@@ -1,26 +1,85 @@
 @import "tailwindcss";
 
+@theme {
+  --color-primary-purple: #7C3AED;
+  --color-primary-blue: #3B82F6;
+  --color-primary-aqua: #06B6D4;
+  --color-primary-cyan: #67E8F9;
+  
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+
+  --color-background-page: #0B1120;
+  --color-background-section: #111827;
+  --color-background-card: #172033;
+  --color-background-elevated: #1E293B;
+
+  --radius-card: 20px;
+  --radius-button: 14px;
+  --radius-input: 14px;
+  --radius-hero: 28px;
+  --radius-product: 24px;
+
+  --shadow-soft: 0 12px 32px rgba(0, 0, 0, 0.24);
+  --shadow-hover: 0 18px 40px rgba(0, 0, 0, 0.32);
+  --shadow-glow: 0 0 24px rgba(124, 58, 237, 0.28);
+
+  --font-sans: "Inter", var(--font-geist-sans);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: var(--color-background-page);
+  --foreground: #ffffff;
+  
+  --card: var(--color-background-card);
+  --card-foreground: #ffffff;
+  
+  --popover: var(--color-background-card);
+  --popover-foreground: #ffffff;
+  
+  --primary: var(--color-primary-purple);
+  --primary-foreground: #ffffff;
+  
+  --secondary: var(--color-primary-blue);
+  --secondary-foreground: #ffffff;
+  
+  --muted: #64748b;
+  --muted-foreground: #94a3b8;
+  
+  --accent: var(--color-primary-aqua);
+  --accent-foreground: #ffffff;
+  
+  --destructive: var(--color-danger);
+  --destructive-foreground: #ffffff;
+  
+  --border: #1e293b;
+  --input: #1e293b;
+  --ring: var(--color-primary-purple);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  border-color: var(--border);
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+@layer utilities {
+  .glass {
+    background: rgba(23, 32, 51, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .ocean-gradient {
+    background: linear-gradient(180deg, rgba(59, 130, 246, 0.08), rgba(124, 58, 237, 0.04));
+  }
+}
+
