@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd oceanfresh && npm install && next build",
+  "outputDirectory": "oceanfresh/.next",
+  "framework": "nextjs"
+}
