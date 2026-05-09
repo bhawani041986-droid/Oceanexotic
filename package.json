@@ -1,0 +1,14 @@
+{
+  "name": "fish-market-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "cd oceanfresh && npm run dev",
+    "build": "cd oceanfresh && npm run build",
+    "start": "cd oceanfresh && npm run start",
+    "lint": "cd oceanfresh && npm run lint"
+  },
+  "dependencies": {
+    "next": "15.0.3"
+  }
+}
