@@ -1,0 +1,7 @@
+git init
+git add .
+git commit -m "Initial setup"
+git branch -M main
+git remote add origin https://github.com/csc73393-rgb/FISH_MARKET.git
+git push -u origin main
+
