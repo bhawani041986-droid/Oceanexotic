@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "cd oceanfresh && npm run dev",
-    "build": "cd oceanfresh && npm run build",
+    "build": "cd oceanfresh && npm install --legacy-peer-deps && next build",
     "start": "cd oceanfresh && npm run start",
     "lint": "cd oceanfresh && npm run lint"
   },

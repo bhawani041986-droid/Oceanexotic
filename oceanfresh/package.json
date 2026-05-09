@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "next": "15.0.3",
-    "react": "19.0.0-rc-66854b9a-20241106",
-    "react-dom": "19.0.0-rc-66854b9a-20241106",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "zustand": "^5.0.1",
     "framer-motion": "^11.11.11",
     "react-hook-form": "^7.53.1",
