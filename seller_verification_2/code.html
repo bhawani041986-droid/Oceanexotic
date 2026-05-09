@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Seller Verification | Abyssal Enterprise</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary": "#3e2e00",
+                    "error": "#ffb4ab",
+                    "on-tertiary-fixed-variant": "#594400",
+                    "error-container": "#93000a",
+                    "primary-container": "#6750a4",
+                    "tertiary-fixed": "#ffdf93",
+                    "surface-bright": "#3b383e",
+                    "on-secondary-fixed": "#1f1635",
+                    "on-primary-fixed-variant": "#4f378a",
+                    "on-background": "#e6e0e9",
+                    "surface-container-lowest": "#0f0d13",
+                    "primary": "#cfbcff",
+                    "surface-variant": "#36343a",
+                    "outline-variant": "#494551",
+                    "background": "#141218",
+                    "on-tertiary-container": "#503d00",
+                    "on-secondary-fixed-variant": "#4b4263",
+                    "secondary-container": "#4d4465",
+                    "primary-fixed-dim": "#cfbcff",
+                    "secondary-fixed": "#e9ddff",
+                    "surface-container-high": "#2b292f",
+                    "secondary-fixed-dim": "#cdc0e9",
+                    "surface-container-low": "#1d1b20",
+                    "on-error-container": "#ffdad6",
+                    "inverse-on-surface": "#322f35",
+                    "primary-fixed": "#e9ddff",
+                    "inverse-primary": "#6750a4",
+                    "on-primary-fixed": "#22005d",
+                    "outline": "#948e9c",
+                    "tertiary-container": "#c9a74d",
+                    "on-primary": "#381e72",
+                    "on-primary-container": "#e0d2ff",
+                    "on-error": "#690005",
+                    "surface-dim": "#141218",
+                    "secondary": "#cdc0e9",
+                    "on-surface-variant": "#cbc4d2",
+                    "tertiary": "#e7c365",
+                    "on-tertiary-fixed": "#241a00",
+                    "on-secondary-container": "#bfb2da",
+                    "inverse-surface": "#e6e0e9",
+                    "surface-tint": "#cfbcff",
+                    "surface": "#141218",
+                    "tertiary-fixed-dim": "#e7c365",
+                    "on-secondary": "#342b4b",
+                    "on-surface": "#e6e0e9",
+                    "surface-container-highest": "#36343a",
+                    "surface-container": "#211f24"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.5rem",
+                    "lg": "1rem",
+                    "xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "display": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(33, 31, 36, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 142, 156, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body antialiased">
+<!-- NavigationDrawer Shell -->
+<aside class="h-screen w-[260px] fixed left-0 top-0 z-50 bg-surface-container-low border-r border-outline-variant/20 shadow-xl flex flex-col p-4 gap-2 hidden md:flex">
+<div class="px-4 py-6 mb-4">
+<h1 class="font-headline text-lg font-bold text-primary">Abyssal Enterprise</h1>
+</div>
+<nav class="flex-1 space-y-1">
+<div class="group cursor-pointer flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out font-body text-body-sm font-medium">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</div>
+<div class="group cursor-pointer flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out font-body text-body-sm font-medium">
+<span class="material-symbols-outlined mr-3" data-icon="inventory_2">inventory_2</span>
+<span>Inventory</span>
+</div>
+<div class="group cursor-pointer flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out font-body text-body-sm font-medium">
+<span class="material-symbols-outlined mr-3" data-icon="add_box">add_box</span>
+<span>Product Listing</span>
+</div>
+<div class="group cursor-pointer flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out font-body text-body-sm font-medium">
+<span class="material-symbols-outlined mr-3" data-icon="payments">payments</span>
+<span>Payouts</span>
+</div>
+<div class="group cursor-pointer flex items-center px-4 py-3 rounded-lg bg-primary-container/20 text-primary border-l-4 border-primary transition-all duration-200 ease-in-out font-body text-body-sm font-medium">
+<span class="material-symbols-outlined mr-3" data-icon="verified_user">verified_user</span>
+<span>Settings</span>
+</div>
+</nav>
+<div class="mt-auto p-4 flex items-center gap-3 bg-surface-container-high/50 rounded-xl">
+<div class="w-10 h-10 rounded-full overflow-hidden bg-primary-container">
+<img alt="Seller Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiCDEqIC2Dw9kqYU1ZOdcDbdA8AKWTFEhdu1lOu8tPX9lxPtQyGlDX7WOxp6cDkwoon-j5GQUCTUFWoQtKQiE10Ds5r8X4b-k0hZKINh6hwYoCKmiHTYAI7G2WLBZMLBzicPiepifgceVT3rpRKyvUdKrQiRvgx0Lw98OiiUBMYJIyLxpELyOo3s8FjHFuEbVZRJSzPy5IT1La2KhOflcLDjfdmqVmSFpVuF_GykSZ7dKS05pbyC5ut-ppz6fnRHJJVSv1BbcUiDE"/>
+</div>
+<div class="flex flex-col">
+<span class="font-bold text-sm text-on-surface">DeepSea Exports</span>
+<span class="text-[10px] text-primary uppercase tracking-wider font-bold">Premium Seller</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="md:ml-[260px] min-h-screen">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-40 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm flex items-center justify-between px-6 py-4">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer active:opacity-80 md:hidden" data-icon="menu">menu</span>
+<h2 class="font-headline text-2xl font-bold tracking-tight text-on-surface">Verification Status</h2>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:bg-surface-variant/50 transition-colors p-2 rounded-full" data-icon="search">search</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:bg-surface-variant/50 transition-colors p-2 rounded-full" data-icon="notifications">notifications</span>
+</div>
+</header>
+<div class="max-w-[1200px] mx-auto p-6 md:p-8">
+<!-- Hero Status Section: Bento Layout -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<!-- Current Tier Card -->
+<div class="md:col-span-2 relative overflow-hidden glass-panel rounded-xl p-8 flex flex-col justify-between min-h-[280px]">
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-4">
+<span class="px-3 py-1 bg-tertiary-container text-on-tertiary-container rounded-full text-xs font-bold tracking-widest uppercase">Verified Tier</span>
+</div>
+<h1 class="text-4xl md:text-5xl font-black text-on-surface mb-2 italic">AAA GOLD</h1>
+<p class="text-on-surface-variant max-w-md">Your enterprise has reached the pinnacle of maritime commerce verification. Benefit from zero-day payouts and global cold-chain insurance coverage.</p>
+</div>
+<div class="mt-6 flex items-center gap-4 relative z-10">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="verified">verified</span>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-secondary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="security">security</span>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-tertiary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-tertiary" data-icon="speed">speed</span>
+</div>
+</div>
+<span class="text-xs font-medium text-on-surface-variant uppercase tracking-widest">Global Compliance Active</span>
+</div>
+<!-- Decorative background element -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[100px] rounded-full -mr-20 -mt-20"></div>
+</div>
+<!-- Trust Score Card -->
+<div class="glass-panel rounded-xl p-8 flex flex-col items-center justify-center text-center">
+<div class="relative mb-6">
+<svg class="w-32 h-32 transform -rotate-90">
+<circle class="text-surface-container-highest" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-tertiary" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-dasharray="364.4" stroke-dashoffset="36.4" stroke-linecap="round" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-bold text-on-surface">90%</span>
+<span class="text-[10px] text-on-surface-variant uppercase font-bold">Health</span>
+</div>
+</div>
+<h3 class="text-lg font-bold text-on-surface mb-1">Verification Health</h3>
+<p class="text-sm text-on-surface-variant">Your documents are 90% up to date. Renew 1 document to maintain status.</p>
+</div>
+</div>
+<!-- Document Checklist -->
+<div class="mb-12">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h3 class="text-2xl font-bold text-on-surface">Compliance Checklist</h3>
+<p class="text-on-surface-variant text-sm">Manage your operational licenses and identity credentials.</p>
+</div>
+<button class="bg-primary text-on-primary px-6 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]" data-icon="upload_file">upload_file</span>
+                        Upload New
+                    </button>
+</div>
+<div class="space-y-4">
+<!-- Item 1: Verified -->
+<div class="bg-surface-container rounded-xl p-5 border border-outline-variant/10 hover:border-primary/30 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-center gap-5">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="badge">badge</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Government Issued ID</h4>
+<p class="text-xs text-on-surface-variant">Validated: Passport #***4920 • Expires Oct 2026</p>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-full">
+<span class="material-symbols-outlined text-[16px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-[11px] font-bold uppercase tracking-wider">Verified</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-on-surface" data-icon="more_vert">more_vert</span>
+</div>
+</div>
+<!-- Item 2: Under Review -->
+<div class="bg-surface-container rounded-xl p-5 border border-outline-variant/10 hover:border-primary/30 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-center gap-5">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary" data-icon="gavel">gavel</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Commercial Export License</h4>
+<p class="text-xs text-on-surface-variant">Submitted on Jan 12, 2024 • Processing time: 24-48h</p>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 px-3 py-1 bg-tertiary/10 text-tertiary border border-tertiary/20 rounded-full">
+<span class="material-symbols-outlined text-[16px]" data-icon="pending">pending</span>
+<span class="text-[11px] font-bold uppercase tracking-wider">Under Review</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-on-surface" data-icon="visibility">visibility</span>
+</div>
+</div>
+<!-- Item 3: Required/Expiring -->
+<div class="bg-surface-container rounded-xl p-5 border-l-4 border-error bg-error-container/5 hover:bg-error-container/10 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-center gap-5">
+<div class="w-12 h-12 rounded-lg bg-error-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-error" data-icon="set_meal">set_meal</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">HACCP Fish Safety Cert</h4>
+<p class="text-xs text-error font-medium">Action Required: Your certification expires in 3 days.</p>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="bg-error text-on-error px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wider hover:opacity-90 transition-all">
+                                Update Now
+                            </button>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-on-surface" data-icon="info">info</span>
+</div>
+</div>
+<!-- Item 4: Bank Details -->
+<div class="bg-surface-container rounded-xl p-5 border border-outline-variant/10 hover:border-primary/30 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-center gap-5">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="account_balance">account_balance</span>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Banking &amp; Tax Identity</h4>
+<p class="text-xs text-on-surface-variant">Validated for SEPA and SWIFT transactions.</p>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary border border-primary/20 rounded-full">
+<span class="material-symbols-outlined text-[16px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="text-[11px] font-bold uppercase tracking-wider">Verified</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-on-surface" data-icon="edit">edit</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Tier Comparison Table (Modern Pattern) -->
+<div class="bg-surface-container-low rounded-2xl p-8 border border-outline-variant/10 overflow-hidden relative">
+<div class="relative z-10 mb-8">
+<h3 class="text-xl font-bold text-on-surface">The Enterprise Advantage</h3>
+<p class="text-on-surface-variant text-sm">Compare tier benefits and requirements.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 relative z-10">
+<div class="hidden md:block p-4">
+<div class="h-10"></div>
+<div class="space-y-6 mt-8">
+<div class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Payout Speed</div>
+<div class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Global Escrow</div>
+<div class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Storage Cap</div>
+<div class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Marketing support</div>
+</div>
+</div>
+<!-- Bronze -->
+<div class="bg-surface-container p-6 rounded-xl border border-outline-variant/10 flex flex-col">
+<span class="text-on-surface-variant font-bold text-sm mb-4">BRONZE</span>
+<div class="space-y-6 md:mt-10">
+<div class="flex justify-between md:block"><span class="md:hidden text-xs text-on-surface-variant">Payout</span> <span class="text-on-surface text-sm font-medium">7 Days</span></div>
+<div class="flex justify-between md:block"><span class="md:hidden text-xs text-on-surface-variant">Escrow</span> <span class="material-symbols-outlined text-error text-[20px]" data-icon="close">close</span></div>
+<div class="flex justify-between md:block"><span class="md:hidden text-xs text-on-surface-variant">Storage</span> <span class="text-on-surface text-sm font-medium">500kg</span></div>
+<div class="flex justify-between md:block"><span class="md:hidden text-xs text-on-surface-variant">Support</span> <span class="material-symbols-outlined text-error text-[20px]" data-icon="close">close</span></div>
+</div>
+</div>
+<!-- Silver -->
+<div class="bg-surface-container p-6 rounded-xl border border-outline-variant/10 flex flex-col">
+<span class="text-secondary font-bold text-sm mb-4">SILVER</span>
+<div class="space-y-6 md:mt-10">
+<div class="flex justify-between md:block"><span class="md:hidden text-xs text-on-surface-variant">Payout</span> <span class="text-on-surface text-sm font-medium">3 Days</span></div>
+<div class="flex justify-between md:block"><span class="md:hidden text-xs text-on-surface-variant">Escrow</span> <span class="material-symbols-outlined text-primary text-[20px]" data-icon="check">check</span></div>
+<div class="flex justify-between md:block"><span class="md:hidden text-xs text-on-surface-variant">Storage</span> <span class="text-on-surface text-sm font-medium">2 Tons</span></div>
+<div class="flex justify-between md:block"><span class="md:hidden text-xs text-on-surface-variant">Support</span> <span class="material-symbols-outlined text-error text-[20px]" data-icon="close">close</span></div>
+</div>
+</div>
+<!-- AAA Gold (Active) -->
+<div class="bg-primary-container/10 p-6 rounded-xl border border-primary/40 flex flex-col relative">
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-on-primary text-[10px] font-bold px-3 py-1 rounded-full uppercase">Current Status</div>
+<span class="text-tertiary font-bold text-sm mb-4 uppercase italic">AAA GOLD</span>
+<div class="space-y-6 md:mt-10">
+<div class="flex justify-between md:block"><span class="md:hidden text-xs text-on-surface-variant">Payout</span> <span class="text-on-surface text-sm font-bold">INSTANT</span></div>
+<div class="flex justify-between md:block"><span class="md:hidden text-xs text-on-surface-variant">Escrow</span> <span class="material-symbols-outlined text-primary text-[20px]" data-icon="check">check</span></div>
+<div class="flex justify-between md:block"><span class="md:hidden text-xs text-on-surface-variant">Storage</span> <span class="text-on-surface text-sm font-bold">UNLIMITED</span></div>
+<div class="flex justify-between md:block"><span class="md:hidden text-xs text-on-surface-variant">Support</span> <span class="material-symbols-outlined text-primary text-[20px]" data-icon="check">check</span></div>
+</div>
+</div>
+</div>
+<!-- Background visual -->
+<div class="absolute bottom-0 right-0 w-1/2 h-1/2 opacity-10 pointer-events-none">
+<img class="w-full h-full object-cover grayscale opacity-50" data-alt="Abstract cinematic composition of flowing digital data lines and geometric structures in deep navy and purple tones. The style is sleek, corporate, and futuristic, suggesting high-speed logistics and global digital connectivity. The lighting is low-key with vibrant neon purple highlights that catch the edges of the technical patterns." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFH3PiJsUACK-ObknLn6IbTH2YXRKSeAv_BxG8Sy-Pkgr1CTfgYcaaI9lhHaWd1uG9moW03gl6gy9Pu1jKwOQS96EeS6Tsi958-hQO2OVtseSEoR2XirFTchgoMEzVCqGEhEwiZW2QbZsVlYi_ujT8dcpMULQ9qn5fdUY9fFjAyUMunqDLqQbE5W2jJAVohfY-axu6ZINr6x_DMUSNPP3rl9tR_6CsuH3FzHmqRbHfiT4QyPSWjoC57uPeG3XWc_kZhj-cieqA1MM"/>
+</div>
+</div>
+<!-- Cold-Chain Alerts -->
+<div class="mt-8 flex flex-wrap gap-4">
+<div class="flex items-center gap-3 bg-surface-container rounded-lg px-4 py-3 border border-outline-variant/10">
+<div class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+</div>
+<span class="text-xs font-medium text-on-surface uppercase tracking-wider">Active Real-Time Monitoring</span>
+</div>
+<div class="flex items-center gap-3 bg-surface-container rounded-lg px-4 py-3 border border-outline-variant/10">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="cloud_done">cloud_done</span>
+<span class="text-xs font-medium text-on-surface uppercase tracking-wider">Blockchain Ledger Synced</span>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-surface-container-low border-t border-outline-variant/20 px-6 py-3 flex justify-between items-center z-50">
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] font-medium">Dashboard</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="text-[10px] font-medium">Inventory</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" data-icon="verified_user" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="text-[10px] font-medium">Verify</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="text-[10px] font-medium">Payouts</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-[10px] font-medium">Settings</span>
+</div>
+</nav>
+</body></html>

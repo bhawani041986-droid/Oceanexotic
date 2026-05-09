@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Abyssal Enterprise - Platform Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-lowest": "#0f0d13",
+                      "secondary": "#cdc0e9",
+                      "tertiary-fixed-dim": "#e7c365",
+                      "inverse-primary": "#6750a4",
+                      "error": "#ffb4ab",
+                      "on-tertiary-fixed-variant": "#594400",
+                      "surface-tint": "#cfbcff",
+                      "on-surface-variant": "#cbc4d2",
+                      "surface-container-highest": "#36343a",
+                      "primary": "#cfbcff",
+                      "on-error-container": "#ffdad6",
+                      "surface": "#141218",
+                      "outline": "#948e9c",
+                      "surface-bright": "#3b383e",
+                      "surface-dim": "#141218",
+                      "on-secondary-fixed-variant": "#4b4263",
+                      "surface-container-low": "#1d1b20",
+                      "on-secondary-fixed": "#1f1635",
+                      "on-primary-container": "#e0d2ff",
+                      "inverse-surface": "#e6e0e9",
+                      "secondary-fixed-dim": "#cdc0e9",
+                      "tertiary-container": "#c9a74d",
+                      "on-primary-fixed-variant": "#4f378a",
+                      "on-secondary": "#342b4b",
+                      "on-secondary-container": "#bfb2da",
+                      "on-surface": "#e6e0e9",
+                      "on-tertiary-container": "#503d00",
+                      "tertiary": "#e7c365",
+                      "surface-variant": "#36343a",
+                      "secondary-container": "#4d4465",
+                      "on-tertiary": "#3e2e00",
+                      "outline-variant": "#494551",
+                      "primary-fixed-dim": "#cfbcff",
+                      "on-primary": "#381e72",
+                      "error-container": "#93000a",
+                      "primary-fixed": "#e9ddff",
+                      "inverse-on-surface": "#322f35",
+                      "primary-container": "#6750a4",
+                      "tertiary-fixed": "#ffdf93",
+                      "surface-container-high": "#2b292f",
+                      "on-background": "#e6e0e9",
+                      "on-primary-fixed": "#22005d",
+                      "on-error": "#690005",
+                      "background": "#141218",
+                      "on-tertiary-fixed": "#241a00",
+                      "surface-container": "#211f24",
+                      "secondary-fixed": "#e9ddff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Inter"],
+                      "display": ["Inter"],
+                      "body": ["Inter"],
+                      "label": ["Inter"]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #141218; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #494551; border-radius: 10px; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col md:flex-row overflow-hidden">
+<!-- Navigation Drawer (Desktop) -->
+<nav class="hidden md:flex flex-col py-4 gap-2 fixed left-0 top-0 h-full w-[260px] z-50 bg-surface-container dark:bg-surface-container-lowest border-r border-white/5 shadow-2xl">
+<div class="text-lg font-bold text-primary px-4 py-6">Abyssal Enterprise</div>
+<div class="px-4 mb-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold">DA</div>
+<div class="flex flex-col overflow-hidden">
+<span class="font-body text-sm font-medium text-on-surface truncate">Deep Sea Admin</span>
+<span class="text-[10px] text-on-surface-variant uppercase tracking-wider">Enterprise Tier</span>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-2">
+<div class="flex items-center gap-3 px-4 py-3 cursor-pointer transition-all duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 rounded-lg">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body text-sm font-medium">Dashboard</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 cursor-pointer transition-all duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 rounded-lg">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body text-sm font-medium">Inventory</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 cursor-pointer transition-all duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 rounded-lg">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-body text-sm font-medium">Logistics</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 cursor-pointer transition-all duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 rounded-lg">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body text-sm font-medium">Financials</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 cursor-pointer transition-all duration-200 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 rounded-lg">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body text-sm font-medium">Sellers</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 cursor-pointer transition-all duration-200 bg-primary-container/20 text-primary border-l-4 border-primary rounded-r-lg">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body text-sm font-medium">Settings</span>
+</div>
+</div>
+<div class="mt-auto px-4 py-4 text-[10px] text-outline text-center">
+            v2.4.0 • Enterprise Core
+        </div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-[260px] flex flex-col h-screen overflow-y-auto custom-scrollbar">
+<!-- Top App Bar -->
+<header class="sticky top-0 w-full z-40 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-sm flex items-center justify-between px-6 h-16 w-full max-w-[1440px] mx-auto">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined md:hidden text-primary">menu</span>
+<h1 class="font-headline text-[24px] md:text-[30px] font-bold leading-tight text-primary">Abyssal Enterprise</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 px-4 py-2 rounded-full hover:bg-surface-bright/50 transition-colors text-on-surface-variant active:scale-95 duration-200">
+<span class="material-symbols-outlined">search</span>
+<span class="hidden sm:inline text-sm font-medium">Search</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-outline-variant overflow-hidden">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="Close up portrait of a professional technology executive in a dark modern office environment with soft blue ambient lighting. The style is crisp and corporate with high-end digital aesthetics. The character has a focused expression, conveying competence and technical authority in the deep-sea logistics sector." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuF_iv5Hho5HiiOIh0R4ql3Zma1JrAHIISIT1BllwcJ9f03FuUoq6Ilw9ipZpvlxrdTvJ3U3zydrb9zB7ZFPm3gI6onNLAvh8qn9JrwAR5JYJLLy4y12n5wZia8hJjNIG7WobyysBWMCHCciKAvrhvZ1DTFsIB3px3hK3qfwNvuBnn85KVLxnwBSLCJpk8YIyLP9bQE9omRr9Q2ZTHpAGeHwYsAuT-ZBCjqwtIUBrhsiDPW5MlYA56k17UV8MYVYCOnR5WdsCwmn4"/>
+</div>
+</div>
+</header>
+<!-- Settings Canvas -->
+<div class="p-4 md:p-8 w-full max-w-[1200px] mx-auto space-y-8 pb-24 md:pb-8">
+<section class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="text-3xl font-bold tracking-tight text-on-surface">Platform Settings</h2>
+<p class="text-on-surface-variant mt-1">Configure global parameters and marketplace operations.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-2.5 rounded-xl border border-outline-variant text-on-surface font-medium hover:bg-surface-bright/30 transition-all active:scale-95">Discard</button>
+<button class="px-6 py-2.5 rounded-xl bg-primary text-on-primary font-bold hover:shadow-[0_0_20px_rgba(207,188,255,0.4)] transition-all active:scale-95">Save Changes</button>
+</div>
+</section>
+<!-- Bento Grid Settings -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Global Commission Rates -->
+<div class="md:col-span-8 bg-surface-container rounded-xl p-6 border border-white/5 shadow-sm">
+<div class="flex items-center gap-3 mb-6">
+<div class="p-2 rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined">percent</span>
+</div>
+<h3 class="text-lg font-semibold">Global Commission Rates</h3>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+<div class="space-y-4">
+<label class="block text-sm font-medium text-on-surface-variant">Base Marketplace Fee</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg py-3 px-4 text-on-surface focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" type="number" value="12.5"/>
+<span class="absolute right-4 top-3 text-on-surface-variant font-mono">%</span>
+</div>
+<p class="text-xs text-outline italic">Applied to all standard aquatic product sales.</p>
+</div>
+<div class="space-y-4">
+<label class="block text-sm font-medium text-on-surface-variant">Premium Seller Incentive</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg py-3 px-4 text-on-surface focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" type="number" value="8.0"/>
+<span class="absolute right-4 top-3 text-on-surface-variant font-mono">%</span>
+</div>
+<p class="text-xs text-outline italic">Reduced rate for AAA-Grade certified partners.</p>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-white/5">
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium text-on-surface">Auto-calculate tiered rates</span>
+<button class="relative inline-flex h-6 w-11 items-center rounded-full bg-primary">
+<span class="inline-block h-4 w-4 translate-x-6 transform rounded-full bg-on-primary transition"></span>
+</button>
+</div>
+</div>
+</div>
+<!-- Operating Hours -->
+<div class="md:col-span-4 bg-surface-container rounded-xl p-6 border border-white/5 shadow-sm">
+<div class="flex items-center gap-3 mb-6">
+<div class="p-2 rounded-lg bg-tertiary/10 text-tertiary">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+<h3 class="text-lg font-semibold">Marketplace Hours</h3>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between group">
+<span class="text-sm text-on-surface-variant">Weekday Open</span>
+<input class="bg-surface-container-lowest border-none rounded text-primary text-sm p-1 focus:ring-0" type="time" value="04:00"/>
+</div>
+<div class="flex items-center justify-between group">
+<span class="text-sm text-on-surface-variant">Weekday Close</span>
+<input class="bg-surface-container-lowest border-none rounded text-primary text-sm p-1 focus:ring-0" type="time" value="22:00"/>
+</div>
+<div class="flex items-center justify-between group">
+<span class="text-sm text-on-surface-variant">Weekend Open</span>
+<input class="bg-surface-container-lowest border-none rounded text-primary text-sm p-1 focus:ring-0" type="time" value="06:00"/>
+</div>
+<div class="flex items-center justify-between group">
+<span class="text-sm text-on-surface-variant">Weekend Close</span>
+<input class="bg-surface-container-lowest border-none rounded text-primary text-sm p-1 focus:ring-0" type="time" value="18:00"/>
+</div>
+</div>
+<div class="mt-6 bg-surface-container-low p-4 rounded-lg flex items-start gap-3 border border-outline-variant/20">
+<span class="material-symbols-outlined text-tertiary text-sm">info</span>
+<p class="text-xs text-on-surface-variant leading-relaxed">Changes to hours will take effect in the next refresh cycle (UTC+0).</p>
+</div>
+</div>
+<!-- Localization & Tax -->
+<div class="md:col-span-6 bg-surface-container rounded-xl p-6 border border-white/5 shadow-sm">
+<div class="flex items-center gap-3 mb-6">
+<div class="p-2 rounded-lg bg-secondary/10 text-secondary">
+<span class="material-symbols-outlined">public</span>
+</div>
+<h3 class="text-lg font-semibold">Localization &amp; Tax</h3>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-sm font-medium text-on-surface-variant">Primary Currency</label>
+<select class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg py-2.5 px-4 text-on-surface focus:ring-2 focus:ring-primary outline-none">
+<option>USD - US Dollar</option>
+<option>EUR - Euro</option>
+<option>JPY - Japanese Yen</option>
+<option>NOK - Norwegian Krone</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-medium text-on-surface-variant">Global VAT / Sales Tax</label>
+<div class="relative">
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg py-2.5 px-4 text-on-surface focus:ring-2 focus:ring-primary outline-none" type="number" value="15.0"/>
+<span class="absolute right-4 top-2.5 text-on-surface-variant font-mono">%</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-medium text-on-surface-variant">Timezone Reference</label>
+<select class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg py-2.5 px-4 text-on-surface focus:ring-2 focus:ring-primary outline-none">
+<option>UTC (Coordinated Universal Time)</option>
+<option>GMT +1 (Oslo/Paris)</option>
+<option>GMT -5 (New York)</option>
+<option>GMT +9 (Tokyo)</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-medium text-on-surface-variant">Weight Metric</label>
+<select class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg py-2.5 px-4 text-on-surface focus:ring-2 focus:ring-primary outline-none">
+<option>Kilograms (kg)</option>
+<option>Pounds (lb)</option>
+<option>Metric Tons (t)</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Support Contact Info -->
+<div class="md:col-span-6 bg-surface-container rounded-xl p-6 border border-white/5 shadow-sm">
+<div class="flex items-center gap-3 mb-6">
+<div class="p-2 rounded-lg bg-error/10 text-error">
+<span class="material-symbols-outlined">support_agent</span>
+</div>
+<h3 class="text-lg font-semibold">Support Configuration</h3>
+</div>
+<div class="space-y-4">
+<div class="flex flex-col gap-1">
+<label class="text-sm font-medium text-on-surface-variant">Escalation Email</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-outline text-sm">mail</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg py-2.5 pl-11 pr-4 text-on-surface focus:ring-2 focus:ring-primary outline-none" type="email" value="ops@abyssal.enterprise"/>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-sm font-medium text-on-surface-variant">Emergency Logistics Hotline</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-4 text-outline text-sm">phone</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg py-2.5 pl-11 pr-4 text-on-surface focus:ring-2 focus:ring-primary outline-none" type="text" value="+1 (800) 555-DEEP"/>
+</div>
+</div>
+<div class="pt-4 flex items-center gap-4">
+<div class="flex-1 space-y-1">
+<span class="text-sm font-medium text-on-surface">Enable Live Chat Support</span>
+<p class="text-xs text-outline">Show widget to active logistics partners.</p>
+</div>
+<button class="relative inline-flex h-6 w-11 items-center rounded-full bg-outline-variant">
+<span class="inline-block h-4 w-4 translate-x-1 transform rounded-full bg-white transition"></span>
+</button>
+</div>
+</div>
+</div>
+<!-- Freshness Metadata Section -->
+<div class="md:col-span-12 bg-surface-container rounded-xl p-8 border border-primary/20 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[120px]">ac_unit</span>
+</div>
+<div class="relative z-10 max-w-2xl">
+<h3 class="text-xl font-bold text-primary mb-2">Cold-Chain Thresholds</h3>
+<p class="text-on-surface-variant mb-6 leading-relaxed">Define the temperature ranges and alert triggers for sensitive seafood logistics. These settings directly impact automated quality grading and insurance claims.</p>
+<div class="flex flex-wrap gap-4">
+<div class="bg-surface-container-lowest px-4 py-3 rounded-lg border border-white/5 flex flex-col">
+<span class="text-xs text-outline uppercase font-bold tracking-tighter">Frozen Max</span>
+<span class="text-lg font-mono text-on-surface">-18°C</span>
+</div>
+<div class="bg-surface-container-lowest px-4 py-3 rounded-lg border border-white/5 flex flex-col">
+<span class="text-xs text-outline uppercase font-bold tracking-tighter">Fresh Max</span>
+<span class="text-lg font-mono text-on-surface">4°C</span>
+</div>
+<div class="bg-surface-container-lowest px-4 py-3 rounded-lg border border-white/5 flex flex-col">
+<span class="text-xs text-outline uppercase font-bold tracking-tighter">Alert Delay</span>
+<span class="text-lg font-mono text-on-surface">15m</span>
+</div>
+<button class="flex items-center gap-2 px-6 rounded-lg bg-surface-bright text-on-surface text-sm font-bold hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-sm">settings_suggest</span>
+                                Edit Thresholds
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 md:hidden bg-surface-container-high/90 backdrop-blur-lg border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.3)] rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant scale-90 active:scale-100 transition-transform">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label text-[12px] font-medium tracking-wider">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant scale-90 active:scale-100 transition-transform">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-label text-[12px] font-medium tracking-wider">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant scale-90 active:scale-100 transition-transform">
+<span class="material-symbols-outlined">ac_unit</span>
+<span class="font-label text-[12px] font-medium tracking-wider">Cold Chain</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 scale-90 active:scale-100 transition-transform">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label text-[12px] font-medium tracking-wider">Profile</span>
+</div>
+</nav>
+</body></html>

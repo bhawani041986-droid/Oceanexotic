@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Customer Reviews | Abyssal Enterprise</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#3e2e00",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "error-container": "#93000a",
+                        "primary-container": "#6750a4",
+                        "tertiary-fixed": "#ffdf93",
+                        "surface-bright": "#3b383e",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "on-background": "#e6e0e9",
+                        "surface-container-lowest": "#0f0d13",
+                        "primary": "#cfbcff",
+                        "surface-variant": "#36343a",
+                        "outline-variant": "#494551",
+                        "background": "#141218",
+                        "on-tertiary-container": "#503d00",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "secondary-container": "#4d4465",
+                        "primary-fixed-dim": "#cfbcff",
+                        "secondary-fixed": "#e9ddff",
+                        "surface-container-high": "#2b292f",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "surface-container-low": "#1d1b20",
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#322f35",
+                        "primary-fixed": "#e9ddff",
+                        "inverse-primary": "#6750a4",
+                        "on-primary-fixed": "#22005d",
+                        "outline": "#948e9c",
+                        "tertiary-container": "#c9a74d",
+                        "on-primary": "#381e72",
+                        "on-primary-container": "#e0d2ff",
+                        "on-error": "#690005",
+                        "surface-dim": "#141218",
+                        "secondary": "#cdc0e9",
+                        "on-surface-variant": "#cbc4d2",
+                        "tertiary": "#e7c365",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-secondary-container": "#bfb2da",
+                        "inverse-surface": "#e6e0e9",
+                        "surface-tint": "#cfbcff",
+                        "surface": "#141218",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "on-secondary": "#342b4b",
+                        "on-surface": "#e6e0e9",
+                        "surface-container-highest": "#36343a",
+                        "surface-container": "#211f24"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #141218;
+            color: #e6e0e9;
+        }
+        .glass-panel {
+            background: rgba(33, 31, 36, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 142, 156, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex min-h-screen">
+<!-- NavigationDrawer -->
+<aside class="h-screen w-[260px] fixed left-0 top-0 z-50 bg-surface-container-low border-r border-outline-variant/20 shadow-xl flex flex-col p-4 gap-2 hidden md:flex">
+<div class="flex items-center gap-3 px-2 mb-8">
+<div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary">tsunami</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline text-lg font-bold text-primary">DeepSea Exports</span>
+<span class="font-body text-[10px] text-on-surface-variant uppercase tracking-widest">Premium Seller</span>
+</div>
+</div>
+<nav class="flex flex-col gap-1">
+<div class="group cursor-pointer flex items-center gap-3 px-3 py-2.5 transition-all duration-200 ease-in-out text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body text-body-sm font-medium">Dashboard</span>
+</div>
+<div class="group cursor-pointer flex items-center gap-3 px-3 py-2.5 transition-all duration-200 ease-in-out text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body text-body-sm font-medium">Inventory</span>
+</div>
+<div class="group cursor-pointer flex items-center gap-3 px-3 py-2.5 transition-all duration-200 ease-in-out text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg">
+<span class="material-symbols-outlined">add_box</span>
+<span class="font-body text-body-sm font-medium">Product Listing</span>
+</div>
+<div class="group cursor-pointer flex items-center gap-3 px-3 py-2.5 transition-all duration-200 ease-in-out bg-primary-container/20 text-primary border-l-4 border-primary rounded-r-lg">
+<span class="material-symbols-outlined">reviews</span>
+<span class="font-body text-body-sm font-medium">Customer Reviews</span>
+</div>
+<div class="group cursor-pointer flex items-center gap-3 px-3 py-2.5 transition-all duration-200 ease-in-out text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body text-body-sm font-medium">Payouts</span>
+</div>
+<div class="group cursor-pointer flex items-center gap-3 px-3 py-2.5 transition-all duration-200 ease-in-out text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high rounded-lg">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body text-body-sm font-medium">Settings</span>
+</div>
+</nav>
+<div class="mt-auto p-4 glass-panel rounded-xl">
+<p class="text-[10px] text-on-surface-variant mb-2">VERIFIED STATUS</p>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="text-xs font-medium">AAA Grade Verified</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-[260px] min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-40 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm flex items-center justify-between px-6 py-4">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-on-surface p-2 hover:bg-surface-variant/50 rounded-full transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline text-2xl font-bold tracking-tight text-primary">Abyssal Enterprise</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex bg-surface-container-high px-4 py-2 rounded-full border border-outline-variant/20 items-center gap-2">
+<span class="material-symbols-outlined text-outline text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 text-on-surface placeholder:text-outline" placeholder="Search reviews..." type="text"/>
+</div>
+<button class="cursor-pointer active:opacity-80 p-2 hover:bg-surface-variant/50 transition-colors rounded-full text-on-surface">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden border border-outline-variant/30">
+<img alt="Profile" data-alt="A professional headshot of a mature male logistics manager with a confident expression, set against a blurred office background. The lighting is sophisticated and directional, creating a corporate tech aesthetic that fits a high-end enterprise software dashboard. The overall color palette is cool-toned with subtle shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXv4iF-cKLWyVmYtcdulgo5-kxpcJh3qb1JOrzw2qrHo68IxG4FQi1XXmTPx-PiYDImNNaMyncFJeqMBs1qBfUzfMZ9wJtn7O5Jhb6w1RVmGhsR-_lHRseu1ZuTN5_lW8g-A0Y7G79CG8sGMElU18u0iVXUkr7keFr9Nw_P7LrVgeGNujwFwzFpwUbPVl1ZjbC7ln28_gvhwpqCpiCfgcAiF3JSC2LF1m-1nzy_Ntv-vBaY4IfypJ4LObAssFSr2s4WYgadD1F3fY"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-6 lg:p-10 max-w-7xl mx-auto w-full">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+<div>
+<h2 class="text-3xl font-bold font-headline mb-2">Customer Feedback</h2>
+<p class="text-on-surface-variant max-w-xl">Monitor your aquaculture trade performance and manage cold-chain logistics feedback from global distributors.</p>
+</div>
+<div class="flex gap-3">
+<button class="bg-surface-container-high hover:bg-surface-container-highest text-on-surface px-4 py-2.5 rounded-xl border border-outline-variant/30 font-medium text-sm flex items-center gap-2 transition-all">
+<span class="material-symbols-outlined text-sm">file_download</span>
+                        Export Report
+                    </button>
+<button class="bg-primary hover:bg-primary-container text-on-primary px-4 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg shadow-primary/10">
+                        View All History
+                    </button>
+</div>
+</div>
+<!-- Summary Section: Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+<!-- Avg Rating Card -->
+<div class="md:col-span-2 glass-panel p-8 rounded-xl relative overflow-hidden group">
+<div class="absolute -right-10 -bottom-10 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-symbols-outlined text-[160px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="text-on-surface-variant font-medium text-sm uppercase tracking-widest mb-4">Average Rating</p>
+<div class="flex items-end gap-4">
+<span class="text-6xl font-bold text-white leading-none tracking-tighter">4.9</span>
+<div class="flex flex-col mb-1">
+<div class="flex gap-1 mb-1">
+<span class="material-symbols-outlined text-[#F59E0B]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#F59E0B]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#F59E0B]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#F59E0B]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#F59E0B]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="text-xs text-on-surface-variant">Global Logistics Index</p>
+</div>
+</div>
+<div class="mt-8 flex items-center gap-2 text-primary font-medium text-sm">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+0.2 from last quarter</span>
+</div>
+</div>
+<!-- Total Reviews Card -->
+<div class="glass-panel p-8 rounded-xl flex flex-col justify-between">
+<div>
+<p class="text-on-surface-variant font-medium text-sm uppercase tracking-widest mb-2">Total Reviews</p>
+<span class="text-4xl font-bold text-white tracking-tight">1,284</span>
+</div>
+<div class="mt-4 flex items-center gap-3">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-surface-container flex items-center justify-center overflow-hidden">
+<img alt="User" data-alt="A close-up portrait of a professional woman with a warm, genuine smile, wearing modern business attire. The setting is a minimalist office with large windows, flooded with soft natural light that creates a clean, airy aesthetic. The color palette is composed of soft neutrals and whites with high clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7TDjBkpKPpBOikrbOc0h-d15OfGDuAQknTpkZeB9Wq2QtVJaiBpxRtGzZn9e4xTSewnQbhUBLAkmy37ydm0mTEV9q2EdmIUC__SzAzczZxqGJNQfU8DEzm_IX31iFnvgcpKcnPjD74WKPnlDg7SO4nGYT2JwE2cr5m1CFc4FoXWGhDGhBeyEuaFFl_G867-5ZelDSafryA86GGObpsAMY1VMNLFatbKpS1MZj3sYc9mGFRRjhGcWre50fqfy27p8yx-RecbR2r4o"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-surface-container flex items-center justify-center overflow-hidden">
+<img alt="User" data-alt="A portrait of a young professional man in a tech-focused workspace. He is looking directly at the camera with a friendly expression. The background features subtle blue and purple lighting, echoing a dark mode UI theme. The image is crisp, modern, and high-resolution with a focus on authentic human connection." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5vDz0m1urDnRXr0O_ncYF9NuVrOvYFZffzV77-9wftzjCgB-dyEWC8uAsGXsYlR1NWiFTf_dUcUTAUnMO79XHXXI18UO5PTuzXazOzcRfX89USXYCpWsGKZBbsLDXdh9soi_C0h0bEOkALGR7ReYWrNiiPn1fRFPAzBLd-bYBRVxwJ8-Fsek-eS39DfGB8JQTUVcg5_70LJe5blkxBzUlyuH7a2axWYgrZJv6AFC8QAHJOnXgZjw2hZJFcIiauorsSLFuCPvx588"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-primary text-[10px] flex items-center justify-center font-bold">+12</div>
+</div>
+<span class="text-xs text-on-surface-variant">New this week</span>
+</div>
+</div>
+<!-- Freshness Score Card -->
+<div class="glass-panel p-8 rounded-xl flex flex-col justify-between">
+<div>
+<p class="text-on-surface-variant font-medium text-sm uppercase tracking-widest mb-2">Freshness SLA</p>
+<span class="text-4xl font-bold text-tertiary tracking-tight">99.8%</span>
+</div>
+<div class="mt-4 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span class="text-xs text-on-surface-variant">Exceeding targets</span>
+</div>
+</div>
+</div>
+<!-- Filters -->
+<div class="flex flex-wrap items-center gap-4 mb-6">
+<button class="bg-primary-container text-on-primary-container px-4 py-2 rounded-full text-sm font-medium border border-primary/20">All Reviews</button>
+<button class="hover:bg-surface-container-high text-on-surface-variant px-4 py-2 rounded-full text-sm font-medium border border-outline-variant/20 transition-colors">Pending Reply</button>
+<button class="hover:bg-surface-container-high text-on-surface-variant px-4 py-2 rounded-full text-sm font-medium border border-outline-variant/20 transition-colors">5 Stars</button>
+<button class="hover:bg-surface-container-high text-on-surface-variant px-4 py-2 rounded-full text-sm font-medium border border-outline-variant/20 transition-colors">Logistics Issues</button>
+<div class="ml-auto flex items-center gap-2 text-on-surface-variant text-sm font-medium cursor-pointer hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-lg">sort</span>
+<span>Newest First</span>
+</div>
+</div>
+<!-- Reviews List -->
+<div class="space-y-4">
+<!-- Review Card 1 -->
+<div class="glass-panel p-6 rounded-xl hover:bg-surface-container-high transition-all border-l-4 border-l-primary">
+<div class="flex flex-col lg:flex-row gap-6">
+<div class="flex-shrink-0 flex items-start gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest overflow-hidden border border-outline-variant/30">
+<img alt="User Avatar" data-alt="A portrait of a female supply chain executive with a professional demeanor. She is set against a dark, minimalist industrial background with hints of metallic textures. The lighting is crisp and modern, emphasizing high-end corporate logistics. The color palette is sophisticated with deep grays and subtle highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzF0vMMe8eW0AaW6PiWM6fq86_o-mjWkFL9wwRGzh0xZQ5FNKH4IBr2c5uonDNhbweflR55DYnHo6AXDXWQ5zuR5NRsiGBNx_gTSxvYOQKpaAwvMzocm-GE6ZmqQQlH8Rh10DPTPzH1XxybN7CK1VWEORwmejtRH3MFsdqmON-hIEQnx0uGQ6Qtt7RtmpH9XqjRKbGrpJ3i8gUg-sagveyDTgP4N0HbX49RWunmD6Efq5stNeGapFbaeJJLJatCNuhqqBFdkscv2U"/>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Elena Rodriguez</h4>
+<p class="text-xs text-on-surface-variant mb-2">Oslo Distribution Hub</p>
+<div class="flex gap-0.5">
+<span class="material-symbols-outlined text-[#F59E0B] text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#F59E0B] text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#F59E0B] text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#F59E0B] text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#F59E0B] text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<div class="flex-grow">
+<div class="flex items-center gap-3 mb-2">
+<span class="bg-surface-container-highest text-[10px] font-bold text-tertiary px-2 py-0.5 rounded border border-tertiary/20 uppercase tracking-tighter">AAA Grade Freshness</span>
+<span class="text-[10px] text-outline">MAR 24, 2024 • SKU: ATL-SAL-02</span>
+</div>
+<p class="text-on-surface text-sm leading-relaxed mb-4">
+                                The Atlantic Salmon arrived in Oslo with a core temperature of -1.8°C, which is within the optimal range. The cold-chain tracking data was seamless and perfectly integrated with our local systems. Our premium retailers are very impressed with the consistency. Highly recommend for high-end distribution.
+                            </p>
+<div class="flex items-center gap-4">
+<button class="text-primary text-xs font-bold flex items-center gap-1.5 hover:underline transition-all">
+<span class="material-symbols-outlined text-sm">reply</span>
+                                    Reply to Buyer
+                                </button>
+<button class="text-on-surface-variant text-xs font-medium flex items-center gap-1.5 hover:text-on-surface transition-all">
+<span class="material-symbols-outlined text-sm">flag</span>
+                                    Report
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Review Card 2 -->
+<div class="glass-panel p-6 rounded-xl hover:bg-surface-container-high transition-all">
+<div class="flex flex-col lg:flex-row gap-6">
+<div class="flex-shrink-0 flex items-start gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest overflow-hidden border border-outline-variant/30">
+<img alt="User Avatar" data-alt="A portrait of a male logistics director, reflecting professionalism and expertise. The background is a clean, dark-themed maritime operations room with subtle digital displays. The lighting is soft and professional, emphasizing a modern enterprise aesthetic with deep navy and slate tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBI3uxr01Xc_lNo0iXcwTcIBiMG9BJ8QJ3u-kFoD0s_mnWqB-jVdpf5qVQ_geuUJ2dqB91kWKdah1QJOsveQ6tCQtq-1rfSbHwqhflEN2TFweinhNDIWrEwySRMEbEpL9M70dq5NcQZ0HDpFgDfZlERuS0jo1jiD9RpPBKXUXbZkR4wuRc6V50dh74FLtKPMEHupvPH9i_KOkJANfIiZRGhF4vdQy4mCL6Y8ZJnhI3D_wDilvpWXbrphWnOlnbSA6zfokay57IWLvs"/>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Markus Chen</h4>
+<p class="text-xs text-on-surface-variant mb-2">Singapore Logistics Center</p>
+<div class="flex gap-0.5">
+<span class="material-symbols-outlined text-[#F59E0B] text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#F59E0B] text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#F59E0B] text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#F59E0B] text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#F59E0B] text-sm" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+</div>
+</div>
+<div class="flex-grow">
+<div class="flex items-center gap-3 mb-2">
+<span class="bg-surface-container-highest text-[10px] font-bold text-primary px-2 py-0.5 rounded border border-primary/20 uppercase tracking-tighter">Verified Delivery</span>
+<span class="text-[10px] text-outline">MAR 22, 2024 • SKU: SEA-BST-44</span>
+</div>
+<p class="text-on-surface text-sm leading-relaxed mb-4">
+                                Excellent response time. Had a slight delay at customs in Singapore, but the DeepSea team was proactive in providing updated GPS coordinates and temperature logs. The product quality remains top-tier.
+                            </p>
+<div class="bg-surface-container p-4 rounded-lg mb-4 border border-outline-variant/10">
+<p class="text-[10px] text-primary font-bold uppercase tracking-widest mb-1">Your Reply</p>
+<p class="text-xs text-on-surface-variant">Thank you Markus! We appreciate your patience during the customs check. Our team is working on further streamlining the documentation for Singapore ports.</p>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant text-xs font-medium flex items-center gap-1.5 hover:text-on-surface transition-all">
+<span class="material-symbols-outlined text-sm">edit</span>
+                                    Edit Reply
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Review Card 3 -->
+<div class="glass-panel p-6 rounded-xl hover:bg-surface-container-high transition-all border-l-4 border-l-primary">
+<div class="flex flex-col lg:flex-row gap-6">
+<div class="flex-shrink-0 flex items-start gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest overflow-hidden border border-outline-variant/30">
+<img alt="User Avatar" data-alt="A portrait of a female global operations manager with a sharp, intelligent look. She is set in a modern, high-tech control center background with soft ambient lighting in shades of deep purple and charcoal. The visual style is premium, clean, and highly detailed, conveying reliability and expertise in global trade." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOhnb2tg5N6YxmpdxueXTyRRcAxiCoC9zG5_IvJZIkh0sCZ3bH10vjq8onstKh5dONB27MlczWPXW6ngX_caJmAFfnSqaYV8oH_YCYlOGpf_5a8IHhnl-DPv4ktwOnjzjtVLomzOoTLkItrNxuM_DkHKkheUATW0xset46WfJwb-sm44wOTR3fLaDwYrZn9ORwsMJsh1SjC-P-94ZUZbiLumm3tC_b_a8OiXewZf_wL-7OE-FZo2y_LuqOmvHxYhkdV-qO8FRVpdU"/>
+</div>
+<div>
+<h4 class="font-bold text-on-surface">Sarah J. Miller</h4>
+<p class="text-xs text-on-surface-variant mb-2">New York Fresh Group</p>
+<div class="flex gap-0.5">
+<span class="material-symbols-outlined text-[#F59E0B] text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#F59E0B] text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#F59E0B] text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#F59E0B] text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[#F59E0B] text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<div class="flex-grow">
+<div class="flex items-center gap-3 mb-2">
+<span class="bg-surface-container-highest text-[10px] font-bold text-tertiary px-2 py-0.5 rounded border border-tertiary/20 uppercase tracking-tighter">Premium Partner</span>
+<span class="text-[10px] text-outline">MAR 20, 2024 • SKU: PA-CRL-91</span>
+</div>
+<p class="text-on-surface text-sm leading-relaxed mb-4">
+                                Fastest transit time we've seen this month. The packaging was reinforced and arrived in perfect condition. Abyssal Enterprise continues to be our most reliable source for high-volume logistics.
+                            </p>
+<div class="flex items-center gap-4">
+<button class="text-primary text-xs font-bold flex items-center gap-1.5 hover:underline transition-all">
+<span class="material-symbols-outlined text-sm">reply</span>
+                                    Reply to Buyer
+                                </button>
+<button class="text-on-surface-variant text-xs font-medium flex items-center gap-1.5 hover:text-on-surface transition-all">
+<span class="material-symbols-outlined text-sm">flag</span>
+                                    Report
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-10 flex items-center justify-between border-t border-outline-variant/20 pt-6">
+<p class="text-sm text-on-surface-variant">Showing 1 to 10 of 1,284 reviews</p>
+<div class="flex gap-2">
+<button class="w-10 h-10 rounded-lg glass-panel flex items-center justify-center hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-lg bg-primary text-on-primary flex items-center justify-center font-bold text-sm">1</button>
+<button class="w-10 h-10 rounded-lg glass-panel flex items-center justify-center hover:bg-surface-container-high transition-colors text-sm">2</button>
+<button class="w-10 h-10 rounded-lg glass-panel flex items-center justify-center hover:bg-surface-container-high transition-colors text-sm">3</button>
+<button class="w-10 h-10 rounded-lg glass-panel flex items-center justify-center hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Mobile Navigation Bar -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-low border-t border-outline-variant/20 px-6 py-3 z-50 flex items-center justify-between">
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px]">Home</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-[10px]">Stock</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">reviews</span>
+<span class="text-[10px] font-bold">Reviews</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-[10px]">Payouts</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px]">Settings</span>
+</div>
+</nav>
+</body></html>

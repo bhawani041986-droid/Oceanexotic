@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Abyssal Enterprise | Merchant Messages</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#3e2e00",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "error-container": "#93000a",
+                        "primary-container": "#6750a4",
+                        "tertiary-fixed": "#ffdf93",
+                        "surface-bright": "#3b383e",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "on-background": "#e6e0e9",
+                        "surface-container-lowest": "#0f0d13",
+                        "primary": "#cfbcff",
+                        "surface-variant": "#36343a",
+                        "outline-variant": "#494551",
+                        "background": "#141218",
+                        "on-tertiary-container": "#503d00",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "secondary-container": "#4d4465",
+                        "primary-fixed-dim": "#cfbcff",
+                        "secondary-fixed": "#e9ddff",
+                        "surface-container-high": "#2b292f",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "surface-container-low": "#1d1b20",
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#322f35",
+                        "primary-fixed": "#e9ddff",
+                        "inverse-primary": "#6750a4",
+                        "on-primary-fixed": "#22005d",
+                        "outline": "#948e9c",
+                        "tertiary-container": "#c9a74d",
+                        "on-primary": "#381e72",
+                        "on-primary-container": "#e0d2ff",
+                        "on-error": "#690005",
+                        "surface-dim": "#141218",
+                        "secondary": "#cdc0e9",
+                        "on-surface-variant": "#cbc4d2",
+                        "tertiary": "#e7c365",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-secondary-container": "#bfb2da",
+                        "inverse-surface": "#e6e0e9",
+                        "surface-tint": "#cfbcff",
+                        "surface": "#141218",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "on-secondary": "#342b4b",
+                        "on-surface": "#e6e0e9",
+                        "surface-container-highest": "#36343a",
+                        "surface-container": "#211f24"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .chat-scroll::-webkit-scrollbar { width: 4px; }
+        .chat-scroll::-webkit-scrollbar-track { background: transparent; }
+        .chat-scroll::-webkit-scrollbar-thumb { background: #494551; border-radius: 10px; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background overflow-hidden">
+<!-- Sidebar Navigation Shell -->
+<aside class="h-screen w-[260px] fixed left-0 top-0 z-50 bg-surface-container-low border-r border-outline-variant/20 shadow-xl flex flex-col p-4 gap-2 hidden md:flex">
+<div class="flex items-center gap-3 px-2 mb-8">
+<div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">sailing</span>
+</div>
+<div>
+<h2 class="font-headline text-lg font-bold text-primary">DeepSea Exports</h2>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">AAA Grade Verified</p>
+</div>
+</div>
+<nav class="flex flex-col gap-1">
+<div class="group cursor-pointer transition-all duration-200 ease-in-out flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body text-body-sm font-medium">Dashboard</span>
+</div>
+<div class="group cursor-pointer transition-all duration-200 ease-in-out flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-body text-body-sm font-medium">Inventory</span>
+</div>
+<div class="group cursor-pointer transition-all duration-200 ease-in-out flex items-center gap-3 p-3 rounded-lg bg-primary-container/20 text-primary border-l-4 border-primary">
+<span class="material-symbols-outlined" data-icon="chat" style="font-variation-settings: 'FILL' 1;">chat</span>
+<span class="font-body text-body-sm font-medium">Messages</span>
+</div>
+<div class="group cursor-pointer transition-all duration-200 ease-in-out flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-body text-body-sm font-medium">Payouts</span>
+</div>
+<div class="group cursor-pointer transition-all duration-200 ease-in-out flex items-center gap-3 p-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body text-body-sm font-medium">Settings</span>
+</div>
+</nav>
+<div class="mt-auto p-4 bg-surface-container-highest/30 rounded-xl border border-outline-variant/10">
+<p class="text-[10px] text-primary uppercase font-bold mb-1">Premium Seller</p>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 bg-tertiary rounded-full animate-pulse"></div>
+<span class="text-xs text-on-surface">Live Market Active</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-[260px] h-screen flex flex-col">
+<!-- Header -->
+<header class="sticky top-0 w-full z-40 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm flex items-center justify-between px-6 py-4">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer active:opacity-80 md:hidden" data-icon="menu">menu</span>
+<h1 class="font-headline text-2xl font-bold tracking-tight text-primary">Abyssal Enterprise</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex bg-surface-container px-3 py-1.5 rounded-full border border-outline-variant/30 items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-xs text-on-surface w-40" placeholder="Search conversations..." type="text"/>
+</div>
+<span class="material-symbols-outlined text-primary cursor-pointer active:opacity-80" data-icon="more_vert">more_vert</span>
+</div>
+</header>
+<!-- Chat Layout -->
+<section class="flex-1 flex overflow-hidden">
+<!-- Conversation List -->
+<div class="w-full md:w-80 lg:w-[360px] border-r border-outline-variant/20 flex flex-col bg-surface-container-lowest">
+<div class="p-4 border-b border-outline-variant/10 flex justify-between items-center">
+<h3 class="font-semibold text-on-surface">Active Channels</h3>
+<span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded-full font-bold">12 TOTAL</span>
+</div>
+<div class="flex-1 overflow-y-auto chat-scroll">
+<!-- Conversation Item 1 (Active/Selected) -->
+<div class="p-4 bg-primary-container/10 border-l-4 border-primary cursor-pointer transition-colors">
+<div class="flex gap-3">
+<div class="relative">
+<img class="w-12 h-12 rounded-xl object-cover grayscale-[0.2]" data-alt="A professional close-up portrait of a male logistics manager in a dark navy suit against a deep slate gray background. The lighting is dramatic and moody, utilizing high-contrast cinematic shadows that highlight his sharp features. The overall aesthetic is corporate, technical, and high-end, mirroring a premium dark-mode interface with subtle purple undertones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuClVa-VMNTjCTtNfW8ohfw_odY7GNhvwu4LJctL7nMcOum5pK-unatGrPDxKzB7mN_700Hi1YTGkjcnvrRhgGwzLjtJyzjlcQ8GovF2xINKcotQsH9MNhf496UEWVuizFRJ_oqankMofz7FosOU8kmgKGg86CUMhVIAeAq01S4Hkznus4RlauaDSLHEpRCW4SlFo0gfPQ89doqryj_RQFjtnZfHrY6dKft42hfbzU3HAnxmaHdGVim2BMXuzLSrkthWlwrRpDGoWks"/>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-background rounded-full flex items-center justify-center">
+<div class="w-2.5 h-2.5 bg-green-500 rounded-full"></div>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-0.5">
+<h4 class="font-semibold text-on-surface truncate">Marcus Chen</h4>
+<span class="text-[10px] text-on-surface-variant">14:22</span>
+</div>
+<p class="text-sm text-primary font-medium truncate italic">"Could you confirm the cold-chain..."</p>
+<div class="flex items-center gap-1 mt-1">
+<span class="bg-tertiary-container/30 text-tertiary text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">Bluefin Tuna</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="w-2.5 h-2.5 bg-primary rounded-full mb-2"></div>
+</div>
+</div>
+</div>
+<!-- Conversation Item 2 -->
+<div class="p-4 hover:bg-surface-container-high/50 cursor-pointer transition-colors border-b border-outline-variant/10">
+<div class="flex gap-3">
+<div class="relative">
+<img class="w-12 h-12 rounded-xl object-cover grayscale" data-alt="A high-end corporate headshot of a female export executive with a confident expression. The environment is a minimalist tech office with deep charcoal walls and soft, ambient purple LED lighting strips in the background. The visual style is crisp, sophisticated, and professional, perfectly suited for an enterprise logistics dashboard with a dark, modern aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfWAjP33zHq13TBxuh_oFh0adVoo4ukKSQaSix9kWsGrkPr_o0d_2B-Z0FkHlUhrkPoWM5wlTNTXhZHSXVim2PRrZimSl1a1E1gZXLA6wuQeUd-WgO6xUzx8kX-cq79OOLV71w2k3lEN9OPsg_e4aGKzQHGVATRFhtO-Jvr4mv9w0WWvmFURlLXksu6aa6lRLhXNN4UJkpJE-Qvg2S00Jg3uO6hYD419FIum7JkR5h2OEz9VSYuRkWmpn_8TdWQ2eDvPiqrROW_SI"/>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-background rounded-full flex items-center justify-center">
+<div class="w-2.5 h-2.5 bg-outline rounded-full"></div>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-0.5">
+<h4 class="font-semibold text-on-surface-variant truncate">Elena Rodriguez</h4>
+<span class="text-[10px] text-on-surface-variant">09:15</span>
+</div>
+<p class="text-sm text-on-surface-variant truncate">The payout for Batch #492 has been processed.</p>
+</div>
+</div>
+</div>
+<!-- Conversation Item 3 -->
+<div class="p-4 hover:bg-surface-container-high/50 cursor-pointer transition-colors border-b border-outline-variant/10">
+<div class="flex gap-3">
+<div class="relative">
+<img class="w-12 h-12 rounded-xl object-cover grayscale" data-alt="A detailed portrait of a senior supply chain specialist with a thoughtful expression, set against a dark, industrial backdrop of a high-tech warehouse. Subtle blue and purple lighting filters through the scene, creating a sense of depth and technical precision. The image follows a high-performance, premium enterprise software visual language with a dark, slate-toned palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBD_Qu2NkT9bivr_DHXuaonaV-sTB5a9xhR8D5v1qTls2acA9qZFJI6I6YP_z2FpDz5nRZdHMTglKcy7VfdxW4d_68bBO3xNzzc0w5L3TT1ftweCVJDpzGMPcG2iCFbB4cDY0taTpML_ZY-D8NXp_LeNbsP7hU-36NNK5tWTpRqqzHKJm-HevWhwUS2aaN94dx54aLnFTYRbqCe4hJE1DBLEvw-Q2k6LZSHGaq04pCftWeSitDCGcrEJjIIXhvmlPaEB0xqgPe5lmg"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start mb-0.5">
+<h4 class="font-semibold text-on-surface-variant truncate">Saito Logistics</h4>
+<span class="text-[10px] text-on-surface-variant">Yesterday</span>
+</div>
+<p class="text-sm text-on-surface-variant truncate">Shipment is currently at Singapore Hub.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Chat Window -->
+<div class="flex-1 flex flex-col bg-surface-container">
+<!-- Chat Header -->
+<div class="px-6 py-4 border-b border-outline-variant/20 flex items-center justify-between bg-surface-container-high/30">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-xl overflow-hidden border border-primary/30">
+<img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwNqhxHxeMbP7UnrqVdWJxiL3fn-WdFqTLy_SEdYKKCzqtC9gLmXgEeI2yNcPYXtxH6F0xLk_6HvaeSOA6YgWctXhve71-vlgSkgh6SYjmrV6om7_jMGw3gPz-DNjjg_muRe93su1P7VndahEy0xNiyAb7UW9bBLTckMpm9LBAXpClgaGe7hg_82zfJR9rktOYgyLnxXJy21SXrxNcRnY8U1YBnz4IkFFj0R0MBeYB9apqAlPicwI1hzllSRC_sTNV466LZeyHc8Q"/>
+</div>
+<div>
+<h3 class="font-bold text-on-surface leading-tight">Marcus Chen</h3>
+<div class="flex items-center gap-2">
+<div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+<span class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest">Active Now • Global Logistics Corp</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="w-10 h-10 rounded-full hover:bg-surface-variant flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="videocam">videocam</span>
+</button>
+<button class="w-10 h-10 rounded-full hover:bg-surface-variant flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="call">call</span>
+</button>
+<button class="px-4 py-2 bg-primary text-on-primary text-xs font-bold rounded-lg shadow-lg shadow-primary/20 transition-transform active:scale-95">
+                            CREATE QUOTE
+                        </button>
+</div>
+</div>
+<!-- Messages Canvas -->
+<div class="flex-1 overflow-y-auto p-6 space-y-6 chat-scroll">
+<!-- Date Divider -->
+<div class="flex justify-center">
+<span class="text-[10px] text-on-surface-variant font-bold bg-surface-container-highest px-3 py-1 rounded-full border border-outline-variant/10 uppercase tracking-tighter">October 24, 2023</span>
+</div>
+<!-- Received Message -->
+<div class="flex items-end gap-3 max-w-[80%]">
+<img class="w-8 h-8 rounded-lg object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiYx8fPJdHyURB_Az_35EU4tpkWnxv9azrkby_oAT2b_C6Vt0NlrttVB8zNp5-bl5BbzRUJdC9cd-V02j0VpsQL_BAdoY5DwPjhEobkeavYP1lxNcEWO-4TuLgLMRmEvN2oO1Ay-gzpaB1s4sb_W9mxvb2umLK2Zyb1LZBqTBKJQUWxnLcDROzP911fFvsWWKlqa3_8Gu62bhdE9M3yaE0xF9gMEyPGs06zoL9GLmbglVq-vNJd9IIwNsKDbb8wfDWsXhjqEemS_o"/>
+<div class="space-y-1">
+<div class="bg-surface-container-highest text-on-surface px-4 py-3 rounded-2xl rounded-bl-none border border-outline-variant/10 shadow-sm">
+<p class="text-sm">Hello, I'm interested in the AAA Grade Bluefin Tuna listing. Could you confirm the cold-chain temperature logs for the last 48 hours?</p>
+</div>
+<p class="text-[10px] text-on-surface-variant ml-2">14:15</p>
+</div>
+</div>
+<!-- Sent Message -->
+<div class="flex items-end gap-3 max-w-[80%] ml-auto flex-row-reverse">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-[10px] font-bold text-on-primary-container">DE</div>
+<div class="space-y-1 items-end flex flex-col">
+<div class="bg-primary text-on-primary px-4 py-3 rounded-2xl rounded-br-none shadow-xl shadow-primary/10">
+<p class="text-sm font-medium">Absolutely, Marcus. Our IoT sensors recorded a consistent -60°C throughout the transit. I'm attaching the telemetry report now.</p>
+</div>
+<p class="text-[10px] text-on-surface-variant mr-2">14:18 • Delivered</p>
+</div>
+</div>
+<!-- File Attachment Sent -->
+<div class="flex items-end gap-3 max-w-[80%] ml-auto flex-row-reverse">
+<div class="w-8 h-8 invisible"></div>
+<div class="bg-surface-container-highest border border-primary/30 p-3 rounded-2xl flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="description" style="font-variation-settings: 'FILL' 1;">description</span>
+</div>
+<div class="flex-1">
+<p class="text-xs font-bold text-on-surface">telemetry_report_BFT_49.pdf</p>
+<p class="text-[10px] text-on-surface-variant">2.4 MB • PDF Document</p>
+</div>
+<span class="material-symbols-outlined text-primary cursor-pointer" data-icon="download">download</span>
+</div>
+</div>
+<!-- Received Message -->
+<div class="flex items-end gap-3 max-w-[80%]">
+<img class="w-8 h-8 rounded-lg object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCptrBZdNqtkD_E0t6dTHxWuqHapr1fEau99hmVE3Z882k5xorFrGU9mAHkZ2Sj4rvEh2nhtIWzQRD2LR4vetDuL9sHqNsQBa-7IjtiNwvby_anEXx_RnxBnxocMVkLr4f36mdvn8iXXnjckcA1xX9JeHL2fL6TVPM2XkTOeRQe4_TDyzkKlyUynKPultY72AMVrlzbwGkyZl6qw1WG0kumzxsVMmFBFbKWi7cOwzpurP4DxdxqOYRXFyntpNgLZPP8hJjJY3NPOCg"/>
+<div class="space-y-1">
+<div class="bg-surface-container-highest text-on-surface px-4 py-3 rounded-2xl rounded-bl-none border border-outline-variant/10 shadow-sm">
+<p class="text-sm">Excellent. Everything looks within tolerance. I will proceed with the purchase for the entire batch. Can we finalize the delivery window for tomorrow morning at the Tokyo port?</p>
+</div>
+<p class="text-[10px] text-on-surface-variant ml-2">14:22</p>
+</div>
+</div>
+</div>
+<!-- Input Area -->
+<div class="p-6 bg-surface-container-low border-t border-outline-variant/20">
+<div class="flex items-center gap-3 bg-surface-container-highest border border-outline-variant/30 rounded-2xl px-4 py-2 focus-within:border-primary/50 transition-colors shadow-inner">
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="add_circle">add_circle</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="image">image</span>
+</button>
+<div class="h-6 w-px bg-outline-variant/30 mx-1"></div>
+<input class="flex-1 bg-transparent border-none focus:ring-0 text-sm text-on-surface placeholder:text-on-surface-variant" placeholder="Type a message or use '/' for commands..." type="text"/>
+<button class="w-10 h-10 bg-primary text-on-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="send" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+<div class="flex gap-4 mt-3 px-2">
+<span class="text-[10px] text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="bolt">bolt</span> Press Enter to send
+                        </span>
+<span class="text-[10px] text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="attach_file">attach_file</span> Max size 50MB
+                        </span>
+</div>
+</div>
+</div>
+<!-- Details Sidebar (Contextual) -->
+<div class="hidden lg:flex w-72 flex-col bg-surface-container-low border-l border-outline-variant/20 p-6 overflow-y-auto chat-scroll">
+<h4 class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-6">Conversation Details</h4>
+<div class="space-y-8">
+<!-- Participant -->
+<div>
+<p class="text-[10px] text-primary font-bold uppercase mb-3">Customer Profile</p>
+<div class="flex items-center gap-3">
+<img class="w-10 h-10 rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEhWaGyYv3WsGXk4TU-RVcgk-yfHPevaX6O2ZtFzLtk4C2X8USQS1awDuqpssa4Vaz1cHoA5YHMKHZCAuZsBRw8ACUPZxFDUdquVXq-5SIRMzajJeszacSEwWJ8LP38HyOTv4oV1kgWCrHdY9D1cexI0Ta4uHhLVS97pKesdbZMHFm_IT39jox_S2N7k_ZlLZHQVJNhFhBFVRE8BToyAtGUZNPV5eshwgAkJqY_nfCxOS18y3eAZAMHVTp3fY8kmKuKb8TV5T_-XY"/>
+<div>
+<p class="text-sm font-bold text-on-surface">Marcus Chen</p>
+<p class="text-xs text-on-surface-variant">Global Logistics Corp</p>
+</div>
+</div>
+<div class="mt-4 flex gap-2">
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] border border-outline-variant/20 text-on-surface">Tier 1 Buyer</span>
+<span class="bg-surface-container-highest px-2 py-1 rounded text-[10px] border border-outline-variant/20 text-on-surface">Verified</span>
+</div>
+</div>
+<!-- Referenced Listing -->
+<div class="p-4 bg-surface-container-highest rounded-xl border border-primary/20">
+<p class="text-[10px] text-primary font-bold uppercase mb-2">Referenced Listing</p>
+<div class="aspect-video w-full rounded-lg mb-3 bg-surface overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A macro shot of fresh, premium AAA grade sashimi-grade bluefin tuna on a dark slate plate with ice crystals visible. The scene is illuminated with professional food photography lighting, emphasizing the deep red texture of the fish. The atmosphere is cold, fresh, and high-quality, fitting into a luxury dark-themed seafood export interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKptpWFC5-0kGbym5PVf1Ck1Ux2HUdtYsO05KC2micZxIvvAhnSAH9Fdm6xo6A5HkfVlAPAv7IqNiIzTuseO5OIPf-4GINuGoJq2rJPiAd3T4gT3jge3m8qOmdOhyTxKOtH-E2Chm6UupjBdI03nDZi4xeMjyVMZA_dk6zIvWF3MlSKg0GPuVTAhWXF68nWy8o_8hB3zbZajr5kINCHJt5yghU3bGj3Ic92sfY_NnQq18Qn8HST9X3A24yz9mIUv_b_XjTGC9lWa0"/>
+</div>
+<p class="text-sm font-bold text-on-surface leading-tight">Bluefin Tuna - Ultra Frozen AAA Grade</p>
+<p class="text-xs text-on-surface-variant mt-1">SKU: BFT-2023-492</p>
+<div class="flex items-center justify-between mt-3">
+<span class="text-primary font-bold">$12,400.00</span>
+<span class="text-[10px] text-on-surface-variant">In Stock: 14kg</span>
+</div>
+</div>
+<!-- Shared Assets -->
+<div>
+<div class="flex justify-between items-center mb-4">
+<p class="text-[10px] text-primary font-bold uppercase">Shared Media</p>
+<span class="text-[10px] text-on-surface-variant cursor-pointer hover:text-primary">View All</span>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<div class="aspect-square rounded-lg bg-surface-container-highest border border-outline-variant/20 flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A clean, scientific view of high-quality salmon fillets being prepared in a sterile, dark, high-tech processing facility. Bright white lighting highlights the fish against deep grey surfaces. The aesthetic is industrial, clinical, and emphasizes the freshness and high standard of the logistics chain." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaVyYKjxiPnVT38yEbx0nd7D_aZxapKNx3Sqhe1wmogov60i4tOkWN8PvcJVRx84QKXKr_XvD29ZSIPKrOdVWQteYeRvZLNMRcZoQ_BSrIhHNXxHrL0UVkxYcwi8n13YYXkkTCgpmECr9xpo9cEw_vgkTLJtgzUJFN46N3KcRzXmrSu7ne9sczSDElOBtkYr3LEswLorRFeNZMfU1vi-U6fb-clXKnLLYDEbbc9f9l1gxcNqGERuAaYEa3zxgordWB1JwZvjI0lnA"/>
+</div>
+<div class="aspect-square rounded-lg bg-surface-container-highest border border-outline-variant/20 flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A close-up shot of a temperature control display showing cold-chain monitoring in a shipping container. The digital readout is sharp and clear against a dark, metallic background with soft purple reflections. The look is technical, reliable, and represents cutting-edge aquaculture logistics technology." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWrQ2VHwsk00nSSTl6St7HDhyiYmmwXrrmUWsmyiDpLIpFOv6KOmveom8fcy1hrDFsKiM99u8mtsUigpBGJArA34qAupbkqprtTAVWl3_tHJQd57VZuWxVTyumdB1VRyWZCpEu3m8AQ-SjqTZrWK45ZTb2ZevypnpgHvppvAZeFJkyg1wc0_Rm41597ZLCfjMWVlPRxH39raBb9m1-3XP25mJ4OiytVXNi-Ud-h8d_2AaFxDMCtGHb_5u-2dm6t-SzbHraRk56P1c"/>
+</div>
+<div class="aspect-square rounded-lg bg-surface-container-highest border border-outline-variant/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="article">article</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Nav (Mobile) -->
+<nav class="md:hidden sticky bottom-0 w-full bg-surface-container px-4 py-2 border-t border-outline-variant/10 flex justify-around items-center">
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] font-medium">Dash</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="text-[10px] font-medium">Inv</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" data-icon="chat" style="font-variation-settings: 'FILL' 1;">chat</span>
+<span class="text-[10px] font-medium">Chat</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="text-[10px] font-medium">Pay</span>
+</div>
+</nav>
+</main>
+</body></html>

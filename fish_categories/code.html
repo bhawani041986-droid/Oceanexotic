@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Abyssal - Seafood Categories</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#0f0d13",
+                        "surface-container-highest": "#36343a",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "on-secondary": "#342b4b",
+                        "primary": "#cfbcff",
+                        "primary-fixed": "#e9ddff",
+                        "on-surface-variant": "#cbc4d2",
+                        "on-secondary-container": "#bfb2da",
+                        "error-container": "#93000a",
+                        "on-primary-container": "#e0d2ff",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#e6e0e9",
+                        "on-tertiary-container": "#503d00",
+                        "surface-container-high": "#2b292f",
+                        "surface-bright": "#3b383e",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "outline": "#948e9c",
+                        "secondary-container": "#4d4465",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "surface-variant": "#36343a",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "on-secondary-fixed": "#1f1635",
+                        "error": "#ffb4ab",
+                        "on-primary": "#381e72",
+                        "on-surface": "#e6e0e9",
+                        "primary-fixed-dim": "#cfbcff",
+                        "on-tertiary-fixed": "#241a00",
+                        "surface-container": "#211f24",
+                        "secondary-fixed": "#e9ddff",
+                        "surface-dim": "#141218",
+                        "surface-container-low": "#1d1b20",
+                        "inverse-primary": "#6750a4",
+                        "tertiary": "#e7c365",
+                        "primary-container": "#6750a4",
+                        "inverse-on-surface": "#322f35",
+                        "outline-variant": "#494551",
+                        "secondary": "#cdc0e9",
+                        "inverse-surface": "#e6e0e9",
+                        "on-tertiary": "#3e2e00",
+                        "background": "#141218",
+                        "on-error": "#690005",
+                        "surface": "#141218",
+                        "surface-tint": "#cfbcff",
+                        "on-primary-fixed": "#22005d",
+                        "tertiary-fixed": "#ffdf93",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "tertiary-container": "#c9a74d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "xxl": "1rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .category-gradient {
+            background: linear-gradient(to top, rgba(15, 13, 19, 0.9) 0%, rgba(15, 13, 19, 0.4) 50%, rgba(15, 13, 19, 0) 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 bg-surface/80 backdrop-blur-xl dark:bg-surface/80 border-b border-outline-variant/30 shadow-sm">
+<div class="flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="waves">waves</span>
+<h1 class="font-headline text-[18px] font-bold leading-tight text-page-title tracking-tight text-primary">Abyssal</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="active:scale-95 transition-transform text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+</button>
+</div>
+</div>
+</header>
+<main class="max-w-7xl mx-auto px-6 pt-8">
+<!-- Hero Title Section -->
+<div class="mb-10">
+<h2 class="text-[30px] font-bold font-headline mb-2 tracking-tight">Market Categories</h2>
+<p class="text-on-surface-variant text-body-lg">Precision-sourced seafood across global supply chains.</p>
+</div>
+<!-- Bento-inspired Category Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Category Card: Shellfish -->
+<div class="group relative overflow-hidden rounded-[16px] bg-surface-container border border-outline-variant/30 aspect-[4/3] cursor-pointer transition-all duration-300 hover:border-primary/50">
+<img alt="Shellfish" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A high-end cinematic macro shot of premium fresh oysters and mussels resting on a bed of crushed ice. The lighting is cold and atmospheric with deep oceanic blue tones and sharp highlights on the wet shells. The aesthetic is professional and clean, fitting a premium logistics platform with a focus on freshness and quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCiKO-xxTr-Us6s9zd9HSMcTkG-nrzkVBym_FrR8DtEbvzK9Jd5RutstIfTuLcctrCjGCa6K4UfBPFTKzum0ASIozwFepixPODkUwGx6LQDASWAsWyoCDVB6ZzUz0pWhNST1aBjUfK0616Z8Xn6KBwUGUJpeuN07kd9ctrHHbh4is9Ck0EfQitEcZVlxhn05mTIvbv46DNxxoyBiR1FM_pPxPfUbuM2AK7hqp2BzOiEJoKnSWNFeUGVJUVej9B_-f-ekinkju7YvU"/>
+<div class="absolute inset-0 category-gradient flex flex-col justify-end p-6">
+<div class="flex justify-between items-end">
+<div>
+<h3 class="text-xl font-bold font-headline text-white mb-1">Shellfish</h3>
+<p class="text-on-primary-container bg-primary-container/40 backdrop-blur-md px-3 py-1 rounded-full text-[12px] font-medium inline-block uppercase tracking-wider">124 Listings</p>
+</div>
+<div class="bg-primary text-on-primary w-10 h-10 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity translate-y-4 group-hover:translate-y-0 duration-300">
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Category Card: Cephalopods -->
+<div class="group relative overflow-hidden rounded-[16px] bg-surface-container border border-outline-variant/30 aspect-[4/3] cursor-pointer transition-all duration-300 hover:border-primary/50">
+<img alt="Cephalopods" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="An artistic, professional close-up of a fresh octopus on a slate surface, illuminated by surgical-style focused lighting that emphasizes the purple and silver skin textures. The environment is a professional kitchen or high-end market setting. The mood is clinical, clean, and technologically precise, consistent with an enterprise-grade aquaculture interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKi-h0eyOdkqUFXLglWxLJQcLNA-P5EesjHQ67Ndw6rVC0G9Kkyq8QPbRWLQVxFLOl_ipcpukAdqC7uA4UGpztTeCvHGx-EQXwsQUfxh617lkpjaViqozLDzRDYQyrZ_sPR4PqsyWp3fNPlfgsa-MCPKQ2_qktY0MQhCORHCRxjtt0pcGpK-cUp3GkTV7FVPKw06mW2Tnj95SHI7Z8nC4Fdeb9j_BNs5n_jIaDCQnugGaDjuVNzt3iS7qR9DTdGl2TdQYC2Wy5dN4"/>
+<div class="absolute inset-0 category-gradient flex flex-col justify-end p-6">
+<div class="flex justify-between items-end">
+<div>
+<h3 class="text-xl font-bold font-headline text-white mb-1">Cephalopods</h3>
+<p class="text-on-primary-container bg-primary-container/40 backdrop-blur-md px-3 py-1 rounded-full text-[12px] font-medium inline-block uppercase tracking-wider">86 Listings</p>
+</div>
+<div class="bg-primary text-on-primary w-10 h-10 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity translate-y-4 group-hover:translate-y-0 duration-300">
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Category Card: Cold Water Fish -->
+<div class="group relative overflow-hidden rounded-[16px] bg-surface-container border border-outline-variant/30 aspect-[4/3] cursor-pointer transition-all duration-300 hover:border-primary/50">
+<img alt="Cold Water Fish" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A side view of a premium fresh salmon fillet showing deep orange flesh and silver skin, placed on a futuristic metal cooling tray with subtle condensation. The lighting is crisp and cool, featuring vibrant purples and deep slates in the background. The visual style reflects high-tech logistics and temperature-controlled freshness." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCz3S-WEMbSOjIa1nt9Ftze5ojkG0VADdQBNp_uNrz04P_ft4QHBdpcxLba6tqVjFbexaQHGLqM4TJkCo1Ggcho1XxbsA6GKE-xlNTJxZQjljT4QpA3Xu4m33GFFjPt6XdHtAU6VAZ7dW7Iu7GIZCSPlG0ePQvhQ-ODzgxrIrNDC7lpcbXkBw0tIRAMd5cnV7J7CBYM5RYUfpzJj-FdoLRG0p-sjMVaYStZsHGBE5DRDwR4KmC0bFo5OcObdkHZG6CWkch8zJzOoO4"/>
+<div class="absolute inset-0 category-gradient flex flex-col justify-end p-6">
+<div class="flex justify-between items-end">
+<div>
+<h3 class="text-xl font-bold font-headline text-white mb-1">Cold Water Fish</h3>
+<p class="text-on-primary-container bg-primary-container/40 backdrop-blur-md px-3 py-1 rounded-full text-[12px] font-medium inline-block uppercase tracking-wider">312 Listings</p>
+</div>
+<div class="bg-primary text-on-primary w-10 h-10 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity translate-y-4 group-hover:translate-y-0 duration-300">
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Category Card: Pelagic -->
+<div class="group relative overflow-hidden rounded-[16px] bg-surface-container border border-outline-variant/30 aspect-[4/3] cursor-pointer transition-all duration-300 hover:border-primary/50">
+<img alt="Pelagic Fish" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Fresh bluefin tuna in a high-density industrial market setting. The image is captured with a shallow depth of field, focusing on the metallic sheen of the fish skin under professional warehouse lighting. The color palette is dominated by deep oceanic slates and vibrant purple accent lighting from a nearby terminal." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAyzuZ_c_qjspPhIZmxyHFUJEmC8vYmV9l8eqwScISOEn6STm99raJ2eZckyTSq2iXxW2gyTVvovxNCUUQl_LaFtsEd0nsK4_GBk_hK-JlwdWAlI-SHS7-WcPohiK_Cs85Ig8gU_awh-fPwdd-l96KjvIY3qk-uGJBq5LzIvIjj_5GFNyW4UaM_JsERhVSVmkYNOrG0rQhVuWl0PxMKfIDvirLIyT3sNzyGAXq7Hwcfi_AEyJyfnQ78Dr5aQYrzhZzPlZmqDTA6rAU"/>
+<div class="absolute inset-0 category-gradient flex flex-col justify-end p-6">
+<div class="flex justify-between items-end">
+<div>
+<h3 class="text-xl font-bold font-headline text-white mb-1">Pelagic</h3>
+<p class="text-on-primary-container bg-primary-container/40 backdrop-blur-md px-3 py-1 rounded-full text-[12px] font-medium inline-block uppercase tracking-wider">54 Listings</p>
+</div>
+<div class="bg-primary text-on-primary w-10 h-10 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity translate-y-4 group-hover:translate-y-0 duration-300">
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Category Card: Crustaceans -->
+<div class="group relative overflow-hidden rounded-[16px] bg-surface-container border border-outline-variant/30 aspect-[4/3] cursor-pointer transition-all duration-300 hover:border-primary/50">
+<img alt="Crustaceans" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Close up of a premium lobster and king crab legs displayed on dark ice in a luxury seafood market. The shell colors are vibrant against a dark, moody background. Professional studio lighting highlights the texture of the shells and the glistening moisture of fresh catch. The overall tone is sophisticated and premium." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7DrqzdxJubp1YyaPnguqPoiVY6TxsnqOobwg3yHtyClWAifrjIxr_CsCCEcabl3F3c6o3BBogLJyyD8EJRFowC04n5SGJWbahkmCKOGRQsNcHIsSiOgrSCiFpX996lQ4ZeCtQSthoRNP_5Zlhc3uMh1fS1SRDZdo-NEsSZnEIfiaJliOwfb1XS1Nyx-4eCpJUijkpl6XFqgniS78pBb1qir0IkYaugY4hb3GZtsVJbvHlShH42V_u3Q2wsl2IxAtkcDbU4txqt5c"/>
+<div class="absolute inset-0 category-gradient flex flex-col justify-end p-6">
+<div class="flex justify-between items-end">
+<div>
+<h3 class="text-xl font-bold font-headline text-white mb-1">Crustaceans</h3>
+<p class="text-on-primary-container bg-primary-container/40 backdrop-blur-md px-3 py-1 rounded-full text-[12px] font-medium inline-block uppercase tracking-wider">198 Listings</p>
+</div>
+<div class="bg-primary text-on-primary w-10 h-10 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity translate-y-4 group-hover:translate-y-0 duration-300">
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Category Card: Smoked & Processed -->
+<div class="group relative overflow-hidden rounded-[16px] bg-surface-container border border-outline-variant/30 aspect-[4/3] cursor-pointer transition-all duration-300 hover:border-primary/50">
+<img alt="Smoked &amp; Processed" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Artisanal smoked salmon slices laid out on a dark slate board with professional garnishing. The lighting is warm yet moody, with deep blacks and vibrant orange-pinks. The composition is precise and minimalist, evoking a sense of high-quality value-added logistics and premium distribution services." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAOAR0bNyAZGhgehP6X2esujuJME-OYwwIoqsy31P79FIM46twlNYF5mPrWeO21zX8qIrjFKfIP8M3zl8OvpKlfKLRt7pY6r16OueL7W9gCm5xeXqaomaTje-ez9j-_7i07OvOKsRFDu_exWM6gOaNT3tPzdwruUvZCZc7FDTYUOELbMkuXpdOT_XHsP1CtM9FOAyD5rdst24ux9NLUm7MIjt8_WJzt-k4lXiQJhjPigofgxX_L7b9sFiDT9EKkUR7De14Ush_RCw"/>
+<div class="absolute inset-0 category-gradient flex flex-col justify-end p-6">
+<div class="flex justify-between items-end">
+<div>
+<h3 class="text-xl font-bold font-headline text-white mb-1">Value-Added</h3>
+<p class="text-on-primary-container bg-primary-container/40 backdrop-blur-md px-3 py-1 rounded-full text-[12px] font-medium inline-block uppercase tracking-wider">42 Listings</p>
+</div>
+<div class="bg-primary text-on-primary w-10 h-10 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity translate-y-4 group-hover:translate-y-0 duration-300">
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom padding for nav bar -->
+<div class="h-12"></div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container-low/90 backdrop-blur-md dark:bg-surface-container-lowest/90 border-t border-outline-variant/20 shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
+<div class="flex justify-around items-center w-full px-2 py-3 pb-safe">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label text-[12px] font-medium tracking-wider uppercase mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container/20 text-primary rounded-xl px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-label text-[12px] font-medium tracking-wider uppercase mt-1">Market</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label text-[12px] font-medium tracking-wider uppercase mt-1">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label text-[12px] font-medium tracking-wider uppercase mt-1">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>

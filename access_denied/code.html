@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#e6e0e9",
+                        "background": "#141218",
+                        "surface-container-lowest": "#0f0d13",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "surface-tint": "#cfbcff",
+                        "tertiary-container": "#c9a74d",
+                        "surface-container": "#211f24",
+                        "on-error": "#690005",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-surface": "#e6e0e9",
+                        "surface-bright": "#3b383e",
+                        "primary-container": "#6750a4",
+                        "error": "#ffb4ab",
+                        "outline": "#948e9c",
+                        "on-secondary": "#342b4b",
+                        "on-tertiary": "#3e2e00",
+                        "on-primary": "#381e72",
+                        "surface-dim": "#141218",
+                        "surface-container-low": "#1d1b20",
+                        "primary-fixed-dim": "#cfbcff",
+                        "tertiary": "#e7c365",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "secondary-container": "#4d4465",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed": "#ffdf93",
+                        "primary-fixed": "#e9ddff",
+                        "surface": "#141218",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-primary-fixed": "#22005d",
+                        "error-container": "#93000a",
+                        "surface-variant": "#36343a",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "on-secondary-container": "#bfb2da",
+                        "secondary-fixed": "#e9ddff",
+                        "primary": "#cfbcff",
+                        "outline-variant": "#494551",
+                        "on-primary-container": "#e0d2ff",
+                        "surface-container-high": "#2b292f",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "surface-container-highest": "#36343a",
+                        "secondary": "#cdc0e9",
+                        "on-surface-variant": "#cbc4d2",
+                        "inverse-primary": "#6750a4",
+                        "on-background": "#e6e0e9",
+                        "inverse-on-surface": "#322f35",
+                        "on-tertiary-container": "#503d00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-abyssal-gradient {
+            background: radial-gradient(circle at center, #211f24 0%, #141218 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col overflow-hidden">
+<header class="sticky top-0 w-full z-40 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-sm">
+<div class="flex items-center justify-between px-6 h-16 w-full max-w-[1440px] mx-auto">
+<div class="text-xl font-bold tracking-tight text-primary">Abyssal Enterprise</div>
+<div class="flex gap-4 items-center">
+<span class="text-on-surface-variant font-label text-sm uppercase tracking-widest">Secure Terminal</span>
+<span class="material-symbols-outlined text-primary" data-icon="lock">lock</span>
+</div>
+</div>
+</header>
+<main class="flex-grow flex items-center justify-center p-6 relative">
+<div class="absolute inset-0 z-0 opacity-20 pointer-events-none overflow-hidden">
+<div class="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-primary/20 rounded-full blur-[120px]"></div>
+<div class="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] bg-secondary-container/20 rounded-full blur-[120px]"></div>
+</div>
+<div class="w-full max-w-2xl z-10">
+<div class="bg-surface-container border border-white/5 rounded-xl shadow-2xl p-12 text-center backdrop-blur-md relative overflow-hidden group">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
+<div class="mb-10 relative inline-flex items-center justify-center">
+<div class="absolute inset-0 bg-primary/10 rounded-full blur-2xl animate-pulse"></div>
+<div class="relative bg-surface-container-high p-8 rounded-full border border-primary/20 shadow-[0_0_50px_rgba(207,188,255,0.1)]">
+<span class="material-symbols-outlined text-[80px] leading-none text-primary" data-icon="encrypted" style="font-variation-settings: 'FILL' 1;">encrypted</span>
+<div class="absolute -bottom-2 -right-2 bg-error-container p-3 rounded-full border-4 border-surface-container shadow-xl">
+<span class="material-symbols-outlined text-white text-2xl" data-icon="block">block</span>
+</div>
+</div>
+</div>
+<div class="space-y-6 max-w-md mx-auto">
+<h1 class="font-headline text-[30px] font-bold leading-tight text-on-surface tracking-tight">
+                        Authorization Required
+                    </h1>
+<p class="text-on-surface-variant text-lg leading-relaxed">
+                        Your current credentials do not have clearance for this sector. Please contact your Department Head or the Logistics Administrator to upgrade your permissions.
+                    </p>
+<div class="pt-6 flex flex-col sm:flex-row gap-4 justify-center">
+<button class="bg-primary text-on-primary h-[44px] px-8 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-primary-container transition-all active:scale-95 duration-200 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-xl" data-icon="request_quote">request_quote</span>
+                            Request Access
+                        </button>
+<button class="bg-surface-container-highest text-on-surface h-[44px] px-8 rounded-xl font-semibold flex items-center justify-center gap-2 border border-outline-variant hover:bg-surface-bright transition-all active:scale-95 duration-200">
+<span class="material-symbols-outlined text-xl" data-icon="logout">logout</span>
+                            Log Out
+                        </button>
+</div>
+</div>
+<div class="mt-12 flex items-center justify-center gap-6">
+<div class="flex flex-col items-center">
+<span class="text-[10px] uppercase tracking-widest text-outline mb-1 font-label">Error Code</span>
+<span class="font-mono text-sm text-primary">403_FORBIDDEN_ZONE</span>
+</div>
+<div class="w-px h-8 bg-outline-variant"></div>
+<div class="flex flex-col items-center">
+<span class="text-[10px] uppercase tracking-widest text-outline mb-1 font-label">Security Tier</span>
+<span class="font-mono text-sm text-tertiary">LVL_4_ENCRYPTED</span>
+</div>
+</div>
+</div>
+<div class="mt-8 text-center">
+<p class="text-on-surface-variant/40 text-[12px] font-label tracking-widest">
+                    SECURED BY ABYSSAL ENTERPRISE CRYPTO-LOGISTICS V2.4.0
+                </p>
+</div>
+</div>
+</main>
+<div class="hidden md:block fixed bottom-8 right-8 z-50">
+<div class="bg-surface-container-highest border border-white/10 p-4 rounded-xl shadow-2xl backdrop-blur-lg max-w-[280px]">
+<div class="flex items-start gap-4">
+<div class="bg-primary/20 p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary text-xl" data-icon="security">security</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-on-surface">Security Event Logged</h4>
+<p class="text-xs text-on-surface-variant mt-1 leading-tight">This unauthorized access attempt has been recorded with your biometric signature.</p>
+</div>
+</div>
+</div>
+</div>
+</body></html>

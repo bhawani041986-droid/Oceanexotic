@@ -1,0 +1,549 @@
+# BLUEPRINT.md
+# OceanFresh — Full Product Development Blueprint
+
+Version: 1.0
+Framework: Next.js + Tailwind CSS + TypeScript
+AI IDE Target: Antigravity IDE
+Secondary Support: Cursor / Windsurf / Claude Code
+
+====================================================
+PROJECT OVERVIEW
+====================================================
+
+OceanFresh is a modern multi-role seafood commerce platform.
+
+The system includes:
+
+1. Customer Marketplace
+2. Seller Dashboard
+3. Admin Dashboard
+
+The application must feel:
+- Premium
+- Enterprise-grade
+- Mobile-first
+- Highly scalable
+- AI-development friendly
+- Component-driven
+- Fully reusable
+
+IMPORTANT:
+This blueprint is the SINGLE SOURCE OF TRUTH for Antigravity IDE.
+
+Antigravity MUST:
+- Follow this architecture exactly
+- Preserve design consistency
+- Avoid redesigning UI
+- Reuse components everywhere
+- Maintain strict coding standards
+
+====================================================
+CORE DEVELOPMENT PRINCIPLES
+====================================================
+
+NEVER:
+- Randomly redesign UI
+- Create inconsistent spacing
+- Create duplicate components
+- Change design tokens
+- Use inline styles
+- Use inconsistent Tailwind utilities
+- Create random page layouts
+
+ALWAYS:
+- Reuse components
+- Reuse spacing system
+- Use design tokens
+- Preserve responsiveness
+- Use TypeScript strictly
+- Use modular architecture
+- Maintain scalable folder structure
+
+====================================================
+TECH STACK
+====================================================
+
+FRONTEND:
+- Next.js App Router
+- React 19
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Framer Motion
+
+STATE MANAGEMENT:
+- Zustand
+
+FORMS:
+- React Hook Form
+- Zod validation
+
+AUTH:
+- Supabase Auth OR Clerk
+
+DATABASE:
+- PostgreSQL
+
+BACKEND:
+- Supabase OR Node.js API
+
+FILE STORAGE:
+- Supabase Storage
+- Cloudinary
+
+PAYMENTS:
+- Stripe
+- Razorpay
+
+MAPS:
+- Google Maps API
+
+REALTIME:
+- Supabase Realtime
+
+CHARTS:
+- Recharts
+
+TABLES:
+- TanStack Table
+
+====================================================
+PROJECT FOLDER STRUCTURE
+====================================================
+
+src/
+│
+├── app/
+│   ├── admin/
+│   ├── seller/
+│   ├── customer/
+│   ├── auth/
+│   └── api/
+│
+├── components/
+│   ├── ui/
+│   ├── shared/
+│   ├── customer/
+│   ├── seller/
+│   ├── admin/
+│   └── layouts/
+│
+├── hooks/
+├── lib/
+├── services/
+├── store/
+├── styles/
+├── constants/
+├── types/
+├── validators/
+├── config/
+├── utils/
+└── providers/
+
+====================================================
+ROUTE STRUCTURE
+====================================================
+
+AUTH ROUTES:
+/login
+/register
+/forgot-password
+/reset-password
+/verify-otp
+
+CUSTOMER:
+/customer
+/customer/products
+/customer/product/[id]
+/customer/cart
+/customer/checkout
+/customer/orders
+/customer/profile
+/customer/wishlist
+
+SELLER:
+/seller/dashboard
+/seller/products
+/seller/orders
+/seller/reviews
+/seller/analytics
+
+ADMIN:
+/admin/dashboard
+/admin/users
+/admin/orders
+/admin/reviews
+/admin/analytics
+/admin/settings
+
+====================================================
+DESIGN SYSTEM IMPLEMENTATION
+====================================================
+
+IMPORTANT:
+Use ONLY design tokens from DESIGN.md
+
+DO NOT:
+- Use arbitrary colors
+- Use arbitrary spacing
+- Use inline random CSS
+
+ALWAYS:
+- Use Tailwind config tokens
+- Use shared utility classes
+- Use reusable UI primitives
+
+====================================================
+TAILWIND RULES
+====================================================
+
+USE:
+- tailwind.config.ts tokens
+- Utility-first styling
+- Shared variants
+
+NEVER:
+- Use hardcoded px values randomly
+- Use inline styles
+- Use inconsistent margins
+
+====================================================
+GLOBAL COMPONENT RULES
+====================================================
+
+ALL components MUST:
+- Be reusable
+- Be responsive
+- Support dark mode
+- Support loading states
+- Support error states
+- Use TypeScript interfaces
+
+====================================================
+UI COMPONENT ARCHITECTURE
+====================================================
+
+CORE UI COMPONENTS:
+
+Button
+Input
+Textarea
+Modal
+Drawer
+Dropdown
+Tooltip
+Popover
+Card
+Badge
+Avatar
+Tabs
+Accordion
+Table
+Pagination
+Toast
+Skeleton
+Loader
+
+====================================================
+CUSTOMER UI COMPONENTS
+====================================================
+
+ProductCard
+CategoryCard
+SellerCard
+CartItem
+CheckoutSummary
+ReviewCard
+WishlistCard
+SearchBar
+DeliveryTracker
+PromoBanner
+
+====================================================
+SELLER COMPONENTS
+====================================================
+
+InventoryCard
+RevenueChart
+OrderTable
+ReviewAnalytics
+ListingForm
+SellerStatsCard
+
+====================================================
+ADMIN COMPONENTS
+====================================================
+
+AnalyticsCards
+ManagementTable
+RoleManager
+ReviewModerationPanel
+ActivityFeed
+AuditLogs
+
+====================================================
+AUTH SYSTEM BLUEPRINT
+====================================================
+
+FEATURES:
+- Email/password login
+- OTP verification
+- Password recovery
+- Role-based authentication
+- Session handling
+- Protected routes
+
+USER ROLES:
+- customer
+- seller
+- admin
+
+====================================================
+DATABASE BLUEPRINT
+====================================================
+
+TABLES:
+
+users
+profiles
+products
+categories
+orders
+order_items
+reviews
+seller_profiles
+payments
+addresses
+notifications
+wishlists
+inventory
+refunds
+support_tickets
+
+====================================================
+API STRUCTURE
+====================================================
+
+Use service-based architecture.
+
+services/
+├── auth.service.ts
+├── product.service.ts
+├── order.service.ts
+├── payment.service.ts
+├── review.service.ts
+
+====================================================
+STATE MANAGEMENT BLUEPRINT
+====================================================
+
+Use Zustand stores.
+
+stores/
+├── authStore.ts
+├── cartStore.ts
+├── uiStore.ts
+├── productStore.ts
+
+====================================================
+FORM SYSTEM RULES
+====================================================
+
+ALL forms MUST:
+- Use React Hook Form
+- Use Zod validation
+- Support loading states
+- Show inline validation
+- Support mobile responsiveness
+
+====================================================
+ERROR HANDLING
+====================================================
+
+Implement:
+- 404 page
+- 500 page
+- Loading states
+- Skeletons
+- Retry handling
+- Toast notifications
+
+====================================================
+RESPONSIVE DEVELOPMENT RULES
+====================================================
+
+MOBILE FIRST.
+
+DESKTOP:
+- Sidebar layout
+
+MOBILE:
+- Bottom navigation
+- Drawer menus
+- Sticky CTA buttons
+
+====================================================
+IMAGE HANDLING
+====================================================
+
+Use:
+- next/image
+- Lazy loading
+- Optimized images
+- Blur placeholders
+
+====================================================
+ANIMATION RULES
+====================================================
+
+Use Framer Motion ONLY for:
+- Page transitions
+- Modal animations
+- Hover interactions
+- Loading states
+
+DO NOT:
+- Overanimate
+- Use flashy effects
+
+====================================================
+ACCESSIBILITY RULES
+====================================================
+
+ALL pages MUST:
+- Support keyboard navigation
+- Have focus states
+- Use semantic HTML
+- Have accessible labels
+
+====================================================
+PERFORMANCE RULES
+====================================================
+
+USE:
+- Dynamic imports
+- Lazy loading
+- Memoization
+- Suspense
+- Optimized assets
+
+====================================================
+CODE QUALITY RULES
+====================================================
+
+STRICT TYPESCRIPT.
+
+NO:
+- any types
+- duplicated logic
+- deeply nested components
+- messy imports
+
+USE:
+- clean architecture
+- modular code
+- reusable hooks
+
+====================================================
+AI DEVELOPMENT RULES FOR ANTIGRAVITY
+====================================================
+
+IMPORTANT:
+
+Antigravity MUST NOT:
+- Redesign layouts
+- Change spacing
+- Change component sizes
+- Change typography
+- Create duplicate styles
+
+Antigravity MUST:
+- Follow DESIGN.md exactly
+- Reuse components
+- Extend functionality only
+- Keep visual consistency
+
+====================================================
+PAGE DEVELOPMENT ORDER
+====================================================
+
+PHASE 1:
+- Design system setup
+- Tailwind setup
+- Shared UI components
+
+PHASE 2:
+- Authentication system
+- Route protection
+
+PHASE 3:
+- Customer marketplace
+
+PHASE 4:
+- Seller dashboard
+
+PHASE 5:
+- Admin dashboard
+
+PHASE 6:
+- Payments
+- Notifications
+- Realtime updates
+
+PHASE 7:
+- Optimization
+- Testing
+- Deployment
+
+====================================================
+TESTING RULES
+====================================================
+
+Implement:
+- Unit tests
+- Integration tests
+- E2E tests
+
+TOOLS:
+- Vitest
+- Playwright
+
+====================================================
+DEPLOYMENT BLUEPRINT
+====================================================
+
+Hosting:
+- Vercel
+
+Database:
+- Supabase
+
+Storage:
+- Cloudinary
+
+Monitoring:
+- Sentry
+
+Analytics:
+- PostHog
+
+====================================================
+FINAL PRODUCT GOAL
+====================================================
+
+The final application must feel:
+- Premium
+- Cohesive
+- Scalable
+- Enterprise-ready
+- Beautiful
+- Production-grade
+
+The UI should feel:
+- Consistent
+- Fast
+- Modern
+- Ocean-inspired
+- Mobile optimized
+
+This blueprint MUST guide ALL Antigravity development decisions.

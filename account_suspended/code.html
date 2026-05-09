@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Account Suspended | Abyssal Enterprise</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#e6e0e9",
+                        "background": "#141218",
+                        "surface-container-lowest": "#0f0d13",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "surface-tint": "#cfbcff",
+                        "tertiary-container": "#c9a74d",
+                        "surface-container": "#211f24",
+                        "on-error": "#690005",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-surface": "#e6e0e9",
+                        "surface-bright": "#3b383e",
+                        "primary-container": "#6750a4",
+                        "error": "#ffb4ab",
+                        "outline": "#948e9c",
+                        "on-secondary": "#342b4b",
+                        "on-tertiary": "#3e2e00",
+                        "on-primary": "#381e72",
+                        "surface-dim": "#141218",
+                        "surface-container-low": "#1d1b20",
+                        "primary-fixed-dim": "#cfbcff",
+                        "tertiary": "#e7c365",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "secondary-container": "#4d4465",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed": "#ffdf93",
+                        "primary-fixed": "#e9ddff",
+                        "surface": "#141218",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-primary-fixed": "#22005d",
+                        "error-container": "#93000a",
+                        "surface-variant": "#36343a",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "on-secondary-container": "#bfb2da",
+                        "secondary-fixed": "#e9ddff",
+                        "primary": "#cfbcff",
+                        "outline-variant": "#494551",
+                        "on-primary-container": "#e0d2ff",
+                        "surface-container-high": "#2b292f",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "surface-container-highest": "#36343a",
+                        "secondary": "#cdc0e9",
+                        "on-surface-variant": "#cbc4d2",
+                        "inverse-primary": "#6750a4",
+                        "on-background": "#e6e0e9",
+                        "inverse-on-surface": "#322f35",
+                        "on-tertiary-container": "#503d00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-deep-ocean {
+            background: radial-gradient(circle at top right, #211f24 0%, #141218 100%);
+        }
+        .glass-panel {
+            background: rgba(33, 31, 36, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col overflow-hidden">
+<!-- TopAppBar - Suppressed Navigation, showing Identity Only for Transactional/Restriction State -->
+<header class="sticky top-0 w-full z-40 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-sm">
+<div class="flex items-center justify-between px-6 h-16 w-full max-w-[1440px] mx-auto">
+<div class="flex items-center gap-3">
+<span class="text-xl font-bold tracking-tight text-primary">Abyssal Enterprise</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-on-surface-variant px-3 py-1.5 rounded-full bg-surface-container-high/50">
+<span class="material-symbols-outlined text-[18px]">support_agent</span>
+<span class="text-xs font-medium">Help Center</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content: Task-Focused Screen (Shell Suppressed) -->
+<main class="flex-grow flex items-center justify-center p-6 bg-deep-ocean relative overflow-hidden">
+<!-- Abstract Deep Sea Tech Decor -->
+<div class="absolute top-1/4 -left-20 w-96 h-96 bg-primary/5 rounded-full blur-[100px]"></div>
+<div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-error/5 rounded-full blur-[100px]"></div>
+<div class="max-w-xl w-full flex flex-col items-center animate-fade-in">
+<!-- Warning Visual -->
+<div class="relative mb-10">
+<div class="absolute inset-0 bg-error/20 blur-2xl rounded-full scale-150"></div>
+<div class="relative flex items-center justify-center w-24 h-24 rounded-full bg-surface-container-highest border border-error/30">
+<span class="material-symbols-outlined text-[48px] text-[#EF4444]" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+</div>
+<!-- Restriction Card -->
+<div class="glass-panel w-full p-8 md:p-12 rounded-xl text-center shadow-2xl">
+<h1 class="font-headline text-[30px] font-bold leading-tight text-on-surface mb-4">
+                    Account Deactivated
+                </h1>
+<p class="text-on-surface-variant text-lg leading-relaxed mb-10 max-w-md mx-auto">
+                    Your access has been restricted due to a compliance violation or pending verification. Please contact support to resolve.
+                </p>
+<div class="flex flex-col gap-4">
+<!-- Action Button -->
+<button class="w-full bg-primary text-on-primary font-semibold h-11 px-8 rounded-xl active:scale-95 transition-all duration-200 hover:bg-primary/90 shadow-lg shadow-primary/10">
+                        Appeal Suspension
+                    </button>
+<button class="w-full bg-transparent text-on-surface font-medium h-11 px-8 rounded-xl border border-outline/30 hover:bg-surface-bright/20 transition-all">
+                        Sign out
+                    </button>
+</div>
+</div>
+<!-- Footer Details -->
+<div class="mt-12 flex flex-col items-center gap-6">
+<div class="flex gap-8 text-on-surface-variant/60 text-xs tracking-widest uppercase font-medium">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+<span>Protocol ID: AB-9921</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span>Restricted: 24 OCT 2023</span>
+</div>
+</div>
+<!-- Support Image Decoration -->
+<div class="flex -space-x-3 mt-4">
+<img class="w-10 h-10 rounded-full border-2 border-background object-cover" data-alt="A portrait of a professional technology support specialist wearing a high-end headset in a dimly lit, modern command center environment. The lighting is dominated by soft indigo and deep purple hues, reflecting the corporate tech aesthetic. The specialist has a calm and focused expression, suggesting reliability and expertise in handling complex technical logistics or compliance issues." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqz2KjCnNUcW1rFDUWQam-F41c64oUuvOWAil7j64iPZt0N9ae4hb8yzS4YYtWsmMGGGbKiSV1y58QmcN-UnOg3XBp_MfsjO14AdncZWRm-MEIJTFi4WhMbM77eb7Gg2s68gxbs4GuxfwSQZ-ApM0IdDztwHjx7d7h6iIUJjr0v7aYg3n8AXIQv63E0ByKurWEd707KTOub060qlUqGR6-EMEJrXztq_SNT9uQmrTwGde7XOgIMDubFjkPm-y4y4P65PNuy3t-sdI"/>
+<img class="w-10 h-10 rounded-full border-2 border-background object-cover" data-alt="A close-up portrait of a female executive in a sleek, charcoal-colored professional suit, set against a background of glowing server lights and data streams. The visual style is premium minimalist with a strong dark-mode color palette of deep blacks and cool slates. Her confident gaze communicates trust and authority in managing international trade and compliance operations." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdCoT_tV2MLuoXzciKEH2G_Aik_BdNT3XVatv8M7UWAs-DxZynXY2O0OqVBsRFt57uzb8V5JG5982uWkmAthdmz3XmVlBE5Sw4v3Yue4NGPXy1tH_JuN4-4o8soQcQugxh0n6CcUzoutQvRN2VHYA4Ompaq2NV_k6Ihi_AE5p3HgbNb6Qsl6P6P7Jv3HJwm_0Ohnch3xS3eZALfvI7vj00WU1Y1qQoSgEFDMxWk6s9ypBg7EcS4ajLBq_p1aNVFey9vWmZcE7gAvc"/>
+<img class="w-10 h-10 rounded-full border-2 border-background object-cover" data-alt="A portrait of a male corporate officer in a minimalist dark office with subtle purple neon accent lighting. The image captures a clean, professional look with sharp focus and cinematic depth of field. The lighting highlights the textures of a tailored suit and the soft glow of a nearby holographic interface, emphasizing the advanced technological nature of the enterprise." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4teIE5wNuJUFiGLqs4S9vI-l81SJZQ4MOUIGajNCw1Y_0JfFX-ix0aFZ26aZbXR2_nPxX7PsSclqpgePFG65bDx-8Oinaj_FEILX8ycWGNaXP1GDFKHo-XkBUlTwBYuvFpFQGw0Upj3d92sqVwVamC7Ch-eBbJx8rnAe5zspc-74ICTR8CXRM3jWb21Ubf1FG_4ntvMYhpl2riSKeB8tf3M5kvXg5lcmIzHvXWwBsgkqM2Io1YX2z8zIhvr-gNUkZxDsoGq832qY"/>
+<div class="w-10 h-10 rounded-full border-2 border-background bg-surface-container-highest flex items-center justify-center text-[10px] font-bold text-primary">
+                        +12
+                    </div>
+</div>
+<p class="text-on-surface-variant/40 text-[11px] max-w-xs text-center">
+                    Verification requests are typically reviewed within 48-72 business hours by our global logistics compliance team.
+                </p>
+</div>
+</div>
+</main>
+<!-- BottomNavBar Suppressed - Only showing footer brand/status -->
+<footer class="h-10 px-6 flex items-center justify-between border-t border-white/5 bg-surface-container-lowest/50 text-[10px] text-on-surface-variant/30">
+<div>© 2023 Abyssal Enterprise. All rights reserved.</div>
+<div class="flex gap-4">
+<span>Privacy Policy</span>
+<span>Terms of Service</span>
+<span class="flex items-center gap-1"><span class="w-1 h-1 rounded-full bg-error"></span> Restricted Access Mode</span>
+</div>
+</footer>
+</body></html>

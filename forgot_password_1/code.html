@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Forgot Password - Oceanic Logistics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"primary-fixed-dim": "#cfbcff", "outline-variant": "#494551", "tertiary-fixed": "#ffdf93", "on-error-container": "#ffdad6", background: "#141218", "on-primary-container": "#e0d2ff", "surface-container-low": "#1d1b20", "secondary-container": "#4d4465", "surface-container-lowest": "#0f0d13", error: "#ffb4ab", "surface-container": "#211f24", "on-background": "#e6e0e9", "on-surface": "#e6e0e9", "on-secondary": "#342b4b", "primary-container": "#6750a4", "error-container": "#93000a", "tertiary-container": "#c9a74d", "secondary-fixed-dim": "#cdc0e9", outline: "#948e9c", "on-surface-variant": "#cbc4d2", "on-secondary-fixed-variant": "#4b4263", "tertiary-fixed-dim": "#e7c365", "surface-tint": "#cfbcff", "primary-fixed": "#e9ddff", "on-tertiary-container": "#503d00", "on-secondary-fixed": "#1f1635", "surface-dim": "#141218", tertiary: "#e7c365", "on-secondary-container": "#bfb2da", "on-primary-fixed-variant": "#4f378a", "on-tertiary": "#3e2e00", "surface-container-high": "#2b292f", "inverse-surface": "#e6e0e9", "surface-container-highest": "#36343a", "secondary-fixed": "#e9ddff", "on-tertiary-fixed-variant": "#594400", "on-tertiary-fixed": "#241a00", "surface-variant": "#36343a", "surface-bright": "#3b383e", "on-error": "#690005", "inverse-primary": "#6750a4", surface: "#141218", secondary: "#cdc0e9", primary: "#cfbcff", "on-primary-fixed": "#22005d", "on-primary": "#381e72", "inverse-on-surface": "#322f35"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"5xl": "48px", "2xl": "24px", xl: "20px", sm: "8px", lg: "16px", "3xl": "32px", "4xl": "40px", md: "12px", xs: "4px"}, fontFamily: {"hero-mobile": ["Inter"], "body-sm": ["Inter"], hero: ["Inter"], "body-lg": ["Inter"], "section-title": ["Inter"], "card-title": ["Inter"], "page-title": ["Inter"], label: ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"]}, fontSize: {"hero-mobile": ["28px", {lineHeight: "1.2", fontWeight: "700"}], "body-sm": ["14px", {lineHeight: "1.5", fontWeight: "400"}], hero: ["36px", {lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700"}], "body-lg": ["16px", {lineHeight: "1.5", fontWeight: "400"}], "section-title": ["24px", {lineHeight: "1.3", fontWeight: "600"}], "card-title": ["18px", {lineHeight: "1.4", fontWeight: "600"}], "page-title": ["30px", {lineHeight: "1.2", fontWeight: "700"}], label: ["12px", {lineHeight: "1", letterSpacing: "0.05em", fontWeight: "500"}]}}}};</script>
+<style>
+        body {
+            background-color: #0F172A; /* Level 0 Base from Style Guidance */
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(207, 188, 255, 0.05) 0px, transparent 50%);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7); /* Level 1/2 Hybrid */
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .premium-border {
+            position: relative;
+        }
+        .premium-border::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            padding: 1px;
+            border-radius: 0.75rem;
+            background: linear-gradient(to bottom, rgba(207, 188, 255, 0.2), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        .pulse-indicator {
+            box-shadow: 0 0 0 0 rgba(207, 188, 255, 0.4);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(207, 188, 255, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(207, 188, 255, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(207, 188, 255, 0); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen flex items-center justify-center p-lg md:p-5xl text-on-surface">
+<main class="w-full max-w-[480px] z-10">
+<!-- Brand Identity Anchor -->
+<div class="flex flex-col items-center mb-4xl">
+<div class="mb-lg relative">
+<div class="pulse-indicator w-3 h-3 bg-primary rounded-full absolute -top-1 -right-1"></div>
+<span class="material-symbols-outlined text-primary text-[48px]" data-icon="ac_unit" style="font-variation-settings: 'FILL' 0;">ac_unit</span>
+</div>
+<h1 class="font-page-title text-page-title font-bold text-primary tracking-tight">Oceanic Logistics</h1>
+<p class="font-label text-label uppercase tracking-widest text-outline mt-xs">Enterprise Tier • Cold Chain Verified</p>
+</div>
+<!-- Auth Card -->
+<div class="glass-card premium-border rounded-xl p-2xl shadow-2xl relative overflow-hidden">
+<div class="absolute top-0 right-0 p-lg opacity-10">
+<span class="material-symbols-outlined text-6xl" data-icon="lock_reset">lock_reset</span>
+</div>
+<div class="relative">
+<header class="mb-3xl">
+<h2 class="font-section-title text-section-title text-on-surface mb-xs">Forgot Password?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Enter your email address to receive a secure recovery link for your logistics dashboard.</p>
+</header>
+<form class="space-y-2xl" onsubmit="return false;">
+<!-- Email Input Group -->
+<div class="space-y-sm">
+<label class="font-label text-label text-on-surface-variant ml-xs" for="email">OFFICIAL WORK EMAIL</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-md flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline group-focus-within:text-primary transition-colors" data-icon="mail">mail</span>
+</div>
+<input class="w-full h-[52px] bg-surface-container-lowest border border-outline-variant rounded-lg pl-3xl pr-lg text-on-surface font-body-lg placeholder:text-outline-variant focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" id="email" name="email" placeholder="name@oceanic.logistics" required="" type="email"/>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full h-[52px] bg-primary-container text-on-primary-container font-section-title text-body-lg rounded-lg flex items-center justify-center gap-sm hover:bg-primary transition-colors active:scale-[0.98] duration-150 shadow-lg shadow-primary/10" type="submit">
+<span>Send Reset Link</span>
+<span class="material-symbols-outlined text-[20px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</form>
+<!-- Footer Links -->
+<div class="mt-3xl pt-2xl border-t border-outline-variant/30 flex justify-center">
+<a class="font-label text-label text-primary hover:text-primary-fixed-dim transition-colors flex items-center gap-xs group" href="#">
+<span class="material-symbols-outlined text-[16px] group-hover:-translate-x-1 transition-transform" data-icon="arrow_back">arrow_back</span>
+                        RETURN TO LOGIN
+                    </a>
+</div>
+</div>
+</div>
+<!-- System Status Decor -->
+<div class="mt-2xl flex items-center justify-between px-lg opacity-60">
+<div class="flex items-center gap-sm">
+<span class="w-1.5 h-1.5 bg-tertiary rounded-full animate-pulse"></span>
+<span class="font-label text-label text-on-surface-variant">NODE: ATLANTIC-NORTH-01</span>
+</div>
+<div class="font-label text-label text-on-surface-variant">ENC: AES-256 BIT</div>
+</div>
+</main>
+<!-- Background Imagery -->
+<div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+<div class="absolute bottom-0 right-0 w-1/2 h-1/2 opacity-20 filter grayscale contrast-125 mix-blend-screen">
+<img alt="Analytics and data" class="w-full h-full object-cover" data-alt="A highly detailed close-up of a high-tech digital logistics dashboard displaying glowing data visualizations and global shipping routes. The visual style is premium minimalist with a deep ocean tech aesthetic, dominated by midnight blues and vibrant purple accents. Sophisticated lighting effects create a sense of depth and advanced technology. The atmosphere is professional, sleek, and high-performance." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQ3-pVCP6kucE1IeYybTQZDSdF7KLdxlrrJIspbmcftW50OvfsoiSjVrfhzbBurWion7kvllksvVl05xw-NeKe6g8vGb9QaLsq0z02WZhE0tyoDRgHiz6wYeDtAZ9Vsh8Aq5jZHqvPNTSydQDzjzdwLc6AfsHrTBtsXXluXJn4BVvKzyP12l_gH5iXbCd-kcm5ubjeGK3RjTWhkThWDfEevmjQQLbLe1W4TyNA6s55iIG0bdGs6gqBLqQJmZEblG5QIpDZyJ-vyYQ"/>
+</div>
+<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-tr from-background via-transparent to-transparent"></div>
+</div>
+</body></html>

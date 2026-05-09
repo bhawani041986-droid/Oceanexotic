@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Withdrawal Requests | Abyssal Enterprise</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary": "#3e2e00",
+                    "error": "#ffb4ab",
+                    "on-tertiary-fixed-variant": "#594400",
+                    "error-container": "#93000a",
+                    "primary-container": "#6750a4",
+                    "tertiary-fixed": "#ffdf93",
+                    "surface-bright": "#3b383e",
+                    "on-secondary-fixed": "#1f1635",
+                    "on-primary-fixed-variant": "#4f378a",
+                    "on-background": "#e6e0e9",
+                    "surface-container-lowest": "#0f0d13",
+                    "primary": "#cfbcff",
+                    "surface-variant": "#36343a",
+                    "outline-variant": "#494551",
+                    "background": "#141218",
+                    "on-tertiary-container": "#503d00",
+                    "on-secondary-fixed-variant": "#4b4263",
+                    "secondary-container": "#4d4465",
+                    "primary-fixed-dim": "#cfbcff",
+                    "secondary-fixed": "#e9ddff",
+                    "surface-container-high": "#2b292f",
+                    "secondary-fixed-dim": "#cdc0e9",
+                    "surface-container-low": "#1d1b20",
+                    "on-error-container": "#ffdad6",
+                    "inverse-on-surface": "#322f35",
+                    "primary-fixed": "#e9ddff",
+                    "inverse-primary": "#6750a4",
+                    "on-primary-fixed": "#22005d",
+                    "outline": "#948e9c",
+                    "tertiary-container": "#c9a74d",
+                    "on-primary": "#381e72",
+                    "on-primary-container": "#e0d2ff",
+                    "on-error": "#690005",
+                    "surface-dim": "#141218",
+                    "secondary": "#cdc0e9",
+                    "on-surface-variant": "#cbc4d2",
+                    "tertiary": "#e7c365",
+                    "on-tertiary-fixed": "#241a00",
+                    "on-secondary-container": "#bfb2da",
+                    "inverse-surface": "#e6e0e9",
+                    "surface-tint": "#cfbcff",
+                    "surface": "#141218",
+                    "tertiary-fixed-dim": "#e7c365",
+                    "on-secondary": "#342b4b",
+                    "on-surface": "#e6e0e9",
+                    "surface-container-highest": "#36343a",
+                    "surface-container": "#211f24"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.5rem",
+                    "lg": "1rem",
+                    "xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "display": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #141218;
+            color: #e6e0e9;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(43, 41, 47, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 142, 156, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex min-h-screen">
+<!-- NavigationDrawer Shell -->
+<aside class="h-screen w-[260px] fixed left-0 top-0 z-50 bg-surface-container-low border-r border-outline-variant/20 shadow-xl flex flex-col p-4 gap-2 hidden md:flex">
+<div class="flex flex-col gap-1 mb-8 px-2 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">waves</span>
+</div>
+<div>
+<h2 class="font-headline text-lg font-bold text-primary">DeepSea Exports</h2>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">Premium Seller</p>
+</div>
+</div>
+<div class="mt-4 px-2 py-1 bg-surface-container-highest rounded-lg">
+<p class="text-[11px] font-medium text-tertiary">AAA Grade Verified</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out cursor-pointer group">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body text-body-sm font-medium">Dashboard</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out cursor-pointer group">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body text-body-sm font-medium">Inventory</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out cursor-pointer group">
+<span class="material-symbols-outlined">add_box</span>
+<span class="font-body text-body-sm font-medium">Product Listing</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container/20 text-primary border-l-4 border-primary transition-all duration-200 ease-in-out cursor-pointer group">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-body text-body-sm font-medium">Payouts</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out cursor-pointer group">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body text-body-sm font-medium">Settings</span>
+</div>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-[260px] min-h-screen flex flex-col">
+<!-- TopAppBar Shell -->
+<header class="sticky top-0 w-full z-40 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm flex items-center justify-between px-6 py-4">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined md:hidden text-on-surface cursor-pointer">menu</span>
+<h1 class="font-headline text-[24px] md:text-[30px] font-bold tracking-tight text-primary">Abyssal Enterprise</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="p-2 rounded-full hover:bg-surface-variant/50 transition-colors cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-container-highest border border-outline-variant/30">
+<img alt="Seller Profile" data-alt="A professional headshot of a marine logistics expert with a high-tech nautical background. The lighting is crisp and cool-toned, reflecting a deep sea enterprise aesthetic. The individual wears a sleek, modern corporate uniform in charcoal grey. The overall mood is authoritative and trustworthy, fitting for a premium seller in the aquaculture industry." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAif4m8OkBewgF1o29m1RRShE73aYyFCuzDoQhsgSbACBL0O00rA2OwG0Mr08Hu25C8IFd78QJnh_Z5ft1T6UiV22RK2T8J2MMQSF_Riwfoz7n-eTS1O7GfTZ164_CKtzf-fMAYfUJWc--Mr8Lvd6k3xqp-hPRNywtUD6L1_Q-VGtVsFE5c1aEqHnCAYgnr8OBv2rfTxYnqLh39zUEmRFJ82wDLREYzJO8Tt-s5VLLIrfR_fqDnPtYFW6qr__gIhgOGAxeMP8_s5Jc"/>
+</div>
+</div>
+</header>
+<section class="p-6 md:p-10 max-w-7xl mx-auto w-full">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Available Balance Hero Card -->
+<div class="lg:col-span-7 flex flex-col gap-6">
+<div class="relative overflow-hidden rounded-xl bg-primary-container p-8 text-on-primary-container shadow-2xl">
+<!-- Abstract Background Decoration -->
+<div class="absolute -right-20 -top-20 w-80 h-80 bg-primary opacity-20 rounded-full blur-[80px]"></div>
+<div class="absolute -left-10 -bottom-10 w-40 h-40 bg-secondary opacity-30 rounded-full blur-[60px]"></div>
+<div class="relative z-10">
+<div class="flex items-center gap-2 mb-2 opacity-90">
+<span class="material-symbols-outlined text-sm">account_balance_wallet</span>
+<span class="text-xs font-bold uppercase tracking-widest">Available Balance</span>
+</div>
+<div class="flex items-baseline gap-3">
+<span class="text-4xl md:text-6xl font-bold tracking-tighter">$142,580.00</span>
+<span class="text-lg opacity-80 font-medium">USD</span>
+</div>
+<div class="mt-8 flex gap-4">
+<div class="px-4 py-2 bg-on-primary-container/10 rounded-lg border border-on-primary-container/20 backdrop-blur-md">
+<p class="text-[10px] uppercase opacity-70">Processing</p>
+<p class="text-lg font-bold">$12,400.00</p>
+</div>
+<div class="px-4 py-2 bg-on-primary-container/10 rounded-lg border border-on-primary-container/20 backdrop-blur-md">
+<p class="text-[10px] uppercase opacity-70">Next Payout</p>
+<p class="text-lg font-bold">24 Oct</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Withdrawal Form Section -->
+<div class="glass-panel rounded-xl p-8 shadow-lg">
+<div class="flex items-center justify-between mb-8">
+<h3 class="text-xl font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">outbox</span>
+                                New Withdrawal Request
+                            </h3>
+</div>
+<div class="space-y-6">
+<!-- Amount Input -->
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider ml-1">Withdrawal Amount</label>
+<div class="relative group">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-primary font-bold text-lg">$</span>
+<input class="w-full h-14 bg-surface-container-lowest border border-outline-variant/50 rounded-xl pl-10 pr-4 text-xl font-semibold text-on-surface focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" placeholder="0.00" type="number"/>
+</div>
+<div class="flex justify-between mt-1 px-1">
+<span class="text-[11px] text-on-surface-variant">Min withdrawal: $500.00</span>
+<button class="text-[11px] text-primary font-bold hover:underline">MAX AMOUNT</button>
+</div>
+</div>
+<!-- Bank Selector -->
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider ml-1">Receiving Bank</label>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="p-4 rounded-xl border-2 border-primary bg-primary/5 cursor-pointer relative transition-all">
+<div class="absolute top-3 right-3 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="text-xs font-bold text-primary uppercase mb-1">Default</p>
+<p class="font-bold text-on-surface">Oceanic Trust Bank</p>
+<p class="text-sm text-on-surface-variant">•••• 8829</p>
+</div>
+<div class="p-4 rounded-xl border border-outline-variant/50 hover:border-outline transition-colors cursor-pointer group">
+<p class="text-xs font-bold text-on-surface-variant uppercase mb-1">Secondary</p>
+<p class="font-bold text-on-surface">Global Marine Credit</p>
+<p class="text-sm text-on-surface-variant">•••• 4102</p>
+</div>
+</div>
+</div>
+<button class="w-full h-14 bg-primary text-on-primary font-bold rounded-xl text-lg flex items-center justify-center gap-3 hover:bg-primary-fixed-dim transition-colors shadow-lg shadow-primary/20 active:scale-[0.98] transform">
+<span class="material-symbols-outlined">payments</span>
+                                Request Payout
+                            </button>
+<p class="text-center text-xs text-on-surface-variant/70 italic px-4">
+                                Withdrawals are processed according to the DeepSea Enterprise SLA. High-volume transfers may require additional identity verification.
+                            </p>
+</div>
+</div>
+</div>
+<!-- Withdrawal History Sidebar -->
+<div class="lg:col-span-5">
+<div class="glass-panel rounded-xl h-full flex flex-col shadow-lg overflow-hidden">
+<div class="p-6 border-b border-outline-variant/20 bg-surface-container-high/30">
+<h3 class="text-xl font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">history</span>
+                                Payout History
+                            </h3>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-4">
+<!-- Pending Transaction -->
+<div class="p-4 rounded-lg bg-surface-container-highest/50 border-l-4 border-tertiary flex items-center justify-between group hover:bg-surface-container-highest transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-tertiary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">schedule</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">$12,400.00</p>
+<p class="text-xs text-on-surface-variant">Oct 22, 2023 • Bank Transfer</p>
+</div>
+</div>
+<span class="px-2 py-1 bg-tertiary/10 text-tertiary text-[10px] font-bold uppercase tracking-wider rounded">Pending</span>
+</div>
+<!-- Approved Transaction -->
+<div class="p-4 rounded-lg bg-surface-container-highest/30 border-l-4 border-primary flex items-center justify-between group hover:bg-surface-container-highest transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">task_alt</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">$45,000.00</p>
+<p class="text-xs text-on-surface-variant">Oct 15, 2023 • Bank Transfer</p>
+</div>
+</div>
+<span class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider rounded">Approved</span>
+</div>
+<!-- Failed Transaction -->
+<div class="p-4 rounded-lg bg-surface-container-highest/30 border-l-4 border-error flex items-center justify-between group hover:bg-surface-container-highest transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-error/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-error">report</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">$2,500.00</p>
+<p class="text-xs text-on-surface-variant">Oct 08, 2023 • Global Marine</p>
+</div>
+</div>
+<span class="px-2 py-1 bg-error/10 text-error text-[10px] font-bold uppercase tracking-wider rounded">Failed</span>
+</div>
+<!-- More Approved Transactions -->
+<div class="p-4 rounded-lg bg-surface-container-highest/30 border-l-4 border-primary flex items-center justify-between group hover:bg-surface-container-highest transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">task_alt</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">$31,200.00</p>
+<p class="text-xs text-on-surface-variant">Sep 29, 2023 • Bank Transfer</p>
+</div>
+</div>
+<span class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider rounded">Approved</span>
+</div>
+<div class="p-4 rounded-lg bg-surface-container-highest/30 border-l-4 border-primary flex items-center justify-between group hover:bg-surface-container-highest transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">task_alt</span>
+</div>
+<div>
+<p class="font-bold text-on-surface">$18,900.00</p>
+<p class="text-xs text-on-surface-variant">Sep 22, 2023 • Bank Transfer</p>
+</div>
+</div>
+<span class="px-2 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider rounded">Approved</span>
+</div>
+<button class="w-full py-4 text-primary text-sm font-bold hover:bg-surface-container-highest/50 transition-colors border-t border-outline-variant/10">
+                                VIEW FULL STATEMENT
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Navigation Bar Mobile -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-surface-container-low border-t border-outline-variant/30 flex justify-around items-center p-3 z-50">
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-medium">Dashboard</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-[10px] font-medium">Inventory</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="text-[10px] font-bold">Payouts</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-medium">Settings</span>
+</div>
+</nav>
+</body></html>

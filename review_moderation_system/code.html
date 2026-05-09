@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Abyssal Enterprise | Review Moderation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-lowest": "#0f0d13",
+                      "secondary": "#cdc0e9",
+                      "tertiary-fixed-dim": "#e7c365",
+                      "inverse-primary": "#6750a4",
+                      "error": "#ffb4ab",
+                      "on-tertiary-fixed-variant": "#594400",
+                      "surface-tint": "#cfbcff",
+                      "on-surface-variant": "#cbc4d2",
+                      "surface-container-highest": "#36343a",
+                      "primary": "#cfbcff",
+                      "on-error-container": "#ffdad6",
+                      "surface": "#141218",
+                      "outline": "#948e9c",
+                      "surface-bright": "#3b383e",
+                      "surface-dim": "#141218",
+                      "on-secondary-fixed-variant": "#4b4263",
+                      "surface-container-low": "#1d1b20",
+                      "on-secondary-fixed": "#1f1635",
+                      "on-primary-container": "#e0d2ff",
+                      "inverse-surface": "#e6e0e9",
+                      "secondary-fixed-dim": "#cdc0e9",
+                      "tertiary-container": "#c9a74d",
+                      "on-primary-fixed-variant": "#4f378a",
+                      "on-secondary": "#342b4b",
+                      "on-secondary-container": "#bfb2da",
+                      "on-surface": "#e6e0e9",
+                      "on-tertiary-container": "#503d00",
+                      "tertiary": "#e7c365",
+                      "surface-variant": "#36343a",
+                      "secondary-container": "#4d4465",
+                      "on-tertiary": "#3e2e00",
+                      "outline-variant": "#494551",
+                      "primary-fixed-dim": "#cfbcff",
+                      "on-primary": "#381e72",
+                      "error-container": "#93000a",
+                      "primary-fixed": "#e9ddff",
+                      "inverse-on-surface": "#322f35",
+                      "primary-container": "#6750a4",
+                      "tertiary-fixed": "#ffdf93",
+                      "surface-container-high": "#2b292f",
+                      "on-background": "#e6e0e9",
+                      "on-primary-fixed": "#22005d",
+                      "on-error": "#690005",
+                      "background": "#141218",
+                      "on-tertiary-fixed": "#241a00",
+                      "surface-container": "#211f24",
+                      "secondary-fixed": "#e9ddff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Inter"],
+                      "display": ["Inter"],
+                      "body": ["Inter"],
+                      "label": ["Inter"]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex">
+<!-- NavigationDrawer Component -->
+<aside class="fixed left-0 top-0 h-full w-[260px] z-50 bg-surface-container dark:bg-surface-container-lowest border-r border-white/5 flex flex-col py-4 gap-2 shadow-2xl hidden md:flex">
+<div class="text-lg font-bold text-primary px-4 py-6 tracking-tight">Abyssal Enterprise</div>
+<div class="px-4 mb-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container overflow-hidden">
+<img alt="Admin Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC35OlUXGef8LAr0Lz9cGN7w-6SmXSemxlGQlEWvuXD8jkJH7Tpkb_Udc-aKYpfLufBZhDQPW_f6EHZgso4mia_NoVUSKFv9ORhdrkY8iYevNRslCCYpnmr6u2amMj1oEXmKod0yTvwNFqT4JedFnR-0JebL4abEhEiA_Su3qdFEsvi0p0nphuMdZbzXIZo_bgjJfPrhtpZoiSKMC5jooIhcCvEujZ7MJuhjZ-nDaAuv-nBVXwzhV0c708bDto58tNyLJ1ePXMgXfc"/>
+</div>
+<div>
+<p class="text-sm font-medium text-on-surface">Deep Sea Admin</p>
+<p class="text-xs text-on-surface-variant">Enterprise Tier</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1 px-2">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 rounded-lg font-body text-sm font-medium transition-all cursor-pointer" href="#">
+<span class="material-symbols-outlined">dashboard</span> Dashboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 rounded-lg font-body text-sm font-medium transition-all cursor-pointer" href="#">
+<span class="material-symbols-outlined">inventory_2</span> Inventory
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 rounded-lg font-body text-sm font-medium transition-all cursor-pointer" href="#">
+<span class="material-symbols-outlined">local_shipping</span> Logistics
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 bg-primary-container/20 text-primary border-l-4 border-primary rounded-r-lg font-body text-sm font-medium transition-all cursor-pointer" href="#">
+<span class="material-symbols-outlined">rate_review</span> Sellers
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 rounded-lg font-body text-sm font-medium transition-all cursor-pointer" href="#">
+<span class="material-symbols-outlined">payments</span> Financials
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 rounded-lg font-body text-sm font-medium transition-all cursor-pointer" href="#">
+<span class="material-symbols-outlined">settings</span> Settings
+            </a>
+</nav>
+<div class="px-6 py-4 text-[10px] text-outline uppercase tracking-widest">v2.4.0</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-[260px] flex flex-col min-h-screen">
+<!-- TopAppBar Component -->
+<header class="sticky top-0 w-full z-40 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-sm">
+<div class="flex items-center justify-between px-6 h-16 w-full max-w-[1440px] mx-auto">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline text-[24px] font-bold leading-tight text-primary">Review Moderation</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="bg-surface-container-low border border-outline-variant rounded-full py-1.5 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary outline-none text-on-surface w-64 transition-all" placeholder="Search reviews..." type="text"/>
+</div>
+<button class="flex items-center gap-2 bg-primary-container text-on-primary-container px-4 py-2 rounded-full text-sm font-medium active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-sm">filter_list</span> Filters
+                    </button>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<div class="p-6 w-full max-w-[1440px] mx-auto space-y-8">
+<!-- Summary Stats (Bento Style) -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="bg-surface-container p-5 rounded-xl border border-white/5 shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<p class="text-on-surface-variant text-xs font-medium uppercase tracking-wider">Pending Review</p>
+<span class="material-symbols-outlined text-tertiary">pending_actions</span>
+</div>
+<h3 class="text-3xl font-bold text-on-surface">128</h3>
+<p class="text-xs text-on-surface-variant mt-2 flex items-center gap-1">
+<span class="text-error font-medium">+12%</span> from yesterday
+                    </p>
+</div>
+<div class="bg-surface-container p-5 rounded-xl border border-white/5 shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<p class="text-on-surface-variant text-xs font-medium uppercase tracking-wider">Avg Sentiment</p>
+<span class="material-symbols-outlined text-primary">analytics</span>
+</div>
+<h3 class="text-3xl font-bold text-on-surface">0.84</h3>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full mt-3 overflow-hidden">
+<div class="bg-primary h-full w-[84%]"></div>
+</div>
+</div>
+<div class="bg-surface-container p-5 rounded-xl border border-white/5 shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<p class="text-on-surface-variant text-xs font-medium uppercase tracking-wider">Flagged Items</p>
+<span class="material-symbols-outlined text-error">flag</span>
+</div>
+<h3 class="text-3xl font-bold text-on-surface">14</h3>
+<p class="text-xs text-on-surface-variant mt-2">Requires manual audit</p>
+</div>
+<div class="bg-surface-container p-5 rounded-xl border border-white/5 shadow-sm">
+<div class="flex justify-between items-start mb-2">
+<p class="text-on-surface-variant text-xs font-medium uppercase tracking-wider">Published</p>
+<span class="material-symbols-outlined text-secondary">check_circle</span>
+</div>
+<h3 class="text-3xl font-bold text-on-surface">2.4k</h3>
+<p class="text-xs text-on-surface-variant mt-2">All time total</p>
+</div>
+</section>
+<!-- Filters & Tabs -->
+<div class="flex flex-wrap items-center justify-between gap-4">
+<div class="flex bg-surface-container-high p-1 rounded-xl">
+<button class="px-6 py-2 rounded-lg text-sm font-medium bg-primary-container text-on-primary-container">Pending</button>
+<button class="px-6 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:text-on-surface">Flagged</button>
+<button class="px-6 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:text-on-surface">Published</button>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-sm text-on-surface-variant">Sort by:</span>
+<select class="bg-surface-container-low border-none text-sm text-on-surface rounded-lg focus:ring-0 cursor-pointer py-2 pl-3 pr-8">
+<option>Newest First</option>
+<option>Lowest Score</option>
+<option>Highest Score</option>
+</select>
+</div>
+</div>
+<!-- Review Cards Grid -->
+<section class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+<!-- Review Card 1 -->
+<article class="bg-surface-container-high rounded-xl border border-white/5 overflow-hidden flex flex-col md:flex-row shadow-lg transition-transform hover:translate-y-[-2px]">
+<div class="md:w-1/3 h-48 md:h-auto relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A macro photograph of fresh, high-quality Atlantic salmon fillets on a bed of crushed ice. The lighting is crisp and cool, highlighting the vibrant orange texture of the fish and the crystalline structure of the ice. The setting feels laboratory-clean and professional, consistent with a high-end aquaculture enterprise. Deep shadows and bright highlights create a sophisticated, high-contrast maritime aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQO1Q577JWs5flb1tkljmfzUOI8otU3TKeRo8LE_yb1NFi5x7HKNuyhEEBLNJY85f_38dabDRvzTIdttO68XZsDyIwgXaEKwI6t0ffH4tB7_fgre5-U0oF5iHGESQ4i_DPxyTbWVdJuNPy9tOMFRz2E8YiX9rAt0l385J36Jikq39PE_vaKzwg0lwYZm2mmuE86iUKLS62MDzHfrfTH0msu3mtyvgFfGSA3SPPOeIBh1HysHh1XakEYfg6E09_-MhmSQaVryMvoQ0"/>
+<div class="absolute top-2 left-2 bg-surface-container-lowest/80 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-primary uppercase">Cold Chain Verified</div>
+</div>
+<div class="flex-1 p-6 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-3">
+<div>
+<h4 class="font-bold text-on-surface">Alex Thompson</h4>
+<p class="text-xs text-on-surface-variant italic">Product: Premium Bluefin Tuna Grade AAA</p>
+</div>
+<div class="flex items-center gap-0.5 text-tertiary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star_half</span>
+</div>
+</div>
+<p class="text-sm text-on-surface line-clamp-3 leading-relaxed mb-4">
+                                "Incredibly fresh delivery. The temperature logging showed it stayed at a consistent -2C throughout the transit from the Norwegian farm. Texture was firm and marbling was exquisite. Best sashimi grade I've had delivered."
+                            </p>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-white/5">
+<div class="flex items-center gap-4">
+<div class="flex flex-col">
+<span class="text-[10px] text-outline uppercase font-bold tracking-tighter">AI Sentiment</span>
+<span class="text-sm font-semibold text-secondary">0.98 Positive</span>
+</div>
+<div class="w-10 h-10 rounded-full border-4 border-secondary/20 flex items-center justify-center">
+<span class="text-[10px] font-bold text-secondary">98</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="p-2 rounded-lg bg-surface-bright/50 text-error hover:bg-error/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+<button class="p-2 rounded-lg bg-surface-bright/50 text-tertiary hover:bg-tertiary/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">flag</span>
+</button>
+<button class="flex items-center gap-2 bg-primary text-on-primary px-4 py-2 rounded-lg text-xs font-bold active:scale-95 transition-all">
+                                    APPROVE
+                                </button>
+</div>
+</div>
+</div>
+</article>
+<!-- Review Card 2 -->
+<article class="bg-surface-container-high rounded-xl border border-white/5 overflow-hidden flex flex-col md:flex-row shadow-lg transition-transform hover:translate-y-[-2px]">
+<div class="md:w-1/3 h-48 md:h-auto relative overflow-hidden bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-4xl text-outline opacity-30">image_not_supported</span>
+<div class="absolute bottom-2 left-2 bg-error/20 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-error uppercase">No Photos</div>
+</div>
+<div class="flex-1 p-6 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-3">
+<div>
+<h4 class="font-bold text-on-surface">Sarah J. Miller</h4>
+<p class="text-xs text-on-surface-variant italic">Seller: Nordic Deep-Sea Logistics</p>
+</div>
+<div class="flex items-center gap-0.5 text-tertiary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 0;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 0;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 0;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+</div>
+<p class="text-sm text-on-surface line-clamp-3 leading-relaxed mb-4">
+                                "The package arrived 4 hours late and the driver was extremely rude. I suspect the cold chain was broken because the outer carton was damp. Requesting a full refund immediately."
+                            </p>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-white/5">
+<div class="flex items-center gap-4">
+<div class="flex flex-col">
+<span class="text-[10px] text-outline uppercase font-bold tracking-tighter">AI Sentiment</span>
+<span class="text-sm font-semibold text-error">0.12 Negative</span>
+</div>
+<div class="w-10 h-10 rounded-full border-4 border-error/20 flex items-center justify-center">
+<span class="text-[10px] font-bold text-error">12</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="p-2 rounded-lg bg-surface-bright/50 text-error hover:bg-error/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+<button class="p-2 rounded-lg bg-error-container/30 text-error border border-error/20 transition-colors">
+<span class="material-symbols-outlined text-[20px]">flag</span>
+</button>
+<button class="flex items-center gap-2 bg-surface-bright text-on-surface px-4 py-2 rounded-lg text-xs font-bold active:scale-95 transition-all">
+                                    AUDIT
+                                </button>
+</div>
+</div>
+</div>
+</article>
+<!-- Review Card 3 -->
+<article class="bg-surface-container-high rounded-xl border border-white/5 overflow-hidden flex flex-col md:flex-row shadow-lg transition-transform hover:translate-y-[-2px]">
+<div class="md:w-1/3 h-48 md:h-auto relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A cinematic close-up of King Crab legs arranged artfully on a dark slate surface. The shells are a vibrant red, glistening under soft, focused lighting that creates a high-end luxury food photography vibe. The background is a deep, atmospheric navy blue, suggesting the ocean depths. The mood is sophisticated and technical, highlighting the premium nature of the logistics involved." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8xK4_E-Y9Kl9mlTgXFBwGZAE_H5WjH1yNwvSN4lohs2YkIyzWIKP5yjLmJL4KodK10Eq8jz3Gjz7dtCSsleVr6oG2mPysYnIidtaHr0jtdB4ek9e3ns3g7vlOMPgPtEZYyg4lgr3S5dh9FaPl8LdOL4_ufS7Jdz9Zy7uTyaacs5d1QX3oH6rKxuEIxepNUdjHUVA7s_m37bWJGfnQXdbN3HR9M4ZryikjYzMxduBhAq89s-53vKkZOmup5W91XSx4rYc7fLBLYrM"/>
+<div class="absolute top-2 left-2 bg-surface-container-lowest/80 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-primary uppercase">Premium Seller</div>
+</div>
+<div class="flex-1 p-6 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-3">
+<div>
+<h4 class="font-bold text-on-surface">Marcus Chen</h4>
+<p class="text-xs text-on-surface-variant italic">Product: Alaskan Red King Crab (Live)</p>
+</div>
+<div class="flex items-center gap-0.5 text-tertiary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<p class="text-sm text-on-surface line-clamp-3 leading-relaxed mb-4">
+                                "Incredible quality. Arrived still highly active in the oxygenated tank system. The Enterprise tracking portal kept me updated on oxygen levels throughout the 24-hour journey. Five star logistics!"
+                            </p>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-white/5">
+<div class="flex items-center gap-4">
+<div class="flex flex-col">
+<span class="text-[10px] text-outline uppercase font-bold tracking-tighter">AI Sentiment</span>
+<span class="text-sm font-semibold text-secondary">0.92 Positive</span>
+</div>
+<div class="w-10 h-10 rounded-full border-4 border-secondary/20 flex items-center justify-center">
+<span class="text-[10px] font-bold text-secondary">92</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="p-2 rounded-lg bg-surface-bright/50 text-error hover:bg-error/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+<button class="p-2 rounded-lg bg-surface-bright/50 text-tertiary hover:bg-tertiary/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">flag</span>
+</button>
+<button class="flex items-center gap-2 bg-primary text-on-primary px-4 py-2 rounded-lg text-xs font-bold active:scale-95 transition-all">
+                                    APPROVE
+                                </button>
+</div>
+</div>
+</div>
+</article>
+<!-- Review Card 4 -->
+<article class="bg-surface-container-high rounded-xl border border-white/5 overflow-hidden flex flex-col md:flex-row shadow-lg transition-transform hover:translate-y-[-2px]">
+<div class="md:w-1/3 h-48 md:h-auto relative overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional warehouse interior showcasing high-tech cold storage units. The scene is illuminated with futuristic blue LED lighting strips that reflect off polished concrete floors. Technicians in sterile white gear are monitoring digital panels. The atmosphere is quiet, cold, and highly efficient, emphasizing the 'Deep Sea Tech' identity of the enterprise. The color palette is dominated by deep blues, teals, and sharp white highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAo36Fb4ZQfVRzgkgl8yMJdrwOg_u78JoL6LhRL4fFfdSBc4Mc_Igd7Gj-0twV6CjrSwJtKm46Rwm2Gv4BAM9uAME7t7ClcAdSH8n1-MEAt_eRVYBWJW5vSUYXkENGWlGpM6YafRXhhEAnEre1dUOq29CwlFuuZ5ypXPf6jgvjQjcDRnUvJtHXMezbfDymIR03kimzMYPg4mgxUJLUABTh9WYPE6IZNSi-FDjihKaovMZWZ2Kw4HKwEhAeiAIttuoBYU9yi6ZRYBMQ"/>
+<div class="absolute top-2 left-2 bg-surface-container-lowest/80 backdrop-blur-md px-2 py-1 rounded text-[10px] font-bold text-primary uppercase">Logistics Issue</div>
+</div>
+<div class="flex-1 p-6 flex flex-col justify-between">
+<div>
+<div class="flex justify-between items-start mb-3">
+<div>
+<h4 class="font-bold text-on-surface">Global Sea Foods Ltd.</h4>
+<p class="text-xs text-on-surface-variant italic">Partner: Atlantic Hub-04</p>
+</div>
+<div class="flex items-center gap-0.5 text-tertiary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 0;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 0;">star</span>
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 0;">star</span>
+</div>
+</div>
+<p class="text-sm text-on-surface line-clamp-3 leading-relaxed mb-4">
+                                "The automated sorting system failed at Hub-04. Three of our pallets were misdirected and sat in the temp-buffer zone for 6 hours. This is the second time this month. We need an technical audit."
+                            </p>
+</div>
+<div class="flex items-center justify-between pt-4 border-t border-white/5">
+<div class="flex items-center gap-4">
+<div class="flex flex-col">
+<span class="text-[10px] text-outline uppercase font-bold tracking-tighter">AI Sentiment</span>
+<span class="text-sm font-semibold text-error">0.34 Neutral-Neg</span>
+</div>
+<div class="w-10 h-10 rounded-full border-4 border-tertiary/20 flex items-center justify-center">
+<span class="text-[10px] font-bold text-tertiary">34</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="p-2 rounded-lg bg-surface-bright/50 text-error hover:bg-error/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+<button class="p-2 rounded-lg bg-surface-bright/50 text-tertiary hover:bg-tertiary/10 transition-colors">
+<span class="material-symbols-outlined text-[20px]">flag</span>
+</button>
+<button class="flex items-center gap-2 bg-surface-bright text-on-surface px-4 py-2 rounded-lg text-xs font-bold active:scale-95 transition-all">
+                                    AUDIT
+                                </button>
+</div>
+</div>
+</div>
+</article>
+</section>
+<!-- Pagination -->
+<div class="flex items-center justify-center gap-2 pt-8 pb-12">
+<button class="w-10 h-10 rounded-lg flex items-center justify-center border border-outline-variant text-on-surface hover:bg-surface-bright transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center bg-primary text-on-primary font-bold">1</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-bright transition-colors">2</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-bright transition-colors">3</button>
+<span class="text-on-surface-variant px-2">...</span>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-bright transition-colors">12</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center border border-outline-variant text-on-surface hover:bg-surface-bright transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar Component (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface-container-high/90 dark:bg-surface-container-high/90 backdrop-blur-lg border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.3)] md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant scale-90 active:scale-100 transition-transform" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label text-[10px] font-medium tracking-wider mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant scale-90 active:scale-100 transition-transform" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-label text-[10px] font-medium tracking-wider mt-1">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant scale-90 active:scale-100 transition-transform" href="#">
+<span class="material-symbols-outlined">ac_unit</span>
+<span class="font-label text-[10px] font-medium tracking-wider mt-1">Cold Chain</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 scale-90 active:scale-100 transition-transform" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label text-[10px] font-medium tracking-wider mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Abyssal Enterprise | Secure Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#0f0d13",
+                    "surface-container-highest": "#36343a",
+                    "tertiary-fixed-dim": "#e7c365",
+                    "on-secondary": "#342b4b",
+                    "primary": "#cfbcff",
+                    "primary-fixed": "#e9ddff",
+                    "on-surface-variant": "#cbc4d2",
+                    "on-secondary-container": "#bfb2da",
+                    "error-container": "#93000a",
+                    "on-primary-container": "#e0d2ff",
+                    "on-error-container": "#ffdad6",
+                    "on-background": "#e6e0e9",
+                    "on-tertiary-container": "#503d00",
+                    "surface-container-high": "#2b292f",
+                    "surface-bright": "#3b383e",
+                    "secondary-fixed-dim": "#cdc0e9",
+                    "outline": "#948e9c",
+                    "secondary-container": "#4d4465",
+                    "on-primary-fixed-variant": "#4f378a",
+                    "surface-variant": "#36343a",
+                    "on-secondary-fixed-variant": "#4b4263",
+                    "on-secondary-fixed": "#1f1635",
+                    "error": "#ffb4ab",
+                    "on-primary": "#381e72",
+                    "on-surface": "#e6e0e9",
+                    "primary-fixed-dim": "#cfbcff",
+                    "on-tertiary-fixed": "#241a00",
+                    "surface-container": "#211f24",
+                    "secondary-fixed": "#e9ddff",
+                    "surface-dim": "#141218",
+                    "surface-container-low": "#1d1b20",
+                    "inverse-primary": "#6750a4",
+                    "tertiary": "#e7c365",
+                    "primary-container": "#6750a4",
+                    "inverse-on-surface": "#322f35",
+                    "outline-variant": "#494551",
+                    "secondary": "#cdc0e9",
+                    "inverse-surface": "#e6e0e9",
+                    "on-tertiary": "#3e2e00",
+                    "background": "#141218",
+                    "on-error": "#690005",
+                    "surface": "#141218",
+                    "surface-tint": "#cfbcff",
+                    "on-primary-fixed": "#22005d",
+                    "tertiary-fixed": "#ffdf93",
+                    "on-tertiary-fixed-variant": "#594400",
+                    "tertiary-container": "#c9a74d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "display": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-abyssal-gradient {
+            background: radial-gradient(circle at top right, rgba(103, 80, 164, 0.15), transparent),
+                        radial-gradient(circle at bottom left, rgba(20, 18, 24, 1), rgba(15, 13, 19, 1));
+        }
+        .glass-panel {
+            background: rgba(33, 31, 36, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(148, 142, 156, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col items-center justify-center selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation (Shell Minimal - For Branding Only) -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="waves">waves</span>
+<span class="font-headline text-[18px] font-bold tracking-tight text-primary">Abyssal</span>
+</div>
+<div class="hidden md:flex items-center gap-6">
+<span class="text-on-surface-variant text-[12px] font-medium tracking-wider uppercase font-label">Global Logistics Network</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="w-full max-w-7xl mx-auto px-4 py-20 flex flex-col items-center justify-center relative overflow-hidden">
+<!-- Background Ambient Elements -->
+<div class="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full"></div>
+<div class="absolute -bottom-[10%] -right-[10%] w-[40%] h-[40%] bg-secondary/5 blur-[120px] rounded-full"></div>
+<div class="w-full max-w-[480px] z-10">
+<!-- Auth Card -->
+<div class="glass-panel p-8 md:p-12 rounded-xl shadow-2xl">
+<div class="text-center mb-10">
+<h1 class="text-[30px] font-bold leading-tight tracking-tight mb-2">Welcome Back</h1>
+<p class="text-on-surface-variant text-body-lg">Access the deep ocean marketplace</p>
+</div>
+<!-- Login Form -->
+<form class="space-y-6" onsubmit="return false;">
+<div class="space-y-2">
+<label class="font-label text-[12px] font-medium tracking-wider uppercase text-on-surface-variant ml-1">Corporate Email</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors" data-icon="mail">mail</span>
+<input class="w-full h-[44px] pl-12 pr-4 bg-surface-container-lowest border border-outline-variant/50 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-outline/50" placeholder="explorer@abyssal.tech" type="email"/>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between items-center px-1">
+<label class="font-label text-[12px] font-medium tracking-wider uppercase text-on-surface-variant">Security Credentials</label>
+<a class="text-[12px] text-primary hover:text-primary-fixed transition-colors font-medium" href="#">Forgot Password?</a>
+</div>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors" data-icon="lock">lock</span>
+<input class="w-full h-[44px] pl-12 pr-4 bg-surface-container-lowest border border-outline-variant/50 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all placeholder:text-outline/50" placeholder="••••••••••••" type="password"/>
+</div>
+</div>
+<button class="w-full h-[44px] text-white font-semibold rounded-xl active:scale-95 transition-all shadow-lg shadow-primary-container/20 flex items-center justify-center gap-2" style="background-color: #7C3AED;" type="submit">
+<span>Sign In</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</form>
+<!-- Divider -->
+<div class="relative flex items-center gap-4 my-10">
+<div class="flex-grow h-[1px] bg-outline-variant/30"></div>
+<span class="text-on-surface-variant font-label text-[10px] tracking-widest uppercase">Federated Login</span>
+<div class="flex-grow h-[1px] bg-outline-variant/30"></div>
+</div>
+<!-- Social Logins -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-3 h-[44px] bg-surface-container-high hover:bg-surface-variant border border-outline-variant/20 rounded-xl transition-all active:scale-95">
+<img alt="Google Logo" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-bUNRrE_98_cNz5c7iRXJwqmznpbEHgdP0VfhrvMuX-YQvHxeLvv16DY5bouT2xhucw97HmduFLO1UmiGg6wM0qgdC0ZGaTsZxxMIOP_PtTlJpv23EYsaLcEIJ_GtuTOFUjD9CI5CWNeAkGEWvmXTHB3MLKeIMuZqAfVFE9fuygnBk70dHlPDjDfg14yxEMGkcOVt1FWPuhRbIMErbrPWJv6Vo5DD5a-uYTKkyPaNHGMKk5CvxXemHMSDYGVE-Cs_lHghgmRAQVo"/>
+<span class="font-medium text-body-sm">Google</span>
+</button>
+<button class="flex items-center justify-center gap-3 h-[44px] bg-surface-container-high hover:bg-surface-variant border border-outline-variant/20 rounded-xl transition-all active:scale-95">
+<span class="material-symbols-outlined text-primary" data-icon="anchor">anchor</span>
+<span class="font-medium text-body-sm">Maritime ID</span>
+</button>
+</div>
+<!-- Footer Link -->
+<div class="mt-10 text-center">
+<p class="text-on-surface-variant text-body-sm">
+                        New to the enterprise? 
+                        <a class="text-primary font-semibold hover:underline underline-offset-4 decoration-2" href="#">Create Account</a>
+</p>
+</div>
+</div>
+<!-- Trust Badge Section -->
+<div class="mt-8 grid grid-cols-3 gap-4 opacity-50 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-700">
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-[20px]" data-icon="verified_user">verified_user</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">SECURE NODE</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-[20px]" data-icon="terminal">terminal</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">E2E ENCRYPTED</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined text-[20px]" data-icon="monitoring">monitoring</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter">REAL-TIME DATA</span>
+</div>
+</div>
+</div>
+<!-- Decorative Elements for the background -->
+<div class="hidden lg:block absolute left-[5%] top-[20%] max-w-[280px]">
+<img class="rounded-xl object-cover aspect-square border border-outline-variant/20 shadow-2xl rotate-[-6deg]" data-alt="A highly detailed cinematic shot of bioluminescent jellyfish pulsing with vibrant purple and violet light in the darkest depths of the ocean. The water is deep indigo and black, with tiny glowing particles floating around the organic forms. The lighting is moody and technical, emphasizing the electric textures of the jellyfish against the cold, dark abyss. The overall atmosphere is premium, mysterious, and high-tech." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCq1NQLyI7XaKDiT6YvPMfkabWnkISzQEKBUJukCRZHqwpYDpz6fErqeAQ7JamOVexgx1cdI-x0MZk5FkrnfOcXO1uev1JWlCCUgVJfib5Mbo97jccpYn67MII4hU3ty4y5UQhx46Go6qXdKjW9IixHxaY7zOU7fi0fgmwary-3GuCDUDRH21xwpVjb3iOuO6qyifdIAojzMMiVesHDtI1HZ2W8ozcRLwyLns9KuRqGT5fuOHnfe8zkkMttbwZLOUC2AnprEFyYsfg"/>
+</div>
+<div class="hidden lg:block absolute right-[5%] bottom-[10%] max-w-[280px]">
+<img class="rounded-xl object-cover aspect-video border border-outline-variant/20 shadow-2xl rotate-[3deg]" data-alt="Close-up macro photography of high-end, fresh seafood on crushed ice inside a modern logistics warehouse. The lighting is sharp and industrial with cool purple neon highlights reflecting off the scales of the fish and the crystalline ice. The scene suggests peak freshness and advanced supply chain management. The background is a dark, sleek industrial environment with soft focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDDxNWx7JWe0mXjcmhDN5gzKmdwT6h41tp5zzwq8Mbe3fr38YGMveVFnWpUlS8WvbMHH87U-LlyE7fbByYBTAmCg4uDa_eX1-vEyJG-Mf3TrdKh2cnek0udEp8gjNNIsbgp3DEUTZTVLVKls4SzzjYWDta3wMY8uI5kt0G97399rQp2tc0aB4hVcQEis6IYMyeGj6bRD1sGMij_BWlCQWQwo2g_GYnTmrjHAhGj0fBkv2Wxauut2ZCTydJakDfzgi4t3pfRpstQYEQ"/>
+</div>
+</main>
+<!-- Navigation Drawer (Shell Suppression - Not rendered on Login as per rules) -->
+<!-- Footer Security Message -->
+<footer class="mt-auto pb-8 text-center px-6">
+<p class="text-outline text-[11px] uppercase tracking-[0.2em] font-medium opacity-60">
+            Authorized Personnel Only • IP Logged: 192.168.1.1
+        </p>
+</footer>
+</body></html>

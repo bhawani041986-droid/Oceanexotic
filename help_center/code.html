@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Help Center | Abyssal Enterprise</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #141218;
+            color: #e6e0e9;
+        }
+        .glass-card {
+            background: rgba(33, 31, 36, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at top right, rgba(103, 80, 164, 0.15), transparent),
+                        radial-gradient(circle at bottom left, rgba(207, 188, 255, 0.05), transparent);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#e6e0e9",
+                        "background": "#141218",
+                        "surface-container-lowest": "#0f0d13",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "surface-tint": "#cfbcff",
+                        "tertiary-container": "#c9a74d",
+                        "surface-container": "#211f24",
+                        "on-error": "#690005",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-surface": "#e6e0e9",
+                        "surface-bright": "#3b383e",
+                        "primary-container": "#6750a4",
+                        "error": "#ffb4ab",
+                        "outline": "#948e9c",
+                        "on-secondary": "#342b4b",
+                        "on-tertiary": "#3e2e00",
+                        "on-primary": "#381e72",
+                        "surface-dim": "#141218",
+                        "surface-container-low": "#1d1b20",
+                        "primary-fixed-dim": "#cfbcff",
+                        "tertiary": "#e7c365",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "secondary-container": "#4d4465",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed": "#ffdf93",
+                        "primary-fixed": "#e9ddff",
+                        "surface": "#141218",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-primary-fixed": "#22005d",
+                        "error-container": "#93000a",
+                        "surface-variant": "#36343a",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "on-secondary-container": "#bfb2da",
+                        "secondary-fixed": "#e9ddff",
+                        "primary": "#cfbcff",
+                        "outline-variant": "#494551",
+                        "on-primary-container": "#e0d2ff",
+                        "surface-container-high": "#2b292f",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "surface-container-highest": "#36343a",
+                        "secondary": "#cdc0e9",
+                        "on-surface-variant": "#cbc4d2",
+                        "inverse-primary": "#6750a4",
+                        "on-background": "#e6e0e9",
+                        "inverse-on-surface": "#322f35",
+                        "on-tertiary-container": "#503d00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- Navigation Drawer (Desktop) -->
+<aside class="hidden md:flex fixed left-0 top-0 h-full w-[260px] z-50 flex-col py-4 gap-2 bg-surface-container dark:bg-surface-container-lowest border-r border-white/5 shadow-2xl">
+<div class="text-lg font-bold text-primary px-4 py-6">Abyssal Enterprise</div>
+<nav class="flex flex-col gap-1 px-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body text-sm font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body text-sm font-medium">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-body text-sm font-medium">Logistics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body text-sm font-medium">Financials</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body text-sm font-medium">Sellers</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container/20 text-primary border-l-4 border-primary cursor-pointer transition-all duration-200">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-4 py-6 flex items-center gap-3 border-t border-white/5">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold">DS</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-on-surface">Deep Sea Admin</span>
+<span class="text-[10px] text-on-surface-variant uppercase tracking-wider">Enterprise Tier</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<main class="md:ml-[260px] pb-24 md:pb-0">
+<!-- Top App Bar -->
+<header class="sticky top-0 w-full z-40 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-sm">
+<div class="flex items-center justify-between px-6 h-16 w-full max-w-[1440px] mx-auto">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline text-[24px] md:text-[30px] font-bold leading-tight text-primary">Help Center</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:bg-surface-bright/50 p-2 rounded-full transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="hidden sm:block text-primary font-medium hover:underline">Search</button>
+</div>
+</div>
+</header>
+<!-- Hero Section & Search -->
+<section class="hero-gradient px-6 py-12 md:py-20 flex flex-col items-center text-center">
+<h2 class="font-headline text-3xl md:text-5xl font-bold mb-4 tracking-tight max-w-3xl">
+                How can we assist your deep-sea logistics today?
+            </h2>
+<p class="text-on-surface-variant mb-10 max-w-xl">
+                Access technical documentation, cold-chain protocols, and enterprise billing support for the global aquaculture supply chain.
+            </p>
+<div class="w-full max-w-2xl relative group">
+<span class="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full h-16 bg-surface-container-low border border-outline-variant rounded-xl pl-14 pr-6 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-xl" placeholder="Search articles or topics" type="text"/>
+</div>
+</section>
+<!-- Category Bento Grid -->
+<section class="px-6 py-12 max-w-[1200px] mx-auto">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Getting Started -->
+<div class="glass-card p-8 rounded-xl hover:bg-surface-container-high transition-all cursor-pointer group flex flex-col items-start gap-4 h-full border border-white/5">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">rocket_launch</span>
+</div>
+<div>
+<h3 class="text-lg font-bold mb-2">Getting Started</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Onboarding guides for enterprise dashboards and fleet integration.</p>
+</div>
+</div>
+<!-- Logistics & Transit -->
+<div class="glass-card p-8 rounded-xl hover:bg-surface-container-high transition-all cursor-pointer group flex flex-col items-start gap-4 h-full border border-white/5">
+<div class="w-12 h-12 rounded-lg bg-tertiary/10 flex items-center justify-center text-tertiary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+</div>
+<div>
+<h3 class="text-lg font-bold mb-2">Logistics &amp; Transit</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Tracking protocols, cold-chain requirements, and customs clearances.</p>
+</div>
+</div>
+<!-- Payments & Billing -->
+<div class="glass-card p-8 rounded-xl hover:bg-surface-container-high transition-all cursor-pointer group flex flex-col items-start gap-4 h-full border border-white/5">
+<div class="w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+</div>
+<div>
+<h3 class="text-lg font-bold mb-2">Payments &amp; Billing</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Invoice management, net-terms applications, and tax documentation.</p>
+</div>
+</div>
+<!-- Seller Success -->
+<div class="glass-card p-8 rounded-xl hover:bg-surface-container-high transition-all cursor-pointer group flex flex-col items-start gap-4 h-full border border-white/5">
+<div class="w-12 h-12 rounded-lg bg-error/10 flex items-center justify-center text-error group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">stars</span>
+</div>
+<div>
+<h3 class="text-lg font-bold mb-2">Seller Success</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Best practices for product grading, packaging, and shelf-life optimization.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Trending Articles & Featured Image -->
+<section class="px-6 py-12 max-w-[1200px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Article List -->
+<div class="lg:col-span-7">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-2xl font-bold tracking-tight">Trending Articles</h2>
+<button class="text-primary text-sm font-medium flex items-center gap-1 hover:underline">
+                        View all <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer group border border-white/5">
+<div class="flex items-center gap-4">
+<span class="text-primary font-mono text-sm">01</span>
+<span class="font-medium">Optimizing Nitrogen Cooling for Trans-Pacific Transit</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer group border border-white/5">
+<div class="flex items-center gap-4">
+<span class="text-primary font-mono text-sm">02</span>
+<span class="font-medium">Managing AAA Grade Certification for High-Value Cargo</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer group border border-white/5">
+<div class="flex items-center gap-4">
+<span class="text-primary font-mono text-sm">03</span>
+<span class="font-medium">Updating Automated Warehouse API Integration (v2.4.0)</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+<div class="flex items-center justify-between p-5 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer group border border-white/5">
+<div class="flex items-center gap-4">
+<span class="text-primary font-mono text-sm">04</span>
+<span class="font-medium">Protocol for Unexpected Temperature Deviations in Cold-Chain</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Visual Feature -->
+<div class="lg:col-span-5 h-[400px] relative rounded-3xl overflow-hidden shadow-2xl group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A highly sophisticated, cinematic view of a futuristic cold-chain logistics facility with glowing purple and blue neon accents. Massive temperature-controlled containers are arranged in a precise geometric grid within a dark, oceanic-themed warehouse. The lighting is low-key with sharp highlights on metallic surfaces, creating a technical and premium enterprise atmosphere. Subtle mist rises from the floor, mimicking the chill of deep-sea environments." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpw63VJGk8C0INVcMjsuSS7FXC1A7TLjrPWOecBXkeIUvB8dhF1oAYT_1doorGi_XUu7u9vH04xBZucdcq8buxRau-jRZrL7a_HlO1nqZM1iUa4Hjem9Wj_SkLqK3tyJRz-BFhEomPpXI_0sZhQ9SsCINbfoNlGwuPogIEzwDFV8wUBK2cYTvBMWFyN6DZzJZLmCgY5wump1khOfuhEMUHeoI1ZD55ZkLxsZH66x9FIfkhMhEqVJIsOEdL7H6HTcJXi5reJHchKmk"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent p-8 flex flex-col justify-end">
+<span class="bg-primary/20 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest self-start mb-3 border border-primary/30 backdrop-blur-md">Featured Guide</span>
+<h3 class="text-2xl font-bold text-white mb-2 leading-tight">Navigating Deep Sea Ports: The 2024 Global Handbook</h3>
+<p class="text-white/70 text-sm">Comprehensive documentation on docking protocols and hazardous material handling in extreme pressure environments.</p>
+</div>
+</div>
+</section>
+<!-- Support Footer / Contact -->
+<section class="px-6 py-12 max-w-[1200px] mx-auto text-center border-t border-white/10 mt-12 mb-20">
+<h2 class="text-xl font-bold mb-2">Can't find what you're looking for?</h2>
+<p class="text-on-surface-variant mb-8">Our enterprise support team is available 24/7 for high-priority logistics emergencies.</p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+<button class="px-8 py-3 bg-primary text-on-primary rounded-xl font-bold hover:bg-primary-fixed-dim transition-colors shadow-lg active:scale-95 duration-200">
+                    Contact Enterprise Support
+                </button>
+<button class="px-8 py-3 bg-surface-container-high border border-outline-variant text-on-surface rounded-xl font-bold hover:bg-surface-bright transition-colors shadow-lg active:scale-95 duration-200">
+                    Submit a Technical Ticket
+                </button>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 md:hidden bg-surface-container-high/90 backdrop-blur-lg border-t border-white/10 rounded-t-xl shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 scale-90 active:scale-100 transition-transform" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label text-[12px] font-medium tracking-wider">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-surface-bright scale-90 active:scale-100 transition-transform" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-label text-[12px] font-medium tracking-wider">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-surface-bright scale-90 active:scale-100 transition-transform" href="#">
+<span class="material-symbols-outlined">ac_unit</span>
+<span class="font-label text-[12px] font-medium tracking-wider">Cold Chain</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant active:bg-surface-bright scale-90 active:scale-100 transition-transform" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label text-[12px] font-medium tracking-wider">Profile</span>
+</a>
+</nav>
+</body></html>

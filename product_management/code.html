@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<title>Oceanic Logistics | Product Management</title>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"primary-fixed-dim": "#cfbcff", "outline-variant": "#494551", "tertiary-fixed": "#ffdf93", "on-error-container": "#ffdad6", background: "#141218", "on-primary-container": "#e0d2ff", "surface-container-low": "#1d1b20", "secondary-container": "#4d4465", "surface-container-lowest": "#0f0d13", error: "#ffb4ab", "surface-container": "#211f24", "on-background": "#e6e0e9", "on-surface": "#e6e0e9", "on-secondary": "#342b4b", "primary-container": "#6750a4", "error-container": "#93000a", "tertiary-container": "#c9a74d", "secondary-fixed-dim": "#cdc0e9", outline: "#948e9c", "on-surface-variant": "#cbc4d2", "on-secondary-fixed-variant": "#4b4263", "tertiary-fixed-dim": "#e7c365", "surface-tint": "#cfbcff", "primary-fixed": "#e9ddff", "on-tertiary-container": "#503d00", "on-secondary-fixed": "#1f1635", "surface-dim": "#141218", tertiary: "#e7c365", "on-secondary-container": "#bfb2da", "on-primary-fixed-variant": "#4f378a", "on-tertiary": "#3e2e00", "surface-container-high": "#2b292f", "inverse-surface": "#e6e0e9", "surface-container-highest": "#36343a", "secondary-fixed": "#e9ddff", "on-tertiary-fixed-variant": "#594400", "on-tertiary-fixed": "#241a00", "surface-variant": "#36343a", "surface-bright": "#3b383e", "on-error": "#690005", "inverse-primary": "#6750a4", surface: "#141218", secondary: "#cdc0e9", primary: "#cfbcff", "on-primary-fixed": "#22005d", "on-primary": "#381e72", "inverse-on-surface": "#322f35"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"5xl": "48px", "2xl": "24px", xl: "20px", sm: "8px", lg: "16px", "3xl": "32px", "4xl": "40px", md: "12px", xs: "4px"}, fontFamily: {"hero-mobile": ["Inter"], "body-sm": ["Inter"], hero: ["Inter"], "body-lg": ["Inter"], "section-title": ["Inter"], "card-title": ["Inter"], "page-title": ["Inter"], label: ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"]}, fontSize: {"hero-mobile": ["28px", {lineHeight: "1.2", fontWeight: "700"}], "body-sm": ["14px", {lineHeight: "1.5", fontWeight: "400"}], hero: ["36px", {lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700"}], "body-lg": ["16px", {lineHeight: "1.5", fontWeight: "400"}], "section-title": ["24px", {lineHeight: "1.3", fontWeight: "600"}], "card-title": ["18px", {lineHeight: "1.4", fontWeight: "600"}], "page-title": ["30px", {lineHeight: "1.2", fontWeight: "700"}], label: ["12px", {lineHeight: "1", letterSpacing: "0.05em", fontWeight: "500"}]}}}};</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .premium-gradient-border {
+            position: relative;
+        }
+        .premium-gradient-border::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(to bottom, rgba(124, 58, 237, 0.3), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-lg overflow-x-hidden">
+<!-- Navigation Drawer -->
+<aside class="flex flex-col h-screen fixed z-40 w-[260px] bg-surface-container border-r border-outline-variant shadow-sm hidden md:flex">
+<div class="px-6 py-8">
+<h1 class="font-page-title text-page-title font-bold text-primary">Oceanic Logistics</h1>
+<p class="font-label text-label text-on-surface-variant mt-2">Enterprise Tier</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container/10 text-primary border-l-4 border-primary transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label text-label">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="font-label text-label">Shipments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-label text-label">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="verified">verified</span>
+<span class="font-label text-label">Quality Control</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="ac_unit">ac_unit</span>
+<span class="font-label text-label">Cold Chain</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label text-label">Settings</span>
+</a>
+</nav>
+<div class="p-6 border-t border-outline-variant flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold overflow-hidden">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A professional headshot of a logistics manager in his 40s with a confident expression. He is wearing a dark, technical navy blue polo shirt against a minimalist, high-tech office background with soft blue lighting. The overall aesthetic is professional, clean, and representative of a high-end corporate logistics environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzB5aoaQ3WpzVWz3uCRpgL325iSRNxKGoj6dGWeKtUmG97IHlPMm2Xga-F3OqRh17Zbou6MHnAAZgZJrVN0gWvxVQBJMgTSBlJSfop4MliLJd23UxD4iJiILupv_LWQ36_jOzZhb5EsnoN7RxcLhZXy7cw5RJ3yQ-23DssGRSv5TRo1d72jvUd_wnofwu25kJNLjS1jJv3C5yH7b4eUxaQAIz1HTJkgihYBHr60AJeNTLLletsswU-JtWK7dpJw82cZGiqVXpgGzo"/>
+</div>
+<div>
+<p class="font-label text-label font-bold">V1.0.4</p>
+<p class="text-xs text-on-surface-variant">System Online</p>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="md:ml-[260px] min-h-screen flex flex-col">
+<!-- Top App Bar -->
+<header class="flex justify-between items-center px-6 py-4 w-full z-30 bg-surface/80 backdrop-blur-xl sticky top-0 border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h2 class="font-page-title text-page-title text-primary">Global Marketplace</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex items-center bg-surface-container-high px-4 py-2 rounded-full border border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant text-sm mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-64 placeholder-on-surface-variant" placeholder="Search inventory..." type="text"/>
+</div>
+<div class="relative cursor-pointer active:opacity-70">
+<span class="material-symbols-outlined text-primary" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
+<img alt="User avatar" class="w-full h-full object-cover" data-alt="A close-up portrait of a senior executive in the maritime industry, reflecting experience and authority. The lighting is cold and atmospheric, with subtle blue and purple highlights typical of a deep-sea tech environment. The background shows blurred server racks with pulsing green and blue status lights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgyU884Dc719XmIXJJKxJED4yVpa31SpbhtZzJAIHE1Zp8ilSiyc-2gvRkCftV8rknzcramcLPT3dyUBMBkcgDdZwURZezoXJWoXOfPfEsCBjNGZ-BdD1C-7th8EtnruLFwYOScCLjmHTWUA4pa5mzDzglctHxftBKhs7qvSyOrlipAkkDAjfklG1RsZMWdSiS0sb54q4neYrfM_W93iZz0WZsRz2x_MYokXYpxlD4EX0dif-98JoAMdxTgdnzsq0g24y8OpmWXqY"/>
+</div>
+</div>
+</header>
+<!-- Canvas Area -->
+<div class="p-6 max-w-[1440px] w-full mx-auto">
+<!-- Filters & Stats Section -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+<div class="glass-card premium-gradient-border p-6 rounded-xl">
+<div class="flex items-center justify-between mb-4">
+<span class="font-label text-label text-on-surface-variant uppercase">Total Stock</span>
+<span class="material-symbols-outlined text-primary" data-icon="database">database</span>
+</div>
+<div class="text-3xl font-bold">1,284 <span class="text-sm font-normal text-on-surface-variant">Tons</span></div>
+<div class="flex items-center gap-2 mt-2 text-xs text-success text-green-400">
+<span class="material-symbols-outlined text-xs" data-icon="trending_up">trending_up</span>
+<span>4.2% from last week</span>
+</div>
+</div>
+<div class="glass-card premium-gradient-border p-6 rounded-xl">
+<div class="flex items-center justify-between mb-4">
+<span class="font-label text-label text-on-surface-variant uppercase">Active Listings</span>
+<span class="material-symbols-outlined text-tertiary" data-icon="list_alt">list_alt</span>
+</div>
+<div class="text-3xl font-bold">42</div>
+<div class="flex items-center gap-2 mt-2 text-xs text-on-surface-variant">
+<span>Across 12 Global Hubs</span>
+</div>
+</div>
+<div class="glass-card premium-gradient-border p-6 rounded-xl">
+<div class="flex items-center justify-between mb-4">
+<span class="font-label text-label text-on-surface-variant uppercase">Avg. Quality</span>
+<span class="material-symbols-outlined text-primary" data-icon="verified">verified</span>
+</div>
+<div class="text-3xl font-bold text-primary">AAA+</div>
+<div class="flex items-center gap-2 mt-2 text-xs text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+<span>Optimal Cold Chain</span>
+</div>
+</div>
+<div class="glass-card premium-gradient-border p-6 rounded-xl">
+<div class="flex items-center justify-between mb-4">
+<span class="font-label text-label text-on-surface-variant uppercase">Avg. Market Price</span>
+<span class="material-symbols-outlined text-primary" data-icon="payments">payments</span>
+</div>
+<div class="text-3xl font-bold">$18.40 <span class="text-sm font-normal text-on-surface-variant">/kg</span></div>
+<div class="flex items-center gap-2 mt-2 text-xs text-on-surface-variant">
+<span>Price Index Stable</span>
+</div>
+</div>
+</div>
+<!-- Header and Filter Bar -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+<div>
+<h3 class="font-section-title text-section-title text-on-surface">Inventory Management</h3>
+<p class="text-on-surface-variant text-body-sm">Real-time global aquaculture stock and distribution tracking.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="bg-surface-container-high px-4 py-2 rounded-lg border border-outline-variant font-label text-label flex items-center gap-2 hover:bg-secondary-container/20 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                        Filter
+                    </button>
+<button class="bg-surface-container-high px-4 py-2 rounded-lg border border-outline-variant font-label text-label flex items-center gap-2 hover:bg-secondary-container/20 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="sort">sort</span>
+                        Sort by Price
+                    </button>
+</div>
+</div>
+<!-- Product Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<!-- Product Card 1 -->
+<div class="glass-card rounded-xl overflow-hidden group hover:scale-[1.02] transition-all duration-300">
+<div class="relative h-48">
+<img class="w-full h-full object-cover" data-alt="A high-resolution, professional macro shot of fresh Atlantic Salmon fillets resting on a bed of crushed ice. The skin is glistening under cool, clinical LED lighting that highlights the vibrant orange and white marbling of the fish. The scene is set in a dark, high-end commercial cold storage facility with subtle blue atmospheric light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAujSgnLN3aewmnbnMwcW9SmP5FUXJHmT73nPFqa3ePN5uHCR1fzDwE8wx0Ceo8NaG304kJkGe5CxflnrV8wtrCWSnO6YeIj5cb0t87_XPISp5w-etDiOMX_gulHfWzSR3a5AhpORCl3xy2P4w1fJ1J6MjM6_kwLN5xoRsFFYKTGPoGyRSD43EAwv68HFjm1JLNvHE6HK7X5TGL4c9RlEDSfV6WqYkmqHQI-U6uiFhv7NAZGiKMT9zY6IB57uxJXw0vnyd31cZrYuk"/>
+<div class="absolute top-3 left-3 bg-green-500/90 text-white font-label text-[10px] px-2 py-1 rounded-full flex items-center gap-1 backdrop-blur-md">
+<span class="material-symbols-outlined text-[10px]" data-icon="verified" data-weight="fill">verified</span>
+                            AAA GRADE
+                        </div>
+<div class="absolute bottom-3 right-3 glass-card px-3 py-1 rounded-full text-xs font-bold text-white">
+                            $24.50/kg
+                        </div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-card-title text-card-title">Atlantic Salmon</h4>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer" data-icon="more_vert">more_vert</span>
+</div>
+<div class="space-y-3 mb-4">
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="warehouse">warehouse</span>
+                                    Stock
+                                </span>
+<span class="font-bold">450 Tons</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="person">person</span>
+                                    Seller
+                                </span>
+<span class="text-primary hover:underline cursor-pointer">Nordic Harvest</span>
+</div>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[75%] rounded-full shadow-[0_0_10px_rgba(207,188,255,0.4)]"></div>
+</div>
+<div class="flex justify-between mt-1 mb-4">
+<span class="text-[10px] text-on-surface-variant font-label">STORAGE CAPACITY</span>
+<span class="text-[10px] text-on-surface-variant font-label">75%</span>
+</div>
+<button class="w-full py-2.5 rounded-lg bg-primary text-on-primary font-label text-label hover:opacity-90 active:scale-95 transition-all">
+                            View Logistics
+                        </button>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="glass-card rounded-xl overflow-hidden group hover:scale-[1.02] transition-all duration-300">
+<div class="relative h-48">
+<img class="w-full h-full object-cover" data-alt="A top-down view of premium Bluefin Tuna slices presented on a dark slate board. The meat is deep red and translucent, showing exceptional quality. The environment is a professional, minimalist kitchen with moody, dramatic lighting and subtle purple lens flares, emphasizing a high-end technological approach to fresh food distribution." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBH6yYv9FzaK4gtyC4qqDlHCf2g6PAXfFcIMiwI5zgfVjCFZX8IYX9NCxahmSC2haWTvja62BlORDDQFQ9GffWQO1nQMd0Am44wGzQ0L0UrWZRYPMkVg3Dzm0xA_C0MfPqztPTqHw8PoOj6z47UDuhqLN9QERRsIXCpxHmnKF6JT0uGX4KdVgs4xBhuInVHZi2cjmxi3LIIaUnZuRcd-2XWl2Nij67UR812D5vrFmUD78BzfBs94TbQGlDNZ8zVjs4v2pfoVXjSnKw"/>
+<div class="absolute top-3 left-3 bg-amber-500/90 text-white font-label text-[10px] px-2 py-1 rounded-full flex items-center gap-1 backdrop-blur-md">
+<span class="material-symbols-outlined text-[10px]" data-icon="verified" data-weight="fill">verified</span>
+                            AA PREMIUM
+                        </div>
+<div class="absolute bottom-3 right-3 glass-card px-3 py-1 rounded-full text-xs font-bold text-white">
+                            $42.00/kg
+                        </div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-card-title text-card-title">Bluefin Tuna</h4>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer" data-icon="more_vert">more_vert</span>
+</div>
+<div class="space-y-3 mb-4">
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="warehouse">warehouse</span>
+                                    Stock
+                                </span>
+<span class="font-bold text-error">12 Tons</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="person">person</span>
+                                    Seller
+                                </span>
+<span class="text-primary hover:underline cursor-pointer">Kyoto Blue</span>
+</div>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-error w-[15%] rounded-full shadow-[0_0_10px_rgba(255,180,171,0.4)]"></div>
+</div>
+<div class="flex justify-between mt-1 mb-4">
+<span class="text-[10px] text-error font-label">CRITICAL STOCK</span>
+<span class="text-[10px] text-error font-label">15%</span>
+</div>
+<button class="w-full py-2.5 rounded-lg bg-surface-container-highest text-on-surface font-label text-label hover:bg-outline-variant transition-all border border-outline-variant">
+                            Restock Request
+                        </button>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="glass-card rounded-xl overflow-hidden group hover:scale-[1.02] transition-all duration-300">
+<div class="relative h-48">
+<img class="w-full h-full object-cover" data-alt="Dozens of fresh, glistening prawns arranged symmetrically in a circular pattern on a bed of ice. The colors are vibrant with iridescent pink and silver tones. The lighting is bright and technical, suggesting a high-performance food safety laboratory or a premium logistics hub. The background is a clean, dark industrial surface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpCHI9YYzkVoFnS0_A1tPE3HBFZ87ftaWQiafG01aJv7mr77mZ2x-EbvX_RqMtKx8OBG6FzkbO2KjFh-s2wvovHTK3h76xWHUriPTJLCPXWvMCGI9wFd5wpol4a9LIBgQ9_qyQuqainBO9YqLkV3XEH6FSuaQ8uotkYBFwqnOLLvqfmef1XegQI75iHJLRXSBGikt-m0jfdE27E9_LRkAvUAQVQ5MU-8RFcZsqdamfypQ2-V6j1goMm1Ok1Qe8vOglHdQL1qmsB9w"/>
+<div class="absolute top-3 left-3 bg-green-500/90 text-white font-label text-[10px] px-2 py-1 rounded-full flex items-center gap-1 backdrop-blur-md">
+<span class="material-symbols-outlined text-[10px]" data-icon="verified" data-weight="fill">verified</span>
+                            AAA GRADE
+                        </div>
+<div class="absolute bottom-3 right-3 glass-card px-3 py-1 rounded-full text-xs font-bold text-white">
+                            $15.80/kg
+                        </div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-card-title text-card-title">Tiger Prawns</h4>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer" data-icon="more_vert">more_vert</span>
+</div>
+<div class="space-y-3 mb-4">
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="warehouse">warehouse</span>
+                                    Stock
+                                </span>
+<span class="font-bold">1,200 Tons</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="person">person</span>
+                                    Seller
+                                </span>
+<span class="text-primary hover:underline cursor-pointer">Gulf Oceanics</span>
+</div>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[90%] rounded-full shadow-[0_0_10px_rgba(207,188,255,0.4)]"></div>
+</div>
+<div class="flex justify-between mt-1 mb-4">
+<span class="text-[10px] text-on-surface-variant font-label">STORAGE CAPACITY</span>
+<span class="text-[10px] text-on-surface-variant font-label">90%</span>
+</div>
+<button class="w-full py-2.5 rounded-lg bg-primary text-on-primary font-label text-label hover:opacity-90 active:scale-95 transition-all">
+                            View Logistics
+                        </button>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="glass-card rounded-xl overflow-hidden group hover:scale-[1.02] transition-all duration-300">
+<div class="relative h-48">
+<img class="w-full h-full object-cover" data-alt="A close-up of premium Sea Bass fillets, skin-on, showing the metallic silvery sheen of the scales. The fillets are laid out on a sterile, brushed steel surface in a modern processing plant. The lighting is cool white with hints of purple, emphasizing freshness and precision engineering in seafood logistics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBAJFwpgtrBs6rdaxjXpuq_lAAh7wdiR_-IScqBkyx3z83onKammwhjDAZKWtOUKPoo9fJkfUPV9Pm2PZz-L2c_55uu3m8d6pAvx6VOFTeyZz7rCmXvkIuoy5tFO_Q4X7-CTVcell7iR3zJICjWAT3s6dN46QZ-S54WsvtJPolyIhn4f3AG9jpWYXSsxVUIUE2NFTjIYjPAT8TN5oiRMlOC1I5BfuZTnLRLJU64_OF--e0SnB6bTMkfmSgEGEQSmKWtCmC55aSUbo"/>
+<div class="absolute top-3 left-3 bg-amber-500/90 text-white font-label text-[10px] px-2 py-1 rounded-full flex items-center gap-1 backdrop-blur-md">
+<span class="material-symbols-outlined text-[10px]" data-icon="verified" data-weight="fill">verified</span>
+                            AA GRADE
+                        </div>
+<div class="absolute bottom-3 right-3 glass-card px-3 py-1 rounded-full text-xs font-bold text-white">
+                            $19.20/kg
+                        </div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-card-title text-card-title">Wild Sea Bass</h4>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer" data-icon="more_vert">more_vert</span>
+</div>
+<div class="space-y-3 mb-4">
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="warehouse">warehouse</span>
+                                    Stock
+                                </span>
+<span class="font-bold">85 Tons</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="person">person</span>
+                                    Seller
+                                </span>
+<span class="text-primary hover:underline cursor-pointer">Coastline Pro</span>
+</div>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[45%] rounded-full shadow-[0_0_10px_rgba(207,188,255,0.4)]"></div>
+</div>
+<div class="flex justify-between mt-1 mb-4">
+<span class="text-[10px] text-on-surface-variant font-label">STORAGE CAPACITY</span>
+<span class="text-[10px] text-on-surface-variant font-label">45%</span>
+</div>
+<button class="w-full py-2.5 rounded-lg bg-primary text-on-primary font-label text-label hover:opacity-90 active:scale-95 transition-all">
+                            View Logistics
+                        </button>
+</div>
+</div>
+<!-- Product Card 5 -->
+<div class="glass-card rounded-xl overflow-hidden group hover:scale-[1.02] transition-all duration-300">
+<div class="relative h-48">
+<img class="w-full h-full object-cover" data-alt="A professional shot of a whole King Crab on ice, its vibrant red and orange shell contrasting against the white ice and dark slate background. The lighting is sophisticated, with narrow spotlights creating a premium, almost gallery-like presentation of the seafood. Subtle blue vapor from the dry ice adds a cold-chain atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXTF-EbzKuFIx89k8_EOrcWRXI3jGXjt4qXsa6I8G2iK3G50IkZb8geZBDPNsEpQPBrtXvWEIWV0mKtflIqGgbL4L560fwqPsiywuRdKQFHFqzx51xv_6voJaVt4w6t1Bl9bBO-P_bQ7e9Y69l3nsjBQNJTYigmGniAvQrLvArXEKOpAdFVQcj7yguqwSIEVpKb_ErNYtdqDEsThwcPeY9T9XfSx1pS0dpAtIFOSuvzZobgrhyXUez1WdvoJ8oBmwNnR5LIlyXBKU"/>
+<div class="absolute top-3 left-3 bg-green-500/90 text-white font-label text-[10px] px-2 py-1 rounded-full flex items-center gap-1 backdrop-blur-md">
+<span class="material-symbols-outlined text-[10px]" data-icon="verified" data-weight="fill">verified</span>
+                            AAA GRADE
+                        </div>
+<div class="absolute bottom-3 right-3 glass-card px-3 py-1 rounded-full text-xs font-bold text-white">
+                            $85.00/kg
+                        </div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-card-title text-card-title">King Crab</h4>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer" data-icon="more_vert">more_vert</span>
+</div>
+<div class="space-y-3 mb-4">
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="warehouse">warehouse</span>
+                                    Stock
+                                </span>
+<span class="font-bold">28 Tons</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="person">person</span>
+                                    Seller
+                                </span>
+<span class="text-primary hover:underline cursor-pointer">Arctic Waters Co.</span>
+</div>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[30%] rounded-full shadow-[0_0_10px_rgba(207,188,255,0.4)]"></div>
+</div>
+<div class="flex justify-between mt-1 mb-4">
+<span class="text-[10px] text-on-surface-variant font-label">STORAGE CAPACITY</span>
+<span class="text-[10px] text-on-surface-variant font-label">30%</span>
+</div>
+<button class="w-full py-2.5 rounded-lg bg-primary text-on-primary font-label text-label hover:opacity-90 active:scale-95 transition-all">
+                            View Logistics
+                        </button>
+</div>
+</div>
+<!-- Product Card 6 (Asymmetric Layout Example) -->
+<div class="glass-card rounded-xl overflow-hidden group hover:scale-[1.02] transition-all duration-300">
+<div class="relative h-48">
+<img class="w-full h-full object-cover" data-alt="A clean, scientific shot of a stack of fresh oysters in their shells. The texture of the rugged shells is highlighted by high-contrast side-lighting. The background is a dark, matte navy blue with a soft tech-grid overlay, representing the data-driven approach to tracking shellfish freshness and quality grade." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmeBRmKjY9OlevurFfVDy0GV1ji3myJRjFOx5asZ94mQneWMPgLtMl8iPVytNPT00JrkeFIUajPDDNhykmIlRlbjXM5pUT3QBPLgrYoMEKL9jQ018ErTaFk8Pgv6SuCq6G0tJGgLZzCNJhiQMs3Db9Eo4vu-98GGpvcojUl7gF-gAkfy1SRrt4Zyz2qJbKxjThUtBiqyDWFDVBj_Qj2LfbPoRUDXG1PAmLz8b2jr38LZiKBVocZ8paxUBKZW8pjfm2mIclNYSo9p8"/>
+<div class="absolute top-3 left-3 bg-green-500/90 text-white font-label text-[10px] px-2 py-1 rounded-full flex items-center gap-1 backdrop-blur-md">
+<span class="material-symbols-outlined text-[10px]" data-icon="verified" data-weight="fill">verified</span>
+                            AAA GRADE
+                        </div>
+<div class="absolute bottom-3 right-3 glass-card px-3 py-1 rounded-full text-xs font-bold text-white">
+                            $12.50/doz
+                        </div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<h4 class="font-card-title text-card-title">Pacific Oysters</h4>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer" data-icon="more_vert">more_vert</span>
+</div>
+<div class="space-y-3 mb-4">
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="warehouse">warehouse</span>
+                                    Stock
+                                </span>
+<span class="font-bold">600 Units</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="person">person</span>
+                                    Seller
+                                </span>
+<span class="text-primary hover:underline cursor-pointer">Island Reefs</span>
+</div>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[55%] rounded-full shadow-[0_0_10px_rgba(207,188,255,0.4)]"></div>
+</div>
+<div class="flex justify-between mt-1 mb-4">
+<span class="text-[10px] text-on-surface-variant font-label">STORAGE CAPACITY</span>
+<span class="text-[10px] text-on-surface-variant font-label">55%</span>
+</div>
+<button class="w-full py-2.5 rounded-lg bg-primary text-on-primary font-label text-label hover:opacity-90 active:scale-95 transition-all">
+                            View Logistics
+                        </button>
+</div>
+</div>
+<!-- Cold-Chain Pulse Card (Informational) -->
+<div class="lg:col-span-2 glass-card rounded-xl p-6 flex flex-col justify-center border-l-4 border-primary bg-gradient-to-br from-primary/5 to-transparent">
+<div class="flex items-center gap-4 mb-6">
+<div class="relative">
+<span class="material-symbols-outlined text-4xl text-primary" data-icon="ac_unit">ac_unit</span>
+<span class="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-ping"></span>
+</div>
+<div>
+<h4 class="font-section-title text-card-title">Live Cold-Chain Tracking</h4>
+<p class="text-body-sm text-on-surface-variant">Global transit sensors reporting optimal conditions.</p>
+</div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="p-3 bg-surface-container-highest rounded-lg">
+<p class="text-[10px] text-on-surface-variant font-label uppercase">In-Transit</p>
+<p class="text-xl font-bold text-primary">124</p>
+</div>
+<div class="p-3 bg-surface-container-highest rounded-lg">
+<p class="text-[10px] text-on-surface-variant font-label uppercase">Optimal Temp</p>
+<p class="text-xl font-bold text-success text-green-400">98%</p>
+</div>
+<div class="p-3 bg-surface-container-highest rounded-lg">
+<p class="text-[10px] text-on-surface-variant font-label uppercase">Average Latency</p>
+<p class="text-xl font-bold">4.2h</p>
+</div>
+<div class="p-3 bg-surface-container-highest rounded-lg">
+<p class="text-[10px] text-on-surface-variant font-label uppercase">Risk Level</p>
+<p class="text-xl font-bold text-primary">LOW</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Spacer for Bottom Nav on Mobile -->
+<div class="h-24 md:hidden"></div>
+<!-- Add Product FAB -->
+<button class="fixed bottom-24 right-6 md:bottom-10 md:right-10 w-16 h-16 bg-primary text-on-primary rounded-2xl shadow-[0_10px_30px_rgba(124,58,237,0.4)] flex items-center justify-center group active:scale-90 transition-transform duration-150 z-50">
+<span class="material-symbols-outlined text-3xl group-hover:rotate-90 transition-transform" data-icon="add">add</span>
+</button>
+</main>
+<!-- Bottom Navigation Bar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full flex justify-around items-center py-3 px-4 z-50 bg-surface-container-high/90 backdrop-blur-md rounded-t-xl border-t border-outline-variant shadow-lg">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label text-label mt-1">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-primary font-bold scale-110 active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-label text-label mt-1">Market</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label text-label mt-1">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label text-label mt-1">Profile</span>
+</div>
+</nav>
+</body></html>

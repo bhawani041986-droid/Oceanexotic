@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #141218;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .premium-border {
+            position: relative;
+        }
+        .premium-border::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(to bottom, rgba(124, 58, 237, 0.3), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+    </style>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"primary-fixed-dim": "#cfbcff", "outline-variant": "#494551", "tertiary-fixed": "#ffdf93", "on-error-container": "#ffdad6", background: "#141218", "on-primary-container": "#e0d2ff", "surface-container-low": "#1d1b20", "secondary-container": "#4d4465", "surface-container-lowest": "#0f0d13", error: "#ffb4ab", "surface-container": "#211f24", "on-background": "#e6e0e9", "on-surface": "#e6e0e9", "on-secondary": "#342b4b", "primary-container": "#6750a4", "error-container": "#93000a", "tertiary-container": "#c9a74d", "secondary-fixed-dim": "#cdc0e9", outline: "#948e9c", "on-surface-variant": "#cbc4d2", "on-secondary-fixed-variant": "#4b4263", "tertiary-fixed-dim": "#e7c365", "surface-tint": "#cfbcff", "primary-fixed": "#e9ddff", "on-tertiary-container": "#503d00", "on-secondary-fixed": "#1f1635", "surface-dim": "#141218", tertiary: "#e7c365", "on-secondary-container": "#bfb2da", "on-primary-fixed-variant": "#4f378a", "on-tertiary": "#3e2e00", "surface-container-high": "#2b292f", "inverse-surface": "#e6e0e9", "surface-container-highest": "#36343a", "secondary-fixed": "#e9ddff", "on-tertiary-fixed-variant": "#594400", "on-tertiary-fixed": "#241a00", "surface-variant": "#36343a", "surface-bright": "#3b383e", "on-error": "#690005", "inverse-primary": "#6750a4", surface: "#141218", secondary: "#cdc0e9", primary: "#cfbcff", "on-primary-fixed": "#22005d", "on-primary": "#381e72", "inverse-on-surface": "#322f35"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"5xl": "48px", "2xl": "24px", xl: "20px", sm: "8px", lg: "16px", "3xl": "32px", "4xl": "40px", md: "12px", xs: "4px"}, fontFamily: {"hero-mobile": ["Inter"], "body-sm": ["Inter"], hero: ["Inter"], "body-lg": ["Inter"], "section-title": ["Inter"], "card-title": ["Inter"], "page-title": ["Inter"], label: ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"]}, fontSize: {"hero-mobile": ["28px", {lineHeight: "1.2", fontWeight: "700"}], "body-sm": ["14px", {lineHeight: "1.5", fontWeight: "400"}], hero: ["36px", {lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700"}], "body-lg": ["16px", {lineHeight: "1.5", fontWeight: "400"}], "section-title": ["24px", {lineHeight: "1.3", fontWeight: "600"}], "card-title": ["18px", {lineHeight: "1.4", fontWeight: "600"}], "page-title": ["30px", {lineHeight: "1.2", fontWeight: "700"}], label: ["12px", {lineHeight: "1", letterSpacing: "0.05em", fontWeight: "500"}]}}}};</script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex">
+<!-- Navigation Drawer -->
+<aside class="flex flex-col h-screen fixed z-40 w-[260px] bg-surface-container border-r border-outline-variant shadow-sm">
+<div class="px-6 py-8">
+<h1 class="font-page-title text-page-title font-bold text-primary">Oceanic Logistics</h1>
+<p class="text-on-surface-variant text-label font-label mt-1">Enterprise Tier</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container/10 text-primary border-l-4 border-primary transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label text-label">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="font-label text-label">Shipments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-label text-label">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="verified">verified</span>
+<span class="font-label text-label">Quality Control</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="ac_unit">ac_unit</span>
+<span class="font-label text-label">Cold Chain</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label text-label">Settings</span>
+</a>
+</nav>
+<div class="p-6 border-t border-outline-variant">
+<div class="flex items-center gap-3">
+<img alt="User profile" class="w-10 h-10 rounded-full border border-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_ejA9RKeAkjQ05l8vJbzPA-ep7AFiJix36htUb2MPQPGIC-QNpuJyanZF1qvBXxcf9axgaGMXW7ebTLRiuuq0SzlCoye2Ufln2_Zt7ajh2hi7p8BTPbhgUU2W-LdWdea-xUReC5JadQmzxy8f1aKF86DMquXvmLoB-ffkLyi8Spl62R2i7KNIdeprmPHVLFeD8wYfeeUekiDjgQafm_mR02-9MCaCy9XVKNboRdC1qJvgPhkM5eED85UM3tv-y0TJXWdnqgKF330"/>
+<div>
+<p class="text-on-surface font-label text-label font-bold">Admin Portal</p>
+<p class="text-on-surface-variant text-[10px]">V1.0.4</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-[260px] min-h-screen flex flex-col">
+<!-- Top App Bar -->
+<header class="flex justify-between items-center px-6 py-4 w-full z-30 sticky top-0 bg-surface/80 backdrop-blur-xl border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface cursor-pointer active:opacity-70" data-icon="menu">menu</span>
+<h2 class="font-page-title text-page-title font-bold text-on-surface tracking-tight">Category Manager</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 px-4 py-2 bg-[#7C3AED] hover:bg-[#6D28D9] text-white rounded-lg transition-all active:scale-95 font-label text-label">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                    New Category
+                </button>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center border border-outline-variant cursor-pointer">
+<span class="material-symbols-outlined text-primary" data-icon="person">person</span>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="p-2xl max-w-[1440px] mx-auto w-full">
+<!-- Summary Header -->
+<div class="mb-3xl flex justify-between items-end">
+<div>
+<h3 class="font-section-title text-section-title text-on-surface">Seafood Categories</h3>
+<p class="text-on-surface-variant font-body-lg text-body-lg mt-1">Manage global inventory classification and quality standards.</p>
+</div>
+<div class="flex gap-4">
+<div class="glass-card px-4 py-2 rounded-xl flex items-center gap-3">
+<span class="material-symbols-outlined text-tertiary" data-icon="category">category</span>
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider">Total Groups</p>
+<p class="text-lg font-bold">12</p>
+</div>
+</div>
+<div class="glass-card px-4 py-2 rounded-xl flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="inventory">inventory</span>
+<div>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider">Stocked SKUs</p>
+<p class="text-lg font-bold">1,429</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Bento Grid of Categories -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2xl">
+<!-- Category Card: Shellfish -->
+<div class="glass-card premium-border p-2xl rounded-2xl group transition-all duration-300 hover:translate-y-[-4px]">
+<div class="flex justify-between items-start mb-lg">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="water_drop">water_drop</span>
+</div>
+<div class="flex gap-1">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<h4 class="font-card-title text-card-title text-on-surface mb-xs">Shellfish</h4>
+<p class="text-body-sm text-on-surface-variant mb-xl line-clamp-2">Premium crustaceans and mollusks including lobster, scallops, and deep-sea prawns.</p>
+<div class="flex items-center justify-between pt-lg border-t border-outline-variant">
+<div class="flex flex-col">
+<span class="text-label font-label text-on-surface-variant">Products</span>
+<span class="text-body-lg font-bold">482 Units</span>
+</div>
+<div class="flex -space-x-2">
+<img alt="Seafood" class="w-8 h-8 rounded-full border-2 border-surface-container" data-alt="A high-resolution close-up of a premium lobster in a cold storage environment. The lighting is clinical and cool-toned, emphasizing the deep reds and blues of the shell. The aesthetic is professional, technical, and high-end, fitting for an enterprise aquaculture logistics software dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBejy7xnu-0KbRus8kQJz8NpxB1iC-gLku1LB0iPbOnRpuwpAXguMn5IRmqKEGdZjOjq_5tWzxjkLUDPFz2Rqh2hKCdc5avKHBiw4KILbD_COUtzwGdFIDlkzcgXBQzFxa8qeTUT9LTGL8nakGCQFFOIHz3Og8jhdDcphu6Auim0s74jNbjrRHDDGE1RnLGjmMKznvE5wctI8elmuouF28dCisiFYqbeMw1Nd9NDHLZVJ8WlIIhYPhw-4n7r3tLVfr_58SnUthYjAQ"/>
+<img alt="Seafood" class="w-8 h-8 rounded-full border-2 border-surface-container" data-alt="A gourmet presentation of fresh king prawns on a bed of crushed ice, illuminated by sharp top-down lighting that creates brilliant highlights on the wet surfaces. The background is a dark, sophisticated slate color, maintaining a minimalist and premium tech atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGjlA76kREngdFJFPWqlGEA0M-iwEc5L1xjnqVlBfNjTekqb4wH_e20VoA2cr1IYmq6WpDDZrhfimANOORjhj7fpjaH_V8zMKpURetXNAG6bwOrnoxIY8bMJmp2M2GMRfocWxFN1aqofhyuqjpNphjf-KXI56HbBi1cWFscsGRwBDP4_OpMFraq5Yb9z47t_XPLnKE_GQkX-Cw9AYgDeMkApiJaXh8ktbzvkcljz3Om3ol0dK_K5Rvtmjv9M--hgaGv0w1gmBjhfk"/>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container bg-primary-container text-[10px] flex items-center justify-center font-bold text-on-primary-container">+14</div>
+</div>
+</div>
+</div>
+<!-- Category Card: Freshwater -->
+<div class="glass-card premium-border p-2xl rounded-2xl group transition-all duration-300 hover:translate-y-[-4px]">
+<div class="flex justify-between items-start mb-lg">
+<div class="w-12 h-12 rounded-xl bg-tertiary/10 flex items-center justify-center border border-tertiary/20">
+<span class="material-symbols-outlined text-tertiary text-3xl" data-icon="waves">waves</span>
+</div>
+<div class="flex gap-1">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<h4 class="font-card-title text-card-title text-on-surface mb-xs">Freshwater</h4>
+<p class="text-body-sm text-on-surface-variant mb-xl line-clamp-2">High-quality river and lake species such as Salmon, Trout, and Arctic Char.</p>
+<div class="flex items-center justify-between pt-lg border-t border-outline-variant">
+<div class="flex flex-col">
+<span class="text-label font-label text-on-surface-variant">Products</span>
+<span class="text-body-lg font-bold">315 Units</span>
+</div>
+<div class="flex -space-x-2">
+<img alt="Seafood" class="w-8 h-8 rounded-full border-2 border-surface-container" data-alt="A pristine side of fresh salmon with vibrant orange flesh and silvery skin, resting on a clean metallic surface. The environment is a professional cold-chain facility with subtle blue and purple lighting accents. The style is sharp, detailed, and technologically focused." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0GhYMpT7l3GgNZ5H47oT4Q7b-T_6QX2Yxo0VQMSJoJy5nD0jhMtixDeIRFuGB_9NVfwOsCeEtHphsPz1nDOxlq6iIvQGcxQfA3OMwpcYAMM-Hps3FZlWD2FGHwULN36KjYRjIjZuVnD7i4ChRAp4JwiRHuAR1UR9tebPvvIsj3zE2vGPjUvs9KTbQqY-aQH9OZAGno8BuMKS1jgd2noU7bY7hyvtujOhILa2wJtEuJFqfG9EwI9NiTcEV4zTGisgTkdizutqGxPo"/>
+<img alt="Seafood" class="w-8 h-8 rounded-full border-2 border-surface-container" data-alt="A high-end technical shot of a whole trout being inspected under cool studio lighting. The focus is sharp on the texture of the scales and the clarity of the eye, conveying extreme freshness and quality control standards in a modern dark-mode UI style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNH9c1VmmcxiMVYAaYwkgnc42rFbOqQE5c31yfI-IJpN8xrfXSopAZIXmDOwIGdjy4oAJQrQhTGBV4ZX4XvsABFItagrSKasy0P2Q0UVT7Bfs7IggqOxLpmLlWb68PC5LToOqqehI6ekQFvoRXK9iCFP63Lk7lOvL9SR8JrcT123d8hpMlSaXK8RaPUZYZgaEaRwSqosBh3wdKzLbmctA615K2PKCUUfqmFovq-3Z42mRjew5CYx4F6VMOQ_weGfl6rAHRcfox0C0"/>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container bg-primary-container text-[10px] flex items-center justify-center font-bold text-on-primary-container">+8</div>
+</div>
+</div>
+</div>
+<!-- Category Card: Deep Sea -->
+<div class="glass-card premium-border p-2xl rounded-2xl group transition-all duration-300 hover:translate-y-[-4px]">
+<div class="flex justify-between items-start mb-lg">
+<div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center border border-secondary/20">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="phishing">phishing</span>
+</div>
+<div class="flex gap-1">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<h4 class="font-card-title text-card-title text-on-surface mb-xs">Deep Sea</h4>
+<p class="text-body-sm text-on-surface-variant mb-xl line-clamp-2">Wild-caught oceanic predators including Bluefin Tuna, Sea Bass, and Cod.</p>
+<div class="flex items-center justify-between pt-lg border-t border-outline-variant">
+<div class="flex flex-col">
+<span class="text-label font-label text-on-surface-variant">Products</span>
+<span class="text-body-lg font-bold">518 Units</span>
+</div>
+<div class="flex -space-x-2">
+<img alt="Seafood" class="w-8 h-8 rounded-full border-2 border-surface-container" data-alt="Close-up of premium Bluefin Tuna sashimi blocks, showcasing the intricate marbling of the meat. The lighting is dramatic and dark, with a single cool spotlight emphasizing the quality. The overall mood is luxurious and high-performance, fitting a global logistics platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJl1d4fTZR6zbhFqceZ_byCfZ7GVnU-bc3islee6RrBRVtnXt8N0FGvdgr8gthAfjdI-ngnrqBUVa609LzmB1CCKql6UtB78m-3VixzjVCUaBZmm8fgJ5dbYew0_cHfOrqBTL3RPjzaZBnJ1PlN10ScSd1qrJ0g2KRpTK_l4vYwjdplyBuuZpp36gBXWZm9NtMIHXGFDmdjR00lodyQzd-zsyHFzyfHGuuZdBwYwvpK1URK43cPcVX7y1lQEV-i8nIzt8KQ6zVY6A"/>
+<img alt="Seafood" class="w-8 h-8 rounded-full border-2 border-surface-container" data-alt="Fresh sea bass fillets arranged on a clean, dark slate board. The visual style uses a cold, fresh palette with deep ocean blue and tech-purple undertones. Every detail of the fish texture is visible, suggesting the high density of information in this enterprise-grade software." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAL7Ga4o7U6Ta3Iq4sLUYpzNTx_c_C9J_tQ2aQXnXoTugMMipLOGE2VzPj7d5lrmz129Dgm7oHQ-sFvd3lJRmpPffuchJhwT9X4Q5C9NUHRtA3V06zbbOHudjjg210OPq5u_EpUPAgi3Fcad9n9_eXAY7U4zjkbst9d1QQH-kHrBGPnRirnJ56ZKxYSYjfuZEso3hkAJlyso4kiglw5ZvJziAg4NV24_VuJ15ysHZgq39SUWAaDwZvFX1e19rKuFVU7UExiWgpz9V0"/>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container bg-primary-container text-[10px] flex items-center justify-center font-bold text-on-primary-container">+22</div>
+</div>
+</div>
+</div>
+<!-- Category Card: Cephalopods -->
+<div class="glass-card premium-border p-2xl rounded-2xl group transition-all duration-300 hover:translate-y-[-4px]">
+<div class="flex justify-between items-start mb-lg">
+<div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="scuba_diving">scuba_diving</span>
+</div>
+<div class="flex gap-1">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-error transition-colors">
+<span class="material-symbols-outlined" data-icon="delete">delete</span>
+</button>
+</div>
+</div>
+<h4 class="font-card-title text-card-title text-on-surface mb-xs">Cephalopods</h4>
+<p class="text-body-sm text-on-surface-variant mb-xl line-clamp-2">Premium squid, octopus, and cuttlefish sourced from Mediterranean and Asian waters.</p>
+<div class="flex items-center justify-between pt-lg border-t border-outline-variant">
+<div class="flex flex-col">
+<span class="text-label font-label text-on-surface-variant">Products</span>
+<span class="text-body-lg font-bold">114 Units</span>
+</div>
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface-container bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-xs" data-icon="image">image</span>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container bg-primary-container text-[10px] flex items-center justify-center font-bold text-on-primary-container">+3</div>
+</div>
+</div>
+</div>
+<!-- New Category Placeholder -->
+<div class="border-2 border-dashed border-outline-variant rounded-2xl flex flex-col items-center justify-center p-2xl group hover:border-primary/50 cursor-pointer transition-all active:scale-95">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center mb-lg group-hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="add_circle">add_circle</span>
+</div>
+<p class="font-label text-label font-bold text-on-surface-variant group-hover:text-primary transition-colors">Add New Group</p>
+</div>
+</div>
+<!-- Detailed Management Table -->
+<div class="mt-5xl glass-card rounded-2xl overflow-hidden">
+<div class="px-2xl py-lg bg-surface-container-high flex justify-between items-center border-b border-outline-variant">
+<h4 class="font-section-title text-section-title text-on-surface">Compliance &amp; Tiering</h4>
+<div class="flex gap-2">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm" data-icon="search">search</span>
+<input class="bg-background border-outline-variant rounded-lg pl-9 pr-4 py-2 text-body-sm focus:ring-primary focus:border-primary w-64" placeholder="Search categories..." type="text"/>
+</div>
+</div>
+</div>
+<table class="w-full text-left">
+<thead>
+<tr class="text-label text-on-surface-variant border-b border-outline-variant uppercase tracking-widest bg-surface-container-low/50">
+<th class="px-2xl py-4 font-medium">Category Name</th>
+<th class="px-2xl py-4 font-medium">Status</th>
+<th class="px-2xl py-4 font-medium text-center">Temp range</th>
+<th class="px-2xl py-4 font-medium">Last Audit</th>
+<th class="px-2xl py-4 font-medium text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-[#273449] transition-colors group">
+<td class="px-2xl py-4">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)]"></div>
+<span class="text-body-lg font-bold">Shellfish - A1</span>
+</div>
+</td>
+<td class="px-2xl py-4">
+<span class="px-2 py-1 rounded text-[10px] font-bold bg-green-900/30 text-green-400 border border-green-400/20 uppercase">AAA Grade</span>
+</td>
+<td class="px-2xl py-4 text-center">
+<span class="text-body-sm font-mono text-primary">-2°C to 2°C</span>
+</td>
+<td class="px-2xl py-4 text-on-surface-variant text-body-sm">
+                                14 Oct 2023
+                            </td>
+<td class="px-2xl py-4 text-right">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary" data-icon="more_vert">more_vert</span>
+</td>
+</tr>
+<tr class="hover:bg-[#273449] transition-colors group">
+<td class="px-2xl py-4">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)]"></div>
+<span class="text-body-lg font-bold">Freshwater - Prime</span>
+</div>
+</td>
+<td class="px-2xl py-4">
+<span class="px-2 py-1 rounded text-[10px] font-bold bg-green-900/30 text-green-400 border border-green-400/20 uppercase">Fresh Tier</span>
+</td>
+<td class="px-2xl py-4 text-center">
+<span class="text-body-sm font-mono text-primary">0°C to 4°C</span>
+</td>
+<td class="px-2xl py-4 text-on-surface-variant text-body-sm">
+                                12 Oct 2023
+                            </td>
+<td class="px-2xl py-4 text-right">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary" data-icon="more_vert">more_vert</span>
+</td>
+</tr>
+<tr class="hover:bg-[#273449] transition-colors group">
+<td class="px-2xl py-4">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.5)] pulse"></div>
+<span class="text-body-lg font-bold">Deep Sea - Wild</span>
+</div>
+</td>
+<td class="px-2xl py-4">
+<span class="px-2 py-1 rounded text-[10px] font-bold bg-amber-900/30 text-amber-400 border border-amber-400/20 uppercase">Pending Review</span>
+</td>
+<td class="px-2xl py-4 text-center">
+<span class="text-body-sm font-mono text-primary">-18°C to -22°C</span>
+</td>
+<td class="px-2xl py-4 text-on-surface-variant text-body-sm">
+                                09 Oct 2023
+                            </td>
+<td class="px-2xl py-4 text-right">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary" data-icon="more_vert">more_vert</span>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="px-2xl py-4 bg-surface-container-low border-t border-outline-variant flex justify-between items-center">
+<p class="text-label text-on-surface-variant">Showing 3 of 12 active tiers</p>
+<div class="flex gap-2">
+<button class="p-1 rounded hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="p-1 rounded hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB for quick action (Suppressed on specific screens but relevant here for "New Category") -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center active:scale-90 transition-transform z-50">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+</body></html>

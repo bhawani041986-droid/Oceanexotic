@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(20, 18, 24, 1) 0px, transparent 50%);
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .premium-gradient-border {
+            position: relative;
+        }
+        .premium-gradient-border::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(to bottom, rgba(207, 188, 255, 0.3), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"primary-fixed-dim": "#cfbcff", "outline-variant": "#494551", "tertiary-fixed": "#ffdf93", "on-error-container": "#ffdad6", background: "#141218", "on-primary-container": "#e0d2ff", "surface-container-low": "#1d1b20", "secondary-container": "#4d4465", "surface-container-lowest": "#0f0d13", error: "#ffb4ab", "surface-container": "#211f24", "on-background": "#e6e0e9", "on-surface": "#e6e0e9", "on-secondary": "#342b4b", "primary-container": "#6750a4", "error-container": "#93000a", "tertiary-container": "#c9a74d", "secondary-fixed-dim": "#cdc0e9", outline: "#948e9c", "on-surface-variant": "#cbc4d2", "on-secondary-fixed-variant": "#4b4263", "tertiary-fixed-dim": "#e7c365", "surface-tint": "#cfbcff", "primary-fixed": "#e9ddff", "on-tertiary-container": "#503d00", "on-secondary-fixed": "#1f1635", "surface-dim": "#141218", tertiary: "#e7c365", "on-secondary-container": "#bfb2da", "on-primary-fixed-variant": "#4f378a", "on-tertiary": "#3e2e00", "surface-container-high": "#2b292f", "inverse-surface": "#e6e0e9", "surface-container-highest": "#36343a", "secondary-fixed": "#e9ddff", "on-tertiary-fixed-variant": "#594400", "on-tertiary-fixed": "#241a00", "surface-variant": "#36343a", "surface-bright": "#3b383e", "on-error": "#690005", "inverse-primary": "#6750a4", surface: "#141218", secondary: "#cdc0e9", primary: "#cfbcff", "on-primary-fixed": "#22005d", "on-primary": "#381e72", "inverse-on-surface": "#322f35"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"5xl": "48px", "2xl": "24px", xl: "20px", sm: "8px", lg: "16px", "3xl": "32px", "4xl": "40px", md: "12px", xs: "4px"}, fontFamily: {"hero-mobile": ["Inter"], "body-sm": ["Inter"], hero: ["Inter"], "body-lg": ["Inter"], "section-title": ["Inter"], "card-title": ["Inter"], "page-title": ["Inter"], label: ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"]}, fontSize: {"hero-mobile": ["28px", {lineHeight: "1.2", fontWeight: "700"}], "body-sm": ["14px", {lineHeight: "1.5", fontWeight: "400"}], hero: ["36px", {lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700"}], "body-lg": ["16px", {lineHeight: "1.5", fontWeight: "400"}], "section-title": ["24px", {lineHeight: "1.3", fontWeight: "600"}], "card-title": ["18px", {lineHeight: "1.4", fontWeight: "600"}], "page-title": ["30px", {lineHeight: "1.2", fontWeight: "700"}], label: ["12px", {lineHeight: "1", letterSpacing: "0.05em", fontWeight: "500"}]}}}};</script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen flex items-center justify-center p-lg relative overflow-hidden">
+<!-- Background Decorative Elements -->
+<div class="absolute inset-0 z-0">
+<div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary-container/20 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-tertiary-container/10 rounded-full blur-[100px]"></div>
+</div>
+<!-- Login Container -->
+<main class="w-full max-w-[440px] z-10">
+<!-- Branding Anchor -->
+<div class="flex flex-col items-center mb-3xl">
+<div class="w-16 h-16 mb-lg flex items-center justify-center rounded-xl bg-primary-container/20 border border-primary/30 premium-gradient-border">
+<span class="material-symbols-outlined text-primary text-[40px]" data-icon="ac_unit">ac_unit</span>
+</div>
+<h1 class="font-page-title text-page-title text-on-surface mb-xs">Oceanic Logistics</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Global Marketplace Admin</p>
+</div>
+<!-- Auth Card -->
+<div class="glass-panel premium-gradient-border rounded-xl p-3xl shadow-2xl">
+<form class="space-y-2xl" onsubmit="return false;">
+<!-- Input Group: Email -->
+<div class="space-y-sm">
+<label class="block font-label text-label text-on-surface-variant uppercase tracking-wider" for="email">Work Email</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-lg flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline text-[20px] group-focus-within:text-primary transition-colors" data-icon="mail">mail</span>
+</div>
+<input class="w-full h-[48px] bg-surface-container-lowest border border-outline-variant rounded-lg pl-[48px] pr-lg text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none font-body-lg text-body-lg" id="email" name="email" placeholder="name@oceanic.logistics" type="email"/>
+</div>
+</div>
+<!-- Input Group: Password -->
+<div class="space-y-sm">
+<div class="flex justify-between items-center">
+<label class="block font-label text-label text-on-surface-variant uppercase tracking-wider" for="password">Access Key</label>
+<a class="font-label text-label text-primary hover:text-primary-fixed-dim transition-colors" href="#">Forgot credentials?</a>
+</div>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-lg flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline text-[20px] group-focus-within:text-primary transition-colors" data-icon="lock">lock</span>
+</div>
+<input class="w-full h-[48px] bg-surface-container-lowest border border-outline-variant rounded-lg pl-[48px] pr-lg text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none font-body-lg text-body-lg" id="password" name="password" placeholder="••••••••••••" type="password"/>
+</div>
+</div>
+<!-- Remember Me Toggle -->
+<div class="flex items-center gap-md">
+<input class="w-5 h-5 rounded border-outline-variant bg-surface-container-lowest text-primary focus:ring-primary focus:ring-offset-background" id="remember" type="checkbox"/>
+<label class="font-body-sm text-body-sm text-on-surface-variant cursor-pointer" for="remember">Maintain active session for 24 hours</label>
+</div>
+<!-- Primary Action -->
+<button class="w-full h-[48px] bg-[#7C3AED] hover:bg-[#8B5CF6] active:scale-[0.98] text-white font-bold rounded-lg transition-all flex items-center justify-center gap-sm shadow-lg shadow-primary-container/20" type="submit">
+<span class="material-symbols-outlined text-[20px]" data-icon="login">login</span>
+                    Authenticate Access
+                </button>
+</form>
+<!-- Metadata/Footer -->
+<div class="mt-3xl pt-2xl border-t border-outline-variant/30 flex flex-col items-center gap-md">
+<div class="flex items-center gap-xs">
+<div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_rgba(231,195,101,0.6)] animate-pulse"></div>
+<span class="font-label text-label text-tertiary">Operational: Global Gateway Node 4</span>
+</div>
+<p class="font-label text-label text-outline text-center">Enterprise Tier Encryption V1.0.4<br/>© 2024 Oceanic Logistics Systems</p>
+</div>
+</div>
+<!-- Decorative Card Sub-elements -->
+<div class="mt-xl flex justify-between px-lg">
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-outline/50 text-[18px]" data-icon="verified_user">verified_user</span>
+<span class="material-symbols-outlined text-outline/50 text-[18px]" data-icon="shield">shield</span>
+<span class="material-symbols-outlined text-outline/50 text-[18px]" data-icon="gpp_good">gpp_good</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="font-label text-label text-outline/50">SERVER STATUS:</span>
+<span class="font-label text-label text-primary uppercase">Optimal</span>
+</div>
+</div>
+</main>
+<!-- Side Graphic (Only visible on larger screens) -->
+<div class="hidden lg:block absolute left-5xl bottom-5xl max-w-sm">
+<div class="glass-panel premium-gradient-border rounded-xl p-xl flex items-center gap-lg">
+<div class="w-12 h-12 rounded-lg bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover grayscale brightness-75 contrast-125" data-alt="A high-tech digital interface overlay showing cold-chain logistics data and temperature sensor readings for fresh seafood shipments. The visualization features clean cyan and purple lines on a dark blue background with technical diagrams of salmon and tuna. The lighting is low-key and professional, evoking a sense of deep ocean precision and high-performance supply chain management." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWFTCsY8o7wAttpwtHNhYYS9dBOPNeoEvVFBMYe_6ai4IXLYly8lPtcvC1LPuvEzVboZqB4K3AUD7BNML5aPr7durWYQPCjXDI6koMUYCcKnUV2tEQ254LuDTT00t-9y7O83Xt0zw2YV6aIPxZap3o-wfJir5LqNm56Lr76ABO2i1TAw_NQWKUKBgXpkIjk-Lz8zpCiGqzjC7iYvD_0e-JjnJ9zKGrZVIIxHNA3m2eZnnmXD7Sy1ooO2_tKbDqqAFe9KQw9LGkR6o"/>
+</div>
+<div>
+<p class="font-label text-label text-primary mb-xs">LIVE SHIPMENT</p>
+<p class="font-card-title text-[14px] text-on-surface">North Atlantic Grade AAA Tuna</p>
+<div class="flex items-center gap-xs mt-xs">
+<span class="material-symbols-outlined text-[12px] text-tertiary" data-icon="thermostat">thermostat</span>
+<span class="font-label text-label text-on-surface-variant">-2.4°C Stable</span>
+</div>
+</div>
+</div>
+</div>
+</body></html>

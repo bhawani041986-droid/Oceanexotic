@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(33, 31, 36, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #141218;
+            color: #e6e0e9;
+        }
+        /* Custom scrollbar for deep sea feel */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f0d13; }
+        ::-webkit-scrollbar-thumb { background: #36343a; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #cfbcff; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#e6e0e9",
+                        "background": "#141218",
+                        "surface-container-lowest": "#0f0d13",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "surface-tint": "#cfbcff",
+                        "tertiary-container": "#c9a74d",
+                        "surface-container": "#211f24",
+                        "on-error": "#690005",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-surface": "#e6e0e9",
+                        "surface-bright": "#3b383e",
+                        "primary-container": "#6750a4",
+                        "error": "#ffb4ab",
+                        "outline": "#948e9c",
+                        "on-secondary": "#342b4b",
+                        "on-tertiary": "#3e2e00",
+                        "on-primary": "#381e72",
+                        "surface-dim": "#141218",
+                        "surface-container-low": "#1d1b20",
+                        "primary-fixed-dim": "#cfbcff",
+                        "tertiary": "#e7c365",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "secondary-container": "#4d4465",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed": "#ffdf93",
+                        "primary-fixed": "#e9ddff",
+                        "surface": "#141218",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-primary-fixed": "#22005d",
+                        "error-container": "#93000a",
+                        "surface-variant": "#36343a",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "on-secondary-container": "#bfb2da",
+                        "secondary-fixed": "#e9ddff",
+                        "primary": "#cfbcff",
+                        "outline-variant": "#494551",
+                        "on-primary-container": "#e0d2ff",
+                        "surface-container-high": "#2b292f",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "surface-container-highest": "#36343a",
+                        "secondary": "#cdc0e9",
+                        "on-surface-variant": "#cbc4d2",
+                        "inverse-primary": "#6750a4",
+                        "on-background": "#e6e0e9",
+                        "inverse-on-surface": "#322f35",
+                        "on-tertiary-container": "#503d00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col md:flex-row">
+<!-- NavigationDrawer (Desktop) -->
+<aside class="hidden md:flex flex-col fixed left-0 top-0 h-full w-[260px] z-50 bg-surface-container dark:bg-surface-container-lowest border-r border-white/5 shadow-2xl py-4 gap-2">
+<div class="text-lg font-bold text-primary px-4 py-6">Abyssal Enterprise</div>
+<nav class="flex-1 px-2 space-y-1">
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body text-sm font-medium">Dashboard</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body text-sm font-medium">Inventory</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-body text-sm font-medium">Logistics</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body text-sm font-medium">Financials</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body text-sm font-medium">Sellers</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container/20 text-primary border-l-4 border-primary cursor-pointer transition-all duration-200">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body text-sm font-medium">Settings</span>
+</div>
+</nav>
+<div class="mt-auto px-4 py-6 border-t border-white/5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold overflow-hidden">
+<img alt="Admin Avatar" class="w-full h-full object-cover" data-alt="A close-up professional portrait of a tech executive in a dark, moody setting with subtle blue backlighting. The aesthetic is clean and modern, representing a high-tier enterprise administrator. The lighting is dramatic yet soft, highlighting facial features against a deep, shadowed background consistent with a dark mode UI theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiySquSPfm289Xa9OVcSE3oKEcGWhRaHwBpndz6pZMZqBwjf-rOt64g6u-i3q3UYYE4mi8Yw0nW_p79j3-t1x54Q7RZz5SMWk6n-5DGRtErM-NOys8-ulOISjmTwSvLLHOImz24PPNQMaXnHiQchYMzVjRicXwEXa3Hx4XP0QiG2pzKO0wAL-gg6h5P7rRRJvbrHxyhI2Y1aurYRI1sw-sIfGcmUiBU8Y-bHSPHAG7One0uneLoTg005xDr2RY00neRPik66Mfl8M"/>
+</div>
+<div class="overflow-hidden">
+<p class="text-sm font-bold text-on-surface truncate">Deep Sea Admin</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest">Enterprise Tier</p>
+</div>
+</div>
+<div class="mt-4 text-[10px] text-outline text-center">v2.4.0</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-[260px] relative pb-24 md:pb-8">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-40 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-sm">
+<div class="flex items-center justify-between px-6 h-16 w-full max-w-[1440px] mx-auto">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline text-[30px] font-bold leading-tight text-primary">Abyssal Enterprise</h1>
+</div>
+<div class="flex items-center gap-6">
+<button class="hidden md:flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">search</span>
+<span class="text-sm font-medium">Search</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary active:scale-95 duration-200">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</div>
+</header>
+<!-- FAQ Content Canvas -->
+<div class="max-w-5xl mx-auto px-6 py-8 md:py-12">
+<!-- Hero Search Section -->
+<section class="mb-12 text-center">
+<h2 class="text-3xl md:text-5xl font-bold mb-4 text-on-surface tracking-tight">How can we assist your <span class="text-primary">logistics?</span></h2>
+<p class="text-on-surface-variant max-w-xl mx-auto mb-8">Search our knowledge base for technical protocols, shipping schedules, and cold-chain compliance data.</p>
+<div class="relative max-w-2xl mx-auto group">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-outline group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="w-full h-14 pl-12 pr-4 bg-surface-container border border-outline-variant rounded-xl text-on-surface focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" placeholder="Search shipping times, cold-chain, or refunds..." type="text"/>
+<div class="absolute inset-y-0 right-2 flex items-center">
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg text-sm font-semibold hover:bg-primary-container hover:text-on-primary-container transition-all">Search</button>
+</div>
+</div>
+</section>
+<!-- Quick Access Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+<div class="bg-surface-container-low border border-white/5 p-6 rounded-2xl hover:bg-surface-container-high transition-all cursor-pointer group">
+<div class="w-12 h-12 rounded-xl bg-primary-container/20 flex items-center justify-center text-primary mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">local_shipping</span>
+</div>
+<h3 class="text-lg font-bold mb-2">Global Shipping</h3>
+<p class="text-sm text-on-surface-variant">Real-time tracking protocols and international transit schedules.</p>
+</div>
+<div class="bg-surface-container-low border border-white/5 p-6 rounded-2xl hover:bg-surface-container-high transition-all cursor-pointer group">
+<div class="w-12 h-12 rounded-xl bg-tertiary-container/20 flex items-center justify-center text-tertiary mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">ac_unit</span>
+</div>
+<h3 class="text-lg font-bold mb-2">Cold-Chain</h3>
+<p class="text-sm text-on-surface-variant">Temperature monitoring, freshness verification, and sensor data.</p>
+</div>
+<div class="bg-surface-container-low border border-white/5 p-6 rounded-2xl hover:bg-surface-container-high transition-all cursor-pointer group">
+<div class="w-12 h-12 rounded-xl bg-secondary-container/20 flex items-center justify-center text-secondary mb-4 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">assignment_return</span>
+</div>
+<h3 class="text-lg font-bold mb-2">Refund Protocols</h3>
+<p class="text-sm text-on-surface-variant">Standard operating procedures for cargo claims and logistics disputes.</p>
+</div>
+</section>
+<!-- Accordion Section -->
+<section class="space-y-4">
+<h4 class="text-sm font-bold uppercase tracking-[0.2em] text-outline mb-6">Frequently Asked Questions</h4>
+<!-- Shipping Times Accordion -->
+<div class="bg-surface-container-low rounded-2xl border border-white/5 overflow-hidden">
+<button class="w-full flex items-center justify-between p-6 text-left hover:bg-surface-container transition-colors group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">schedule</span>
+<span class="text-lg font-semibold">What are the standard shipping times for international aquaculture?</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">expand_more</span>
+</button>
+<div class="px-6 pb-6 pt-0 text-on-surface-variant border-t border-white/5">
+<div class="mt-4 space-y-3">
+<p>Standard international shipping times vary by oceanic route and vessel speed. On average:</p>
+<ul class="list-disc pl-5 space-y-2">
+<li><span class="text-on-surface font-medium">Asia to North America:</span> 14-22 days via deep-sea freighter.</li>
+<li><span class="text-on-surface font-medium">Europe to North America:</span> 8-12 days.</li>
+<li><span class="text-on-surface font-medium">Intra-Pacific:</span> 4-7 days for express fresh haulage.</li>
+</ul>
+<p class="text-sm italic mt-4 text-tertiary">Note: Premium Tier subscribers have access to Priority Ocean Lanes, reducing transit time by up to 15%.</p>
+</div>
+</div>
+</div>
+<!-- Cold-Chain Verification Accordion -->
+<div class="bg-surface-container-low rounded-2xl border border-white/5 overflow-hidden">
+<button class="w-full flex items-center justify-between p-6 text-left hover:bg-surface-container transition-colors group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">verified</span>
+<span class="text-lg font-semibold">How do I verify cold-chain integrity for my shipment?</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">expand_more</span>
+</button>
+<div class="px-6 pb-6 pt-0 text-on-surface-variant border-t border-white/5">
+<div class="mt-4 flex flex-col md:flex-row gap-6">
+<div class="flex-1">
+<p>Cold-chain verification is managed through our proprietary <strong>Abyssal Sensor Network</strong>. Every shipment contains IoT-enabled temperature monitors that broadcast data to the blockchain.</p>
+<div class="mt-4 p-4 bg-background rounded-xl border border-white/5">
+<div class="flex items-center gap-2 text-primary text-sm font-bold mb-2">
+<span class="material-symbols-outlined text-sm">emergency_home</span>
+                                        LIVE FRESHNESS INDICATOR
+                                    </div>
+<p class="text-xs">Navigate to <strong>Logistics &gt; Active Shipments</strong> and select your SKU to see the real-time temperature graph and humidity levels.</p>
+</div>
+</div>
+<div class="md:w-48 shrink-0">
+<img alt="Logistics Sensor" class="rounded-xl object-cover h-32 w-full border border-primary/20 shadow-[0_0_15px_rgba(207,188,255,0.1)]" data-alt="A high-tech digital temperature sensor device with a glowing purple LED display, sitting inside a frosty industrial refrigeration unit. The atmosphere is cold and technical, with visible condensation and deep blue and purple lighting that highlights the precision of cold-chain logistics technology in a dark, enterprise environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPy_4MBHdMoRhAA-i6oZdVzc_9HN415vhwjWg7frwj44dhQ769rLssU7vnKpHqz8Yp007wn48LZC9S_-wRETqAwmhY6lfUshYXN9t-f6wHy_gR56CAKlo0Jn1GleXhjLzf3IGxnqHTzFhpVWYwvo-rDyRpJpnVXIHpnBEXUvzLhkoHsvdTtkXrf_ICjai5etDsyKmywuHEtX4wEiIgB1fLohbSGORGv5H7hytoGE_iMpeLrjt5qyNSYqAu0y879rqVjT9eXz-9poo"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Refund Protocols Accordion -->
+<div class="bg-surface-container-low rounded-2xl border border-white/5 overflow-hidden">
+<button class="w-full flex items-center justify-between p-6 text-left hover:bg-surface-container transition-colors group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">policy</span>
+<span class="text-lg font-semibold">What are the refund protocols for cargo non-compliance?</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">expand_more</span>
+</button>
+<div class="px-6 pb-6 pt-0 text-on-surface-variant border-t border-white/5">
+<div class="mt-4 space-y-4">
+<p>Abyssal Enterprise operates on a <strong>Smart Contract Refund Model</strong>. Refunds are automatically triggered if cold-chain parameters (temperature threshold) are breached for more than 120 minutes during transit.</p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="p-4 bg-surface-container rounded-lg border-l-4 border-error">
+<h5 class="text-on-surface font-bold text-sm mb-1">Damaged Cargo</h5>
+<p class="text-xs">Submit high-resolution imagery via the Seller Portal within 4 hours of dock arrival.</p>
+</div>
+<div class="p-4 bg-surface-container rounded-lg border-l-4 border-secondary">
+<h5 class="text-on-surface font-bold text-sm mb-1">Delayed Transit</h5>
+<p class="text-xs">Credits applied automatically for delays exceeding 72 hours beyond the Estimated Arrival Window.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Technical Support Accordion -->
+<div class="bg-surface-container-low rounded-2xl border border-white/5 overflow-hidden">
+<button class="w-full flex items-center justify-between p-6 text-left hover:bg-surface-container transition-colors group">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">support_agent</span>
+<span class="text-lg font-semibold">Can I talk to a technical logistics officer?</span>
+</div>
+<span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">expand_more</span>
+</button>
+<div class="px-6 pb-6 pt-0 text-on-surface-variant border-t border-white/5 hidden">
+<p class="mt-4">Yes, Enterprise Tier users have 24/7 dedicated access to our command center. Use the 'Help' beacon in your dashboard to initiate a encrypted video call.</p>
+</div>
+</div>
+</section>
+<!-- Footer Help Section -->
+<section class="mt-20 glass-panel border border-white/10 rounded-3xl p-8 md:p-12 text-center relative overflow-hidden">
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 blur-[80px] rounded-full"></div>
+<div class="absolute -bottom-24 -left-24 w-64 h-64 bg-secondary/10 blur-[80px] rounded-full"></div>
+<h3 class="text-2xl font-bold mb-4">Still need assistance?</h3>
+<p class="text-on-surface-variant mb-8 max-w-lg mx-auto">Our specialized support team is standing by to resolve complex logistics challenges and enterprise inquiries.</p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+<button class="bg-primary text-on-primary px-8 py-3 rounded-xl font-bold hover:scale-105 transition-transform active:scale-95">Open Support Ticket</button>
+<button class="bg-surface-container-high border border-outline-variant text-on-surface px-8 py-3 rounded-xl font-bold hover:bg-surface-bright transition-colors">Contact Sales</button>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar (Mobile) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 md:hidden bg-surface-container-high/90 dark:bg-surface-container-high/90 backdrop-blur-lg border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.3)] rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant scale-90 active:scale-100 transition-transform">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label text-[12px] font-medium tracking-wider">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant scale-90 active:scale-100 transition-transform">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-label text-[12px] font-medium tracking-wider">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant scale-90 active:scale-100 transition-transform">
+<span class="material-symbols-outlined">ac_unit</span>
+<span class="font-label text-[12px] font-medium tracking-wider">Cold Chain</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 scale-90 active:scale-100 transition-transform">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label text-[12px] font-medium tracking-wider">Profile</span>
+</div>
+</nav>
+</body></html>

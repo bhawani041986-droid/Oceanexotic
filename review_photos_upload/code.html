@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Abyssal - Review Photos Upload</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-lowest": "#0f0d13",
+                        "surface-container-highest": "#36343a",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "on-secondary": "#342b4b",
+                        "primary": "#cfbcff",
+                        "primary-fixed": "#e9ddff",
+                        "on-surface-variant": "#cbc4d2",
+                        "on-secondary-container": "#bfb2da",
+                        "error-container": "#93000a",
+                        "on-primary-container": "#e0d2ff",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#e6e0e9",
+                        "on-tertiary-container": "#503d00",
+                        "surface-container-high": "#2b292f",
+                        "surface-bright": "#3b383e",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "outline": "#948e9c",
+                        "secondary-container": "#4d4465",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "surface-variant": "#36343a",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "on-secondary-fixed": "#1f1635",
+                        "error": "#ffb4ab",
+                        "on-primary": "#381e72",
+                        "on-surface": "#e6e0e9",
+                        "primary-fixed-dim": "#cfbcff",
+                        "on-tertiary-fixed": "#241a00",
+                        "surface-container": "#211f24",
+                        "secondary-fixed": "#e9ddff",
+                        "surface-dim": "#141218",
+                        "surface-container-low": "#1d1b20",
+                        "inverse-primary": "#6750a4",
+                        "tertiary": "#e7c365",
+                        "primary-container": "#6750a4",
+                        "inverse-on-surface": "#322f35",
+                        "outline-variant": "#494551",
+                        "secondary": "#cdc0e9",
+                        "inverse-surface": "#e6e0e9",
+                        "on-tertiary": "#3e2e00",
+                        "background": "#141218",
+                        "on-error": "#690005",
+                        "surface": "#141218",
+                        "surface-tint": "#cfbcff",
+                        "on-primary-fixed": "#22005d",
+                        "tertiary-fixed": "#ffdf93",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "tertiary-container": "#c9a74d"
+                    },
+                    fontFamily: {
+                        headline: ["Inter"],
+                        display: ["Inter"],
+                        body: ["Inter"],
+                        label: ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #141218;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 bg-surface/80 backdrop-blur-xl dark:bg-surface/80 border-b border-outline-variant/30 shadow-sm">
+<div class="flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-3">
+<button class="text-primary active:scale-95 transition-transform">
+<span class="material-symbols-outlined">close</span>
+</button>
+<h1 class="font-headline text-[18px] font-bold leading-tight text-page-title tracking-tight text-primary">Upload Visual Proof</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">waves</span>
+<span class="material-symbols-outlined text-on-surface-variant">shopping_cart</span>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-4xl mx-auto px-6 py-8">
+<!-- Progress Header -->
+<div class="mb-8">
+<div class="flex justify-between items-center mb-2">
+<span class="text-on-surface-variant font-medium text-sm">Step 2 of 2: Multimedia Evidence</span>
+<span class="text-primary font-bold text-sm">85% Complete</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5">
+<div class="bg-primary h-1.5 rounded-full" style="width: 85%"></div>
+</div>
+</div>
+<!-- Drop Zone Section -->
+<section class="mb-10">
+<div class="relative group">
+<div class="w-full h-64 border-2 border-dashed border-outline-variant/50 rounded-xl bg-surface-container-low flex flex-col items-center justify-center transition-all duration-300 group-hover:border-primary group-hover:bg-primary-container/5">
+<div class="mb-4 p-4 rounded-full bg-primary-container/10 text-primary">
+<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'wght' 300;">cloud_upload</span>
+</div>
+<h2 class="text-on-surface font-semibold text-lg mb-1">Drop photos here</h2>
+<p class="text-on-surface-variant text-sm px-10 text-center">Drag and drop high-resolution images of your shipment or product. Max file size: 25MB per file.</p>
+<button class="mt-6 px-6 py-2 bg-surface-container-highest text-on-surface rounded-lg font-medium text-sm border border-outline-variant/30 hover:bg-surface-container transition-colors">
+                        Browse Files
+                    </button>
+</div>
+</div>
+</section>
+<!-- Gallery of Pending Uploads -->
+<section class="mb-24">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-section-title font-semibold text-on-surface">Gallery of pending uploads</h3>
+<span class="text-on-surface-variant text-sm font-medium">3 Files Selected</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+<!-- Photo Card 1 -->
+<div class="relative aspect-square rounded-xl overflow-hidden border border-outline-variant/30 group bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A high-definition macro shot of fresh seafood on a bed of crushed ice, illuminated by cool-toned studio lighting that highlights the glistening textures and deep oceanic colors. The style is professional and commercial, emphasizing freshness and quality in a clean, high-end logistics context with a dark, sophisticated backdrop." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCB9YA3gtiMZNSGh6bEfqltlFYnICbob409g1jJFfrxlIzeGn0jH4DDX8yt2WiWeDcfuh41Y5s02-K1Iio77It6xjJe-83WuVtpA97igPI1O9Wgd8l3f_kHTQD-fw8w1aTNi7p7jq0QudBMvlUr0vfSbnr5MbzQUOEU6x7_ghdpCH1aABwTG6_RdMGh-VKJBNmu4NDxhdvWN3QdZemAuhb-8Brd5kC6V35J89U27MIXLMklGNddLnsg9TIxNBIlNw-eulOX8ryNCTc"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3">
+<span class="text-white text-xs font-medium">IMG_7241.jpg</span>
+<button class="bg-error/90 p-1.5 rounded-lg text-on-error">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+</div>
+<!-- Photo Card 2 -->
+<div class="relative aspect-square rounded-xl overflow-hidden border border-outline-variant/30 group bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Close-up of a high-tech temperature tracking sensor attached to a cold-chain shipping container, showing a digital display with technical data. The lighting is crisp and cool, reflecting off metallic surfaces in a dark warehouse environment, projecting an atmosphere of industrial precision and advanced logistics technology." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJPN1sFJtcDk51jQIDuSYEnn--KmHa4yOFjTPhd-gvBbXPBHvxUwUw-MJ8xb_8PEyjtllBuVHr7OxGJDUXUe6q9DrqE440URiGod47A0ML64lg8NNRtDhPdFmwEFbUZ2JAJBZ5R8jAq0lJzfBUip6NyaU_5FHlSeUg939MHl0exV1VMM8R66QkbkO1FR_zWNEplluuUhh7k6h4Cgm3r-GddYmuUJ9ILwRcC6u9170dUzaAtx-LarKL7hO47EsyAWsL_628SZ_Y1no"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-3">
+<span class="text-white text-xs font-medium">SENSOR_LOG.png</span>
+<button class="bg-error/90 p-1.5 rounded-lg text-on-error">
+<span class="material-symbols-outlined text-sm">delete</span>
+</button>
+</div>
+</div>
+<!-- Photo Card 3 (Uploading State) -->
+<div class="relative aspect-square rounded-xl overflow-hidden border border-outline-variant/30 bg-surface-container flex flex-col items-center justify-center p-4">
+<div class="w-12 h-12 rounded-full border-4 border-primary/20 border-t-primary animate-spin mb-3"></div>
+<span class="text-on-surface-variant text-xs font-medium">Uploading 64%</span>
+</div>
+<!-- Add More Slot -->
+<button class="aspect-square rounded-xl border-2 border-dashed border-outline-variant/30 bg-surface-container-lowest flex flex-col items-center justify-center hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl mb-1">add_a_photo</span>
+<span class="text-on-surface-variant text-xs font-medium">Add More</span>
+</button>
+</div>
+</section>
+<!-- Fixed Action Bar -->
+<div class="fixed bottom-0 left-0 w-full bg-surface-container-low/90 backdrop-blur-md border-t border-outline-variant/20 px-6 py-6 z-50">
+<div class="max-w-4xl mx-auto flex items-center justify-between">
+<div class="hidden md:block">
+<p class="text-on-surface font-semibold">Ready to verify?</p>
+<p class="text-on-surface-variant text-xs">Images will be stored in encrypted ocean-cold storage.</p>
+</div>
+<div class="flex gap-4 w-full md:w-auto">
+<button class="flex-1 md:flex-none px-8 py-3 rounded-xl font-semibold border border-outline-variant text-on-surface hover:bg-surface-variant transition-colors active:scale-95 duration-150">
+                        Cancel
+                    </button>
+<button class="flex-[2] md:flex-none px-12 py-3 rounded-xl font-semibold bg-primary text-on-primary shadow-[0_10px_30px_rgba(207,188,255,0.2)] hover:bg-primary-container transition-all active:scale-90 duration-150">
+                        Finalize &amp; Post
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Navigation Shell Placeholder (Not rendered per 'Transactional' rule) -->
+</body></html>

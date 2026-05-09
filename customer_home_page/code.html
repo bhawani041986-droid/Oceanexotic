@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Abyssal | Premium Aquaculture</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#0f0d13",
+                        "surface-container-highest": "#36343a",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "on-secondary": "#342b4b",
+                        "primary": "#cfbcff",
+                        "primary-fixed": "#e9ddff",
+                        "on-surface-variant": "#cbc4d2",
+                        "on-secondary-container": "#bfb2da",
+                        "error-container": "#93000a",
+                        "on-primary-container": "#e0d2ff",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#e6e0e9",
+                        "on-tertiary-container": "#503d00",
+                        "surface-container-high": "#2b292f",
+                        "surface-bright": "#3b383e",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "outline": "#948e9c",
+                        "secondary-container": "#4d4465",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "surface-variant": "#36343a",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "on-secondary-fixed": "#1f1635",
+                        "error": "#ffb4ab",
+                        "on-primary": "#381e72",
+                        "on-surface": "#e6e0e9",
+                        "primary-fixed-dim": "#cfbcff",
+                        "on-tertiary-fixed": "#241a00",
+                        "surface-container": "#211f24",
+                        "secondary-fixed": "#e9ddff",
+                        "surface-dim": "#141218",
+                        "surface-container-low": "#1d1b20",
+                        "inverse-primary": "#6750a4",
+                        "tertiary": "#e7c365",
+                        "primary-container": "#6750a4",
+                        "inverse-on-surface": "#322f35",
+                        "outline-variant": "#494551",
+                        "secondary": "#cdc0e9",
+                        "inverse-surface": "#e6e0e9",
+                        "on-tertiary": "#3e2e00",
+                        "background": "#141218",
+                        "on-error": "#690005",
+                        "surface": "#141218",
+                        "surface-tint": "#cfbcff",
+                        "on-primary-fixed": "#22005d",
+                        "tertiary-fixed": "#ffdf93",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "tertiary-container": "#c9a74d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #141218;
+            color: #e6e0e9;
+            font-family: 'Inter', sans-serif;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(33, 31, 36, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 142, 156, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 bg-surface/80 backdrop-blur-xl dark:bg-surface/80 border-b border-outline-variant/30 shadow-sm">
+<div class="flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">waves</span>
+<h1 class="text-page-title font-bold tracking-tight text-primary dark:text-primary">Abyssal</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform text-primary dark:text-primary-fixed-dim">
+<span class="material-symbols-outlined">shopping_cart</span>
+</button>
+</div>
+</div>
+</header>
+<main class="px-6 space-y-8 pt-4">
+<!-- Search Bar -->
+<section class="w-full">
+<div class="relative flex items-center group">
+<span class="material-symbols-outlined absolute left-4 text-on-surface-variant group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full h-[56px] bg-surface-container-low border-none rounded-xl pl-12 pr-4 text-on-surface placeholder:text-outline focus:ring-2 focus:ring-primary transition-all" placeholder="Search for fresh catches..." type="text"/>
+</div>
+</section>
+<!-- Categories Horizontal Scroll -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="text-section-title font-semibold">Categories</h2>
+</div>
+<div class="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+<div class="flex-shrink-0 flex flex-col items-center gap-2">
+<div class="w-20 h-20 rounded-full bg-primary-container/30 flex items-center justify-center border border-primary/20">
+<span class="material-symbols-outlined text-primary text-3xl">set_meal</span>
+</div>
+<span class="font-label text-[12px] font-medium tracking-wider uppercase">Sea Fish</span>
+</div>
+<div class="flex-shrink-0 flex flex-col items-center gap-2">
+<div class="w-20 h-20 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/30">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl">water_drop</span>
+</div>
+<span class="font-label text-[12px] font-medium tracking-wider uppercase">Freshwater</span>
+</div>
+<div class="flex-shrink-0 flex flex-col items-center gap-2">
+<div class="w-20 h-20 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/30">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl">phishing</span>
+</div>
+<span class="font-label text-[12px] font-medium tracking-wider uppercase">Shellfish</span>
+</div>
+<div class="flex-shrink-0 flex flex-col items-center gap-2">
+<div class="w-20 h-20 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/30">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl">restaurant</span>
+</div>
+<span class="font-label text-[12px] font-medium tracking-wider uppercase">Prepared</span>
+</div>
+</div>
+</section>
+<!-- Fresh Arrivals Bento Grid -->
+<section class="space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="text-section-title font-semibold">Fresh Arrivals</h2>
+<button class="text-primary font-label text-[12px] font-medium uppercase tracking-widest">View All</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Main Featured Card -->
+<div class="group relative overflow-hidden rounded-xl h-[300px] border border-outline-variant/20">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Close up high-end photography of a whole fresh organic Atlantic Salmon resting on a bed of crushed crystal ice. The lighting is cold and cinematic, highlighting the iridescent silver scales and vibrant orange flesh. The background is a deep oceanic slate, creating a premium, high-performance logistics aesthetic with soft purple highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcP0JRxR_z9YjJnAH7J7GWF0FosnWWNZEtjYKb_xXIh6yr955QijM-sYRtto7nY8gJ5zDZ6q3vBWezu9TRofqNzcslfcDCe2X6icPEc1qZntkDqjtfOMYT0DLuID-11vIrwPc4BqWE_-sdpdHCrb8eyb5yyws2CBnJfHKMGZx07OQ3zLxKoM9lpTX2mC2ooXdv8WIamgiEbMYDmKe7Hxks1dwkdrrTIR42wsh6mp6OAyeIxN5GEgeAl6LEn6go9kupBY-bNvnFEGo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest/90 via-surface-container-lowest/20 to-transparent p-6 flex flex-col justify-end">
+<div class="flex justify-between items-end">
+<div>
+<span class="bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter mb-2 inline-block">Caught 4h ago</span>
+<h3 class="text-card-title text-white">Atlantic King Salmon</h3>
+<p class="text-on-surface-variant text-sm">Wild caught • Premium Grade</p>
+</div>
+<div class="text-right">
+<span class="block text-primary font-bold text-xl">$42.50</span>
+<span class="text-[10px] text-outline uppercase">per kg</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Secondary Cards Stack -->
+<div class="grid grid-cols-2 gap-4">
+<div class="group glass-card rounded-xl overflow-hidden flex flex-col">
+<div class="h-32 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform group-hover:scale-105" data-alt="Freshly harvested blue mussels in a black ceramic bowl, with fine water droplets on their glossy shells. The setting is a professional seafood kitchen with dark slate countertops and moody, focused lighting. Hints of vibrant purple light reflect off the wet surfaces, maintaining a consistent high-tech oceanic brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5e5iYC_HlqKQm15moAjAUeC81Y4pDwZ5MgAJgh7y2yPgOgaKKZMoOkaADg1A8mlkD9KkDexRpsV6Jb4R3qdrfOQ9R4ERB8yMd_fhNPBC4yB4JesmCNmJe0ray_f-PVY3LWlgfEJm4oQS1Lpzss8O2fgl9R9OPFDfcjQpBrGIo8RGS0xQaW3pq7JJF1Mn0Lt5BLgwHuOGZXLeVpx8FP4ltBoWxMfLjsp4-SKPMOXCUJRXtfyRTBvCSPuCn7b3r7sDU7pHKHwT4ZF0"/>
+</div>
+<div class="p-4 flex-grow flex flex-col justify-between">
+<div>
+<h4 class="text-body-lg font-semibold leading-tight mb-1">Blue Mussels</h4>
+<span class="text-[10px] text-on-tertiary-container bg-tertiary/20 px-2 py-0.5 rounded uppercase font-bold">Premium AAA</span>
+</div>
+<div class="mt-2 flex justify-between items-center">
+<span class="text-primary-fixed-dim font-bold">$18.00</span>
+<button class="bg-primary p-1.5 rounded-lg text-on-primary active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+<div class="group glass-card rounded-xl overflow-hidden flex flex-col">
+<div class="h-32 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform group-hover:scale-105" data-alt="A pair of fresh whole Sea Bass on a dark metallic tray, covered in fine sea salt crystals. The lighting is dramatic and cool-toned, casting long shadows that emphasize the texture of the fish. The overall atmosphere is sophisticated and enterprise-grade, emphasizing freshness and cold-chain integrity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6qzrJQQ9dWL7zBeW94nMQcPVfa0a_fC5jIadJnKsylX038ushtkqtHj1hZ3gwe2HmkQAET4T1Hst9VW6gBGdfl5jCSBFA5Xru-tDYVhZVqUU9fUhYNHDHrp75Q4F54q1N184SVOFn4qzUUHD8R0YM7P8I4l-Xa11sC_orRs1xUNJCOkEYOj0GRQw2ZD868if3l5R7NoneGuz0rzW81Oe5V8ztSwbeK7qTXlmP1dq0PhZfVl7DJExOhPZliC1uAStsHL_rxXYPFm0"/>
+</div>
+<div class="p-4 flex-grow flex flex-col justify-between">
+<div>
+<h4 class="text-body-lg font-semibold leading-tight mb-1">Wild Sea Bass</h4>
+<span class="text-[10px] text-on-tertiary-container bg-tertiary/20 px-2 py-0.5 rounded uppercase font-bold">Cold Chain Verified</span>
+</div>
+<div class="mt-2 flex justify-between items-center">
+<span class="text-primary-fixed-dim font-bold">$34.20</span>
+<button class="bg-primary p-1.5 rounded-lg text-on-primary active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Recommended For You (Asymmetric Layout) -->
+<section class="space-y-4">
+<h2 class="text-section-title font-semibold">Recommended for You</h2>
+<div class="flex gap-4 overflow-x-auto no-scrollbar py-2">
+<!-- Large Feature Card -->
+<div class="flex-shrink-0 w-72 glass-card rounded-xl overflow-hidden border border-primary/20 shadow-lg shadow-primary/5">
+<div class="relative h-40">
+<img class="w-full h-full object-cover" data-alt="Artistic composition of fresh oysters arranged on a bed of dark seaweed and ice. The scene is illuminated by soft, atmospheric indigo and purple studio lighting. The texture of the oyster shells is crisp and detailed, suggesting luxury and high-quality oceanic aquaculture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZSdY81eYhXWQnK8-KIn8o7kypZjmOR54VfN0huruRTzYr9RZg_aW9YtyrCtMVmj153v4zJXPKmWc5d_8EkCGS_IFbnQfbRLfI4UmCMUbU7QNCPwwJ-gejGpShg4_CLULds4kxWqktcrA6X5DEXLDDpv1m7l1nRTuJ08WttcfCgFCV15prlP_FUPsDoi3uG6ScFoyPw-P1faceX8Uv2saqSAJLd6uQldbrfjuSS7OZupDrFlShMk_WA0pqrbHs4FY4ftXP2bY9rBQ"/>
+<div class="absolute top-3 right-3">
+<span class="material-symbols-outlined text-primary bg-surface/80 p-1.5 rounded-full backdrop-blur-sm" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+</div>
+<div class="p-5">
+<div class="flex items-center gap-1 mb-2">
+<span class="material-symbols-outlined text-[14px] text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-[10px] text-on-surface-variant uppercase font-medium">Top Rated by Chefs</span>
+</div>
+<h4 class="text-card-title mb-1">Pacific Rock Oysters</h4>
+<p class="text-body-sm text-on-surface-variant line-clamp-2 mb-4">Hand-harvested from the pristine waters of the Pacific Northwest.</p>
+<div class="flex items-center justify-between">
+<span class="text-primary font-bold">$24.00 / doz</span>
+<button class="bg-primary-container/20 text-primary px-4 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider active:scale-95 transition-transform">Reserve</button>
+</div>
+</div>
+</div>
+<!-- Standard Card -->
+<div class="flex-shrink-0 w-64 glass-card rounded-xl overflow-hidden">
+<div class="h-40">
+<img class="w-full h-full object-cover opacity-80" data-alt="Frozen King Crab legs with a light dusting of frost, displayed against a matte black background. The lighting is sharp and technical, showcasing the vibrant red color of the shell. The design conveys a sense of high-performance cold chain storage and elite product quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4_gD5Q0VegfXSNkdv0Wa9pRm0vIldNdmUHyio84yvXBUmH_eV1Yv5R60FRr0Jy-JelA7XvdZsQNEto5S9cwciT46zZ8o7DFxdc7uaupJIv-E15SYeyyPlBSDsZgU7YVVZkSfSENApTUXl0yWQ1kA5KSHA0zi2MyTQ8dDTC4kDjoLx1pNhdqcfXwJ4ahVRTJXGT72irVLlmQSRcgz-LYKK8bf2p1Vz4-7sIC0C7xf-4KTrNkbra_eJdLPTMdv1eJkHdWJXC8A0aNk"/>
+</div>
+<div class="p-5">
+<h4 class="text-card-title mb-1">Alaskan King Crab</h4>
+<p class="text-body-sm text-on-surface-variant mb-4">Flash-frozen at source.</p>
+<div class="flex items-center justify-between">
+<span class="text-primary font-bold">$89.00</span>
+<button class="text-primary p-2 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Freshness Insight (Glassmorphism Banner) -->
+<section class="pb-8">
+<div class="glass-card rounded-2xl p-6 relative overflow-hidden flex items-center justify-between border-primary/10">
+<div class="absolute -right-12 -top-12 w-48 h-48 bg-primary/10 rounded-full blur-3xl"></div>
+<div class="relative z-10 space-y-2 max-w-[60%]">
+<h3 class="text-xl font-bold text-white">Cold-Chain Tracked</h3>
+<p class="text-sm text-on-surface-variant">Real-time temperature monitoring for all Abyssal deliveries ensures 100% freshness.</p>
+<div class="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest pt-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                        Live tracking active
+                    </div>
+</div>
+<div class="relative z-10">
+<span class="material-symbols-outlined text-6xl text-primary/40">thermostat</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container-low/90 backdrop-blur-md dark:bg-surface-container-lowest/90 border-t border-outline-variant/20 shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
+<div class="flex justify-around items-center w-full px-2 py-3 pb-safe">
+<!-- Home (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container/20 text-primary rounded-xl px-4 py-2 active:scale-90 duration-150 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Home</span>
+</a>
+<!-- Market -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high active:scale-90 duration-150 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Market</span>
+</a>
+<!-- Orders -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high active:scale-90 duration-150 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Orders</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high active:scale-90 duration-150 transition-all rounded-xl" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>

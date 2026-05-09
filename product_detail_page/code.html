@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-lowest": "#0f0d13",
+            "surface-container-highest": "#36343a",
+            "tertiary-fixed-dim": "#e7c365",
+            "on-secondary": "#342b4b",
+            "primary": "#cfbcff",
+            "primary-fixed": "#e9ddff",
+            "on-surface-variant": "#cbc4d2",
+            "on-secondary-container": "#bfb2da",
+            "error-container": "#93000a",
+            "on-primary-container": "#e0d2ff",
+            "on-error-container": "#ffdad6",
+            "on-background": "#e6e0e9",
+            "on-tertiary-container": "#503d00",
+            "surface-container-high": "#2b292f",
+            "surface-bright": "#3b383e",
+            "secondary-fixed-dim": "#cdc0e9",
+            "outline": "#948e9c",
+            "secondary-container": "#4d4465",
+            "on-primary-fixed-variant": "#4f378a",
+            "surface-variant": "#36343a",
+            "on-secondary-fixed-variant": "#4b4263",
+            "on-secondary-fixed": "#1f1635",
+            "error": "#ffb4ab",
+            "on-primary": "#381e72",
+            "on-surface": "#e6e0e9",
+            "primary-fixed-dim": "#cfbcff",
+            "on-tertiary-fixed": "#241a00",
+            "surface-container": "#211f24",
+            "secondary-fixed": "#e9ddff",
+            "surface-dim": "#141218",
+            "surface-container-low": "#1d1b20",
+            "inverse-primary": "#6750a4",
+            "tertiary": "#e7c365",
+            "primary-container": "#6750a4",
+            "inverse-on-surface": "#322f35",
+            "outline-variant": "#494551",
+            "secondary": "#cdc0e9",
+            "inverse-surface": "#e6e0e9",
+            "on-tertiary": "#3e2e00",
+            "background": "#141218",
+            "on-error": "#690005",
+            "surface": "#141218",
+            "surface-tint": "#cfbcff",
+            "on-primary-fixed": "#22005d",
+            "tertiary-fixed": "#ffdf93",
+            "on-tertiary-fixed-variant": "#594400",
+            "tertiary-container": "#c9a74d"
+          },
+          "fontFamily": {
+            "headline": ["Inter"],
+            "display": ["Inter"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body { font-family: 'Inter', sans-serif; }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-32">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 bg-surface/80 backdrop-blur-xl dark:bg-surface/80 border-b border-outline-variant/30 shadow-sm">
+<div class="flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-3">
+<button class="active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary">waves</span>
+</button>
+<h1 class="font-headline text-[18px] font-bold leading-tight text-primary">Abyssal</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer">search</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer">shopping_cart</span>
+</div>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto px-6 lg:px-12 py-8">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- High-Res Image Gallery -->
+<section class="lg:col-span-7 space-y-4">
+<div class="aspect-[16/10] w-full rounded-xl overflow-hidden bg-surface-container shadow-2xl relative group">
+<img alt="Atlantic Bluefin Tuna Detail" class="w-full h-full object-cover" data-alt="A professional, high-end macro photograph of a premium Atlantic Bluefin Tuna steak, showcasing the deep ruby red marbleized texture of the meat. The lighting is dramatic and moody, with cool blue and deep purple undertones that reflect an oceanic tech aesthetic. The fish sits on a dark, wet slate surface with subtle ice crystals, emphasizing its absolute freshness and cold-chain integrity. The atmosphere is sophisticated, technical, and clean." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBV23NRs8w3uwHJNnMXd84qjmB5vpK5kMORGVkb_JM0ctWej0Hwv5-L6QP-4_x-E-bYu6XFFnxXg-MxHV8wBdlgUBbUMaSrT6M7g4BmeyhCT6zjNIgWMslUKfYfzKUrTKqcUhneHvFRTJiIchndqaqUjmOggM5VkP0nOJuQocHcpoD2K4q7jay_uIvqcQddTYWivN2xoWCfFIP2NGJss18mFZZ2v3BP2ro59-A0wc90g7NTaPsgFxDG2484NwBJkkzf2LK3QGqpV4Q"/>
+<div class="absolute top-4 left-4">
+<span class="bg-primary/20 backdrop-blur-md text-primary px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase border border-primary/30">Premium Grade</span>
+</div>
+</div>
+<div class="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
+<div class="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden border-2 border-primary bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Close up of tuna texture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCr7E9bRlGVONOI8c37tJpSXFgoVVvRkNihiag_E9CrMQyGVBub0E0BNsGZ6V8o7EROFOCggEVdKJBX1z_cJ34mlS4WtcP7gZlpVxCkRnD047JUCKAxOkh-tuKW-FT6BqxLHmfLRtras_v9kD20ccscmMPKFAE7XnFrGfO4IyJyKyg35DVMaWsXx9eUcyhLcmjtm2H0fVaNJaq7R8U9_d787T_WSesQsf1FvC10IXPIVckvIwRr6jlIVHblsVCJEzQ1wBVoq-VQw1Y"/>
+</div>
+<div class="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden border border-outline-variant/30 bg-surface-container opacity-60 hover:opacity-100 transition-opacity">
+<img class="w-full h-full object-cover" data-alt="Sustainable fishing vessel in deep blue waters." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtNRbHJjcrAVlvqjPqxTbDmq0iGVmsoz1pkmkQINSjRvRwhGWGkgsAkNmhtVDUiWEdUAOlksE0mxVFnOO0p7ocx9AdcQPLMV8uRBVB44PRTwbk-6jhO0u8FJxWgA9jABRelq2usqbKWe7zaha2f0PsHg_1Eh01hAUcS_92txFvMdYmXDGGtfsWElv7JO1MMFHZZVQEfbQmrgYzKIpNRRLOql1xOTeFYy9NlwEJtUeSnx1rT6THFXM3HXw_QqCTkY8mZGgh3Ruvqxk"/>
+</div>
+<div class="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden border border-outline-variant/30 bg-surface-container opacity-60 hover:opacity-100 transition-opacity">
+<img class="w-full h-full object-cover" data-alt="Professional kitchen prep of bluefin tuna." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBULkpwz6JmagzmcHQCVFTtH-MO9Gic5Li5-o4reaEMVsc1QDDUonhe_8CKPcd7_AJ5d2b_CvfV0R60G98ZM4ASpxzAYFm-CjttseZaXUzfpIP2YjXVCE8NbrxrLzF49edGY1m9xQBQrG4TTVL_Uuo4LIHVD39oeMoy93ezFhymvBgPhh-iBSdbiaf_OFQ_N9l-G1yN1-OHPHt093ThGyKicCrOn7lE-FqjQ-P9zwBFuC1lqGCivVgX0pDlp5GTIcis5eMcaP46R2A"/>
+</div>
+</div>
+</section>
+<!-- Product Info & Actions -->
+<section class="lg:col-span-5 flex flex-col">
+<div class="mb-2">
+<p class="text-tertiary font-medium text-sm tracking-wide uppercase">Norway • MSC Certified</p>
+<h2 class="text-3xl font-bold text-on-surface mt-1 leading-tight tracking-tight">Atlantic Bluefin Tuna</h2>
+</div>
+<div class="flex items-center gap-2 mt-4 mb-6">
+<div class="flex text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined">star_half</span>
+</div>
+<span class="text-on-surface-variant text-sm font-medium">4.8 (124 Seller Ratings)</span>
+</div>
+<div class="bg-surface-container-low rounded-xl p-6 border border-outline-variant/20 mb-6">
+<p class="text-on-surface-variant text-sm">Price per kg</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-bold text-primary">$189.00</span>
+<span class="text-on-surface-variant line-through text-lg">$210.00</span>
+</div>
+<div class="mt-4 flex items-center gap-3 py-2 px-3 bg-error-container/10 border border-error/20 rounded-lg">
+<span class="material-symbols-outlined text-error animate-pulse">ac_unit</span>
+<span class="text-error text-xs font-semibold uppercase tracking-tighter">Ultra-Low Temp Guarantee (-60°C)</span>
+</div>
+</div>
+<!-- Freshness Timeline -->
+<div class="space-y-4 mb-8">
+<h3 class="text-sm font-bold text-on-surface-variant uppercase tracking-widest">Freshness Timeline</h3>
+<div class="relative pl-8 space-y-6 before:content-[''] before:absolute before:left-3 before:top-2 before:bottom-2 before:w-px before:bg-outline-variant/40">
+<!-- Caught -->
+<div class="relative">
+<div class="absolute -left-8 mt-1.5 w-6 h-6 rounded-full bg-surface-container border-2 border-primary flex items-center justify-center z-10">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<p class="text-on-surface font-semibold text-sm">Caught</p>
+<p class="text-on-surface-variant text-xs">Arctic Circle, Norway • 14h ago</p>
+</div>
+<!-- Processed -->
+<div class="relative">
+<div class="absolute -left-8 mt-1.5 w-6 h-6 rounded-full bg-surface-container border-2 border-primary-container flex items-center justify-center z-10">
+<div class="w-2 h-2 rounded-full bg-primary-container"></div>
+</div>
+<p class="text-on-surface font-semibold text-sm">Processed &amp; Graded</p>
+<p class="text-on-surface-variant text-xs">Tromsø Logistics Hub • 10h ago</p>
+</div>
+<!-- Deep Chill -->
+<div class="relative">
+<div class="absolute -left-8 mt-1.5 w-6 h-6 rounded-full bg-surface-container border-2 border-tertiary flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-tertiary text-[14px]">bolt</span>
+</div>
+<p class="text-on-surface font-semibold text-sm">Deep Chill Activation</p>
+<p class="text-tertiary text-xs font-medium">Active Monitoring • In Transit</p>
+</div>
+</div>
+</div>
+<!-- Sourcing Details Bento -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-highest/40 p-4 rounded-xl border border-outline-variant/20">
+<span class="material-symbols-outlined text-primary mb-2">location_on</span>
+<p class="text-xs text-on-surface-variant uppercase">Origin</p>
+<p class="text-sm font-bold text-on-surface">Norway</p>
+</div>
+<div class="bg-surface-container-highest/40 p-4 rounded-xl border border-outline-variant/20">
+<span class="material-symbols-outlined text-primary mb-2">verified</span>
+<p class="text-xs text-on-surface-variant uppercase">Cert</p>
+<p class="text-sm font-bold text-on-surface">MSC Silver</p>
+</div>
+</div>
+</section>
+</div>
+<!-- Technical Specs Section -->
+<section class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="md:col-span-2">
+<h3 class="text-2xl font-bold text-on-surface mb-6">Product Description</h3>
+<p class="text-on-surface-variant leading-relaxed text-lg mb-6">
+          Sourced from the frigid, nutrient-rich waters of the Arctic Circle, our Atlantic Bluefin Tuna represents the pinnacle of sustainable aquaculture logistics. Each catch is immediately processed using the Abyssal 'Deep Chill' protocol, preserving cellular integrity and fat marbling that rivals the finest wild-caught specimens.
+        </p>
+<div class="grid grid-cols-2 gap-6">
+<ul class="space-y-3">
+<li class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+<span class="text-sm">AAA Sashimi Grade</span>
+</li>
+<li class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+<span class="text-sm">Carbon Neutral Transport</span>
+</li>
+</ul>
+<ul class="space-y-3">
+<li class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+<span class="text-sm">Mercury Tested</span>
+</li>
+<li class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+<span class="text-sm">Direct Dock Sourcing</span>
+</li>
+</ul>
+</div>
+</div>
+<div class="bg-primary-container/10 border border-primary/20 rounded-2xl p-8 relative overflow-hidden">
+<div class="absolute -right-8 -top-8 text-primary/5">
+<span class="material-symbols-outlined text-[160px]">science</span>
+</div>
+<h4 class="text-primary font-bold mb-2">Lab Analysis</h4>
+<div class="space-y-4 relative z-10">
+<div>
+<div class="flex justify-between text-xs text-on-surface-variant uppercase mb-1">
+<span>Fat Content</span>
+<span>18%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full">
+<div class="h-full bg-primary rounded-full" style="width: 75%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs text-on-surface-variant uppercase mb-1">
+<span>Freshness (K-Value)</span>
+<span>&lt;5%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-highest rounded-full">
+<div class="h-full bg-tertiary rounded-full" style="width: 92%"></div>
+</div>
+</div>
+<p class="text-xs text-on-surface-variant italic mt-4">Verified by OceanIQ Blockchain</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Action Bar (Mobile Sticky) -->
+<div class="fixed bottom-0 left-0 right-0 z-50 bg-surface-container-low/90 backdrop-blur-md border-t border-outline-variant/20 p-4 md:px-12 flex items-center justify-between gap-4">
+<div class="hidden md:flex flex-col">
+<span class="text-[10px] uppercase tracking-widest text-on-surface-variant">Total with shipping</span>
+<span class="text-xl font-bold text-on-surface">$204.50</span>
+</div>
+<div class="flex items-center gap-3 w-full md:w-auto">
+<button class="flex-1 md:flex-none px-6 py-4 rounded-xl border border-primary text-primary font-bold hover:bg-primary/10 transition-all active:scale-95 duration-150">
+        Add to Cart
+      </button>
+<button class="flex-[2] md:flex-none px-12 py-4 rounded-xl bg-primary text-on-primary font-bold hover:brightness-110 shadow-[0_0_20px_rgba(207,188,255,0.3)] transition-all active:scale-95 duration-150">
+        Buy Now
+      </button>
+</div>
+</div>
+<!-- Navigation Shell (Desktop Hidden / Mobile Shown) -->
+<nav class="md:hidden fixed bottom-14 left-0 w-full z-40 bg-surface-container-low/90 backdrop-blur-md border-t border-outline-variant/20 shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
+<div class="flex justify-around items-center w-full px-2 py-3">
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container/20 text-primary rounded-xl px-4 py-2 active:scale-90 duration-150">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Market</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Profile</span>
+</div>
+</div>
+</nav>
+</body></html>

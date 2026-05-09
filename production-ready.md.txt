@@ -1,0 +1,418 @@
+Create a COMPLETE production-ready multi-role SaaS dashboard UI for an Online Fish Selling Platform.
+
+The platform includes:
+1. Admin Panel
+2. Seller Dashboard
+3. Customer Marketplace App
+
+This must look like a modern premium SaaS product similar to:
+- Stripe
+- Shopify
+- Linear
+- Vercel
+- Notion
+- Airbnb Admin Systems
+
+The UI must be:
+- Clean
+- Minimal
+- Premium
+- Highly consistent
+- Fully scalable
+- Enterprise quality
+- Pixel-perfect
+- Ready for React + Tailwind implementation
+- Ready for Antigravity IDE / Cursor / Windsurf development WITHOUT redesign
+
+====================================================
+GLOBAL DESIGN SYSTEM (STRICTLY ENFORCE)
+====================================================
+
+IMPORTANT:
+Maintain EXACT visual consistency across ALL pages.
+DO NOT generate random styles.
+DO NOT change spacing rules between screens.
+DO NOT create different button styles.
+DO NOT create inconsistent typography.
+ALL components MUST reuse the same design system.
+
+====================================================
+STRICT CSS DESIGN RULES
+====================================================
+
+USE ONLY THESE DESIGN TOKENS.
+
+COLORS:
+--color-primary: #7C3AED;
+--color-primary-light: #A78BFA;
+--color-success: #10B981;
+--color-warning: #F59E0B;
+--color-danger: #EF4444;
+
+--bg-primary: #0F172A;
+--bg-secondary: #111827;
+--bg-card: #1E293B;
+--bg-hover: #273449;
+
+--text-primary: #F8FAFC;
+--text-secondary: #94A3B8;
+
+--border-color: rgba(255,255,255,0.08);
+
+TYPOGRAPHY:
+- Font Family: Inter
+- Heading Weight: 700
+- Subheading Weight: 600
+- Body Weight: 400–500
+
+FONT SIZES:
+- Hero Heading: 36px
+- Page Heading: 30px
+- Section Heading: 24px
+- Card Heading: 18px
+- Body Text: 14px–16px
+- Small Text: 12px
+
+SPACING SCALE:
+ONLY USE:
+4px
+8px
+12px
+16px
+20px
+24px
+32px
+40px
+48px
+
+CARD RULES:
+- Border Radius: 16px
+- Padding: 24px
+- Soft shadow only
+- Thin subtle borders
+- Consistent hover state
+- Equal card spacing everywhere
+
+BUTTON RULES:
+Primary Button:
+- Height: 44px
+- Radius: 12px
+- Purple background
+- White text
+- Medium font weight
+- Soft hover glow
+
+Secondary Button:
+- Dark background
+- Thin border
+- Same height and radius
+
+NEVER:
+- Use sharp corners
+- Use random gradients
+- Use different button heights
+- Use inconsistent padding
+
+INPUT RULES:
+- Height: 44px
+- Radius: 12px
+- Dark filled background
+- Purple focus ring
+- Same spacing everywhere
+
+SIDEBAR RULES:
+- Fixed sidebar
+- Width: 260px desktop
+- Collapsible mobile sidebar
+- Consistent icon spacing
+- Active menu highlight in purple
+
+TABLE RULES:
+- Rounded table containers
+- Sticky headers
+- Soft row hover
+- Consistent padding
+- Responsive mobile tables
+
+MODAL RULES:
+- Radius: 20px
+- Background blur
+- Smooth animations
+- Consistent spacing
+
+ANIMATION RULES:
+- Smooth micro interactions
+- Soft hover transitions
+- 200ms–300ms duration
+- No excessive animation
+
+GRID RULES:
+- 12-column responsive grid
+- Consistent gutters
+- Mobile-first responsive behavior
+
+====================================================
+FISH MARKETPLACE VISUAL STYLE
+====================================================
+
+Theme inspiration:
+- Premium seafood marketplace
+- Ocean-inspired UI
+- Elegant dark mode
+- Modern logistics dashboard
+- Freshness-focused commerce UI
+
+Use:
+- Subtle deep ocean gradients
+- Freshness badges
+- Delivery indicators
+- Cold-chain tracking visuals
+- Modern seafood product cards
+
+DO NOT:
+- Use cartoon fish graphics
+- Use childish colors
+- Use bright white UI
+- Use outdated admin templates
+
+====================================================
+COMPONENTS TO GENERATE
+====================================================
+
+Generate reusable components for:
+
+- Sidebar
+- Navbar
+- Search bar
+- Filters
+- Product cards
+- Review cards
+- Analytics cards
+- Orders tables
+- Charts
+- Empty states
+- Loading skeletons
+- Toast notifications
+- Tabs
+- Accordions
+- Breadcrumbs
+- Pagination
+- Multi-step forms
+- File upload
+- Image uploader
+- Ratings component
+- Chat widget
+- Notification dropdown
+- Confirmation dialogs
+- Status badges
+- Timeline tracker
+- Address cards
+- Payment cards
+- FAQ section
+- Activity feed
+
+====================================================
+ADMIN INTERFACE
+====================================================
+
+Generate these pages:
+
+1. Admin Login
+2. Forgot Password
+3. Reset Password
+4. OTP Verification
+5. Two-Factor Authentication Screen
+6. Admin Dashboard
+7. Seller Management
+8. Customer Management
+9. Product Management
+10. Fish Categories Management
+11. Inventory Management
+12. Orders Management
+13. Refund Management
+14. Delivery Tracking
+15. Analytics Dashboard
+16. Revenue Reports
+17. Platform Notifications
+18. User Roles & Permissions
+19. Review Moderation System
+20. Complaint & Dispute Resolution
+21. Coupon & Discount Management
+22. Subscription Plans
+23. CMS / Content Management
+24. FAQ Management
+25. Settings
+26. Security Settings
+27. Audit Logs
+28. Activity Monitoring
+
+====================================================
+SELLER INTERFACE
+====================================================
+
+Generate these pages:
+
+1. Seller Login/Register
+2. Forgot Password
+3. Seller Dashboard
+4. Product Listings
+5. Add/Edit Fish Listing
+6. Inventory Alerts
+7. Orders Management
+8. Shipping Management
+9. Earnings Dashboard
+10. Withdrawal Requests
+11. Customer Chat
+12. Customer Reviews
+13. Review Reply System
+14. Seller Analytics
+15. Promotions & Discounts
+16. Seller Verification
+17. Store Profile
+18. Notification Center
+19. Seller Settings
+
+====================================================
+CUSTOMER INTERFACE
+====================================================
+
+Generate these pages:
+
+1. Customer Login/Register
+2. Forgot Password
+3. OTP Verification
+4. Customer Home Page
+5. Fish Categories
+6. Product Listing Page
+7. Product Detail Page
+8. Search Results
+9. Wishlist
+10. Shopping Cart
+11. Checkout
+12. Payment Success
+13. Payment Failed
+14. Order Tracking
+15. Order History
+16. Invoice Page
+17. Customer Reviews
+18. Write Review Screen
+19. Review Photos Upload
+20. Customer Profile
+21. Saved Addresses
+22. Saved Payment Methods
+23. Notification Center
+24. Support Tickets
+25. Chat With Seller
+26. Refer & Earn
+27. Loyalty Rewards
+28. Customer Settings
+
+====================================================
+REVIEW & RATING SYSTEM
+====================================================
+
+Generate a FULL review system including:
+
+- Star ratings
+- Product reviews
+- Seller reviews
+- Review analytics
+- Verified purchase badges
+- Photo/video review uploads
+- Helpful votes
+- Review sorting
+- Review filters
+- Seller replies
+- Admin moderation
+- Report abusive review
+- AI spam detection UI
+- Review summary graphs
+- Rating breakdown charts
+
+Design review cards with:
+- Clean spacing
+- Rounded layout
+- Profile image
+- Timestamp
+- Verified badge
+- Helpful button
+- Reply thread UI
+
+====================================================
+ESSENTIAL SYSTEM PAGES
+====================================================
+
+Generate ALL important support pages:
+
+- 404 Page
+- 500 Error Page
+- Maintenance Page
+- No Internet Page
+- Empty State Pages
+- Access Denied
+- Session Expired
+- Account Suspended
+- Coming Soon Page
+- Terms & Conditions
+- Privacy Policy
+- Contact Support
+- Help Center
+- FAQ
+- Onboarding Screens
+- Welcome Screens
+- Success Screens
+- Error States
+- Loading Screens
+
+====================================================
+RESPONSIVENESS
+====================================================
+
+Generate:
+- Desktop layouts
+- Tablet layouts
+- Mobile layouts
+
+SPECIAL MOBILE RULES:
+- Bottom navigation for customer app
+- Swipe-friendly cards
+- Responsive tables
+- Mobile drawer menus
+- Sticky action buttons
+
+====================================================
+FINAL OUTPUT RULES
+====================================================
+
+CRITICAL:
+- Generate ALL screens together
+- Use ONE unified design system
+- Reuse components everywhere
+- Preserve exact spacing consistency
+- Preserve exact typography consistency
+- Preserve exact button styles
+- Preserve exact input styles
+- Preserve exact sidebar structure
+- Use production-ready Tailwind structure
+- Keep React component architecture friendly
+
+VERY IMPORTANT:
+DO NOT redesign components between pages.
+DO NOT randomly change colors.
+DO NOT randomly change card styles.
+DO NOT randomly change shadows.
+DO NOT use inconsistent border radius.
+DO NOT use different spacing systems.
+
+ALL UI MUST FEEL LIKE ONE SINGLE PROFESSIONAL PRODUCT.
+
+The output should be directly usable in:
+- React
+- Next.js
+- Tailwind CSS
+- shadcn/ui
+- Antigravity IDE
+- Cursor
+- Windsurf
+
+with minimal or ZERO redesign work.

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Deep-Freeze Logistics | Abyssal Enterprise</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#e6e0e9",
+                        "background": "#141218",
+                        "surface-container-lowest": "#0f0d13",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "surface-tint": "#cfbcff",
+                        "tertiary-container": "#c9a74d",
+                        "surface-container": "#211f24",
+                        "on-error": "#690005",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-surface": "#e6e0e9",
+                        "surface-bright": "#3b383e",
+                        "primary-container": "#6750a4",
+                        "error": "#ffb4ab",
+                        "outline": "#948e9c",
+                        "on-secondary": "#342b4b",
+                        "on-tertiary": "#3e2e00",
+                        "on-primary": "#381e72",
+                        "surface-dim": "#141218",
+                        "surface-container-low": "#1d1b20",
+                        "primary-fixed-dim": "#cfbcff",
+                        "tertiary": "#e7c365",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "secondary-container": "#4d4465",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed": "#ffdf93",
+                        "primary-fixed": "#e9ddff",
+                        "surface": "#141218",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-primary-fixed": "#22005d",
+                        "error-container": "#93000a",
+                        "surface-variant": "#36343a",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "on-secondary-container": "#bfb2da",
+                        "secondary-fixed": "#e9ddff",
+                        "primary": "#cfbcff",
+                        "outline-variant": "#494551",
+                        "on-primary-container": "#e0d2ff",
+                        "surface-container-high": "#2b292f",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "surface-container-highest": "#36343a",
+                        "secondary": "#cdc0e9",
+                        "on-surface-variant": "#cbc4d2",
+                        "inverse-primary": "#6750a4",
+                        "on-background": "#e6e0e9",
+                        "inverse-on-surface": "#322f35",
+                        "on-tertiary-container": "#503d00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .ice-frost {
+            background: 
+                radial-gradient(circle at top left, rgba(207, 188, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at bottom right, rgba(207, 188, 255, 0.05) 0%, transparent 40%);
+            position: relative;
+            overflow: hidden;
+        }
+        .ice-frost::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3C%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+        }
+        .crystal-edge {
+            position: fixed;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0.4;
+            filter: blur(1px);
+        }
+        .crystal-top-left { top: -20px; left: -20px; width: 300px; height: 300px; background: conic-gradient(from 0deg at 0% 0%, transparent, rgba(207, 188, 255, 0.2) 25%, transparent 50%); mask-image: radial-gradient(circle at 0% 0%, black, transparent 70%); }
+        .crystal-bottom-right { bottom: -20px; right: -20px; width: 300px; height: 300px; background: conic-gradient(from 180deg at 100% 100%, transparent, rgba(207, 188, 255, 0.2) 25%, transparent 50%); mask-image: radial-gradient(circle at 100% 100%, black, transparent 70%); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body selection:bg-primary/30 min-h-screen flex flex-col ice-frost">
+<!-- Crystal Decoration -->
+<div class="crystal-edge crystal-top-left"></div>
+<div class="crystal-edge crystal-bottom-right"></div>
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-40 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-sm">
+<div class="flex items-center justify-between px-6 h-16 w-full max-w-[1440px] mx-auto">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">menu</span>
+<h1 class="text-xl font-bold tracking-tight text-primary">Abyssal Enterprise</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:bg-surface-bright/50 transition-colors px-3 py-1 rounded-lg text-sm font-medium">Search</button>
+</div>
+</div>
+</header>
+<main class="flex-grow flex flex-col items-center justify-center px-6 py-12 relative z-20">
+<!-- Hero Section -->
+<div class="max-w-4xl w-full text-center space-y-8">
+<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-container/20 border border-primary/20 text-primary text-xs font-bold tracking-widest uppercase mb-4">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+                Coming Next Month
+            </div>
+<h2 class="font-headline text-[42px] md:text-[64px] font-bold leading-[1.1] tracking-tight text-on-surface">
+                A New Layer of <span class="text-primary bg-clip-text text-transparent bg-gradient-to-br from-primary to-secondary">Freshness.</span>
+</h2>
+<p class="text-on-surface-variant text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+                We are launching ultra-low temperature monitoring next month. High-fidelity sensors, real-time cryogenic tracking, and sub-zero logistics integrity for your most sensitive shipments.
+            </p>
+<!-- Subscription Form -->
+<div class="max-w-md mx-auto pt-6">
+<form class="flex flex-col sm:flex-row gap-3 p-2 bg-surface-container-high rounded-xl border border-white/5 shadow-2xl backdrop-blur-md">
+<input class="flex-grow bg-transparent border-none focus:ring-0 text-on-surface px-4 py-3 text-sm placeholder:text-on-surface-variant/50" placeholder="Enter your enterprise email" required="" type="email"/>
+<button class="bg-primary text-on-primary font-semibold px-6 py-3 rounded-lg hover:brightness-110 active:scale-95 transition-all duration-200 shadow-lg shadow-primary/20" type="submit">
+                        Notify Me
+                    </button>
+</form>
+<p class="text-[11px] text-on-surface-variant/40 mt-4 font-label tracking-wide uppercase">Priority access for Enterprise Tier members</p>
+</div>
+</div>
+<!-- Feature Bento Grid Teaser -->
+<div class="mt-24 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[1200px] w-full">
+<!-- Card 1 -->
+<div class="p-8 rounded-xl bg-surface-container border border-white/5 flex flex-col gap-4 group hover:border-primary/20 transition-colors">
+<div class="h-12 w-12 rounded-lg bg-surface-bright flex items-center justify-center text-primary shadow-inner">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">ac_unit</span>
+</div>
+<h3 class="font-headline text-xl font-semibold">Sub-Zero Precision</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Monitoring capabilities down to -80°C with 0.1° variance thresholds for biological and sensitive pharmaceutical cargo.</p>
+</div>
+<!-- Card 2: Visual Spotlight -->
+<div class="md:col-span-1 rounded-xl overflow-hidden border border-white/5 relative h-64 md:h-auto">
+<img alt="Frost visual" class="absolute inset-0 w-full h-full object-cover grayscale opacity-40 mix-blend-screen group-hover:scale-110 transition-transform duration-700" data-alt="A cinematic, high-definition close-up of intricate ice crystals forming on a dark, polished metallic surface. The lighting is cool and technical, with sharp purple highlights reflecting off the frost edges. The aesthetic is deep-sea logistics meets high-end cryogenic technology, characterized by deep blacks and electric violet glows. The mood is silent, cold, and extremely precise." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPieOAlTeEDowrrtSqyW3peibozFC7q344g9WaMVJ_peFU67NpyBWdU_rXKF2gcVyFyPFZ9x0DwTXHBEs-1e1MNJKd6GtyliHdf_Ync9oqMUFTaIKYdkQPbt6yQ1hdM6TtpZ-EEDZcswpK3fffGgIfGZeDdQcM7qrzw_CVaIhyKpdpGG6bDuBSHCZcOCmaGbX1qoGB3zngeyrh0UoORt1TPYI7SRplUY6q07BlhACOMvUIm9le8P8azvH9lCbVAtV7SzVcziR0ADs"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container via-transparent to-transparent"></div>
+<div class="absolute bottom-6 left-6 right-6">
+<div class="text-primary font-mono text-xs mb-1">SENSOR_STATUS: ACTIVE</div>
+<div class="h-1 w-full bg-surface-bright rounded-full overflow-hidden">
+<div class="h-full bg-primary w-2/3 shadow-[0_0_10px_rgba(207,188,255,0.5)]"></div>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="p-8 rounded-xl bg-surface-container border border-white/5 flex flex-col gap-4 group hover:border-primary/20 transition-colors">
+<div class="h-12 w-12 rounded-lg bg-surface-bright flex items-center justify-center text-primary shadow-inner">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dataset</span>
+</div>
+<h3 class="font-headline text-xl font-semibold">Immutable Audits</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Blockchain-verified temperature logs providing an unbreakable chain of custody records for international compliance.</p>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-8 px-6 border-t border-white/5 relative z-20">
+<div class="max-w-[1440px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-8 text-on-surface-variant/60 text-xs font-medium tracking-widest uppercase">
+<a class="hover:text-primary transition-colors" href="#">Terms</a>
+<a class="hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="hover:text-primary transition-colors" href="#">Contact</a>
+</div>
+<div class="text-on-surface-variant/40 text-[10px] font-mono">
+                SYSTEM_VERSION: v2.4.0_STABLE // BUILD_ID: ABYSS-DF-01
+            </div>
+</div>
+</footer>
+<!-- BottomNavBar (Mobile only suppression check: Home, Orders, Cold Chain, Profile) -->
+<!-- As per rule, suppress for Focused Splash page, but including structure if required for future navigation -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 md:hidden bg-surface-container-high/90 backdrop-blur-lg border-t border-white/10 rounded-t-xl shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
+<div class="flex flex-col items-center justify-center text-on-surface-variant scale-90 active:scale-100 transition-transform">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label text-[10px] font-medium tracking-wider mt-1 uppercase">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant scale-90 active:scale-100 transition-transform">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-label text-[10px] font-medium tracking-wider mt-1 uppercase">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 scale-90 active:scale-100 transition-transform">
+<span class="material-symbols-outlined">ac_unit</span>
+<span class="font-label text-[10px] font-medium tracking-wider mt-1 uppercase">Cold Chain</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant scale-90 active:scale-100 transition-transform">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label text-[10px] font-medium tracking-wider mt-1 uppercase">Profile</span>
+</div>
+</nav>
+</body></html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Review Moderation | Abyssal Enterprise</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface-variant": "#cbc4d2",
+                    "inverse-primary": "#6750a4",
+                    "on-tertiary-container": "#503d00",
+                    "inverse-on-surface": "#322f35",
+                    "on-background": "#e6e0e9",
+                    "surface-container-high": "#2b292f",
+                    "outline-variant": "#494551",
+                    "on-primary-container": "#e0d2ff",
+                    "primary": "#cfbcff",
+                    "secondary": "#cdc0e9",
+                    "surface-container-highest": "#36343a",
+                    "secondary-fixed-dim": "#cdc0e9",
+                    "on-secondary-container": "#bfb2da",
+                    "on-tertiary-fixed-variant": "#594400",
+                    "secondary-fixed": "#e9ddff",
+                    "error-container": "#93000a",
+                    "surface-variant": "#36343a",
+                    "tertiary-fixed": "#ffdf93",
+                    "on-primary-fixed": "#22005d",
+                    "surface": "#141218",
+                    "on-secondary-fixed": "#1f1635",
+                    "primary-fixed": "#e9ddff",
+                    "tertiary": "#e7c365",
+                    "secondary-container": "#4d4465",
+                    "on-primary-fixed-variant": "#4f378a",
+                    "on-error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#4b4263",
+                    "outline": "#948e9c",
+                    "primary-container": "#6750a4",
+                    "error": "#ffb4ab",
+                    "surface-dim": "#141218",
+                    "surface-container-low": "#1d1b20",
+                    "primary-fixed-dim": "#cfbcff",
+                    "on-primary": "#381e72",
+                    "on-tertiary": "#3e2e00",
+                    "on-secondary": "#342b4b",
+                    "surface-tint": "#cfbcff",
+                    "tertiary-fixed-dim": "#e7c365",
+                    "surface-container-lowest": "#0f0d13",
+                    "inverse-surface": "#e6e0e9",
+                    "background": "#141218",
+                    "surface-bright": "#3b383e",
+                    "on-tertiary-fixed": "#241a00",
+                    "on-surface": "#e6e0e9",
+                    "on-error": "#690005",
+                    "tertiary-container": "#c9a74d",
+                    "surface-container": "#211f24"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "display": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-panel { backdrop-filter: blur(12px); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #141218; }
+        ::-webkit-scrollbar-thumb { background: #494551; border-radius: 10px; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- Navigation Drawer -->
+<aside class="fixed left-0 top-0 h-full w-[260px] z-50 bg-surface-container-lowest border-r border-white/5 flex flex-col py-4 gap-2 shadow-2xl hidden md:flex">
+<div class="text-lg font-bold text-primary px-6 py-6 tracking-tight">Abyssal Enterprise</div>
+<nav class="flex-1 flex flex-col gap-1 px-2">
+<div class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200 font-medium text-sm rounded-lg">
+<span class="material-symbols-outlined">dashboard</span> Dashboard
+            </div>
+<div class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200 font-medium text-sm rounded-lg">
+<span class="material-symbols-outlined">inventory_2</span> Inventory
+            </div>
+<div class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200 font-medium text-sm rounded-lg">
+<span class="material-symbols-outlined">local_shipping</span> Logistics
+            </div>
+<div class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200 font-medium text-sm rounded-lg">
+<span class="material-symbols-outlined">payments</span> Financials
+            </div>
+<div class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200 font-medium text-sm rounded-lg">
+<span class="material-symbols-outlined">group</span> Sellers
+            </div>
+<div class="flex items-center gap-3 px-4 py-3 bg-primary-container/20 text-primary border-l-4 border-primary cursor-pointer transition-all duration-200 font-medium text-sm rounded-r-lg">
+<span class="material-symbols-outlined">gavel</span> Settings
+            </div>
+</nav>
+<div class="mt-auto px-4 py-4 border-t border-white/5">
+<div class="flex items-center gap-3 px-2">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold overflow-hidden">
+<img alt="Admin Avatar" class="w-full h-full object-cover" data-alt="A professional 3D avatar profile picture of a high-tech logistics administrator, featuring clean lines and soft purple lighting. The style is modern, technical, and high-fidelity, matching an enterprise software aesthetic with a deep sea dark mode theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDabGxtTse3IqCgx1fZhlZdWKdFpFMhzf0AC6k4aSESNRDWftmiziLvf77a0pLW_fTzkdLIH2zsoJ7fbX9U5_193D9q3mtzOUOqZ3doh1i0HZpL4pRTa9Hp4beHoSdhFGYHaiZnQ-Pnon3RXupDTyii6BcTcMXsT9wsOvlTX8KT9xZzRf50_FNCW87c3DGduD9Cs-hEEURhUgYLPYStedxWLvn8ka5iwmUZRGiX9JsbxeoBlo7gqjVjDj1awaTcpO6Jh1BLnjpZzLg"/>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-semibold text-on-surface">Deep Sea Admin</span>
+<span class="text-xs text-on-surface-variant">Enterprise Tier</span>
+</div>
+</div>
+<div class="mt-4 px-2 text-[10px] text-outline uppercase tracking-widest font-bold">v2.4.0</div>
+</div>
+</aside>
+<!-- Top App Bar -->
+<header class="sticky top-0 w-full z-40 bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-sm flex items-center justify-between px-6 h-16 md:pl-[284px]">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-headline text-[24px] font-bold leading-tight text-on-surface">Review Moderation</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-high text-on-surface-variant hover:bg-surface-bright transition-colors text-sm font-medium border border-white/5">
+<span class="material-symbols-outlined text-sm">search</span> Search
+            </button>
+<div class="h-8 w-[1px] bg-white/10 mx-2"></div>
+<span class="material-symbols-outlined text-primary cursor-pointer active:scale-95 duration-200">notifications</span>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="md:pl-[260px] pb-24 md:pb-12">
+<div class="max-w-[1440px] mx-auto px-6 py-8">
+<!-- Stats Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+<!-- Stat Card: Pending -->
+<div class="bg-surface-container border border-white/5 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-4">
+<span class="text-outline text-xs font-bold uppercase tracking-widest">Pending Reviews</span>
+<div class="p-2 rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined">pending_actions</span>
+</div>
+</div>
+<div class="text-3xl font-bold text-on-surface mb-1">1,429</div>
+<div class="text-xs text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span>
+<span>12% since yesterday</span>
+</div>
+</div>
+<!-- Stat Card: Flagged -->
+<div class="bg-surface-container border border-white/5 p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between mb-4">
+<span class="text-outline text-xs font-bold uppercase tracking-widest">Flagged Items</span>
+<div class="p-2 rounded-lg bg-error/10 text-error">
+<span class="material-symbols-outlined text-error">flag</span>
+</div>
+</div>
+<div class="text-3xl font-bold text-on-surface mb-1">84</div>
+<div class="text-xs text-error flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">priority_high</span>
+<span>Critical priority level</span>
+</div>
+</div>
+<!-- AI Sentiment Overview -->
+<div class="md:col-span-2 bg-surface-container-high border border-primary/20 p-6 rounded-xl flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute -right-12 -top-12 w-32 h-32 bg-primary/10 rounded-full blur-3xl transition-all duration-500 group-hover:bg-primary/20"></div>
+<div class="flex items-center justify-between mb-4 relative z-10">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<span class="text-on-surface font-semibold">AI Sentiment Analytics</span>
+</div>
+<span class="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded-full font-bold uppercase tracking-tighter">Live Monitor</span>
+</div>
+<div class="flex items-end gap-8 relative z-10">
+<div class="flex-1">
+<div class="flex justify-between text-xs mb-2">
+<span class="text-on-surface-variant">Neutral/Positive Accuracy</span>
+<span class="text-primary font-mono font-bold">0.98</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 98%;"></div>
+</div>
+</div>
+<div class="flex-1">
+<div class="flex justify-between text-xs mb-2">
+<span class="text-on-surface-variant">Spam Probability</span>
+<span class="text-error font-mono font-bold">0.12</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-2 rounded-full overflow-hidden">
+<div class="bg-error h-full rounded-full" style="width: 12%;"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Header and Filter -->
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+<div>
+<h2 class="text-xl font-semibold text-on-surface">Queue Management</h2>
+<p class="text-sm text-on-surface-variant">Managing high-density cargo feedback and logistics reports</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-4 py-2 bg-surface-container-high rounded-lg text-sm font-medium text-on-surface-variant border border-white/5 hover:bg-surface-bright transition-all">
+                        All Items
+                    </button>
+<button class="px-4 py-2 bg-primary-container text-on-primary-container rounded-lg text-sm font-medium transition-all shadow-lg shadow-primary/20">
+                        Flagged Only
+                    </button>
+<button class="p-2 bg-surface-container-high rounded-lg border border-white/5 text-on-surface-variant">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Moderation Feed -->
+<div class="grid grid-cols-1 gap-4">
+<!-- Review Card 1 (Flagged) -->
+<div class="bg-surface-container border-l-4 border-l-error bg-gradient-to-r from-error/5 to-transparent p-6 rounded-xl border border-white/5 flex flex-col md:flex-row gap-6 items-start transition-all hover:border-white/10">
+<div class="flex-shrink-0 flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-white/10">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="A professional and clean avatar for a customer review profile, set against a dark oceanic background. The lighting is focused and cinematic with a purple-blue color palette, emphasizing a premium enterprise feel." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJAUBJJzIfxqHOk4skKmubBw6EhRel1yHGmz1IiJj4S3OP9DJbMo7OfeFuVt_oxloAuQrL9p75V9YNl7xx8aDLMqCcpe30RjBdCx1GLRlCHnLnYGfmCdTyGyz8TLjA-3Sg1WtiS4Nh_n8FMmWO0ughA4rr8WcEZ3za954AfrzWh-RtUQy8-6zkR2MG54nBbofhWTuPWFiRcZnHbDYC1FFgQ8nRnqX_Ql7UwPLI5-7l9TJL83tCgd-A650rIahbvHhbHQ282CETotg"/>
+</div>
+<div class="flex flex-col items-center">
+<div class="text-[10px] text-outline font-bold uppercase">ID #82719</div>
+<div class="text-xs text-error font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">error</span>
+                                Flagged
+                            </div>
+</div>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-2">
+<span class="text-on-surface font-semibold">James D.</span>
+<span class="text-outline text-xs">• Verified Importer</span>
+<div class="flex text-tertiary ml-2">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs">star</span>
+<span class="material-symbols-outlined text-xs">star</span>
+<span class="material-symbols-outlined text-xs">star</span>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-4">
+                            The cold chain logistics were completely compromised on arrival. The sensors registered a 4 degree variance for over 12 hours. The shipment is potentially tainted. Highly unprofessional support when I called the hotline. This is unacceptable for premium grade inventory.
+                        </p>
+<div class="flex flex-wrap gap-2 items-center">
+<div class="flex items-center gap-1.5 px-2 py-1 bg-error-container/30 text-error rounded text-[11px] font-bold border border-error/20">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+                                Logistics Issue
+                            </div>
+<div class="flex items-center gap-1.5 px-2 py-1 bg-surface-container-highest text-on-surface-variant rounded text-[11px] font-mono">
+<span class="material-symbols-outlined text-[14px]">psychology</span>
+                                AI Sentiment: 0.22 (Negative)
+                            </div>
+</div>
+</div>
+<div class="w-full md:w-auto flex md:flex-col gap-2">
+<button class="flex-1 md:w-32 py-2 bg-primary/10 text-primary text-xs font-bold rounded hover:bg-primary/20 transition-all border border-primary/20">Audit</button>
+<button class="flex-1 md:w-32 py-2 bg-error text-on-error text-xs font-bold rounded hover:bg-error/90 transition-all">Delete</button>
+<button class="flex-1 md:w-32 py-2 bg-surface-container-highest text-on-surface-variant text-xs font-bold rounded border border-white/5 hover:bg-surface-bright transition-all">Flag for Abuse</button>
+</div>
+</div>
+<!-- Review Card 2 (Spam) -->
+<div class="bg-surface-container border-l-4 border-l-outline bg-gradient-to-r from-outline/5 to-transparent p-6 rounded-xl border border-white/5 flex flex-col md:flex-row gap-6 items-start transition-all hover:border-white/10 opacity-80">
+<div class="flex-shrink-0 flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-white/10">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="A clean, minimalist user icon for an unverified account, presented in a dark software UI theme with deep purples and high-contrast lines." src="https://lh3.googleusercontent.com/aida-public/AB6AXuClCHtnonzUAKMX9FiiCHjhbkao4eaQZYCfA9fWYxsm8MrmkRNgijrUEkqlf8CSvkCioon_RJ5LLZh0xC5xRpw4poIJERXZ4n6BHzoStlwtoHW8vlgnjASWMotNLkP1l4KrYkUAATIWupuzfaFUZedxBW0D8svFQot3eArn55Hhie0MyXCMCB5mAJLyqTMnaIDfo5hUbv4ooTfCLgwPn4D4cyyI3jei3MLdmyYUUVxkk5n6q6NhwAPb_QRG02Hw-LBfVOAfCSxvESI"/>
+</div>
+<div class="flex flex-col items-center text-outline">
+<div class="text-[10px] font-bold uppercase">ID #10293</div>
+<div class="text-xs font-semibold">Unverified</div>
+</div>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-2">
+<span class="text-on-surface font-semibold">CryptoWhale_99</span>
+<span class="text-outline text-xs">• External Guest</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-4 italic">
+                            "GET FREE LOGISTICS TOOLS NOW! Visit our site for 50% discount on all shipping across the Atlantic. Reliable and fast service guaranteed 24/7. Click link in bio."
+                        </p>
+<div class="flex flex-wrap gap-2 items-center">
+<div class="flex items-center gap-1.5 px-2 py-1 bg-surface-container-highest text-on-error rounded text-[11px] font-bold border border-error/50">
+<span class="material-symbols-outlined text-[14px]">block</span>
+                                Abusive Language
+                            </div>
+<div class="flex items-center gap-1.5 px-2 py-1 bg-error-container/20 text-error rounded text-[11px] font-mono">
+<span class="material-symbols-outlined text-[14px]">psychology</span>
+                                AI Sentiment: 0.12 (Spam)
+                            </div>
+</div>
+</div>
+<div class="w-full md:w-auto flex md:flex-col gap-2">
+<button class="flex-1 md:w-32 py-2 bg-surface-container-highest text-on-surface-variant text-xs font-bold rounded border border-white/5 hover:bg-surface-bright transition-all">Approve</button>
+<button class="flex-1 md:w-32 py-2 bg-error text-on-error text-xs font-bold rounded hover:bg-error/90 transition-all">Delete</button>
+</div>
+</div>
+<!-- Review Card 3 (Normal Pending) -->
+<div class="bg-surface-container p-6 rounded-xl border border-white/5 flex flex-col md:flex-row gap-6 items-start transition-all hover:border-white/10 group">
+<div class="flex-shrink-0 flex flex-col items-center gap-2">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-white/10 transition-transform group-hover:scale-105">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="A portrait-style profile icon for a verified business professional, emphasizing high-end corporate reliability. The colors match the deep abyssal slate and purple accent theme of the software interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbO4mlQ6KlrIH4-1BaWnJZEnkWoBaw9lGjANNIUqjfjQD4YKAt1BqEtI2SH_vqPRDN1f3DJtQD5UXmn8kyEGVmOL_wawMIKcwHMab60AIFRq-nkX6JZGVi4F7F_M1TwM-Ad6Q-yZHi7-2ZX8W58OcUAINgFvajJ_e9cY9F9vOxMzirO-epj5DpyfTyQMy9WcDJfCqBI2PPhUo8JMP90ptY0eVA63LBQINkVi8z_HxTmDFVysMuR_LuLO50LzQhTqsnRSbixQ2jYmU"/>
+</div>
+<div class="flex flex-col items-center">
+<div class="text-[10px] text-outline font-bold uppercase">ID #44201</div>
+<div class="text-xs text-primary font-semibold">New Review</div>
+</div>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-2">
+<span class="text-on-surface font-semibold">Marina S.</span>
+<span class="text-outline text-xs">• Premium Vendor</span>
+<div class="flex text-tertiary ml-2">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-4">
+                            Excellent response time on the last batch of Atlantic salmon. The packaging was robust and maintained optimal temperature throughout the 48-hour transit. Abyssal Enterprise continues to be our preferred logistics partner for high-sensitivity cargo.
+                        </p>
+<div class="flex flex-wrap gap-2 items-center">
+<div class="flex items-center gap-1.5 px-2 py-1 bg-primary/10 text-primary rounded text-[11px] font-mono">
+<span class="material-symbols-outlined text-[14px]">psychology</span>
+                                AI Sentiment: 0.98 (Positive)
+                            </div>
+</div>
+</div>
+<div class="w-full md:w-auto flex md:flex-col gap-2">
+<button class="flex-1 md:w-32 py-2 bg-primary text-on-primary text-xs font-bold rounded hover:bg-primary/90 transition-all shadow-md shadow-primary/10">Approve</button>
+<button class="flex-1 md:w-32 py-2 bg-surface-container-highest text-on-surface-variant text-xs font-bold rounded border border-white/5 hover:bg-surface-bright transition-all">Audit</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Nav Bar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface-container-high/90 backdrop-blur-lg border-t border-white/10 md:hidden rounded-t-xl shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
+<div class="flex flex-col items-center justify-center text-on-surface-variant scale-90 active:scale-100 transition-transform">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant scale-90 active:scale-100 transition-transform">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 scale-90 active:scale-100 transition-transform">
+<span class="material-symbols-outlined">gavel</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Admin</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant scale-90 active:scale-100 transition-transform">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Profile</span>
+</div>
+</nav>
+<!-- Contextual FAB (Only for major actions) -->
+<div class="fixed bottom-24 right-6 md:bottom-8 md:right-8 z-40">
+<button class="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center text-on-primary shadow-2xl shadow-primary/40 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-3xl">auto_mode</span>
+</button>
+</div>
+</body></html>

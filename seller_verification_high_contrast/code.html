@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+
+<html class="" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Seller Verification | Oceanic Logistics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glowing-border-pending {
+            position: relative;
+        }
+        .glowing-border-pending::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(45deg, #7C3AED, #cfbcff, #7C3AED);
+            z-index: -1;
+            border-radius: inherit;
+            opacity: 0.4;
+            filter: blur(8px);
+        }
+        body {
+            background-color: #141218;
+            color: #e6e0e9;
+        }
+    </style>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"inverse-primary": "#aac7ff", tertiary: "#964400", "surface-container": "#ebedf7", "secondary-fixed": "#d6e3ff", "surface-dim": "#d7dae3", "surface-container-low": "#f1f3fc", "on-primary": "#ffffff", "on-surface": "#181c22", "primary-fixed-dim": "#aac7ff", "on-tertiary-fixed": "#321200", error: "#ba1a1a", "on-primary-fixed": "#001b3e", "tertiary-fixed": "#ffdbc9", "on-tertiary-fixed-variant": "#763400", "tertiary-container": "#bd5700", "on-error": "#ffffff", surface: "#f9f9ff", "surface-tint": "#005db8", secondary: "#465f88", "inverse-surface": "#2d3037", "on-tertiary": "#ffffff", background: "#f9f9ff", "primary-container": "#0a73e0", "inverse-on-surface": "#eef0fa", "outline-variant": "#c1c6d5", "primary-fixed": "#d6e3ff", "on-surface-variant": "#414753", "on-secondary-container": "#3f5881", "error-container": "#ffdad6", "on-secondary": "#ffffff", primary: "#005ab4", "surface-container-lowest": "#ffffff", "surface-container-highest": "#e0e2eb", "tertiary-fixed-dim": "#ffb68c", "secondary-container": "#b6d0ff", "on-primary-fixed-variant": "#00458d", "surface-variant": "#e0e2eb", "on-secondary-fixed-variant": "#2d476f", "on-secondary-fixed": "#001b3d", "on-tertiary-container": "#fffbff", "surface-container-high": "#e6e8f1", "surface-bright": "#f9f9ff", "secondary-fixed-dim": "#aec7f7", outline: "#717785", "on-error-container": "#93000a", "on-background": "#181c22", "on-primary-container": "#fefcff"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {sm: "8px", md: "12px", "5xl": "48px", xs: "4px", "2xl": "24px", xl: "20px", "3xl": "32px", "4xl": "40px", lg: "16px"}, fontFamily: {"hero-mobile": ["Inter"], "section-title": ["Inter"], label: ["Inter"], "card-title": ["Inter"], "body-lg": ["Inter"], "page-title": ["Inter"], hero: ["Inter"], "body-sm": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"]}, fontSize: {"hero-mobile": ["28px", {lineHeight: "1.2", fontWeight: "700"}], "section-title": ["24px", {lineHeight: "1.3", fontWeight: "600"}], label: ["12px", {lineHeight: "1", letterSpacing: "0.05em", fontWeight: "500"}], "card-title": ["18px", {lineHeight: "1.4", fontWeight: "600"}], "body-lg": ["16px", {lineHeight: "1.5", fontWeight: "400"}], "page-title": ["30px", {lineHeight: "1.2", fontWeight: "700"}], hero: ["36px", {lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700"}], "body-sm": ["14px", {lineHeight: "1.5", fontWeight: "400"}]}}}};</script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-lg text-on-surface">
+<!-- Navigation Drawer (SideNav) -->
+<aside class="flex flex-col h-screen fixed z-40 w-[260px] bg-surface-container dark:bg-surface-container border-r border-outline-variant shadow-sm overflow-y-auto">
+<div class="px-6 py-8">
+<h1 class="font-page-title text-page-title font-bold text-primary">Oceanic Logistics</h1>
+<p class="text-on-surface-variant font-label text-label mt-1">Enterprise Tier</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label text-label">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-label text-label">Shipments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label text-label">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container/10 text-primary border-l-4 border-primary transition-all" href="#">
+<span class="material-symbols-outlined">verified</span>
+<span class="font-label text-label">Quality Control</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">ac_unit</span>
+<span class="font-label text-label">Cold Chain</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label text-label">Settings</span>
+</a>
+</nav>
+<div class="p-6 border-t border-outline-variant mt-auto">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold">
+                    OL
+                </div>
+<div>
+<p class="font-label text-[13px] font-bold text-on-surface">V1.0.4</p>
+<p class="text-[11px] text-on-surface-variant">System Active</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-[260px] min-h-screen">
+<!-- Top App Bar -->
+<header class="flex justify-between items-center px-6 py-4 w-full z-30 sticky top-0 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface cursor-pointer">menu</span>
+<h2 class="font-page-title text-page-title text-on-surface font-black">Global Marketplace</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex gap-6 items-center">
+<span class="font-label text-label text-on-surface-variant hover:text-primary cursor-pointer transition-colors">Documentation</span>
+<span class="font-label text-label text-on-surface-variant hover:text-primary cursor-pointer transition-colors">Support</span>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant cursor-pointer active:opacity-70 transition-all">
+<img alt="User avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5x0WZShnnE_2OnP52hdgT6mMi_HI9l2GC5lK-iCnvymcf689ZOq1Bgwm18RMqgfUFTVvWfgyjU7-o8DqqYdkdwW_m_0xRJTHPXiXffEdDqlqwsO9GAEqb25GQBQOAfryNJPWxCodAnYPhAVjfG_hMffupouHOQK7VET-PVz3Kw7Rq5LU-p-Lk-98BOHBijubXVKIBtZI6hlJAqkuK-_qyejg7GPZQTSCs85j8rftaF-TDacmkzzfYi1TVZscNl4dxLLqHHQ1-RMU"/>
+</div>
+</div>
+</header>
+<!-- Immersive Content Area -->
+<section class="p-5xl max-w-[1440px] mx-auto">
+<!-- Hero Header Section -->
+<div class="relative w-full h-[320px] rounded-xl overflow-hidden mb-4xl shadow-lg">
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="A cinematic, low-angle shot of a high-tech deep-sea laboratory with bioluminescent blue lighting. Scientists in minimalist tech-gear monitor glowing holographic data panels that display aquaculture metrics. The atmosphere is cold, precise, and technologically advanced, with deep blues and crisp whites dominating the color palette. High-end equipment and reinforced glass windows suggest an underwater facility." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAH88yisHAmF2AyqQE5UsKxvw9Z8q39vCz0080pkNXPZ8TbVMFVI31J1euCcMjbnNJjvnD8pamfmMumQbHNTg7utDd5YZ1v5toykehzZ92UezBu4i-7sEzkC6KCRFhvKEKogF4J8R2hylzJdkVHv0gUSWuGK0eVbGC9BPyosw1UGnxRqgc2kLKzxNnIl4vf1N6r1CBnGZDyRSkno0qK1smHm6kktyAUHawEYdc2cOb0FrOT0zeyzmJn9uNOg7loP2N5nIcdbhYV6ME"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-3xl">
+<div class="flex items-center gap-lg mb-md">
+<span class="px-4 py-1 rounded-full bg-primary text-on-primary font-label text-label uppercase tracking-widest">Verification Status</span>
+<div class="flex items-center gap-2 px-3 py-1 rounded-full bg-tertiary-container/30 border border-tertiary/40 backdrop-blur-sm">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse shadow-[0_0_8px_#e7c365]"></span>
+<span class="text-tertiary font-bold text-[10px] tracking-widest uppercase">Pending Audit</span>
+</div>
+</div>
+<h1 class="font-hero text-hero text-white mb-sm">Oceanic Seller Verification</h1>
+<p class="font-body-lg text-on-surface-variant max-w-2xl">Validate your supply chain integrity and cold-chain compliance to unlock Global Tier trading permissions.</p>
+</div>
+</div>
+<!-- Bento Grid Content -->
+<div class="grid grid-cols-12 gap-2xl">
+<!-- Main Verification Steps -->
+<div class="col-span-12 lg:col-span-8 space-y-2xl">
+<!-- Compliance Card -->
+<div class="glass-panel rounded-xl p-2xl glowing-border-pending">
+<div class="flex justify-between items-start mb-4xl">
+<div>
+<h3 class="font-card-title text-card-title text-primary mb-xs">Regulatory Documentation</h3>
+<p class="text-on-surface-variant font-body-sm">Final review of international aquaculture permits.</p>
+</div>
+<span class="material-symbols-outlined text-primary text-3xl">description</span>
+</div>
+<div class="space-y-lg">
+<!-- Document Item -->
+<div class="flex items-center justify-between p-lg bg-surface-container-lowest rounded-lg border border-outline-variant/30">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-secondary-container/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">gavel</span>
+</div>
+<div>
+<p class="font-label text-on-surface text-[14px]">Export License #AQ-9942</p>
+<p class="text-[11px] text-on-surface-variant uppercase tracking-tighter">Verified by EU Maritime Agency</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-green-400">check_circle</span>
+</div>
+<!-- Document Item Pending -->
+<div class="flex items-center justify-between p-lg bg-surface-container-low rounded-lg border border-primary/20">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-primary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">analytics</span>
+</div>
+<div>
+<p class="font-label text-on-surface text-[14px]">Cold-Chain Integrity Report</p>
+<p class="text-[11px] text-primary/80 uppercase tracking-tighter">Under Manual Review</p>
+</div>
+</div>
+<div class="px-3 py-1 bg-primary/10 border border-primary/20 rounded text-[10px] text-primary font-bold uppercase">Processing</div>
+</div>
+</div>
+</div>
+<!-- Facility Inspection Section -->
+<div class="grid grid-cols-2 gap-2xl">
+<div class="glass-panel rounded-xl overflow-hidden flex flex-col h-full">
+<div class="h-40 relative">
+<img class="w-full h-full object-cover" data-alt="A high-contrast macro shot of a sophisticated cold-chain monitoring device with a glowing digital screen. The device is mounted on a brushed metal wall inside a sub-zero storage facility. Frost crystals are visible on the metal surfaces, reflecting sharp, clinical white light. The overall mood is cold, sterile, and industrially clean with a focus on precision technology." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxMB3aOBOyzMVbBe78PQaDOW_MIU0HFF21LjHl6ZhW59VAXATBuzklLWm8stc5EziHtEDlGB8L2uMZMqEFOa1OpD92gG6OwvQzRbG3EOyy4woV-TbxzbvMkcuMdtVC13rRA9ZijLiSuNB4eCLDOYw9zcJXxe_cvr1oUEx207vEyv9TRb-7gAaUx1azLUkA9AZVsJahS0fokvEBLqdTUh8R_jHHfZaP5_t40Rt8tpqqKY23JTPUoSXe5TFO4kCqHRdZqDbdtARx5mQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent"></div>
+<div class="absolute bottom-4 left-4">
+<h4 class="font-card-title text-card-title text-white">Facility Telemetry</h4>
+</div>
+</div>
+<div class="p-2xl flex-1">
+<div class="flex items-end justify-between mb-lg">
+<span class="text-4xl font-black text-primary">98.4<span class="text-lg font-normal text-on-surface-variant ml-1">%</span></span>
+<span class="font-label text-label text-on-surface-variant uppercase">Uptime</span>
+</div>
+<div class="w-full bg-outline-variant h-1 rounded-full overflow-hidden">
+<div class="bg-primary w-[98.4%] h-full"></div>
+</div>
+<p class="mt-lg text-body-sm text-on-surface-variant">Real-time sensor network is fully integrated with Oceanic Hub.</p>
+</div>
+</div>
+<div class="glass-panel rounded-xl overflow-hidden flex flex-col h-full">
+<div class="h-40 relative">
+<img class="w-full h-full object-cover" data-alt="An industrial interior showing a pristine, automated seafood processing line in a high-end facility. Stainless steel robotic arms and conveyor belts move through a environment lit by cool-toned, recessed ceiling lights. The floor is a polished dark grey, and the walls are clean, minimalist white. The image exudes high-tech efficiency and extreme cleanliness." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXUcIeKJEuNJGbAumkJ9laspFsn0mIHrZNc-2AodjYraUwdLXLstDkzUA1JK0PU5yElXbEYkHz97ChwicGt0M0MApPYjrfjdXb_ARrGvWCYL4SBGn8IgjDFDK6Qw80IxFYV33y-8VPRCBDl_sYNDdpyZb6GYNwjCzelawHLqjOg3SDWjAMItAK9q7rXW4RoY8BMaYKp4HBu-2lRPLPN3vAGrhpDHdKj7PINc4BuyoGLFY0KBlO_fLa-Ok5vuxZ7L0jvyPmeT0VpRU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent"></div>
+<div class="absolute bottom-4 left-4">
+<h4 class="font-card-title text-card-title text-white">Quality Audit</h4>
+</div>
+</div>
+<div class="p-2xl flex-1">
+<div class="flex items-center gap-3 mb-lg">
+<div class="px-2 py-1 rounded bg-green-500/20 text-green-400 font-bold text-[10px] border border-green-500/40">AAA GRADE</div>
+<span class="text-on-surface-variant text-body-sm">Standard Achieved</span>
+</div>
+<p class="text-body-sm text-on-surface-variant">Last on-site automated drone inspection passed without variance.</p>
+<button class="mt-xl w-full py-2 border border-outline text-on-surface font-label text-label rounded hover:bg-on-surface/5 transition-all">View Report</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Side Panel Info -->
+<div class="col-span-12 lg:col-span-4 space-y-2xl">
+<!-- Status Progress Card -->
+<div class="bg-surface-container-high rounded-xl p-2xl border border-outline-variant">
+<h3 class="font-section-title text-section-title text-on-surface mb-2xl">Verification Flow</h3>
+<div class="space-y-4xl relative">
+<!-- Timeline Line -->
+<div class="absolute left-[15px] top-2 bottom-2 w-[2px] bg-outline-variant"></div>
+<!-- Step 1 -->
+<div class="relative flex gap-xl items-start">
+<div class="z-10 w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white shadow-[0_0_15px_rgba(34,197,94,0.3)]">
+<span class="material-symbols-outlined text-[20px]">check</span>
+</div>
+<div>
+<p class="font-label text-on-surface font-bold text-[14px]">Identity &amp; Banking</p>
+<p class="text-[12px] text-on-surface-variant">Completed on Oct 12</p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="relative flex gap-xl items-start">
+<div class="z-10 w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary shadow-[0_0_15px_rgba(207,188,255,0.3)]">
+<span class="material-symbols-outlined text-[20px]">autorenew</span>
+</div>
+<div>
+<p class="font-label text-primary font-bold text-[14px]">Supply Chain Audit</p>
+<p class="text-[12px] text-on-surface-variant">Estimated 2 days remaining</p>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="relative flex gap-xl items-start">
+<div class="z-10 w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]">lock</span>
+</div>
+<div>
+<p class="font-label text-on-surface-variant font-bold text-[14px]">Global Marketplace Access</p>
+<p class="text-[12px] text-on-surface-variant">Unlocks after audit success</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Card -->
+<div class="bg-primary p-2xl rounded-xl shadow-[0_20px_50px_rgba(124,58,237,0.3)]">
+<h4 class="font-card-title text-card-title text-on-primary mb-md">Expedite Verification</h4>
+<p class="text-on-primary/80 font-body-sm mb-2xl">Priority auditing for Enterprise Tier partners. Shortens the queue from 5 days to 24 hours.</p>
+<button class="w-full py-4 bg-white text-primary font-bold rounded-lg shadow-sm hover:scale-[1.02] active:scale-95 transition-all">
+                            Request Priority Review
+                        </button>
+</div>
+<!-- Freshness Alert Card -->
+<div class="glass-panel rounded-xl p-xl flex items-center gap-xl border-l-4 border-tertiary">
+<div class="w-12 h-12 rounded-full bg-tertiary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">warning</span>
+</div>
+<div>
+<p class="text-[11px] text-tertiary font-black uppercase tracking-widest">System Notice</p>
+<p class="text-[13px] text-on-surface-variant">Update your "Cold Chain V3" certificates before November 1st.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full flex justify-around items-center py-3 px-4 z-50 bg-surface-container-high/90 backdrop-blur-md border-t border-outline-variant shadow-lg rounded-t-xl">
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary cursor-pointer">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label text-label">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary cursor-pointer">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label text-label">Market</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary cursor-pointer">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label text-label">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center text-primary font-bold scale-110">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label text-label">Profile</span>
+</div>
+</nav>
+</body></html>

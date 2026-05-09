@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+
+<html class="" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Seller Portal | Oceanic Logistics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #0F172A;
+            color: #E6E0E9;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .freshness-gradient {
+            border-top: 2px solid transparent;
+            background-image: linear-gradient(#1E293B, #1E293B), linear-gradient(to right, #7C3AED, #cfbcff);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+        }
+    </style>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-primary-fixed-variant": "#00458d", secondary: "#465f88", primary: "#005ab4", "surface-tint": "#005db8", "on-tertiary-fixed": "#321200", "on-secondary": "#ffffff", "on-primary-fixed": "#001b3e", "surface-container": "#ebedf7", surface: "#f9f9ff", "on-tertiary-container": "#fffbff", "on-background": "#181c22", "tertiary-container": "#bd5700", "error-container": "#ffdad6", "surface-bright": "#f9f9ff", "secondary-fixed": "#d6e3ff", "on-secondary-fixed": "#001b3d", "on-primary": "#ffffff", "tertiary-fixed": "#ffdbc9", "on-primary-container": "#fefcff", "inverse-on-surface": "#eef0fa", "on-surface-variant": "#414753", "surface-container-high": "#e6e8f1", "primary-fixed-dim": "#aac7ff", "secondary-container": "#b6d0ff", "on-error": "#ffffff", "surface-variant": "#e0e2eb", "surface-container-lowest": "#ffffff", "on-tertiary-fixed-variant": "#763400", "primary-container": "#0a73e0", "primary-fixed": "#d6e3ff", "inverse-surface": "#2d3037", tertiary: "#964400", "surface-dim": "#d7dae3", "surface-container-low": "#f1f3fc", "on-error-container": "#93000a", background: "#f9f9ff", "on-secondary-fixed-variant": "#2d476f", "secondary-fixed-dim": "#aec7f7", "on-tertiary": "#ffffff", "on-surface": "#181c22", outline: "#717785", "tertiary-fixed-dim": "#ffb68c", "on-secondary-container": "#3f5881", error: "#ba1a1a", "inverse-primary": "#aac7ff", "outline-variant": "#c1c6d5", "surface-container-highest": "#e0e2eb"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"5xl": "48px", xl: "20px", "4xl": "40px", xs: "4px", sm: "8px", lg: "16px", "3xl": "32px", "2xl": "24px", md: "12px"}, fontFamily: {"hero-mobile": ["Inter"], hero: ["Inter"], "body-sm": ["Inter"], "section-title": ["Inter"], label: ["Inter"], "page-title": ["Inter"], "card-title": ["Inter"], "body-lg": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"]}, fontSize: {"hero-mobile": ["28px", {lineHeight: "1.2", fontWeight: "700"}], hero: ["36px", {lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700"}], "body-sm": ["14px", {lineHeight: "1.5", fontWeight: "400"}], "section-title": ["24px", {lineHeight: "1.3", fontWeight: "600"}], label: ["12px", {lineHeight: "1", letterSpacing: "0.05em", fontWeight: "500"}], "page-title": ["30px", {lineHeight: "1.2", fontWeight: "700"}], "card-title": ["18px", {lineHeight: "1.4", fontWeight: "600"}], "body-lg": ["16px", {lineHeight: "1.5", fontWeight: "400"}]}}}};</script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-lowest selection:bg-primary/30">
+<!-- Navigation Drawer (Sidebar) -->
+<aside class="flex flex-col h-screen fixed z-40 w-[260px] bg-surface-container dark:bg-surface-container border-r border-outline-variant shadow-sm hidden md:flex">
+<div class="px-6 py-8 flex flex-col gap-1">
+<h1 class="font-page-title text-page-title font-bold text-primary">Oceanic Logistics</h1>
+<p class="font-label text-label text-on-surface-variant opacity-70">Enterprise Tier • V1.0.4</p>
+</div>
+<nav class="flex-1 px-4 space-y-2 mt-4">
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container/10 text-primary border-l-4 border-primary transition-all font-label text-label" href="#">
+<span class="material-symbols-outlined">inventory_2</span> Inventory
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200 font-label text-label" href="#">
+<span class="material-symbols-outlined">local_shipping</span> Shipments
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200 font-label text-label" href="#">
+<span class="material-symbols-outlined">leaderboard</span> Analytics
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200 font-label text-label" href="#">
+<span class="material-symbols-outlined">verified</span> Quality Control
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200 font-label text-label" href="#">
+<span class="material-symbols-outlined">ac_unit</span> Cold Chain
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200 font-label text-label" href="#">
+<span class="material-symbols-outlined">settings</span> Settings
+            </a>
+</nav>
+<div class="p-4 border-t border-outline-variant mt-auto">
+<div class="flex items-center gap-3 p-2 bg-surface-variant/30 rounded-xl">
+<img alt="User profile" class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A professional headshot of a corporate logistics executive with a confident expression, set against a blurred high-tech office background. The lighting is crisp and cool, featuring blue and purple highlights that match a sophisticated dark-mode enterprise interface. The overall aesthetic is clean, sharp, and high-performance." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0f4th2ZzlodOpkSu65ptIjexEAByc1WPkRNZd5NENrMPkGbJRGFPcsEXDFL-ZPYisW1cwDl4tVR7R3HdagpTXVmnxcHLp9PXW_KxZYb_ykCQhPbsdL09XyQRXx-AuK_UVfxjcw8bV3Ah0SS3I9CGDFXwu-a-tjBgyaT5XgkHJv2LejZehq7vE5uT1ifj34jboGgyImEOZNm83k6V9T9XZZMLFhnFih6J5I8mLFQ0aVp9l8kKSxIcPDcArXl0feh4JjlMp5IEjvuI"/>
+<div class="overflow-hidden">
+<p class="font-card-title text-[14px] truncate text-on-surface">Oceanic Logistics</p>
+<p class="font-label text-label text-on-surface-variant">Global Seller</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="md:ml-[260px] min-h-screen flex flex-col pb-24 md:pb-8">
+<!-- Top App Bar -->
+<header class="flex justify-between items-center px-6 py-4 w-full z-30 sticky top-0 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary md:hidden cursor-pointer active:opacity-70">menu</span>
+<h2 class="font-page-title text-page-title text-on-surface">Seller Portal</h2>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer">notifications</span>
+<img alt="User avatar" class="w-8 h-8 rounded-full border border-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvBp5rel7MCg2Qr0WQGJMGvXrFgNxMI_G3Kbzlo8BDc8MBtW72V-gRyYwkvXsaTv2LAFVBVTUA7o-IEvI5YwrlbAk2yfh-q1qfsv4s7lxxU7qGr0wzpiSHc3C7bDPkhFk4G5Q6qgE7LavW0rPy_-UywPmvM8LKmWaUmOQlrNhFMYrtQVpwWPBZNiNfPt7vBAijnFHz1jtG7uJUJ_7z5IcFfWJ1gQlc-fZIsEEfVV-yN-QNs8Ul7ae2-Ef3eEm0Rlyb6guH3dtKk0s"/>
+</div>
+</header>
+<!-- Canvas -->
+<div class="max-w-[1440px] w-full mx-auto p-6 space-y-8">
+<!-- KPI Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Revenue Card -->
+<div class="glass-card freshness-gradient p-6 rounded-2xl flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<span class="font-label text-label text-on-surface-variant">Today's Revenue</span>
+<span class="material-symbols-outlined text-primary">payments</span>
+</div>
+<div class="flex flex-col">
+<span class="font-page-title text-page-title text-on-surface">$14,280.50</span>
+<span class="text-success text-xs font-label text-emerald-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">trending_up</span> +12% from yesterday
+                        </span>
+</div>
+</div>
+<!-- Active Orders Card -->
+<div class="glass-card p-6 rounded-2xl flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<span class="font-label text-label text-on-surface-variant">Active Orders</span>
+<span class="material-symbols-outlined text-primary">shopping_cart</span>
+</div>
+<div class="flex flex-col">
+<span class="font-page-title text-page-title text-on-surface">84</span>
+<span class="font-label text-label text-on-surface-variant">12 awaiting dispatch</span>
+</div>
+</div>
+<!-- Inventory Alert Card -->
+<div class="glass-card p-6 rounded-2xl flex flex-col gap-2 border-l-4 border-error">
+<div class="flex justify-between items-center">
+<span class="font-label text-label text-on-surface-variant">Inventory Alerts</span>
+<span class="material-symbols-outlined text-error">warning</span>
+</div>
+<div class="flex flex-col">
+<span class="font-page-title text-page-title text-error">3 Critical</span>
+<span class="font-label text-label text-error/80">Stock below 5% for Grade AAA Salmon</span>
+</div>
+</div>
+</section>
+<!-- Main Dashboard Layout -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Performance Chart (Simulated) -->
+<div class="lg:col-span-2 glass-card p-6 rounded-2xl space-y-6">
+<div class="flex justify-between items-center">
+<h3 class="font-section-title text-section-title text-on-surface">Weekly Earnings Performance</h3>
+<div class="flex gap-2">
+<button class="px-3 py-1 text-xs font-label bg-primary-container text-on-primary-container rounded-lg">Weekly</button>
+<button class="px-3 py-1 text-xs font-label text-on-surface-variant hover:text-primary transition-colors">Monthly</button>
+</div>
+</div>
+<div class="h-[300px] w-full relative flex items-end justify-between px-2">
+<!-- Simulated Line Chart via CSS Gradients & Bars -->
+<div class="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent opacity-30 rounded-xl"></div>
+<div class="w-12 bg-primary/20 hover:bg-primary/40 transition-all rounded-t-lg h-[40%]" title="Mon"></div>
+<div class="w-12 bg-primary/20 hover:bg-primary/40 transition-all rounded-t-lg h-[65%]" title="Tue"></div>
+<div class="w-12 bg-primary/20 hover:bg-primary/40 transition-all rounded-t-lg h-[45%]" title="Wed"></div>
+<div class="w-12 bg-primary/40 hover:bg-primary/60 transition-all rounded-t-lg h-[85%]" title="Thu"></div>
+<div class="w-12 bg-primary/20 hover:bg-primary/40 transition-all rounded-t-lg h-[60%]" title="Fri"></div>
+<div class="w-12 bg-primary/20 hover:bg-primary/40 transition-all rounded-t-lg h-[50%]" title="Sat"></div>
+<div class="w-12 bg-primary/60 hover:bg-primary/80 transition-all rounded-t-lg h-[95%]" title="Sun"></div>
+</div>
+<div class="flex justify-between px-2 font-label text-label text-on-surface-variant">
+<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+</div>
+</div>
+<!-- Side Actions / Cold Chain Pulse -->
+<div class="space-y-6">
+<div class="glass-card p-6 rounded-2xl">
+<h3 class="font-section-title text-section-title text-on-surface mb-4">Active Cold Chains</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 bg-surface-variant/20 rounded-xl">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]"></div>
+<span class="font-body-lg text-body-lg">Zone A-12</span>
+</div>
+<span class="font-label text-label text-primary">-2.4°C</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-variant/20 rounded-xl">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]"></div>
+<span class="font-body-lg text-body-lg">Zone B-04</span>
+</div>
+<span class="font-label text-label text-primary">-1.8°C</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-variant/20 rounded-xl">
+<div class="flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]"></div>
+<span class="font-body-lg text-body-lg">Zone C-09</span>
+</div>
+<span class="font-label text-label text-tertiary">0.2°C</span>
+</div>
+</div>
+<button class="w-full mt-6 py-3 bg-primary text-on-primary rounded-xl font-label text-label font-bold active:scale-95 transition-all">
+                            View Sensor Map
+                        </button>
+</div>
+<div class="glass-card p-6 rounded-2xl overflow-hidden relative group">
+<img alt="Fresh Product" class="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:scale-110 transition-transform duration-700" data-alt="Close up of premium chilled salmon fillets with ice crystals on a dark slate background, reflecting professional aquatic logistics and high-end seafood freshness. The lighting uses deep blues and soft purples to highlight the texture and quality, fitting the technical and premium aesthetic of the online marketplace." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1ZR_fto4dnF77KupJs17A7OByWbdoXjtfd6qjuA8i9p8erg_pzbveHyzGIKuKZV2-zqewPT7KW6N56d09a4HJwiZoKRvzLiK1CDdIFZw78eq2H-lOdlus8ok52COVTlpxP97LeQKg5fCHnWtBaBxDCD9Geyg8STzXki-JoCNY5dLk80L0E08aicc0BXP_hTeyNQAseitHpK6I2KyCY-hl689VcgX4L2A1mccFHPozHqG6FflsC7hdoch9Q2i_XbdKlbJLQD7mnBs"/>
+<div class="relative z-10">
+<h4 class="font-card-title text-card-title text-on-surface">Market Trends</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2">Atlantic Salmon demand is up 14% in EU markets. Adjust your pricing strategy.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Orders Table -->
+<section class="glass-card rounded-2xl overflow-hidden">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-section-title text-section-title text-on-surface">Recent Orders</h3>
+<button class="text-primary font-label text-label hover:underline">View All Orders</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-variant/30 font-label text-label text-on-surface-variant uppercase tracking-wider">
+<tr>
+<th class="px-6 py-4">Order ID</th>
+<th class="px-6 py-4">Product</th>
+<th class="px-6 py-4">Status</th>
+<th class="px-6 py-4">Total</th>
+<th class="px-6 py-4 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-on-surface/5 transition-colors group">
+<td class="px-6 py-4 font-label text-label text-on-surface">#9928-AX</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">flatware</span>
+</div>
+<span class="font-body-lg text-body-lg">Premium Grade Bluefin Tuna</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 font-label text-[10px] uppercase border border-emerald-500/20">Delivered</span>
+</td>
+<td class="px-6 py-4 font-body-lg text-body-lg">$2,450.00</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer group-hover:text-primary">more_vert</span>
+</td>
+</tr>
+<tr class="hover:bg-on-surface/5 transition-colors group">
+<td class="px-6 py-4 font-label text-label text-on-surface">#9929-BK</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">flatware</span>
+</div>
+<span class="font-body-lg text-body-lg">King Crab Legs (Chilled)</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 font-label text-[10px] uppercase border border-amber-500/20">In Transit</span>
+</td>
+<td class="px-6 py-4 font-body-lg text-body-lg">$1,120.00</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer group-hover:text-primary">more_vert</span>
+</td>
+</tr>
+<tr class="hover:bg-on-surface/5 transition-colors group">
+<td class="px-6 py-4 font-label text-label text-on-surface">#9931-CM</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">flatware</span>
+</div>
+<span class="font-body-lg text-body-lg">Sashimi Grade Scallops</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full bg-primary/10 text-primary font-label text-[10px] uppercase border border-primary/20">Processing</span>
+</td>
+<td class="px-6 py-4 font-body-lg text-body-lg">$890.00</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer group-hover:text-primary">more_vert</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-6 md:bottom-8 md:right-8 w-14 h-14 bg-primary text-on-primary rounded-2xl shadow-lg flex items-center justify-center active:scale-90 transition-transform duration-150 z-50 group">
+<span class="material-symbols-outlined text-[32px]">add</span>
+<span class="absolute right-16 bg-surface-container-high px-4 py-2 rounded-xl text-primary font-label text-label shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-outline-variant">Add New Listing</span>
+</button>
+</main>
+<!-- Bottom Navigation Bar (Mobile Only) -->
+<nav class="fixed bottom-0 w-full flex justify-around items-center py-3 px-4 z-50 bg-surface-container-high/90 dark:bg-surface-container-high/90 backdrop-blur-md border-t border-outline-variant md:hidden rounded-t-xl shadow-lg">
+<a class="flex flex-col items-center justify-center text-primary font-bold scale-110 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-weight="fill">home</span>
+<span class="font-label text-[10px] mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label text-[10px] mt-1">Market</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label text-[10px] mt-1">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label text-[10px] mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

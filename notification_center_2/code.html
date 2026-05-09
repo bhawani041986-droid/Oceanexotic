@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Abyssal Enterprise - Notification Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#3e2e00",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "error-container": "#93000a",
+                        "primary-container": "#6750a4",
+                        "tertiary-fixed": "#ffdf93",
+                        "surface-bright": "#3b383e",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "on-background": "#e6e0e9",
+                        "surface-container-lowest": "#0f0d13",
+                        "primary": "#cfbcff",
+                        "surface-variant": "#36343a",
+                        "outline-variant": "#494551",
+                        "background": "#141218",
+                        "on-tertiary-container": "#503d00",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "secondary-container": "#4d4465",
+                        "primary-fixed-dim": "#cfbcff",
+                        "secondary-fixed": "#e9ddff",
+                        "surface-container-high": "#2b292f",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "surface-container-low": "#1d1b20",
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#322f35",
+                        "primary-fixed": "#e9ddff",
+                        "inverse-primary": "#6750a4",
+                        "on-primary-fixed": "#22005d",
+                        "outline": "#948e9c",
+                        "tertiary-container": "#c9a74d",
+                        "on-primary": "#381e72",
+                        "on-primary-container": "#e0d2ff",
+                        "on-error": "#690005",
+                        "surface-dim": "#141218",
+                        "secondary": "#cdc0e9",
+                        "on-surface-variant": "#cbc4d2",
+                        "tertiary": "#e7c365",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-secondary-container": "#bfb2da",
+                        "inverse-surface": "#e6e0e9",
+                        "surface-tint": "#cfbcff",
+                        "surface": "#141218",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "on-secondary": "#342b4b",
+                        "on-surface": "#e6e0e9",
+                        "surface-container-highest": "#36343a",
+                        "surface-container": "#211f24"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex">
+<!-- Sidebar Navigation Drawer -->
+<aside class="h-screen w-[260px] fixed left-0 top-0 z-50 bg-surface-container-low dark:bg-surface-container-low border-r border-outline-variant/20 shadow-xl flex flex-col h-full p-4 gap-2 hidden md:flex">
+<div class="flex items-center gap-3 px-4 py-6">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container overflow-hidden">
+<img alt="Seller Profile" class="w-full h-full object-cover" data-alt="A professional seller profile avatar set against a moody, deep oceanic background. The lighting is dramatic, highlighting the sleek contours of a modern professional, while maintaining a tech-forward, enterprise aesthetic. The colors include deep slates and vibrant purple accents, creating a sense of reliability and high-end logistics expertise." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAehsA7SQ5kcumlHHsAaSiIzDuylu1IyKebS7y6hV5_fuErAbvVmCjwUVPFXFsKPhbqkS8MUSaofO4yEyg04gTk9NCEIHsKyTWMWIgjL_gONGQASpUmRNTLGEcow3ADRbFGlQbrDd1iKbI5mJrKFvbyClI3YxlfXCFiV9uHeRTJRrpRC0w5CgzeOxzz6dousmecbI4bAUv3oSiGqmfObfCsFwyJ0gjJMkpbd2vxnNY_-0-laZSpuo4V3FvJNkyNfiNZ0q42BboSd3k"/>
+</div>
+<div class="flex flex-col">
+<span class="font-headline text-lg font-bold text-primary">DeepSea Exports</span>
+<span class="font-body text-body-sm font-medium text-on-surface-variant">AAA Grade Verified</span>
+</div>
+</div>
+<nav class="flex flex-col gap-1 mt-4">
+<div class="group cursor-pointer transition-all duration-200 ease-in-out flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body text-sm font-medium">Dashboard</span>
+</div>
+<div class="group cursor-pointer transition-all duration-200 ease-in-out flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body text-sm font-medium">Inventory</span>
+</div>
+<div class="group cursor-pointer transition-all duration-200 ease-in-out flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">
+<span class="material-symbols-outlined">add_box</span>
+<span class="font-body text-sm font-medium">Product Listing</span>
+</div>
+<div class="group cursor-pointer transition-all duration-200 ease-in-out flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body text-sm font-medium">Payouts</span>
+</div>
+<div class="group cursor-pointer transition-all duration-200 ease-in-out flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container/20 text-primary border-l-4 border-primary">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-body text-sm font-medium">Notifications</span>
+</div>
+<div class="group cursor-pointer transition-all duration-200 ease-in-out flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high mt-auto">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body text-sm font-medium">Settings</span>
+</div>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-[260px] min-h-screen flex flex-col">
+<!-- Top App Bar -->
+<header class="sticky top-0 w-full z-40 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm flex items-center justify-between px-6 py-4 w-full">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined cursor-pointer text-primary md:hidden">menu</span>
+<h1 class="font-headline text-2xl font-bold tracking-tight text-primary">Abyssal Enterprise</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex items-center bg-surface-container px-3 py-1.5 rounded-full border border-outline-variant/30 text-on-surface-variant">
+<span class="material-symbols-outlined text-sm mr-2">search</span>
+<span class="text-sm">Search notifications...</span>
+</div>
+<span class="material-symbols-outlined cursor-pointer text-primary">search</span>
+<div class="relative">
+<span class="material-symbols-outlined cursor-pointer text-primary">notifications_active</span>
+<span class="absolute -top-1 -right-1 w-2 h-2 bg-primary rounded-full"></span>
+</div>
+</div>
+</header>
+<!-- Notification Center Content -->
+<section class="p-4 md:p-8 max-w-5xl mx-auto w-full flex-1">
+<div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="text-3xl font-bold text-on-surface mb-2">Notification Center</h2>
+<p class="text-on-surface-variant">Stay updated with your logistics and inventory status.</p>
+</div>
+<div class="flex gap-2">
+<button class="bg-surface-container-high text-primary px-4 py-2 rounded-lg text-sm font-medium border border-outline-variant/30 hover:bg-surface-container-highest transition-colors">
+                        Mark all as read
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Notification Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Filter Sidebar (Mobile Horizontal Scroll / Desktop Vertical) -->
+<div class="md:col-span-3 flex md:flex-col gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+<button class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary-container text-on-primary-container whitespace-nowrap w-full text-left transition-all">
+<span class="material-symbols-outlined">all_inclusive</span>
+<span class="font-medium">All Alerts</span>
+</button>
+<button class="flex items-center gap-3 px-4 py-3 rounded-xl bg-surface-container text-on-surface-variant whitespace-nowrap w-full text-left hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-medium">Orders</span>
+</button>
+<button class="flex items-center gap-3 px-4 py-3 rounded-xl bg-surface-container text-on-surface-variant whitespace-nowrap w-full text-left hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-medium">Inventory</span>
+</button>
+<button class="flex items-center gap-3 px-4 py-3 rounded-xl bg-surface-container text-on-surface-variant whitespace-nowrap w-full text-left hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-medium">Financials</span>
+</button>
+<button class="flex items-center gap-3 px-4 py-3 rounded-xl bg-surface-container text-on-surface-variant whitespace-nowrap w-full text-left hover:bg-surface-container-high transition-all">
+<span class="material-symbols-outlined">support_agent</span>
+<span class="font-medium">Support</span>
+</button>
+</div>
+<!-- Main Notification List -->
+<div class="md:col-span-9 space-y-4">
+<!-- Group: New -->
+<div class="space-y-3">
+<h3 class="text-xs font-bold uppercase tracking-widest text-outline px-1">Newest Updates</h3>
+<!-- Order Notification (Unread) -->
+<div class="bg-surface-container p-5 rounded-2xl border-l-4 border-primary shadow-sm hover:shadow-md transition-shadow group">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-xl bg-primary-container/20 flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-semibold text-on-surface group-hover:text-primary transition-colors">High Priority Order: #EXP-9921</h4>
+<span class="text-xs text-primary font-bold">2m ago</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-3">
+                                        New bulk order received for <span class="text-on-surface font-medium">Pacific Blue Mackerel (AAA Grade)</span>. Action required: Confirm shipment logistics within 4 hours to maintain cold-chain SLA.
+                                    </p>
+<div class="flex gap-2">
+<button class="bg-primary text-on-primary px-3 py-1.5 rounded-lg text-xs font-bold">View Order</button>
+<button class="bg-surface-container-high text-on-surface-variant px-3 py-1.5 rounded-lg text-xs font-medium border border-outline-variant/30">Dismiss</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Inventory Notification (Unread) -->
+<div class="bg-surface-container p-5 rounded-2xl border-l-4 border-tertiary shadow-sm hover:shadow-md transition-shadow group">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-xl bg-tertiary-container/20 flex items-center justify-center text-tertiary flex-shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">ac_unit</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-semibold text-on-surface">Cold-Chain Alert: Facility 04</h4>
+<span class="text-xs text-tertiary font-bold">14m ago</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                                        Temperature fluctuation detected in storage zone B-12. Current: <span class="text-tertiary">-14°C</span>. Threshold: <span class="text-tertiary">-18°C</span>. Automated cooling systems engaged.
+                                    </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Group: Earlier -->
+<div class="space-y-3 pt-4">
+<h3 class="text-xs font-bold uppercase tracking-widest text-outline px-1">Earlier Today</h3>
+<!-- Financial Notification (Read) -->
+<div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/20 opacity-80 hover:opacity-100 transition-opacity">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-xl bg-secondary-container/20 flex items-center justify-center text-on-secondary-container flex-shrink-0">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-semibold text-on-surface-variant">Payout Processed</h4>
+<span class="text-xs text-outline">2h ago</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                                        Your weekly revenue of <span class="text-on-surface font-mono">$12,450.80</span> has been successfully transferred to your verified account ending in 4492.
+                                    </p>
+</div>
+</div>
+</div>
+<!-- Support Notification (Read) -->
+<div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/20 opacity-80 hover:opacity-100 transition-opacity">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center text-on-surface-variant flex-shrink-0">
+<span class="material-symbols-outlined">chat_bubble</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-semibold text-on-surface-variant">Support Ticket Updated</h4>
+<span class="text-xs text-outline">5h ago</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                                        Case #CS-2024-X: "Documentation for export to EU markets" has been updated with new regulatory attachments.
+                                    </p>
+</div>
+</div>
+</div>
+<!-- System Status (Read) -->
+<div class="bg-surface-container-low p-5 rounded-2xl border border-outline-variant/20 opacity-80 hover:opacity-100 transition-opacity">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest flex items-center justify-center text-on-surface-variant flex-shrink-0">
+<span class="material-symbols-outlined">verified</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-semibold text-on-surface-variant">Compliance Check Passed</h4>
+<span class="text-xs text-outline">9h ago</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                                        Your Q3 sustainability report has been approved. Your "AAA Grade Verified" status remains active until next audit.
+                                    </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom CTA for history -->
+<div class="py-10 text-center">
+<p class="text-outline text-sm mb-4">Showing notifications from the last 7 days</p>
+<button class="text-primary font-bold text-sm hover:underline">View Older Notifications</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Floating Action Button (Suppressed as per rules on Detail/Focused screens, but let's keep it for main notifications if needed - Wait, rule says: "ONLY render the FAB if the screen's primary purpose aligns perfectly with the FAB's action... suppress on Settings, Profile, Details" - This is a Hub, so we add an 'Add Alert' FAB) -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center md:hidden">
+<span class="material-symbols-outlined">add</span>
+</button>
+</main>
+<!-- Mobile Navigation Bar (md:hidden) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-surface-container-low border-t border-outline-variant/20 flex justify-around items-center py-3 px-4 z-50">
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-medium">Home</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-[10px] font-medium">Inventory</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">notifications</span>
+<span class="text-[10px] font-medium">Alerts</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-[10px] font-medium">Payouts</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="text-[10px] font-medium">Profile</span>
+</div>
+</nav>
+</body></html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Session Expired | Abyssal Enterprise</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#e6e0e9",
+                        "background": "#141218",
+                        "surface-container-lowest": "#0f0d13",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "surface-tint": "#cfbcff",
+                        "tertiary-container": "#c9a74d",
+                        "surface-container": "#211f24",
+                        "on-error": "#690005",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-surface": "#e6e0e9",
+                        "surface-bright": "#3b383e",
+                        "primary-container": "#6750a4",
+                        "error": "#ffb4ab",
+                        "outline": "#948e9c",
+                        "on-secondary": "#342b4b",
+                        "on-tertiary": "#3e2e00",
+                        "on-primary": "#381e72",
+                        "surface-dim": "#141218",
+                        "surface-container-low": "#1d1b20",
+                        "primary-fixed-dim": "#cfbcff",
+                        "tertiary": "#e7c365",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "secondary-container": "#4d4465",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed": "#ffdf93",
+                        "primary-fixed": "#e9ddff",
+                        "surface": "#141218",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-primary-fixed": "#22005d",
+                        "error-container": "#93000a",
+                        "surface-variant": "#36343a",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "on-secondary-container": "#bfb2da",
+                        "secondary-fixed": "#e9ddff",
+                        "primary": "#cfbcff",
+                        "outline-variant": "#494551",
+                        "on-primary-container": "#e0d2ff",
+                        "surface-container-high": "#2b292f",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "surface-container-highest": "#36343a",
+                        "secondary": "#cdc0e9",
+                        "on-surface-variant": "#cbc4d2",
+                        "inverse-primary": "#6750a4",
+                        "on-background": "#e6e0e9",
+                        "inverse-on-surface": "#322f35",
+                        "on-tertiary-container": "#503d00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
+<!-- Ambient Deep Sea Background -->
+<div class="absolute inset-0 z-0">
+<div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-secondary-container/20 blur-[150px] rounded-full"></div>
+</div>
+<!-- Top Bar (Suppressed Nav, just Brand Identity) -->
+<header class="fixed top-0 w-full z-40 bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-sm h-16 flex items-center justify-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">tsunami</span>
+<span class="text-xl font-bold tracking-tight text-primary">Abyssal Enterprise</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="relative z-10 w-full max-w-[1440px] px-6 flex flex-col items-center">
+<!-- Bento Grid Layout for Visual Impact -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6 w-full max-w-4xl">
+<!-- Hero Message Card -->
+<div class="md:col-span-12 lg:col-span-8 bg-surface-container-high/60 backdrop-blur-2xl border border-white/10 rounded-xl p-8 md:p-12 flex flex-col items-start gap-6 shadow-2xl">
+<div class="flex items-center justify-center w-14 h-14 rounded-xl bg-error-container/30 border border-error/20">
+<span class="material-symbols-outlined text-error text-3xl">timer_off</span>
+</div>
+<div class="space-y-4">
+<h1 class="font-headline text-[36px] font-bold leading-tight text-on-surface tracking-tight">
+                        Session Depleted.
+                    </h1>
+<p class="font-body text-lg text-on-surface-variant leading-relaxed max-w-lg">
+                        For your security, your connection has been timed out. Please re-authenticate to continue access to the deep-sea logistics dashboard.
+                    </p>
+</div>
+<div class="pt-4 w-full sm:w-auto">
+<button class="w-full sm:w-auto px-10 h-[52px] bg-primary text-on-primary font-semibold rounded-xl hover:shadow-[0_0_20px_rgba(207,188,255,0.4)] transition-all active:scale-95 flex items-center justify-center gap-3">
+                        Re-authenticate Now
+                        <span class="material-symbols-outlined">login</span>
+</button>
+</div>
+</div>
+<!-- Contextual Decorative Card -->
+<div class="md:col-span-12 lg:col-span-4 bg-surface-container-lowest border border-white/5 rounded-xl overflow-hidden shadow-xl hidden lg:flex flex-col">
+<div class="h-48 w-full relative">
+<img class="w-full h-full object-cover opacity-60" data-alt="A highly detailed close-up of a high-tech server rack in a deep-sea data center, illuminated by pulsing bioluminescent purple and cyan lights. The aesthetic is extremely clean and futuristic, following a dark mode philosophy with crisp metal surfaces and glowing fiber-optic cables. Soft mist or ice condensation hints at a cold-chain environment. The lighting is low-key, focusing on the electric purple signals against the deep black machinery." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCx4iCuDpJ95EcnDlPCpcwY9eM966m0DPYsNSlw6_R1Tyxk2rY9JIWGzA5RwfcyYR3DXLky348T0AAMmBZd2bJ4juP6TEF6WxGq9CsxwE5FufqqnmKW4KaF7WwKPr1KhhP-GXNPNrmdR3b-RexNF6tWaq0VrCRA28eWVZml_MVr48ZV3ddHiYJqjaCDV3QkLziwwGH3QPghWwdgYNRoEl--mMuuqiGu7tIuarIC2z6giv-vIpfOQAiQPxQqQU9Xda46PBu-HEGOmgA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-transparent to-transparent"></div>
+</div>
+<div class="p-6 space-y-3">
+<div class="flex items-center gap-2 text-tertiary text-xs font-bold tracking-widest uppercase">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">shield</span>
+                        Security Protocol
+                    </div>
+<p class="text-sm text-on-surface-variant/80 font-body italic">
+                        "Protocols enforced to protect sensitive cold-chain telemetry and seller financials during inactivity."
+                    </p>
+</div>
+</div>
+<!-- Secondary Status Indicators (Bento Style) -->
+<div class="md:col-span-6 lg:col-span-4 bg-surface-container/40 border border-white/5 rounded-xl p-6 flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-bright flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">lock</span>
+</div>
+<div>
+<h3 class="text-on-surface font-semibold text-sm">Encrypted Vault</h3>
+<p class="text-xs text-on-surface-variant">Your local cache is secured</p>
+</div>
+</div>
+<div class="md:col-span-6 lg:col-span-4 bg-surface-container/40 border border-white/5 rounded-xl p-6 flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-bright flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">history</span>
+</div>
+<div>
+<h3 class="text-on-surface font-semibold text-sm">Auto-Save</h3>
+<p class="text-xs text-on-surface-variant">Unsaved work was cached locally</p>
+</div>
+</div>
+<div class="md:col-span-12 lg:col-span-4 bg-surface-container/40 border border-white/5 rounded-xl p-6 flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-bright flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant">public</span>
+</div>
+<div>
+<h3 class="text-on-surface font-semibold text-sm">System Status</h3>
+<p class="text-xs text-green-400">All nodes online - v2.4.0</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Identity -->
+<footer class="fixed bottom-8 w-full z-10 text-center">
+<p class="text-on-surface-variant/40 text-[10px] tracking-[0.2em] uppercase font-medium">
+            © Abyssal Enterprise • Strategic Logistics Division • 2024
+        </p>
+</footer>
+<!-- Decorative Elements (Ocean Technical) -->
+<div class="absolute bottom-20 left-20 opacity-10 pointer-events-none select-none">
+<span class="material-symbols-outlined text-[120px]" style="font-variation-settings: 'wght' 100;">water_lux</span>
+</div>
+<div class="absolute top-40 right-40 opacity-5 pointer-events-none select-none">
+<span class="material-symbols-outlined text-[180px]" style="font-variation-settings: 'wght' 100;">grid_view</span>
+</div>
+</body></html>

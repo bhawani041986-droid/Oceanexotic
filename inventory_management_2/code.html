@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Inventory Management | Oceanic Logistics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #141218;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #494551;
+            border-radius: 10px;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .premium-border {
+            position: relative;
+        }
+        .premium-border::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(to bottom, rgba(124, 58, 237, 0.3), transparent);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+    </style>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"primary-fixed-dim": "#cfbcff", "outline-variant": "#494551", "tertiary-fixed": "#ffdf93", "on-error-container": "#ffdad6", background: "#141218", "on-primary-container": "#e0d2ff", "surface-container-low": "#1d1b20", "secondary-container": "#4d4465", "surface-container-lowest": "#0f0d13", error: "#ffb4ab", "surface-container": "#211f24", "on-background": "#e6e0e9", "on-surface": "#e6e0e9", "on-secondary": "#342b4b", "primary-container": "#6750a4", "error-container": "#93000a", "tertiary-container": "#c9a74d", "secondary-fixed-dim": "#cdc0e9", outline: "#948e9c", "on-surface-variant": "#cbc4d2", "on-secondary-fixed-variant": "#4b4263", "tertiary-fixed-dim": "#e7c365", "surface-tint": "#cfbcff", "primary-fixed": "#e9ddff", "on-tertiary-container": "#503d00", "on-secondary-fixed": "#1f1635", "surface-dim": "#141218", tertiary: "#e7c365", "on-secondary-container": "#bfb2da", "on-primary-fixed-variant": "#4f378a", "on-tertiary": "#3e2e00", "surface-container-high": "#2b292f", "inverse-surface": "#e6e0e9", "surface-container-highest": "#36343a", "secondary-fixed": "#e9ddff", "on-tertiary-fixed-variant": "#594400", "on-tertiary-fixed": "#241a00", "surface-variant": "#36343a", "surface-bright": "#3b383e", "on-error": "#690005", "inverse-primary": "#6750a4", surface: "#141218", secondary: "#cdc0e9", primary: "#cfbcff", "on-primary-fixed": "#22005d", "on-primary": "#381e72", "inverse-on-surface": "#322f35"}, fontFamily: {"body-sm": ["Inter"], hero: ["Inter"], "body-lg": ["Inter"], "section-title": ["Inter"], "card-title": ["Inter"], "page-title": ["Inter"], label: ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"]}, fontSize: {"body-sm": ["14px", {lineHeight: "1.5", fontWeight: "400"}], hero: ["36px", {lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700"}], "body-lg": ["16px", {lineHeight: "1.5", fontWeight: "400"}], "section-title": ["24px", {lineHeight: "1.3", fontWeight: "600"}], "card-title": ["18px", {lineHeight: "1.4", fontWeight: "600"}], "page-title": ["30px", {lineHeight: "1.2", fontWeight: "700"}], label: ["12px", {lineHeight: "1", letterSpacing: "0.05em", fontWeight: "500"}]}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}}}};</script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-lg">
+<!-- NavigationDrawer -->
+<aside class="flex flex-col h-screen fixed z-40 w-[260px] bg-surface-container border-r border-outline-variant shadow-sm hidden md:flex">
+<div class="px-6 py-8">
+<h1 class="font-page-title text-page-title font-bold text-primary mb-1">Oceanic Logistics</h1>
+<p class="font-label text-label text-on-surface-variant uppercase tracking-widest">Enterprise Tier</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<!-- Active Item: Inventory -->
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container/10 text-primary border-l-4 border-primary transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label text-label">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="font-label text-label">Shipments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-label text-label">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="verified">verified</span>
+<span class="font-label text-label">Quality Control</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="ac_unit">ac_unit</span>
+<span class="font-label text-label">Cold Chain</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label text-label">Settings</span>
+</a>
+</nav>
+<div class="p-6 border-t border-outline-variant mt-auto">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold">
+                    AD
+                </div>
+<div>
+<p class="font-label text-label font-bold text-on-surface">Admin User</p>
+<p class="text-[10px] text-on-surface-variant">V1.0.4</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-[260px] min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-6 py-4 w-full z-30 bg-surface/80 backdrop-blur-xl sticky top-0 border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-on-surface p-2">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h2 class="font-page-title text-page-title font-bold text-on-surface">Inventory Management</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex items-center gap-4 text-on-surface-variant">
+<span class="font-label text-label">System Status: <span class="text-tertiary">Operational</span></span>
+<div class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></div>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A professional headshot of a corporate logistics executive in a dark tailored suit. The lighting is dramatic and moody with deep shadows and cool blue highlights, matching a high-end tech aesthetic. The background is a blurred high-tech control center with soft glowing data screens." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrxpXf62oWasMOAWIZ6EpyCfoSi1sd0lCUY2ti80TBZOQf4gY3LubyfjvdpyktbevkK6o0JljRBWeO6BPFGbiJAYHwT5HlUXJX9iyy8LfF88QAiFdIpA-RWK_bi_KmKT-oHq5jj1qZ6nL7LgiqO9m7yxHmTBfYXGmMiPu0W8LTewK0r9HItK7FbLtJcowvvExVXZmxtejpsxvNJvc4T39mszK6xxiT-q2bIKjZtdMsmozZcAg-sTafv33ZfooP9r8kccI7onzZh10"/>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="p-6 lg:p-8 max-w-[1440px] mx-auto w-full space-y-8">
+<!-- Bento Grid Stats -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Stat Card 1 -->
+<div class="glass-card p-6 rounded-xl flex flex-col justify-between h-[160px] premium-border">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-primary" data-icon="inventory">inventory</span>
+<span class="text-[10px] font-bold text-primary px-2 py-1 bg-primary/10 rounded-full">+2.4%</span>
+</div>
+<div>
+<p class="font-label text-label text-on-surface-variant mb-1">Global Stock Units</p>
+<p class="font-page-title text-page-title">842,509 <span class="text-body-sm font-normal text-on-surface-variant">MT</span></p>
+</div>
+</div>
+<!-- Stat Card 2 -->
+<div class="glass-card p-6 rounded-xl flex flex-col justify-between h-[160px]">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-tertiary" data-icon="ac_unit">ac_unit</span>
+<span class="text-[10px] font-bold text-tertiary px-2 py-1 bg-tertiary/10 rounded-full">Optimal</span>
+</div>
+<div>
+<p class="font-label text-label text-on-surface-variant mb-1">Cold Chain Utilization</p>
+<p class="font-page-title text-page-title">92.4 <span class="text-body-sm font-normal text-on-surface-variant">%</span></p>
+</div>
+</div>
+<!-- Stat Card 3 -->
+<div class="glass-card p-6 rounded-xl flex flex-col justify-between h-[160px]">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+<span class="text-[10px] font-bold text-error px-2 py-1 bg-error/10 rounded-full">Critical</span>
+</div>
+<div>
+<p class="font-label text-label text-on-surface-variant mb-1">Active Deviations</p>
+<p class="font-page-title text-page-title">14 <span class="text-body-sm font-normal text-on-surface-variant">Nodes</span></p>
+</div>
+</div>
+<!-- Stat Card 4 -->
+<div class="glass-card p-6 rounded-xl flex flex-col justify-between h-[160px]">
+<div class="flex justify-between items-start">
+<span class="material-symbols-outlined text-primary-fixed-dim" data-icon="payments">payments</span>
+<span class="text-[10px] font-bold text-primary-fixed-dim px-2 py-1 bg-primary-fixed-dim/10 rounded-full">Asset Value</span>
+</div>
+<div>
+<p class="font-label text-label text-on-surface-variant mb-1">Inventory Valuation</p>
+<p class="font-page-title text-page-title">$12.8 <span class="text-body-sm font-normal text-on-surface-variant">MM</span></p>
+</div>
+</div>
+</div>
+<!-- Visualization Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Large Chart Card -->
+<div class="lg:col-span-2 glass-card rounded-xl p-8 premium-border overflow-hidden">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h3 class="font-section-title text-section-title text-on-surface mb-2">Global Stock Trends</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Inventory levels across 14 international hubs</p>
+</div>
+<div class="flex gap-2">
+<button class="px-4 py-2 bg-surface-container-high rounded text-on-surface font-label text-label hover:bg-surface-variant">7D</button>
+<button class="px-4 py-2 bg-primary text-on-primary rounded font-label text-label">30D</button>
+</div>
+</div>
+<!-- Mock Chart Visualization -->
+<div class="h-[300px] w-full flex items-end justify-between gap-2">
+<div class="w-full bg-primary/20 h-[40%] rounded-t-sm relative group">
+<div class="absolute inset-x-0 bottom-0 bg-primary h-full opacity-50 group-hover:opacity-80 transition-opacity"></div>
+</div>
+<div class="w-full bg-primary/20 h-[65%] rounded-t-sm relative group">
+<div class="absolute inset-x-0 bottom-0 bg-primary h-full opacity-50 group-hover:opacity-80 transition-opacity"></div>
+</div>
+<div class="w-full bg-primary/20 h-[50%] rounded-t-sm relative group">
+<div class="absolute inset-x-0 bottom-0 bg-primary h-full opacity-50 group-hover:opacity-80 transition-opacity"></div>
+</div>
+<div class="w-full bg-primary/20 h-[85%] rounded-t-sm relative group">
+<div class="absolute inset-x-0 bottom-0 bg-primary h-full opacity-50 group-hover:opacity-80 transition-opacity"></div>
+</div>
+<div class="w-full bg-primary/20 h-[70%] rounded-t-sm relative group">
+<div class="absolute inset-x-0 bottom-0 bg-primary h-full opacity-50 group-hover:opacity-80 transition-opacity"></div>
+</div>
+<div class="w-full bg-primary/20 h-[45%] rounded-t-sm relative group">
+<div class="absolute inset-x-0 bottom-0 bg-primary h-full opacity-50 group-hover:opacity-80 transition-opacity"></div>
+</div>
+<div class="w-full bg-primary/20 h-[95%] rounded-t-sm relative group">
+<div class="absolute inset-x-0 bottom-0 bg-primary h-full opacity-50 group-hover:opacity-80 transition-opacity"></div>
+</div>
+<div class="w-full bg-primary/20 h-[60%] rounded-t-sm relative group">
+<div class="absolute inset-x-0 bottom-0 bg-primary h-full opacity-50 group-hover:opacity-80 transition-opacity"></div>
+</div>
+</div>
+</div>
+<!-- Alert Sidebar Card -->
+<div class="glass-card rounded-xl p-8 flex flex-col">
+<h3 class="font-section-title text-section-title text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-error" data-icon="notifications_active">notifications_active</span>
+                        Live Alerts
+                    </h3>
+<div class="space-y-4 flex-1 overflow-y-auto pr-2">
+<!-- Alert 1 -->
+<div class="p-4 rounded-lg bg-error-container/10 border-l-4 border-error">
+<div class="flex justify-between items-start mb-1">
+<p class="font-label text-label text-error font-bold uppercase">Temp Deviation</p>
+<p class="text-[10px] text-on-surface-variant">2m ago</p>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface">Unit #CR-882 (Hokkaido Hub) reports +4.2°C spike.</p>
+</div>
+<!-- Alert 2 -->
+<div class="p-4 rounded-lg bg-tertiary-container/10 border-l-4 border-tertiary">
+<div class="flex justify-between items-start mb-1">
+<p class="font-label text-label text-tertiary font-bold uppercase">Low Stock</p>
+<p class="text-[10px] text-on-surface-variant">15m ago</p>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface">Grade AAA Atlantic Salmon below safety threshold in Rotterdam.</p>
+</div>
+<!-- Alert 3 -->
+<div class="p-4 rounded-lg bg-surface-container-high border-l-4 border-outline-variant">
+<div class="flex justify-between items-start mb-1">
+<p class="font-label text-label text-on-surface-variant font-bold uppercase">Maintenance</p>
+<p class="text-[10px] text-on-surface-variant">1h ago</p>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface">Sensor calibration scheduled for Singapore Zone D.</p>
+</div>
+</div>
+<button class="mt-6 w-full py-3 border border-outline-variant rounded font-label text-label text-on-surface hover:bg-surface-variant transition-colors">
+                        View All History
+                    </button>
+</div>
+</div>
+<!-- Detailed Table Section -->
+<div class="glass-card rounded-xl overflow-hidden">
+<div class="px-8 py-6 border-b border-outline-variant flex flex-col md:flex-row justify-between items-center gap-4">
+<h3 class="font-section-title text-section-title text-on-surface">Inventory Detailed Ledger</h3>
+<div class="flex items-center gap-3 w-full md:w-auto">
+<div class="relative flex-1 md:w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm" data-icon="search">search</span>
+<input class="w-full bg-surface-container-lowest border-outline-variant rounded-full pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-transparent outline-none" placeholder="Search SKU or Hub..." type="text"/>
+</div>
+<button class="p-2 border border-outline-variant rounded-full text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-8 py-4 font-label text-label text-on-surface-variant uppercase">Product SKU</th>
+<th class="px-8 py-4 font-label text-label text-on-surface-variant uppercase">Location</th>
+<th class="px-8 py-4 font-label text-label text-on-surface-variant uppercase">Quality Grade</th>
+<th class="px-8 py-4 font-label text-label text-on-surface-variant uppercase">Current Temp</th>
+<th class="px-8 py-4 font-label text-label text-on-surface-variant uppercase">Stock Level</th>
+<th class="px-8 py-4 font-label text-label text-on-surface-variant uppercase text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-highest transition-colors cursor-pointer group">
+<td class="px-8 py-5">
+<div>
+<p class="font-bold text-on-surface">SLMN-AAA-204</p>
+<p class="text-[10px] text-on-surface-variant">King Salmon (Fresh)</p>
+</div>
+</td>
+<td class="px-8 py-5 text-on-surface-variant">Oslo Hub #4</td>
+<td class="px-8 py-5">
+<span class="px-3 py-1 rounded-full bg-tertiary-container/20 text-tertiary text-[10px] font-bold">AAA Grade</span>
+</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<span class="text-on-surface font-mono">-1.2°C</span>
+</div>
+</td>
+<td class="px-8 py-5">
+<div class="w-full bg-surface-container-high h-1.5 rounded-full mt-2 max-w-[100px]">
+<div class="bg-primary h-full rounded-full" style="width: 85%;"></div>
+</div>
+<p class="text-[10px] mt-1 text-on-surface-variant">42,000 / 50,000 kg</p>
+</td>
+<td class="px-8 py-5 text-right">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="chevron_right">chevron_right</span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-highest transition-colors cursor-pointer group">
+<td class="px-8 py-5">
+<div>
+<p class="font-bold text-on-surface">TUNA-BFE-990</p>
+<p class="text-[10px] text-on-surface-variant">Bluefin Tuna (Deep Frozen)</p>
+</div>
+</td>
+<td class="px-8 py-5 text-on-surface-variant">Tokyo Bay Cold Store</td>
+<td class="px-8 py-5">
+<span class="px-3 py-1 rounded-full bg-primary-container/20 text-primary-fixed-dim text-[10px] font-bold">AA Grade</span>
+</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-error animate-pulse"></div>
+<span class="text-error font-mono">-18.5°C</span>
+</div>
+</td>
+<td class="px-8 py-5">
+<div class="w-full bg-surface-container-high h-1.5 rounded-full mt-2 max-w-[100px]">
+<div class="bg-error h-full rounded-full" style="width: 12%;"></div>
+</div>
+<p class="text-[10px] mt-1 text-error">Low: 1,200 kg</p>
+</td>
+<td class="px-8 py-5 text-right">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="chevron_right">chevron_right</span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-highest transition-colors cursor-pointer group">
+<td class="px-8 py-5">
+<div>
+<p class="font-bold text-on-surface">CRAB-KNG-112</p>
+<p class="text-[10px] text-on-surface-variant">King Crab (Live)</p>
+</div>
+</td>
+<td class="px-8 py-5 text-on-surface-variant">Dutch Harbor Node</td>
+<td class="px-8 py-5">
+<span class="px-3 py-1 rounded-full bg-tertiary-container/20 text-tertiary text-[10px] font-bold">Premium</span>
+</td>
+<td class="px-8 py-5">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<span class="text-on-surface font-mono">4.1°C</span>
+</div>
+</td>
+<td class="px-8 py-5">
+<div class="w-full bg-surface-container-high h-1.5 rounded-full mt-2 max-w-[100px]">
+<div class="bg-primary h-full rounded-full" style="width: 62%;"></div>
+</div>
+<p class="text-[10px] mt-1 text-on-surface-variant">18,500 / 30,000 kg</p>
+</td>
+<td class="px-8 py-5 text-right">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors" data-icon="chevron_right">chevron_right</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-8 py-4 bg-surface-container-low flex justify-between items-center">
+<p class="font-label text-label text-on-surface-variant">Showing 1-10 of 142 entries</p>
+<div class="flex gap-2">
+<button class="p-2 rounded border border-outline-variant text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-sm" data-icon="arrow_back">arrow_back</span></button>
+<button class="p-2 rounded border border-outline-variant text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span></button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full flex justify-around items-center py-3 px-4 z-50 bg-surface-container-high/90 backdrop-blur-md border-t border-outline-variant shadow-lg rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-primary font-bold scale-110" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label text-[10px]">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-label text-[10px]">Market</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label text-[10px]">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label text-[10px]">Profile</span>
+</a>
+</nav>
+<!-- Floating Action Button -->
+<button class="fixed bottom-24 right-6 md:bottom-10 md:right-10 w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-40">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</body></html>

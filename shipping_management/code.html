@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Abyssal Enterprise | Shipping Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#3e2e00",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "error-container": "#93000a",
+                        "primary-container": "#6750a4",
+                        "tertiary-fixed": "#ffdf93",
+                        "surface-bright": "#3b383e",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "on-background": "#e6e0e9",
+                        "surface-container-lowest": "#0f0d13",
+                        "primary": "#cfbcff",
+                        "surface-variant": "#36343a",
+                        "outline-variant": "#494551",
+                        "background": "#141218",
+                        "on-tertiary-container": "#503d00",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "secondary-container": "#4d4465",
+                        "primary-fixed-dim": "#cfbcff",
+                        "secondary-fixed": "#e9ddff",
+                        "surface-container-high": "#2b292f",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "surface-container-low": "#1d1b20",
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#322f35",
+                        "primary-fixed": "#e9ddff",
+                        "inverse-primary": "#6750a4",
+                        "on-primary-fixed": "#22005d",
+                        "outline": "#948e9c",
+                        "tertiary-container": "#c9a74d",
+                        "on-primary": "#381e72",
+                        "on-primary-container": "#e0d2ff",
+                        "on-error": "#690005",
+                        "surface-dim": "#141218",
+                        "secondary": "#cdc0e9",
+                        "on-surface-variant": "#cbc4d2",
+                        "tertiary": "#e7c365",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-secondary-container": "#bfb2da",
+                        "inverse-surface": "#e6e0e9",
+                        "surface-tint": "#cfbcff",
+                        "surface": "#141218",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "on-secondary": "#342b4b",
+                        "on-surface": "#e6e0e9",
+                        "surface-container-highest": "#36343a",
+                        "surface-container": "#211f24"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(43, 41, 47, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 142, 156, 0.1);
+        }
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.1); }
+        }
+        .status-pulse {
+            animation: pulse-soft 2s infinite ease-in-out;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body min-h-screen">
+<!-- NavigationDrawer -->
+<aside class="h-screen w-[260px] fixed left-0 top-0 z-50 bg-surface-container-low border-r border-outline-variant/20 flex flex-col p-4 gap-2 shadow-xl">
+<div class="mb-8 px-4 flex flex-col gap-1">
+<h1 class="font-headline text-lg font-bold text-primary">Abyssal Enterprise</h1>
+<div class="mt-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img alt="DE" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBC9ghAbpVSbH2IT798we-uzRGKZgKJE_dIWKrje0cZ8vXXMExdabszO85UFbfZuL6Lv8BikhD0c28jRZ201rYjTFFQFbKODjxwx2zGJ-8xKHPsg8Ua3GArh0qK1x0huhb1AQ5-HvRblk7nVxdrpIXITHFjleu8vGweCmIdGJIlx8VjMjvLFAeOB8PCBE7cv9BVOzzHhJHFnrCqIUCa130H8UPywF0pj4Jy82WLzYwnfdnVKeDLHfC4Eox59hQluTxx8p1kxkv5Z1Q"/>
+</div>
+<div>
+<p class="font-headline text-sm font-bold text-primary">DeepSea Exports</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider">Premium Seller</p>
+</div>
+</div>
+</div>
+<nav class="flex flex-col gap-1">
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out cursor-pointer group">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="font-body text-body-sm font-medium">Dashboard</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container/20 text-primary border-l-4 border-primary transition-all duration-200 ease-in-out cursor-pointer group">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+<span class="font-body text-body-sm font-medium">Inventory</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out cursor-pointer group">
+<span class="material-symbols-outlined text-[20px]">add_box</span>
+<span class="font-body text-body-sm font-medium">Product Listing</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out cursor-pointer group">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+<span class="font-body text-body-sm font-medium">Payouts</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-200 ease-in-out cursor-pointer group mt-auto">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="font-body text-body-sm font-medium">Settings</span>
+</div>
+</nav>
+</aside>
+<!-- Main Content -->
+<main class="ml-[260px] min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-40 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 flex items-center justify-between px-8 py-4 shadow-sm">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer active:opacity-80">menu</span>
+<h2 class="font-headline text-[24px] font-bold tracking-tight text-primary">Shipping Management</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-sm">search</span>
+<input class="bg-surface-container rounded-lg pl-10 pr-4 py-2 text-sm border-none focus:ring-2 focus:ring-primary w-64 text-on-surface" placeholder="Search orders, SKU, or tracking ID..." type="text"/>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">help_outline</span>
+</div>
+</div>
+</header>
+<!-- Dashboard Canvas -->
+<div class="p-8 max-w-[1440px] w-full mx-auto grid grid-cols-12 gap-6">
+<!-- Quick Actions / Generate Label -->
+<section class="col-span-12 lg:col-span-4 flex flex-col gap-6">
+<div class="glass-panel p-6 rounded-xl flex flex-col gap-4">
+<h3 class="font-headline text-lg font-semibold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined">label</span>
+                        Generate Shipping Label
+                    </h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Instantly generate regulatory-compliant shipping labels with integrated cold-chain telemetry support.</p>
+<div class="space-y-3 mt-2">
+<div>
+<label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider mb-1 block">Order Reference</label>
+<select class="w-full bg-surface-container-highest border-outline-variant/30 rounded-lg text-sm text-on-surface px-3 py-2.5 focus:ring-primary focus:border-primary">
+<option>ORD-2944-X (Bluefin Tuna)</option>
+<option>ORD-3012-Y (Alaskan Salmon)</option>
+<option>ORD-3105-Z (King Crab Legs)</option>
+</select>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div>
+<label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider mb-1 block">Carrier</label>
+<select class="w-full bg-surface-container-highest border-outline-variant/30 rounded-lg text-sm text-on-surface px-3 py-2.5 focus:ring-primary">
+<option>DeepLogix Air</option>
+<option>Ocean Express</option>
+</select>
+</div>
+<div>
+<label class="text-[10px] uppercase font-bold text-on-surface-variant tracking-wider mb-1 block">Service</label>
+<select class="w-full bg-surface-container-highest border-outline-variant/30 rounded-lg text-sm text-on-surface px-3 py-2.5 focus:ring-primary">
+<option>Flash Freeze</option>
+<option>Standard Chill</option>
+</select>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-semibold py-3 rounded-lg hover:bg-primary/90 transition-all active:scale-[0.98] mt-2 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">print</span>
+                        Print Dispatch Label
+                    </button>
+</div>
+<!-- Logistics Metrics -->
+<div class="glass-panel p-6 rounded-xl grid grid-cols-2 gap-4">
+<div class="flex flex-col">
+<span class="text-[10px] uppercase text-on-surface-variant font-bold tracking-widest">Active Transits</span>
+<span class="text-3xl font-headline font-bold text-on-surface mt-1">24</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] uppercase text-on-surface-variant font-bold tracking-widest">Alerts</span>
+<span class="text-3xl font-headline font-bold text-error mt-1">02</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] uppercase text-on-surface-variant font-bold tracking-widest">Average Temp</span>
+<span class="text-3xl font-headline font-bold text-tertiary mt-1">-18°C</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] uppercase text-on-surface-variant font-bold tracking-widest">Ontime Rate</span>
+<span class="text-3xl font-headline font-bold text-primary mt-1">98.4%</span>
+</div>
+</div>
+</section>
+<!-- Awaiting Dispatch -->
+<section class="col-span-12 lg:col-span-8 flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<h3 class="font-headline text-lg font-semibold text-on-surface">Awaiting Dispatch</h3>
+<button class="text-xs text-primary font-medium hover:underline">View All Orders</button>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Order Card 1 -->
+<div class="glass-panel p-4 rounded-xl flex items-center justify-between border-l-4 border-tertiary">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-highest rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">set_meal</span>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">ORD-4921-A | Atlantic Sea Bass</p>
+<p class="text-xs text-on-surface-variant">Destination: Tokyo International Port</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="text-right">
+<p class="text-[10px] uppercase text-on-surface-variant font-bold">Cold-Chain Reqs</p>
+<p class="text-xs text-on-surface">Super-Chilled (-2°C)</p>
+</div>
+<button class="px-4 py-2 bg-surface-container-highest text-primary border border-primary/20 rounded-lg text-xs font-bold hover:bg-primary/10 transition-colors">Dispatch Now</button>
+</div>
+</div>
+<!-- Order Card 2 -->
+<div class="glass-panel p-4 rounded-xl flex items-center justify-between border-l-4 border-primary">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-surface-container-highest rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">scuba_diving</span>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">ORD-4925-B | Diver-Caught Scallops</p>
+<p class="text-xs text-on-surface-variant">Destination: Paris CDG Cargo</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="text-right">
+<p class="text-[10px] uppercase text-on-surface-variant font-bold">Cold-Chain Reqs</p>
+<p class="text-xs text-on-surface">Fresh-Iced (0°C)</p>
+</div>
+<button class="px-4 py-2 bg-surface-container-highest text-primary border border-primary/20 rounded-lg text-xs font-bold hover:bg-primary/10 transition-colors">Dispatch Now</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Integrated Tracking Section -->
+<section class="col-span-12 mt-4">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-headline text-xl font-bold text-on-surface">Live Shipment Tracking</h3>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-bold border border-primary/20 uppercase tracking-tighter">In Transit (12)</span>
+<span class="px-3 py-1 bg-surface-container-highest text-on-surface-variant rounded-full text-[10px] font-bold border border-outline-variant/30 uppercase tracking-tighter">Delivered (82)</span>
+</div>
+</div>
+<!-- Bento Grid Tracking Layout -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Tracking Card 1 (Warning State) -->
+<div class="glass-panel rounded-xl overflow-hidden flex flex-col">
+<div class="h-[140px] relative bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover opacity-60" data-alt="A sophisticated dark-themed map interface showing shipping routes across the Atlantic Ocean with neon purple and blue lines connecting ports. Minimalist data overlays display real-time coordinates and vessel speed in a tech-industrial style, mimicking a high-end logistics command center. The lighting is low-key with vibrant electronic glows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6hnclLQIv9Vj5RrgnYl3bgtCOD1o84HQznhNcLxz3zUT0K0c3NC1l776vBMKDKU-vNQ0eHPmivfURkyYCxdCPilWsalLgIy4gcuUrkXAP27rRZErBaxI0m4kUgLZyspigj3yDbnimhQvusm5_W20haYp633uPbPIMwXw9HWHPAGNsIRmSd2aLurKKcdoVU1i5n9SGBExx4F6rBgZEkLZQNqNSTG4c9dcO4Y1TAqU8GHX18FSfCsUSrfQmdgSkMk9U3VLkYOxDaZU"/>
+<div class="absolute top-3 left-3 bg-error-container text-on-error-container text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 uppercase tracking-widest">
+<span class="w-1.5 h-1.5 bg-on-error-container rounded-full status-pulse"></span>
+                                Temp Variance
+                            </div>
+<div class="absolute bottom-3 right-3 text-white text-[10px] font-mono bg-black/40 px-2 py-1 rounded backdrop-blur-sm">
+                                TS-90214-EX
+                            </div>
+</div>
+<div class="p-5 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="text-sm font-bold text-on-surface">Premium King Crab (Bulk)</h4>
+<p class="text-xs text-on-surface-variant">En route: San Francisco, US</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] uppercase font-bold text-error">Current Temp</p>
+<p class="text-lg font-bold text-error">-14.2°C</p>
+</div>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[65%]"></div>
+</div>
+<div class="flex justify-between items-center">
+<div>
+<p class="text-[10px] uppercase font-bold text-on-surface-variant">ETA</p>
+<p class="text-xs font-medium text-on-surface">Oct 24, 08:30 AM</p>
+</div>
+<button class="text-primary text-xs font-bold flex items-center gap-1 hover:gap-2 transition-all">
+                                    Full Telemetry <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Tracking Card 2 (Stable State) -->
+<div class="glass-panel rounded-xl overflow-hidden flex flex-col">
+<div class="h-[140px] relative bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover opacity-60" data-alt="A macro shot of a sleek, black technical sensor device attached to a shipment container, showing a small circular digital display with the number -18 and a bright green status LED. The surrounding environment is a cold-chain warehouse with industrial textures and cool blue lighting, conveying a professional and high-tech supply chain atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-yBvQejze_u5l02LUdbn9JnA7SGytg6gnv3tB3iN4-Jto8QjEmDtpDUxopZ_G9jUW31luXnFj9nmsPKESYgBd0OPKRvsaJxOMANowhENoHQPrHs-JOxu8Y_MPFpzsnG-re-RWym4Ov1nAvA9AWnfeVd-WVIo5uCmRkyGVdX6gLKpKhpwGMZQjOSY2hYr8_NP7I-v3po-U5fur5VhP83bMLzKZI7B9s0ck2dMHBN1LGPpjROVyz8YqkgrkB-R3Ar9bwOt_vgXFIQw"/>
+<div class="absolute top-3 left-3 bg-primary-container text-on-primary-container text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 uppercase tracking-widest">
+<span class="w-1.5 h-1.5 bg-primary rounded-full"></span>
+                                Stable Transit
+                            </div>
+<div class="absolute bottom-3 right-3 text-white text-[10px] font-mono bg-black/40 px-2 py-1 rounded backdrop-blur-sm">
+                                TS-88120-X
+                            </div>
+</div>
+<div class="p-5 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="text-sm font-bold text-on-surface">Frozen Skipjack Fillets</h4>
+<p class="text-xs text-on-surface-variant">En route: Singapore Port</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] uppercase font-bold text-primary">Current Temp</p>
+<p class="text-lg font-bold text-primary">-22.0°C</p>
+</div>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[88%]"></div>
+</div>
+<div class="flex justify-between items-center">
+<div>
+<p class="text-[10px] uppercase font-bold text-on-surface-variant">ETA</p>
+<p class="text-xs font-medium text-on-surface">Oct 23, 11:15 PM</p>
+</div>
+<button class="text-primary text-xs font-bold flex items-center gap-1 hover:gap-2 transition-all">
+                                    Full Telemetry <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Tracking Card 3 (Stable State) -->
+<div class="glass-panel rounded-xl overflow-hidden flex flex-col">
+<div class="h-[140px] relative bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover opacity-60" data-alt="A dramatic night view of a large cargo ship illuminated by intense industrial spotlights, navigating through dark deep sea waters. The aesthetic is tech-focused and futuristic, with digital grid overlays suggesting automated navigation and real-time tracking data. High contrast, deep shadows, and vibrant purple highlights dominate the visual palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAB5wQMYpxaqMg74uaJLBaoeRQ3Sbb31VwsgIQ7Z7jWfqU1K3ld5YKih52Nhv-orX_oyGR46JlFaNk7d1Wvzs7iDDUknZR4rf-44hhUDMjGY-Efkz4B4ybBGu8jDLuT_mWNcQggEHLikX0P04UePk8l4zTIqLLvuH8wcyDxvDrovuPVgvnBTtA6WhAoV9rQY3laoqNlRhaxurEE8BrEMu7ZAcCMATQCW_kmJK_34gZajlCNdO2pED0r2l0xEKcvKoFKVPLWuhYEl3M"/>
+<div class="absolute top-3 left-3 bg-primary-container text-on-primary-container text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 uppercase tracking-widest">
+<span class="w-1.5 h-1.5 bg-primary rounded-full"></span>
+                                Stable Transit
+                            </div>
+<div class="absolute bottom-3 right-3 text-white text-[10px] font-mono bg-black/40 px-2 py-1 rounded backdrop-blur-sm">
+                                TS-77034-EX
+                            </div>
+</div>
+<div class="p-5 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="text-sm font-bold text-on-surface">Norwegian Salmon Sides</h4>
+<p class="text-xs text-on-surface-variant">En route: Frankfurt Air Cargo</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] uppercase font-bold text-primary">Current Temp</p>
+<p class="text-lg font-bold text-primary">0.5°C</p>
+</div>
+</div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[42%]"></div>
+</div>
+<div class="flex justify-between items-center">
+<div>
+<p class="text-[10px] uppercase font-bold text-on-surface-variant">ETA</p>
+<p class="text-xs font-medium text-on-surface">Oct 25, 04:00 AM</p>
+</div>
+<button class="text-primary text-xs font-bold flex items-center gap-1 hover:gap-2 transition-all">
+                                    Full Telemetry <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Sticky FAB for quick label scan -->
+<div class="fixed bottom-8 right-8 z-50">
+<button class="w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-3xl">qr_code_scanner</span>
+</button>
+</div>
+</main>
+</body></html>

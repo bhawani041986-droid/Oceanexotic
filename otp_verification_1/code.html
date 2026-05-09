@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"primary-fixed-dim": "#cfbcff", "outline-variant": "#494551", "tertiary-fixed": "#ffdf93", "on-error-container": "#ffdad6", background: "#141218", "on-primary-container": "#e0d2ff", "surface-container-low": "#1d1b20", "secondary-container": "#4d4465", "surface-container-lowest": "#0f0d13", error: "#ffb4ab", "surface-container": "#211f24", "on-background": "#e6e0e9", "on-surface": "#e6e0e9", "on-secondary": "#342b4b", "primary-container": "#6750a4", "error-container": "#93000a", "tertiary-container": "#c9a74d", "secondary-fixed-dim": "#cdc0e9", outline: "#948e9c", "on-surface-variant": "#cbc4d2", "on-secondary-fixed-variant": "#4b4263", "tertiary-fixed-dim": "#e7c365", "surface-tint": "#cfbcff", "primary-fixed": "#e9ddff", "on-tertiary-container": "#503d00", "on-secondary-fixed": "#1f1635", "surface-dim": "#141218", tertiary: "#e7c365", "on-secondary-container": "#bfb2da", "on-primary-fixed-variant": "#4f378a", "on-tertiary": "#3e2e00", "surface-container-high": "#2b292f", "inverse-surface": "#e6e0e9", "surface-container-highest": "#36343a", "secondary-fixed": "#e9ddff", "on-tertiary-fixed-variant": "#594400", "on-tertiary-fixed": "#241a00", "surface-variant": "#36343a", "surface-bright": "#3b383e", "on-error": "#690005", "inverse-primary": "#6750a4", surface: "#141218", secondary: "#cdc0e9", primary: "#cfbcff", "on-primary-fixed": "#22005d", "on-primary": "#381e72", "inverse-on-surface": "#322f35"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"5xl": "48px", "2xl": "24px", xl: "20px", sm: "8px", lg: "16px", "3xl": "32px", "4xl": "40px", md: "12px", xs: "4px"}, fontFamily: {"hero-mobile": ["Inter"], "body-sm": ["Inter"], hero: ["Inter"], "body-lg": ["Inter"], "section-title": ["Inter"], "card-title": ["Inter"], "page-title": ["Inter"], label: ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"]}, fontSize: {"hero-mobile": ["28px", {lineHeight: "1.2", fontWeight: "700"}], "body-sm": ["14px", {lineHeight: "1.5", fontWeight: "400"}], hero: ["36px", {lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700"}], "body-lg": ["16px", {lineHeight: "1.5", fontWeight: "400"}], "section-title": ["24px", {lineHeight: "1.3", fontWeight: "600"}], "card-title": ["18px", {lineHeight: "1.4", fontWeight: "600"}], "page-title": ["30px", {lineHeight: "1.2", fontWeight: "700"}], label: ["12px", {lineHeight: "1", letterSpacing: "0.05em", fontWeight: "500"}]}}}};</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .otp-input:focus {
+            box-shadow: 0 0 0 2px #6750a4;
+            border-color: #cfbcff;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-lg min-h-screen flex items-center justify-center p-lg">
+<!-- Transactional Layout Wrapper -->
+<div class="w-full max-w-[1440px] flex flex-col items-center justify-center">
+<!-- Header Branding (Suppressed Nav Shell as per Task Focus Rule) -->
+<header class="w-full max-w-md mb-3xl flex items-center justify-between">
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant active:scale-90">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex flex-col items-end">
+<span class="font-page-title text-page-title font-bold text-primary tracking-tight">Oceanic Logistics</span>
+<span class="font-label text-label text-on-surface-variant uppercase tracking-widest">Enterprise Secure</span>
+</div>
+</header>
+<!-- OTP Main Card -->
+<main class="w-full max-w-md glass-panel rounded-xl p-2xl shadow-2xl relative overflow-hidden">
+<!-- Subtle Decorative Gradient -->
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
+<div class="mb-3xl text-center">
+<div class="w-16 h-16 bg-primary-container/20 rounded-full flex items-center justify-center mx-auto mb-lg border border-primary/20">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<h1 class="font-page-title text-page-title text-on-surface mb-xs">Identity Verification</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">We've sent a 6-digit code to your registered device ending in <span class="text-on-surface font-semibold">•••• 8821</span></p>
+</div>
+<!-- OTP Input Grid -->
+<form class="space-y-3xl">
+<div class="grid grid-cols-6 gap-sm">
+<input autofocus="" class="otp-input w-full aspect-square bg-surface-container-lowest border border-outline-variant rounded-lg text-center text-section-title font-bold text-primary focus:outline-none transition-all duration-200" maxlength="1" placeholder="0" type="text"/>
+<input class="otp-input w-full aspect-square bg-surface-container-lowest border border-outline-variant rounded-lg text-center text-section-title font-bold text-primary focus:outline-none transition-all duration-200" maxlength="1" placeholder="0" type="text"/>
+<input class="otp-input w-full aspect-square bg-surface-container-lowest border border-outline-variant rounded-lg text-center text-section-title font-bold text-primary focus:outline-none transition-all duration-200" maxlength="1" placeholder="0" type="text"/>
+<input class="otp-input w-full aspect-square bg-surface-container-lowest border border-outline-variant rounded-lg text-center text-section-title font-bold text-primary focus:outline-none transition-all duration-200" maxlength="1" placeholder="0" type="text"/>
+<input class="otp-input w-full aspect-square bg-surface-container-lowest border border-outline-variant rounded-lg text-center text-section-title font-bold text-primary focus:outline-none transition-all duration-200" maxlength="1" placeholder="0" type="text"/>
+<input class="otp-input w-full aspect-square bg-surface-container-lowest border border-outline-variant rounded-lg text-center text-section-title font-bold text-primary focus:outline-none transition-all duration-200" maxlength="1" placeholder="0" type="text"/>
+</div>
+<!-- Timer and Resend Logic -->
+<div class="flex flex-col items-center gap-xs">
+<div class="flex items-center gap-sm text-on-surface-variant font-label text-label">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span>RESEND CODE IN <span class="text-primary font-bold">00:54</span></span>
+</div>
+<button class="text-on-surface-variant/40 font-label text-label cursor-not-allowed uppercase tracking-tighter" disabled="" type="button">
+                        Resend Code
+                    </button>
+</div>
+<!-- Action Button -->
+<button class="w-full h-[56px] bg-primary-container text-on-primary-container font-section-title text-card-title rounded-xl flex items-center justify-center gap-md hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-primary-container/20" type="submit">
+                    Verify Identity
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</form>
+<div class="mt-3xl pt-2xl border-t border-outline-variant/30 flex items-center justify-center gap-md">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional portrait of a senior logistics coordinator in a modern office, characterized by soft cool lighting and a shallow depth of field. The image reflects the high-end technical nature of global aquaculture logistics with a focus on reliability and expertise. Deep blues and slate grays dominate the color palette, matching a premium enterprise software aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeztoOJ6S7OvRJ708pqaHJ986V4WJKIgTwVi_wwk6_LeBIjKXfe8Y1OJxvJt6-S3Uz2r3c-JMvxo4GxOdd6Q0o0k8hbNV-lEEpnwWHYVknlR0SulCKHQ0Zo-45DPOqwIhfgZSmlMWQTZoJYSys3FKOcKB1_oI4sOGgorOal2_80vveEmQ3CPlkaKnXSXYghIHD2xSjVKTYx867nfBi_WfhT5D5xFNWOZ56xlkwZrfgj8TDSGmXH2hfc1S-PCb7JooxSMuEjSuh8hQ"/>
+</div>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-xs text-on-surface-variant" style="font-variation-settings: 'FILL' 1;">support_agent</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Need help? <a class="text-primary hover:underline" href="#">Contact Supply-Chain Support</a></p>
+</div>
+</main>
+<!-- Cold-Chain Real-time Indicator (Ambient Background Element) -->
+<div class="fixed bottom-lg left-lg flex items-center gap-md glass-panel px-lg py-sm rounded-full">
+<div class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-tertiary"></span>
+</div>
+<span class="font-label text-label text-on-surface-variant uppercase tracking-widest">Network Secure: AES-256 Protocol Active</span>
+</div>
+<!-- Decorative Background Element -->
+<div class="fixed -bottom-40 -right-40 w-96 h-96 bg-primary-container/10 rounded-full blur-[120px] pointer-events-none"></div>
+<div class="fixed -top-40 -left-40 w-96 h-96 bg-tertiary-container/5 rounded-full blur-[120px] pointer-events-none"></div>
+</div>
+</body></html>

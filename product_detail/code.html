@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html class="" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-primary-fixed-variant": "#00458d", secondary: "#465f88", primary: "#005ab4", "surface-tint": "#005db8", "on-tertiary-fixed": "#321200", "on-secondary": "#ffffff", "on-primary-fixed": "#001b3e", "surface-container": "#ebedf7", surface: "#f9f9ff", "on-tertiary-container": "#fffbff", "on-background": "#181c22", "tertiary-container": "#bd5700", "error-container": "#ffdad6", "surface-bright": "#f9f9ff", "secondary-fixed": "#d6e3ff", "on-secondary-fixed": "#001b3d", "on-primary": "#ffffff", "tertiary-fixed": "#ffdbc9", "on-primary-container": "#fefcff", "inverse-on-surface": "#eef0fa", "on-surface-variant": "#414753", "surface-container-high": "#e6e8f1", "primary-fixed-dim": "#aac7ff", "secondary-container": "#b6d0ff", "on-error": "#ffffff", "surface-variant": "#e0e2eb", "surface-container-lowest": "#ffffff", "on-tertiary-fixed-variant": "#763400", "primary-container": "#0a73e0", "primary-fixed": "#d6e3ff", "inverse-surface": "#2d3037", tertiary: "#964400", "surface-dim": "#d7dae3", "surface-container-low": "#f1f3fc", "on-error-container": "#93000a", background: "#f9f9ff", "on-secondary-fixed-variant": "#2d476f", "secondary-fixed-dim": "#aec7f7", "on-tertiary": "#ffffff", "on-surface": "#181c22", outline: "#717785", "tertiary-fixed-dim": "#ffb68c", "on-secondary-container": "#3f5881", error: "#ba1a1a", "inverse-primary": "#aac7ff", "outline-variant": "#c1c6d5", "surface-container-highest": "#e0e2eb"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"5xl": "48px", xl: "20px", "4xl": "40px", xs: "4px", sm: "8px", lg: "16px", "3xl": "32px", "2xl": "24px", md: "12px"}, fontFamily: {"hero-mobile": ["Inter"], hero: ["Inter"], "body-sm": ["Inter"], "section-title": ["Inter"], label: ["Inter"], "page-title": ["Inter"], "card-title": ["Inter"], "body-lg": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"]}, fontSize: {"hero-mobile": ["28px", {lineHeight: "1.2", fontWeight: "700"}], hero: ["36px", {lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700"}], "body-sm": ["14px", {lineHeight: "1.5", fontWeight: "400"}], "section-title": ["24px", {lineHeight: "1.3", fontWeight: "600"}], label: ["12px", {lineHeight: "1", letterSpacing: "0.05em", fontWeight: "500"}], "page-title": ["30px", {lineHeight: "1.2", fontWeight: "700"}], "card-title": ["18px", {lineHeight: "1.4", fontWeight: "600"}], "body-lg": ["16px", {lineHeight: "1.5", fontWeight: "400"}]}}}};</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-lg min-h-screen">
+<!-- Top Navigation -->
+<header class="flex justify-between items-center px-6 py-4 w-full z-30 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl sticky top-0 border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface hover:text-primary transition-colors cursor-pointer active:opacity-70">arrow_back</button>
+<h1 class="font-hero text-hero-mobile md:text-hero font-black text-on-surface">Global Marketplace</h1>
+</div>
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer">share</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer">favorite</span>
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden border border-outline-variant">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A professional studio headshot of a person with a clean, modern aesthetic. The lighting is soft and cinematic, with a dark slate blue background that complements the deep ocean tech theme of the UI. The individual has a friendly but expert expression, fitting for an enterprise logistics platform user profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCndTz1k41Kxon-lzLgisZoWh9EKhgT56oTsqncLCIisdUHm7lDXy-ZAFWxFo9gqjqC2fnYg3pTlA-QuUzzo-7PXAFIxU6eubRzbRtSHUtzs1qaQWRUQQjoJQp5iLP2MRJ9MJBvCJ9WhSXEychfYPCB4Y0CMWefhctX1jFLZ9puoeGqn-F6Qy62k-HnyoMDcV9jQ1I1eTdFqFcpAXKbv-Dcfj7gF6TQ2B3eNv-PGHr1zKOk_sBaXlqrgHKQN3FuaFgtOeFpqpcjfPg"/>
+</div>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto pb-32">
+<div class="flex flex-col lg:flex-row gap-8 p-6">
+<!-- Gallery Section -->
+<section class="lg:w-1/2 flex flex-col gap-4">
+<div class="relative aspect-square rounded-xl overflow-hidden bg-surface-container-low border border-outline-variant group">
+<img alt="Atlantic Salmon" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A high-end, professional culinary photograph of a fresh, raw Atlantic Salmon fillet resting on a bed of crushed ice. The lighting is crisp and cool, highlighting the vibrant orange-pink flesh and delicate marbling. Subtle glints of light reflect off the ice crystals, emphasizing the extreme freshness and cold-chain integrity of the seafood in a minimalist, premium technical setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpjJhArrct4Jg7azUBotb6q6OtfaxPImZ61c2HHOyMHuN45GaONAp4MUvCSTT7UsNsodLetI84fTP6dWN0rIlJ2UkjAbUHroETqiQ1Rs7mtsOSvzx4pfgdpFN-0h-fQbUU2mcpfZYTbDnsAB9DuX7nweYhAJzTbUvwvGnqvYPEqYN5Rp3Xj3uSwMM4tdaWi4w2PIuh0hEj5cOx272z1cM8lgMbBC7-UcBpwsOVo2-T9hBpG4gGJMLmwNzbYLW_HHRRs-6vc87z_Q4"/>
+<div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<div class="w-2 h-2 rounded-full bg-on-surface-variant/50"></div>
+<div class="w-2 h-2 rounded-full bg-on-surface-variant/50"></div>
+</div>
+<button class="absolute left-4 top-1/2 -translate-y-1/2 bg-surface/50 backdrop-blur-md p-2 rounded-full material-symbols-outlined">chevron_left</button>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 bg-surface/50 backdrop-blur-md p-2 rounded-full material-symbols-outlined">chevron_right</button>
+</div>
+<div class="flex gap-4 overflow-x-auto hide-scrollbar">
+<div class="w-24 h-24 flex-shrink-0 rounded-lg border-2 border-primary overflow-hidden">
+<img alt="Thumbnail 1" class="w-full h-full object-cover" data-alt="Close up of fresh salmon marbling, highly detailed and technical." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6ZQlZfOr5VSt_QcFqBeqEe8Tq2TG5JoJqeLxWGGKOetvYr7Xp-swZRqGHRWs-HA564V6YY5Wxb4XIYrsggu7RfNxdLCKpXm9UMDtSLp_yP6t2JA3vBP4Ys4wqsnSIORa_vjJaDiHD_sRviHa4qe3e3cPHUso0JECFMN1gaFJxvTPLEn8xj8F8I-xNBQOthwitGE4X2JSHiZu9ipIcyty2636pgaN-j4VFqE_my2VAgCbO1yyzaFBt4q-Lrj4l8lOliOa14P5JNEY"/>
+</div>
+<div class="w-24 h-24 flex-shrink-0 rounded-lg border border-outline-variant overflow-hidden">
+<img alt="Thumbnail 2" class="w-full h-full object-cover" data-alt="Salmon prepared on a dark slate plate with minimalist garnishing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJMZNSV7NN1VPxXMNFc9bF30w4J1foQcrv0aWp6o3op_7xRERk0h7e7h2oBvFYm5X4oEtklYo90Sr_cjpGfTJ1vg9kkDqGRuIJOQiDYbC1zMfqaMnY4BiP4VvcT83ci4OnX0RUCrlZpLiQw-Qw2UaP-SGz5cOdeb34Z7xwGn3zgAg2cB5FQSX8zQSIQ9_Ybxi6-Qh0ydIxXu0fbh_IQXO_bqdK0giRqmxMwQz708OPEkyVUZyXlM3m9Slih3796P-Lf8WqiFmsuVY"/>
+</div>
+<div class="w-24 h-24 flex-shrink-0 rounded-lg border border-outline-variant overflow-hidden">
+<img alt="Thumbnail 3" class="w-full h-full object-cover" data-alt="Technical packaging shot showing the vacuum seal and temperature tags." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJ9RtnLaJZcMVx3BqZHV2Fg2A5p3XN8w_dyouDnCvN7uArIz-M3R7GGVKAZBtwHq_yVfxSicJxklfo_7mdx5rgU2rtjTsYcbU6FAm84v1kruq6H_QkGqOstsyEWJIWgsEkXRebzknjHtzjMjH5lOuNTone0N_Pgce3_dnruhXU4hZv3teeZrR_ORg9ZD_u4vUs_py39c_QLq22_Oz0FeZ8NYncIw_OC8WzNGm-Vu60VQkIQPQ0R76Ira4C7sQmWg2H3EOF2CQTgTs"/>
+</div>
+</div>
+</section>
+<!-- Product Details Section -->
+<section class="lg:w-1/2 flex flex-col gap-6">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-primary-container/20 text-primary px-3 py-1 rounded-full font-label text-label uppercase tracking-wider">AAA Grade</span>
+<span class="bg-tertiary-container/20 text-tertiary px-3 py-1 rounded-full font-label text-label uppercase tracking-wider flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">ac_unit</span> Cold Chain Certified
+                        </span>
+</div>
+<h2 class="font-page-title text-page-title text-on-surface mb-2">Premium Atlantic Salmon</h2>
+<p class="font-body-lg text-on-surface-variant max-w-prose">Sustainably farm-raised in the icy fjords of Norway. Delivered with zero-break cold chain integrity to ensure peak sashimi-grade quality.</p>
+</div>
+<div class="flex items-end gap-4">
+<span class="text-4xl font-bold text-primary">$42.00</span>
+<span class="text-on-surface-variant font-body-lg line-through mb-1">$58.00</span>
+<span class="text-error bg-error-container/20 px-2 py-0.5 rounded font-label text-label mb-1">SAVE 28%</span>
+</div>
+<!-- Quantity Selector -->
+<div class="flex items-center gap-4">
+<span class="font-label text-label uppercase text-on-surface-variant">Quantity</span>
+<div class="flex items-center bg-surface-container rounded-lg border border-outline-variant overflow-hidden">
+<button class="px-4 py-2 hover:bg-surface-variant transition-colors material-symbols-outlined">remove</button>
+<span class="px-6 py-2 font-bold text-on-surface">1</span>
+<button class="px-4 py-2 hover:bg-surface-variant transition-colors material-symbols-outlined">add</button>
+</div>
+<span class="text-body-sm text-on-surface-variant">450g per fillet</span>
+</div>
+<!-- Freshness Timeline -->
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant relative overflow-hidden">
+<div class="absolute top-0 right-0 p-3">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+</span>
+</div>
+<h3 class="font-section-title text-card-title text-on-surface mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined">analytics</span> Freshness Timeline
+                    </h3>
+<div class="relative flex flex-col gap-8 ml-4 border-l-2 border-outline-variant pl-8">
+<div class="relative">
+<div class="absolute -left-[41px] top-0 w-4 h-4 rounded-full bg-primary border-4 border-background"></div>
+<p class="font-label text-label text-primary uppercase">Caught &amp; Processed</p>
+<p class="font-body-lg text-on-surface">Today, 04:30 AM</p>
+<p class="text-xs text-on-surface-variant">Bergen, Norway • Facility ID: NW-429</p>
+</div>
+<div class="relative">
+<div class="absolute -left-[41px] top-0 w-4 h-4 rounded-full bg-primary border-4 border-background"></div>
+<p class="font-label text-label text-primary uppercase">Deep Chill Activation</p>
+<p class="font-body-lg text-on-surface">Today, 06:15 AM</p>
+<p class="text-xs text-on-surface-variant">Temperature stabilized at -1.5°C</p>
+</div>
+<div class="relative opacity-50">
+<div class="absolute -left-[41px] top-0 w-4 h-4 rounded-full bg-outline-variant border-4 border-background"></div>
+<p class="font-label text-label text-on-surface-variant uppercase">Transit Stage</p>
+<p class="font-body-lg text-on-surface-variant">Expected Dispatch 10:00 AM</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Info Tabs -->
+<div class="px-6 mt-8">
+<div class="border-b border-outline-variant flex gap-8">
+<button class="pb-4 border-b-2 border-primary text-primary font-bold">Detailed Description</button>
+<button class="pb-4 text-on-surface-variant hover:text-on-surface transition-colors">Nutrition Info</button>
+<button class="pb-4 text-on-surface-variant hover:text-on-surface transition-colors">Sourcing</button>
+</div>
+<div class="py-8 grid md:grid-cols-2 gap-12">
+<div class="space-y-4">
+<p class="text-on-surface-variant leading-relaxed">Our Premium Atlantic Salmon is harvested from the pristine waters of the North Atlantic. Known for its rich flavor and high Omega-3 content, each fillet is hand-selected and vacuum-sealed within hours of harvest.</p>
+<ul class="space-y-2">
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+<span class="text-on-surface">100% Antibiotic Free</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+<span class="text-on-surface">Responsibly Sourced (ASC Certified)</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-sm">check_circle</span>
+<span class="text-on-surface">Never Frozen - Fresh Delivery</span>
+</li>
+</ul>
+</div>
+<div class="bg-surface-container-high p-6 rounded-xl border border-outline-variant">
+<h4 class="font-bold text-on-surface mb-4">Nutritional Facts (Per 100g)</h4>
+<div class="space-y-3">
+<div class="flex justify-between border-b border-outline-variant pb-2">
+<span class="text-on-surface-variant">Calories</span>
+<span class="font-bold text-on-surface">208 kcal</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant pb-2">
+<span class="text-on-surface-variant">Protein</span>
+<span class="font-bold text-on-surface">20g</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant pb-2">
+<span class="text-on-surface-variant">Total Fat</span>
+<span class="font-bold text-on-surface">13g</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant pb-2">
+<span class="text-on-surface-variant">Omega-3 Fatty Acids</span>
+<span class="font-bold text-primary">2.5g</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Reviews Section -->
+<section class="px-6 mt-12">
+<h3 class="font-section-title text-section-title text-on-surface mb-8">Customer Reviews</h3>
+<div class="grid lg:grid-cols-3 gap-12">
+<!-- Star Breakdown -->
+<div class="lg:col-span-1">
+<div class="flex items-center gap-4 mb-4">
+<span class="text-5xl font-black text-on-surface">4.9</span>
+<div>
+<div class="flex text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star_half</span>
+</div>
+<span class="text-on-surface-variant text-sm">Based on 1,248 reviews</span>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex items-center gap-3">
+<span class="text-sm w-4">5</span>
+<div class="flex-1 h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[85%]"></div>
+</div>
+<span class="text-sm text-on-surface-variant w-8">85%</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-sm w-4">4</span>
+<div class="flex-1 h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[12%]"></div>
+</div>
+<span class="text-sm text-on-surface-variant w-8">12%</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-sm w-4">3</span>
+<div class="flex-1 h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[2%]"></div>
+</div>
+<span class="text-sm text-on-surface-variant w-8">2%</span>
+</div>
+</div>
+</div>
+<!-- Review Feed -->
+<div class="lg:col-span-2 space-y-8">
+<div class="border-b border-outline-variant pb-8">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-secondary font-bold">JD</div>
+<div>
+<h5 class="text-on-surface font-bold">Jameson D.</h5>
+<div class="flex text-tertiary text-xs">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<span class="text-on-surface-variant text-sm">2 days ago</span>
+</div>
+<p class="text-on-surface-variant mb-4 italic">"The freshest salmon I've ever had delivered. The tracking showed exactly when it left the farm, and it arrived perfectly chilled. The color is incredible."</p>
+<div class="flex gap-2">
+<img alt="Customer Review Photo" class="w-20 h-20 object-cover rounded-lg border border-outline-variant" data-alt="A raw, user-taken photo of a salmon fillet being prepared in a modern kitchen. The lighting is natural and domestic, contrasting with the professional product shots. It shows the salmon's vibrant color and firmness on a cutting board, proving the quality to other customers." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAu6hsyCP6h20gswaVLBfUmqIjwk1GQpmNKpz1P9192RHX1xW50GVcpUyYJlGw7jPu0WA1Cc2aVM_Hk_3jQNan4B9H-NzEku0sZoH53_wqmNYHpoUt3MB9pC5-JSLJyN5x6hftslhqhSvdVDmzGyT_Sx3aLiClAEi6jMMCkCHY4_v-iZcL38gCvVnJNCGmt2hD17K1xxwdggCt9G7LOo3WIilQUtkX3Cj1tJFq5LSpomum71_zEgKUiaR7KEX1nQgTdVVMi_U4hEY"/>
+</div>
+</div>
+<div class="border-b border-outline-variant pb-8">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-secondary font-bold">MK</div>
+<div>
+<h5 class="text-on-surface font-bold">Marie K.</h5>
+<div class="flex text-tertiary text-xs">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+</div>
+<span class="text-on-surface-variant text-sm">1 week ago</span>
+</div>
+<p class="text-on-surface-variant mb-4">"Exceptional sashimi grade quality. Perfect for my dinner party last night. Worth every penny for the peace of mind regarding sourcing."</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Sticky Bottom Actions -->
+<div class="fixed bottom-0 left-0 w-full bg-surface-container-high/90 backdrop-blur-md border-t border-outline-variant p-4 z-50 flex items-center justify-between lg:px-24">
+<div class="hidden md:flex flex-col">
+<span class="text-xs text-on-surface-variant uppercase font-label">Total Price</span>
+<span class="text-2xl font-bold text-primary">$42.00</span>
+</div>
+<div class="flex gap-4 w-full md:w-auto">
+<button class="flex-1 md:w-48 h-[52px] border border-primary text-primary font-bold rounded-xl hover:bg-primary/5 transition-all active:scale-95 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">shopping_cart</span> Add to Cart
+            </button>
+<button class="flex-1 md:w-48 h-[52px] bg-primary text-on-primary font-bold rounded-xl shadow-[0_4px_20px_rgba(124,58,237,0.3)] hover:brightness-110 transition-all active:scale-95">
+                Buy Now
+            </button>
+</div>
+</div>
+</body></html>

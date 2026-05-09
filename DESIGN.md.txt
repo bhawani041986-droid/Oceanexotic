@@ -1,0 +1,577 @@
+OceanFresh — Customer Marketplace UI
+Modern Premium Seafood Commerce Experience
+
+====================================================
+OVERVIEW
+====================================================
+
+OceanFresh Customer UI is designed as a modern premium seafood shopping experience inspired by:
+
+- Apple Store
+- Airbnb
+- Uber Eats
+- Amazon Fresh
+- Deliveroo
+- Modern D2C brands
+
+Unlike the Admin and Seller dashboards, the Customer UI should feel:
+- More emotional
+- More visual
+- More immersive
+- More product-focused
+- More mobile-native
+- More lifestyle-oriented
+
+The customer experience must feel:
+- Fresh
+- Premium
+- Fast
+- Trustworthy
+- Ocean-inspired
+- Clean and modern
+
+IMPORTANT:
+Customer UI should still follow the SAME core design system as the dashboards but with:
+- Slightly softer visuals
+- More gradients
+- Larger product imagery
+- More whitespace
+- More rounded surfaces
+- More visual storytelling
+
+====================================================
+CUSTOMER UI PERSONALITY
+====================================================
+
+Mood:
+- Fresh seafood marketplace
+- Premium ocean delivery service
+- Fast and trusted seafood commerce
+- Luxury grocery experience
+
+Brand Feel:
+- Calm
+- Modern
+- Elegant
+- Fresh
+- Premium
+
+DO NOT:
+- Make it look like an admin dashboard
+- Use overly technical layouts
+- Use dense enterprise spacing
+- Use cartoon fish art
+- Use cluttered ecommerce UI
+
+====================================================
+CUSTOMER COLOR SYSTEM
+====================================================
+
+PRIMARY COLORS
+
+Ocean Purple:
+#7C3AED
+
+Ocean Blue:
+#3B82F6
+
+Fresh Aqua:
+#06B6D4
+
+Soft Cyan:
+#67E8F9
+
+SUCCESS:
+#10B981
+
+WARNING:
+#F59E0B
+
+DANGER:
+#EF4444
+
+====================================================
+CUSTOMER BACKGROUND SYSTEM
+====================================================
+
+Page Background:
+#0B1120
+
+Section Background:
+#111827
+
+Card Background:
+#172033
+
+Elevated Card:
+#1E293B
+
+Gradient Sections:
+linear-gradient(
+180deg,
+rgba(59,130,246,0.08),
+rgba(124,58,237,0.04)
+)
+
+====================================================
+CUSTOMER TYPOGRAPHY
+====================================================
+
+Primary Font:
+Inter
+
+Hero Headings:
+40px
+Weight 800
+
+Page Titles:
+32px
+Weight 700
+
+Section Titles:
+24px
+Weight 700
+
+Card Titles:
+18px
+Weight 600
+
+Body Text:
+15px
+
+Small Text:
+13px
+
+====================================================
+CUSTOMER SPACING
+====================================================
+
+Use slightly larger spacing than dashboard UI.
+
+Spacing Scale:
+4px
+8px
+12px
+16px
+20px
+24px
+32px
+40px
+48px
+64px
+80px
+
+====================================================
+CUSTOMER BORDER RADIUS
+====================================================
+
+Cards:
+20px
+
+Buttons:
+14px
+
+Inputs:
+14px
+
+Hero Banners:
+28px
+
+Product Images:
+24px
+
+====================================================
+CUSTOMER SHADOW SYSTEM
+====================================================
+
+Soft Floating Shadow:
+0 12px 32px rgba(0,0,0,0.24)
+
+Hover Shadow:
+0 18px 40px rgba(0,0,0,0.32)
+
+Purple Glow:
+0 0 24px rgba(124,58,237,0.28)
+
+====================================================
+CUSTOMER LAYOUT STYLE
+====================================================
+
+DESKTOP:
+- Wide immersive layouts
+- Large product imagery
+- Spacious sections
+- Rich banners
+
+MOBILE:
+- App-like experience
+- Sticky bottom navigation
+- Swipe gestures
+- Sticky CTA buttons
+
+====================================================
+NAVIGATION DESIGN
+====================================================
+
+TOP NAVBAR
+
+Height:
+76px
+
+Contains:
+- Brand logo
+- Search bar
+- Categories
+- Wishlist
+- Notifications
+- Cart
+- Profile
+
+Navbar should:
+- Blur on scroll
+- Semi-transparent
+- Sticky top
+
+BOTTOM MOBILE NAVIGATION
+
+Contains:
+- Home
+- Categories
+- Search
+- Orders
+- Profile
+
+====================================================
+HOMEPAGE DESIGN
+====================================================
+
+HERO SECTION
+
+Large immersive banner:
+- Fresh seafood photography
+- Gradient overlays
+- Search bar
+- CTA buttons
+- Delivery trust badges
+
+SECTIONS:
+1. Featured Fish
+2. Popular Categories
+3. Fresh Arrivals
+4. Premium Sellers
+5. Flash Deals
+6. Seasonal Seafood
+7. Customer Reviews
+8. Recipes & Cooking Tips
+
+====================================================
+PRODUCT CARD SYSTEM
+====================================================
+
+CARD STYLE
+
+Large rounded image
+Soft hover elevation
+Gradient overlay on hover
+
+CARD CONTENT
+
+- Fish image
+- Freshness badge
+- Seller name
+- Delivery ETA
+- Ratings
+- Price
+- Add to cart button
+
+INTERACTIONS
+
+Hover:
+- Slight scale
+- Elevated shadow
+- Image zoom
+- CTA reveal
+
+====================================================
+PRODUCT DETAIL PAGE
+====================================================
+
+LAYOUT
+
+LEFT:
+Large image gallery
+
+CENTER:
+- Product title
+- Pricing
+- Freshness info
+- Delivery ETA
+- Seller profile
+- Quantity controls
+- CTA buttons
+
+RIGHT:
+Floating purchase card:
+- Total price
+- Delivery estimate
+- Add to cart
+- Buy now
+
+BOTTOM:
+Tabs:
+- Description
+- Nutrition
+- Reviews
+- Shipping
+- Seller details
+
+====================================================
+CART EXPERIENCE
+====================================================
+
+STYLE:
+- Minimal
+- Clean
+- App-like
+
+FEATURES:
+- Quantity controls
+- Delivery estimates
+- Coupon section
+- Suggested products
+- Sticky checkout summary
+
+====================================================
+CHECKOUT EXPERIENCE
+====================================================
+
+MULTI-STEP FLOW
+
+Step 1:
+Address
+
+Step 2:
+Delivery method
+
+Step 3:
+Payment
+
+Step 4:
+Review order
+
+RIGHT SIDE:
+Sticky order summary
+
+====================================================
+REVIEW EXPERIENCE
+====================================================
+
+REVIEW CARDS
+
+Design:
+- Spacious
+- Social-proof style
+- Rounded cards
+- Customer photos
+
+Contains:
+- User avatar
+- Verified purchase badge
+- Star ratings
+- Review photos
+- Seller reply
+- Helpful button
+
+====================================================
+SEARCH EXPERIENCE
+====================================================
+
+SEARCH UI
+
+- Large search input
+- Live suggestions
+- Trending searches
+- Filter chips
+- Voice search option
+
+SEARCH RESULTS
+
+Grid layout with:
+- Filters
+- Sort dropdown
+- Delivery estimate
+- Freshness score
+
+====================================================
+WISHLIST EXPERIENCE
+====================================================
+
+STYLE:
+- Pinterest-inspired card grid
+- Smooth hover effects
+- Save animations
+
+====================================================
+ANIMATION RULES
+====================================================
+
+ALLOWED:
+- Smooth fade-ins
+- Hover elevation
+- Image zoom
+- Skeleton loading
+- Page transitions
+
+DO NOT:
+- Use flashy animations
+- Use bouncing effects
+- Use excessive motion
+
+====================================================
+MICROINTERACTIONS
+====================================================
+
+Use subtle interactions for:
+- Add to cart
+- Wishlist
+- Hover states
+- Checkout progress
+- Notifications
+- Search suggestions
+
+====================================================
+MOBILE EXPERIENCE
+====================================================
+
+MOBILE-FIRST RULES
+
+- Sticky bottom cart CTA
+- Swipeable product carousels
+- Thumb-friendly buttons
+- Full-width cards
+- Bottom sheets
+- Mobile drawer filters
+
+====================================================
+ACCESSIBILITY RULES
+====================================================
+
+- High contrast
+- Large tap targets
+- Keyboard accessible
+- Clear focus states
+- Readable typography
+
+====================================================
+EMPTY STATES
+====================================================
+
+Use elegant empty states for:
+- Cart
+- Wishlist
+- Orders
+- Reviews
+- Search
+
+Each should include:
+- Minimal illustration
+- Helpful message
+- CTA button
+
+====================================================
+LOADING STATES
+====================================================
+
+Use:
+- Skeleton loaders
+- Shimmer effects
+- Progressive image loading
+
+====================================================
+IMAGE STYLE RULES
+====================================================
+
+Images should feel:
+- Fresh
+- Premium
+- High quality
+- Realistic
+- Bright but cinematic
+
+Avoid:
+- Stock-photo feeling
+- Cartoon fish
+- Low-resolution imagery
+
+====================================================
+RESPONSIVE BREAKPOINTS
+====================================================
+
+sm:
+640px
+
+md:
+768px
+
+lg:
+1024px
+
+xl:
+1280px
+
+2xl:
+1536px
+
+====================================================
+TAILWIND IMPLEMENTATION RULES
+====================================================
+
+Use:
+- Reusable utility classes
+- Shared component tokens
+- Shared spacing scale
+
+DO NOT:
+- Use inline random CSS
+- Use inconsistent paddings
+- Create duplicate components
+
+====================================================
+STRICT AI DEVELOPMENT RULES
+====================================================
+
+FOR ANTIGRAVITY IDE / CURSOR / WINDSURF
+
+DO NOT:
+- Redesign customer pages
+- Change card styles
+- Change button sizes
+- Change shadows
+- Change radius
+- Change typography
+
+ALWAYS:
+- Reuse design tokens
+- Reuse shared components
+- Preserve visual consistency
+- Preserve responsive layouts
+
+====================================================
+FINAL GOAL
+====================================================
+
+The customer UI should feel like:
+- A luxury seafood delivery app
+- A modern D2C marketplace
+- A polished mobile-first ecommerce experience
+- A premium lifestyle commerce platform
+
+The final result should feel:
+- Beautiful
+- Cohesive
+- Fast
+- Elegant
+- Fresh
+- Production-ready
+
+This README.md acts as the CUSTOMER EXPERIENCE SOURCE OF TRUTH for all frontend development.

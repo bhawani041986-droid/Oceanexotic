@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"primary-fixed-dim": "#cfbcff", "outline-variant": "#494551", "tertiary-fixed": "#ffdf93", "on-error-container": "#ffdad6", background: "#141218", "on-primary-container": "#e0d2ff", "surface-container-low": "#1d1b20", "secondary-container": "#4d4465", "surface-container-lowest": "#0f0d13", error: "#ffb4ab", "surface-container": "#211f24", "on-background": "#e6e0e9", "on-surface": "#e6e0e9", "on-secondary": "#342b4b", "primary-container": "#6750a4", "error-container": "#93000a", "tertiary-container": "#c9a74d", "secondary-fixed-dim": "#cdc0e9", outline: "#948e9c", "on-surface-variant": "#cbc4d2", "on-secondary-fixed-variant": "#4b4263", "tertiary-fixed-dim": "#e7c365", "surface-tint": "#cfbcff", "primary-fixed": "#e9ddff", "on-tertiary-container": "#503d00", "on-secondary-fixed": "#1f1635", "surface-dim": "#141218", tertiary: "#e7c365", "on-secondary-container": "#bfb2da", "on-primary-fixed-variant": "#4f378a", "on-tertiary": "#3e2e00", "surface-container-high": "#2b292f", "inverse-surface": "#e6e0e9", "surface-container-highest": "#36343a", "secondary-fixed": "#e9ddff", "on-tertiary-fixed-variant": "#594400", "on-tertiary-fixed": "#241a00", "surface-variant": "#36343a", "surface-bright": "#3b383e", "on-error": "#690005", "inverse-primary": "#6750a4", surface: "#141218", secondary: "#cdc0e9", primary: "#cfbcff", "on-primary-fixed": "#22005d", "on-primary": "#381e72", "inverse-on-surface": "#322f35"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"5xl": "48px", "2xl": "24px", xl: "20px", sm: "8px", lg: "16px", "3xl": "32px", "4xl": "40px", md: "12px", xs: "4px"}, fontFamily: {"hero-mobile": ["Inter"], "body-sm": ["Inter"], hero: ["Inter"], "body-lg": ["Inter"], "section-title": ["Inter"], "card-title": ["Inter"], "page-title": ["Inter"], label: ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"]}, fontSize: {"hero-mobile": ["28px", {lineHeight: "1.2", fontWeight: "700"}], "body-sm": ["14px", {lineHeight: "1.5", fontWeight: "400"}], hero: ["36px", {lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700"}], "body-lg": ["16px", {lineHeight: "1.5", fontWeight: "400"}], "section-title": ["24px", {lineHeight: "1.3", fontWeight: "600"}], "card-title": ["18px", {lineHeight: "1.4", fontWeight: "600"}], "page-title": ["30px", {lineHeight: "1.2", fontWeight: "700"}], label: ["12px", {lineHeight: "1", letterSpacing: "0.05em", fontWeight: "500"}]}}}};</script>
+<style>
+        body {
+            background-color: #0F172A;
+            color: #E6E0E9;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .otp-input {
+            width: 56px;
+            height: 64px;
+            background-color: #111827;
+            border: 1px solid #494551;
+            border-radius: 0.75rem;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #cfbcff;
+        }
+        .otp-input:focus {
+            outline: none;
+            border-color: #cfbcff;
+            box-shadow: 0 0 0 2px rgba(207, 188, 255, 0.2);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-screen">
+<!-- Top Navigation Anchor -->
+<header class="flex justify-between items-center px-6 py-4 w-full z-30 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-outline-variant sticky top-0">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">verified_user</span>
+<span class="font-hero text-on-surface font-black tracking-tight">Oceanic Logistics</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex gap-6 items-center mr-4">
+<span class="font-label text-label text-on-surface-variant hover:text-primary cursor-pointer transition-colors">Support</span>
+<span class="font-label text-label text-on-surface-variant hover:text-primary cursor-pointer transition-colors">Security Docs</span>
+</div>
+<div class="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center border border-primary/30">
+<span class="material-symbols-outlined text-primary">person</span>
+</div>
+</div>
+</header>
+<main class="flex-1 flex items-center justify-center p-6 md:p-12 relative overflow-hidden">
+<!-- Ambient Deep Water Background Element -->
+<div class="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
+<div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px]"></div>
+<div class="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-secondary-container/10 rounded-full blur-[100px]"></div>
+</div>
+<div class="w-full max-w-xl z-10">
+<div class="glass-panel rounded-3xl p-8 md:p-12 shadow-2xl">
+<!-- Progress Indicator -->
+<div class="flex justify-between items-center mb-8">
+<div class="flex-1 h-1 bg-primary rounded-full"></div>
+<div class="flex-1 h-1 bg-primary/30 mx-2 rounded-full"></div>
+<div class="flex-1 h-1 bg-primary/30 rounded-full"></div>
+</div>
+<div class="text-center mb-10">
+<h1 class="font-page-title text-page-title text-on-surface mb-3">Two-Factor Authentication</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-sm mx-auto">To secure your enterprise tier account, please verify your identity using one of the methods below.</p>
+</div>
+<!-- Method Selection Bento -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+<!-- Authenticator App Option -->
+<button class="flex flex-col items-start p-5 rounded-2xl bg-primary-container/10 border-2 border-primary transition-all group hover:bg-primary-container/20 text-left">
+<div class="flex justify-between w-full mb-4">
+<span class="material-symbols-outlined text-primary text-3xl group-hover:scale-110 transition-transform">phonelink_lock</span>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="font-card-title text-card-title text-on-surface">Authenticator App</span>
+<span class="font-label text-label text-primary mt-1">Recommended for Deep Tech</span>
+</button>
+<!-- SMS Option -->
+<button class="flex flex-col items-start p-5 rounded-2xl bg-surface-container border border-outline-variant transition-all hover:border-primary/50 group text-left">
+<div class="flex justify-between w-full mb-4">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl group-hover:text-primary transition-colors">sms</span>
+</div>
+<span class="font-card-title text-card-title text-on-surface">SMS Message</span>
+<span class="font-label text-label text-on-surface-variant mt-1">Sent to +1 ••• ••• 44</span>
+</button>
+</div>
+<!-- Verification Input -->
+<div class="space-y-6">
+<div class="flex justify-between items-center px-2">
+<label class="font-label text-label text-on-surface-variant uppercase tracking-widest">Enter Verification Code</label>
+<span class="font-label text-label text-primary cursor-pointer hover:underline">Get help?</span>
+</div>
+<div class="flex justify-between gap-3">
+<input class="otp-input" maxlength="1" placeholder="0" type="text"/>
+<input class="otp-input" maxlength="1" placeholder="0" type="text"/>
+<input class="otp-input" maxlength="1" placeholder="0" type="text"/>
+<input class="otp-input" maxlength="1" placeholder="0" type="text"/>
+<input class="otp-input" maxlength="1" placeholder="0" type="text"/>
+<input class="otp-input" maxlength="1" placeholder="0" type="text"/>
+</div>
+<div class="pt-4">
+<button class="w-full h-[52px] bg-[#7C3AED] text-white rounded-xl font-card-title text-card-title font-bold shadow-[0_0_20px_rgba(124,58,237,0.3)] hover:shadow-[0_0_30px_rgba(124,58,237,0.5)] transition-all active:scale-[0.98]">
+                            Verify &amp; Continue
+                        </button>
+</div>
+</div>
+<!-- Footer Links -->
+<div class="mt-8 pt-8 border-t border-outline-variant/30 text-center">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                        Didn't receive a code? <button class="text-primary font-semibold hover:underline">Resend in 0:45</button>
+</p>
+</div>
+</div>
+<!-- Contextual Branding Image Card -->
+<div class="mt-8 flex items-center gap-6 p-4 rounded-2xl bg-surface-container-low border border-outline-variant/20">
+<div class="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0">
+<img alt="Global Logistics Network" class="w-full h-full object-cover" data-alt="An abstract 3D data visualization of a global shipping network rendered with glowing purple and cyan nodes over a deep navy background. The lines representing shipping routes look like fiber optic cables pulsing with energy beneath an ocean-like surface. The lighting is moody and cinematic, emphasizing a high-tech, secure logistics ecosystem with a professional, enterprise-grade aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdbXGi8GMzl6KbTPSlwOBfIeSQxdUwX-nCjZ2I7O36ncXN9mhP4HsP1XCReRYMm0mOQh-nhO7YNhNf_BFr0dZLYfDrA_5Is-68YSuL9zjSxJm5o03JD0JezNbqzk0EGGTqipT57Luz4-rbYRFoKhApH4msuxvDbwmDYLwEso-wDjl0fkLTOVqs0GO93NF1r_2ejN1w9kdrrYrKgk8C5naH_WgRkxdpV7Mxveovp-hAHknl4_MGv0rUsQex36SGNFb1GIKug2WjWFc"/>
+</div>
+<div>
+<h4 class="font-card-title text-card-title text-on-surface">Secure Cold Chain Monitoring</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Your login session is protected by military-grade encryption and real-time biometric tracking protocols.</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Footer Anchor (Replaces Nav on simple screens) -->
+<footer class="w-full py-6 px-8 flex justify-between items-center bg-surface-container-lowest border-t border-outline-variant/10">
+<span class="font-label text-label text-on-surface-variant">© 2024 Oceanic Logistics Systems</span>
+<div class="flex gap-6">
+<span class="font-label text-label text-on-surface-variant hover:text-primary transition-colors cursor-pointer">Privacy Policy</span>
+<span class="font-label text-label text-on-surface-variant hover:text-primary transition-colors cursor-pointer">Terms of Service</span>
+<div class="flex items-center gap-2 text-tertiary">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span class="font-label text-label">Server: US-EAST-VERIFY-04</span>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Maintenance | Abyssal Enterprise</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-surface": "#e6e0e9",
+                    "background": "#141218",
+                    "surface-container-lowest": "#0f0d13",
+                    "tertiary-fixed-dim": "#e7c365",
+                    "surface-tint": "#cfbcff",
+                    "tertiary-container": "#c9a74d",
+                    "surface-container": "#211f24",
+                    "on-error": "#690005",
+                    "on-tertiary-fixed": "#241a00",
+                    "on-surface": "#e6e0e9",
+                    "surface-bright": "#3b383e",
+                    "primary-container": "#6750a4",
+                    "error": "#ffb4ab",
+                    "outline": "#948e9c",
+                    "on-secondary": "#342b4b",
+                    "on-tertiary": "#3e2e00",
+                    "on-primary": "#381e72",
+                    "surface-dim": "#141218",
+                    "surface-container-low": "#1d1b20",
+                    "primary-fixed-dim": "#cfbcff",
+                    "tertiary": "#e7c365",
+                    "on-secondary-fixed-variant": "#4b4263",
+                    "secondary-container": "#4d4465",
+                    "on-primary-fixed-variant": "#4f378a",
+                    "on-error-container": "#ffdad6",
+                    "tertiary-fixed": "#ffdf93",
+                    "primary-fixed": "#e9ddff",
+                    "surface": "#141218",
+                    "on-secondary-fixed": "#1f1635",
+                    "on-primary-fixed": "#22005d",
+                    "error-container": "#93000a",
+                    "surface-variant": "#36343a",
+                    "on-tertiary-fixed-variant": "#594400",
+                    "on-secondary-container": "#bfb2da",
+                    "secondary-fixed": "#e9ddff",
+                    "primary": "#cfbcff",
+                    "outline-variant": "#494551",
+                    "on-primary-container": "#e0d2ff",
+                    "surface-container-high": "#2b292f",
+                    "secondary-fixed-dim": "#cdc0e9",
+                    "surface-container-highest": "#36343a",
+                    "secondary": "#cdc0e9",
+                    "on-surface-variant": "#cbc4d2",
+                    "inverse-primary": "#6750a4",
+                    "on-background": "#e6e0e9",
+                    "inverse-on-surface": "#322f35",
+                    "on-tertiary-container": "#503d00"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "display": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-mesh {
+            background-color: #141218;
+            background-image: radial-gradient(at 0% 0%, rgba(103, 80, 164, 0.15) 0px, transparent 50%),
+                              radial-gradient(at 100% 100%, rgba(103, 80, 164, 0.1) 0px, transparent 50%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body selection:bg-primary/30 min-h-screen flex flex-col overflow-x-hidden bg-mesh">
+<!-- Header / Brand Anchor -->
+<header class="sticky top-0 w-full z-40 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-sm">
+<div class="flex items-center justify-between px-6 h-16 w-full max-w-[1440px] mx-auto">
+<div class="text-xl font-bold tracking-tight text-primary">
+                Abyssal Enterprise
+            </div>
+<div class="hidden md:flex items-center gap-6">
+<span class="text-xs font-label uppercase tracking-widest text-outline">System Status: Maintenance</span>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></div>
+<span class="text-xs font-medium text-tertiary">Logistics Offline</span>
+</div>
+</div>
+</div>
+</header>
+<main class="flex-grow flex items-center justify-center px-6 py-12">
+<div class="max-w-5xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+<!-- Content Side -->
+<div class="space-y-8 order-2 lg:order-1">
+<div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-surface-container-high border border-outline-variant">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">build</span>
+<span class="text-xs font-bold tracking-widest uppercase text-on-surface-variant">Scheduled Optimization</span>
+</div>
+<div class="space-y-4">
+<h1 class="font-headline text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight text-on-surface">
+                        Optimizing the <span class="text-primary">Cold Chain.</span>
+</h1>
+<p class="text-on-surface-variant text-lg md:text-xl max-w-lg leading-relaxed">
+                        We are performing scheduled maintenance to improve logistics throughput. Our systems are receiving a critical hardware upgrade to ensure sub-zero integrity across all transit vectors.
+                    </p>
+</div>
+<!-- Status Card -->
+<div class="bg-surface-container-low border border-white/5 p-6 rounded-xl shadow-2xl relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-6xl">ac_unit</span>
+</div>
+<div class="relative z-10 space-y-4">
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium text-on-surface-variant">Estimated uptime</span>
+<span class="text-sm font-mono text-primary bg-primary/10 px-3 py-1 rounded-full">T-MINUS 02:00:00</span>
+</div>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-2/3 rounded-full relative">
+<div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+</div>
+</div>
+<p class="text-xs text-outline italic">
+                            Next status update in 15 minutes.
+                        </p>
+</div>
+</div>
+<!-- Action/Subscribe (Soft secondary action) -->
+<div class="flex flex-wrap gap-4 pt-4">
+<button class="px-8 py-4 bg-primary text-on-primary font-semibold rounded-xl hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-primary/20">
+                        Notify Me
+                    </button>
+<button class="px-8 py-4 border border-outline-variant text-on-surface font-semibold rounded-xl hover:bg-surface-bright/50 transition-all active:scale-95">
+                        View Network Status
+                    </button>
+</div>
+</div>
+<!-- Visual Side -->
+<div class="order-1 lg:order-2">
+<div class="relative group">
+<!-- Glass Frame -->
+<div class="absolute inset-0 bg-primary/10 blur-3xl rounded-full scale-75 group-hover:scale-90 transition-transform duration-700"></div>
+<div class="relative aspect-square rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
+<img alt="Maintenance in Progress" class="w-full h-full object-cover grayscale-[0.2] contrast-[1.1]" data-alt="A high-tech industrial cold storage facility illuminated by futuristic purple and blue LED lighting. Technicians in sterile white cleanroom suits are performing precision maintenance on a massive, chrome-finished cryogenic storage unit. The atmosphere is filled with a soft vapor mist from the sub-zero temperatures, creating a cinematic and technical mood. The overall aesthetic is clean, premium, and representative of advanced aquaculture logistics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjn0uOujpmS85AahTIWcdsJ8a36GqL7vAV5l-07YhBKdGzGN7-YiJna7OlaUdJ8Oe4LYScCrR2if5Pt350wyLl-lpIZMw-duNHa1y6Ya0O5INeKW8ygD4FQnpzDvotJG7zc16h87RSbqQdFCNKvEGKVhgnTe8mx7LAWzcH9cGo3Eew3MgkOxYc4R5cfSXw2yijuu2eTeSrLTk-XrDtoSasp79eGsgl5PoPYna5dOhajOWF6qI2LM38dVzcjzGR4szP4wM2ykdEIX0"/>
+<!-- Overlay Details -->
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60"></div>
+<div class="absolute bottom-6 left-6 right-6">
+<div class="backdrop-blur-md bg-surface-container/60 border border-white/10 p-4 rounded-lg flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">thermostat</span>
+</div>
+<div>
+<div class="text-xs font-bold text-white uppercase tracking-tighter">Core Temperature</div>
+<div class="text-lg font-mono text-primary">-24.5°C <span class="text-[10px] text-tertiary">STABLE</span></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating Tech Badge -->
+<div class="absolute -top-6 -right-6 hidden md:block">
+<div class="bg-surface-container-high border border-outline-variant p-4 rounded-xl shadow-xl flex flex-col items-center gap-1 backdrop-blur-xl">
+<span class="material-symbols-outlined text-tertiary text-3xl">verified</span>
+<span class="text-[10px] font-bold text-outline uppercase">Certified Service</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer / Social Links -->
+<footer class="w-full py-12 border-t border-white/5 bg-surface-container-lowest">
+<div class="max-w-[1440px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex flex-col gap-2 items-center md:items-start text-center md:text-left">
+<div class="text-lg font-bold text-primary">Abyssal Enterprise</div>
+<p class="text-xs text-outline max-w-xs">Global aquaculture logistics at sub-zero precision. Powering the next generation of seafood supply chains.</p>
+</div>
+<div class="flex items-center gap-8">
+<a class="text-on-surface-variant hover:text-primary transition-colors flex flex-col items-center gap-1 group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">public</span>
+<span class="text-[10px] font-medium tracking-widest uppercase">X / Twitter</span>
+</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors flex flex-col items-center gap-1 group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">hub</span>
+<span class="text-[10px] font-medium tracking-widest uppercase">LinkedIn</span>
+</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors flex flex-col items-center gap-1 group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">terminal</span>
+<span class="text-[10px] font-medium tracking-widest uppercase">GitHub</span>
+</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors flex flex-col items-center gap-1 group" href="#">
+<span class="material-symbols-outlined text-2xl group-hover:scale-110 transition-transform">alternate_email</span>
+<span class="text-[10px] font-medium tracking-widest uppercase">Contact</span>
+</a>
+</div>
+<div class="text-xs text-outline font-medium">
+                © 2024 ABYSSAL ENTERPRISE. ALL RIGHTS RESERVED.
+            </div>
+</div>
+</footer>
+<!-- Status Background Overlay (Subtle noise/texture) -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+</body></html>

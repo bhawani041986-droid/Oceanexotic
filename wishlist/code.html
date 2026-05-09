@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#0f0d13",
+                    "surface-container-highest": "#36343a",
+                    "tertiary-fixed-dim": "#e7c365",
+                    "on-secondary": "#342b4b",
+                    "primary": "#cfbcff",
+                    "primary-fixed": "#e9ddff",
+                    "on-surface-variant": "#cbc4d2",
+                    "on-secondary-container": "#bfb2da",
+                    "error-container": "#93000a",
+                    "on-primary-container": "#e0d2ff",
+                    "on-error-container": "#ffdad6",
+                    "on-background": "#e6e0e9",
+                    "on-tertiary-container": "#503d00",
+                    "surface-container-high": "#2b292f",
+                    "surface-bright": "#3b383e",
+                    "secondary-fixed-dim": "#cdc0e9",
+                    "outline": "#948e9c",
+                    "secondary-container": "#4d4465",
+                    "on-primary-fixed-variant": "#4f378a",
+                    "surface-variant": "#36343a",
+                    "on-secondary-fixed-variant": "#4b4263",
+                    "on-secondary-fixed": "#1f1635",
+                    "error": "#ffb4ab",
+                    "on-primary": "#381e72",
+                    "on-surface": "#e6e0e9",
+                    "primary-fixed-dim": "#cfbcff",
+                    "on-tertiary-fixed": "#241a00",
+                    "surface-container": "#211f24",
+                    "secondary-fixed": "#e9ddff",
+                    "surface-dim": "#141218",
+                    "surface-container-low": "#1d1b20",
+                    "inverse-primary": "#6750a4",
+                    "tertiary": "#e7c365",
+                    "primary-container": "#6750a4",
+                    "inverse-on-surface": "#322f35",
+                    "outline-variant": "#494551",
+                    "secondary": "#cdc0e9",
+                    "inverse-surface": "#e6e0e9",
+                    "on-tertiary": "#3e2e00",
+                    "background": "#141218",
+                    "on-error": "#690005",
+                    "surface": "#141218",
+                    "surface-tint": "#cfbcff",
+                    "on-primary-fixed": "#22005d",
+                    "tertiary-fixed": "#ffdf93",
+                    "on-tertiary-fixed-variant": "#594400",
+                    "tertiary-container": "#c9a74d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "display": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 bg-surface/80 backdrop-blur-xl dark:bg-surface/80 border-b border-outline-variant/30 shadow-sm flex justify-between items-center px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim">waves</span>
+<h1 class="font-headline text-[18px] font-bold leading-tight text-page-title tracking-tight text-primary">Abyssal</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="active:scale-95 transition-transform text-on-surface-variant hover:text-primary">
+<span class="material-symbols-outlined">shopping_cart</span>
+</button>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto px-6 py-8">
+<!-- Wishlist Header -->
+<div class="flex items-center justify-between mb-8">
+<div>
+<h2 class="text-[30px] font-bold tracking-tight leading-tight">My Wishlist</h2>
+<p class="text-on-surface-variant text-body-sm mt-1">3 premium items saved for later</p>
+</div>
+<button class="flex items-center gap-2 text-error hover:bg-error-container/10 px-4 py-2 rounded-xl transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-[20px]">delete_sweep</span>
+<span class="font-label text-[12px] font-medium tracking-wider uppercase">Clear All</span>
+</button>
+</div>
+<!-- Wishlist Grid (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Product Card 1 -->
+<div class="bg-surface-container border border-outline-variant/30 rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300">
+<div class="relative h-48 overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A macro photograph of high-end deep-sea diving electronics sitting on a slate grey surface. The lighting is cinematic with deep purple and blue ambient glows reflecting off the metallic housing of the sensor. The image has a clean, technical aesthetic that feels both premium and industrial, consistent with a modern logistics enterprise brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCToKCokDS5Oxggp-Ypi1ogJU6ZYTYLzZbKmXOewAuZGOQU-rj594c61jtfqrp3BbJmeqC2demrvsSs1cN6hve2OF_Rr13-Jj4XX-oB8rYiLWvRayzPaNoQhbIjxKW1DHsuinaZsTfCJRAv_qPZV93fqE7T0Vl5fi3lJrru974RHYS1Zju8LRVu78lnwV-VTmNNT_HMVJxG1v07PqvnQP5dUyvdf74H-0yqahfygLQPEYabpSvypudIOPLgURGt_z8Oz9j9spJuWUY"/>
+<div class="absolute top-3 right-3">
+<button class="bg-surface/60 backdrop-blur-md p-2 rounded-full text-error hover:bg-error-container hover:text-on-error-container transition-colors shadow-lg active:scale-90 duration-150">
+<span class="material-symbols-outlined text-[20px]">heart_broken</span>
+</button>
+</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline text-[18px] font-semibold text-on-surface">Neptune Pro Tracker</h3>
+<span class="text-tertiary-fixed-dim font-bold">$1,240.00</span>
+</div>
+<p class="text-on-surface-variant text-body-sm mb-6">Industrial-grade IoT sensor with real-time pressure monitoring and deep-sea cold-chain logging.</p>
+<button class="w-full bg-primary-container text-on-primary-container py-3 rounded-xl flex items-center justify-center gap-2 hover:brightness-110 active:scale-[0.98] transition-all font-medium">
+<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+                        Add to Cart
+                    </button>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="bg-surface-container border border-outline-variant/30 rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300">
+<div class="relative h-48 overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Technical illustration of a fluid sapphire blue liquid encapsulated in a crystal glass container. Soft purple volumetric lighting pierces through the liquid, creating caustic patterns on a dark oceanic slate background. The aesthetic is high-tech laboratory meet premium logistics, utilizing a dark mode palette with vibrant accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBodN925SjBeqya77rZIF4Qjz81dOZFIV0M988YxI4kdQtrZJrtlwFxBu_6yt3N_Iqa_jgXqgb1esELNk2haapEH7MXLYLEWheJW3RwIKpwXmwjKp4ksSSu782_Tml8ClUPSV35U6j4zkEkxaug4BeFjkGk-CY51cWJxnP_PxfQDWaFR0FKzL4qg5QTaB2D-mBvOo7fvp3ApFYgMPPcblRuk940YBHx0mSbe8eW5SINt06YefFb5oWyk867vao4SFWRylo9al9W4I4"/>
+<div class="absolute top-3 right-3">
+<button class="bg-surface/60 backdrop-blur-md p-2 rounded-full text-error hover:bg-error-container hover:text-on-error-container transition-colors shadow-lg active:scale-90 duration-150">
+<span class="material-symbols-outlined text-[20px]">heart_broken</span>
+</button>
+</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline text-[18px] font-semibold text-on-surface">Aquaculture Catalyst</h3>
+<span class="text-tertiary-fixed-dim font-bold">$450.00</span>
+</div>
+<p class="text-on-surface-variant text-body-sm mb-6">Optimized nutrient solution for sustainable kelp farm yield enhancement. Bio-certified.</p>
+<button class="w-full bg-primary-container text-on-primary-container py-3 rounded-xl flex items-center justify-center gap-2 hover:brightness-110 active:scale-[0.98] transition-all font-medium">
+<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+                        Add to Cart
+                    </button>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="bg-surface-container border border-outline-variant/30 rounded-xl overflow-hidden group shadow-sm hover:shadow-lg transition-all duration-300">
+<div class="relative h-48 overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="An ultra-modern warehouse monitoring interface shown on a sleek tablet screen. The UI displays complex data charts in shades of purple and teal against a pitch-black background. The surrounding environment is a dimly lit, high-tech distribution center with cold blue light bars illuminating heavy-duty storage racks." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnKvF6RAscI7H8-KuB1a0U4OinWvFiKe18cxDe9gImTTsFSZ6X2VKr7Ipi-7zf5qv3ffAruo49gpJyvN95ks6YeNyDIJ4SVdfiPJpztEjNC3mAIQxGOEwiK9IA4Baqqkdl5NyIcZPNiHQR2OZpTRKKG5od-9vgUefLg5eRynpe7k2CXyp4qNw9xPWi34jpyZu_RdmQMBmfilQwNR7CMOTZpFLd3F89ebJegYf6QB6351IUzwoloAtQq5jGsT78DBQiWtJjvocnYNo"/>
+<div class="absolute top-3 right-3">
+<button class="bg-surface/60 backdrop-blur-md p-2 rounded-full text-error hover:bg-error-container hover:text-on-error-container transition-colors shadow-lg active:scale-90 duration-150">
+<span class="material-symbols-outlined text-[20px]">heart_broken</span>
+</button>
+</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline text-[18px] font-semibold text-on-surface">Fleet Command UI</h3>
+<span class="text-tertiary-fixed-dim font-bold">$2,800.00</span>
+</div>
+<p class="text-on-surface-variant text-body-sm mb-6">Annual license for enterprise logistics orchestration and predictive freshness analytics.</p>
+<button class="w-full bg-primary-container text-on-primary-container py-3 rounded-xl flex items-center justify-center gap-2 hover:brightness-110 active:scale-[0.98] transition-all font-medium">
+<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
+                        Add to Cart
+                    </button>
+</div>
+</div>
+</div>
+<!-- Empty Wishlist State (Hidden by default, shown for demonstration) -->
+<div class="hidden flex flex-col items-center justify-center py-20 text-center">
+<div class="w-64 h-64 bg-surface-container-high rounded-full flex items-center justify-center mb-8 shadow-2xl border border-outline-variant/20">
+<span class="material-symbols-outlined text-[120px] text-outline-variant/50">bookmark_add</span>
+</div>
+<h3 class="text-section-title font-bold text-on-surface mb-2">Your wishlist is empty</h3>
+<p class="text-on-surface-variant max-w-md mx-auto mb-8">Start exploring our premium aquaculture solutions and save your favorites here for quick access.</p>
+<button class="px-8 py-3 bg-primary text-on-primary rounded-full font-semibold hover:opacity-90 transition-opacity active:scale-95 duration-150">
+                Explore Market
+            </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container-low/90 backdrop-blur-md dark:bg-surface-container-lowest/90 border-t border-outline-variant/20 shadow-[0_-10px_30px_rgba(0,0,0,0.3)] flex justify-around items-center px-2 py-3 pb-safe">
+<!-- Home -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label text-[12px] font-medium tracking-wider uppercase mt-1">Home</span>
+</a>
+<!-- Market -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label text-[12px] font-medium tracking-wider uppercase mt-1">Market</span>
+</a>
+<!-- Orders -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="font-label text-[12px] font-medium tracking-wider uppercase mt-1">Orders</span>
+</a>
+<!-- Profile -->
+<a class="flex flex-col items-center justify-center bg-primary-container/20 text-primary rounded-xl px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label text-[12px] font-medium tracking-wider uppercase mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

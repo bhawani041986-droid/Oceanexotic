@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#0f0d13",
+                    "surface-container-highest": "#36343a",
+                    "tertiary-fixed-dim": "#e7c365",
+                    "on-secondary": "#342b4b",
+                    "primary": "#cfbcff",
+                    "primary-fixed": "#e9ddff",
+                    "on-surface-variant": "#cbc4d2",
+                    "on-secondary-container": "#bfb2da",
+                    "error-container": "#93000a",
+                    "on-primary-container": "#e0d2ff",
+                    "on-error-container": "#ffdad6",
+                    "on-background": "#e6e0e9",
+                    "on-tertiary-container": "#503d00",
+                    "surface-container-high": "#2b292f",
+                    "surface-bright": "#3b383e",
+                    "secondary-fixed-dim": "#cdc0e9",
+                    "outline": "#948e9c",
+                    "secondary-container": "#4d4465",
+                    "on-primary-fixed-variant": "#4f378a",
+                    "surface-variant": "#36343a",
+                    "on-secondary-fixed-variant": "#4b4263",
+                    "on-secondary-fixed": "#1f1635",
+                    "error": "#ffb4ab",
+                    "on-primary": "#381e72",
+                    "on-surface": "#e6e0e9",
+                    "primary-fixed-dim": "#cfbcff",
+                    "on-tertiary-fixed": "#241a00",
+                    "surface-container": "#211f24",
+                    "secondary-fixed": "#e9ddff",
+                    "surface-dim": "#141218",
+                    "surface-container-low": "#1d1b20",
+                    "inverse-primary": "#6750a4",
+                    "tertiary": "#e7c365",
+                    "primary-container": "#6750a4",
+                    "inverse-on-surface": "#322f35",
+                    "outline-variant": "#494551",
+                    "secondary": "#cdc0e9",
+                    "inverse-surface": "#e6e0e9",
+                    "on-tertiary": "#3e2e00",
+                    "background": "#141218",
+                    "on-error": "#690005",
+                    "surface": "#141218",
+                    "surface-tint": "#cfbcff",
+                    "on-primary-fixed": "#22005d",
+                    "tertiary-fixed": "#ffdf93",
+                    "on-tertiary-fixed-variant": "#594400",
+                    "tertiary-container": "#c9a74d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "display": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-effect {
+            backdrop-filter: blur(12px);
+            background: rgba(33, 31, 36, 0.7);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen font-body">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 bg-surface/80 backdrop-blur-xl dark:bg-surface/80 border-b border-outline-variant/30 shadow-sm">
+<div class="flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim">waves</span>
+<h1 class="font-headline text-[18px] font-bold leading-tight text-page-title tracking-tight text-primary dark:text-primary">Abyssal</h1>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden md:flex gap-6 items-center">
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200 font-medium" href="#">Home</a>
+<a class="text-primary font-semibold hover:text-primary transition-colors duration-200" href="#">Market</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200 font-medium" href="#">Orders</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-200 font-medium" href="#">Profile</a>
+</nav>
+<div class="active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim">shopping_cart</span>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto px-4 md:px-8 py-8 pb-32">
+<!-- Category Header -->
+<div class="mb-10">
+<div class="flex items-center gap-2 text-primary mb-2">
+<span class="material-symbols-outlined text-sm">water_drop</span>
+<span class="font-label text-[12px] uppercase tracking-wider font-bold">Category</span>
+</div>
+<h2 class="text-4xl font-bold font-headline tracking-tight mb-4">Freshwater Fish</h2>
+<p class="text-on-surface-variant max-w-2xl text-lg">Premium yields harvested from sustainable aquaculture systems. Cold-chain verified from source to doorstep.</p>
+</div>
+<!-- Filter and Sort Bar -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 sticky top-20 z-40 bg-background/95 py-4 backdrop-blur-sm">
+<div class="flex flex-wrap gap-3">
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary/10 border border-primary/30 text-primary font-medium hover:bg-primary/20 transition-all">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+<span>Price</span>
+<span class="material-symbols-outlined text-[16px]">expand_more</span>
+</button>
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-surface-container border border-outline-variant/30 text-on-surface-variant hover:border-primary/50 transition-all">
+<span class="material-symbols-outlined text-[18px]">star</span>
+<span>Rating</span>
+</button>
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-surface-container border border-outline-variant/30 text-on-surface-variant hover:border-primary/50 transition-all">
+<span class="material-symbols-outlined text-[18px]">speed</span>
+<span>Delivery Speed</span>
+</button>
+<button class="flex items-center gap-2 px-3 py-2.5 rounded-full bg-surface-container border border-outline-variant/30 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</button>
+</div>
+<div class="flex items-center gap-3">
+<label class="text-on-surface-variant text-sm font-medium">Sort By:</label>
+<div class="relative group">
+<button class="flex items-center gap-4 bg-surface-container-high px-5 py-2.5 rounded-xl border border-outline-variant/20 text-on-surface min-w-[180px] justify-between">
+<span>Newest Arrivals</span>
+<span class="material-symbols-outlined">sort</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Feed (Bento Style Vertical Feed) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+<!-- Card 1 -->
+<div class="flex flex-col bg-surface-container rounded-xl border border-outline-variant/20 overflow-hidden hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)] transition-all duration-300 group">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A macro photograph of fresh whole trout on a bed of crushed ice, illuminated by cool blue studio lighting. The scales shimmer with a metallic purple and silver luster, emphasizing freshness. The background is a deep oceanic slate, creating a high-end, commercial culinary aesthetic consistent with Abyssal Enterprise branding." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRn8KNd1-iYBpfGx9DSrqkzrEma0orNQcPDHpV14UBFuyJLGwHYJLasq--8zRZHA6qUcLSa5Lm2jvy8D_2jMRN8v9MVav60ImqCwZ4O7oa4d94OCgf_a-ALOfhsadHytc5IzZmUjCkRdyX01voZx2eBqSVMvm9Fdh-_J8b-fiLDbQnGGRQ6j-Y2nx2UIbg16dNls8i6uiCsUsIPtqGOZyCpL2Dx8m2_YtWD3uXbHmqwvG8aA6Vx1v7XSU-jHV4clwi4Vj3N2HiRFk"/>
+<div class="absolute top-4 left-4">
+<span class="bg-tertiary text-on-tertiary px-3 py-1 rounded-lg text-xs font-bold shadow-lg">AAA Grade</span>
+</div>
+<div class="absolute bottom-4 right-4 glass-effect px-3 py-1.5 rounded-lg flex items-center gap-1 border border-white/10">
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="text-xs font-bold text-white">4.9</span>
+</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold font-headline text-on-surface leading-tight">Rainbow Trout Prime</h3>
+<span class="text-primary font-bold text-lg">$24.50</span>
+</div>
+<div class="flex items-center gap-2 mb-4">
+<div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-primary">storefront</span>
+</div>
+<span class="text-on-surface-variant text-sm">Nordic River Farms</span>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/10 flex items-center justify-between">
+<span class="text-on-surface-variant text-xs uppercase tracking-widest font-bold">Price per KG</span>
+<button class="bg-primary text-on-primary px-5 py-2 rounded-xl font-bold text-sm hover:bg-primary-fixed-dim transition-colors flex items-center gap-2 active:scale-95">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+                            Add to Cart
+                        </button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="flex flex-col bg-surface-container rounded-xl border border-outline-variant/20 overflow-hidden hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)] transition-all duration-300 group">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Close up shot of fresh Tilapia fillets arranged geometrically on a dark slate surface. The lighting is focused and technical, with purple-tinted highlights reflecting off the moist surfaces of the fish. A fine mist of water vapor surrounds the plate, suggesting deep-freeze freshness in a professional logistics setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdD4ySvs_c--MBqD9nVzbeXRWn3E3XKBRuW4exbcTfiaoQ9QhdF1zw_lppAPejE8VmPDCaX3GDg25OkLu7aD9loW10di7FO8GeaeksreaYDPQoy8Yz-AIn4VzHJq09tgprJQBD2H6bJSa4Vi3OcHeFUYeGnLqM0HWzMuvRomSZ71_l1lZH0aXz7vCgIWB8__eo9D6vDKC10YgaDfaH-DEABV96Ly0Ewee38bRIHKSdlg67wd6lWZw4qYejBPifLsglO2puN9EsCUI"/>
+<div class="absolute top-4 left-4">
+<span class="bg-tertiary text-on-tertiary px-3 py-1 rounded-lg text-xs font-bold shadow-lg">AAA Grade</span>
+</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold font-headline text-on-surface leading-tight">Mountain Tilapia</h3>
+<span class="text-primary font-bold text-lg">$18.90</span>
+</div>
+<div class="flex items-center gap-2 mb-4">
+<div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-primary">storefront</span>
+</div>
+<span class="text-on-surface-variant text-sm">Highland Fisheries</span>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/10 flex items-center justify-between">
+<span class="text-on-surface-variant text-xs uppercase tracking-widest font-bold">Price per KG</span>
+<button class="bg-primary text-on-primary px-5 py-2 rounded-xl font-bold text-sm hover:bg-primary-fixed-dim transition-colors flex items-center gap-2 active:scale-95">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+                            Add to Cart
+                        </button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="flex flex-col bg-surface-container rounded-xl border border-outline-variant/20 overflow-hidden hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)] transition-all duration-300 group">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Glistening fresh Arctic Char presented in a high-tech cooling container with integrated digital sensors visible. The environment is a clean, minimalist laboratory-like setting with dark navy backgrounds. Intense white lighting highlights the vibrant orange and pink hues of the fish meat, creating a sense of scientific precision and ultimate quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnGJF8jbfzMAs53C1QAtpftgeVDhIxZw94y3JqGnFKYAdELPde3GaGJTD4qei_EtOEUItgJh5QRMTg7uQuJYjVNzaNBAENcYgmiWoFJLq9No51XPb8mxl_JUfC1jpe-6QvGMc-bmnqriFq4f29gLpfrW8EAKh07VA5i_wtRGZtgbaGcW4BRouQIiAjRYWSFSw6n0xeFr1eIvhy78aY110dtZR-d3hVrXjOi0PWVsUL21_j_c2TDVg15n4f4q2nF-B3GGJow0JUHNw"/>
+<div class="absolute top-4 left-4">
+<span class="bg-tertiary text-on-tertiary px-3 py-1 rounded-lg text-xs font-bold shadow-lg">AAA Grade</span>
+</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold font-headline text-on-surface leading-tight">Arctic Char Select</h3>
+<span class="text-primary font-bold text-lg">$32.00</span>
+</div>
+<div class="flex items-center gap-2 mb-4">
+<div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-primary">storefront</span>
+</div>
+<span class="text-on-surface-variant text-sm">Polar Blue Ltd.</span>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/10 flex items-center justify-between">
+<span class="text-on-surface-variant text-xs uppercase tracking-widest font-bold">Price per KG</span>
+<button class="bg-primary text-on-primary px-5 py-2 rounded-xl font-bold text-sm hover:bg-primary-fixed-dim transition-colors flex items-center gap-2 active:scale-95">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+                            Add to Cart
+                        </button>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="flex flex-col bg-surface-container rounded-xl border border-outline-variant/20 overflow-hidden hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)] transition-all duration-300 group">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Artistic composition of fresh freshwater bass caught in clear lake waters. The image captures the dynamic textures of the fish surface against a dark, wet granite background. Subtle purple neon strips in the periphery provide a modern, technical contrast to the natural subject, emphasizing the fusion of nature and logistics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGrb72kB2-BfwbKc5_AOX16b-uWGlvFbX1GTL7VPmjX4skQGAJ9jp3-7XaVC0m60GnKVX4G23DAe7nF0-dcREGvZPJvY2yCzDw89OIfVfWedFBtXKby6bD46ODRcl3GrnlAm8oHlIvml-xEFQQk1qm8qptl_fJ_X8sNyHfP5TtpHs4UOCW2HelU9uA3JfdqHw-uBwCVnZOSYtl0NRQD42X3S8C_yMh0D_L0UN1mN0DmdBe8w8dm8I9mQtmPGkFeeVIl1ZXq1qPvMU"/>
+<div class="absolute top-4 left-4">
+<span class="bg-tertiary text-on-tertiary px-3 py-1 rounded-lg text-xs font-bold shadow-lg">AAA Grade</span>
+</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold font-headline text-on-surface leading-tight">Silver Bass Prime</h3>
+<span class="text-primary font-bold text-lg">$21.75</span>
+</div>
+<div class="flex items-center gap-2 mb-4">
+<div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-primary">storefront</span>
+</div>
+<span class="text-on-surface-variant text-sm">Crystal Lake Co-Op</span>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/10 flex items-center justify-between">
+<span class="text-on-surface-variant text-xs uppercase tracking-widest font-bold">Price per KG</span>
+<button class="bg-primary text-on-primary px-5 py-2 rounded-xl font-bold text-sm hover:bg-primary-fixed-dim transition-colors flex items-center gap-2 active:scale-95">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+                            Add to Cart
+                        </button>
+</div>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="flex flex-col bg-surface-container rounded-xl border border-outline-variant/20 overflow-hidden hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)] transition-all duration-300 group">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A detailed shot of freshly prepared freshwater prawns, presented in a minimalist ceramic dish. The dish sits on an illuminated glass platform that glows with a soft purple light. Tiny water droplets are scattered around the dish, signifying recent harvest. The overall atmosphere is premium, clean, and technologically advanced." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpY-Mw9GCm4W4nkOwjsLrug6w19IZtt7hYHfbOPAeZStPXOaz9uB0l5NPXP28d1bioTKTVJVEmKwK4IInHWaD0vaPT5eLqSIMPamoibun1t2ISOMmfvxqgPkzhhnH7lPkS1BlaVJuuoy1I9RWWz9hW9jDqyin9ybSFfXt-K2HsrOjPKgALfzfJnT_u7crJrErG_MRRegd69-hAB6mZPtvRD9qWmCWU0vxyVPS5XmaCwhKxCk4JV1cWLDAP9Eq5aIYIlwZwTsnVoSQ"/>
+<div class="absolute top-4 left-4">
+<span class="bg-tertiary text-on-tertiary px-3 py-1 rounded-lg text-xs font-bold shadow-lg">AAA Grade</span>
+</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold font-headline text-on-surface leading-tight">Giant River Prawns</h3>
+<span class="text-primary font-bold text-lg">$45.00</span>
+</div>
+<div class="flex items-center gap-2 mb-4">
+<div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-primary">storefront</span>
+</div>
+<span class="text-on-surface-variant text-sm">Deep Valley Ponds</span>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/10 flex items-center justify-between">
+<span class="text-on-surface-variant text-xs uppercase tracking-widest font-bold">Price per KG</span>
+<button class="bg-primary text-on-primary px-5 py-2 rounded-xl font-bold text-sm hover:bg-primary-fixed-dim transition-colors flex items-center gap-2 active:scale-95">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+                            Add to Cart
+                        </button>
+</div>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="flex flex-col bg-surface-container rounded-xl border border-outline-variant/20 overflow-hidden hover:shadow-[0_10px_30px_rgba(0,0,0,0.3)] transition-all duration-300 group">
+<div class="relative h-64 overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Close up of fresh Walleye fillets on a dark, technical surface with digital cold-chain status indicators subtly glowing in the background. The lighting is crisp and cool, emphasizing the purity and quality of the white fish meat. The aesthetic is extremely professional and enterprise-focused, using deep slate and electric purple tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxJuP3RsMWVe3LElv5rUdhN6oD_T72KL5ikMXOhLtRu3tiD3WDudUzA9c_TvlTSEOqCvTKPqlXuV4woJNxZNjpCdd0fALBFu_Kl7i2P4k3yHL8a3RWWHQss7vfYez_VBtqCgORJ0YGinptJmQr3IqFPPf6NkAqttGBd5815wD-ykHqUAsU4dZnb2NwcfrepL6Sb25Lt5Vl-_-hY_YpKajTucfa-kj9lS_-efMQPpHrqUuraRyKOgcl9bLP2SIht63RqSXn6JNsRhg"/>
+<div class="absolute top-4 left-4">
+<span class="bg-tertiary text-on-tertiary px-3 py-1 rounded-lg text-xs font-bold shadow-lg">AAA Grade</span>
+</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold font-headline text-on-surface leading-tight">Wild Harvest Walleye</h3>
+<span class="text-primary font-bold text-lg">$28.90</span>
+</div>
+<div class="flex items-center gap-2 mb-4">
+<div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px] text-primary">storefront</span>
+</div>
+<span class="text-on-surface-variant text-sm">Northern Catch Inc.</span>
+</div>
+<div class="mt-auto pt-4 border-t border-outline-variant/10 flex items-center justify-between">
+<span class="text-on-surface-variant text-xs uppercase tracking-widest font-bold">Price per KG</span>
+<button class="bg-primary text-on-primary px-5 py-2 rounded-xl font-bold text-sm hover:bg-primary-fixed-dim transition-colors flex items-center gap-2 active:scale-95">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+                            Add to Cart
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Visible on Mobile) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container-low/90 backdrop-blur-md dark:bg-surface-container-lowest/90 border-t border-outline-variant/20 shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
+<div class="flex justify-around items-center w-full px-2 py-3 pb-safe">
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-primary-container/20 text-primary rounded-xl px-4 py-2 active:scale-90 duration-150">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Market</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Profile</span>
+</div>
+</div>
+</nav>
+<!-- FAB (Contextual for Market) -->
+<button class="fixed right-6 bottom-24 md:bottom-8 bg-primary text-on-primary w-14 h-14 rounded-2xl shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-40">
+<span class="material-symbols-outlined">search</span>
+</button>
+</body></html>

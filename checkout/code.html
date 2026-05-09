@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-lowest": "#0f0d13",
+                        "surface-container-highest": "#36343a",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "on-secondary": "#342b4b",
+                        "primary": "#cfbcff",
+                        "primary-fixed": "#e9ddff",
+                        "on-surface-variant": "#cbc4d2",
+                        "on-secondary-container": "#bfb2da",
+                        "error-container": "#93000a",
+                        "on-primary-container": "#e0d2ff",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#e6e0e9",
+                        "on-tertiary-container": "#503d00",
+                        "surface-container-high": "#2b292f",
+                        "surface-bright": "#3b383e",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "outline": "#948e9c",
+                        "secondary-container": "#4d4465",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "surface-variant": "#36343a",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "on-secondary-fixed": "#1f1635",
+                        "error": "#ffb4ab",
+                        "on-primary": "#381e72",
+                        "on-surface": "#e6e0e9",
+                        "primary-fixed-dim": "#cfbcff",
+                        "on-tertiary-fixed": "#241a00",
+                        "surface-container": "#211f24",
+                        "secondary-fixed": "#e9ddff",
+                        "surface-dim": "#141218",
+                        "surface-container-low": "#1d1b20",
+                        "inverse-primary": "#6750a4",
+                        "tertiary": "#e7c365",
+                        "primary-container": "#6750a4",
+                        "inverse-on-surface": "#322f35",
+                        "outline-variant": "#494551",
+                        "secondary": "#cdc0e9",
+                        "inverse-surface": "#e6e0e9",
+                        "on-tertiary": "#3e2e00",
+                        "background": "#141218",
+                        "on-error": "#690005",
+                        "surface": "#141218",
+                        "surface-tint": "#cfbcff",
+                        "on-primary-fixed": "#22005d",
+                        "tertiary-fixed": "#ffdf93",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "tertiary-container": "#c9a74d"
+                    },
+                    fontFamily: {
+                        headline: ["Inter"],
+                        display: ["Inter"],
+                        body: ["Inter"],
+                        label: ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #141218;
+            color: #e6e0e9;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- TopAppBar Execution -->
+<header class="sticky top-0 w-full z-50 bg-surface/80 backdrop-blur-xl dark:bg-surface/80 border-b border-outline-variant/30 shadow-sm">
+<div class="flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform text-primary dark:text-primary-fixed-dim">
+<span class="material-symbols-outlined">waves</span>
+</button>
+<h1 class="font-headline text-[18px] font-bold leading-tight text-page-title tracking-tight text-primary dark:text-primary">Abyssal</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform text-primary dark:text-primary-fixed-dim">
+<span class="material-symbols-outlined">shopping_cart</span>
+</button>
+</div>
+</div>
+</header>
+<main class="max-w-4xl mx-auto px-4 pt-6 pb-32">
+<div class="mb-8">
+<h2 class="text-[30px] font-bold leading-tight tracking-tight mb-2">Checkout</h2>
+<p class="text-on-surface-variant text-[14px]">Finalize your deep-sea logistics request.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Left Column: Checkout Steps -->
+<div class="md:col-span-2 space-y-4">
+<!-- Shipping Address Card -->
+<section class="bg-surface-container-low rounded-[16px] p-6 border border-outline-variant/20 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">location_on</span>
+<h3 class="text-[18px] font-semibold leading-none">Shipping Address</h3>
+</div>
+<button class="text-primary text-[14px] font-medium hover:underline">Edit</button>
+</div>
+<div class="space-y-1 text-on-surface-variant text-[15px]">
+<p class="font-medium text-on-surface">Alex Mercer</p>
+<p>241 Deep Trench Boulevard</p>
+<p>Sub-Level 4, Sector 7G</p>
+<p>Atlantic Hub, 90210-AO</p>
+</div>
+</section>
+<!-- Delivery Speed Card -->
+<section class="bg-surface-container-low rounded-[16px] p-6 border border-outline-variant/20 shadow-sm">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary">speed</span>
+<h3 class="text-[18px] font-semibold leading-none">Delivery Speed</h3>
+</div>
+<div class="space-y-3">
+<label class="flex items-center justify-between p-4 rounded-xl border-2 border-primary bg-primary/5 cursor-pointer">
+<div class="flex items-center gap-4">
+<input checked="" class="text-primary focus:ring-primary bg-surface border-outline" name="delivery" type="radio"/>
+<div>
+<p class="font-bold text-[16px]">Hyper-Pressure Express</p>
+<p class="text-[12px] text-on-surface-variant uppercase tracking-wider">Estimated: 4-6 Hours</p>
+</div>
+</div>
+<span class="font-bold text-primary">+$45.00</span>
+</label>
+<label class="flex items-center justify-between p-4 rounded-xl border border-outline-variant/30 hover:bg-surface-variant/30 cursor-pointer transition-colors">
+<div class="flex items-center gap-4">
+<input class="text-primary focus:ring-primary bg-surface border-outline" name="delivery" type="radio"/>
+<div>
+<p class="font-semibold text-[16px]">Abyssal Standard</p>
+<p class="text-[12px] text-on-surface-variant uppercase tracking-wider">Estimated: 1-2 Days</p>
+</div>
+</div>
+<span class="font-semibold">$12.50</span>
+</label>
+</div>
+</section>
+<!-- Payment Method Card -->
+<section class="bg-surface-container-low rounded-[16px] p-6 border border-outline-variant/20 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+<h3 class="text-[18px] font-semibold leading-none">Payment Method</h3>
+</div>
+<button class="text-primary text-[14px] font-medium hover:underline">Change</button>
+</div>
+<div class="flex items-center gap-4 p-4 bg-surface-container-highest/30 rounded-xl">
+<div class="w-12 h-8 bg-surface-container-highest rounded flex items-center justify-center border border-outline-variant/50">
+<span class="material-symbols-outlined text-on-surface-variant">credit_card</span>
+</div>
+<div>
+<p class="font-medium text-on-surface">Visa ending in •••• 8842</p>
+<p class="text-[12px] text-on-surface-variant">Expires 09/27</p>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Order Summary -->
+<div class="space-y-4">
+<section class="bg-surface-container rounded-[16px] p-6 border border-outline-variant/30 shadow-xl sticky top-24">
+<h3 class="text-[20px] font-bold mb-6">Order Summary</h3>
+<div class="space-y-4 border-b border-outline-variant/20 pb-6 mb-6">
+<div class="flex justify-between text-[14px]">
+<span class="text-on-surface-variant">Subtotal (3 items)</span>
+<span class="text-on-surface font-medium">$842.00</span>
+</div>
+<div class="flex justify-between text-[14px]">
+<span class="text-on-surface-variant">Shipping &amp; Handling</span>
+<span class="text-on-surface font-medium">$45.00</span>
+</div>
+<div class="flex justify-between text-[14px]">
+<span class="text-on-surface-variant">Estimated Tax</span>
+<span class="text-on-surface font-medium">$62.34</span>
+</div>
+</div>
+<div class="flex justify-between items-center mb-8">
+<span class="text-[18px] font-bold">Total</span>
+<span class="text-[24px] font-bold text-primary">$949.34</span>
+</div>
+<button class="w-full bg-primary text-on-primary font-bold py-4 rounded-[12px] active:scale-[0.98] transition-all shadow-lg shadow-primary/20 hover:brightness-110">
+                        Place Order
+                    </button>
+<p class="text-center text-[11px] text-on-surface-variant mt-4 leading-relaxed">
+                        By placing your order, you agree to Abyssal Enterprise's <br/>
+<a class="underline" href="#">Terms of Service</a> and <br/>
+<a class="underline" href="#">Privacy Policy</a>.
+                    </p>
+<!-- Inventory Preview -->
+<div class="mt-8 pt-6 border-t border-outline-variant/20">
+<h4 class="text-[12px] font-bold uppercase tracking-widest text-on-surface-variant mb-4">Items in Shipment</h4>
+<div class="space-y-4">
+<div class="flex gap-3">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest overflow-hidden shrink-0">
+<img class="w-full h-full object-cover grayscale brightness-75" data-alt="A macro photograph of high-grade frozen seafood showing crystalline textures and vibrant oceanic colors. The lighting is cold and clinical, highlighting the freshness and technical quality of the product within a dark, premium logistics container setting. Minimalist and high-performance aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfhqScIOV3bN1xd4obvoXlzXQ0B5dxkpKMkEUctJUXSogdAubIfDq7RB1y5jlg9DVSbMTKKYn-Z9sbD38SHnO86Y3rnvUb4i8eHJbaDThEe6PG7VFSycvrSYy_kZWhB84_AFyQnVzeA2dX7SQ-v2Y-x03nMgHtIzHMr5XzAH55nnxM8bKziTY3KWf0ZZYnapp96nPrCnzMHZewhoLBUAxJA4iZN5HuLFf9LQAvvRlnqx6Ggt-nrL79PZd_6STE3N7eqf4u8iw7L4Q"/>
+</div>
+<div class="flex-1">
+<p class="text-[13px] font-semibold line-clamp-1">Bluefin Logistics Core - AAA</p>
+<p class="text-[11px] text-on-surface-variant">Qty: 2 • $620.00</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-12 h-12 rounded-lg bg-surface-container-highest overflow-hidden shrink-0">
+<img class="w-full h-full object-cover grayscale brightness-75" data-alt="A technical close-up of temperature-controlled shipping packaging featuring advanced cooling filaments and sleek, dark slate materials. Subtle purple light reflects off the metallic surfaces, conveying a sense of high-tech deep sea logistics. Professional, corporate, and extremely reliable atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQSGW3i-iThZnOcLCRvrHsodaToQOesCvm4GY82G1LfpibCJZrueNhdth7zgaiI5FppJB4kD_rj-okYSJ2JoBUTnyKritRlDkLB8X7pl7fEytwI87O7vNoQlsFpsI7WIZkJSHvZ_48la7jatIa058xXt3HTp8hcU9YE4YdpEDQF5-S7UrlfAnUXN9CI1TGNAUWXGuTSBwwyFbG38tl6z_3cvCsJs5hqYfe_6Qn56MaXMhX-hBdk2jYzJRKRtjP6MUinA8paoWw7Po"/>
+</div>
+<div class="flex-1">
+<p class="text-[13px] font-semibold line-clamp-1">Isothermal Shield V4</p>
+<p class="text-[11px] text-on-surface-variant">Qty: 1 • $222.00</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- BottomNavBar Suppression Check: Checkout is transactional/task-focused, so BottomNavBar is suppressed to prioritize the task canvas -->
+<!-- However, the JSON requires us to handle navigation logic if we were at a top-level. Since this is Checkout, we follow the "Automatic Suppression" rule in the Prompt instructions. -->
+</body></html>

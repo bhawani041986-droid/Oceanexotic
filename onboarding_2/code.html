@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Abyssal Enterprise - Global Marketplace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#e6e0e9",
+                        "background": "#141218",
+                        "surface-container-lowest": "#0f0d13",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "surface-tint": "#cfbcff",
+                        "tertiary-container": "#c9a74d",
+                        "surface-container": "#211f24",
+                        "on-error": "#690005",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-surface": "#e6e0e9",
+                        "surface-bright": "#3b383e",
+                        "primary-container": "#6750a4",
+                        "error": "#ffb4ab",
+                        "outline": "#948e9c",
+                        "on-secondary": "#342b4b",
+                        "on-tertiary": "#3e2e00",
+                        "on-primary": "#381e72",
+                        "surface-dim": "#141218",
+                        "surface-container-low": "#1d1b20",
+                        "primary-fixed-dim": "#cfbcff",
+                        "tertiary": "#e7c365",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "secondary-container": "#4d4465",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed": "#ffdf93",
+                        "primary-fixed": "#e9ddff",
+                        "surface": "#141218",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-primary-fixed": "#22005d",
+                        "error-container": "#93000a",
+                        "surface-variant": "#36343a",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "on-secondary-container": "#bfb2da",
+                        "secondary-fixed": "#e9ddff",
+                        "primary": "#cfbcff",
+                        "outline-variant": "#494551",
+                        "on-primary-container": "#e0d2ff",
+                        "surface-container-high": "#2b292f",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "surface-container-highest": "#36343a",
+                        "secondary": "#cdc0e9",
+                        "on-surface-variant": "#cbc4d2",
+                        "inverse-primary": "#6750a4",
+                        "on-background": "#e6e0e9",
+                        "inverse-on-surface": "#322f35",
+                        "on-tertiary-container": "#503d00"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #141218;
+        }
+        .glass-panel {
+            background: rgba(33, 31, 36, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .transit-line {
+            stroke-dasharray: 10;
+            animation: dash 30s linear infinite;
+        }
+        @keyframes dash {
+            to { stroke-dashoffset: -1000; }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface min-h-screen flex flex-col">
+<!-- TopAppBar Fragment: Suppressed Shell for Task-Focused Onboarding -->
+<header class="sticky top-0 w-full z-40 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-sm">
+<div class="flex items-center justify-between px-6 h-16 w-full max-w-[1440px] mx-auto">
+<div class="flex items-center gap-4">
+<span class="text-xl font-bold tracking-tight text-primary">Abyssal Enterprise</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-surface-bright/50 transition-colors rounded-full active:scale-95 duration-200">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Area (Onboarding Focus) -->
+<main class="flex-grow flex flex-col items-center justify-center p-6 md:p-12 relative overflow-hidden">
+<!-- Background Visual: World Map Transit Lines -->
+<div class="absolute inset-0 z-0 opacity-40 pointer-events-none">
+<svg class="w-full h-full" fill="none" viewbox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg">
+<!-- Abstract Map Paths -->
+<path class="transit-line opacity-30" d="M150 150 Q 300 100 500 250 T 850 150" stroke="#cfbcff" stroke-width="1.5"></path>
+<path class="transit-line opacity-50" d="M200 400 Q 400 350 600 400 T 800 300" stroke="#cfbcff" stroke-width="1.5"></path>
+<path class="transit-line opacity-20" d="M100 300 Q 250 200 400 300 T 700 450" stroke="#cfbcff" stroke-width="1.5"></path>
+<!-- Connection Nodes -->
+<circle class="animate-pulse" cx="150" cy="150" fill="#cfbcff" r="4"></circle>
+<circle cx="500" cy="250" fill="#cfbcff" r="6"></circle>
+<circle class="animate-pulse" cx="850" cy="150" fill="#cfbcff" r="4"></circle>
+<circle cx="200" cy="400" fill="#cfbcff" r="4"></circle>
+<circle cx="800" cy="300" fill="#cfbcff" r="4"></circle>
+<circle cx="700" cy="450" fill="#cfbcff" r="4"></circle>
+</svg>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background"></div>
+</div>
+<div class="z-10 w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+<!-- Visual Element -->
+<div class="relative flex justify-center items-center">
+<div class="w-full aspect-square rounded-xl overflow-hidden glass-panel shadow-2xl relative border-outline-variant/30">
+<img alt="Global marketplace network map" class="w-full h-full object-cover mix-blend-luminosity opacity-80" data-alt="A sophisticated global logistics network visualization displayed on a high-resolution technical monitor. Glowing purple lines crisscross a dark, stylized world map, representing active cold-chain transit routes. The scene is set in a modern, dim control room with soft ambient light filtering through deep ocean-toned glass panels. The overall aesthetic is premium, precise, and technologically advanced, emphasizing a dark mode professional interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDtCFNZP6qbT8_W9c0bY5xji-OKs8PXlXys1_2i6ISLBFJZDrfR4kJsvkfMbpir9645zW2YgPyXjBjCbQJXaMBjTJk6u4byNATdSo4sHfas5Q4FuzgaSmuF9ofIFj4UaCppSt7R9DI7PLUhowsDP7GkRr4406qk6ifLf9XP7joBwaGGXY2osQdtXeoXwA0JD36opqeEaLOgesAE6Q2N5aZRL9SmR6AXRp1a9Hbu0fHQkx-JGqYbTRccqdErOxqLKi23KDWdnQwVIg"/>
+<!-- Overlay Tech UI Elements -->
+<div class="absolute top-6 left-6 flex flex-col gap-2">
+<div class="glass-panel px-3 py-1 rounded-full text-[10px] font-bold tracking-widest text-primary uppercase flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+                            Live Network Active
+                        </div>
+</div>
+<div class="absolute bottom-6 right-6 glass-panel p-4 rounded-lg flex gap-4 items-center">
+<div class="flex flex-col">
+<span class="text-[10px] text-on-surface-variant font-medium">International Hubs</span>
+<span class="text-2xl font-bold text-primary">14</span>
+</div>
+<div class="h-8 w-px bg-white/10"></div>
+<div class="flex flex-col">
+<span class="text-[10px] text-on-surface-variant font-medium">Verified Sellers</span>
+<span class="text-2xl font-bold text-tertiary">AAA+</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Content Area -->
+<div class="flex flex-col gap-8">
+<div class="space-y-4">
+<h1 class="font-headline text-[40px] md:text-[52px] font-bold leading-tight text-on-surface tracking-tight">
+                        Global <span class="text-primary">Marketplace.</span>
+</h1>
+<p class="text-lg text-on-surface-variant leading-relaxed font-body">
+                        Connect with AAA Grade verified sellers across 14 international seafood hubs. Our network ensures transparency, quality, and high-performance logistics for premium aquaculture trade.
+                    </p>
+</div>
+<!-- Feature Mini Bento -->
+<div class="grid grid-cols-2 gap-4">
+<div class="glass-panel p-4 rounded-xl space-y-2">
+<span class="material-symbols-outlined text-primary">verified_user</span>
+<h3 class="font-semibold text-sm">Vetted Suppliers</h3>
+<p class="text-xs text-on-surface-variant">Strict entry protocols for all marketplace sellers.</p>
+</div>
+<div class="glass-panel p-4 rounded-xl space-y-2">
+<span class="material-symbols-outlined text-primary">language</span>
+<h3 class="font-semibold text-sm">Seamless Transit</h3>
+<p class="text-xs text-on-surface-variant">Global lines optimized for cold-chain integrity.</p>
+</div>
+</div>
+<!-- Footer Actions -->
+<div class="flex flex-col gap-6 pt-4">
+<!-- Progress Indicators -->
+<div class="flex gap-2">
+<div class="h-1.5 w-8 rounded-full bg-surface-container-highest"></div>
+<div class="h-1.5 w-12 rounded-full bg-primary"></div>
+<div class="h-1.5 w-8 rounded-full bg-surface-container-highest"></div>
+</div>
+<div class="flex items-center justify-between">
+<button class="text-on-surface-variant font-medium hover:text-on-surface transition-colors">
+                            Back
+                        </button>
+<button class="h-12 px-8 bg-primary text-on-primary font-bold rounded-xl flex items-center gap-2 hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-primary/20">
+                            Continue
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Metadata (Minimalist) -->
+<footer class="p-6 text-center">
+<p class="text-[10px] text-on-surface-variant tracking-widest uppercase opacity-50">
+            Abyssal Enterprise © 2024 • Enterprise Tier v2.4.0
+        </p>
+</footer>
+</body></html>

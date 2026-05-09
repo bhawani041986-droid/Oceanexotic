@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Abyssal Enterprise | Seller Analytics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary": "#3e2e00",
+                        "error": "#ffb4ab",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "error-container": "#93000a",
+                        "primary-container": "#6750a4",
+                        "tertiary-fixed": "#ffdf93",
+                        "surface-bright": "#3b383e",
+                        "on-secondary-fixed": "#1f1635",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "on-background": "#e6e0e9",
+                        "surface-container-lowest": "#0f0d13",
+                        "primary": "#cfbcff",
+                        "surface-variant": "#36343a",
+                        "outline-variant": "#494551",
+                        "background": "#141218",
+                        "on-tertiary-container": "#503d00",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "secondary-container": "#4d4465",
+                        "primary-fixed-dim": "#cfbcff",
+                        "secondary-fixed": "#e9ddff",
+                        "surface-container-high": "#2b292f",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "surface-container-low": "#1d1b20",
+                        "on-error-container": "#ffdad6",
+                        "inverse-on-surface": "#322f35",
+                        "primary-fixed": "#e9ddff",
+                        "inverse-primary": "#6750a4",
+                        "on-primary-fixed": "#22005d",
+                        "outline": "#948e9c",
+                        "tertiary-container": "#c9a74d",
+                        "on-primary": "#381e72",
+                        "on-primary-container": "#e0d2ff",
+                        "on-error": "#690005",
+                        "surface-dim": "#141218",
+                        "secondary": "#cdc0e9",
+                        "on-surface-variant": "#cbc4d2",
+                        "tertiary": "#e7c365",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-secondary-container": "#bfb2da",
+                        "inverse-surface": "#e6e0e9",
+                        "surface-tint": "#cfbcff",
+                        "surface": "#141218",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "on-secondary": "#342b4b",
+                        "on-surface": "#e6e0e9",
+                        "surface-container-highest": "#36343a",
+                        "surface-container": "#211f24"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card {
+            background: rgba(43, 41, 47, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 142, 156, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- Navigation Drawer -->
+<aside class="h-screen w-[260px] fixed left-0 top-0 z-50 bg-surface-container-low border-r border-outline-variant/20 flex flex-col h-full p-4 gap-2 shadow-xl hidden md:flex">
+<div class="mb-8 px-2 flex flex-col gap-1">
+<h1 class="font-headline text-lg font-bold text-primary">Abyssal Enterprise</h1>
+<div class="flex items-center gap-3 mt-4">
+<div class="w-10 h-10 rounded-lg bg-primary-container/40 flex items-center justify-center border border-primary/20">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">waves</span>
+</div>
+<div>
+<p class="font-headline text-on-surface font-bold text-sm">DeepSea Exports</p>
+<p class="font-body text-on-surface-variant text-[10px] uppercase tracking-wider">AAA Grade Verified</p>
+</div>
+</div>
+</div>
+<nav class="flex flex-col gap-1">
+<div class="bg-primary-container/20 text-primary border-l-4 border-primary group cursor-pointer transition-all duration-200 ease-in-out flex items-center gap-3 p-3 font-body text-body-sm font-medium">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</div>
+<div class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high group cursor-pointer transition-all duration-200 ease-in-out flex items-center gap-3 p-3 font-body text-body-sm font-medium">
+<span class="material-symbols-outlined">inventory_2</span>
+<span>Inventory</span>
+</div>
+<div class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high group cursor-pointer transition-all duration-200 ease-in-out flex items-center gap-3 p-3 font-body text-body-sm font-medium">
+<span class="material-symbols-outlined">add_box</span>
+<span>Product Listing</span>
+</div>
+<div class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high group cursor-pointer transition-all duration-200 ease-in-out flex items-center gap-3 p-3 font-body text-body-sm font-medium">
+<span class="material-symbols-outlined">payments</span>
+<span>Payouts</span>
+</div>
+<div class="text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high group cursor-pointer transition-all duration-200 ease-in-out flex items-center gap-3 p-3 font-body text-body-sm font-medium mt-auto">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</div>
+</nav>
+</aside>
+<!-- Main Canvas -->
+<main class="md:pl-[260px] min-h-screen">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-40 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 flex items-center justify-between px-6 py-4 w-full shadow-sm">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer active:opacity-80 md:hidden">menu</span>
+<h2 class="font-headline text-2xl font-bold tracking-tight text-on-surface">Seller Analytics</h2>
+</div>
+<div class="flex items-center gap-4">
+<!-- Date Range Picker -->
+<div class="hidden sm:flex items-center gap-2 bg-surface-container-high px-4 py-2 rounded-lg border border-outline-variant/30 text-body-sm">
+<span class="material-symbols-outlined text-sm text-outline">calendar_today</span>
+<span class="text-on-surface">Oct 01, 2023 - Oct 31, 2023</span>
+<span class="material-symbols-outlined text-sm text-outline">expand_more</span>
+</div>
+<div class="flex gap-2">
+<div class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-variant/50 transition-colors cursor-pointer text-on-surface-variant">
+<span class="material-symbols-outlined">search</span>
+</div>
+<div class="w-10 h-10 rounded-full flex items-center justify-center hover:bg-surface-variant/50 transition-colors cursor-pointer text-on-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Body -->
+<div class="p-6 lg:p-10 space-y-8 max-w-[1440px] mx-auto">
+<!-- Quick Stats Hero -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="glass-card p-6 rounded-xl space-y-2">
+<p class="text-on-surface-variant text-xs font-medium uppercase tracking-widest">Net Revenue</p>
+<div class="flex items-end justify-between">
+<h3 class="text-3xl font-bold text-on-surface">$124,592.00</h3>
+<span class="text-tertiary text-xs font-bold flex items-center bg-tertiary/10 px-2 py-1 rounded">+12.4%</span>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl space-y-2">
+<p class="text-on-surface-variant text-xs font-medium uppercase tracking-widest">Active Orders</p>
+<div class="flex items-end justify-between">
+<h3 class="text-3xl font-bold text-on-surface">1,842</h3>
+<span class="text-primary text-xs font-bold flex items-center bg-primary/10 px-2 py-1 rounded">+5.2%</span>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl space-y-2">
+<p class="text-on-surface-variant text-xs font-medium uppercase tracking-widest">Conversion Rate</p>
+<div class="flex items-end justify-between">
+<h3 class="text-3xl font-bold text-on-surface">3.82%</h3>
+<span class="text-error text-xs font-bold flex items-center bg-error/10 px-2 py-1 rounded">-0.4%</span>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl space-y-2 border-l-4 border-primary">
+<p class="text-on-surface-variant text-xs font-medium uppercase tracking-widest">Freshness Index</p>
+<div class="flex items-end justify-between">
+<h3 class="text-3xl font-bold text-on-surface">98.2</h3>
+<span class="text-primary text-xs font-bold flex items-center bg-primary/10 px-2 py-1 rounded">AAA</span>
+</div>
+</div>
+</section>
+<!-- Bento Grid Main Analytics -->
+<section class="grid grid-cols-12 gap-6">
+<!-- Performance Chart: Revenue Trends -->
+<div class="col-span-12 lg:col-span-8 glass-card p-6 rounded-xl flex flex-col min-h-[400px]">
+<div class="flex justify-between items-center mb-8">
+<h4 class="font-headline text-lg font-bold text-on-surface">Product Performance Trends</h4>
+<div class="flex gap-2">
+<button class="bg-primary px-3 py-1.5 rounded-lg text-on-primary text-xs font-bold">Revenue</button>
+<button class="bg-surface-container-highest px-3 py-1.5 rounded-lg text-on-surface-variant text-xs font-bold hover:text-on-surface">Units Sold</button>
+</div>
+</div>
+<div class="flex-grow relative flex items-end gap-3 px-2">
+<!-- Simulated High Density Chart Bars -->
+<div class="w-full flex items-end gap-1.5 h-full pt-4">
+<div class="bg-primary/20 hover:bg-primary/40 transition-colors rounded-t w-full" style="height: 40%"></div>
+<div class="bg-primary/20 hover:bg-primary/40 transition-colors rounded-t w-full" style="height: 55%"></div>
+<div class="bg-primary/20 hover:bg-primary/40 transition-colors rounded-t w-full" style="height: 45%"></div>
+<div class="bg-primary/20 hover:bg-primary/40 transition-colors rounded-t w-full" style="height: 70%"></div>
+<div class="bg-primary hover:bg-primary/80 transition-colors rounded-t w-full shadow-[0_0_15px_rgba(207,188,255,0.4)]" style="height: 95%"></div>
+<div class="bg-primary/20 hover:bg-primary/40 transition-colors rounded-t w-full" style="height: 60%"></div>
+<div class="bg-primary/20 hover:bg-primary/40 transition-colors rounded-t w-full" style="height: 50%"></div>
+<div class="bg-primary/20 hover:bg-primary/40 transition-colors rounded-t w-full" style="height: 65%"></div>
+<div class="bg-secondary/40 hover:bg-secondary/60 transition-colors rounded-t w-full" style="height: 80%"></div>
+<div class="bg-secondary/40 hover:bg-secondary/60 transition-colors rounded-t w-full" style="height: 75%"></div>
+<div class="bg-secondary/40 hover:bg-secondary/60 transition-colors rounded-t w-full" style="height: 85%"></div>
+<div class="bg-secondary/40 hover:bg-secondary/60 transition-colors rounded-t w-full" style="height: 60%"></div>
+</div>
+<!-- Axis Labels -->
+<div class="absolute bottom-[-24px] w-full flex justify-between text-[10px] text-outline uppercase font-medium">
+<span>01 Oct</span>
+<span>08 Oct</span>
+<span>15 Oct</span>
+<span>22 Oct</span>
+<span>31 Oct</span>
+</div>
+</div>
+</div>
+<!-- Traffic Sources -->
+<div class="col-span-12 lg:col-span-4 glass-card p-6 rounded-xl flex flex-col">
+<h4 class="font-headline text-lg font-bold text-on-surface mb-6">Traffic Sources</h4>
+<div class="space-y-6 flex-grow">
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="text-on-surface">Direct Supply Chain</span>
+<span class="text-on-surface-variant">42%</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 42%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="text-on-surface">Marketplace App</span>
+<span class="text-on-surface-variant">28%</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-secondary" style="width: 28%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="text-on-surface">Partner Referrals</span>
+<span class="text-on-surface-variant">15%</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-tertiary" style="width: 15%"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm">
+<span class="text-on-surface">Search Engine</span>
+<span class="text-on-surface-variant">10%</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-outline" style="width: 10%"></div>
+</div>
+</div>
+</div>
+<div class="mt-8 p-4 rounded-lg bg-primary-container/10 border border-primary/20 flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">insights</span>
+<p class="text-xs text-on-primary-container">Marketplace traffic is up 14% this month due to "Premium Fresh" campaign.</p>
+</div>
+</div>
+<!-- Customer Demographics: Regional Heatmap -->
+<div class="col-span-12 lg:col-span-5 glass-card p-6 rounded-xl">
+<h4 class="font-headline text-lg font-bold text-on-surface mb-6">Regional Distribution</h4>
+<div class="relative rounded-lg overflow-hidden h-64 mb-6">
+<img class="w-full h-full object-cover opacity-60 grayscale brightness-50" data-alt="A stylized digital global map visualization with glowing data nodes and heat map overlays in deep purple and cyan. The background is a dark obsidian slate, mimicking an enterprise logistics command center display. Glowing lines connect key hubs in Europe, Asia, and North America, representing high-volume trade routes and buyer density for premium aquaculture products." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHrP9GWB93jTz9098zlc3e1aqPWY2ZTSSKdJwYyfxafR2ZOulCIx82CgGTvqbUCeLOul-FV0LgjXeQkEonwSNHJK76mY5Qbk1rN6J3vuFj7cIAOXhIeFztmJEqGgRj7eQ60SuVUgfrLqYL39YXoBm09jAzoiygw5bBng7bSATWx8AnUPD-Vj7DeYCYnr3dla9kUkYmWCakw-5gXLcd2IH3XkRsUJoDbGIp2MglEMlexDCDBvWeJWlpeK3qG0htLy9H6QCXdcGUwJM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent"></div>
+<!-- Pulse Indicators -->
+<div class="absolute top-1/4 left-1/3 flex">
+<div class="w-3 h-3 bg-primary rounded-full animate-ping absolute"></div>
+<div class="w-3 h-3 bg-primary rounded-full relative"></div>
+</div>
+<div class="absolute top-1/2 right-1/4 flex">
+<div class="w-3 h-3 bg-secondary rounded-full animate-ping absolute"></div>
+<div class="w-3 h-3 bg-secondary rounded-full relative"></div>
+</div>
+</div>
+<ul class="space-y-4">
+<li class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="text-sm font-medium">Asia Pacific</span>
+</div>
+<span class="text-sm font-bold">$48,200.00</span>
+</li>
+<li class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-sm font-medium">Europe</span>
+</div>
+<span class="text-sm font-bold">$35,150.00</span>
+</li>
+<li class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="text-sm font-medium">North America</span>
+</div>
+<span class="text-sm font-bold">$22,840.00</span>
+</li>
+</ul>
+</div>
+<!-- Top Seller List: Enterprise Density -->
+<div class="col-span-12 lg:col-span-7 glass-card p-6 rounded-xl">
+<div class="flex justify-between items-center mb-6">
+<h4 class="font-headline text-lg font-bold text-on-surface">Product Rankings</h4>
+<span class="text-xs text-primary cursor-pointer hover:underline">Export Full Report</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-[10px] text-outline uppercase tracking-wider border-b border-outline-variant/30">
+<th class="pb-3 font-bold">Product</th>
+<th class="pb-3 font-bold">Category</th>
+<th class="pb-3 font-bold text-right">Units</th>
+<th class="pb-3 font-bold text-right">Revenue</th>
+<th class="pb-3 font-bold text-center">Status</th>
+</tr>
+</thead>
+<tbody class="text-sm">
+<tr class="border-b border-outline-variant/10 hover:bg-surface-variant/20 transition-colors group">
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Macro close-up of a high-grade bluefin tuna fillet showing pristine marbling and deep red color. The lighting is crisp and professional, like a high-end food product catalog. The image is clean, sharp, and symbolizes luxury seafood exports for global markets." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOR1h59rpxZnipDfVsECbd66vfEAgizW9wDll5_v3kfA5nb3NxNn_NOr1Wp6TUHKvaO93LR9bbegfPHujJQk9TEv7s9NRpCPdLGv7aYdGskd8go3wz59ufoMBMTRo2D9Bz9LE1fAS6cwre6sw413cTIs_X60CPmpoGpl1THf7RHzQ_czp7g3UsjEzsBwVBJid04C48CPh7_9DrqutpTRxnWIrgx3c0Y3fCMqGjbCKy3avMXwE_Wwwi2-6-ZrM3bKzCL_3KBb5E40w"/>
+</div>
+<div>
+<p class="font-bold text-on-surface">Atlantic Bluefin Grade AAA</p>
+<p class="text-[10px] font-mono text-outline">SKU-24901</p>
+</div>
+</div>
+</td>
+<td class="py-4 text-on-surface-variant">Seafood Premium</td>
+<td class="py-4 text-right font-medium">842</td>
+<td class="py-4 text-right font-bold">$24,900.00</td>
+<td class="py-4 text-center">
+<span class="px-2 py-1 rounded bg-primary/10 text-primary text-[10px] font-bold">HOT</span>
+</td>
+</tr>
+<tr class="border-b border-outline-variant/10 hover:bg-surface-variant/20 transition-colors group">
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Artisanal glass jar of premium sea salt harvested from deep ocean currents. The jar has a minimal technical label. Soft cinematic lighting highlights the crystal textures against a dark, moody background, emphasizing the organic and high-purity nature of the product." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYEPFwgq1a_DIPvPXEp1vskL_Lv36zFL8FuBMd80xzKNG7ev4hat8LsWDh_zyyTpBZN3OzcemclZz6cZeupJ48pN80HYqdhRVpJJeTSXujL0RGyHHHbW_g67fz8NYSoHvAA4DJDPUVyQNdFjN3oEy1QalkUBZYI3tT-JqF3KaLzpJZaH5s9qgxlXgSXm69xG22csU0QP-pHofhgLz0pIt2M4cceBj3oMIWharAwjNMpXWDe4Uo_sJqdV94AY__BbHAZpoWyThqt_s"/>
+</div>
+<div>
+<p class="font-bold text-on-surface">Deep Sea Crystal Salt</p>
+<p class="text-[10px] font-mono text-outline">SKU-18233</p>
+</div>
+</div>
+</td>
+<td class="py-4 text-on-surface-variant">Condiments</td>
+<td class="py-4 text-right font-medium">1,205</td>
+<td class="py-4 text-right font-bold">$18,450.00</td>
+<td class="py-4 text-center">
+<span class="px-2 py-1 rounded bg-secondary/10 text-secondary text-[10px] font-bold">STABLE</span>
+</td>
+</tr>
+<tr class="border-b border-outline-variant/10 hover:bg-surface-variant/20 transition-colors group">
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-container-highest overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A top-down view of chilled king crab legs presented on a bed of crushed ice. Subtle blue and purple lighting effects mimic a cold-chain storage environment. The image communicates freshness, high value, and strict logistics standards in the seafood trade." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXyIaMmRLReVCgC2l3MTOTcq0sr7SAbBh0JPWQAmKrUcSd30JIoAMyoP1xqZaHeDeMmNzQxOPTMW2EJ-AGr0PoL-SMNiQ6JgMRZW-uCaONxQ91DyGlUJD_17eGRzMuoX8MsRtAi4IwR_wwEzMousNNIVDM_aBb0tlDPMJ4vGlCi8b8DzhRCHiEgdVgsuercgj1fccyc15rlzGZ59PoWo80zr1O6xvi3bPP-mIRI3vyYZFc7KLv15F_Y3vMeycCmGTUApKdyCurUVM"/>
+</div>
+<div>
+<p class="font-bold text-on-surface">King Crab Harvest Cluster</p>
+<p class="text-[10px] font-mono text-outline">SKU-99402</p>
+</div>
+</div>
+</td>
+<td class="py-4 text-on-surface-variant">Shellfish</td>
+<td class="py-4 text-right font-medium">312</td>
+<td class="py-4 text-right font-bold">$12,100.00</td>
+<td class="py-4 text-center">
+<span class="px-2 py-1 rounded bg-error/10 text-error text-[10px] font-bold">LOW STOCK</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-low border-t border-outline-variant/20 flex justify-around py-3 z-50">
+<div class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[10px] font-medium">Stats</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-[10px] font-medium">Inventory</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-[10px] font-medium">Payouts</span>
+</div>
+<div class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-medium">Settings</span>
+</div>
+</nav>
+</body></html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-lowest": "#0f0d13",
+            "surface-container-highest": "#36343a",
+            "tertiary-fixed-dim": "#e7c365",
+            "on-secondary": "#342b4b",
+            "primary": "#cfbcff",
+            "primary-fixed": "#e9ddff",
+            "on-surface-variant": "#cbc4d2",
+            "on-secondary-container": "#bfb2da",
+            "error-container": "#93000a",
+            "on-primary-container": "#e0d2ff",
+            "on-error-container": "#ffdad6",
+            "on-background": "#e6e0e9",
+            "on-tertiary-container": "#503d00",
+            "surface-container-high": "#2b292f",
+            "surface-bright": "#3b383e",
+            "secondary-fixed-dim": "#cdc0e9",
+            "outline": "#948e9c",
+            "secondary-container": "#4d4465",
+            "on-primary-fixed-variant": "#4f378a",
+            "surface-variant": "#36343a",
+            "on-secondary-fixed-variant": "#4b4263",
+            "on-secondary-fixed": "#1f1635",
+            "error": "#ffb4ab",
+            "on-primary": "#381e72",
+            "on-surface": "#e6e0e9",
+            "primary-fixed-dim": "#cfbcff",
+            "on-tertiary-fixed": "#241a00",
+            "surface-container": "#211f24",
+            "secondary-fixed": "#e9ddff",
+            "surface-dim": "#141218",
+            "surface-container-low": "#1d1b20",
+            "inverse-primary": "#6750a4",
+            "tertiary": "#e7c365",
+            "primary-container": "#6750a4",
+            "inverse-on-surface": "#322f35",
+            "outline-variant": "#494551",
+            "secondary": "#cdc0e9",
+            "inverse-surface": "#e6e0e9",
+            "on-tertiary": "#3e2e00",
+            "background": "#141218",
+            "on-error": "#690005",
+            "surface": "#141218",
+            "surface-tint": "#cfbcff",
+            "on-primary-fixed": "#22005d",
+            "tertiary-fixed": "#ffdf93",
+            "on-tertiary-fixed-variant": "#594400",
+            "tertiary-container": "#c9a74d"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Inter"],
+            "display": ["Inter"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface/80 backdrop-blur-xl dark:bg-surface/80 sticky top-0 w-full z-50 border-b border-outline-variant/30 shadow-sm flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform text-on-surface">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="relative">
+<img alt="Ocean Explorer" class="w-10 h-10 rounded-full object-cover border border-primary/30" data-alt="A professional headshot of a middle-aged male oceanographer with a friendly expression, set against a blurred background of a modern marine logistics office. The lighting is crisp and cinematic, using cool blue and purple tones to match the deep ocean tech aesthetic. High-quality digital photography with sharp focus on the facial features and soft bokeh." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUqxOgzeNSuHAZ5u1x9ypLhvl7Ekgkj1PJQ6sHiVvAH-CLpX0wuzyDAlh3KkzFwWbqyA0v54m0QkvbeE2geeHuoUmc8jKhdwe7alu9dH0RRzMkD23Mx6VvBovUXiylb9cuCTImea_ygyS5sdL7wLMAWYguASui8B2s6FQCYY0NB78HQd_F8qRM89nKfgJJ39unr8SWDvsu1ONtNRwFgQ4qdn4fb7U-Mt8GohaZdazXZzAFoluGsShMVK0rBo_eca0I7E8vJa3QVTg"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-tertiary rounded-full border-2 border-surface"></span>
+</div>
+<div>
+<h1 class="font-headline text-[18px] font-bold leading-tight text-primary">Ocean Explorer</h1>
+<p class="text-[12px] font-medium text-on-surface-variant flex items-center gap-1">
+          Online <span class="text-[8px] text-tertiary">●</span>
+</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="active:scale-95 transition-transform text-primary">
+<span class="material-symbols-outlined">call</span>
+</button>
+<button class="active:scale-95 transition-transform text-primary">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</header>
+<!-- Chat Content -->
+<main class="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-hide pb-24">
+<!-- Date Divider -->
+<div class="flex justify-center">
+<span class="px-3 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-[11px] font-medium tracking-wider uppercase">Today</span>
+</div>
+<!-- Incoming Message -->
+<div class="flex gap-3 max-w-[85%]">
+<div class="flex-shrink-0 mt-auto">
+<img alt="Seller" class="w-8 h-8 rounded-full border border-outline-variant/30" data-alt="A small, circular profile avatar of a professional male seller in a dark blue uniform. The background is a clean, technical environment with soft purple lighting accents. The image is clear and optimized for a high-end enterprise mobile application." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBadm009BVyllv7mnN8uwHPN0kYQEmc7gLYbbGKYm-Mgk3C4I077C0mNvFyFsbNXVXAOMV5vXQFHoY7j58o-DV6CXeXsjGkrdptHZql3ItZ9EHngH4WiwbGasNC6uxSJ-L93_rl7yGqrUJyFyzItJPRK8Lgydn3FyUWKpEwV3bGr7VDOgOO9052t3BzoZWS5Hyud3hqU6cjQ5r34OMpC5BjtQXWbwc-a4eOgzZyg-lpEFQnzvX07VBBtSTWD1phzARlYCViwxMBPY8"/>
+</div>
+<div class="space-y-1">
+<div class="bg-surface-container-high text-on-surface rounded-2xl rounded-bl-none p-4 shadow-sm border border-outline-variant/10">
+<p class="text-body-sm">The Grade AAA Bluefin Tuna catch just arrived at the terminal. Are you still interested in the 50kg batch for the weekend shipment?</p>
+</div>
+<span class="text-[10px] text-on-surface-variant ml-1">09:42 AM</span>
+</div>
+</div>
+<!-- Product Card in Chat -->
+<div class="flex gap-3 max-w-[85%]">
+<div class="flex-shrink-0 w-8"></div>
+<div class="bg-surface-container rounded-2xl p-3 border border-primary/20 space-y-3">
+<img alt="Fresh Catch" class="w-full aspect-video object-cover rounded-xl" data-alt="A high-resolution, close-up photograph of a fresh, glistening bluefin tuna steak resting on a bed of crushed ice. The scene is illuminated with professional studio lighting that highlights the deep red marbling of the fish. Cold mist rises from the ice, creating a tech-forward logistics atmosphere. The color palette is dominated by deep blues, silvers, and vibrant reds." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL_RUEVk0iYhVq5mCu9X0X0PTwCuPGoJhlDo8gufJ_imuwv1mG1b-HW4bzYXuNvhdrsHBO1nxV1EmNWuQ6kA6K1_uuEuiS1v4qMKsy3_cyt2GUg55WBSdussg7YEd2bd-3uo6MUaG7mHkWsihd2GDnjcExlwScJkmF2jKi5ohvtV1ZpQZoJRa020GP1j5qZasS25t3qM9rAcYGUEu5tbquUW-KJQmg-K3pyrywf0DxmYIGDAIuvDI4EVbmlc2w7qhtHgGSvvC50uI"/>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-semibold text-primary">Bluefin Tuna (Premium)</h4>
+<p class="text-[12px] text-on-surface-variant italic">Batch ID: #ABY-9921</p>
+</div>
+<span class="bg-tertiary/10 text-tertiary px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tighter border border-tertiary/20">AAA Grade</span>
+</div>
+</div>
+</div>
+<!-- Outgoing Message -->
+<div class="flex flex-row-reverse gap-3 max-w-[85%] ml-auto">
+<div class="space-y-1 items-end flex flex-col">
+<div class="bg-primary-container text-on-primary-container rounded-2xl rounded-br-none p-4 shadow-md border border-primary/20">
+<p class="text-body-sm">Yes, definitely. Can you confirm the cold-chain temperature logs for the last 12 hours? I need to ensure the -60°C integrity before placing the order.</p>
+</div>
+<div class="flex items-center gap-1 mr-1">
+<span class="text-[10px] text-on-surface-variant">09:45 AM</span>
+<span class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings: 'FILL' 1;">done_all</span>
+</div>
+</div>
+</div>
+<!-- Incoming Message -->
+<div class="flex gap-3 max-w-[85%]">
+<div class="flex-shrink-0 mt-auto">
+<img alt="Seller" class="w-8 h-8 rounded-full border border-outline-variant/30" data-alt="Profile icon of a logistics expert, focused and professional. The image uses high-end studio lighting with dark slate and neon purple highlights, reflecting a premium enterprise software aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNxNE_o1r65lX8DtY9LagU3gtrJraL9MmDPDVQIYuiKInJRGxdxof0zfpbKYrZ0xwXIMkIKLqkZcsztRN_oo_OpdTX96WKLfCYAIWOY4ONsUzFEn3QC8x10xTcy_v9dEXs1pg33UXQtR3UccXtl19IhZQLDH73pQjW8Fj4NY1HQX-jcMcbZtmhRAc_Df1YMQNs7o50YXsJimq5SLOiNMqqEhgacR8g9FOjYwT1aDm5lctHYWyDvPRjRBO9q9AJoKupUUJXa5zUs7k"/>
+</div>
+<div class="space-y-1">
+<div class="bg-surface-container-high text-on-surface rounded-2xl rounded-bl-none p-4 shadow-sm border border-outline-variant/10">
+<p class="text-body-sm">Absolutely. Attaching the real-time sensor data from the transport pod now. You'll see we've maintained a steady -62°C throughout transit.</p>
+</div>
+<span class="text-[10px] text-on-surface-variant ml-1">09:46 AM</span>
+</div>
+</div>
+<!-- File Attachment (Incoming) -->
+<div class="flex gap-3 max-w-[85%]">
+<div class="flex-shrink-0 w-8"></div>
+<div class="flex items-center gap-3 bg-surface-container-highest/50 p-3 rounded-2xl border border-outline-variant/30 w-full">
+<div class="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">monitoring</span>
+</div>
+<div class="flex-1 overflow-hidden">
+<p class="text-sm font-medium text-on-surface truncate">ColdChain_Log_ABY9921.pdf</p>
+<p class="text-[11px] text-on-surface-variant uppercase tracking-wider">1.2 MB • PDF</p>
+</div>
+<button class="p-2 hover:bg-surface-variant rounded-full transition-colors">
+<span class="material-symbols-outlined text-on-surface">download</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Input Area -->
+<div class="fixed bottom-0 w-full p-4 bg-surface-container-low/90 backdrop-blur-md border-t border-outline-variant/20 z-50">
+<div class="max-w-4xl mx-auto flex items-center gap-3">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors active:scale-90">
+<span class="material-symbols-outlined">add_circle</span>
+</button>
+<div class="flex-1 bg-surface-container-highest rounded-full px-4 py-2.5 flex items-center gap-2 border border-outline-variant/20 focus-within:border-primary transition-all">
+<input class="bg-transparent border-none focus:ring-0 text-on-surface placeholder-on-surface-variant/50 w-full text-sm" placeholder="Type a message..." type="text"/>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">attach_file</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">mood</span>
+</button>
+</div>
+<button class="w-10 h-10 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">send</span>
+</button>
+</div>
+<div class="h-safe-area-inset-bottom"></div>
+</div>
+</body></html>

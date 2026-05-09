@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Subscription Management | Abyssal Enterprise</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#0f0d13",
+                    "secondary": "#cdc0e9",
+                    "tertiary-fixed-dim": "#e7c365",
+                    "inverse-primary": "#6750a4",
+                    "error": "#ffb4ab",
+                    "on-tertiary-fixed-variant": "#594400",
+                    "surface-tint": "#cfbcff",
+                    "on-surface-variant": "#cbc4d2",
+                    "surface-container-highest": "#36343a",
+                    "primary": "#cfbcff",
+                    "on-error-container": "#ffdad6",
+                    "surface": "#141218",
+                    "outline": "#948e9c",
+                    "surface-bright": "#3b383e",
+                    "surface-dim": "#141218",
+                    "on-secondary-fixed-variant": "#4b4263",
+                    "surface-container-low": "#1d1b20",
+                    "on-secondary-fixed": "#1f1635",
+                    "on-primary-container": "#e0d2ff",
+                    "inverse-surface": "#e6e0e9",
+                    "secondary-fixed-dim": "#cdc0e9",
+                    "tertiary-container": "#c9a74d",
+                    "on-primary-fixed-variant": "#4f378a",
+                    "on-secondary": "#342b4b",
+                    "on-secondary-container": "#bfb2da",
+                    "on-surface": "#e6e0e9",
+                    "on-tertiary-container": "#503d00",
+                    "tertiary": "#e7c365",
+                    "surface-variant": "#36343a",
+                    "secondary-container": "#4d4465",
+                    "on-tertiary": "#3e2e00",
+                    "outline-variant": "#494551",
+                    "primary-fixed-dim": "#cfbcff",
+                    "on-primary": "#381e72",
+                    "error-container": "#93000a",
+                    "primary-fixed": "#e9ddff",
+                    "inverse-on-surface": "#322f35",
+                    "primary-container": "#6750a4",
+                    "tertiary-fixed": "#ffdf93",
+                    "surface-container-high": "#2b292f",
+                    "on-background": "#e6e0e9",
+                    "on-primary-fixed": "#22005d",
+                    "on-error": "#690005",
+                    "background": "#141218",
+                    "on-tertiary-fixed": "#241a00",
+                    "surface-container": "#211f24",
+                    "secondary-fixed": "#e9ddff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "display": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(33, 31, 36, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen">
+<!-- NavigationDrawer (Shared Component) -->
+<aside class="fixed left-0 top-0 h-full w-[260px] z-50 bg-surface-container dark:bg-surface-container-lowest border-r border-white/5 shadow-2xl flex flex-col py-4 gap-2 hidden md:flex">
+<div class="text-lg font-bold text-primary px-4 py-6 tracking-tight">Abyssal Enterprise</div>
+<div class="px-4 mb-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container/30 flex items-center justify-center overflow-hidden border border-primary/20">
+<img alt="Admin Avatar" class="w-full h-full object-cover" data-alt="A professional close-up portrait of a tech executive with a confident expression, set against a dark, moody background with subtle purple neon highlights. The lighting is dramatic and cinematic, reflecting a high-end corporate tech environment. The image is crisp with deep shadows and vibrant cool-toned highlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrEtEGGGu55jaRlBGXGB9b6Q7yeRV75DRmxpMe2ApSiMerah1baWC2c9pCDszDYFtvsLswalB_wwNFGECcjPioYn4kJ26c3GlNlZOA1voku4Q1L8lMCxN_ydtAPCfM7TOAWUHUD7evlZnfadW11TuOmcnKoO1rGMgr-MSYCSie06CB2j5ciKAyl335Bwq-MALEovVZi7e6Yq9a3wbPzDjJdrZ-oJcCBnv0ZNgcbz1YINJ411LzFGC69aXVuLiWJtwdAKJZChQmcXI"/>
+</div>
+<div>
+<div class="font-body text-sm font-medium text-on-surface">Deep Sea Admin</div>
+<div class="text-[10px] text-on-surface-variant uppercase tracking-widest">Enterprise Tier</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200 font-body text-sm font-medium" href="#">
+<span class="material-symbols-outlined">dashboard</span> Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200 font-body text-sm font-medium" href="#">
+<span class="material-symbols-outlined">inventory_2</span> Inventory
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200 font-body text-sm font-medium" href="#">
+<span class="material-symbols-outlined">local_shipping</span> Logistics
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200 font-body text-sm font-medium" href="#">
+<span class="material-symbols-outlined">payments</span> Financials
+            </a>
+<!-- Active State: Sellers -->
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container/20 text-primary border-l-4 border-primary cursor-pointer transition-all duration-200 font-body text-sm font-medium" href="#">
+<span class="material-symbols-outlined">group</span> Sellers
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-on-surface hover:bg-surface-bright/10 cursor-pointer transition-all duration-200 font-body text-sm font-medium" href="#">
+<span class="material-symbols-outlined">settings</span> Settings
+            </a>
+</nav>
+<div class="mt-auto px-4 py-4 text-[10px] text-outline tracking-widest font-mono">v2.4.0</div>
+</aside>
+<!-- Main Content Area -->
+<main class="md:ml-[260px] min-h-screen flex flex-col">
+<!-- TopAppBar (Shared Component) -->
+<header class="sticky top-0 w-full z-40 bg-surface/80 dark:bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-sm">
+<div class="flex items-center justify-between px-6 h-16 w-full max-w-[1440px] mx-auto">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary cursor-pointer md:hidden">menu</span>
+<h1 class="font-headline text-[24px] font-bold leading-tight text-primary">Subscription Plans</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-bright transition-colors text-on-surface-variant active:scale-95 duration-200">
+<span class="material-symbols-outlined text-sm">search</span>
+<span class="text-sm font-medium">Search</span>
+</button>
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-6 md:p-10 max-w-[1440px] w-full mx-auto space-y-8 pb-24">
+<!-- Quick Stats Header -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-surface-container p-6 rounded-xl border border-white/5 relative overflow-hidden group">
+<div class="flex justify-between items-start relative z-10">
+<div>
+<p class="text-on-surface-variant text-sm font-medium mb-1">Basic Tier</p>
+<h3 class="text-3xl font-bold text-on-surface font-mono">1,284</h3>
+</div>
+<div class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(205,192,233,0.8)] animate-pulse"></div>
+</div>
+<div class="mt-4 flex items-center gap-2 text-xs text-secondary">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+12% from last month</span>
+</div>
+<div class="absolute top-0 right-0 w-32 h-32 bg-secondary/5 blur-3xl rounded-full -mr-10 -mt-10"></div>
+</div>
+<div class="bg-surface-container p-6 rounded-xl border border-white/5 relative overflow-hidden group">
+<div class="flex justify-between items-start relative z-10">
+<div>
+<p class="text-on-surface-variant text-sm font-medium mb-1">Professional Tier</p>
+<h3 class="text-3xl font-bold text-on-surface font-mono">842</h3>
+</div>
+<div class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(207,188,255,0.8)] animate-pulse"></div>
+</div>
+<div class="mt-4 flex items-center gap-2 text-xs text-primary">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+5.4% from last month</span>
+</div>
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl rounded-full -mr-10 -mt-10"></div>
+</div>
+<div class="bg-surface-container p-6 rounded-xl border border-white/5 relative overflow-hidden group">
+<div class="flex justify-between items-start relative z-10">
+<div>
+<p class="text-on-surface-variant text-sm font-medium mb-1">Enterprise Tier</p>
+<h3 class="text-3xl font-bold text-on-surface font-mono">156</h3>
+</div>
+<div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_rgba(231,195,101,0.8)] animate-pulse"></div>
+</div>
+<div class="mt-4 flex items-center gap-2 text-xs text-tertiary">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>+2.1% from last month</span>
+</div>
+<div class="absolute top-0 right-0 w-32 h-32 bg-tertiary/5 blur-3xl rounded-full -mr-10 -mt-10"></div>
+</div>
+</div>
+<!-- Bento Grid Section: Comparison & Editor -->
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<!-- Tier Comparison Grid (Bento Large) -->
+<div class="xl:col-span-2 space-y-6">
+<div class="flex items-center justify-between">
+<h2 class="text-xl font-semibold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">analytics</span> Tier Matrix Comparison
+                        </h2>
+<button class="text-sm font-medium text-primary hover:underline">Export Report</button>
+</div>
+<div class="overflow-x-auto glass-panel rounded-2xl">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-white/10 bg-surface-container-highest/30">
+<th class="p-6 text-sm font-semibold text-on-surface">Feature Parameter</th>
+<th class="p-6 text-sm font-semibold text-secondary">Basic</th>
+<th class="p-6 text-sm font-semibold text-primary">Professional</th>
+<th class="p-6 text-sm font-semibold text-tertiary">Enterprise</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<tr>
+<td class="p-6 text-sm text-on-surface-variant">Commission Rate</td>
+<td class="p-6 text-sm font-mono">15.0%</td>
+<td class="p-6 text-sm font-mono text-primary font-bold">8.5%</td>
+<td class="p-6 text-sm font-mono text-tertiary font-bold">4.0%</td>
+</tr>
+<tr>
+<td class="p-6 text-sm text-on-surface-variant">Listing Limit</td>
+<td class="p-6 text-sm">50 SKU</td>
+<td class="p-6 text-sm">500 SKU</td>
+<td class="p-6 text-sm">Unlimited</td>
+</tr>
+<tr>
+<td class="p-6 text-sm text-on-surface-variant">Analytics Access</td>
+<td class="p-6 text-sm">Standard</td>
+<td class="p-6 text-sm">Advanced</td>
+<td class="p-6 text-sm">Real-time API</td>
+</tr>
+<tr>
+<td class="p-6 text-sm text-on-surface-variant">Cold-Chain Tracking</td>
+<td class="p-6 text-sm"><span class="material-symbols-outlined text-error text-sm">close</span></td>
+<td class="p-6 text-sm"><span class="material-symbols-outlined text-primary text-sm">check_circle</span></td>
+<td class="p-6 text-sm"><span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span></td>
+</tr>
+<tr>
+<td class="p-6 text-sm text-on-surface-variant">Support SLA</td>
+<td class="p-6 text-sm">48h Email</td>
+<td class="p-6 text-sm text-primary">12h Priority</td>
+<td class="p-6 text-sm text-tertiary">1h Dedicated</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Visual Tech Card -->
+<div class="relative h-[200px] rounded-2xl overflow-hidden group border border-white/10">
+<img alt="Cold Chain Tech" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A macro photograph of high-tech circuit boards glowing with bioluminescent purple and blue light, submerged in a crystalline liquid that looks like deep seawater. The aesthetic is extremely technical and futuristic, representing advanced logistics sensors. Soft bokeh creates a sense of depth, and the overall color palette is dominated by deep blacks and vibrant neons." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXsT_fowFXDuzC5pc6oojxpVv-qQ5N63GJePDNl4SrD3tpeILkwwJJg8r7SQTBYkZvYxo6Etu4MIkl0MDcD0_LAs6x9r91dCC3P7ls9DrQ5QDn-Xig-H5s7SZv-KMftn3234nCx39oEd1mnAdCW6bLXxEZTlKq66X9UEm7sIwlRVgwLEmqfuHWDUPd5561C4EEW5573X8XXPt7eepw4hBGd-EEn7lkCm_Pqr-utS-RuAzn33hqRESw9784pvjvBCj-BjOlpZe1JuA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest to-transparent opacity-80"></div>
+<div class="absolute bottom-0 left-0 p-6">
+<h3 class="text-xl font-bold text-white mb-1">Cold-Chain Optimization Engine</h3>
+<p class="text-on-surface-variant text-sm">Real-time telemetry integration available for Enterprise partners.</p>
+</div>
+</div>
+</div>
+<!-- Plan Editor (Bento Side) -->
+<div class="space-y-6">
+<div class="flex items-center justify-between">
+<h2 class="text-xl font-semibold text-on-surface">Plan Editor</h2>
+</div>
+<div class="bg-surface-container-high p-8 rounded-2xl border border-white/10 space-y-6">
+<div>
+<label class="block text-[12px] font-medium text-on-surface-variant uppercase tracking-widest mb-2">Target Tier</label>
+<select class="w-full bg-surface-container-lowest border-outline-variant rounded-xl text-on-surface focus:ring-primary focus:border-primary px-4 py-3 appearance-none">
+<option>Professional Plan</option>
+<option>Basic Plan</option>
+<option>Enterprise Plan</option>
+</select>
+</div>
+<div>
+<label class="block text-[12px] font-medium text-on-surface-variant uppercase tracking-widest mb-2">Commission Rate (%)</label>
+<input class="w-full bg-surface-container-lowest border-outline-variant rounded-xl text-on-surface font-mono focus:ring-primary focus:border-primary px-4 py-3" type="text" value="8.5"/>
+</div>
+<div>
+<label class="block text-[12px] font-medium text-on-surface-variant uppercase tracking-widest mb-2">SKU Listing Cap</label>
+<input class="w-full bg-surface-container-lowest border-outline-variant rounded-xl text-on-surface font-mono focus:ring-primary focus:border-primary px-4 py-3" type="number" value="500"/>
+</div>
+<div class="space-y-3">
+<label class="block text-[12px] font-medium text-on-surface-variant uppercase tracking-widest">Enhanced Features</label>
+<div class="flex items-center justify-between p-3 bg-surface-container rounded-lg border border-white/5">
+<span class="text-sm">Priority Search Visibility</span>
+<div class="w-10 h-5 bg-primary rounded-full relative flex items-center px-1">
+<div class="w-3.5 h-3.5 bg-on-primary rounded-full ml-auto"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container rounded-lg border border-white/5">
+<span class="text-sm">Advanced Cold-Chain Dashboard</span>
+<div class="w-10 h-5 bg-primary rounded-full relative flex items-center px-1">
+<div class="w-3.5 h-3.5 bg-on-primary rounded-full ml-auto"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container rounded-lg border border-white/5">
+<span class="text-sm">Direct API Webhooks</span>
+<div class="w-10 h-5 bg-outline-variant rounded-full relative flex items-center px-1">
+<div class="w-3.5 h-3.5 bg-surface-container-low rounded-full"></div>
+</div>
+</div>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary font-bold rounded-xl active:scale-[0.98] transition-transform shadow-lg shadow-primary/10">
+                            Apply Changes to Tier
+                        </button>
+<p class="text-center text-[10px] text-outline italic">Changes will propagate to active subscribers at the next billing cycle.</p>
+</div>
+<!-- Small Meta Info Card -->
+<div class="bg-surface-container-low p-6 rounded-2xl border border-white/5">
+<div class="flex items-center gap-4 mb-4">
+<div class="w-10 h-10 rounded-lg bg-tertiary-container/20 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">security</span>
+</div>
+<div>
+<h4 class="text-sm font-semibold">Tier Integrity Lock</h4>
+<p class="text-xs text-on-surface-variant">Plan editing requires Tier-3 auth level.</p>
+</div>
+</div>
+<div class="w-full h-1 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="w-3/4 h-full bg-tertiary"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- BottomNavBar (Shared Component - Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-4 pt-2 bg-surface-container-high/90 dark:bg-surface-container-high/90 backdrop-blur-lg border-t border-white/10 shadow-[0_-10px_30px_rgba(0,0,0,0.3)] md:hidden">
+<div class="flex flex-col items-center justify-center text-on-surface-variant transition-transform scale-90 active:scale-100">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label text-[12px] font-medium tracking-wider">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant transition-transform scale-90 active:scale-100">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-label text-[12px] font-medium tracking-wider">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant transition-transform scale-90 active:scale-100">
+<span class="material-symbols-outlined">ac_unit</span>
+<span class="font-label text-[12px] font-medium tracking-wider">Cold Chain</span>
+</div>
+<!-- Active State: Profile (Simulated for this context as Admin/User focus) -->
+<div class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 transition-transform scale-90 active:scale-100">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-label text-[12px] font-medium tracking-wider">Profile</span>
+</div>
+</nav>
+</main>
+</body></html>

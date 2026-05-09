@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Abyssal Enterprise - Search Results</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#0f0d13",
+                        "surface-container-highest": "#36343a",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "on-secondary": "#342b4b",
+                        "primary": "#cfbcff",
+                        "primary-fixed": "#e9ddff",
+                        "on-surface-variant": "#cbc4d2",
+                        "on-secondary-container": "#bfb2da",
+                        "error-container": "#93000a",
+                        "on-primary-container": "#e0d2ff",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#e6e0e9",
+                        "on-tertiary-container": "#503d00",
+                        "surface-container-high": "#2b292f",
+                        "surface-bright": "#3b383e",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "outline": "#948e9c",
+                        "secondary-container": "#4d4465",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "surface-variant": "#36343a",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "on-secondary-fixed": "#1f1635",
+                        "error": "#ffb4ab",
+                        "on-primary": "#381e72",
+                        "on-surface": "#e6e0e9",
+                        "primary-fixed-dim": "#cfbcff",
+                        "on-tertiary-fixed": "#241a00",
+                        "surface-container": "#211f24",
+                        "secondary-fixed": "#e9ddff",
+                        "surface-dim": "#141218",
+                        "surface-container-low": "#1d1b20",
+                        "inverse-primary": "#6750a4",
+                        "tertiary": "#e7c365",
+                        "primary-container": "#6750a4",
+                        "inverse-on-surface": "#322f35",
+                        "outline-variant": "#494551",
+                        "secondary": "#cdc0e9",
+                        "inverse-surface": "#e6e0e9",
+                        "on-tertiary": "#3e2e00",
+                        "background": "#141218",
+                        "on-error": "#690005",
+                        "surface": "#141218",
+                        "surface-tint": "#cfbcff",
+                        "on-primary-fixed": "#22005d",
+                        "tertiary-fixed": "#ffdf93",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "tertiary-container": "#c9a74d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #141218;
+            color: #e6e0e9;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex min-h-screen">
+<!-- Navigation Drawer (Sidebar) -->
+<aside class="hidden md:flex flex-col h-screen sticky top-0 w-[280px] bg-surface-container border-r border-outline-variant/30 shadow-2xl z-40">
+<div class="flex flex-col h-full py-8">
+<!-- Header/Profile -->
+<div class="px-6 mb-8 flex flex-col gap-2">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary/30">
+<img alt="Avatar" data-alt="A professional studio portrait of a modern maritime logistics executive with a friendly yet authoritative expression. The background is a clean, dark slate blue with subtle technical overlays. High-end lighting creates sharp highlights on the subject, embodying a tech-forward corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfqaoFXaKuXj4D5j24JxsGf7PBejmwqt-wrsexVZYU29lvG-tkpwboD55MdwLv7AfxDQe4cbqJ8aLOLa6OFolqHZrzMr0Bs9gcr0obsz5j74YYPEiEOm46cJV1BoSatERLIIlw1EGNPInAL1i6uu3OWF162q76JjhWIfuJj3PYvFgo-yiAfqK3e93YohB1hDfVwsCe3HBW1BSrwcfGTjbfXVGpuB8KVg07cBeRRpLcPsjJ27U-zeUA5VsJ7pT_0gLSRAMTon6wr9Q"/>
+</div>
+<div>
+<h2 class="text-xl font-bold text-primary">Ocean Explorer</h2>
+<p class="text-on-surface-variant text-sm">Gold Member • 1,240 pts</p>
+</div>
+</div>
+<!-- Nav Links -->
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-4 text-on-surface-variant px-6 py-3 hover:bg-surface-variant/50 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined">category</span>
+<span class="font-medium">Categories</span>
+</a>
+<a class="flex items-center gap-4 text-primary font-bold bg-primary/10 border-l-4 border-primary px-6 py-3 transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">storefront</span>
+<span class="font-medium">Market</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-6 py-3 hover:bg-surface-variant/50 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined">verified</span>
+<span class="font-medium">Freshness Guide</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-6 py-3 hover:bg-surface-variant/50 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined">eco</span>
+<span class="font-medium">Sustainability</span>
+</a>
+<a class="flex items-center gap-4 text-on-surface-variant px-6 py-3 hover:bg-surface-variant/50 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined">military_tech</span>
+<span class="font-medium">Loyalty Program</span>
+</a>
+</nav>
+<div class="mt-auto px-6">
+<a class="flex items-center gap-4 text-on-surface-variant py-3 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-medium">Support</span>
+</a>
+</div>
+</div>
+</aside>
+<div class="flex-1 flex flex-col min-w-0">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm">
+<div class="flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-2xl">waves</span>
+<h1 class="text-page-title font-bold tracking-tight text-primary">Abyssal</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors active:scale-95">search</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors active:scale-95">shopping_cart</button>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 w-full max-w-[1440px] mx-auto px-6 py-8 pb-32">
+<!-- Search & Filter Controls -->
+<section class="flex flex-col gap-6 mb-10">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="relative w-full max-w-2xl">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full h-12 pl-12 pr-4 bg-surface-container border border-outline-variant/30 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent text-on-surface placeholder-on-surface-variant/50 outline-none transition-all" type="text" value="Salmon"/>
+</div>
+<button class="flex items-center justify-center gap-2 px-6 h-12 bg-surface-container-high border border-outline-variant/30 rounded-xl text-primary font-semibold hover:bg-primary/10 transition-all active:scale-95">
+<span class="material-symbols-outlined">bookmark</span>
+                        Save Search
+                    </button>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<h2 class="text-2xl font-bold text-on-surface">Found <span class="text-primary">24</span> results for 'Salmon'</h2>
+<div class="flex items-center gap-2 text-sm text-on-surface-variant cursor-pointer hover:text-primary transition-colors">
+<span>Sort: Relevance</span>
+<span class="material-symbols-outlined text-[18px]">expand_more</span>
+</div>
+</div>
+<!-- Active Filter Chips -->
+<div class="flex flex-wrap gap-2">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-primary-container/20 border border-primary/30 rounded-full text-primary-fixed text-sm font-medium">
+<span>Freshness: Grade AAA</span>
+<span class="material-symbols-outlined text-[16px] cursor-pointer hover:text-on-primary-container">close</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1.5 bg-primary-container/20 border border-primary/30 rounded-full text-primary-fixed text-sm font-medium">
+<span>Origin: Atlantic</span>
+<span class="material-symbols-outlined text-[16px] cursor-pointer hover:text-on-primary-container">close</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1.5 bg-primary-container/20 border border-primary/30 rounded-full text-primary-fixed text-sm font-medium">
+<span>Available Now</span>
+<span class="material-symbols-outlined text-[16px] cursor-pointer hover:text-on-primary-container">close</span>
+</div>
+<button class="text-sm text-outline hover:text-primary underline underline-offset-4 ml-2 transition-colors">Clear All</button>
+</div>
+</div>
+</section>
+<!-- Results Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+<!-- Card 1 -->
+<div class="glass-card rounded-xl overflow-hidden flex flex-col group transition-transform hover:-translate-y-1">
+<div class="h-48 overflow-hidden relative">
+<img alt="Salmon Fillet" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A pristine, macro close-up of a fresh Atlantic Salmon fillet resting on a bed of crushed ice. The lighting is crisp and cool, highlighting the vibrant orange hue and the pearlescent fat marbling of the fish. Subtle blue and purple glints from the surrounding ice mimic a tech-focused, cold-chain environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNS50G6LRHH9SHOaNpH5qixlPkwGNAyja5w0FLPNsMNgROxQFU03TGIaGQd5EI_Snx_l9IKOt-44J5aG2ZtgExefOF-AQObPYSrIMmlcNHGW5y1t_GpuhAO8IiqBQmuNAkfrhwse7K1KkKHRrY9XAL53hoKJo2uRMn7gAiXaVYFQd00rlNLbmvkfhJkp87qHW5iRzxtmH4vMzqITLiJ7i74tAlgnbvWdaVDPuy86_wf3qa7X0XR_qNk1WD8Bwh9wq1If7ctNQUB-I"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-surface-container-lowest/80 backdrop-blur-md text-tertiary-fixed-dim text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">AAA Grade</span>
+<span class="bg-primary/20 backdrop-blur-md text-primary text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">Sustainable</span>
+</div>
+<div class="absolute bottom-4 right-4 bg-surface-container-lowest/80 backdrop-blur-md p-2 rounded-lg flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary shadow-[0_0_8px_rgba(231,195,101,0.6)] animate-pulse"></div>
+<span class="text-[10px] font-mono text-on-surface">34°F Stable</span>
+</div>
+</div>
+<div class="p-5 flex flex-col gap-4">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="text-lg font-semibold text-on-surface group-hover:text-primary transition-colors">Atlantic King Salmon</h3>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-error transition-colors">favorite</span>
+</div>
+<p class="text-sm text-on-surface-variant mt-1">Origin: Norway • SKU: NS-4290</p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<div>
+<span class="text-2xl font-bold text-on-surface">$24.50</span>
+<span class="text-sm text-on-surface-variant ml-1">/ kg</span>
+</div>
+<button class="bg-primary hover:bg-primary-fixed-dim text-on-primary p-2 rounded-xl transition-all active:scale-90">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-card rounded-xl overflow-hidden flex flex-col group transition-transform hover:-translate-y-1">
+<div class="h-48 overflow-hidden relative">
+<img alt="Sockeye Salmon" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Vibrant red Sockeye salmon steaks arranged neatly on a dark, wet slate surface. The lighting is dramatic and moody, focusing on the deep saturated color of the fish. Mist or light condensation adds to the fresh, cold-chain logistical feel, with deep purple shadows grounding the composition." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmS8LDXVZWsGA8p0GAfqcYo5mCEnzHgI1ZGMu6HuUphqxBT8Y66yNKJRQVeNzRSC7nu4aEvoeM1Y_dS9r-VO0474mQhT-6J9rP0EOOBVfIQLBXQ4AjIqp3n2D_j5W6xhakW9qr07qt3gmnnQ530xv2fRHJQBdFvyy9VgnRbqHWcwFGGPn_0DyWrJkE542y64plgWtB8LIQK6tAaKBQD7mAT-DRASrbLLCW0nvPYV9bgk6V-AwMhawhV3Wa36629ZQ3gjW1ajSUWso"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-surface-container-lowest/80 backdrop-blur-md text-tertiary-fixed-dim text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">Premium</span>
+</div>
+<div class="absolute bottom-4 right-4 bg-surface-container-lowest/80 backdrop-blur-md p-2 rounded-lg flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-error shadow-[0_0_8px_rgba(255,180,171,0.6)] animate-pulse"></div>
+<span class="text-[10px] font-mono text-on-surface">38°F Warning</span>
+</div>
+</div>
+<div class="p-5 flex flex-col gap-4">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="text-lg font-semibold text-on-surface group-hover:text-primary transition-colors">Wild Alaskan Sockeye</h3>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-error transition-colors">favorite</span>
+</div>
+<p class="text-sm text-on-surface-variant mt-1">Origin: Bristol Bay • SKU: AS-8812</p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<div>
+<span class="text-2xl font-bold text-on-surface">$31.00</span>
+<span class="text-sm text-on-surface-variant ml-1">/ kg</span>
+</div>
+<button class="bg-primary hover:bg-primary-fixed-dim text-on-primary p-2 rounded-xl transition-all active:scale-90">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-card rounded-xl overflow-hidden flex flex-col group transition-transform hover:-translate-y-1">
+<div class="h-48 overflow-hidden relative">
+<img alt="Smoked Salmon" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A gourmet presentation of thinly sliced smoked salmon on a dark ceramic platter. The scene is illuminated by warm, localized lighting that highlights the glossy texture and delicate oils of the fish. The background is a blurred, high-end restaurant interior with cool oceanic accents, suggesting a premium, ready-to-eat product." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBP-ZZ7jJp6OuJw3EifZAakFgTo-csoYQWNef0YAKNbYgP5lgEBssH3esZ_fZ-4-g3mnqexrO8MvW4-CohozzgCBqNUXyaDiBzAcD0zth3fjhrplzg7ILvv0lfgzWFoHDxS_0m549s8sgU58OLVqviu8lX5MHy2wR61123vw54cqrYxuYHbDLTXX-RO-rYDFq1eHcycf_uwfB6rErt5-xGb1ATDhJO0xJs37KURRfuYzG1dxAuYKIROuQ6WBNHaVHdbPBlM6hQ3xqU"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-surface-container-lowest/80 backdrop-blur-md text-tertiary-fixed-dim text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">Artisan</span>
+</div>
+<div class="absolute bottom-4 right-4 bg-surface-container-lowest/80 backdrop-blur-md p-2 rounded-lg flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(207,188,255,0.6)] animate-pulse"></div>
+<span class="text-[10px] font-mono text-on-surface">32°F Optimal</span>
+</div>
+</div>
+<div class="p-5 flex flex-col gap-4">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="text-lg font-semibold text-on-surface group-hover:text-primary transition-colors">Cold-Smoked Scottish Salmon</h3>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-error transition-colors">favorite</span>
+</div>
+<p class="text-sm text-on-surface-variant mt-1">Origin: Highlands • SKU: SK-1123</p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<div>
+<span class="text-2xl font-bold text-on-surface">$18.75</span>
+<span class="text-sm text-on-surface-variant ml-1">/ unit</span>
+</div>
+<button class="bg-primary hover:bg-primary-fixed-dim text-on-primary p-2 rounded-xl transition-all active:scale-90">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 4 (Repeat pattern for density) -->
+<div class="glass-card rounded-xl overflow-hidden flex flex-col group transition-transform hover:-translate-y-1">
+<div class="h-48 overflow-hidden relative">
+<img alt="Whole Salmon" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A whole, silver-skinned salmon positioned diagonally across a bed of ice and dark grey sea salt. The lighting mimics deep sea conditions with soft gradients of deep blue and purple. The focus is on the scales' metallic sheen and the crystal-clear eye of the fish, signifying peak freshness and high-end logistical precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuFd-lGvAvVDl1QunB3k6NlqhqCp2ux-rJmU0kmTUmTTDTngGcg-09fR6ZPkg5FOTa1mPb8-LeLUHGIaEdQcvJGwQHaqDN61A_7DnfLSGjVdl5MZWykubgWlmOFZiG5bdrGXPDTDnxKEVQhHQsAfo7UAnJCrzapJSwI1pceCdMayl3SqQK_ldomP0QptzTZLfzEvlRe8aFeLvyYh1H0J0nqdqx3gDs0VLtlUnHFnHoFleHmmacTsuA55-CbDJ39iM7qHBEb_5qMUM"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<span class="bg-surface-container-lowest/80 backdrop-blur-md text-tertiary-fixed-dim text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">Wholesale</span>
+</div>
+</div>
+<div class="p-5 flex flex-col gap-4">
+<div>
+<div class="flex justify-between items-start">
+<h3 class="text-lg font-semibold text-on-surface group-hover:text-primary transition-colors">Whole Tasmanian Salmon</h3>
+<span class="material-symbols-outlined text-outline cursor-pointer hover:text-error transition-colors">favorite</span>
+</div>
+<p class="text-sm text-on-surface-variant mt-1">Origin: Tasmania • SKU: TS-0051</p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<div>
+<span class="text-2xl font-bold text-on-surface">$145.00</span>
+<span class="text-sm text-on-surface-variant ml-1">/ case</span>
+</div>
+<button class="bg-primary hover:bg-primary-fixed-dim text-on-primary p-2 rounded-xl transition-all active:scale-90">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="flex justify-center mt-12 gap-2">
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container text-on-surface hover:bg-primary/20 transition-all">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-primary text-on-primary font-bold">1</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container text-on-surface hover:bg-primary/20 transition-all">2</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container text-on-surface hover:bg-primary/20 transition-all">3</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-lg bg-surface-container text-on-surface hover:bg-primary/20 transition-all">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container-low/90 backdrop-blur-md border-t border-outline-variant/20 shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
+<div class="flex justify-around items-center w-full px-2 py-3 pb-safe">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container/20 text-primary rounded-xl px-4 py-2 transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">storefront</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Market</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label text-[10px] font-medium tracking-wider uppercase mt-1">Profile</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

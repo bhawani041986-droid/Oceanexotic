@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"primary-fixed-dim": "#cfbcff", "outline-variant": "#494551", "tertiary-fixed": "#ffdf93", "on-error-container": "#ffdad6", background: "#141218", "on-primary-container": "#e0d2ff", "surface-container-low": "#1d1b20", "secondary-container": "#4d4465", "surface-container-lowest": "#0f0d13", error: "#ffb4ab", "surface-container": "#211f24", "on-background": "#e6e0e9", "on-surface": "#e6e0e9", "on-secondary": "#342b4b", "primary-container": "#6750a4", "error-container": "#93000a", "tertiary-container": "#c9a74d", "secondary-fixed-dim": "#cdc0e9", outline: "#948e9c", "on-surface-variant": "#cbc4d2", "on-secondary-fixed-variant": "#4b4263", "tertiary-fixed-dim": "#e7c365", "surface-tint": "#cfbcff", "primary-fixed": "#e9ddff", "on-tertiary-container": "#503d00", "on-secondary-fixed": "#1f1635", "surface-dim": "#141218", tertiary: "#e7c365", "on-secondary-container": "#bfb2da", "on-primary-fixed-variant": "#4f378a", "on-tertiary": "#3e2e00", "surface-container-high": "#2b292f", "inverse-surface": "#e6e0e9", "surface-container-highest": "#36343a", "secondary-fixed": "#e9ddff", "on-tertiary-fixed-variant": "#594400", "on-tertiary-fixed": "#241a00", "surface-variant": "#36343a", "surface-bright": "#3b383e", "on-error": "#690005", "inverse-primary": "#6750a4", surface: "#141218", secondary: "#cdc0e9", primary: "#cfbcff", "on-primary-fixed": "#22005d", "on-primary": "#381e72", "inverse-on-surface": "#322f35"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"5xl": "48px", "2xl": "24px", xl: "20px", sm: "8px", lg: "16px", "3xl": "32px", "4xl": "40px", md: "12px", xs: "4px"}, fontFamily: {"hero-mobile": ["Inter"], "body-sm": ["Inter"], hero: ["Inter"], "body-lg": ["Inter"], "section-title": ["Inter"], "card-title": ["Inter"], "page-title": ["Inter"], label: ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"]}, fontSize: {"hero-mobile": ["28px", {lineHeight: "1.2", fontWeight: "700"}], "body-sm": ["14px", {lineHeight: "1.5", fontWeight: "400"}], hero: ["36px", {lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700"}], "body-lg": ["16px", {lineHeight: "1.5", fontWeight: "400"}], "section-title": ["24px", {lineHeight: "1.3", fontWeight: "600"}], "card-title": ["18px", {lineHeight: "1.4", fontWeight: "600"}], "page-title": ["30px", {lineHeight: "1.2", fontWeight: "700"}], label: ["12px", {lineHeight: "1", letterSpacing: "0.05em", fontWeight: "500"}]}}}};</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body {
+            background-color: #0F172A;
+            color: #F8FAFC;
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .sidebar-active {
+            background: rgba(124, 58, 237, 0.1);
+            border-left: 4px solid #7C3AED;
+            color: #cfbcff;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-lg text-on-surface">
+<!-- NavigationDrawer Shell -->
+<aside class="flex flex-col h-screen fixed z-40 w-[260px] bg-surface-container border-r border-outline-variant shadow-sm">
+<div class="px-6 py-8">
+<h1 class="font-page-title text-page-title font-bold text-primary">Oceanic Logistics</h1>
+<p class="font-label text-label text-on-surface-variant mt-1">Enterprise Tier</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label text-label">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-label text-label">Shipments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label text-label">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container/10 text-primary border-l-4 border-primary rounded-r-lg" href="#">
+<span class="material-symbols-outlined">verified</span>
+<span class="font-label text-label">Quality Control</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">ac_unit</span>
+<span class="font-label text-label">Cold Chain</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label text-label">Settings</span>
+</a>
+</nav>
+<div class="p-6 border-t border-outline-variant flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">person</span>
+</div>
+<div class="flex-1 overflow-hidden">
+<p class="font-label text-label font-bold truncate text-on-surface">Admin Console</p>
+<p class="text-[10px] text-on-surface-variant truncate">V1.0.4</p>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-[260px] min-h-screen">
+<!-- TopAppBar Shell -->
+<header class="flex justify-between items-center px-8 py-6 w-full sticky top-0 bg-surface/80 backdrop-blur-xl z-30 border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">menu</span>
+<h2 class="font-page-title text-page-title font-bold text-on-surface">Seller Management</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center bg-surface-container-highest px-4 py-2 rounded-full border border-outline-variant min-w-[320px]">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full text-on-surface placeholder:text-on-surface-variant ml-2" placeholder="Search sellers, regions, or IDs..." type="text"/>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined text-on-surface cursor-pointer">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-primary/30">
+<img alt="User Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUpyrcvNALwYVwSST6rw9Owhb60EFRHvkqWPNUmetiiSpsHppiuDGDMyg7KDrYiS1AZ2md5P7-xaNf4FNZUg4OmnHu-IbevskQheoGW17KCdTpo-GOp27wOizlQ3UI1MXoatmLSM5jVulj2j5RhmAANoaAbs36YjenZv70LFC-z3KFO9D9JUymub6IWeISMt-o7kqRa5cOL4KKLzz-QEob0yHvqIIKxl0Zbj-oiDzyrl6Fil3-SzW3jVdKnhsDQ18atF9ViRGKmdQ"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-8 max-w-[1440px] mx-auto space-y-8">
+<!-- Dashboard Stats Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="glass-panel p-6 rounded-xl flex flex-col gap-2">
+<span class="text-on-surface-variant font-label text-label">TOTAL SELLERS</span>
+<div class="flex items-end gap-2">
+<span class="text-3xl font-bold text-on-surface">1,284</span>
+<span class="text-emerald-400 text-xs mb-1 font-medium">+12%</span>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-xl flex flex-col gap-2">
+<span class="text-on-surface-variant font-label text-label">VERIFIED PARTNERS</span>
+<div class="flex items-end gap-2">
+<span class="text-3xl font-bold text-on-surface">942</span>
+<span class="text-primary text-xs mb-1 font-medium">Top Tier</span>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-xl flex flex-col gap-2">
+<span class="text-on-surface-variant font-label text-label">PENDING APPROVAL</span>
+<div class="flex items-end gap-2">
+<span class="text-3xl font-bold text-on-surface">36</span>
+<span class="text-tertiary text-xs mb-1 font-medium">Priority</span>
+</div>
+</div>
+<div class="glass-panel p-6 rounded-xl flex flex-col gap-2">
+<span class="text-on-surface-variant font-label text-label">AVERAGE RATING</span>
+<div class="flex items-end gap-2">
+<span class="text-3xl font-bold text-on-surface">4.8</span>
+<div class="flex mb-1.5">
+<span class="material-symbols-outlined text-[14px] text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary">star_half</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Filter Section -->
+<div class="flex flex-wrap items-center justify-between gap-4">
+<div class="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0">
+<button class="px-5 py-2 rounded-full bg-primary text-on-primary font-label text-label font-bold">All Sellers</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-highest border border-outline-variant text-on-surface-variant hover:text-on-surface transition-colors font-label text-label">Verified</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-highest border border-outline-variant text-on-surface-variant hover:text-on-surface transition-colors font-label text-label">Pending</button>
+<button class="px-5 py-2 rounded-full bg-surface-container-highest border border-outline-variant text-on-surface-variant hover:text-on-surface transition-colors font-label text-label">Suspended</button>
+<div class="h-6 w-px bg-outline-variant mx-2"></div>
+<button class="flex items-center gap-2 px-5 py-2 rounded-full bg-surface-container-highest border border-outline-variant text-on-surface-variant hover:text-on-surface transition-colors font-label text-label">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+                        More Filters
+                    </button>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 bg-primary px-6 py-2.5 rounded-lg text-on-primary font-bold transition-all active:scale-95 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-lg">add</span>
+                        Onboard Seller
+                    </button>
+</div>
+</div>
+<!-- Data Table Section -->
+<div class="glass-panel rounded-2xl overflow-hidden shadow-2xl">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-highest/50 border-b border-outline-variant">
+<th class="px-6 py-5 font-label text-label text-on-surface-variant uppercase tracking-wider">Seller Information</th>
+<th class="px-6 py-5 font-label text-label text-on-surface-variant uppercase tracking-wider">Region / Hub</th>
+<th class="px-6 py-5 font-label text-label text-on-surface-variant uppercase tracking-wider">Inventory Volume</th>
+<th class="px-6 py-5 font-label text-label text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="px-6 py-5 font-label text-label text-on-surface-variant uppercase tracking-wider">Last Sync</th>
+<th class="px-6 py-5"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-primary-container/5 transition-colors cursor-pointer group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl overflow-hidden relative">
+<img alt="Arctic Seas Logo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-j9J6lNPgz1Z1y9GN8SU8qhnxEzWPDmqD_RcKo50bVilmtBlGGp2LxNQRSh61oBTcmLFs9gsDEFI9xtjR6Vp2t6_2GdRueC93dV-sZ41FiJx7gTpN5ZBp1WTOIsFP7beo0t7XBz3ajLcjboMSfoEIVeGqTIrSF8-hVd3eWlZXhlRKgI1aewKhFnYsF7d7o0MXBORWW0z0m1Brr4k7vt2LsjD9mAi5NBCYZtdNgMHDIdYpyOw0mv2yahISVOsBSWmS5BwkImvLvmo"/>
+</div>
+<div>
+<div class="font-bold text-on-surface">Arctic Seas Ltd.</div>
+<div class="text-sm text-on-surface-variant">ID: SL-2024-001</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-on-surface-variant">North Atlantic / Reykjavik</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="flex-1 h-1.5 w-24 bg-outline-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-[85%]"></div>
+</div>
+<span class="font-label text-label">12,400kg</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Verified</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+<span class="text-sm text-on-surface-variant">2m ago</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 rounded-full hover:bg-surface-variant text-on-surface-variant group-hover:text-on-surface transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-primary-container/5 transition-colors cursor-pointer group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl overflow-hidden relative">
+<img alt="Pacific Deep Logo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBFtKNtaMU0Ll1Y5YQz-MvTLjMG9s0oGwzrED_OmF7dHTovzREVAbhbhrSdVGqjZ-lBJdpXcWOthsKxwtOJyQNYAb6_1plZ_et4MNDiBbD9REsz1zK6L2salIicDAlwrzhvW854zZOCltYeX4i_3Bo0N4Rwb4oy5GEGk6MJmd8NPiqgr-z36q7NkDh3rxepyTqno0m6MCOLouT6k5LCi96ffTQBu9s3rKmAhPKPJ5bVBKf9HC1sAGcnXBOE_XoxKYIsYRd2Nr6eTqY"/>
+</div>
+<div>
+<div class="font-bold text-on-surface">Pacific Deep Co.</div>
+<div class="text-sm text-on-surface-variant">ID: SL-2024-045</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-on-surface-variant">Western Pacific / Tokyo</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="flex-1 h-1.5 w-24 bg-outline-variant rounded-full overflow-hidden">
+<div class="h-full bg-tertiary rounded-full w-[40%]"></div>
+</div>
+<span class="font-label text-label">3,120kg</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-tertiary/10 text-tertiary border border-tertiary/20">Pending</span>
+</td>
+<td class="px-6 py-5 text-on-surface-variant text-sm">
+                                4h ago
+                            </td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 rounded-full hover:bg-surface-variant text-on-surface-variant group-hover:text-on-surface transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-primary-container/5 transition-colors cursor-pointer group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl overflow-hidden relative grayscale">
+<img alt="Coral Coast Logo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZL0gOqtHVLyiQCwNRctRae4tRBazLWN2aq-f9tvB9r8BLVXrkrMY2HCIy-PV8BWPiTzfXH8JTDUav8RKIoOmxrsrS0E4msTgAvmpQOpTu4ttrSTGzKgOSz-VQHHN9zUBz4qGNlA1PwJUfqzSy70lThR7GadNDCwukvw7tYyyonmCow6WbpCHorvOQc25uGv05SSIX3BT0fDDbX9axCc7aUweuVlkvUgc6WV-Zu5Yufhqal75HybHmUgVsjLeoQ448hS0P44nD6OY"/>
+</div>
+<div>
+<div class="font-bold text-on-surface">Coral Coast Imports</div>
+<div class="text-sm text-on-surface-variant">ID: SL-2023-892</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-on-surface-variant">Indian Ocean / Colombo</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3 opacity-50">
+<div class="flex-1 h-1.5 w-24 bg-outline-variant rounded-full overflow-hidden">
+<div class="h-full bg-error rounded-full w-[10%]"></div>
+</div>
+<span class="font-label text-label">0kg</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-error/10 text-error border border-error/20">Suspended</span>
+</td>
+<td class="px-6 py-5 text-on-surface-variant text-sm">
+                                12d ago
+                            </td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 rounded-full hover:bg-surface-variant text-on-surface-variant group-hover:text-on-surface transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-primary-container/5 transition-colors cursor-pointer group border-b-0">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-xl overflow-hidden relative">
+<img alt="Norse Harvest Logo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCy6AFP7eXDBCVIQ9U5f9JVdVRG0TkgH0TX3ki6Xyw6nDx2HBVlBwtDJ-oE-0InNo5lXCPvllouFd8xepRT9fFY-4Cf0HtXxIn5QwGu2PxRcukRd8lzMPTEAn-PzmpzIufgLIimIaMl38I52gtNYbaMk5-AsD1gpS0xyNkqnrt18zyhvHqkOZ4Q-VysPktTBOQg9EJczthGyjOAfiwlClXj3zlRrDtpGH8otb1hxF1uZSKUCuCZrU5BsbVT3hJlALUkKKA0vEtVfD8"/>
+</div>
+<div>
+<div class="font-bold text-on-surface">Norse Harvest AS</div>
+<div class="text-sm text-on-surface-variant">ID: SL-2024-112</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-on-surface-variant">Norwegian Sea / Bergen</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="flex-1 h-1.5 w-24 bg-outline-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-[95%]"></div>
+</div>
+<span class="font-label text-label">24,900kg</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Verified</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+<span class="text-sm text-on-surface-variant">Just now</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 rounded-full hover:bg-surface-variant text-on-surface-variant group-hover:text-on-surface transition-all">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="px-6 py-4 bg-surface-container-high/50 flex items-center justify-between border-t border-outline-variant">
+<span class="text-sm text-on-surface-variant">Showing 1 to 4 of 1,284 entries</span>
+<div class="flex gap-2">
+<button class="px-4 py-2 rounded-lg bg-surface-variant border border-outline-variant text-on-surface-variant hover:text-on-surface transition-colors">Previous</button>
+<button class="px-4 py-2 rounded-lg bg-primary text-on-primary font-bold">1</button>
+<button class="px-4 py-2 rounded-lg bg-surface-variant border border-outline-variant text-on-surface-variant hover:text-on-surface transition-colors">2</button>
+<button class="px-4 py-2 rounded-lg bg-surface-variant border border-outline-variant text-on-surface-variant hover:text-on-surface transition-colors">3</button>
+<button class="px-4 py-2 rounded-lg bg-surface-variant border border-outline-variant text-on-surface-variant hover:text-on-surface transition-colors">Next</button>
+</div>
+</div>
+</div>
+<!-- Contextual Insight Card -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="glass-panel p-8 rounded-2xl relative overflow-hidden group">
+<div class="absolute -right-16 -top-16 w-64 h-64 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all duration-700"></div>
+<div class="relative z-10 flex flex-col h-full justify-between">
+<div>
+<h3 class="text-xl font-bold text-on-surface mb-2">Onboarding Health</h3>
+<p class="text-on-surface-variant text-sm max-w-sm">Current seller approval wait time is 4.2 hours. This is 15% faster than the previous quarter average.</p>
+</div>
+<div class="mt-8 flex items-center gap-4">
+<div class="flex-1">
+<div class="flex justify-between text-xs font-bold mb-2">
+<span class="text-primary">APPROVAL VELOCITY</span>
+<span class="text-on-surface">88% Target</span>
+</div>
+<div class="h-2 bg-outline-variant rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-fixed-dim w-[88%]"></div>
+</div>
+</div>
+<button class="bg-surface-container-highest px-4 py-2 rounded-lg text-sm border border-outline-variant hover:bg-surface-variant transition-colors">View Logs</button>
+</div>
+</div>
+</div>
+<div class="glass-panel p-8 rounded-2xl relative overflow-hidden group">
+<div class="absolute -right-16 -top-16 w-64 h-64 bg-tertiary/10 rounded-full blur-3xl group-hover:bg-tertiary/20 transition-all duration-700"></div>
+<div class="relative z-10 flex flex-col h-full justify-between">
+<div>
+<h3 class="text-xl font-bold text-on-surface mb-2">Compliance Alert</h3>
+<p class="text-on-surface-variant text-sm max-w-sm">3 sellers in the Indian Ocean region have expired cold-chain certifications. Action required for export compliance.</p>
+</div>
+<div class="mt-8 flex items-center gap-2">
+<button class="bg-error px-4 py-2 rounded-lg text-on-error text-sm font-bold shadow-lg shadow-error/20">Review Certificates</button>
+<button class="bg-transparent px-4 py-2 rounded-lg text-sm text-on-surface-variant hover:text-on-surface transition-colors">Ignore for now</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="mt-8 px-8 py-10 border-t border-outline-variant text-center">
+<p class="text-sm text-on-surface-variant">© 2024 Oceanic Logistics. Global Seafood Supply Chain &amp; Quality Infrastructure.</p>
+</footer>
+</main>
+<!-- BottomNavBar (Hidden on desktop, shown on mobile) -->
+<nav class="md:hidden fixed bottom-0 w-full flex justify-around items-center py-3 px-4 z-50 bg-surface-container-high/90 backdrop-blur-md border-t border-outline-variant rounded-t-xl shadow-lg">
+<div class="flex flex-col items-center justify-center text-primary font-bold scale-110">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label text-label mt-1">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label text-label mt-1">Market</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label text-label mt-1">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label text-label mt-1">Profile</span>
+</div>
+</nav>
+</body></html>

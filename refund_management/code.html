@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Refund Management | Oceanic Logistics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #141218;
+            color: #e6e0e9;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .premium-gradient-border {
+            position: relative;
+        }
+        .premium-gradient-border::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(to bottom, rgba(124, 58, 237, 0.3), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+    </style>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"primary-fixed-dim": "#cfbcff", "outline-variant": "#494551", "tertiary-fixed": "#ffdf93", "on-error-container": "#ffdad6", background: "#141218", "on-primary-container": "#e0d2ff", "surface-container-low": "#1d1b20", "secondary-container": "#4d4465", "surface-container-lowest": "#0f0d13", error: "#ffb4ab", "surface-container": "#211f24", "on-background": "#e6e0e9", "on-surface": "#e6e0e9", "on-secondary": "#342b4b", "primary-container": "#6750a4", "error-container": "#93000a", "tertiary-container": "#c9a74d", "secondary-fixed-dim": "#cdc0e9", outline: "#948e9c", "on-surface-variant": "#cbc4d2", "on-secondary-fixed-variant": "#4b4263", "tertiary-fixed-dim": "#e7c365", "surface-tint": "#cfbcff", "primary-fixed": "#e9ddff", "on-tertiary-container": "#503d00", "on-secondary-fixed": "#1f1635", "surface-dim": "#141218", tertiary: "#e7c365", "on-secondary-container": "#bfb2da", "on-primary-fixed-variant": "#4f378a", "on-tertiary": "#3e2e00", "surface-container-high": "#2b292f", "inverse-surface": "#e6e0e9", "surface-container-highest": "#36343a", "secondary-fixed": "#e9ddff", "on-tertiary-fixed-variant": "#594400", "on-tertiary-fixed": "#241a00", "surface-variant": "#36343a", "surface-bright": "#3b383e", "on-error": "#690005", "inverse-primary": "#6750a4", surface: "#141218", secondary: "#cdc0e9", primary: "#cfbcff", "on-primary-fixed": "#22005d", "on-primary": "#381e72", "inverse-on-surface": "#322f35"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"5xl": "48px", "2xl": "24px", xl: "20px", sm: "8px", lg: "16px", "3xl": "32px", "4xl": "40px", md: "12px", xs: "4px"}, fontFamily: {"hero-mobile": ["Inter"], "body-sm": ["Inter"], hero: ["Inter"], "body-lg": ["Inter"], "section-title": ["Inter"], "card-title": ["Inter"], "page-title": ["Inter"], label: ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"]}, fontSize: {"hero-mobile": ["28px", {lineHeight: "1.2", fontWeight: "700"}], "body-sm": ["14px", {lineHeight: "1.5", fontWeight: "400"}], hero: ["36px", {lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700"}], "body-lg": ["16px", {lineHeight: "1.5", fontWeight: "400"}], "section-title": ["24px", {lineHeight: "1.3", fontWeight: "600"}], "card-title": ["18px", {lineHeight: "1.4", fontWeight: "600"}], "page-title": ["30px", {lineHeight: "1.2", fontWeight: "700"}], label: ["12px", {lineHeight: "1", letterSpacing: "0.05em", fontWeight: "500"}]}}}};</script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- Navigation Drawer (Desktop) -->
+<aside class="flex flex-col h-screen fixed z-40 w-[260px] bg-surface-container border-r border-outline-variant hidden md:flex">
+<div class="p-6">
+<h1 class="font-page-title text-page-title font-bold text-primary">Oceanic Logistics</h1>
+<p class="font-label text-label text-on-surface-variant mt-1">Enterprise Tier</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label text-label">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-label text-label">Shipments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label text-label">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">verified</span>
+<span class="font-label text-label">Quality Control</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">ac_unit</span>
+<span class="font-label text-label">Cold Chain</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container/10 text-primary border-l-4 border-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-label text-label">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-outline-variant">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div>
+<p class="font-label text-label font-bold">Admin Portal</p>
+<p class="text-[10px] text-on-surface-variant">V1.0.4</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="md:ml-[260px] flex-1 flex flex-col">
+<!-- Top App Bar -->
+<header class="flex justify-between items-center px-6 py-4 w-full z-30 sticky top-0 bg-surface/80 backdrop-blur-xl border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h2 class="font-page-title text-page-title text-primary">Refund Management</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="bg-surface-container-lowest border border-outline-variant rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary outline-none transition-all w-64" placeholder="Search Order ID..." type="text"/>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant cursor-pointer active:opacity-70">
+<img alt="User avatar" class="w-full h-full object-cover" data-alt="A professional portrait of a logistical fleet manager in a tech-focused dark mode environment. The avatar features a clean, minimalist design with subtle purple highlights on the clothing to match the corporate brand identity of Oceanic Logistics. The background is a soft, out-of-focus control room with digital blue displays." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-EyXglx0lRRVScLR3Xf_CyqiZhzxkWhbO5ApJ5zjy8EThHtZYDzLnOwxjSl5tk24_3P6zWsc_7v6pqZ6hEVm_HND6qG75n_-QO7ghgLYHYj_Ixo4FdsxaJYg1Lte4yzuPXdI1OLIsA3Ek3WKVv-YzMM62wxazOfgTvGJuiRH_Ab_Mgddfhx9Uj4c5WX2RcOKf4nuoZqEni70ZWmThbXaKkvPbXticQ07XveU4z25Xks9V7I6YqgIUrDSaSPk9kPmPK2gIn96dXOw"/>
+</div>
+</div>
+</header>
+<!-- Page Canvas -->
+<div class="p-6 max-w-[1440px] w-full mx-auto space-y-6">
+<!-- Bento Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="glass-card premium-gradient-border p-6 rounded-xl flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label text-label">PENDING REQUESTS</span>
+<span class="material-symbols-outlined text-primary">pending_actions</span>
+</div>
+<div class="mt-4">
+<h3 class="font-hero text-hero">24</h3>
+<p class="text-xs text-tertiary mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">trending_up</span>
+                            +12% from last week
+                        </p>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl flex flex-col justify-between border-outline-variant">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label text-label">TOTAL REFUND VALUE</span>
+<span class="material-symbols-outlined text-primary">payments</span>
+</div>
+<div class="mt-4">
+<h3 class="font-hero text-hero">$12,840.50</h3>
+<p class="text-xs text-on-surface-variant mt-1">Global Marketplace Tier</p>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl flex flex-col justify-between border-outline-variant">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-label text-label">AVG. PROCESSING TIME</span>
+<span class="material-symbols-outlined text-primary">timer</span>
+</div>
+<div class="mt-4">
+<h3 class="font-hero text-hero">4.2h</h3>
+<p class="text-xs text-emerald-400 mt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">check_circle</span>
+                            Within SLA limits
+                        </p>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl bg-primary-container/10 border-primary/20 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<span class="text-primary font-label text-label">SYSTEM HEALTH</span>
+<div class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+</div>
+</div>
+<div class="mt-4">
+<h3 class="font-card-title text-card-title text-on-primary-container">Cold-Chain Secure</h3>
+<p class="text-xs text-on-surface-variant mt-1">Real-time tracking active</p>
+</div>
+</div>
+</div>
+<!-- Main Table Section -->
+<div class="glass-card rounded-xl border border-outline-variant overflow-hidden">
+<div class="px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-outline-variant">
+<h3 class="font-section-title text-section-title">Active Refund Queue</h3>
+<div class="flex items-center gap-2">
+<button class="flex items-center gap-2 px-3 py-1.5 text-xs font-label bg-surface-container border border-outline-variant rounded-lg hover:bg-secondary-container/20 transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+                            Filter
+                        </button>
+<button class="flex items-center gap-2 px-3 py-1.5 text-xs font-label bg-primary text-on-primary rounded-lg hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm">download</span>
+                            Export Report
+                        </button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-high/50 text-on-surface-variant uppercase font-label text-[10px] tracking-widest border-b border-outline-variant">
+<th class="px-6 py-4 font-semibold">Order ID</th>
+<th class="px-6 py-4 font-semibold">Customer &amp; Reason</th>
+<th class="px-6 py-4 font-semibold">Status</th>
+<th class="px-6 py-4 font-semibold text-right">Total Amount</th>
+<th class="px-6 py-4 font-semibold text-center">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30">
+<!-- Row 1 -->
+<tr class="hover:bg-secondary-container/10 transition-colors group">
+<td class="px-6 py-5">
+<span class="font-label text-label font-bold text-primary">#ORD-8829-AQ</span>
+<p class="text-[10px] text-on-surface-variant mt-0.5">Oct 24, 2023</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg">Arctic Fin Exports</span>
+<span class="text-xs text-on-surface-variant italic">"Temperature variance detected during transit beyond 2°C threshold."</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20 uppercase">
+                                        Pending
+                                    </span>
+</td>
+<td class="px-6 py-5 text-right font-body-lg text-body-lg font-semibold">
+                                    $4,250.00
+                                </td>
+<td class="px-6 py-5">
+<div class="flex justify-center gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all">
+<span class="material-symbols-outlined text-lg">check</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-error-container/10 text-error hover:bg-error-container hover:text-white transition-all">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container border border-outline-variant text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-secondary-container/10 transition-colors group">
+<td class="px-6 py-5">
+<span class="font-label text-label font-bold text-primary">#ORD-9012-XL</span>
+<p class="text-[10px] text-on-surface-variant mt-0.5">Oct 23, 2023</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg">Blue Horizon Logistics</span>
+<span class="text-xs text-on-surface-variant italic">"Damaged container seal on arrival at Singapore Port."</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 uppercase">
+                                        Approved
+                                    </span>
+</td>
+<td class="px-6 py-5 text-right font-body-lg text-body-lg font-semibold">
+                                    $1,890.20
+                                </td>
+<td class="px-6 py-5">
+<div class="flex justify-center gap-2">
+<button class="px-3 py-1 bg-surface-container border border-outline-variant rounded-lg text-xs font-label opacity-50 cursor-not-allowed">Processed</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-secondary-container/10 transition-colors group">
+<td class="px-6 py-5">
+<span class="font-label text-label font-bold text-primary">#ORD-7761-CC</span>
+<p class="text-[10px] text-on-surface-variant mt-0.5">Oct 22, 2023</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg">Deep Sea Gourmet</span>
+<span class="text-xs text-on-surface-variant italic">"Mismatched SKU quantity - requested 500kg, received 420kg."</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-500 border border-amber-500/20 uppercase">
+                                        Pending
+                                    </span>
+</td>
+<td class="px-6 py-5 text-right font-body-lg text-body-lg font-semibold">
+                                    $6,700.00
+                                </td>
+<td class="px-6 py-5">
+<div class="flex justify-center gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all">
+<span class="material-symbols-outlined text-lg">check</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-error-container/10 text-error hover:bg-error-container hover:text-white transition-all">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-surface-container border border-outline-variant text-on-surface-variant hover:text-primary transition-all">
+<span class="material-symbols-outlined text-lg">visibility</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-secondary-container/10 transition-colors group">
+<td class="px-6 py-5">
+<span class="font-label text-label font-bold text-primary">#ORD-1022-ZY</span>
+<p class="text-[10px] text-on-surface-variant mt-0.5">Oct 20, 2023</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col">
+<span class="font-body-lg text-body-lg">Pacific Prime</span>
+<span class="text-xs text-on-surface-variant italic">"Incorrect labeling for premium grade salmon fillets."</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-error-container/10 text-error border border-error-container/20 uppercase">
+                                        Rejected
+                                    </span>
+</td>
+<td class="px-6 py-5 text-right font-body-lg text-body-lg font-semibold">
+                                    $420.00
+                                </td>
+<td class="px-6 py-5">
+<div class="flex justify-center gap-2">
+<button class="px-3 py-1 bg-surface-container border border-outline-variant rounded-lg text-xs font-label hover:text-primary transition-all">Review Appeal</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer -->
+<div class="px-6 py-4 flex justify-between items-center bg-surface-container-low/30 border-t border-outline-variant">
+<p class="text-[11px] text-on-surface-variant font-label">SHOWING 4 OF 24 REQUESTS</p>
+<div class="flex gap-1">
+<button class="p-1 rounded bg-surface-container-high border border-outline-variant text-on-surface-variant hover:bg-primary-container/20">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="px-3 py-1 rounded bg-primary text-on-primary text-xs font-bold">1</button>
+<button class="px-3 py-1 rounded bg-surface-container-high border border-outline-variant text-xs hover:bg-primary-container/20">2</button>
+<button class="px-3 py-1 rounded bg-surface-container-high border border-outline-variant text-xs hover:bg-primary-container/20">3</button>
+<button class="p-1 rounded bg-surface-container-high border border-outline-variant text-on-surface-variant hover:bg-primary-container/20">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Bottom Action Grid (Asymmetric) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="md:col-span-2 glass-card p-6 rounded-xl border-outline-variant">
+<h4 class="font-card-title text-card-title mb-4">Refund Distribution by Reason</h4>
+<div class="h-48 flex items-end justify-between gap-4 px-4 pb-4">
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="w-full bg-primary/20 rounded-t-lg relative" style="height: 65%;">
+<div class="absolute inset-0 bg-primary/40 blur-sm rounded-t-lg"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-label uppercase text-center">Temp Variance</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="w-full bg-tertiary/20 rounded-t-lg" style="height: 40%;"></div>
+<span class="text-[10px] text-on-surface-variant font-label uppercase text-center">Damaged Goods</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="w-full bg-primary/20 rounded-t-lg" style="height: 85%;"></div>
+<span class="text-[10px] text-on-surface-variant font-label uppercase text-center">Mismatched SKU</span>
+</div>
+<div class="flex flex-col items-center gap-2 flex-1">
+<div class="w-full bg-primary/20 rounded-t-lg" style="height: 25%;"></div>
+<span class="text-[10px] text-on-surface-variant font-label uppercase text-center">Delayed Docking</span>
+</div>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl border-outline-variant bg-[url('https://images.unsplash.com/photo-1551733938-22213d58d24b?auto=format&amp;fit=crop&amp;q=80&amp;w=800')] bg-cover bg-center relative overflow-hidden" data-alt="A macro close-up of crystal clear ice fragments with a deep blue underwater lighting effect. The lighting creates a sense of freezing technology and cold-chain precision, with subtle purple refractions dancing across the ice surfaces. This aesthetic represents the premium freshness focus of the logistics enterprise.">
+<div class="absolute inset-0 bg-surface-container-highest/80 backdrop-blur-sm"></div>
+<div class="relative z-10 flex flex-col h-full justify-between">
+<div>
+<h4 class="font-card-title text-card-title text-primary">Need Assistance?</h4>
+<p class="text-xs text-on-surface-variant mt-2">Connect with a senior dispute resolution specialist for complex high-value claims.</p>
+</div>
+<button class="mt-6 w-full py-3 bg-primary text-on-primary rounded-lg font-label text-label tracking-widest uppercase hover:opacity-90 active:scale-95 transition-all">
+                            Open Concierge
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile only) -->
+<nav class="fixed bottom-0 w-full flex justify-around items-center py-3 px-4 z-50 bg-surface-container-high/90 backdrop-blur-md border-t border-outline-variant rounded-t-xl md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label text-label mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label text-label mt-1">Market</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant hover:text-secondary" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-label text-label mt-1">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary font-bold scale-110" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label text-label mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

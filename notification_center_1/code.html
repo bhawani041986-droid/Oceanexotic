@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#0f0d13",
+                    "surface-container-highest": "#36343a",
+                    "tertiary-fixed-dim": "#e7c365",
+                    "on-secondary": "#342b4b",
+                    "primary": "#cfbcff",
+                    "primary-fixed": "#e9ddff",
+                    "on-surface-variant": "#cbc4d2",
+                    "on-secondary-container": "#bfb2da",
+                    "error-container": "#93000a",
+                    "on-primary-container": "#e0d2ff",
+                    "on-error-container": "#ffdad6",
+                    "on-background": "#e6e0e9",
+                    "on-tertiary-container": "#503d00",
+                    "surface-container-high": "#2b292f",
+                    "surface-bright": "#3b383e",
+                    "secondary-fixed-dim": "#cdc0e9",
+                    "outline": "#948e9c",
+                    "secondary-container": "#4d4465",
+                    "on-primary-fixed-variant": "#4f378a",
+                    "surface-variant": "#36343a",
+                    "on-secondary-fixed-variant": "#4b4263",
+                    "on-secondary-fixed": "#1f1635",
+                    "error": "#ffb4ab",
+                    "on-primary": "#381e72",
+                    "on-surface": "#e6e0e9",
+                    "primary-fixed-dim": "#cfbcff",
+                    "on-tertiary-fixed": "#241a00",
+                    "surface-container": "#211f24",
+                    "secondary-fixed": "#e9ddff",
+                    "surface-dim": "#141218",
+                    "surface-container-low": "#1d1b20",
+                    "inverse-primary": "#6750a4",
+                    "tertiary": "#e7c365",
+                    "primary-container": "#6750a4",
+                    "inverse-on-surface": "#322f35",
+                    "outline-variant": "#494551",
+                    "secondary": "#cdc0e9",
+                    "inverse-surface": "#e6e0e9",
+                    "on-tertiary": "#3e2e00",
+                    "background": "#141218",
+                    "on-error": "#690005",
+                    "surface": "#141218",
+                    "surface-tint": "#cfbcff",
+                    "on-primary-fixed": "#22005d",
+                    "tertiary-fixed": "#ffdf93",
+                    "on-tertiary-fixed-variant": "#594400",
+                    "tertiary-container": "#c9a74d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "display": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #141218;
+        }
+        .notification-card-gradient {
+            background: linear-gradient(180deg, rgba(207, 188, 255, 0.05) 0%, rgba(207, 188, 255, 0) 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-background min-h-screen pb-20">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 bg-surface/80 backdrop-blur-xl dark:bg-surface/80 border-b border-outline-variant/30 shadow-sm">
+<div class="flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="waves">waves</span>
+<h1 class="font-headline text-[18px] font-bold leading-tight text-page-title tracking-tight text-primary">Abyssal</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="active:scale-95 transition-transform text-on-surface-variant hover:text-primary transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button class="active:scale-95 transition-transform text-on-surface-variant hover:text-primary transition-colors duration-200 relative">
+<span class="material-symbols-outlined text-primary" data-icon="shopping_cart">shopping_cart</span>
+<span class="absolute -top-1 -right-1 bg-error text-on-error text-[10px] font-bold px-1.5 py-0.5 rounded-full">3</span>
+</button>
+</div>
+</div>
+</header>
+<main class="max-w-2xl mx-auto px-4 py-8">
+<!-- Header Section -->
+<div class="mb-8">
+<h2 class="font-headline text-3xl font-bold mb-2">Notification Center</h2>
+<p class="text-on-surface-variant text-body-sm">Stay updated with your cold-chain logistics and exclusive offers.</p>
+</div>
+<!-- Today Section -->
+<section class="mb-8">
+<div class="sticky top-[68px] z-40 bg-background/95 backdrop-blur-sm py-3 mb-4">
+<h3 class="font-headline text-sm font-semibold uppercase tracking-widest text-primary-fixed-dim">Today</h3>
+</div>
+<div class="space-y-4">
+<!-- Notification Item 1: Order Shipped -->
+<div class="group relative overflow-hidden bg-surface-container rounded-xl p-5 border border-outline-variant/30 notification-card-gradient hover:border-primary/40 transition-all duration-300">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-12 h-12 rounded-lg bg-primary-container/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary" data-icon="local_shipping">local_shipping</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-semibold text-on-surface">Order Shipped</h4>
+<span class="text-[11px] font-medium text-on-surface-variant uppercase tracking-tighter">2h ago</span>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed mb-3">Your batch of <span class="text-primary-fixed-dim font-medium">Premium Bluefin Tuna (SKU-882)</span> has departed from the Tsukiji terminal and is currently in transit.</p>
+<div class="flex items-center gap-4 text-[12px]">
+<button class="text-primary font-bold hover:underline">Track Shipment</button>
+<span class="flex items-center gap-1 text-tertiary">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+                                    Temp Locked: -2.4°C
+                                </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Notification Item 2: Discount -->
+<div class="group relative overflow-hidden bg-surface-container rounded-xl p-5 border border-outline-variant/30 notification-card-gradient hover:border-primary/40 transition-all duration-300">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-12 h-12 rounded-lg bg-tertiary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary" data-icon="sell">sell</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-semibold text-on-surface">New Discount Available</h4>
+<span class="text-[11px] font-medium text-on-surface-variant uppercase tracking-tighter">5h ago</span>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">Flash Sale: 15% off all <span class="italic font-medium">Deep Sea Atlantic Salmon</span> for the next 12 hours. Use code <span class="text-primary-fixed-dim font-bold">ABYSS15</span> at checkout.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Earlier Section -->
+<section>
+<div class="sticky top-[68px] z-40 bg-background/95 backdrop-blur-sm py-3 mb-4">
+<h3 class="font-headline text-sm font-semibold uppercase tracking-widest text-on-surface-variant">Earlier</h3>
+</div>
+<div class="space-y-4">
+<!-- Notification Item 3: Sustainability Report -->
+<div class="group relative overflow-hidden bg-surface-container-low rounded-xl p-5 border border-outline-variant/20 hover:border-outline transition-all duration-300">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-12 h-12 rounded-lg bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="eco">eco</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-semibold text-on-surface">Sustainability Update</h4>
+<span class="text-[11px] font-medium text-on-surface-variant uppercase tracking-tighter">Yesterday</span>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">Your account has reached 'Ocean Guardian' status. Thank you for choosing MSC-certified suppliers for your last 10 orders.</p>
+</div>
+</div>
+</div>
+<!-- Notification Item 4: Delivery Confirmation -->
+<div class="group relative overflow-hidden bg-surface-container-low rounded-xl p-5 border border-outline-variant/20 hover:border-outline transition-all duration-300">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="inventory_2">inventory_2</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-semibold text-on-surface">Delivery Confirmed</h4>
+<span class="text-[11px] font-medium text-on-surface-variant uppercase tracking-tighter">Oct 24</span>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">Order #AQ-99812 has been delivered to your primary warehouse. Cold-chain logs show zero deviations.</p>
+</div>
+</div>
+</div>
+<!-- Promo Banner -->
+<div class="relative w-full aspect-[21/9] rounded-xl overflow-hidden mt-8 shadow-2xl">
+<img alt="Fresh Fish" class="w-full h-full object-cover" data-alt="A professional, high-end photograph of a fresh whole salmon resting on a bed of crushed ice. The lighting is cold and cinematic, highlighting the silver scales and the texture of the ice crystals. The background is a deep, dark navy oceanic slate, consistent with a premium logistics software aesthetic. The overall mood is sterile, fresh, and high-performance, evoking industrial cold-chain precision." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8gt6mnmVvuYD-FHWqS6QbARJEI-Na2pegoGkGgOiliSSo9utO_SixILnelpPGZhpPv6GYFzHwAUJFHC6hQF7MLZDFkCh7eVt5_yg0PLJ8RVLpYEd8WSNVzEm8MyuH9m-_Wpzdb9-V_-DPbdrp1lT004wi172pZ6XFHcTDgJSYz-Jdlv9HJlA8NwQeoJSIegzIsmOMb1cazMnNmcTtaaLgbGZVc_MTEz6TrLyY24Z9H7GAwfwmIUIv8AtMgWrQjqVsRhH1-RO8BEw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest to-transparent flex flex-col justify-end p-6">
+<span class="text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-1">Exclusive Insight</span>
+<h5 class="text-lg font-bold text-white mb-1">Upcoming Market Trends</h5>
+<p class="text-xs text-on-surface-variant max-w-[80%]">Predictive analytics suggest a rise in demand for Chilean Sea Bass next week. Update your inventory soon.</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 rounded-t-xl bg-surface-container-low/90 backdrop-blur-md border-t border-outline-variant/20 shadow-[0_-10px_30px_rgba(0,0,0,0.3)]">
+<div class="flex justify-around items-center w-full px-2 py-3 pb-safe">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label text-[12px] font-medium tracking-wider uppercase mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-label text-[12px] font-medium tracking-wider uppercase mt-1">Market</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2 hover:bg-surface-container-high transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label text-[12px] font-medium tracking-wider uppercase mt-1">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container/20 text-primary rounded-xl px-4 py-2 transition-all active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="person" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-label text-[12px] font-medium tracking-wider uppercase mt-1">Profile</span>
+</a>
+</div>
+</nav>
+</body></html>

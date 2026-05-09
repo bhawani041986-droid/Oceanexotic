@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#141218",
+                        "surface-container": "#211f24",
+                        "secondary-fixed-dim": "#cdc0e9",
+                        "primary-fixed-dim": "#cfbcff",
+                        "on-secondary-fixed": "#1f1635",
+                        "outline-variant": "#494551",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#e6e0e9",
+                        "surface-container-high": "#2b292f",
+                        "primary": "#cfbcff",
+                        "surface-container-low": "#1d1b20",
+                        "surface-bright": "#3b383e",
+                        "on-primary": "#381e72",
+                        "tertiary-fixed-dim": "#e7c365",
+                        "tertiary": "#e7c365",
+                        "surface-variant": "#36343a",
+                        "inverse-surface": "#e6e0e9",
+                        "on-tertiary-container": "#503d00",
+                        "on-tertiary-fixed-variant": "#594400",
+                        "error-container": "#93000a",
+                        "primary-container": "#6750a4",
+                        "on-surface-variant": "#cbc4d2",
+                        "inverse-primary": "#6750a4",
+                        "tertiary-container": "#c9a74d",
+                        "surface-dim": "#141218",
+                        "on-primary-fixed-variant": "#4f378a",
+                        "surface-container-lowest": "#0f0d13",
+                        "on-secondary": "#342b4b",
+                        "secondary-container": "#4d4465",
+                        "on-tertiary-fixed": "#241a00",
+                        "tertiary-fixed": "#ffdf93",
+                        "surface-container-highest": "#36343a",
+                        "on-error": "#690005",
+                        "primary-fixed": "#e9ddff",
+                        "on-primary-container": "#e0d2ff",
+                        "on-secondary-container": "#bfb2da",
+                        "secondary-fixed": "#e9ddff",
+                        "background": "#141218",
+                        "outline": "#948e9c",
+                        "on-secondary-fixed-variant": "#4b4263",
+                        "secondary": "#cdc0e9",
+                        "inverse-on-surface": "#322f35",
+                        "on-tertiary": "#3e2e00",
+                        "on-primary-fixed": "#22005d",
+                        "error": "#ffb4ab",
+                        "on-surface": "#e6e0e9",
+                        "surface-tint": "#cfbcff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "display": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-panel {
+            background: rgba(33, 31, 36, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(148, 142, 156, 0.1);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- Navigation Drawer -->
+<aside class="h-screen w-[260px] fixed left-0 top-0 z-50 bg-surface-container-low border-r border-outline-variant/20 shadow-xl flex flex-col p-4 gap-2 hidden md:flex">
+<div class="mb-8 px-2 flex flex-col gap-1">
+<span class="font-headline text-lg font-bold text-primary">Abyssal Enterprise</span>
+<div class="flex items-center gap-3 mt-4">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container font-bold">DS</div>
+<div class="flex flex-col">
+<span class="font-body text-body-sm font-medium text-on-surface">DeepSea Exports</span>
+<span class="text-[10px] text-outline uppercase tracking-wider">Premium Seller</span>
+</div>
+</div>
+</div>
+<nav class="flex flex-col gap-2">
+<div class="group cursor-pointer flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-200">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body text-body-sm font-medium">Dashboard</span>
+</div>
+<div class="group cursor-pointer flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-200">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body text-body-sm font-medium">Inventory</span>
+</div>
+<div class="group cursor-pointer flex items-center gap-3 px-4 py-3 rounded-lg bg-primary-container/20 text-primary border-l-4 border-primary transition-all duration-200">
+<span class="material-symbols-outlined">add_box</span>
+<span class="font-body text-body-sm font-medium">Product Listing</span>
+</div>
+<div class="group cursor-pointer flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-200">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body text-body-sm font-medium">Payouts</span>
+</div>
+<div class="mt-auto group cursor-pointer flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-all duration-200">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body text-body-sm font-medium">Settings</span>
+</div>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-[260px] min-h-screen flex flex-col">
+<!-- Top App Bar -->
+<header class="sticky top-0 w-full z-40 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm flex items-center justify-between px-6 py-4">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer md:hidden">menu</span>
+<h1 class="font-headline text-2xl font-bold tracking-tight text-on-surface">New Product Listing</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">search</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant/30"></div>
+</div>
+</header>
+<section class="max-w-5xl mx-auto w-full p-6 lg:p-10">
+<!-- Progress Stepper -->
+<div class="flex items-center justify-between mb-12 relative">
+<div class="absolute top-1/2 left-0 w-full h-[2px] bg-surface-container-highest -translate-y-1/2 z-0"></div>
+<!-- Step 1 -->
+<div class="relative z-10 flex flex-col items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold ring-4 ring-background">1</div>
+<span class="text-xs font-medium text-primary tracking-wide">BASIC INFO</span>
+</div>
+<!-- Step 2 (Active) -->
+<div class="relative z-10 flex flex-col items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold ring-4 ring-background">2</div>
+<span class="text-xs font-medium text-on-surface tracking-wide">PRICING &amp; STOCK</span>
+</div>
+<!-- Step 3 -->
+<div class="relative z-10 flex flex-col items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-bold ring-4 ring-background">3</div>
+<span class="text-xs font-medium text-on-surface-variant tracking-wide">LOGISTICS</span>
+</div>
+<!-- Step 4 -->
+<div class="relative z-10 flex flex-col items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-bold ring-4 ring-background">4</div>
+<span class="text-xs font-medium text-on-surface-variant tracking-wide">MEDIA</span>
+</div>
+</div>
+<!-- Form Content -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Main Form Column -->
+<div class="lg:col-span-8 space-y-8">
+<!-- Section: Pricing & Stock -->
+<div class="bg-surface-container rounded-xl p-8 border border-outline-variant/10 shadow-sm">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">payments</span>
+<h2 class="text-xl font-semibold text-on-surface">Pricing &amp; Inventory</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-on-surface-variant ml-1">Price per KG (USD)</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-outline">$</span>
+<input class="w-full h-12 bg-surface-container-low border border-outline-variant/30 rounded-xl pl-8 pr-4 text-on-surface focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" placeholder="0.00" type="number"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-on-surface-variant ml-1">Minimum Order Quantity (MOQ)</label>
+<div class="relative">
+<input class="w-full h-12 bg-surface-container-low border border-outline-variant/30 rounded-xl px-4 text-on-surface focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" placeholder="500" type="number"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 text-outline text-xs uppercase font-bold">KG</span>
+</div>
+</div>
+<div class="flex flex-col gap-2 md:col-span-2">
+<label class="text-sm font-medium text-on-surface-variant ml-1">Available Stock (Immediate)</label>
+<input class="w-full h-12 bg-surface-container-low border border-outline-variant/30 rounded-xl px-4 text-on-surface focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none" placeholder="Enter total available weight" type="number"/>
+</div>
+</div>
+</div>
+<!-- Section: Logistics Preview -->
+<div class="bg-surface-container rounded-xl p-8 border border-outline-variant/10 shadow-sm">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">ac_unit</span>
+<h2 class="text-xl font-semibold text-on-surface">Cold Chain Requirements</h2>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant/20 group hover:border-primary/40 transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary">thermostat</span>
+</div>
+<div>
+<p class="text-on-surface font-medium">Standard Frozen</p>
+<p class="text-xs text-on-surface-variant">-18°C to -25°C core temperature</p>
+</div>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl border border-outline-variant/20 group hover:border-primary/40 transition-colors cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">water_drop</span>
+</div>
+<div>
+<p class="text-on-surface font-medium">Fresh Chilled</p>
+<p class="text-xs text-on-surface-variant">0°C to 4°C with moist airflow</p>
+</div>
+</div>
+<div class="w-6 h-6 rounded-full border-2 border-outline-variant"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Summary/Preview Sidebar -->
+<div class="lg:col-span-4 space-y-6">
+<div class="bg-surface-container-high rounded-xl p-6 border border-outline-variant/30 sticky top-24">
+<h3 class="font-semibold text-on-surface mb-4">Listing Summary</h3>
+<div class="aspect-square w-full rounded-lg bg-surface-container-low border border-dashed border-outline-variant/50 flex flex-col items-center justify-center mb-6 overflow-hidden">
+<img class="w-full h-full object-cover opacity-50" data-alt="High-resolution, professionally styled studio photograph of premium Atlantic Salmon fillets resting on a bed of crushed ice. The lighting is crisp and cool, emphasizing the vibrant orange texture and silver scales. The background is a dark, sleek slate material consistent with a high-end aquaculture technology platform aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-6QOdPXIuPMHgF6k-wAtjEePPnuSDMYXOWjoiL977BwEbE4miqYhrZIEmXDMBfj6oAeu7fkfjUYD6B3vDqUhKzUvGsHBa2eP6sfbHcUIHljvnS-XDoYexPxrsxQchib-yuodvrjsv9SxR876iiRfFUCqjwnrXUPCW3l4LnZfq6QQFGjNaxmmfUOsshYB_Q2kk9fnF3uT4JlxDxEbhfQ1G5b6CD9GGlszY_8GU7KfN4Mnka2UxmbE5vA9nLsLW7Uth9E2HFOvTRSQ"/>
+<div class="absolute flex flex-col items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl">add_a_photo</span>
+<span class="text-xs font-medium text-on-surface-variant uppercase tracking-widest">Media Pending</span>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Category:</span>
+<span class="text-on-surface font-medium">Premium Seafood</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">MOQ Value:</span>
+<span class="text-on-surface font-medium">$0.00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-on-surface-variant">Status:</span>
+<span class="text-tertiary font-medium italic">Drafting</span>
+</div>
+</div>
+<div class="mt-8 flex flex-col gap-3">
+<button class="w-full h-12 bg-primary text-on-primary font-bold rounded-xl hover:shadow-[0_0_20px_rgba(207,188,255,0.3)] transition-all flex items-center justify-center gap-2">
+                                Next Step
+                                <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+<button class="w-full h-12 bg-transparent border border-outline-variant text-on-surface font-medium rounded-xl hover:bg-surface-variant/50 transition-colors">
+                                Save as Draft
+                            </button>
+</div>
+</div>
+<!-- Real-time Quality Alert -->
+<div class="bg-primary-container/10 border border-primary/20 rounded-xl p-4 flex gap-4">
+<span class="material-symbols-outlined text-primary">verified</span>
+<div class="flex flex-col gap-1">
+<p class="text-sm font-semibold text-primary">AAA Grade Verification</p>
+<p class="text-[12px] text-on-surface-variant leading-tight">Your profile holds Premium Seller status. This listing will automatically receive the AAA Grade tag upon logistic verification.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Contextual FAB - Mobile Only -->
+<button class="md:hidden fixed bottom-6 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center z-50">
+<span class="material-symbols-outlined">check</span>
+</button>
+</body></html>

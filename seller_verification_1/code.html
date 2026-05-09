@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+
+<html class="" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Seller Verification | Oceanic Logistics</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"surface-tint": "#005db8", "on-tertiary-fixed": "#321200", "on-error": "#ffffff", "tertiary-fixed-dim": "#ffb68c", primary: "#005ab4", "surface-container-highest": "#e0e2eb", "surface-bright": "#f9f9ff", "on-primary-fixed-variant": "#00458d", "surface-container": "#ebedf7", "surface-container-high": "#e6e8f1", surface: "#f9f9ff", "on-tertiary": "#ffffff", "surface-dim": "#d7dae3", "secondary-fixed": "#d6e3ff", "on-tertiary-container": "#fffbff", "error-container": "#ffdad6", "on-error-container": "#93000a", "on-primary-fixed": "#001b3e", "inverse-primary": "#aac7ff", "secondary-fixed-dim": "#aec7f7", error: "#ba1a1a", "on-primary-container": "#fefcff", "on-secondary-container": "#3f5881", "on-secondary-fixed-variant": "#2d476f", "inverse-surface": "#2d3037", "surface-container-lowest": "#ffffff", tertiary: "#964400", "on-tertiary-fixed-variant": "#763400", "on-secondary": "#ffffff", "surface-variant": "#e0e2eb", "primary-container": "#0a73e0", "tertiary-fixed": "#ffdbc9", "tertiary-container": "#bd5700", "surface-container-low": "#f1f3fc", outline: "#717785", "on-background": "#181c22", "on-primary": "#ffffff", "on-surface-variant": "#414753", "outline-variant": "#c1c6d5", "primary-fixed": "#d6e3ff", background: "#f9f9ff", secondary: "#465f88", "inverse-on-surface": "#eef0fa", "on-secondary-fixed": "#001b3d", "secondary-container": "#b6d0ff", "primary-fixed-dim": "#aac7ff", "on-surface": "#181c22"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"5xl": "48px", lg: "16px", "3xl": "32px", "2xl": "24px", sm: "8px", md: "12px", "4xl": "40px", xs: "4px", xl: "20px"}, fontFamily: {label: ["Inter"], hero: ["Inter"], "body-sm": ["Inter"], "section-title": ["Inter"], "page-title": ["Inter"], "hero-mobile": ["Inter"], "card-title": ["Inter"], "body-lg": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"]}, fontSize: {label: ["12px", {lineHeight: "1", letterSpacing: "0.05em", fontWeight: "500"}], hero: ["36px", {lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700"}], "body-sm": ["14px", {lineHeight: "1.5", fontWeight: "400"}], "section-title": ["24px", {lineHeight: "1.3", fontWeight: "600"}], "page-title": ["30px", {lineHeight: "1.2", fontWeight: "700"}], "hero-mobile": ["28px", {lineHeight: "1.2", fontWeight: "700"}], "card-title": ["18px", {lineHeight: "1.4", fontWeight: "600"}], "body-lg": ["16px", {lineHeight: "1.5", fontWeight: "400"}]}}}};</script>
+<style>
+        body {
+            background-color: #0F172A;
+            color: #F8FAFC;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0F172A;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 10px;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="dark bg-background text-on-surface">
+<!-- Navigation Drawer -->
+<aside class="flex flex-col h-screen fixed z-40 w-[260px] bg-surface-container border-r border-outline-variant shadow-sm hidden md:flex">
+<div class="px-6 py-8">
+<h1 class="font-page-title text-page-title font-bold text-primary">Oceanic Logistics</h1>
+<p class="text-on-surface-variant font-label text-[10px] mt-1 tracking-widest uppercase">Enterprise Tier</p>
+</div>
+<nav class="flex-1 px-4 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label text-label">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-label text-label">Shipments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label text-label">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container/10 text-primary border-l-4 border-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label text-label">Quality Control</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">ac_unit</span>
+<span class="font-label text-label">Cold Chain</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200 mt-auto" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label text-label">Settings</span>
+</a>
+</nav>
+<div class="p-6 border-t border-outline-variant flex items-center gap-3">
+<img alt="User profile" class="w-10 h-10 rounded-full bg-primary-container" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4BhIopJg-TmfE0HU5hWax6Gx2KXtZo7GjklsqTkA8TlqIOs3AFNODCzSFM_ebK4rnO8otIRMu6uAr2EXjn7T_9_LwaR-_z1Pkq3u-FUqvbmJjmcOZ_z6fy_hjEaU7KDFulHt60z05ItuAe5R5p8BKgwycpJ_hmmMJxl56aCgLbZkDF8iP-m4cC7OxyHrXNGljyyuMGYkvD49I5mm1DRN0l33jA0vFGyFRCYE_sRigrPTk88lTqvoA9K5Z3ySl-rH4IIFPGLRw980"/>
+<div>
+<p class="font-label text-on-surface font-bold">Admin Panel</p>
+<p class="text-[10px] text-on-surface-variant">V1.0.4</p>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="md:ml-[260px] min-h-screen flex flex-col pb-32">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-6 py-4 w-full z-30 sticky top-0 bg-surface/80 backdrop-blur-xl border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-70">arrow_back</button>
+<h2 class="font-page-title text-page-title font-bold text-on-surface">Seller Verification</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant">notifications</button>
+<img alt="User avatar" class="w-8 h-8 rounded-full border border-outline" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAr949DMBTn_G1P3dA9xlrCAsblJpTKujV1R9O664wgESgOFE6Lb2uAfxkMMTA3VgAFb7B7ikbAq5CF_OCOX3pemqL0yepnl18gxlXjLwL5UHs2pv2uqg7FJPYdvRQ25fCAJPSYOafGpn-SN6t0fLF9FrbDInm3PskFMn9i1PcVkdIxGu6aaquHm3WT9p4Tx0VMChokJBy7kv_eAMqi47xVZfyZ9ycTSnIHp7Co70e4uTOKx92PRLmX_7KVbjUafNgOv2uoAfSumLI"/>
+</div>
+</header>
+<!-- Tabs -->
+<div class="px-6 mt-6 border-b border-outline-variant bg-surface-container-lowest">
+<div class="flex gap-8">
+<button class="pb-4 border-b-2 border-primary text-primary font-bold font-label text-label">Pending (12)</button>
+<button class="pb-4 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface font-label text-label transition-colors">Approved</button>
+<button class="pb-4 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface font-label text-label transition-colors">Rejected</button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 px-6 py-8 max-w-[1440px]">
+<!-- Sidebar: Scrollable List of Requests -->
+<section class="lg:col-span-4 space-y-4 max-h-[calc(100vh-250px)] overflow-y-auto custom-scrollbar pr-2">
+<!-- Active Card -->
+<div class="p-6 rounded-xl bg-primary-container/10 border border-primary/30 shadow-sm cursor-pointer relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+<div class="flex justify-between items-start mb-3">
+<div>
+<h3 class="font-card-title text-card-title text-on-surface">Pacific Catch Co.</h3>
+<p class="text-body-sm text-on-surface-variant">ID: #AQ-99210</p>
+</div>
+<span class="px-2 py-1 bg-tertiary-container/30 text-tertiary rounded text-[10px] font-bold uppercase tracking-wider">Pending Review</span>
+</div>
+<div class="flex items-center gap-2 text-body-sm text-on-surface-variant mb-4">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                        2 hours ago
+                    </div>
+<div class="flex justify-between items-center">
+<span class="text-label text-on-surface-variant italic">Commercial Fishery</span>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 text-xs font-bold text-primary hover:bg-primary/10 rounded transition-all">Details</button>
+</div>
+</div>
+</div>
+<!-- Inactive Cards -->
+<div class="p-6 rounded-xl bg-surface-container border border-outline-variant hover:border-outline transition-all cursor-pointer">
+<div class="flex justify-between items-start mb-3">
+<div>
+<h3 class="font-card-title text-card-title text-on-surface">Blue Horizon Farms</h3>
+<p class="text-body-sm text-on-surface-variant">ID: #AQ-99185</p>
+</div>
+<span class="px-2 py-1 bg-tertiary-container/30 text-tertiary rounded text-[10px] font-bold uppercase tracking-wider">Pending Review</span>
+</div>
+<div class="flex items-center gap-2 text-body-sm text-on-surface-variant mb-4">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                        5 hours ago
+                    </div>
+<div class="flex justify-between items-center">
+<span class="text-label text-on-surface-variant italic">Aquaculture Facility</span>
+<button class="px-3 py-1.5 text-xs font-bold text-primary-fixed-dim hover:bg-primary/10 rounded transition-all">Quick Approve</button>
+</div>
+</div>
+<div class="p-6 rounded-xl bg-surface-container border border-outline-variant hover:border-outline transition-all cursor-pointer">
+<div class="flex justify-between items-start mb-3">
+<div>
+<h3 class="font-card-title text-card-title text-on-surface">DeepSea Harvest Ltd</h3>
+<p class="text-body-sm text-on-surface-variant">ID: #AQ-99142</p>
+</div>
+<span class="px-2 py-1 bg-tertiary-container/30 text-tertiary rounded text-[10px] font-bold uppercase tracking-wider">Pending Review</span>
+</div>
+<div class="flex items-center gap-2 text-body-sm text-on-surface-variant mb-4">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                        Yesterday
+                    </div>
+<div class="flex justify-between items-center">
+<span class="text-label text-on-surface-variant italic">Industrial Processing</span>
+<button class="px-3 py-1.5 text-xs font-bold text-primary-fixed-dim hover:bg-primary/10 rounded transition-all">Quick Approve</button>
+</div>
+</div>
+</section>
+<!-- Main Content: Detail View -->
+<section class="lg:col-span-8 bg-surface-container-low rounded-xl border border-outline-variant overflow-hidden">
+<div class="p-8 space-y-10">
+<!-- Header of Detail -->
+<div class="flex items-center justify-between border-b border-outline-variant pb-6">
+<div class="flex items-center gap-6">
+<div class="w-20 h-20 bg-secondary-container rounded-xl flex items-center justify-center">
+<span class="material-symbols-outlined text-4xl text-secondary">waves</span>
+</div>
+<div>
+<h2 class="font-section-title text-section-title text-on-surface">Pacific Catch Co.</h2>
+<div class="flex items-center gap-3 mt-1">
+<span class="text-on-surface-variant font-label">Commercial Fishery</span>
+<span class="text-outline">•</span>
+<span class="text-on-surface-variant font-label">Founded 2012</span>
+<span class="text-outline">•</span>
+<span class="flex items-center gap-1 text-tertiary font-bold font-label">
+<span class="material-symbols-outlined text-[14px]">stars</span>
+                                        TOP TIER APPLICANT
+                                    </span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<p class="text-on-surface-variant text-body-sm">Submitted On</p>
+<p class="font-bold text-on-surface">Oct 24, 2023 • 14:20</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Business Documents -->
+<div class="space-y-4">
+<h4 class="font-label text-label text-primary uppercase tracking-widest flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">description</span>
+                                Business Documents
+                            </h4>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-4 bg-surface-container-high rounded-lg border border-outline-variant">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">picture_as_pdf</span>
+<span class="text-body-sm">Business License.pdf</span>
+</div>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer">visibility</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer">download</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-high rounded-lg border border-outline-variant">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">verified_user</span>
+<span class="text-body-sm">Fishing Permit #402</span>
+</div>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer">visibility</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer">download</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-high rounded-lg border border-outline-variant">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">medical_services</span>
+<span class="text-body-sm">Health Certificate</span>
+</div>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer">visibility</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer">download</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Identity Verification -->
+<div class="space-y-4">
+<h4 class="font-label text-label text-primary uppercase tracking-widest flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">badge</span>
+                                Identity Verification
+                            </h4>
+<div class="p-6 bg-surface-container-high rounded-lg border border-outline-variant space-y-4">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">person</span>
+</div>
+<div>
+<p class="text-on-surface font-bold">Marcus Vane</p>
+<p class="text-on-surface-variant text-xs">Chief Operations Officer</p>
+</div>
+</div>
+<div class="aspect-video bg-surface-container-highest rounded-lg overflow-hidden border border-outline-variant group relative cursor-zoom-in">
+<img class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" data-alt="A professional identification card photograph for Marcus Vane, displayed on a high-resolution digital tablet. The scene is set in a dark, tech-focused administrative office with cool blue ambient lighting. The ID photo itself is sharp and well-lit, showing a person with professional attire against a neutral backdrop, reinforcing an atmosphere of institutional reliability and security." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjrcddpDvJf8F4g0kXCZ7QMD7_IEqZynV_li1Qf4dP8pErcBweeEAaQ_EppVyyhwYWdDKJMHyz4JSg96lC5cDFgStOhMG4G55QUufKAuzunuR8VP-7Kev2EaNOzndD2fvTG2yZTCkIK93T89XEBTeLwdwC0RfIxPodx7Z4AlEsumx1JRd_DzcRz0WGG4suTYj437OYiHNwbERDsyO-T2-AxV9SBGct1tqjywgZLLDEzCxF78biEswoqYaga2dqsPYcM4p0FKdCiPg"/>
+<div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+<span class="material-symbols-outlined text-4xl text-primary">zoom_in</span>
+</div>
+</div>
+<p class="text-[10px] text-center text-outline uppercase tracking-widest font-bold">Government Issued ID #992-XXXXX-00</p>
+</div>
+</div>
+</div>
+<!-- Facility Inspection -->
+<div class="space-y-6">
+<h4 class="font-label text-label text-primary uppercase tracking-widest flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">factory</span>
+                            Facility Inspection
+                        </h4>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+<div class="aspect-square bg-surface-container-high rounded-xl overflow-hidden border border-outline-variant relative">
+<img class="w-full h-full object-cover" data-alt="A clinical, industrial cold storage facility with stainless steel walls and rows of high-grade frozen inventory containers. The environment is illuminated by sterile LED lighting that creates long, clean reflections on the polished floor. The atmosphere is freezing and meticulously organized, emphasizing technical precision and food safety standards." src="https://lh3.googleusercontent.com/aida-public/AB6AXuASw4XLnmtedoQTm0C-YmxdeJWw5RAZLJdwDLTtXeKCCWWPH6eb_6Qj4-ACHDhjfwEmRvUSoCWtANktSgjDnfGIDKzP0vbzUBHP-G61jsOXXaHq7zfPjXLTChMYKYaHbWtxsJN2GRQCaSg1_xC-Y8dA4iogJaNzlStEGqmosMcX9l7HED9xSfTqLs7WbA9LeQx7QPAdXZFr3XJQs-FOBzZl5ZdpPidJqS9IFpMP5J59EPrhj_nE-sOAqMFYoXrXPW9By58xVg-cIFE"/>
+<div class="absolute bottom-2 left-2 px-2 py-1 bg-black/60 backdrop-blur rounded text-[10px] text-white">Cold Storage A1</div>
+</div>
+<div class="aspect-square bg-surface-container-high rounded-xl overflow-hidden border border-outline-variant relative">
+<img class="w-full h-full object-cover" data-alt="A professional commercial fishing vessel docked at a high-tech logistics port at dusk. The boat is equipped with modern hauling machinery and deep-sea navigation arrays. The lighting is low-key, with deep blue tones and sharp orange safety lights, evoking a sense of powerful industrial ocean technology." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZ2F0Ilw-SpvUtImlgGTyg6cLbj9O9V53YuFvRab7xaeGC0CO93a7fDgohbmgjXHqdk85WFvCoJWRzraB4SJYa24WLH5aAfbhsxXxl1iaWKA10_UDZS8bE8GTm_Whr67C1yF96r5naaFfg2xAIS52wCR2C439WZzKmPiuNInB-TgPX_rZil9OLd5qGFK1OBTB-ti25m8NZrEgNWkYCI02laMKYKKXJI4adsc4vlCyC1qFTPw6UBUpaLaq2ZayAK7GkbpLlzRrPb-g"/>
+<div class="absolute bottom-2 left-2 px-2 py-1 bg-black/60 backdrop-blur rounded text-[10px] text-white">Vessel "Oceanic I"</div>
+</div>
+<div class="aspect-square bg-surface-container-high rounded-xl overflow-hidden border border-outline-variant relative">
+<img class="w-full h-full object-cover" data-alt="Interior view of a high-speed fish processing line within a temperature-controlled sterile environment. Workers are equipped with medical-grade protective gear, operating precision cutting machinery. The palette is dominated by cold whites and surgical blues, highlighting the deep-ocean tech aesthetic and commitment to hygiene." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7clc3oR5MlNibxBOHcCnJbH1skZuSjUwVaj3hpo_6EQpJkqQR9GRkrVhsRPBzELM-9e1ZPGOBuxEYAeRJrO4Oyvi1CUFqlqxP7TfIFVSU2v4llMQhYeoTzKpn8WAAdP_RDZXGb9v5nLmgsA6OtNK1S4hQD0K4sWf-0PSF5_qruddyy7TSu-gZcQGWr6_4Dvpqz8thiRQMA736WzUSetjFe01Z0Wpdkq1FMhsp2xLfOA6h4Xv7dAFEn7_I7SGmfsvObzXfwweBddM"/>
+<div class="absolute bottom-2 left-2 px-2 py-1 bg-black/60 backdrop-blur rounded text-[10px] text-white">Processing Line</div>
+</div>
+</div>
+</div>
+<!-- Compliance Checklist -->
+<div class="space-y-4">
+<h4 class="font-label text-label text-primary uppercase tracking-widest flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">fact_check</span>
+                            Compliance Checklist
+                        </h4>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="flex items-center gap-4 p-4 bg-primary/5 rounded-xl border border-primary/20">
+<div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<p class="font-bold text-on-surface text-body-sm">Cold Chain Verified</p>
+<p class="text-[11px] text-on-surface-variant">Sensor data confirmed stable -18°C average</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 bg-primary/5 rounded-xl border border-primary/20">
+<div class="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<p class="font-bold text-on-surface text-body-sm">Sourcing Ethics Confirmed</p>
+<p class="text-[11px] text-on-surface-variant">Sustainability certification MSC-4022 valid</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 bg-surface-container-high rounded-xl border border-outline-variant">
+<div class="w-6 h-6 rounded-full border border-outline-variant flex items-center justify-center">
+</div>
+<div>
+<p class="font-bold text-on-surface-variant text-body-sm">Vessel Safety Inspection</p>
+<p class="text-[11px] text-on-surface-variant">Pending manual review of logs</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 bg-surface-container-high rounded-xl border border-outline-variant">
+<div class="w-6 h-6 rounded-full border border-outline-variant flex items-center justify-center">
+</div>
+<div>
+<p class="font-bold text-on-surface-variant text-body-sm">Financial Auditing</p>
+<p class="text-[11px] text-on-surface-variant">Tax compliance document upload pending</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Floating Action Bar -->
+<div class="fixed bottom-8 left-1/2 -translate-x-1/2 w-full max-w-[600px] px-6 z-50">
+<div class="glass p-4 rounded-2xl flex items-center justify-between shadow-2xl">
+<div class="flex items-center gap-4 ml-2">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-surface bg-primary/20 flex items-center justify-center text-[10px] font-bold">PC</div>
+</div>
+<div class="hidden sm:block">
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Selected Seller</p>
+<p class="text-body-sm font-bold">Pacific Catch Co.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<button class="px-6 py-2.5 rounded-xl border border-error text-error font-bold text-label hover:bg-error/10 transition-all">Reject</button>
+<button class="px-8 py-2.5 rounded-xl bg-primary text-on-primary font-bold text-label shadow-lg shadow-primary/20 hover:scale-105 active:scale-95 transition-all">Approve Seller</button>
+</div>
+</div>
+</div>
+<!-- Mobile Bottom Navigation -->
+<nav class="md:hidden fixed bottom-0 w-full flex justify-around items-center py-3 px-4 z-50 bg-surface-container-high/90 backdrop-blur-md border-t border-outline-variant rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label text-label">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-label text-label">Market</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary font-bold scale-110" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label text-label">Verify</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label text-label">Profile</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html class="" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Oceanic Logistics | Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A; /* Base level 0 */
+        }
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .premium-border {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .freshness-gradient {
+            background: linear-gradient(180deg, rgba(124, 58, 237, 0.1) 0%, rgba(124, 58, 237, 0) 100%);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-primary-fixed-variant": "#00458d", secondary: "#465f88", primary: "#005ab4", "surface-tint": "#005db8", "on-tertiary-fixed": "#321200", "on-secondary": "#ffffff", "on-primary-fixed": "#001b3e", "surface-container": "#ebedf7", surface: "#f9f9ff", "on-tertiary-container": "#fffbff", "on-background": "#181c22", "tertiary-container": "#bd5700", "error-container": "#ffdad6", "surface-bright": "#f9f9ff", "secondary-fixed": "#d6e3ff", "on-secondary-fixed": "#001b3d", "on-primary": "#ffffff", "tertiary-fixed": "#ffdbc9", "on-primary-container": "#fefcff", "inverse-on-surface": "#eef0fa", "on-surface-variant": "#414753", "surface-container-high": "#e6e8f1", "primary-fixed-dim": "#aac7ff", "secondary-container": "#b6d0ff", "on-error": "#ffffff", "surface-variant": "#e0e2eb", "surface-container-lowest": "#ffffff", "on-tertiary-fixed-variant": "#763400", "primary-container": "#0a73e0", "primary-fixed": "#d6e3ff", "inverse-surface": "#2d3037", tertiary: "#964400", "surface-dim": "#d7dae3", "surface-container-low": "#f1f3fc", "on-error-container": "#93000a", background: "#f9f9ff", "on-secondary-fixed-variant": "#2d476f", "secondary-fixed-dim": "#aec7f7", "on-tertiary": "#ffffff", "on-surface": "#181c22", outline: "#717785", "tertiary-fixed-dim": "#ffb68c", "on-secondary-container": "#3f5881", error: "#ba1a1a", "inverse-primary": "#aac7ff", "outline-variant": "#c1c6d5", "surface-container-highest": "#e0e2eb"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"5xl": "48px", xl: "20px", "4xl": "40px", xs: "4px", sm: "8px", lg: "16px", "3xl": "32px", "2xl": "24px", md: "12px"}, fontFamily: {"hero-mobile": ["Inter"], hero: ["Inter"], "body-sm": ["Inter"], "section-title": ["Inter"], label: ["Inter"], "page-title": ["Inter"], "card-title": ["Inter"], "body-lg": ["Inter"], headline: ["Inter"], display: ["Inter"], body: ["Inter"]}, fontSize: {"hero-mobile": ["28px", {lineHeight: "1.2", fontWeight: "700"}], hero: ["36px", {lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700"}], "body-sm": ["14px", {lineHeight: "1.5", fontWeight: "400"}], "section-title": ["24px", {lineHeight: "1.3", fontWeight: "600"}], label: ["12px", {lineHeight: "1", letterSpacing: "0.05em", fontWeight: "500"}], "page-title": ["30px", {lineHeight: "1.2", fontWeight: "700"}], "card-title": ["18px", {lineHeight: "1.4", fontWeight: "600"}], "body-lg": ["16px", {lineHeight: "1.5", fontWeight: "400"}]}}}};</script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface">
+<!-- NavigationDrawer Shell -->
+<aside class="flex flex-col h-screen fixed z-40 w-[260px] bg-surface-container border-r border-outline-variant shadow-sm hidden md:flex">
+<div class="px-6 py-8">
+<h1 class="font-page-title text-page-title font-bold text-primary">Oceanic Logistics</h1>
+<p class="text-on-surface-variant font-label text-[10px] mt-1 tracking-widest uppercase">Enterprise Tier</p>
+</div>
+<nav class="flex-1 space-y-1 px-2">
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-container/10 text-primary border-l-4 border-primary transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-label text-label">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="font-label text-label">Shipments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span class="font-label text-label">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="verified">verified</span>
+<span class="font-label text-label">Quality Control</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="ac_unit">ac_unit</span>
+<span class="font-label text-label">Cold Chain</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-secondary-container/20 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label text-label">Settings</span>
+</a>
+</nav>
+<div class="p-6 border-t border-outline-variant">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-primary font-bold">A</div>
+<div>
+<p class="text-sm font-semibold">Admin Panel</p>
+<p class="text-[10px] text-on-surface-variant">V1.0.4</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="md:ml-[260px] min-h-screen">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-6 py-4 w-full z-30 sticky top-0 bg-surface/80 backdrop-blur-xl border-b border-outline-variant">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer md:hidden" data-icon="menu">menu</span>
+<h2 class="font-page-title text-page-title font-bold text-on-surface">Global Marketplace</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex gap-4">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary cursor-pointer" data-icon="search">search</span>
+</div>
+<img alt="User avatar" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="A professional headshot of a high-level female executive in a minimalist studio setting. She is wearing a modern charcoal grey blazer. The lighting is sophisticated and directional, highlighting clean facial features against a deep, muted background. This image represents the premium, enterprise-focused identity of a global logistics platform administrator." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBr6Hay42gX_XAWPUqcrFYTHYE0fHdLB1CVcLhj-DfxfgqDwbpXbE29ZTmoQYsPUFzFxbXEFJ-9E8CWpyTkQgM273uW3FdJzwV-QzUlFhkGsAPLZmULxo08s5OsQJdZ6ar5ch3fDGcIgnVCb13QEVL2sVS4Qu4GXTnCvF8pyXteLl6s7RFkoAsuYQ1ol9vbR9k8trCE2L9-NR_Bxz4mOYqBU0nA7SaCD49vjYLbM2opLqrlAnKPrIvpp8J-U8pgu1ebfYbxwCBKwNc"/>
+</div>
+</header>
+<div class="max-w-[1440px] mx-auto p-6 space-y-6">
+<!-- Global Stats Summary (Bento Style) -->
+<section class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="md:col-span-2 p-6 rounded-xl glass-panel relative overflow-hidden group">
+<div class="absolute inset-0 freshness-gradient opacity-50"></div>
+<div class="relative z-10">
+<p class="font-label text-label text-on-surface-variant uppercase tracking-wider">Total Platform Revenue</p>
+<h3 class="text-4xl font-bold mt-2">$2,482,910.00</h3>
+<div class="flex items-center gap-2 mt-4 text-green-400">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+<span class="text-xs font-semibold">+12.4% from last month</span>
+</div>
+</div>
+</div>
+<div class="p-6 rounded-xl glass-panel">
+<p class="font-label text-label text-on-surface-variant uppercase tracking-wider">Active Sellers</p>
+<h3 class="text-3xl font-bold mt-2">1,248</h3>
+<p class="text-xs text-on-surface-variant mt-4">84 currently online</p>
+</div>
+<div class="p-6 rounded-xl glass-panel">
+<p class="font-label text-label text-on-surface-variant uppercase tracking-wider">Customer Growth</p>
+<h3 class="text-3xl font-bold mt-2">18.2k</h3>
+<div class="flex items-center gap-2 mt-4 text-primary">
+<span class="material-symbols-outlined text-sm" data-icon="person_add">person_add</span>
+<span class="text-xs font-semibold">+420 this week</span>
+</div>
+</div>
+</section>
+<!-- Secondary Row: Seller Management & Dispute Center -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Seller Management Shortcut List -->
+<div class="lg:col-span-2 rounded-xl bg-surface-container-high premium-border overflow-hidden">
+<div class="px-6 py-5 border-b border-outline-variant flex justify-between items-center">
+<h4 class="font-card-title text-card-title">Seller Management</h4>
+<button class="text-primary text-xs font-bold uppercase tracking-widest hover:underline">View All</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-surface-variant/30">
+<tr>
+<th class="px-6 py-3 font-label text-label text-on-surface-variant">Seller</th>
+<th class="px-6 py-3 font-label text-label text-on-surface-variant">Category</th>
+<th class="px-6 py-3 font-label text-label text-on-surface-variant">Freshness Score</th>
+<th class="px-6 py-3 font-label text-label text-on-surface-variant">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-variant/20 transition-colors">
+<td class="px-6 py-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-secondary-container flex items-center justify-center text-secondary text-xs">NF</div>
+<span class="text-sm font-medium">Nordic Fresh Ltd.</span>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Deep Sea Cod</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-green-500/10 text-green-400 rounded text-[10px] font-bold uppercase tracking-widest">AAA Grade</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+<span class="text-xs">Verified</span>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-variant/20 transition-colors">
+<td class="px-6 py-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-secondary-container flex items-center justify-center text-secondary text-xs">TB</div>
+<span class="text-sm font-medium">Tokyo Bluefin Co.</span>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Bluefin Tuna</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-primary-container/20 text-primary rounded text-[10px] font-bold uppercase tracking-widest">Premium</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+<span class="text-xs">Active</span>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-variant/20 transition-colors">
+<td class="px-6 py-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-secondary-container flex items-center justify-center text-secondary text-xs">AS</div>
+<span class="text-sm font-medium">Atlantic Shellfish</span>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Oysters</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-yellow-500/10 text-yellow-400 rounded text-[10px] font-bold uppercase tracking-widest">A Grade</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+<span class="text-xs">Reviewing</span>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Dispute Center Card -->
+<div class="rounded-xl bg-surface-container-high premium-border p-6 flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h4 class="font-card-title text-card-title">Dispute Center</h4>
+<span class="px-2 py-1 bg-error-container text-on-error-container rounded text-[10px] font-bold">12 PENDING</span>
+</div>
+<div class="space-y-4 flex-1">
+<div class="p-4 rounded-lg bg-surface-variant/30 border-l-4 border-error">
+<p class="text-xs font-bold text-error uppercase mb-1">Damaged Goods #8821</p>
+<p class="text-sm text-on-surface leading-snug">Customer reports frozen storage failure on arrival for Batch #44.</p>
+<p class="text-[10px] text-on-surface-variant mt-2">2 hours ago • Action Required</p>
+</div>
+<div class="p-4 rounded-lg bg-surface-variant/30 border-l-4 border-yellow-500">
+<p class="text-xs font-bold text-yellow-500 uppercase mb-1">Delayed Shipment #7712</p>
+<p class="text-sm text-on-surface leading-snug">Logistics partner transit delay at Port of Singapore.</p>
+<p class="text-[10px] text-on-surface-variant mt-2">5 hours ago • Monitoring</p>
+</div>
+</div>
+<button class="mt-6 w-full py-3 bg-secondary-container text-on-secondary-container rounded-lg font-bold text-sm hover:opacity-90 transition-opacity">
+                        Go to Incident Manager
+                    </button>
+</div>
+</section>
+<!-- Bottom Row: System Health -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="p-5 rounded-xl bg-surface-container-low premium-border flex items-center justify-between">
+<div>
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Main Server</p>
+<p class="text-lg font-semibold mt-1">Operational</p>
+</div>
+<span class="material-symbols-outlined text-green-400 text-3xl" data-icon="cloud_done">cloud_done</span>
+</div>
+<div class="p-5 rounded-xl bg-surface-container-low premium-border flex items-center justify-between">
+<div>
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Delivery API</p>
+<p class="text-lg font-semibold mt-1">Normal Latency</p>
+</div>
+<span class="material-symbols-outlined text-green-400 text-3xl" data-icon="bolt">bolt</span>
+</div>
+<div class="p-5 rounded-xl bg-surface-container-low premium-border flex items-center justify-between">
+<div>
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Cold Sensors</p>
+<p class="text-lg font-semibold mt-1">98.4% Sync</p>
+</div>
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="sensors">sensors</span>
+</div>
+<div class="p-5 rounded-xl bg-surface-container-low premium-border flex items-center justify-between">
+<div>
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Database</p>
+<p class="text-lg font-semibold mt-1">Cluster Healthy</p>
+</div>
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="database">database</span>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar for Mobile -->
+<nav class="fixed bottom-0 w-full flex justify-around items-center py-3 px-4 z-50 bg-surface-container-high/90 backdrop-blur-md rounded-t-xl border-t border-outline-variant md:hidden">
+<div class="flex flex-col items-center justify-center text-primary font-bold scale-110 active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label text-label mt-1">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-label text-label mt-1">Market</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="font-label text-label mt-1">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="font-label text-label mt-1">Profile</span>
+</div>
+</nav>
+</body></html>
