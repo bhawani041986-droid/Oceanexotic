@@ -1,0 +1,609 @@
+please research the local name of fish that will be name actually this is local base.
+To feed your product data and add-on products into the marketplace, I will need you to provide the details so I can construct the `MASTER_PRODUCT_REGISTRY` and link the add-ons properly. 
+
+Here are the fields I require from your admin end (you can skip images as you mentioned):
+
+### 🐟 1. Main Product Fields
+For each main product, please provide:
+*   **Name**: (e.g., *Atlantic Bluefin Tuna*)
+*   **Tagline / Short Subtitle**: (e.g., *Premium Saku • Grade A+*)
+*   **Category**: (e.g., *Fresh Fish, Shellfish, Crustaceans*)
+*   **Price**: Current selling price
+*   **Original Price**: (Optional, to show discounts)
+*   **Stock**: Available quantity
+*   **Weight / Unit size**: (e.g., *500g, 1kg, 12 pcs*)
+*   **Description**: Detailed description of the catch.
+*   **Badge**: (e.g., *BEST SELLER, FRESH CATCH, LIVE CATCH*)
+*   **Seller Name**: (e.g., *Pacific Blue Fleet*)
+*   **Variants** (if any): Different sizes and their prices (e.g., *1/2 KG: ₹3200, 1 KG: ₹6000*)
+*   **Nutrition Info** (Optional but recommended): Protein, Omega-3, Calories, Fat.
+
+### 🍋 2. Add-on Products
+Since you mentioned add-ons, we can implement an "Add-on / Complementary Items" section (e.g., special marinades, lemon butter sauce, sashimi knives, specialized ice packs). 
+For add-ons, please provide:
+*   **Name of Add-on**: (e.g., *Premium Wasabi & Soy Kit*)
+*   **Price**: 
+*   **Category/Type**: Is it a global add-on available for all products, or tied only to specific ones (like oysters needing a shucking knife)?
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Yes — this is VERY important for your marketplace.
+
+You should absolutely use:
+
+* local Andaman fish names
+* Hindi market names
+* Bengali names
+* Tamil/Malayalam coastal names
+* English names
+
+Because local buyers search using local names, not scientific names.
+
+Example:
+People search:
+
+* Surmai
+* Bangda
+* Paplet
+* Jhinga
+* Kokari
+* Bhetki
+
+NOT:
+
+* Indo-Pacific King Mackerel
+
+This dramatically improves:
+
+* search
+* SEO
+* trust
+* local adoption
+* seller familiarity
+
+---
+
+# Recommended Product Naming Structure
+
+Your products should contain:
+
+| Field               | Example                      |
+| ------------------- | ---------------------------- |
+| English Name        | Seer Fish                    |
+| Local Name          | Surmai                       |
+| Andaman Market Name | Chatri Surmai                |
+| Scientific Name     | Scomberomorus commerson      |
+| Search Keywords     | surmai, king fish, seer fish |
+
+---
+
+# MASTER LOCAL FISH NAME DATASET FOR OCEANFRESH
+
+Use this in Antigravity.
+
+---
+
+```txt id="gs0q4o"
+Create a COMPLETE LOCALIZED SEAFOOD PRODUCT NAMING SYSTEM for OceanFresh marketplace.
+
+IMPORTANT:
+This marketplace is based in:
+- Andaman & Nicobar Islands
+- Port Blair
+- local Indian seafood market
+
+The platform MUST support:
+- local fish names
+- Hindi fish names
+- Bengali names
+- Tamil names
+- Malayalam coastal names
+- Andaman local market names
+- English names
+
+====================================================
+PRIMARY OBJECTIVE
+====================================================
+
+Every seafood product must support:
+
+1. English Name
+2. Local Market Name
+3. Hindi Name
+4. Coastal Regional Names
+5. Andaman Fish Market Name
+6. Scientific Name
+7. Search Keywords
+8. SEO aliases
+
+This improves:
+- local search
+- SEO
+- marketplace trust
+- seller familiarity
+- buyer familiarity
+
+====================================================
+GLOBAL PRODUCT NAMING STRUCTURE
+====================================================
+
+Each product MUST contain:
+
+{
+  english_name: "",
+  local_name: "",
+  andaman_market_name: "",
+  hindi_name: "",
+  tamil_name: "",
+  malayalam_name: "",
+  bengali_name: "",
+  scientific_name: "",
+  search_keywords: []
+}
+
+====================================================
+MASTER FISH LOCALIZATION DATABASE
+====================================================
+
+PRODUCT 1
+----------------------------------------------------
+
+English Name:
+Yellowfin Tuna
+
+Local Name:
+Tuna
+
+Hindi Name:
+Toona
+
+Tamil Name:
+Choorai
+
+Malayalam Name:
+Choora
+
+Andaman Market Name:
+Blue Tuna / Surmayi
+
+Scientific Name:
+Thunnus albacares
+
+Search Keywords:
+tuna, choora, choorai, blue tuna, yellowfin tuna, surmayi
+
+====================================================
+
+PRODUCT 2
+----------------------------------------------------
+
+English Name:
+Skipjack Tuna
+
+Local Name:
+Aku Tuna
+
+Hindi Name:
+Tuna
+
+Tamil Name:
+Chura
+
+Malayalam Name:
+Choora
+
+Andaman Market Name:
+Local Tuna
+
+Scientific Name:
+Katsuwonus pelamis
+
+====================================================
+
+PRODUCT 3
+----------------------------------------------------
+
+English Name:
+Seer Fish
+
+Local Name:
+Surmai
+
+Hindi Name:
+Surmai
+
+Tamil Name:
+Vanjaram
+
+Malayalam Name:
+Neymeen
+
+Andaman Market Name:
+Chatri Surmai
+
+Scientific Name:
+Scomberomorus commerson
+
+Search Keywords:
+surmai, king fish, seer fish, vanjaram, neymeen
+
+====================================================
+
+PRODUCT 4
+----------------------------------------------------
+
+English Name:
+Pomfret
+
+Local Name:
+Paplet
+
+Hindi Name:
+Paplet
+
+Tamil Name:
+Vavval
+
+Malayalam Name:
+Avoli
+
+Andaman Market Name:
+Pomplet Machi
+
+Scientific Name:
+Pampus argenteus
+
+====================================================
+
+PRODUCT 5
+----------------------------------------------------
+
+English Name:
+Mackerel
+
+Local Name:
+Bangda
+
+Hindi Name:
+Bangda
+
+Tamil Name:
+Ayala
+
+Malayalam Name:
+Ayala
+
+Andaman Market Name:
+Mackerel
+
+Scientific Name:
+Rastrelliger kanagurta
+
+====================================================
+
+PRODUCT 6
+----------------------------------------------------
+
+English Name:
+Sardine
+
+Local Name:
+Tarli
+
+Hindi Name:
+Pedvey
+
+Tamil Name:
+Mathi
+
+Malayalam Name:
+Mathi
+
+Andaman Market Name:
+Tarni Machi
+
+Scientific Name:
+Sardinella longiceps
+
+====================================================
+
+PRODUCT 7
+----------------------------------------------------
+
+English Name:
+Red Snapper
+
+Local Name:
+Lal Bhetki
+
+Hindi Name:
+Bhetki
+
+Tamil Name:
+Sankara
+
+Malayalam Name:
+Chempalli
+
+Andaman Market Name:
+Kutha Bhekti
+
+Scientific Name:
+Lutjanus bohar
+
+====================================================
+
+PRODUCT 8
+----------------------------------------------------
+
+English Name:
+Barracuda
+
+Local Name:
+Barracuda
+
+Hindi Name:
+Barracuda
+
+Tamil Name:
+Sheela
+
+Malayalam Name:
+Neduva
+
+Andaman Market Name:
+Kawwa Surmayi
+
+Scientific Name:
+Sphyraena barracuda
+
+====================================================
+
+PRODUCT 9
+----------------------------------------------------
+
+English Name:
+Bluefin Trevally
+
+Local Name:
+Trevally
+
+Hindi Name:
+Trevally
+
+Tamil Name:
+Parai
+
+Malayalam Name:
+Vatta
+
+Andaman Market Name:
+Neela Kokari
+
+Scientific Name:
+Caranx melampygus
+
+====================================================
+
+PRODUCT 10
+----------------------------------------------------
+
+English Name:
+Giant Trevally
+
+Local Name:
+GT Fish
+
+Hindi Name:
+Trevally
+
+Tamil Name:
+Parai
+
+Malayalam Name:
+Vatta
+
+Andaman Market Name:
+Croakari Machi
+
+Scientific Name:
+Caranx ignobilis
+
+====================================================
+
+PRODUCT 11
+----------------------------------------------------
+
+English Name:
+Prawns
+
+Local Name:
+Jhinga
+
+Hindi Name:
+Jhinga
+
+Tamil Name:
+Eral
+
+Malayalam Name:
+Chemmeen
+
+Andaman Market Name:
+Jhingha
+
+Scientific Name:
+Penaeidae
+
+====================================================
+
+PRODUCT 12
+----------------------------------------------------
+
+English Name:
+Tiger Prawns
+
+Local Name:
+Tiger Jhinga
+
+Hindi Name:
+Jhinga
+
+Tamil Name:
+Tiger Eral
+
+Malayalam Name:
+Konju
+
+Andaman Market Name:
+Tiger Jhingha
+
+Scientific Name:
+Penaeus monodon
+
+====================================================
+
+PRODUCT 13
+----------------------------------------------------
+
+English Name:
+Mud Crab
+
+Local Name:
+Kekda
+
+Hindi Name:
+Kekda
+
+Tamil Name:
+Nandu
+
+Malayalam Name:
+Njandu
+
+Andaman Market Name:
+Khadi Kekada
+
+Scientific Name:
+Scylla serrata
+
+====================================================
+
+PRODUCT 14
+----------------------------------------------------
+
+English Name:
+Squid
+
+Local Name:
+Squid
+
+Hindi Name:
+Squid
+
+Tamil Name:
+Kanava
+
+Malayalam Name:
+Kanava
+
+Andaman Market Name:
+Squid
+
+Scientific Name:
+Teuthida
+
+====================================================
+
+PRODUCT 15
+----------------------------------------------------
+
+English Name:
+Lobster
+
+Local Name:
+Lobster
+
+Hindi Name:
+Lobster
+
+Tamil Name:
+Eraal
+
+Malayalam Name:
+Konju Lobster
+
+Andaman Market Name:
+Sea Lobster
+
+Scientific Name:
+Palinuridae
+
+====================================================
+SEARCH ENGINE RULES
+====================================================
+
+When user searches:
+- Surmai
+- Vanjaram
+- Neymeen
+
+ALL should return:
+Seer Fish
+
+====================================================
+SEO RULES
+====================================================
+
+Generate SEO aliases using:
+- local names
+- English names
+- regional names
+
+====================================================
+PRODUCT PAGE RULES
+====================================================
+
+Display:
+Primary:
+English Name
+
+Secondary:
+Local Names
+
+Example:
+Seer Fish
+(Surmai / Vanjaram / Neymeen)
+
+====================================================
+SELLER PRODUCT CREATION RULES
+====================================================
+
+Seller can:
+- search using local names
+- choose predefined product
+- auto-map regional aliases
+
+====================================================
+ADMIN RULES
+====================================================
+
+Admin can:
+- edit aliases
+- add regional names
+- add local market names
+
+====================================================
+FINAL GOAL
+====================================================
+
+OceanFresh should feel like:
+- a real local Andaman seafood marketplace
+- culturally accurate
+- locally trusted
+- SEO optimized
+- multilingual seafood ecosystem
+```
+
+The local naming references were gathered from Andaman seafood references, Indian coastal fish naming databases, local seafood discussions, and Port Blair fish market sources. ([andamanangler.com][1])
+
+[1]: https://andamanangler.com/species/?utm_source=chatgpt.com "Species – Andaman Angler"
+

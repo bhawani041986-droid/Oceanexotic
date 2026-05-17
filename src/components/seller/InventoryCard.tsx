@@ -12,9 +12,9 @@ interface InventoryItem {
 
 export default function InventoryCard({ item }: { item: InventoryItem }) {
   return (
-    <div className="flex items-center justify-between p-4 bg-white/5 rounded-[16px] border border-white/5 hover:border-white/10 transition-all">
+    <div className="flex items-center justify-between p-4 bg-[var(--foreground)]/5 rounded-[16px] border border-[var(--foreground)]/5 hover:border-[var(--foreground)]/10 transition-all">
       <div className="flex items-center gap-4">
-        <div className="w-12 h-12 rounded-[12px] bg-white/5 flex items-center justify-center text-2xl">
+        <div className="w-12 h-12 rounded-[12px] bg-[var(--foreground)]/5 flex items-center justify-center text-2xl">
           🐟
         </div>
         <div>

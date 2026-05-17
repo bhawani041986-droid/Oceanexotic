@@ -1,4 +1,4 @@
-export const APP_NAME = 'OceanFresh';
+export const APP_NAME = 'OceanExotic Global';
 export const APP_DESCRIPTION = 'Premium Seafood Marketplace';
 
 export const ROUTES = {

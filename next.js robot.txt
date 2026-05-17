@@ -1,0 +1,18 @@
+2. Next.js Build Guard Robot
+I created a dedicated Python robot located at scripts/build_guard.py.
+
+Purpose: This robot scans your src directory for the specific JSX tag imbalances and layout errors that have been causing the "Unexpected token MainLayout" build failures.
+Usage: You can run it anytime via terminal: python scripts/build_guard.py.
+Capabilities: It currently identifies tag imbalances and missing layout wrappers. I can expand it to perform "Auto-Healing" (automatically fixing unclosed tags) if you'd like.
+Summary of Changes:
+
+
+Checkout Page
+: Restored fetching logic and added a horizontal saved-address selector.
+
+Build Guard Robot
+: A new automated tool to preemptively catch build-breaking syntax errors.
+The checkout flow is now fully synchronized with the user's profile data! Would you like me to run the Build Guard now to check for any other hidden errors?
+
+page.tsx
+build_guard.py

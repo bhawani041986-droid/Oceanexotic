@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OceanExotic Logo Render</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@1,900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --c-primary: #8b5cf6; /* Sovereign Purple */
+            --c-text-primary: #1e1b4b;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: transparent;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+        }
+        .icon-node {
+            position: relative;
+            width: 55px;
+            height: 48px;
+        }
+        .text-node {
+            display: flex;
+            flex-direction: column;
+            line-height: 1;
+        }
+        .brand-name {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            font-size: 36px;
+            color: var(--c-text-primary);
+            margin: 0;
+        }
+        .global-sub {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 4px;
+        }
+        .accent-line {
+            height: 2px;
+            width: 16px;
+            background: var(--c-primary);
+            border-radius: 4px;
+        }
+        .global-text {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            font-size: 10px;
+            color: var(--c-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container" id="logo">
+        <div class="icon-node">
+            <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="width: 100%; height: 100%; color: var(--c-primary);">
+                <mask id="m">
+                    <rect x="0" y="0" width="100" height="100" fill="white" />
+                    <text x="50%" y="52%" text-anchor="middle" dominant-baseline="middle" fill="black" font-size="24" font-weight="900" font-family="Inter, sans-serif" font-style="italic" style="letter-spacing: -1px;">OX</text>
+                    <line x1="38" y1="44" x2="15" y2="44" stroke="black" stroke-width="2.5" />
+                    <line x1="62" y1="58" x2="88" y2="58" stroke="black" stroke-width="2.5" />
+                    <circle cx="82" cy="48" r="3" fill="black" />
+                </mask>
+                <path d="M50 20 C35 20 20 30 15 50 L5 30 L5 70 L15 50 C20 70 35 80 50 80 C70 80 85 70 90 50 C85 30 70 20 50 20 Z M50 20 C55 10 65 5 75 5 C65 5 55 10 50 20 Z M50 80 C55 90 65 95 75 95 C65 95 55 90 50 80 Z" fill="currentColor" mask="url(#m)" />
+            </svg>
+        </div>
+        <div class="text-node">
+            <h1 class="brand-name">OceanExotic</h1>
+            <div class="global-sub">
+                <div class="accent-line"></div>
+                <span class="global-text">Global</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+# OceanFresh API Governance
+# Enforce Global CORS Authority (Always)
+
+<IfModule mod_headers.c>
+    Header unset Access-Control-Allow-Origin
+    Header always unset Access-Control-Allow-Origin
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS, DELETE, PUT"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+</IfModule>
+
+# Handle Preflight Handshakes
+RewriteEngine On
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ - [R=200,L]
+
+# Ensure PHP Resolution
+<FilesMatch "\.php$">
+    SetHandler application/x-httpd-php
+</FilesMatch>

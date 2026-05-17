@@ -1,9 +1,12 @@
 "use client";
 
-import React from "react";
+import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/authStore";
+import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 import { ROUTES } from "@/constants";
@@ -25,19 +28,53 @@ export default function LoginForm() {
     resolver: zodResolver(loginSchema),
   });
 
+  const router = useRouter();
+  const { login } = useAuthStore();
+  const { toast } = useToast();
+
   const onSubmit = async (data: LoginFormValues) => {
-    console.log("Login data:", data);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    // Redirect logic would go here
+    // High-Integrity Diagnostic Log
+    console.log("INITIATING_AUTHENTICATION_HANDSHAKE:", data.email);
+    
+    try {
+      // Simulate Abyssal Network Latency
+      await new Promise((resolve) => setTimeout(resolve, 1200));
+
+      // Sovereign Role Detection (Mock Logic for Enterprise Demo)
+      let role: "admin" | "seller" | "customer" = "customer";
+      if (data.email.toLowerCase().includes("admin")) role = "admin";
+      else if (data.email.toLowerCase().includes("seller")) role = "seller";
+
+      // Execute Sovereign State Handshake
+      login({
+        id: "USR-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
+        name: data.email.split("@")[0].charAt(0).toUpperCase() + data.email.split("@")[0].slice(1),
+        email: data.email,
+        role: role,
+      });
+
+      toast(`Authentication Successful. Welcome, ${role.toUpperCase()}.`, "success");
+
+      // Execute Navigational Handshake
+      if (role === "admin") {
+        router.push(ROUTES.ADMIN_DASHBOARD);
+      } else if (role === "seller") {
+        router.push(ROUTES.SELLER_DASHBOARD);
+      } else {
+        router.push(ROUTES.PRODUCTS);
+      }
+    } catch (error) {
+      console.error("AUTHENTICATION_FAILURE:", error);
+      toast("Authentication signal lost. Verify credentials and retry.", "error");
+    }
   };
 
   return (
-    <Card className="w-full max-w-md border-white/5 bg-background-card/50 backdrop-blur-xl">
+    <Card className="w-full max-w-md border-[var(--foreground)]/5 bg-background-card/50 backdrop-blur-xl">
       <CardHeader className="space-y-1 text-center">
         <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
         <CardDescription>
-          Enter your credentials to access your OceanFresh account
+          Enter your credentials to access your OceanExotic account
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -50,7 +87,7 @@ export default function LoginForm() {
               id="email"
               type="email"
               placeholder="name@example.com"
-              className="w-full h-12 bg-white/5 border border-white/10 rounded-[14px] px-4 focus:outline-none focus:ring-2 focus:ring-primary-purple transition-all"
+              className="w-full h-12 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-[14px] px-4 focus:outline-none focus:ring-2 focus:ring-primary-purple transition-all"
               {...register("email")}
             />
             {errors.email && (
@@ -73,7 +110,7 @@ export default function LoginForm() {
               id="password"
               type="password"
               placeholder="••••••••"
-              className="w-full h-12 bg-white/5 border border-white/10 rounded-[14px] px-4 focus:outline-none focus:ring-2 focus:ring-primary-purple transition-all"
+              className="w-full h-12 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-[14px] px-4 focus:outline-none focus:ring-2 focus:ring-primary-purple transition-all"
               {...register("password")}
             />
             {errors.password && (

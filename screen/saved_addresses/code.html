@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Saved Addresses | Abyssal Enterprise</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#0f0d13",
+                    "surface-container-highest": "#36343a",
+                    "tertiary-fixed-dim": "#e7c365",
+                    "on-secondary": "#342b4b",
+                    "primary": "#cfbcff",
+                    "primary-fixed": "#e9ddff",
+                    "on-surface-variant": "#cbc4d2",
+                    "on-secondary-container": "#bfb2da",
+                    "error-container": "#93000a",
+                    "on-primary-container": "#e0d2ff",
+                    "on-error-container": "#ffdad6",
+                    "on-background": "#e6e0e9",
+                    "on-tertiary-container": "#503d00",
+                    "surface-container-high": "#2b292f",
+                    "surface-bright": "#3b383e",
+                    "secondary-fixed-dim": "#cdc0e9",
+                    "outline": "#948e9c",
+                    "secondary-container": "#4d4465",
+                    "on-primary-fixed-variant": "#4f378a",
+                    "surface-variant": "#36343a",
+                    "on-secondary-fixed-variant": "#4b4263",
+                    "on-secondary-fixed": "#1f1635",
+                    "error": "#ffb4ab",
+                    "on-primary": "#381e72",
+                    "on-surface": "#e6e0e9",
+                    "primary-fixed-dim": "#cfbcff",
+                    "on-tertiary-fixed": "#241a00",
+                    "surface-container": "#211f24",
+                    "secondary-fixed": "#e9ddff",
+                    "surface-dim": "#141218",
+                    "surface-container-low": "#1d1b20",
+                    "inverse-primary": "#6750a4",
+                    "tertiary": "#e7c365",
+                    "primary-container": "#6750a4",
+                    "inverse-on-surface": "#322f35",
+                    "outline-variant": "#494551",
+                    "secondary": "#cdc0e9",
+                    "inverse-surface": "#e6e0e9",
+                    "on-tertiary": "#3e2e00",
+                    "background": "#141218",
+                    "on-error": "#690005",
+                    "surface": "#141218",
+                    "surface-tint": "#cfbcff",
+                    "on-primary-fixed": "#22005d",
+                    "tertiary-fixed": "#ffdf93",
+                    "on-tertiary-fixed-variant": "#594400",
+                    "tertiary-container": "#c9a74d"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "2xl": "1rem",
+                    "3xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "display": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<<body class="bg-[#0a0a0c] text-on-background min-h-screen pb-32 selection:bg-primary/30">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 bg-[#0a0a0c]/80 backdrop-blur-xl border-b border-white/5 shadow-premium">
+<div class="flex justify-between items-center px-4 py-3 w-full">
+<div class="flex items-center gap-3">
+<button class="active:scale-95 transition-transform text-primary/60 hover:text-primary">
+<span class="material-symbols-outlined text-xl">arrow_back</span>
+</button>
+<h1 class="text-sm font-black text-white tracking-widest uppercase italic shadow-glow-purple/5">Logistics Endpoints</h1>
+</div>
+<div class="flex items-center gap-3">
+<button class="active:scale-95 transition-transform text-white/40 hover:text-white">
+<span class="material-symbols-outlined text-xl">search</span>
+</button>
+<button class="active:scale-95 transition-transform text-primary/60 hover:text-primary relative">
+<span class="material-symbols-outlined text-xl">shopping_cart</span>
+<span class="absolute -top-1 -right-1 w-3 h-3 bg-primary text-on-primary text-[7px] font-black flex items-center justify-center rounded-full italic">3</span>
+</button>
+</div>
+</div>
+</header>
+<main class="max-w-3xl mx-auto px-4 pt-6 space-y-4">
+<!-- Section Header -->
+<div class="space-y-0.5 px-1">
+<h2 class="text-xl font-black text-white tracking-tighter uppercase italic shadow-glow-purple/5">Delivery Coordinates</h2>
+<p class="text-[9px] font-black text-text-secondary uppercase tracking-widest italic opacity-40 leading-relaxed">Governing Your Global Maritime Reception Centers & Cold-Chain Nodes</p>
+</div>
+<!-- Address Grid -->
+<div class="grid grid-cols-1 gap-2.5">
+<!-- Address Card 1 (Default/Primary) -->
+<div class="group relative bg-white/[0.02] border border-white/5 p-4 rounded-xl shadow-glow-purple/5 hover:border-primary/30 transition-all duration-300">
+<div class="flex justify-between items-start">
+<div class="flex gap-4">
+<div class="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-glow-purple/20">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">home</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h3 class="text-[13px] font-black text-white tracking-tight uppercase italic shadow-glow-purple/5">Central Processing Hub</h3>
+<span class="px-2 py-0.5 rounded bg-primary/10 text-primary text-[7px] font-black uppercase tracking-widest italic border border-primary/20">DEFAULT</span>
+</div>
+<p class="text-[11px] font-black text-text-secondary uppercase tracking-tighter italic opacity-40 mt-1 leading-tight">
+                                742 Maritime Way, Pier 19<br/>
+                                North Atlantic Sector, NY 10004
+                            </p>
+<div class="mt-2.5 flex items-center gap-1.5 text-primary text-[8px] font-black uppercase tracking-widest italic opacity-60">
+<span class="material-symbols-outlined text-[12px]">thermometer_gain</span>
+                                Cold Chain Certified
+                            </div>
+</div>
+</div>
+<div class="flex gap-1 opacity-20 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded transition-colors">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error/10 rounded transition-colors">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Address Card 2 -->
+<div class="group relative bg-white/[0.02] border border-white/5 p-4 rounded-xl shadow-glow-purple/5 hover:border-primary/30 transition-all duration-300">
+<div class="flex justify-between items-start">
+<div class="flex gap-4">
+<div class="w-10 h-10 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white/40">
+<span class="material-symbols-outlined text-xl">business</span>
+</div>
+<div>
+<h3 class="text-[13px] font-black text-white tracking-tight uppercase italic shadow-glow-purple/5">Abyssal HQ Logistics</h3>
+<p class="text-[11px] font-black text-text-secondary uppercase tracking-tighter italic opacity-40 mt-1 leading-tight">
+                                101 Deepwater Plaza, Suite 400<br/>
+                                Financial District, San Francisco, CA 94105
+                            </p>
+<div class="mt-2.5 flex items-center gap-1.5 text-white/40 text-[8px] font-black uppercase tracking-widest italic">
+<span class="material-symbols-outlined text-[12px]">schedule</span>
+                                Receiving: 08:00 - 17:00
+                            </div>
+</div>
+</div>
+<div class="flex gap-1 opacity-20 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded transition-colors">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error/10 rounded transition-colors">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Address Card 3 (Map Preview Variant) -->
+<div class="group relative overflow-hidden bg-white/[0.02] border border-white/5 rounded-xl shadow-glow-purple/5 hover:border-primary/30 transition-all duration-300">
+<div class="h-24 w-full relative">
+<img class="w-full h-full object-cover opacity-20 grayscale group-hover:grayscale-0 group-hover:opacity-40 transition-all duration-700" data-alt="Satellite map view of harbor" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeTsiLy0p7_3aY71V81YFnwoHAzcW2z2tS1O1NoOX-rikko_cps8ZpmfUAutgaVPzv1QHhPXBp1_9Zo1QlhdF65Rrf5cigkz0NaTZ8TAcQIBbcqifBXajs02LhrZXC3VoBHvcqdHfY1T2J-5GrKiga7OhncuV46mmDlz9O1Aj9nLQNI07dR0neoS1R0yt03gBxwgxTGWcEtovZxnr4lulwez5JHBip0EWdyqkZCVEiyIWg9NqQDUIdK37t1N_LmSRS_da-ctVcKyE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0c] to-transparent"></div>
+<div class="absolute top-3 left-3">
+<div class="w-8 h-8 rounded bg-primary/20 backdrop-blur-md border border-primary/30 flex items-center justify-center text-primary shadow-glow-purple/40">
+<span class="material-symbols-outlined text-lg">anchor</span>
+</div>
+</div>
+</div>
+<div class="px-4 pb-4 pt-1">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-[13px] font-black text-white tracking-tight uppercase italic shadow-glow-purple/5">Reykjavík Distribution</h3>
+<p class="text-[11px] font-black text-text-secondary uppercase tracking-tighter italic opacity-40 mt-1 leading-tight">
+                                Skarfabakki Harbour, Berth 3<br/>
+                                105 Reykjavík, Iceland
+                            </p>
+</div>
+<div class="flex gap-1 opacity-20 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-primary/10 rounded transition-colors">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error/10 rounded transition-colors">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Info Card -->
+<div class="bg-primary/5 border border-primary/10 p-3 rounded-lg flex gap-3 items-start shadow-glow-purple/5">
+<span class="material-symbols-outlined text-primary text-lg opacity-60">info</span>
+<p class="text-[9px] font-black text-text-secondary uppercase tracking-widest italic leading-relaxed opacity-60">
+                Shipment directives are finalized at transit initiation. Active maritime deployments cannot be recalibrated from this node.
+            </p>
+</div>
+</main>
+<!-- Bottom Action Area -->
+<div class="fixed bottom-0 left-0 w-full p-4 bg-gradient-to-t from-[#0a0a0c] via-[#0a0a0c]/90 to-transparent z-40">
+<div class="max-w-3xl mx-auto">
+<button class="w-full h-11 bg-primary text-on-primary text-[10px] font-black uppercase tracking-widest italic rounded-lg flex items-center justify-center gap-2 shadow-glow-purple active:scale-[0.98] transition-all duration-150 hover:brightness-110">
+<span class="material-symbols-outlined text-lg">add_location_alt</span>
+                COMMISSION NEW COORDINATE
+            </button>
+</div>
+</div>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 w-full z-50 bg-[#0a0a0c]/90 backdrop-blur-md border-t border-white/5 shadow-premium md:hidden">
+<div class="flex justify-around items-center w-full px-2 py-2 pb-safe">
+<div class="flex flex-col items-center justify-center text-white/40 px-3 py-1.5 hover:text-white transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined text-xl">home</span>
+<span class="text-[7px] font-black tracking-widest uppercase italic mt-1 opacity-60">Home</span>
+</div>
+<div class="flex flex-col items-center justify-center text-white/40 px-3 py-1.5 hover:text-white transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined text-xl">storefront</span>
+<span class="text-[7px] font-black tracking-widest uppercase italic mt-1 opacity-60">Market</span>
+</div>
+<div class="flex flex-col items-center justify-center text-white/40 px-3 py-1.5 hover:text-white transition-all active:scale-90 duration-150">
+<span class="material-symbols-outlined text-xl">receipt_long</span>
+<span class="text-[7px] font-black tracking-widest uppercase italic mt-1 opacity-60">Orders</span>
+</div>
+<div class="flex flex-col items-center justify-center text-primary px-3 py-1.5 bg-primary/5 rounded-lg active:scale-90 duration-150 border border-primary/10">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="text-[7px] font-black tracking-widest uppercase italic mt-1 shadow-glow-purple/5">Profile</span>
+</div>
+</div>
+</nav>
+</body>
+</html>

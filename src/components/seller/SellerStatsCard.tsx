@@ -18,7 +18,7 @@ export default function SellerStatsCard({
   icon,
 }: SellerStatsCardProps) {
   return (
-    <Card className="border-white/5 bg-background-card hover:border-primary-purple/20 transition-all">
+    <Card className="border-[var(--foreground)]/5 bg-background-card hover:border-primary-purple/20 transition-all">
       <CardContent className="p-6">
         <div className="flex justify-between items-start">
           <div className="space-y-1">
@@ -27,7 +27,7 @@ export default function SellerStatsCard({
             </p>
             <h3 className="text-3xl font-extrabold tracking-tight">{value}</h3>
           </div>
-          <div className="w-12 h-12 rounded-[14px] bg-white/5 flex items-center justify-center text-xl">
+          <div className="w-12 h-12 rounded-[14px] bg-[var(--foreground)]/5 flex items-center justify-center text-xl">
             {icon}
           </div>
         </div>

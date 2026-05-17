@@ -1,0 +1,16 @@
+npm install
+npm run dev
+
+2. Platform Command Hierarchy:
+Navigator Hub: http://localhost:3000/customer/products (Marketplace Discovery).
+Merchant Hub: http://localhost:3000/seller/dashboard (Fleet Command).
+Admiral Hub: http://localhost:3000/admin/dashboard (Platform Authority).
+Registry Hub: http://localhost:3000/onboarding (Identity Commissioning).
+🛠️ Technical Requirement for Absolute Access:
+To activate the global signal, please ensure the Next.js development server is active by running the following command in your project terminal:
+
+
+http://localhost:3000/agent/tracking?order_id=ORD-9982&auto=true
+bash
+npm run dev
+Once the node is online, the Sovereign Gateway at http://localhost:8081/FISH_MARKET/viewer.php will automatically synchronize, granting you full administrative and operational control o

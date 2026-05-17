@@ -1,0 +1,15 @@
+ npx expo start -c
+
+cd apps/customer-mobile
+npx expo start --web
+npx expo start --web --clear
+
+
+cursor api
+
+crsr_7824f8a7b4de20c5238047a18b5cb491b3b2904dbb08f631b683e16a286a2e31
+
+openrouter ai api
+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
+
+

@@ -1,0 +1,41 @@
+<svg width="800" height="200" viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMid meet">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@1,900&amp;display=swap');
+      @keyframes neonTravel { 0% { stroke-dashoffset: 1500; } 100% { stroke-dashoffset: 0; } }
+      @keyframes hairyPulse {
+        0% { filter: drop-shadow(0 0 1px #FC8019) drop-shadow(0 0 2px #FDBA74); }
+        50% { filter: drop-shadow(0 0 2px #F97316) drop-shadow(0 0 3px #FC8019); }
+        100% { filter: drop-shadow(0 0 1px #FC8019) drop-shadow(0 0 2px #FDBA74); }
+      }
+      @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      .neon-path { stroke-dasharray: 200 1300; animation: neonTravel 3s linear infinite; }
+      .hairy-glow { animation: hairyPulse 4s ease-in-out infinite; transform-origin: 50px 50px; }
+      .hairline-orbit { transform-origin: 50px 50px; animation: rotate 10s linear infinite; stroke-dasharray: 30 150; }
+      .brand-text { font-family: 'Inter', sans-serif; font-weight: 900; font-style: italic; text-transform: uppercase; }
+    </style>
+    <linearGradient id="neonGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FC8019"><animate attributeName="stop-color" values="#FC8019;#FDBA74;#F97316;#FC8019" dur="4s" repeatCount="indefinite" /></stop>
+      <stop offset="100%" stop-color="#F97316"><animate attributeName="stop-color" values="#F97316;#FC8019;#FDBA74;#F97316" dur="4s" repeatCount="indefinite" /></stop>
+    </linearGradient>
+    <radialGradient id="eyeGradient">
+      <stop offset="0%" stop-color="#FFFFFF" /><stop offset="100%" stop-color="#FC8019"><animate attributeName="stop-color" values="#FC8019;#F97316;#FDBA74;#FC8019" dur="2s" repeatCount="indefinite" /></stop>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="200" fill="#0B1120" rx="12"/>
+  <g transform="translate(60, 55) scale(1.15)">
+    <circle cx="50" cy="50" r="48" stroke="url(#neonGradient)" stroke-width="0.75" fill="none" class="hairline-orbit" />
+    <g class="hairy-glow">
+      <path fill="#FC8019" d="M50 20 C35 20 20 30 15 50 L5 30 L5 70 L15 50 C20 70 35 80 50 80 C70 80 85 70 90 50 C85 30 70 20 50 20 Z M50 20 C55 10 65 5 75 5 C65 5 55 10 50 20 Z M50 80 C55 90 65 95 75 95 C65 95 55 90 50 80 Z" />
+      <text x="50" y="52" text-anchor="middle" dominant-baseline="middle" fill="url(#neonGradient)" font-size="24" font-weight="900" font-family="Inter, sans-serif" font-style="italic" style="letter-spacing: -1px;">OX</text>
+      <line x1="15" y1="44" x2="38" y2="44" stroke="white" stroke-width="2" opacity="0.8" />
+      <line x1="62" y1="58" x2="88" y2="58" stroke="white" stroke-width="2" opacity="0.8" />
+      <circle cx="82" cy="48" r="4" fill="white" opacity="0.2" /><circle cx="82" cy="48" r="3" fill="url(#eyeGradient)" />
+    </g>
+  </g>
+  <g transform="translate(180, 100)">
+    <path class="neon-path" d="M0, -45 L420, -45 L420, 50 L0, 50 L0, -45" fill="none" stroke="url(#neonGradient)" stroke-width="3" stroke-linecap="round" opacity="0.8" />
+    <text fill="#F8FAFC" class="brand-text" style="font-size: 58px; letter-spacing: -0.06em;" dominant-baseline="middle" x="0" y="0">OCEANEXOTIC</text>
+    <g transform="translate(0, 38)"><rect fill="#FC8019" x="0" y="-8" width="50" height="5" rx="2.5" /><text fill="#FC8019" class="brand-text" style="font-size: 24px; letter-spacing: 0.4em;" x="65" y="0">GLOBAL</text></g>
+  </g>
+</svg>

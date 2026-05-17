@@ -1,9 +1,12 @@
 "use client";
 
-import React from "react";
+import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/authStore";
+import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
 import { ROUTES } from "@/constants";
@@ -19,6 +22,10 @@ const registerSchema = z.object({
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function RegisterForm() {
+  const router = useRouter();
+  const { login } = useAuthStore();
+  const { toast } = useToast();
+
   const {
     register,
     handleSubmit,
@@ -31,16 +38,41 @@ export default function RegisterForm() {
   });
 
   const onSubmit = async (data: RegisterFormValues) => {
-    console.log("Register data:", data);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // High-Integrity Diagnostic Log
+    console.log("INITIATING_REGISTRATION_HANDSHAKE:", data.email, data.role);
+    
+    try {
+      // Simulate Abyssal Network Latency
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      // Execute Sovereign State Handshake
+      login({
+        id: "USR-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
+        name: data.name,
+        email: data.email,
+        role: data.role as any,
+      });
+
+      toast(`Account Registered. Welcome to the Fleet, ${data.name.toUpperCase()}.`, "success");
+
+      // Execute Navigational Handshake
+      if (data.role === "seller") {
+        router.push(ROUTES.SELLER_DASHBOARD);
+      } else {
+        router.push(ROUTES.PRODUCTS);
+      }
+    } catch (error) {
+      console.error("REGISTRATION_FAILURE:", error);
+      toast("Registration signal lost. Verify technical parameters and retry.", "error");
+    }
   };
 
   return (
-    <Card className="w-full max-w-md border-white/5 bg-background-card/50 backdrop-blur-xl">
+    <Card className="w-full max-w-md border-[var(--foreground)]/5 bg-background-card/50 backdrop-blur-xl">
       <CardHeader className="space-y-1 text-center">
         <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
         <CardDescription>
-          Join OceanFresh and start trading premium seafood
+          Join OceanExotic Global and start trading premium seafood
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -52,7 +84,7 @@ export default function RegisterForm() {
             <input
               id="name"
               placeholder="John Doe"
-              className="w-full h-12 bg-white/5 border border-white/10 rounded-[14px] px-4 focus:outline-none focus:ring-2 focus:ring-primary-purple transition-all"
+              className="w-full h-12 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-[14px] px-4 focus:outline-none focus:ring-2 focus:ring-primary-purple transition-all"
               {...register("name")}
             />
             {errors.name && (
@@ -67,7 +99,7 @@ export default function RegisterForm() {
               id="email"
               type="email"
               placeholder="name@example.com"
-              className="w-full h-12 bg-white/5 border border-white/10 rounded-[14px] px-4 focus:outline-none focus:ring-2 focus:ring-primary-purple transition-all"
+              className="w-full h-12 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-[14px] px-4 focus:outline-none focus:ring-2 focus:ring-primary-purple transition-all"
               {...register("email")}
             />
             {errors.email && (
@@ -82,7 +114,7 @@ export default function RegisterForm() {
               id="password"
               type="password"
               placeholder="••••••••"
-              className="w-full h-12 bg-white/5 border border-white/10 rounded-[14px] px-4 focus:outline-none focus:ring-2 focus:ring-primary-purple transition-all"
+              className="w-full h-12 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-[14px] px-4 focus:outline-none focus:ring-2 focus:ring-primary-purple transition-all"
               {...register("password")}
             />
             {errors.password && (

@@ -11,7 +11,7 @@ export default function LoginPage() {
       
       <div className="relative z-10 w-full max-w-md flex flex-col items-center">
         <div className="mb-8 text-3xl font-bold bg-gradient-to-r from-primary-purple to-primary-blue bg-clip-text text-transparent">
-          OceanFresh
+          OceanExotic Global
         </div>
         <LoginForm />
       </div>
