@@ -59,3 +59,9 @@ mobile/.env
 .qoder/
 .zencoder/
 .zenflow/
+
+# Exclude zip backup files
+*.zip
+
+# Exclude user uploads (images, avatars)
+public/uploads/
