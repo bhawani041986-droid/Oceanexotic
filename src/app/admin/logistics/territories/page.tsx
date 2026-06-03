@@ -4,6 +4,7 @@ import React from "react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { Modal } from "@/components/ui/Modal";
 import { 
   Anchor, 
   MapPin, 
@@ -17,7 +18,9 @@ import {
   MoreVertical,
   Activity,
   Globe,
-  X
+  X,
+  Edit3,
+  Trash2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -30,12 +33,11 @@ export default function TerritoryManagementPage() {
   );
   const [territories, setTerritories] = React.useState<any[]>([]
   );
-  const [isLoading, setIsLoading] = React.useState(true
-  );
-  const [showAddModal, setShowAddModal] = React.useState(false
-  );
-  const [newArea, setNewArea] = React.useState({ name: "", type: "JETTY", parentId: "" }
-  );
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [showAddModal, setShowAddModal] = React.useState(false);
+  const [newArea, setNewArea] = React.useState({ name: "", type: "JETTY", parentId: "" });
+  const [showEditModal, setShowEditModal] = React.useState(false);
+  const [editingArea, setEditingArea] = React.useState<any>(null);
 
   const fetchTerritories = async () => {
     try {
@@ -91,21 +93,66 @@ export default function TerritoryManagementPage() {
           parent_id: newArea.parentId || territories.find(t => t.name === activeIsland)?.id || null,
           status: "ACTIVE"
         })
-      }
-  );
-      const data = await res.json(
-  );
+      });
+      const data = await res.json();
       if (data.status === "success") {
-        fetchTerritories(
-  );
-        setShowAddModal(false
-  );
-        setNewArea({ name: "", type: "JETTY", parentId: "" }
-  );
+        fetchTerritories();
+        setShowAddModal(false);
+        setNewArea({ name: "", type: "JETTY", parentId: "" });
       }
     } catch (error) {
-      console.error("Failed to add territory", error
-  );
+      console.error("Failed to add territory", error);
+    }
+  };
+
+  const handleEditClick = (area: any) => {
+    setEditingArea({
+      id: area.id,
+      name: area.name,
+      type: area.zone_type,
+      parentId: area.parent_id || ""
+    });
+    setShowEditModal(true);
+  };
+
+  const handleEditArea = async () => {
+    if (!editingArea.name) return;
+    try {
+      const res = await fetch(`${API_BASE_URL}/system/edit_territory.php`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: editingArea.id,
+          name: editingArea.name,
+          zone_type: editingArea.type,
+          parent_id: editingArea.parentId || null
+        })
+      });
+      const data = await res.json();
+      if (data.status === "success") {
+        fetchTerritories();
+        setShowEditModal(false);
+        setEditingArea(null);
+      }
+    } catch (error) {
+      console.error("Failed to edit territory", error);
+    }
+  };
+
+  const handleDeleteArea = async (id: number, name: string) => {
+    if (!confirm(`Are you sure you want to decommission ${name}?`)) return;
+    try {
+      const res = await fetch(`${API_BASE_URL}/system/delete_territory.php`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id })
+      });
+      const data = await res.json();
+      if (data.status === "success") {
+        fetchTerritories();
+      }
+    } catch (error) {
+      console.error("Failed to delete territory", error);
     }
   };
 
@@ -137,59 +184,110 @@ export default function TerritoryManagementPage() {
       </div>
 
       {/* Add Territory Modal */}
-      {showAddModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
-          <Card className="w-full max-w-md p-8 bg-bg-secondary border-[var(--foreground)]/10 space-y-6 animate-in zoom-in-95 duration-200">
-             <div className="flex items-center justify-between border-b border-[var(--foreground)]/5 pb-4">
-                <h3 className="text-lg font-black text-[var(--foreground)] uppercase italic tracking-tighter">Commission Node</h3>
-                <button onClick={() => setShowAddModal(false)} className="text-[var(--foreground)]/40 hover:text-[var(--foreground)]"><X className="w-5 h-5" /></button>
-             </div>
-             <div className="space-y-4">
-                <div className="space-y-1.5">
-                   <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Node Identity</label>
-                   <input 
-                      type="text" 
-                      placeholder="e.g. Phoenix Bay Jetty"
-                      value={newArea.name}
-                      onChange={(e) => setNewArea({...newArea, name: e.target.value})}
-                      className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
-                   />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                   <div className="space-y-1.5">
-                      <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Classification</label>
-                      <select 
-                         value={newArea.type}
-                         onChange={(e) => setNewArea({...newArea, type: e.target.value})}
-                         className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
-                      >
-                         <option value="ISLAND">ISLAND</option>
-                         <option value="PORT">PORT</option>
-                         <option value="JETTY">JETTY</option>
-                         <option value="WARD">WARD</option>
-                      </select>
-                   </div>
-                   <div className="space-y-1.5">
-                      <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Parent Registry</label>
-                      <select 
-                         value={newArea.parentId}
-                         onChange={(e) => setNewArea({...newArea, parentId: e.target.value})}
-                         className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
-                      >
-                         <option value="">(Selected Island)</option>
-                         {territories.filter(t => t.zone_type !== 'WARD').map(t => (
-                            <option key={t.id} value={t.id}>{t.name}</option>
-                         ))}
-                      </select>
-                   </div>
-                </div>
-                <Button onClick={handleAddArea} className="w-full bg-primary py-4 text-[11px] font-black uppercase tracking-widest shadow-glow-purple mt-4">
-                   AUTHORIZE COMMISSION
-                </Button>
-             </div>
-          </Card>
+      <Modal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        title="Commission Node"
+        description="Commission a new geographic territory node in the registry."
+        className="bg-bg-secondary border-[var(--foreground)]/10 text-[var(--foreground)]"
+      >
+        <div className="space-y-4">
+           <div className="space-y-1.5">
+              <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Node Identity</label>
+              <input 
+                 type="text" 
+                 placeholder="e.g. Phoenix Bay Jetty"
+                 value={newArea.name}
+                 onChange={(e) => setNewArea({...newArea, name: e.target.value})}
+                 className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
+              />
+           </div>
+           <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                 <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Classification</label>
+                 <select 
+                    value={newArea.type}
+                    onChange={(e) => setNewArea({...newArea, type: e.target.value})}
+                    className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
+                 >
+                    <option value="ISLAND">ISLAND</option>
+                    <option value="PORT">PORT</option>
+                    <option value="JETTY">JETTY</option>
+                    <option value="WARD">WARD</option>
+                 </select>
+              </div>
+              <div className="space-y-1.5">
+                 <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Parent Registry</label>
+                 <select 
+                    value={newArea.parentId}
+                    onChange={(e) => setNewArea({...newArea, parentId: e.target.value})}
+                    className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
+                 >
+                    <option value="">(Selected Island)</option>
+                    {territories.filter(t => t.zone_type !== 'WARD').map(t => (
+                       <option key={t.id} value={t.id}>{t.name}</option>
+                    ))}
+                 </select>
+              </div>
+           </div>
+           <Button onClick={handleAddArea} className="w-full bg-primary py-4 text-[11px] font-black uppercase tracking-widest shadow-glow-purple mt-4">
+              AUTHORIZE COMMISSION
+           </Button>
         </div>
-      )}
+      </Modal>
+
+      {/* Edit Territory Modal */}
+      <Modal
+        isOpen={showEditModal && !!editingArea}
+        onClose={() => setShowEditModal(false)}
+        title="Edit Node"
+        description="Modify geographic territory node parameters in the registry."
+        className="bg-bg-secondary border-[var(--foreground)]/10 text-[var(--foreground)]"
+      >
+        <div className="space-y-4">
+           <div className="space-y-1.5">
+              <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Node Identity</label>
+              <input 
+                 type="text" 
+                 placeholder="e.g. Phoenix Bay Jetty"
+                 value={editingArea?.name || ""}
+                 onChange={(e) => setEditingArea({...editingArea, name: e.target.value})}
+                 className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
+              />
+           </div>
+           <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                 <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Classification</label>
+                 <select 
+                    value={editingArea?.type || "JETTY"}
+                    onChange={(e) => setEditingArea({...editingArea, type: e.target.value})}
+                    className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
+                 >
+                    <option value="ISLAND">ISLAND</option>
+                    <option value="PORT">PORT</option>
+                    <option value="JETTY">JETTY</option>
+                    <option value="WARD">WARD</option>
+                 </select>
+              </div>
+              <div className="space-y-1.5">
+                 <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Parent Registry</label>
+                 <select 
+                    value={editingArea?.parentId || ""}
+                    onChange={(e) => setEditingArea({...editingArea, parentId: e.target.value})}
+                    className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
+                 >
+                    <option value="">(Selected Island)</option>
+                    {territories.filter(t => t.zone_type !== 'WARD' && t.id !== editingArea?.id).map(t => (
+                       <option key={t.id} value={t.id}>{t.name}</option>
+                    ))}
+                 </select>
+              </div>
+           </div>
+           <Button onClick={handleEditArea} className="w-full bg-primary py-4 text-[11px] font-black uppercase tracking-widest shadow-glow-purple mt-4">
+              SAVE CHANGES
+           </Button>
+        </div>
+      </Modal>
 
       <div className="space-y-8">
         {/* Territory Analytics Cards */}
@@ -268,8 +366,8 @@ export default function TerritoryManagementPage() {
               </div>
             </div>
 
-            {/* Territories Table */}
-            <div className="border border-[var(--foreground)]/5 rounded-[24px] overflow-hidden bg-bg-secondary/20">
+            {/* Territories Table - Desktop */}
+            <div className="hidden lg:block border border-[var(--foreground)]/5 rounded-[24px] overflow-hidden bg-bg-secondary/20">
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-[var(--foreground)]/5 border-b border-[var(--foreground)]/10">
@@ -278,7 +376,7 @@ export default function TerritoryManagementPage() {
                     <th className="p-6 text-[9px] font-black text-[var(--foreground)]/40 uppercase tracking-[0.2em]">Parent Registry</th>
                     <th className="p-6 text-[9px] font-black text-[var(--foreground)]/40 uppercase tracking-[0.2em]">Status</th>
                     <th className="p-6 text-[9px] font-black text-[var(--foreground)]/40 uppercase tracking-[0.2em]">Sub-Nodes</th>
-                    <th className="p-6"></th>
+                    <th className="p-6 text-right text-[9px] font-black text-[var(--foreground)]/40 uppercase tracking-[0.2em] pr-10">Governance</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
@@ -287,6 +385,12 @@ export default function TerritoryManagementPage() {
                       <td colSpan={6} className="p-20 text-center">
                         <Activity className="w-8 h-8 text-primary animate-spin mx-auto mb-4" />
                         <p className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Accessing Maritime Registry...</p>
+                      </td>
+                    </tr>
+                  ) : filteredTerritories.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="text-center p-12 text-xs font-black uppercase text-text-secondary italic">
+                        No matching records found in database registry.
                       </td>
                     </tr>
                   ) : filteredTerritories.map((t) => (
@@ -308,28 +412,115 @@ export default function TerritoryManagementPage() {
                         <span className="text-[10px] font-bold text-[var(--foreground)]/40 italic">{t.parent_name || "ROOT"}</span>
                       </td>
                       <td className="p-6">
-                        <div className="flex items-center gap-2">
+                        <button 
+                          onClick={() => toggleStatus(t.id)}
+                          className="flex items-center gap-2"
+                        >
                           <div className={cn("w-1.5 h-1.5 rounded-full", t.status === "ACTIVE" ? "bg-success shadow-[0_0_8px_rgba(34,197,94,0.5)]" : "bg-[var(--foreground)]/20")} />
                           <span className={cn("text-[9px] font-black tracking-widest uppercase", t.status === "ACTIVE" ? "text-success" : "text-[var(--foreground)]/20")}>
                             {t.status}
                           </span>
-                        </div>
+                        </button>
                       </td>
                       <td className="p-6 text-center">
                         <span className="text-xs font-black text-[var(--foreground)]">{t.sub_nodes}</span>
                       </td>
-                      <td className="p-6 text-right">
-                        <button 
-                          onClick={() => toggleStatus(t.id)}
-                          className="w-8 h-8 rounded-lg hover:bg-[var(--foreground)]/5 flex items-center justify-center text-[var(--foreground)]/20 hover:text-[var(--foreground)] transition-all group/btn"
-                        >
-                          <MoreVertical className="w-4 h-4 group-hover/btn:text-primary transition-colors" />
-                        </button>
+                      <td className="p-6 text-right pr-6">
+                        <div className="flex justify-end gap-1.5">
+                          <button 
+                            onClick={() => handleEditClick(t)} 
+                            className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5"
+                          >
+                             <Edit3 className="w-3.5 h-3.5" />
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteArea(t.id, t.name)} 
+                            className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5"
+                          >
+                             <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+            </div>
+
+            {/* Mobile view cards - visible only on lg screens and below */}
+            <div className="lg:hidden space-y-4">
+              {isLoading ? (
+                <div className="p-20 text-center">
+                  <Activity className="w-8 h-8 text-primary animate-spin mx-auto mb-4" />
+                  <p className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Accessing Maritime Registry...</p>
+                </div>
+              ) : filteredTerritories.length === 0 ? (
+                <div className="text-center p-12 text-xs font-black uppercase text-text-secondary italic bg-bg-secondary/20 border border-[var(--foreground)]/5 rounded-2xl">
+                  No matching records found in database registry.
+                </div>
+              ) : (
+                filteredTerritories.map((t) => (
+                  <div 
+                    key={t.id} 
+                    className="p-4 rounded-xl bg-bg-card/40 border border-[var(--foreground)]/5 space-y-3 shadow-md"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-[var(--foreground)]/5 flex items-center justify-center border border-[var(--foreground)]/10 shrink-0">
+                          <MapPin className="w-4 h-4 text-primary" />
+                        </div>
+                        <div className="space-y-0.5">
+                          <p className="font-bold text-sm text-[var(--foreground)] tracking-wide">{t.name}</p>
+                          <Badge variant="outline" className="text-[8px] font-black tracking-widest border-[var(--foreground)]/10 text-[var(--foreground)]/60">
+                            {t.zone_type}
+                          </Badge>
+                        </div>
+                      </div>
+
+                      <div className="text-right">
+                        <button 
+                          onClick={() => toggleStatus(t.id)}
+                          className={cn(
+                            "px-2.5 py-1 rounded-full text-[8px] font-black tracking-widest uppercase border transition-all",
+                            t.status === "ACTIVE" 
+                              ? "bg-success/10 border-success/20 text-success" 
+                              : "bg-[var(--foreground)]/5 border-[var(--foreground)]/10 text-[var(--foreground)]/40"
+                          )}
+                        >
+                          {t.status}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5">
+                      <div className="space-y-0.5">
+                        <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Parent Registry</p>
+                        <p className="text-[10px] font-bold text-[var(--foreground)]/50 italic">{t.parent_name || "ROOT"}</p>
+                      </div>
+                      
+                      <div className="space-y-0.5 text-center">
+                        <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Sub-Nodes</p>
+                        <p className="text-xs font-black text-[var(--foreground)]">{t.sub_nodes}</p>
+                      </div>
+
+                      <div className="flex gap-1.5">
+                        <button 
+                          onClick={() => handleEditClick(t)} 
+                          className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5"
+                        >
+                           <Edit3 className="w-3.5 h-3.5" />
+                        </button>
+                        <button 
+                          onClick={() => handleDeleteArea(t.id, t.name)} 
+                          className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5"
+                        >
+                           <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>

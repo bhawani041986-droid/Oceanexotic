@@ -53,9 +53,9 @@ export const homeService = {
     return [];
   },
 
-  fetchCutOptions: async (productId: string): Promise<CutOption[]> => {
+  fetchCutOptions: async (productId: string, area?: string): Promise<CutOption[]> => {
     const { data } = await api.get("/products/cut_options.php", {
-      params: { product_id: productId },
+      params: { product_id: productId, area },
     });
     if (data.status === "success") return data.cut_options || [];
     return [];

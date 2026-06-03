@@ -160,7 +160,7 @@ export default function SellerChatPage() {
                 </h3>
                 <p className="text-[9px] font-black text-text-secondary uppercase tracking-widest">Active Fleet Comms</p>
               </div>
-              <Badge variant="primary" className="h-6 px-3 text-[8px] font-black tracking-widest uppercase shadow-glow-purple">LIVE</Badge>
+              <Badge variant="success" className="h-6 px-3 text-[8px] font-black tracking-widest uppercase shadow-glow-purple">LIVE</Badge>
            </div>
            <div className="relative group">
               <Input placeholder="Search signals..." className="h-11 lg:h-12 pl-12 bg-bg-primary border-white/5 text-[10px] font-black uppercase rounded-[16px]" />

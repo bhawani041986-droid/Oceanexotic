@@ -86,8 +86,68 @@ export default function OrderDetailsScreen() {
             </View>
           </View>
           <Text className="mt-2 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-            Sovereign Settlement Manifest • {MOCK_ORDER.date}
+            Order Invoice • {MOCK_ORDER.date}
           </Text>
+        </View>
+
+        {/* 🚚 Live Cold-Chain Delivery Radar */}
+        <View className="mb-6 rounded-2xl border border-primary/20 bg-primary/5 p-5">
+          <View className="flex-row items-center gap-3">
+            <View className="h-10 w-10 items-center justify-center rounded-full bg-primary/20 border border-primary/30">
+              <Text className="text-lg">🚚</Text>
+            </View>
+            <View className="flex-1">
+              <Text className="text-xs font-black uppercase italic text-foreground">
+                Cold-Chain Delivery Radar
+              </Text>
+              <Text className="mt-0.5 text-[9px] text-muted-foreground">
+                Current Node: Port Blair Phoenix Bay Hub
+              </Text>
+            </View>
+          </View>
+          
+          <View className="mt-4 flex-row flex-wrap items-center justify-between gap-2 border-t border-white/5 pt-3">
+            <View className="flex-row items-center gap-1.5 rounded-full bg-blue-500/10 px-2 py-1 border border-blue-500/30">
+              <View className="h-1.5 w-1.5 rounded-full bg-blue-400" />
+              <Text className="text-[9px] font-black uppercase text-blue-400">
+                1.2°C Chilled
+              </Text>
+            </View>
+            <Text className="text-[10px] font-black text-foreground">
+              32 mins remaining
+            </Text>
+          </View>
+        </View>
+
+        {/* 🔐 SECURE HANDOFF PROTOCOL */}
+        <View className="mb-6 rounded-2xl border border-blue-500/20 bg-blue-500/5 p-5">
+          <View className="flex-row items-center gap-3">
+            <View className="h-10 w-10 items-center justify-center rounded-full bg-blue-500/20 border border-blue-500/30">
+              <Text className="text-lg">🔐</Text>
+            </View>
+            <View className="flex-1">
+              <Text className="text-xs font-black uppercase italic text-foreground">
+                Secure Handoff Protocol
+              </Text>
+              <Text className="mt-0.5 text-[9px] text-muted-foreground">
+                Provide QR or OTP to confirm delivery
+              </Text>
+            </View>
+          </View>
+          
+          <View className="mt-4 items-center justify-center border-t border-white/5 pt-4">
+            <Image
+              source={{ uri: `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`http://localhost:3000/agent/confirm/${id}?otp=${String((parseInt(id?.replace(/[^0-9]/g, "") || "123") * 997 + 12345) % 900000 + 100000)}`)}` }}
+              className="h-40 w-40 rounded-xl bg-white p-2"
+              contentFit="contain"
+            />
+            <Text className="mt-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+              Verification Password (OTP)
+            </Text>
+            <Text className="mt-1 text-2xl font-black tracking-widest text-primary italic">
+              {String((parseInt(id?.replace(/[^0-9]/g, "") || "123") * 997 + 12345) % 900000 + 100000)}
+            </Text>
+          </View>
         </View>
 
         {/* Items */}
@@ -129,6 +189,26 @@ export default function OrderDetailsScreen() {
               </View>
             </View>
           ))}
+        </View>
+
+        {/* 🔄 Reorder Hub */}
+        <View className="mb-6 rounded-2xl border border-white/10 bg-secondary/40 p-5">
+          <View className="flex-row items-center gap-3">
+            <Text className="text-xl">🐟</Text>
+            <View className="flex-1">
+              <Text className="text-xs font-bold text-foreground">
+                Re-order these items?
+              </Text>
+              <Text className="text-[9px] text-muted-foreground">
+                Instant one-click checkout for previous items.
+              </Text>
+            </View>
+          </View>
+          <Button
+            label="CATCH AGAIN"
+            onPress={() => toast("Adding previous items to cart...", "success")}
+            className="mt-4 w-full"
+          />
         </View>
 
         {/* Settlement Summary */}
@@ -178,6 +258,49 @@ export default function OrderDetailsScreen() {
             {MOCK_ORDER.address.line1}
             {"\n"}
             {MOCK_ORDER.address.city}, {MOCK_ORDER.address.state} {MOCK_ORDER.address.zip}
+          </Text>
+        </View>
+
+        {/* 🍳 Culinary Prep & Storage Ledger */}
+        <View className="mt-6 rounded-2xl border border-white/10 bg-secondary/40 p-5">
+          <Text className="mb-3 text-[10px] font-black uppercase tracking-widest text-foreground">
+            🍳 Culinary Prep & Storage Ledger
+          </Text>
+          
+          <View className="mb-3 border-b border-white/5 pb-3">
+            <Text className="text-[9px] font-black uppercase text-primary tracking-widest">
+              ❄️ Thawing & Storage
+            </Text>
+            <Text className="mt-1 text-[10px] leading-normal text-muted-foreground">
+              Keep vacuum-sealed Bluefin Tuna chilled at 0-2°C (consume within 24h) or freeze at -18°C.
+            </Text>
+          </View>
+
+          <View>
+            <Text className="text-[9px] font-black uppercase text-primary tracking-widest">
+              👨‍🍳 Culinary Guide
+            </Text>
+            <Text className="mt-1 text-[10px] leading-normal text-muted-foreground">
+              Pan-sear Hokkaido Scallops with garlic herb butter for 2 mins per side.
+            </Text>
+          </View>
+        </View>
+
+        {/* ⚓ Fisherman Support & Sustainability Ledger */}
+        <View className="mt-6 rounded-2xl border border-white/10 bg-secondary/40 p-5">
+          <Text className="mb-3 text-[10px] font-black uppercase tracking-widest text-foreground">
+            ⚓ Fleet Sustainability
+          </Text>
+          <View className="flex-row justify-between mb-1">
+            <Text className="text-[10px] text-muted-foreground">Harvest Method</Text>
+            <Text className="text-[10px] font-black uppercase text-foreground italic">100% Line-Caught</Text>
+          </View>
+          <View className="flex-row justify-between mb-2">
+            <Text className="text-[10px] text-muted-foreground">Vessel Impact</Text>
+            <Text className="text-[10px] font-black text-foreground">₹340 Crew Support</Text>
+          </View>
+          <Text className="mt-1 border-t border-white/5 pt-2 text-[9px] leading-normal text-muted-foreground italic">
+            Your purchase directly contributes to local artisanal fisherman groups at Junglighat & Phoenix Bay.
           </Text>
         </View>
       </ScrollView>

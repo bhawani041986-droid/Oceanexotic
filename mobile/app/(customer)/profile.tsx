@@ -5,6 +5,7 @@ import { useAuthStore } from "@/store/authStore";
 import { userService, type UserProfile } from "@/services/userService";
 import { orderService } from "@/services/orderService";
 import { useCartStore } from "@/store/cartStore";
+import { useSettingsStore } from "@/store/settingsStore";
 import { authService } from "@/services/authService";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -14,6 +15,7 @@ import { cn } from "@/lib/utils";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
 import { assetUrl } from "@/config/assets";
+import { useThemeColors } from "@/hooks/useThemeColors";
 
 const JETTIES = ["Phoenix Bay Jetty", "Haddo Jetty", "Junglighat Jetty", "Havelock Jetty", "Chatham Jetty"];
 
@@ -22,6 +24,9 @@ export default function ProfileScreen() {
   const { user, logout, updateUser } = useAuthStore();
   const cart = useCartStore();
   const { toast, ToastHost } = useToast();
+  const colors = useThemeColors();
+
+  const primaryColor = colors.primary;
 
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [orderCount, setOrderCount] = useState(0);
@@ -64,6 +69,11 @@ export default function ProfileScreen() {
       setEmail(p.email || user.email);
       setOrderCount(orders.length);
       setAddresses(addrList);
+      updateUser({
+        name: p.name || user.name,
+        email: p.email || user.email,
+        avatar: p.avatar_url,
+      });
     } catch (err) {
       console.error("Vault/Profile Sync drift:", err);
       setName(user.name);
@@ -219,30 +229,37 @@ export default function ProfileScreen() {
 
   if (loading) {
     return (
-      <View className="flex-1 items-center justify-center bg-background">
-        <ActivityIndicator color="#7C3AED" size="large" />
+      <View className="flex-1 items-center justify-center" style={{ backgroundColor: colors.bg }}>
+        <ActivityIndicator color={primaryColor} size="large" />
       </View>
     );
   }
 
   return (
-    <View className="flex-1 bg-background">
+    <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       {ToastHost}
       <ScrollView contentContainerClassName="px-4 pb-28 pt-16">
-        <Text className="text-2xl font-black uppercase italic text-foreground">Citizen Profile</Text>
-        <Text className="mt-1 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+        <Text className="text-2xl font-black uppercase italic" style={{ color: colors.text }}>Citizen Profile</Text>
+        <Text 
+          className="mt-1 text-[10px] font-black uppercase tracking-widest" 
+          style={{ color: colors.textMuted }}
+        >
           {profile?.grade || "Maritime Citizen"}
         </Text>
 
         {/* Identity Head & Avatar */}
-        <View className="flex-row items-center gap-4 mt-6 rounded-2xl border border-white/10 bg-card p-4">
+        <View 
+          className="flex-row items-center gap-4 mt-6 rounded-2xl border p-4"
+          style={{ borderColor: colors.border, backgroundColor: colors.card }}
+        >
           <Pressable 
             onPress={handlePickImage} 
             disabled={uploadingAvatar}
-            className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-primary/30 bg-secondary/50 justify-center items-center"
+            className="relative w-16 h-16 rounded-full overflow-hidden border-2 justify-center items-center"
+            style={{ borderColor: colors.primary + "4D", backgroundColor: colors.bgAlt }}
           >
             {uploadingAvatar ? (
-              <ActivityIndicator color="#7C3AED" size="small" />
+              <ActivityIndicator color={primaryColor} size="small" />
             ) : profile?.avatar_url ? (
               <Image
                 source={{ uri: assetUrl(profile.avatar_url) }}
@@ -250,7 +267,7 @@ export default function ProfileScreen() {
                 contentFit="cover"
               />
             ) : (
-              <Text className="text-xl font-black text-primary">
+              <Text className="text-xl font-black" style={{ color: colors.primary }}>
                 {name ? name.charAt(0).toUpperCase() : "M"}
               </Text>
             )}
@@ -259,8 +276,8 @@ export default function ProfileScreen() {
             </View>
           </Pressable>
           <View className="flex-1">
-            <Text className="text-lg font-black uppercase text-foreground">{name || "Maritime Citizen"}</Text>
-            <Text className="text-[8px] font-black uppercase tracking-widest text-primary mt-0.5">
+            <Text className="text-lg font-black uppercase" style={{ color: colors.text }}>{name || "Maritime Citizen"}</Text>
+            <Text className="text-[8px] font-black uppercase tracking-widest mt-0.5" style={{ color: primaryColor }}>
               🚢 {profile?.grade || "Maritime Citizen"}
             </Text>
           </View>
@@ -269,43 +286,51 @@ export default function ProfileScreen() {
         <View className="mt-6 flex-row gap-3">
           <Pressable
             onPress={() => router.push("/orders")}
-            className="flex-1 rounded-2xl border border-white/10 bg-card p-4"
+            className="flex-1 rounded-2xl border p-4"
+            style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
-            <Text className="text-2xl font-black text-primary">{orderCount}</Text>
-            <Text className="text-[9px] font-black uppercase text-muted-foreground">Orders</Text>
+            <Text className="text-2xl font-black" style={{ color: primaryColor }}>{orderCount}</Text>
+            <Text className="text-[9px] font-black uppercase" style={{ color: colors.textMuted }}>Orders</Text>
           </Pressable>
           <Pressable
             onPress={() => router.push("/cart")}
-            className="flex-1 rounded-2xl border border-white/10 bg-card p-4"
+            className="flex-1 rounded-2xl border p-4"
+            style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
-            <Text className="text-2xl font-black text-primary">{cart.itemCount()}</Text>
-            <Text className="text-[9px] font-black uppercase text-muted-foreground">Cart items</Text>
+            <Text className="text-2xl font-black" style={{ color: primaryColor }}>{cart.itemCount()}</Text>
+            <Text className="text-[9px] font-black uppercase" style={{ color: colors.textMuted }}>Cart items</Text>
           </Pressable>
         </View>
 
         {/* Identity node */}
-        <View className="mt-6 gap-4 rounded-2xl border border-white/10 bg-card p-5">
-          <Text className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+        <View 
+          className="mt-6 gap-4 rounded-2xl border p-5"
+          style={{ borderColor: colors.border, backgroundColor: colors.card }}
+        >
+          <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
             Identity node
           </Text>
           <View>
-            <Text className="mb-1 text-[10px] font-black uppercase text-foreground">Name</Text>
+            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Name</Text>
             <Input value={name} onChangeText={setName} />
           </View>
           <View>
-            <Text className="mb-1 text-[10px] font-black uppercase text-foreground">Email</Text>
+            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Email</Text>
             <Input value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
           </View>
           <Button label={saving ? "SAVING…" : "SAVE PROFILE"} loading={saving} onPress={save} />
         </View>
 
         {/* Change Password node */}
-        <View className="mt-6 gap-4 rounded-2xl border border-white/10 bg-card p-5">
-          <Text className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+        <View 
+          className="mt-6 gap-4 rounded-2xl border p-5"
+          style={{ borderColor: colors.border, backgroundColor: colors.card }}
+        >
+          <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
             Security credentials
           </Text>
           <View>
-            <Text className="mb-1 text-[10px] font-black uppercase text-foreground">Current Password</Text>
+            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Current Password</Text>
             <Input
               value={currentPassword}
               onChangeText={setCurrentPassword}
@@ -314,7 +339,7 @@ export default function ProfileScreen() {
             />
           </View>
           <View>
-            <Text className="mb-1 text-[10px] font-black uppercase text-foreground">New Password</Text>
+            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>New Password</Text>
             <Input
               value={newPassword}
               onChangeText={setNewPassword}
@@ -323,7 +348,7 @@ export default function ProfileScreen() {
             />
           </View>
           <View>
-            <Text className="mb-1 text-[10px] font-black uppercase text-foreground">Confirm New Password</Text>
+            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Confirm New Password</Text>
             <Input
               value={confirmPassword}
               onChangeText={setConfirmPassword}
@@ -339,29 +364,51 @@ export default function ProfileScreen() {
         </View>
 
         {/* Address Vault Manager */}
-        <View className="mt-6 rounded-2xl border border-white/10 bg-card p-5">
+        <View 
+          className="mt-6 rounded-2xl border p-5"
+          style={{ borderColor: colors.border, backgroundColor: colors.card }}
+        >
           <View className="flex-row items-center justify-between mb-4">
-            <Text className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+            <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
               Address Vault
             </Text>
-            <Pressable onPress={() => setAddressModalVisible(true)} className="rounded-lg bg-primary/10 border border-primary/20 px-3 py-1">
-              <Text className="text-[9px] font-black text-primary uppercase">+ ADD NEW</Text>
+            <Pressable 
+              onPress={() => setAddressModalVisible(true)} 
+              className="rounded-lg border px-3 py-1"
+              style={{
+                backgroundColor: colors.primary + "1A",
+                borderColor: colors.primary + "33"
+              }}
+            >
+              <Text className="text-[9px] font-black uppercase" style={{ color: primaryColor }}>+ ADD NEW</Text>
             </Pressable>
           </View>
 
           {addresses.length === 0 ? (
-            <View className="items-center py-6 border border-dashed border-white/10 rounded-xl">
-              <Text className="text-xs font-bold text-muted-foreground uppercase">No addresses registered</Text>
+            <View 
+              className="items-center py-6 border border-dashed rounded-xl"
+              style={{ borderColor: colors.border }}
+            >
+              <Text className="text-xs font-bold uppercase" style={{ color: colors.textMuted }}>No addresses registered</Text>
             </View>
           ) : (
             <View className="gap-3">
               {addresses.map((addr) => (
-                <View key={addr.id} className="p-4 rounded-xl border border-white/10 bg-secondary/20 relative">
+                <View 
+                  key={addr.id} 
+                  className="p-4 rounded-xl border relative"
+                  style={{ borderColor: colors.border, backgroundColor: colors.bgAlt }}
+                >
                   <View className="flex-row items-center justify-between mb-1">
                     <View className="flex-row items-center gap-2">
-                      <Text className="text-[9px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2 py-0.5 rounded">
-                        {addr.type}
-                      </Text>
+                      <View 
+                        className="px-2 py-0.5 rounded"
+                        style={{ backgroundColor: colors.primary + "1A" }}
+                      >
+                        <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>
+                          {addr.type}
+                        </Text>
+                      </View>
                       {addr.is_default ? (
                         <Text className="text-[8px] font-black text-emerald-400 uppercase tracking-widest">
                           Default
@@ -372,9 +419,9 @@ export default function ProfileScreen() {
                       <Text className="text-[9px] font-black text-rose-500 uppercase">Delete</Text>
                     </Pressable>
                   </View>
-                  <Text className="text-xs font-bold text-foreground">{addr.hotel_name || "Private Residence"}</Text>
-                  <Text className="text-[11px] text-muted-foreground mt-1 leading-tight">{addr.address}</Text>
-                  <Text className="text-[9px] text-muted-foreground/60 mt-1 italic">
+                  <Text className="text-xs font-bold" style={{ color: colors.text }}>{addr.hotel_name || "Private Residence"}</Text>
+                  <Text className="text-[11px] mt-1 leading-tight" style={{ color: colors.textMuted }}>{addr.address}</Text>
+                  <Text className="text-[9px] mt-1 italic" style={{ color: colors.textMuted + "99" }}>
                     🚢 Jetty: {addr.jetty} · 📞 {addr.phone}
                   </Text>
                 </View>
@@ -384,11 +431,19 @@ export default function ProfileScreen() {
         </View>
 
         <View className="mt-4 gap-2">
-          <Pressable onPress={() => router.push("/products")} className="rounded-xl border border-white/10 bg-card px-4 py-4">
-            <Text className="text-sm font-bold text-foreground">Browse Market</Text>
+          <Pressable 
+            onPress={() => router.push("/products")} 
+            className="rounded-xl border px-4 py-4"
+            style={{ borderColor: colors.border, backgroundColor: colors.card }}
+          >
+            <Text className="text-sm font-bold" style={{ color: colors.text }}>Browse Market</Text>
           </Pressable>
-          <Pressable onPress={() => router.push("/home")} className="rounded-xl border border-white/10 bg-card px-4 py-4">
-            <Text className="text-sm font-bold text-foreground">Harbor Home</Text>
+          <Pressable 
+            onPress={() => router.push("/home")} 
+            className="rounded-xl border px-4 py-4"
+            style={{ borderColor: colors.border, backgroundColor: colors.card }}
+          >
+            <Text className="text-sm font-bold" style={{ color: colors.text }}>Harbor Home</Text>
           </Pressable>
         </View>
 
@@ -402,22 +457,29 @@ export default function ProfileScreen() {
         animationType="slide"
         onRequestClose={() => setAddressModalVisible(false)}
       >
-        <View className="flex-1 justify-end bg-background/90 px-4 pb-12 pt-20">
-          <ScrollView contentContainerClassName="rounded-3xl border border-white/10 bg-card p-6 shadow-2xl">
+        <View className="flex-1 justify-end px-4 pb-12 pt-20" style={{ backgroundColor: colors.bg + "E6" }}>
+          <ScrollView 
+            contentContainerClassName="rounded-3xl border p-6 shadow-2xl"
+            style={{ borderColor: colors.border, backgroundColor: colors.card }}
+          >
             <View className="mb-6 flex-row items-center justify-between">
-              <Text className="text-xl font-black uppercase italic text-foreground">
+              <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
                 Register Node
               </Text>
               <Pressable
                 onPress={() => setAddressModalVisible(false)}
-                className="rounded-full bg-white/5 p-2"
+                className="rounded-full p-2"
+                style={{ backgroundColor: colors.textMuted + "1A" }}
               >
-                <Text className="text-xs font-black text-foreground">X</Text>
+                <Text className="text-xs font-black" style={{ color: colors.text }}>X</Text>
               </Pressable>
             </View>
 
             <View className="mb-4">
-              <Text className="mb-2 text-[10px] font-black uppercase tracking-widest text-foreground">
+              <Text 
+                className="mb-2 text-[10px] font-black uppercase tracking-widest" 
+                style={{ color: colors.text }}
+              >
                 Type / Label
               </Text>
               <View className="flex-row gap-2">
@@ -425,19 +487,23 @@ export default function ProfileScreen() {
                   <Pressable
                     key={t}
                     onPress={() => setAddrType(t)}
-                    className={cn(
-                      "flex-1 py-2 rounded-xl border items-center",
-                      addrType === t ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"
-                    )}
+                    className="flex-1 py-2 rounded-xl border items-center"
+                    style={addrType === t ? {
+                      borderColor: primaryColor,
+                      backgroundColor: colors.primary + "1A"
+                    } : {
+                      borderColor: colors.border,
+                      backgroundColor: colors.bgAlt
+                    }}
                   >
-                    <Text className="text-[9px] font-black text-foreground">{t}</Text>
+                    <Text className="text-[9px] font-black" style={{ color: colors.text }}>{t}</Text>
                   </Pressable>
                 ))}
               </View>
             </View>
 
             <View className="mb-4">
-              <Text className="mb-1 text-[10px] font-black uppercase text-foreground">Hotel / Resort Name</Text>
+              <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Hotel / Resort Name</Text>
               <Input
                 placeholder="e.g. Symphony Palms Resort"
                 value={addrHotel}
@@ -446,7 +512,7 @@ export default function ProfileScreen() {
             </View>
 
             <View className="mb-4">
-              <Text className="mb-1 text-[10px] font-black uppercase text-foreground">Room / Villa No (Optional)</Text>
+              <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Room / Villa No (Optional)</Text>
               <Input
                 placeholder="e.g. Room 204"
                 value={addrRoom}
@@ -455,7 +521,10 @@ export default function ProfileScreen() {
             </View>
 
             <View className="mb-4">
-              <Text className="mb-2 text-[10px] font-black uppercase tracking-widest text-foreground">
+              <Text 
+                className="mb-2 text-[10px] font-black uppercase tracking-widest" 
+                style={{ color: colors.text }}
+              >
                 Delivery Jetty
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row gap-2">
@@ -463,19 +532,23 @@ export default function ProfileScreen() {
                   <Pressable
                     key={j}
                     onPress={() => setAddrJetty(j)}
-                    className={cn(
-                      "px-3 py-2 rounded-xl border mr-2",
-                      addrJetty === j ? "border-primary bg-primary/10" : "border-white/10 bg-white/5"
-                    )}
+                    className="px-3 py-2 rounded-xl border mr-2"
+                    style={addrJetty === j ? {
+                      borderColor: primaryColor,
+                      backgroundColor: colors.primary + "1A"
+                    } : {
+                      borderColor: colors.border,
+                      backgroundColor: colors.bgAlt
+                    }}
                   >
-                    <Text className="text-[8px] font-black text-foreground uppercase">{j}</Text>
+                    <Text className="text-[8px] font-black uppercase" style={{ color: colors.text }}>{j}</Text>
                   </Pressable>
                 ))}
               </ScrollView>
             </View>
 
             <View className="mb-4">
-              <Text className="mb-1 text-[10px] font-black uppercase text-foreground">Delivery Address / Destination</Text>
+              <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Delivery Address / Destination</Text>
               <Input
                 placeholder="e.g. Govind Nagar Beach No 3, Havelock"
                 value={addrLine}
@@ -484,7 +557,7 @@ export default function ProfileScreen() {
             </View>
 
             <View className="mb-4">
-              <Text className="mb-1 text-[10px] font-black uppercase text-foreground">Contact Phone</Text>
+              <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Contact Phone</Text>
               <Input
                 placeholder="e.g. +91 9999999999"
                 value={addrPhone}
@@ -493,14 +566,20 @@ export default function ProfileScreen() {
               />
             </View>
 
-            <View className="mb-6 flex-row items-center justify-between border-t border-white/5 pt-4">
-              <Text className="text-[10px] font-black uppercase tracking-widest text-foreground">
+            <View 
+              className="mb-6 flex-row items-center justify-between border-t pt-4"
+              style={{ borderTopColor: colors.border }}
+            >
+              <Text 
+                className="text-[10px] font-black uppercase tracking-widest" 
+                style={{ color: colors.text }}
+              >
                 Set as Default Address
               </Text>
               <Switch
                 value={addrDefault}
                 onValueChange={setAddrDefault}
-                trackColor={{ false: "#1E293B", true: "#7C3AED" }}
+                trackColor={{ false: colors.bgAlt, true: primaryColor }}
                 thumbColor="#F8FAFC"
               />
             </View>

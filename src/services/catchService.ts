@@ -6,7 +6,7 @@
 
 import type { TodaysCatchResponse, CutOptionsResponse } from '@/types/marketplace';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? 'http://localhost:8081/FISH_MARKET/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? 'http://127.0.0.1:8081/FISH_MARKET/api';
 
 // Shared fetch options — no-cache for live inventory pages
 const LIVE_FETCH: RequestInit = {

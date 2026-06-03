@@ -44,7 +44,7 @@ export default function SellerProductsPage() {
     setIsHydrating(true
   );
     try {
-      const res = await fetch('/api/seller/products'
+      const res = await fetch('/api/seller/products.php'
   );
       const data = await res.json(
   );
@@ -98,7 +98,7 @@ export default function SellerProductsPage() {
     toast(`Decommissioning ${id}...`, "info"
   );
     try {
-      const res = await fetch(`/api/seller/products?id=${id}`, { method: 'DELETE' }
+      const res = await fetch(`/api/seller/products.php?id=${id}`, { method: 'DELETE' }
   );
       if (res.ok) {
         toast(`${id} purged from registry.`, "success"
@@ -125,7 +125,7 @@ export default function SellerProductsPage() {
 
   return (
 
-    <div className="space-y-[10px] md:space-y-12 pt-4 md:pt-10 pb-32 md:pb-10 px-4 md:px-0 animate-fade-in" style={{ color: 'var(--agent-text)' }}>
+    <div className="space-y-[10px] md:space-y-12 pt-4 md:pt-10 pb-32 md:pb-10 px-0 animate-fade-in" style={{ color: 'var(--agent-text)' }}>
       
       {/* Header & Search */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-[10px] md:gap-6 md:border-b md:border-[var(--foreground)]/5 md:pb-10">
@@ -152,7 +152,7 @@ export default function SellerProductsPage() {
       </div>
 
       {/* Mobile Grid */}
-      <div className="grid grid-cols-2 gap-[10px] md:hidden">
+      <div className="grid grid-cols-2 gap-[10px] lg:hidden p-4">
         {paginatedProducts.map((product) => (
           <Card key={product.id} className="p-[8px] space-y-2 group rounded-[20px] relative overflow-hidden border-[var(--foreground)]/5 bg-bg-secondary/20 shadow-glow-purple/5">
             <div className="relative aspect-square rounded-xl border border-[var(--foreground)]/5 flex items-center justify-center text-2xl overflow-hidden shadow-inner bg-bg-secondary/40">
@@ -183,7 +183,7 @@ export default function SellerProductsPage() {
       </div>
 
       {/* Inventory Table (Desktop Only) */}
-      <Card className="hidden md:block p-1 rounded-[24px] md:rounded-[40px] overflow-hidden border-[var(--foreground)]/5 bg-bg-secondary/20 shadow-premium">
+      <Card className="hidden lg:block p-1 rounded-[24px] md:rounded-[40px] overflow-hidden border-[var(--foreground)]/5 bg-bg-secondary/20 shadow-premium">
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-transparent border-[var(--foreground)]/5">

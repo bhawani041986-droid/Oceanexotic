@@ -72,6 +72,9 @@ export default function OrdersPage() {
                       <div className="space-y-0.5 md:space-y-1">
                         <div className="flex items-center gap-3 md:gap-4">
                           <h3 className="text-base md:text-xl font-black uppercase italic text-[var(--foreground)] tracking-tight">{order.id}</h3>
+                          {order.is_pre_order === 1 && (
+                            <span className="px-1.5 py-0.5 rounded-[4px] bg-amber-500/20 text-amber-500 text-[8px] font-black uppercase tracking-wider border border-amber-500/30">PRE-ORDER</span>
+                          )}
                           <Badge variant={order.status === "IN TRANSIT" ? "success" : "glass"} className="text-[8px] md:text-[10px] font-black uppercase">
                             {order.status}
                           </Badge>

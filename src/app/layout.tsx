@@ -8,17 +8,18 @@ import { ToastProvider } from "@/components/ui/Toast";
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  viewportFit: 'cover',
   themeColor: '#0F172A',
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://oceanexotic.com'),
   title: "OceanExotic Global | Elite Maritime Marketplace",
-  description: "Experience absolute authority in exotic maritime trade. Rare, direct-from-source harvests with cold-chain integrity and global settlement sovereignty.",
+  description: "Experience the finest, freshest seafood delivered directly from the ocean to your door. Premium quality guaranteed.",
   keywords: ["seafood", "exotic fish", "maritime trade", "bluefin tuna", "oceanexotic", "premium seafood"],
   openGraph: {
     title: "OceanExotic Global | Elite Maritime Marketplace",
-    description: "Premium exotic maritime sourcing with total transparency and integrity.",
+    description: "Experience the finest, freshest seafood delivered directly from the ocean to your door. Premium quality guaranteed.",
     url: "https://oceanexotic.com",
     siteName: "OceanExotic Global",
     images: [
@@ -36,6 +37,7 @@ export const metadata: Metadata = {
 
 import { ThemeApplier } from "@/components/ThemeApplier";
 import { CustomerThemeApplier } from "@/components/customer/CustomerThemeApplier";
+import { AppSplashScreen } from "@/components/ui/AppSplashScreen";
 
 export default function RootLayout({
   children,
@@ -47,6 +49,7 @@ export default function RootLayout({
       <body className="font-sans antialiased min-h-screen selection:bg-primary/30 selection:text-white">
         <ThemeApplier />
         <CustomerThemeApplier />
+        <AppSplashScreen />
         <ToastProvider>
           {children}
         </ToastProvider>

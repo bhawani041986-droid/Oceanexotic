@@ -26,25 +26,27 @@ try {
 
         if (isset($data['id']) && is_numeric($data['id'])) {
             // Update
-            $stmt = $pdo->prepare("UPDATE cms_content SET title = ?, type = ?, status = ?, sector = ?, image_url = ? WHERE id = ?");
+            $stmt = $pdo->prepare("UPDATE cms_content SET title = ?, type = ?, status = ?, sector = ?, image_url = ?, metadata = ? WHERE id = ?");
             $stmt->execute([
                 $data['title'],
                 $data['type'],
                 $data['status'],
                 $data['sector'],
                 $data['image_url'],
+                isset($data['metadata']) ? (is_string($data['metadata']) ? $data['metadata'] : json_encode($data['metadata'])) : null,
                 $data['id']
             ]);
             echo json_encode(["status" => "success", "message" => "Directive Updated."]);
         } else {
             // Create
-            $stmt = $pdo->prepare("INSERT INTO cms_content (title, type, status, sector, image_url) VALUES (?, ?, ?, ?, ?)");
+            $stmt = $pdo->prepare("INSERT INTO cms_content (title, type, status, sector, image_url, metadata) VALUES (?, ?, ?, ?, ?, ?)");
             $stmt->execute([
                 $data['title'],
                 $data['type'] ?? 'BANNER',
                 $data['status'] ?? 'DRAFT',
                 $data['sector'] ?? 'GLOBAL',
-                $data['image_url'] ?? ''
+                $data['image_url'] ?? '',
+                isset($data['metadata']) ? (is_string($data['metadata']) ? $data['metadata'] : json_encode($data['metadata'])) : null
             ]);
             echo json_encode(["status" => "success", "message" => "Directive Commissioned.", "id" => $pdo->lastInsertId()]);
         }

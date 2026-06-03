@@ -133,37 +133,72 @@ export default function AdminRevenuePage() {
                VIEW FULL FINANCIAL DIRECTIVE <ChevronRight className="w-3 md:w-4 h-3 md:h-4" />
             </Button>
          </div>
-         <Table>
-            <TableHeader>
-               <TableRow className="border-[var(--foreground)]/5">
-                  <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Merchant Source</TableHead>
-                  <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Gross Volume</TableHead>
-                  <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Platform Cut</TableHead>
-                  <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Payout Status</TableHead>
-                  <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary pr-4 md:pr-6">Market Integrity</TableHead>
-               </TableRow>
-            </TableHeader>
-            <TableBody>
-               {[
-                 { merchant: "Nordic Prime Fisheries", volume: "₹1.24M", cut: "₹148.8K", status: "SETTLED", integrity: "99.4%" },
-                 { merchant: "Mediterranean Catch", volume: "₹940K", cut: "₹112.8K", status: "PENDING", integrity: "98.2%" },
-                 { merchant: "Pacific Rim Harvests", volume: "₹820K", cut: "₹98.4K", status: "SETTLED", integrity: "99.1%" },
-                 { merchant: "Bering Sea Sourcing", volume: "₹650K", cut: "₹78K", status: "SETTLED", integrity: "97.5%" },
-               ].map((row) => (
-                 <TableRow key={row.merchant} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
-                    <TableCell className="font-black text-[var(--foreground)] text-xs md:text-sm uppercase tracking-tighter italic group-hover/row:text-primary transition-colors">{row.merchant}</TableCell>
-                    <TableCell className="font-black text-[var(--foreground)] text-xs md:text-sm italic">{row.volume}</TableCell>
-                    <TableCell className="font-black text-primary text-xs md:text-sm italic">{row.cut}</TableCell>
-                    <TableCell>
-                       <Badge variant={row.status === "SETTLED" ? "success" : "warning"} className="text-[7px] md:text-[9px] italic px-2 uppercase font-black tracking-widest">
-                          {row.status}
-                       </Badge>
-                    </TableCell>
-                    <TableCell className="text-right font-black text-[var(--foreground)] text-[8px] md:text-[10px] tracking-widest italic pr-4 md:pr-6">{row.integrity}</TableCell>
-                 </TableRow>
-               ))}
-            </TableBody>
-         </Table>
+          <div className="hidden lg:block">
+            <Table>
+               <TableHeader>
+                  <TableRow className="border-[var(--foreground)]/5">
+                     <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Merchant Source</TableHead>
+                     <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Gross Volume</TableHead>
+                     <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Platform Cut</TableHead>
+                     <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Payout Status</TableHead>
+                     <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary pr-4 md:pr-6">Market Integrity</TableHead>
+                  </TableRow>
+               </TableHeader>
+               <TableBody>
+                  {[
+                    { merchant: "Nordic Prime Fisheries", volume: "₹1.24M", cut: "₹148.8K", status: "SETTLED", integrity: "99.4%" },
+                    { merchant: "Mediterranean Catch", volume: "₹940K", cut: "₹112.8K", status: "PENDING", integrity: "98.2%" },
+                    { merchant: "Pacific Rim Harvests", volume: "₹820K", cut: "₹98.4K", status: "SETTLED", integrity: "99.1%" },
+                    { merchant: "Bering Sea Sourcing", volume: "₹650K", cut: "₹78K", status: "SETTLED", integrity: "97.5%" },
+                  ].map((row) => (
+                    <TableRow key={row.merchant} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
+                       <TableCell className="font-black text-[var(--foreground)] text-xs md:text-sm uppercase tracking-tighter italic group-hover/row:text-primary transition-colors">{row.merchant}</TableCell>
+                       <TableCell className="font-black text-[var(--foreground)] text-xs md:text-sm italic">{row.volume}</TableCell>
+                       <TableCell className="font-black text-primary text-xs md:text-sm italic">{row.cut}</TableCell>
+                       <TableCell>
+                          <Badge variant={row.status === "SETTLED" ? "success" : "warning"} className="text-[7px] md:text-[9px] italic px-2 uppercase font-black tracking-widest">
+                             {row.status}
+                          </Badge>
+                       </TableCell>
+                       <TableCell className="text-right font-black text-[var(--foreground)] text-[8px] md:text-[10px] tracking-widest italic pr-4 md:pr-6">{row.integrity}</TableCell>
+                    </TableRow>
+                  ))}
+               </TableBody>
+            </Table>
+         </div>
+
+         {/* Mobile card list */}
+         <div className="lg:hidden space-y-3 p-4">
+            {[
+              { merchant: "Nordic Prime Fisheries", volume: "₹1.24M", cut: "₹148.8K", status: "SETTLED", integrity: "99.4%" },
+              { merchant: "Mediterranean Catch", volume: "₹940K", cut: "₹112.8K", status: "PENDING", integrity: "98.2%" },
+              { merchant: "Pacific Rim Harvests", volume: "₹820K", cut: "₹98.4K", status: "SETTLED", integrity: "99.1%" },
+              { merchant: "Bering Sea Sourcing", volume: "₹650K", cut: "₹78K", status: "SETTLED", integrity: "97.5%" },
+            ].map((row) => (
+               <div key={row.merchant} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
+                  <div className="flex items-start justify-between">
+                     <p className="font-black text-[var(--foreground)] text-sm uppercase tracking-tighter italic">{row.merchant}</p>
+                     <Badge variant={row.status === "SETTLED" ? "success" : "warning"} className="text-[7px] italic px-1.5 uppercase font-black tracking-widest">
+                        {row.status}
+                     </Badge>
+                  </div>
+                  <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5">
+                     <div className="space-y-0">
+                        <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Gross Volume</p>
+                        <p className="text-xs font-black text-[var(--foreground)] italic">{row.volume}</p>
+                     </div>
+                     <div className="space-y-0">
+                        <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Platform Cut</p>
+                        <p className="text-xs font-black text-primary italic">{row.cut}</p>
+                     </div>
+                     <div className="text-right space-y-0">
+                        <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Market Integrity</p>
+                        <p className="text-xs font-black text-[var(--foreground)] italic">{row.integrity}</p>
+                     </div>
+                  </div>
+               </div>
+            ))}
+         </div>
       </Card>
     </div>
   

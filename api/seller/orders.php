@@ -87,7 +87,8 @@ try {
             'shipping_method' => $o['shipping_method'],
             'tracking_number' => $o['tracking_number'],
             'estimated_delivery' => $o['estimated_delivery'],
-            'created_at' => $o['created_at']
+            'created_at' => $o['created_at'],
+            'is_pre_order' => isset($o['is_pre_order']) ? (int)$o['is_pre_order'] : 0
         ];
     }, $orders);
 

@@ -17,7 +17,8 @@ import {
   Trash2,
   Edit3,
   Filter,
-  BarChart2
+  BarChart2,
+  Navigation
 } from "lucide-react";
 
 const GLOBAL_INVENTORY = [
@@ -86,55 +87,98 @@ export default function AdminInventoryPage() {
               </Button>
            </div>
         </div>
-        <Table>
-           <TableHeader>
-              <TableRow className="border-[var(--foreground)]/5">
-                 <TableHead className="text-[9px] font-black uppercase tracking-widest italic text-text-secondary">Harvest Identity</TableHead>
-                 <TableHead className="text-[9px] font-black uppercase tracking-widest italic text-text-secondary">Merchant Source</TableHead>
-                 <TableHead className="text-[9px] font-black uppercase tracking-widest italic text-text-secondary">Category</TableHead>
-                 <TableHead className="text-[9px] font-black uppercase tracking-widest italic text-text-secondary">Stock Level</TableHead>
-                 <TableHead className="text-[9px] font-black uppercase tracking-widest italic text-text-secondary">Market Status</TableHead>
-                 <TableHead className="text-right text-[9px] font-black uppercase tracking-widest italic text-text-secondary">Governance</TableHead>
-              </TableRow>
-           </TableHeader>
-           <TableBody>
-              {GLOBAL_INVENTORY.map((item) => (
-                 <TableRow key={item.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
-                    <TableCell>
-                       <div className="space-y-0.5 md:space-y-1">
-                          <p className="font-black text-[var(--foreground)] text-xs md:text-sm uppercase tracking-tighter italic">{item.name}</p>
-                          <p className="text-[7px] md:text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">ID: {item.id}</p>
-                       </div>
-                    </TableCell>
-                    <TableCell className="text-[10px] md:text-xs font-black text-text-secondary italic opacity-40">via {item.seller}</TableCell>
-                    <TableCell>
-                       <Badge variant="glass" className="bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5 uppercase text-[7px] md:text-[8px] tracking-[0.2em] italic">
+        <div className="hidden lg:block">
+           <Table>
+              <TableHeader>
+                 <TableRow className="border-[var(--foreground)]/5">
+                    <TableHead className="text-[9px] font-black uppercase tracking-widest italic text-text-secondary">Harvest Identity</TableHead>
+                    <TableHead className="text-[9px] font-black uppercase tracking-widest italic text-text-secondary">Merchant Source</TableHead>
+                    <TableHead className="text-[9px] font-black uppercase tracking-widest italic text-text-secondary">Category</TableHead>
+                    <TableHead className="text-[9px] font-black uppercase tracking-widest italic text-text-secondary">Stock Level</TableHead>
+                    <TableHead className="text-[9px] font-black uppercase tracking-widest italic text-text-secondary">Market Status</TableHead>
+                    <TableHead className="text-right text-[9px] font-black uppercase tracking-widest italic text-text-secondary">Governance</TableHead>
+                 </TableRow>
+              </TableHeader>
+              <TableBody>
+                 {GLOBAL_INVENTORY.map((item) => (
+                    <TableRow key={item.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
+                       <TableCell>
+                          <div className="space-y-0.5 md:space-y-1">
+                             <p className="font-black text-[var(--foreground)] text-xs md:text-sm uppercase tracking-tighter italic">{item.name}</p>
+                             <p className="text-[7px] md:text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">ID: {item.id}</p>
+                          </div>
+                       </TableCell>
+                       <TableCell className="text-[10px] md:text-xs font-black text-text-secondary italic opacity-40">via {item.seller}</TableCell>
+                       <TableCell>
+                          <Badge variant="glass" className="bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5 uppercase text-[7px] md:text-[8px] tracking-[0.2em] italic">
+                             {item.category}
+                          </Badge>
+                       </TableCell>
+                       <TableCell className="font-black text-[var(--foreground)] italic text-[11px] md:text-sm tracking-tighter">{item.stock}</TableCell>
+                       <TableCell>
+                          <Badge variant={item.status === "PUBLISHED" ? "success" : item.status === "LOW STOCK" ? "warning" : "secondary"} className="uppercase text-[8px] md:text-[10px] italic px-2">
+                             {item.status}
+                          </Badge>
+                       </TableCell>
+                       <TableCell className="text-right">
+                          <div className="flex justify-end gap-1 md:gap-2">
+                             <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
+                                <Eye className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                             </button>
+                             <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
+                                <Edit3 className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                             </button>
+                             <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5">
+                                <Trash2 className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                             </button>
+                          </div>
+                       </TableCell>
+                    </TableRow>
+                 ))}
+              </TableBody>
+           </Table>
+        </div>
+
+        {/* Mobile card list */}
+        <div className="lg:hidden space-y-3 p-4">
+           {GLOBAL_INVENTORY.map((item) => (
+              <div key={item.id} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
+                 <div className="flex items-start justify-between">
+                    <div className="space-y-0.5">
+                       <p className="font-black text-[var(--foreground)] italic text-sm tracking-tighter uppercase">{item.name}</p>
+                       <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">ID: {item.id} • {item.seller}</p>
+                    </div>
+                    <Badge variant={item.status === "PUBLISHED" ? "success" : item.status === "LOW STOCK" ? "warning" : "secondary"} className="uppercase text-[8px] italic px-2">
+                       {item.status}
+                    </Badge>
+                 </div>
+                 <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5">
+                    <div className="space-y-0">
+                       <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Category</p>
+                       <Badge variant="glass" className="bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5 uppercase text-[7px] tracking-[0.15em] italic px-1.5 py-0.5">
                           {item.category}
                        </Badge>
-                    </TableCell>
-                    <TableCell className="font-black text-[var(--foreground)] italic text-[11px] md:text-sm tracking-tighter">{item.stock}</TableCell>
-                    <TableCell>
-                       <Badge variant={item.status === "PUBLISHED" ? "success" : item.status === "LOW STOCK" ? "warning" : "secondary"} className="uppercase text-[8px] md:text-[10px] italic px-2">
-                          {item.status}
-                       </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                       <div className="flex justify-end gap-1 md:gap-2">
-                          <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
-                             <Eye className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                          <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
-                             <Edit3 className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                          <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5">
-                             <Trash2 className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                       </div>
-                    </TableCell>
-                 </TableRow>
-              ))}
-           </TableBody>
-        </Table>
+                    </div>
+                    <div className="space-y-0">
+                       <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Stock Level</p>
+                       <p className="text-xs font-black text-[var(--foreground)] italic">{item.stock}</p>
+                    </div>
+                    <div className="space-y-0">
+                       <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Price</p>
+                       <p className="text-xs font-black text-primary italic">{item.price}</p>
+                    </div>
+                    <div className="flex gap-1">
+                       <button className="p-1.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
+                          <Eye className="w-3.5 h-3.5" />
+                       </button>
+                       <button className="p-1.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
+                          <Edit3 className="w-3.5 h-3.5" />
+                       </button>
+                    </div>
+                 </div>
+              </div>
+           ))}
+        </div>
       </Card>
     </div>
   

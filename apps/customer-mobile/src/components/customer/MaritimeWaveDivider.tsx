@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { View, StyleSheet, Dimensions, Animated, Easing } from "react-native";
+import { View, StyleSheet, Dimensions, Animated, Easing, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Path, Circle, Line } from "react-native-svg";
 import { Image } from "expo-image";
@@ -179,6 +179,167 @@ function SeaSnail({ x, y, size = 15 }: { x: number; y: number; size?: number }) 
         <Line x1="16" y1="14.5" x2="18" y2="11.5" stroke="#fda4af" strokeWidth="1" />
       </Svg>
     </View>
+  );
+}
+
+function SwayingSeaweed({ x, y, size = 26, color = "#10b981" }: { x: number; y: number; size?: number; color?: string }) {
+  const animValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(animValue, {
+          toValue: 1,
+          duration: 1800 + Math.random() * 1200,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(animValue, {
+          toValue: 0,
+          duration: 1800 + Math.random() * 1200,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        })
+      ])
+    ).start();
+
+    return () => animValue.stopAnimation();
+  }, []);
+
+  const rotate = animValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["-2deg", "8deg"],
+  });
+
+  return (
+    <Animated.View
+      style={[
+        styles.swayingCoralContainer,
+        {
+          left: x,
+          top: y,
+          transform: [{ rotate: rotate }],
+        },
+      ]}
+    >
+      <Svg width={size} height={size + 10} viewBox="0 0 24 34">
+        <Path
+          d="M12 34c-4-6-2-12-4-18s4-8 2-14c4 6 2 12 4 18s-4 8-2 14z"
+          fill={color}
+          opacity="0.8"
+        />
+      </Svg>
+    </Animated.View>
+  );
+}
+
+function RestingCrab({ x, y }: { x: number; y: number }) {
+  const animValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(animValue, {
+          toValue: 1,
+          duration: 800 + Math.random() * 500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(animValue, {
+          toValue: 0,
+          duration: 800 + Math.random() * 500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        })
+      ])
+    ).start();
+
+    return () => animValue.stopAnimation();
+  }, []);
+
+  const rotate = animValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["-4deg", "4deg"],
+  });
+
+  return (
+    <Animated.View
+      style={{
+        position: "absolute",
+        left: x,
+        top: y,
+        zIndex: 20,
+        transform: [{ rotate: rotate }],
+      }}
+    >
+      <Text style={{ fontSize: 13 }}>🦀</Text>
+    </Animated.View>
+  );
+}
+
+function RubyDiamondSprinkle({ x, y, size = 10, isRuby = true }: { x: number; y: number; size?: number; isRuby?: boolean }) {
+  const animValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(animValue, {
+          toValue: 1,
+          duration: 1000 + Math.random() * 800,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(animValue, {
+          toValue: 0,
+          duration: 1000 + Math.random() * 800,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        })
+      ])
+    ).start();
+
+    return () => animValue.stopAnimation();
+  }, []);
+
+  const opacity = animValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.4, 1],
+  });
+
+  const scale = animValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.85, 1.15],
+  });
+
+  return (
+    <Animated.View
+      style={{
+        position: "absolute",
+        left: x,
+        top: y,
+        zIndex: 25,
+        transform: [{ scale: scale }],
+        opacity: opacity,
+      }}
+    >
+      <Svg width={size} height={size} viewBox="0 0 24 24">
+        {isRuby ? (
+          <Path
+            d="M12 2 L22 12 L12 22 L2 12 Z"
+            fill="#ef4444"
+            stroke="#f87171"
+            strokeWidth="1.5"
+          />
+        ) : (
+          <Path
+            d="M6 2 L18 2 L22 8 L12 22 L2 8 Z"
+            fill="#38bdf8"
+            stroke="#e0f2fe"
+            strokeWidth="1.2"
+          />
+        )}
+      </Svg>
+    </Animated.View>
   );
 }
 
@@ -362,15 +523,80 @@ export function MaritimeWaveDivider() {
       <SwayingCoral x={width / 2 - 40} y={22} size={22} color="#a855f7" />
       <SwayingCoral x={width - 34} y={19} size={25} color="#ec4899" />
       <SwayingCoral x={width - 90} y={21} size={20} color="#06b6d4" />
+      <SwayingCoral x={45} y={24} size={18} color="#00ffcc" />
+      <SwayingCoral x={width / 4 - 20} y={21} size={23} color="#fda4af" />
+      <SwayingCoral x={width / 4 + 60} y={23} size={21} color="#facc15" />
+      <SwayingCoral x={width * 0.75 - 50} y={22} size={24} color="#a855f7" />
+      <SwayingCoral x={width * 0.75 + 30} y={20} size={20} color="#06b6d4" />
+      <SwayingCoral x={width - 150} y={23} size={22} color="#10b981" />
+      {/* 10 More Corals */}
+      <SwayingCoral x={30} y={22} size={20} color="#fb7185" />
+      <SwayingCoral x={85} y={23} size={19} color="#f472b6" />
+      <SwayingCoral x={width / 4 + 20} y={20} size={22} color="#c084fc" />
+      <SwayingCoral x={width / 2 - 120} y={21} size={24} color="#38bdf8" />
+      <SwayingCoral x={width / 2 + 35} y={22} size={21} color="#fbbf24" />
+      <SwayingCoral x={width * 0.65} y={20} size={23} color="#f43f5e" />
+      <SwayingCoral x={width * 0.7} y={23} size={19} color="#2dd4bf" />
+      <SwayingCoral x={width - 190} y={21} size={21} color="#fb7185" />
+      <SwayingCoral x={width - 110} y={22} size={25} color="#c084fc" />
+      <SwayingCoral x={width - 60} y={20} size={18} color="#34d399" />
+      {/* Additional Corals in Blank/Sparse Spaces */}
+      <SwayingCoral x={width * 0.15} y={21} size={22} color="#f43f5e" />
+      <SwayingCoral x={width * 0.38} y={23} size={20} color="#a855f7" />
+      <SwayingCoral x={width * 0.55} y={19} size={25} color="#ec4899" />
+      <SwayingCoral x={width * 0.82} y={21} size={21} color="#06b6d4" />
+      <SwayingCoral x={155} y={22} size={19} color="#00ffcc" />
+      <SwayingCoral x={width / 2 - 80} y={20} size={23} color="#fda4af" />
+      <SwayingCoral x={width / 2 + 130} y={22} size={22} color="#facc15" />
+      <SwayingCoral x={width * 0.88} y={20} size={20} color="#a855f7" />
+
+      {/* Swaying Seaweeds */}
+      <SwayingSeaweed x={width / 3 + 20} y={12} size={24} color="#059669" />
+      <SwayingSeaweed x={width / 2 + 100} y={10} size={28} color="#10b981" />
+      <SwayingSeaweed x={100} y={14} size={22} color="#34d399" />
+      <SwayingSeaweed x={width - 200} y={11} size={26} color="#059669" />
 
       {/* Resting Starfish */}
       <Starfish x={55} y={32} size={13} color="#f97316" />
       <Starfish x={width / 2 + 60} y={33} size={11} color="#eab308" />
       <Starfish x={width - 60} y={31} size={12} color="#f43f5e" />
+      <Starfish x={width / 3 - 50} y={32} size={12} color="#ec4899" />
+      <Starfish x={width * 0.75 - 10} y={31} size={13} color="#eab308" />
+      <Starfish x={width - 120} y={33} size={11} color="#3b82f6" />
+      {/* 6 More Stars */}
+      <Starfish x={20} y={33} size={10} color="#ec4899" />
+      <Starfish x={width / 4 + 100} y={32} size={12} color="#f59e0b" />
+      <Starfish x={width / 2 - 10} y={31} size={11} color="#ef4444" />
+      <Starfish x={width / 2 + 130} y={32} size={13} color="#10b981" />
+      <Starfish x={width * 0.7} y={33} size={12} color="#06b6d4" />
+      <Starfish x={width - 160} y={32} size={11} color="#a855f7" />
 
       {/* Slowly crawling Snails */}
       <SeaSnail x={95} y={30} size={15} />
       <SeaSnail x={width / 2 - 110} y={31} size={14} />
+      {/* 6 More Snails */}
+      <SeaSnail x={25} y={32} size={13} />
+      <SeaSnail x={width / 4 + 80} y={31} size={14} />
+      <SeaSnail x={width / 2 + 50} y={32} size={15} />
+      <SeaSnail x={width * 0.65 - 10} y={30} size={13} />
+      <SeaSnail x={width - 175} y={32} size={14} />
+      <SeaSnail x={width - 80} y={31} size={15} />
+
+      {/* Diamond/Ruby Sprinkling */}
+      <RubyDiamondSprinkle x={35} y={32} size={10} isRuby={true} />
+      <RubyDiamondSprinkle x={width / 4 + 40} y={33} size={8} isRuby={false} />
+      <RubyDiamondSprinkle x={width / 2 - 80} y={31} size={9} isRuby={true} />
+      <RubyDiamondSprinkle x={width / 2 + 120} y={34} size={11} isRuby={false} />
+      <RubyDiamondSprinkle x={width * 0.75 + 10} y={32} size={9} isRuby={true} />
+      <RubyDiamondSprinkle x={width - 75} y={33} size={10} isRuby={false} />
+      <RubyDiamondSprinkle x={width - 22} y={31} size={8} isRuby={true} />
+      <RubyDiamondSprinkle x={120} y={33} size={10} isRuby={false} />
+      <RubyDiamondSprinkle x={width / 2 - 20} y={32} size={9} isRuby={true} />
+      <RubyDiamondSprinkle x={width * 0.75 - 70} y={33} size={8} isRuby={false} />
+
+      {/* Animated Resting Crabs */}
+      <RestingCrab x={width / 4 + 10} y={26} />
+      <RestingCrab x={width * 0.75 - 90} y={27} />
 
       {/* Swimming Category Fish Assets */}
       {finFish.map((fish, idx) => (
@@ -406,7 +632,7 @@ export function MaritimeWaveDivider() {
       </Animated.View>
 
       {/* Animated Rising Oxygen Bubbles */}
-      {[...Array(6)].map((_, i) => (
+      {[...Array(12)].map((_, i) => (
         <FloatingBubble key={i} index={i} />
       ))}
     </View>

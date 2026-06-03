@@ -11,6 +11,8 @@ import Svg, {
   G,
 } from "react-native-svg";
 import { cn } from "@/lib/utils";
+import { useSettingsStore } from "@/store/settingsStore";
+import { useThemeColors } from "@/hooks/useThemeColors";
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 const AnimatedG = Animated.createAnimatedComponent(G);
@@ -18,7 +20,7 @@ const AnimatedG = Animated.createAnimatedComponent(G);
 type LogoSize = "sm" | "md" | "lg";
 
 const SIZES: Record<LogoSize, { width: number; height: number }> = {
-  sm: { width: 184, height: 46 },
+  sm: { width: 196, height: 49 },
   md: { width: 248, height: 62 },
   lg: { width: 308, height: 77 },
 };
@@ -33,10 +35,12 @@ interface LogoProps {
 export function Logo({ size = "md", className, style }: LogoProps) {
   const uid = useMemo(() => `logo${Math.random().toString(36).slice(2, 9)}`, []);
   const dims = SIZES[size];
+  const colors = useThemeColors();
   const textFill = "#F8FAFC";
-  const primaryFill = "#7C3AED";
-  const accentCyan = "#00D1FF";
-  const accentPink = "#F0ABFC";
+
+  const primaryFill = colors.primary;
+  const accentCyan = colors.secondary;
+  const accentPink = colors.accent;
 
   // Core Animated Loop Values
   const dashAnim = useRef(new Animated.Value(0)).current;
@@ -119,21 +123,21 @@ export function Logo({ size = "md", className, style }: LogoProps) {
             fill={primaryFill}
             d="M50 20 C35 20 20 30 15 50 L5 30 L5 70 L15 50 C20 70 35 80 50 80 C70 80 85 70 90 50 C85 30 70 20 50 20 Z M50 20 C55 10 65 5 75 5 C65 5 55 10 50 20 Z M50 80 C55 90 65 95 75 95 C65 95 55 90 50 80 Z"
           />
-          {/* Direct overlay of fish details in theme background color (#020617) to render perfectly on native platforms */}
+          {/* Direct overlay of fish details in theme background color to render perfectly on native platforms */}
           <SvgText
             x="50"
             y="58"
             textAnchor="middle"
-            fill="#020617"
+            fill={colors.bg}
             fontSize="24"
             fontWeight="900"
             fontStyle="italic"
           >
             OX
           </SvgText>
-          <Path d="M38 44 L15 44" stroke="#020617" strokeWidth={2.5} />
-          <Path d="M62 58 L88 58" stroke="#020617" strokeWidth={2.5} />
-          <Circle cx="82" cy="48" r="4" fill="#020617" />
+          <Path d="M38 44 L15 44" stroke={colors.bg} strokeWidth={2.5} />
+          <Path d="M62 58 L88 58" stroke={colors.bg} strokeWidth={2.5} />
+          <Circle cx="82" cy="48" r="4" fill={colors.bg} />
           <Circle cx="82" cy="48" r="3" fill={`url(#eyeGrad-${uid})`} />
         </AnimatedG>
 

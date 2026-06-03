@@ -294,7 +294,7 @@ export default function SellerReviewsPage() {
         onClose={() => setIsModalOpen(false)}
         title="DIRECT SIGNAL RESPONSE"
         description={`Replying to commendation from ${selectedReview?.user_name || selectedReview?.author}`}
-        className="max-w-xl border-primary/20 bg-bg-secondary/95 backdrop-blur-xl shadow-glow-purple/10"
+        className="md:max-w-xl bg-bg-secondary/95 border border-primary/20 text-[var(--foreground)] shadow-[0_0_50px_rgba(168,85,247,0.15)] backdrop-blur-xl rounded-t-[28px] md:rounded-[28px] p-5 md:p-8"
       >
         <div className="space-y-6 md:space-y-8">
           <div className="p-5 md:p-6 rounded-[24px] bg-white/[0.03] border border-[var(--foreground)]/5 relative overflow-hidden group">

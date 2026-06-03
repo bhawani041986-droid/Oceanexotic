@@ -89,7 +89,7 @@ export default function AdminProfilePage() {
                  <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Master Authority Hub • Sector-1</p>
               </div>
               <div className="pt-6 border-t border-[var(--foreground)]/5 flex flex-col gap-4 relative z-10">
-                 <Badge variant="primary" className="h-9 text-[9px] font-black tracking-widest uppercase bg-primary/10 text-primary border-primary/20">
+                 <Badge variant="default" className="h-9 text-[9px] font-black tracking-widest uppercase bg-primary/10 text-primary border-primary/20">
                     CLEARANCE: LEVEL-9 (SUPREME)
                  </Badge>
                  <Badge variant="glass" className="h-9 text-[9px] font-black tracking-widest uppercase bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5">

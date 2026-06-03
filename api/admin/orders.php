@@ -4,7 +4,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
-require_once '../../db.php';
+require_once __DIR__ . '/../../db.php';
 
 $pdo = getDB();
 
@@ -74,6 +74,7 @@ try {
             'shipping_method' => $o['shipping_method'],
             'tracking_number' => $o['tracking_number'],
             'estimated_delivery' => $o['estimated_delivery'],
+            'is_pre_order' => isset($o['is_pre_order']) ? (int)$o['is_pre_order'] : 0,
             'created_at' => $o['created_at']
         ];
     }, $orders);

@@ -86,16 +86,41 @@ export default function SellerEditProductPage() {
       const id = params?.id as string;
       if (!id) return;
       try {
-        const res = await fetch(`/api/seller/products?id=${id}`);
+        const res = await fetch(`/api/seller/products.php?id=${id}`);
         const data = await res.json();
         if (data.id) {
           const nutrition = data.nutrition ? (typeof data.nutrition === 'string' ? JSON.parse(data.nutrition) : data.nutrition) : {
             protein: "20g", omega3: "300mg", calories: "100 kcal", fat: "2g"
           };
           setFormData({
-            ...data,
-            nutrition,
-            cut_options: data.cut_options || [],
+            id: data.id || "",
+            name: data.name || "",
+            category: data.category || "SEAWATER FISH",
+            seller_id: data.seller_id || "",
+            price: data.price || "",
+            description: data.description || "",
+            stock: data.stock || "",
+            unit: data.unit || "KG",
+            min_order: data.min_order || "1",
+            image_url: data.image_url || "",
+            gallery: data.gallery || "[]",
+            status: data.status || "ACTIVE",
+            quality_rank: data.quality_rank || "VERIFIED",
+            harbor_node: data.harbor_node || "Phoenix Bay Harbor",
+            catch_date: data.catch_date || "",
+            nutrition: {
+              protein: nutrition.protein || "",
+              omega3: nutrition.omega3 || "",
+              calories: nutrition.calories || "",
+              fat: nutrition.fat || ""
+            },
+            cut_options: (data.cut_options || []).map((cut: any) => ({
+              ...cut,
+              cut_type: cut.cut_type || "WHOLE",
+              price_modifier_percent: cut.price_modifier_percent ?? 0,
+              price_flat_add: cut.price_flat_add ?? 0,
+              is_available: cut.is_available ?? 1
+            })),
             is_live_inventory: Number(data.is_live_inventory) || 0,
             catch_time: data.freshness_timestamp ? data.freshness_timestamp.split(' ')[1].substring(0, 5) : "05:30",
             batch_label: data.batch_label || "MORNING"
@@ -130,19 +155,50 @@ export default function SellerEditProductPage() {
   const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
-      toast(`Commissioning assets...`, "info");
-      const currentGallery = JSON.parse(formData.gallery || "[]");
+      toast(`Commissioning ${files.length} assets...`, "info");
+      const newUrls: string[] = [];
       for (let i = 0; i < files.length; i++) {
         const uploadData = new FormData();
         uploadData.append("file", files[i]);
         try {
           const response = await fetch("/api/upload", { method: "POST", body: uploadData });
           const data = await response.json();
-          if (data.url) currentGallery.push(data.url);
+          if (data.url) newUrls.push(data.url);
         } catch (err) {}
       }
-      setFormData((prev: any) => ({ ...prev, gallery: JSON.stringify(currentGallery) }));
-      toast("Gallery synchronized.", "success");
+      if (newUrls.length > 0) {
+        setFormData((prev: any) => {
+          const current = getGalleryArray(prev.gallery);
+          return {
+            ...prev,
+            gallery: JSON.stringify([...current, ...newUrls])
+          };
+        });
+        toast("Gallery synchronized.", "success");
+      }
+    }
+  };
+
+  const removeGalleryImage = (index: number) => {
+    setFormData((prev: any) => {
+      const current = getGalleryArray(prev.gallery);
+      const updated = current.filter((_, idx) => idx !== index);
+      return {
+        ...prev,
+        gallery: JSON.stringify(updated)
+      };
+    });
+    toast("Gallery asset removed.", "success");
+  };
+
+  const getGalleryArray = (galleryVal: any): string[] => {
+    if (!galleryVal) return [];
+    if (Array.isArray(galleryVal)) return galleryVal;
+    try {
+      const parsed = JSON.parse(galleryVal);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
     }
   };
 
@@ -163,7 +219,7 @@ export default function SellerEditProductPage() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      const res = await fetch('/api/seller/products', {
+      const res = await fetch('/api/seller/products.php', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -224,10 +280,14 @@ export default function SellerEditProductPage() {
                 <div className="space-y-2">
                   <label className="text-[10px] font-black uppercase tracking-widest ml-1">Category Registry</label>
                   <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} className="w-full h-[52px] border rounded-[16px] px-4 text-[10px] font-black uppercase tracking-widest outline-none focus:border-primary/50" style={{ backgroundColor: 'var(--agent-bg)', borderColor: 'var(--agent-border)', color: 'var(--agent-text)' }}>
-                     <option value="PREMIUM SAKU">PREMIUM SAKU</option>
-                     <option value="WILD CRUSTACEANS">WILD CRUSTACEANS</option>
-                     <option value="SHELLFISH ELITE">SHELLFISH ELITE</option>
-                     <option value="DEEP SEA WHITEFISH">DEEP SEA WHITEFISH</option>
+                     <option value="SEAWATER FISH">SEAWATER FISH</option>
+                     <option value="FRESHWATER FISH">FRESHWATER FISH</option>
+                     <option value="PRAWNS & SHRIMPS">PRAWNS & SHRIMPS</option>
+                     <option value="CRABS & LOBSTERS">CRABS & LOBSTERS</option>
+                     <option value="STEAKS & FILLETS">STEAKS & FILLETS</option>
+                     <option value="EXOTIC CATCH">EXOTIC CATCH</option>
+                     <option value="READY TO COOK">READY TO COOK</option>
+                     <option value="COASTAL DRY FISH">COASTAL DRY FISH</option>
                   </select>
                 </div>
                 <div className="space-y-2">
@@ -419,13 +479,44 @@ export default function SellerEditProductPage() {
           <Card className="p-8 space-y-6 border" style={{ backgroundColor: 'var(--agent-card-bg)', borderColor: 'var(--agent-border)' }}>
             <h3 className="text-lg font-bold tracking-tight uppercase border-b pb-6" style={{ borderColor: 'var(--agent-border)' }}>Visual Registry</h3>
             <div className="space-y-6">
-              <div onClick={() => mainInputRef.current?.click()} className="aspect-square rounded-[32px] border-2 border-dashed flex flex-col items-center justify-center gap-4 group hover:border-primary/50 transition-all cursor-pointer overflow-hidden relative" style={{ backgroundColor: 'var(--agent-bg)', borderColor: 'var(--agent-border)' }}>
-                {formData.image_url ? ( <img src={formData.image_url} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" /> ) : ( <><Upload className="w-8 h-8 opacity-20" /><p className="text-[10px] font-black uppercase tracking-widest opacity-40">Primary Asset</p></> )}
+              <div 
+                onClick={() => mainInputRef.current?.click()} 
+                className="aspect-square rounded-[32px] border-2 border-dashed flex flex-col items-center justify-center gap-4 group hover:border-primary/50 transition-all cursor-pointer overflow-hidden relative" 
+                style={{ backgroundColor: 'var(--agent-bg)', borderColor: 'var(--agent-border)' }}
+              >
+                {formData.image_url ? (
+                  <div className="w-full h-full relative group">
+                    <img src={formData.image_url} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" />
+                    <button 
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setFormData((prev: any) => ({ ...prev, image_url: "" }));
+                        toast("Primary image removed.", "success");
+                      }}
+                      className="absolute top-3 right-3 p-2 rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-danger/80"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <Upload className="w-8 h-8 opacity-20" />
+                    <p className="text-[10px] font-black uppercase tracking-widest opacity-40">Primary Asset</p>
+                  </>
+                )}
               </div>
               <div className="grid grid-cols-3 gap-2">
-                  {JSON.parse(formData.gallery || "[]").map((img: string, idx: number) => (
+                  {getGalleryArray(formData.gallery).map((img: string, idx: number) => (
                     <div key={idx} className="relative aspect-square rounded-xl overflow-hidden group border border-[var(--agent-border)]">
                       <img src={img} className="w-full h-full object-cover" />
+                      <button 
+                        type="button"
+                        onClick={() => removeGalleryImage(idx)}
+                        className="absolute top-1 right-1 p-1 rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
                     </div>
                   ))}
                   <button onClick={() => galleryInputRef.current?.click()} className="aspect-square rounded-xl border-2 border-dashed border-primary/20 flex items-center justify-center hover:bg-primary/5 transition-all">

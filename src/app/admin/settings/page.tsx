@@ -21,7 +21,9 @@ import {
   Lock,
   Database,
   CreditCard,
-  Key
+  Key,
+  Clock,
+  Calendar
 } from "lucide-react";
 import { useTheme, ThemeType } from "@/context/ThemeContext";
 import { useSettingsStore } from "@/store/settingsStore";
@@ -133,10 +135,22 @@ const THEMES: { id: ThemeType; name: string; description: string; colors: string
 
 export default function AdminSettingsPage() {
   const { theme, setTheme, font, setFont, blurIntensity, setBlurIntensity, glowIntensity, setGlowIntensity } = useTheme();
-  const { pushSettings } = useSettingsStore();
+  const { 
+    ordersEnabled, 
+    ordersOpenTime, 
+    ordersCloseTime, 
+    ordersNextOpenText, 
+    setSettings, 
+    fetchSettings, 
+    pushSettings 
+  } = useSettingsStore();
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+
+  React.useEffect(() => {
+    fetchSettings();
+  }, [fetchSettings]);
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -366,6 +380,79 @@ export default function AdminSettingsPage() {
                     </div>
                  </div>
               </Card>
+
+              {/* Order Window Calibration Module */}
+              <div className="pt-10 space-y-8">
+                 <div className="flex items-center justify-between px-1">
+                    <div className="space-y-[2px] md:space-y-1">
+                       <h3 className="text-[10px] md:text-lg font-black text-[var(--foreground)] uppercase tracking-tight flex items-center gap-2 md:gap-3">
+                          <Clock className="w-3.5 h-3.5 md:w-5 md:h-5 text-primary" /> Order Window Calibration
+                       </h3>
+                       <p className="text-[7px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest leading-relaxed">Calibrate instant delivery availability & automatic opening times.</p>
+                    </div>
+                 </div>
+
+                 <Card className="p-6 md:p-10 space-y-8 rounded-[32px] border-[var(--foreground)]/5 bg-bg-secondary/40">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-bg-primary/30 border border-[var(--foreground)]/5">
+                       <div className="space-y-1">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]">Platform Window State</p>
+                          <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest">
+                             {ordersEnabled ? "Accepting Instant & Pre-Orders" : "Pre-Orders Only Mode Enabled"}
+                          </p>
+                       </div>
+                       <button
+                          onClick={() => setSettings({ ordersEnabled: !ordersEnabled })}
+                          className={cn(
+                             "px-6 h-12 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-300",
+                             ordersEnabled 
+                                ? "bg-primary text-[var(--foreground)] shadow-glow-purple" 
+                                : "bg-amber-500/20 text-amber-500 border border-amber-500/30"
+                          )}
+                       >
+                          {ordersEnabled ? "Instant Delivery: ON" : "Pre-Orders Only: ACTIVE"}
+                       </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                       <div className="space-y-2">
+                          <label className="text-[9px] font-black uppercase tracking-widest ml-1 text-text-secondary flex items-center gap-2">
+                             <Clock className="w-3 h-3 text-primary" /> Opening Time (Daily Auto-Open)
+                          </label>
+                          <input 
+                             type="time" 
+                             value={ordersOpenTime || "09:00"}
+                             onChange={(e) => setSettings({ ordersOpenTime: e.target.value })}
+                             className="w-full h-14 bg-bg-primary/50 border border-[var(--foreground)]/5 rounded-2xl px-6 text-sm font-black text-[var(--foreground)] outline-none focus:border-primary/40 transition-all [color-scheme:dark]"
+                          />
+                       </div>
+                       <div className="space-y-2">
+                          <label className="text-[9px] font-black uppercase tracking-widest ml-1 text-text-secondary flex items-center gap-2">
+                             <Clock className="w-3 h-3 text-primary" /> Closing Time (Daily Auto-Close)
+                          </label>
+                          <input 
+                             type="time" 
+                             value={ordersCloseTime || "22:00"}
+                             onChange={(e) => setSettings({ ordersCloseTime: e.target.value })}
+                             className="w-full h-14 bg-bg-primary/50 border border-[var(--foreground)]/5 rounded-2xl px-6 text-sm font-black text-[var(--foreground)] outline-none focus:border-primary/40 transition-all [color-scheme:dark]"
+                          />
+                       </div>
+                    </div>
+
+                    <div className="space-y-2">
+                       <label className="text-[9px] font-black uppercase tracking-widest ml-1 text-text-secondary flex items-center gap-2">
+                          <Calendar className="w-3 h-3 text-primary" /> Pre-Order Slot Broadcast Label
+                       </label>
+                       <input 
+                          type="text" 
+                          value={ordersNextOpenText || "Tomorrow at 09:00 AM"}
+                          onChange={(e) => setSettings({ ordersNextOpenText: e.target.value })}
+                          placeholder="e.g. Tomorrow at 09:00 AM"
+                          className="w-full h-14 bg-bg-primary/50 border border-[var(--foreground)]/5 rounded-2xl px-6 text-sm font-black text-[var(--foreground)] outline-none focus:border-primary/40 transition-all"
+                       />
+                       <p className="text-[7px] font-black text-text-secondary uppercase tracking-widest mt-1">This text is displayed dynamically on the storefront during closed hours to guide pre-orders.</p>
+                    </div>
+                 </Card>
+              </div>
            </div>
         </div>
 

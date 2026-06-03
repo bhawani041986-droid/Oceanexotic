@@ -22,14 +22,13 @@ export interface Category {
   glowColor: string;
 }
 
-/** Mirrors `CATEGORIES` in `src/app/customer/page.tsx` */
 export const CATEGORIES: Category[] = [
-  { name: "Red Snapper",   image: IMG_SNAPPER,  slug: "snapper",  glowColor: "#e11d48" },
-  { name: "Kingfish",      image: IMG_KINGFISH, slug: "kingfish", glowColor: "#3b82f6" },
-  { name: "White Pomfret", image: IMG_POMFRET,  slug: "pomfret",  glowColor: "#cbd5e1" },
-  { name: "Grouper",       image: IMG_GROUPER,  slug: "grouper",  glowColor: "#92400e" },
-  { name: "Mackerel",      image: IMG_MACKEREL, slug: "mackerel", glowColor: "#06b6d4" },
-  { name: "Tiger Prawns",  image: IMG_PRAWNS,   slug: "prawns",   glowColor: "#f97316" },
-  { name: "Mud Crab",      image: IMG_CRAB,     slug: "crab",     glowColor: "#065f46" },
-  { name: "Spiny Lobster", image: IMG_LOBSTER,  slug: "lobster",  glowColor: "#b91c1c" },
+  { name: "Seawater Fish",   image: IMG_SNAPPER,  slug: "seawater",  glowColor: "#e11d48" },
+  { name: "Freshwater Fish", image: IMG_MACKEREL, slug: "freshwater", glowColor: "#06b6d4" },
+  { name: "Prawns & Shrimps",image: IMG_PRAWNS,   slug: "prawns",     glowColor: "#f97316" },
+  { name: "Crabs & Lobsters",image: IMG_CRAB,     slug: "crustaceans", glowColor: "#065f46" },
+  { name: "Steaks & Fillets",image: IMG_KINGFISH, slug: "fillets",    glowColor: "#3b82f6" },
+  { name: "Exotic Catch",    image: IMG_LOBSTER,  slug: "exotic",     glowColor: "#b91c1c" },
+  { name: "Ready to Cook",   image: IMG_GROUPER,  slug: "ready-to-cook", glowColor: "#92400e" },
+  { name: "Coastal Dry Fish",image: IMG_POMFRET,  slug: "dry-fish",   glowColor: "#cbd5e1" },
 ];

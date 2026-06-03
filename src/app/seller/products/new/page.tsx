@@ -33,6 +33,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/Toast";
 import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/store/authStore";
 
 const CUT_TYPES = [
   { id: 'WHOLE', label: 'Whole Fish' },
@@ -50,12 +51,13 @@ const CUT_TYPES = [
 export default function SellerNewProductPage() {
   const { toast } = useToast();
   const router = useRouter();
+  const { user } = useAuthStore();
   const [isSaving, setIsSaving] = useState(false);
 
   const [formData, setFormData] = useState<any>({
     id: `PRD-${Date.now()}-${Math.floor(Math.random() * 999)}`,
     name: "",
-    category: "PREMIUM SAKU",
+    category: "SEAWATER FISH",
     price: "",
     description: "",
     stock: "100",
@@ -106,18 +108,50 @@ export default function SellerNewProductPage() {
   const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
-      const currentGallery = JSON.parse(formData.gallery || "[]");
+      toast(`Commissioning ${files.length} assets...`, "info");
+      const newUrls: string[] = [];
       for (let i = 0; i < files.length; i++) {
         const uploadData = new FormData();
         uploadData.append("file", files[i]);
         try {
-          const res = await fetch("/api/upload", { method: "POST", body: uploadData });
-          const data = await res.json();
-          if (data.url) currentGallery.push(data.url);
+          const response = await fetch("/api/upload", { method: "POST", body: uploadData });
+          const data = await response.json();
+          if (data.url) newUrls.push(data.url);
         } catch (err) {}
       }
-      setFormData((prev: any) => ({ ...prev, gallery: JSON.stringify(currentGallery) }));
-      toast("Gallery registry synchronized.", "success");
+      if (newUrls.length > 0) {
+        setFormData((prev: any) => {
+          const current = getGalleryArray(prev.gallery);
+          return {
+            ...prev,
+            gallery: JSON.stringify([...current, ...newUrls])
+          };
+        });
+        toast("Gallery registry synchronized.", "success");
+      }
+    }
+  };
+
+  const removeGalleryImage = (index: number) => {
+    setFormData((prev: any) => {
+      const current = getGalleryArray(prev.gallery);
+      const updated = current.filter((_, idx) => idx !== index);
+      return {
+        ...prev,
+        gallery: JSON.stringify(updated)
+      };
+    });
+    toast("Gallery asset removed.", "success");
+  };
+
+  const getGalleryArray = (galleryVal: any): string[] => {
+    if (!galleryVal) return [];
+    if (Array.isArray(galleryVal)) return galleryVal;
+    try {
+      const parsed = JSON.parse(galleryVal);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
     }
   };
 
@@ -143,10 +177,11 @@ export default function SellerNewProductPage() {
 
     setIsSaving(true);
     try {
-      const res = await fetch('/api/seller/products', {
+      const seller_id = user?.id ? (user.id.startsWith("SEL-") ? user.id : `SEL-${user.id}`) : 'SEL-USR-1778761853233';
+      const res = await fetch('/api/seller/products.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, seller_id: 'SEL-001' })
+        body: JSON.stringify({ ...formData, seller_id })
       });
       if (res.ok) {
         toast("Harvest successfully commissioned!", "success");
@@ -218,10 +253,14 @@ export default function SellerNewProductPage() {
                 <div className="space-y-1 lg:space-y-2">
                   <label className="text-[8px] lg:text-[10px] font-black uppercase tracking-widest ml-1">Category Registry</label>
                   <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} className="w-full h-[44px] lg:h-[52px] border rounded-[12px] lg:rounded-[16px] px-3 lg:px-4 text-[9px] lg:text-[10px] font-black uppercase tracking-widest outline-none focus:border-primary/50 transition-all" style={{ backgroundColor: 'var(--agent-bg)', borderColor: 'var(--agent-border)', color: 'var(--agent-text)' }}>
-                     <option value="PREMIUM SAKU">PREMIUM SAKU</option>
-                     <option value="WILD CRUSTACEANS">WILD CRUSTACEANS</option>
-                     <option value="SHELLFISH ELITE">SHELLFISH ELITE</option>
-                     <option value="DEEP SEA WHITEFISH">DEEP SEA WHITEFISH</option>
+                     <option value="SEAWATER FISH">SEAWATER FISH</option>
+                     <option value="FRESHWATER FISH">FRESHWATER FISH</option>
+                     <option value="PRAWNS & SHRIMPS">PRAWNS & SHRIMPS</option>
+                     <option value="CRABS & LOBSTERS">CRABS & LOBSTERS</option>
+                     <option value="STEAKS & FILLETS">STEAKS & FILLETS</option>
+                     <option value="EXOTIC CATCH">EXOTIC CATCH</option>
+                     <option value="READY TO COOK">READY TO COOK</option>
+                     <option value="COASTAL DRY FISH">COASTAL DRY FISH</option>
                   </select>
                 </div>
                 <div className="space-y-1 lg:space-y-2">
@@ -471,7 +510,20 @@ export default function SellerNewProductPage() {
                 style={{ backgroundColor: 'var(--agent-bg)', borderColor: 'var(--agent-border)' }}
               >
                 {formData.image_url ? (
-                  <img src={formData.image_url} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" />
+                  <div className="w-full h-full relative group">
+                    <img src={formData.image_url} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" />
+                    <button 
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setFormData((prev: any) => ({ ...prev, image_url: "" }));
+                        toast("Primary image removed.", "success");
+                      }}
+                      className="absolute top-3 right-3 p-2 rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-danger/80"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
                 ) : (
                   <>
                     <Upload className="w-6 h-6 lg:w-8 lg:h-8 opacity-20" />
@@ -481,9 +533,16 @@ export default function SellerNewProductPage() {
               </div>
 
               <div className="grid grid-cols-3 gap-2">
-                  {JSON.parse(formData.gallery || "[]").map((img: string, idx: number) => (
+                  {getGalleryArray(formData.gallery).map((img: string, idx: number) => (
                     <div key={idx} className="relative aspect-square rounded-xl overflow-hidden group border border-[var(--agent-border)]">
                       <img src={img} className="w-full h-full object-cover" />
+                      <button 
+                        type="button"
+                        onClick={() => removeGalleryImage(idx)}
+                        className="absolute top-1 right-1 p-1 rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
                     </div>
                   ))}
                   <button onClick={() => galleryInputRef.current?.click()} className="aspect-square rounded-xl border-2 border-dashed border-primary/20 flex items-center justify-center hover:bg-primary/5 transition-all">

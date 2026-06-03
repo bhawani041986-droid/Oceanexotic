@@ -51,13 +51,13 @@ export default async function MorningCatchSection() {
               href={`/customer/products/${item.product_id}?catch=${item.catch_id}`}
               className="group relative block"
             >
-              <div className="aspect-[4/5] rounded-[32px] overflow-hidden bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 group-hover:border-emerald-500/30 transition-all duration-500">
+              <div className="aspect-[4/5] rounded-[32px] overflow-hidden bg-black border border-[var(--foreground)]/5 group-hover:border-emerald-500/30 transition-all duration-500">
                 {item.image_url ? (
                   <Image
                     src={item.image_url}
                     alt={item.name}
                     fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-1000"
+                    className="object-contain group-hover:scale-105 transition-transform duration-1000"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-7xl group-hover:scale-110 transition-transform duration-1000">

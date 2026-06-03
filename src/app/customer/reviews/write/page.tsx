@@ -68,9 +68,8 @@ function WriteReviewContent() {
     const files = e.target.files;
     if (files) {
       Array.from(files).forEach(file => {
-        const type = file.type.startsWith('video') ? 'video' : 'image';
-        const reader = new FileReader(
-  );
+        const type = (file.type.startsWith('video') ? 'video' : 'image') as 'image' | 'video';
+        const reader = new FileReader();
         reader.onloadend = () => {
           setMedia(prev => [...prev, { url: reader.result as string, type }].slice(0, 5)
   );

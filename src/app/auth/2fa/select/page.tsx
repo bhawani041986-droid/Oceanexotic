@@ -63,7 +63,7 @@ export default function TwoFactorSelectPage() {
                       <div className="space-y-2">
                          <div className="flex items-center gap-3">
                             <h3 className="text-lg font-bold text-[var(--foreground)] uppercase tracking-tight">{option.title}</h3>
-                            <Badge variant={option.id === 'auth-app' ? 'primary' : 'glass'} className="text-[7px] tracking-[0.2em] px-2 h-5">
+                            <Badge variant={option.id === 'auth-app' ? 'default' : 'glass'} className="text-[7px] tracking-[0.2em] px-2 h-5">
                                {option.tag}
                             </Badge>
                          </div>

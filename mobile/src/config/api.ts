@@ -38,12 +38,16 @@ export function resolveApiBaseUrl(): string {
   const envUrl = process.env.EXPO_PUBLIC_API_URL?.trim();
   const extraUrl = Constants.expoConfig?.extra?.apiUrl as string | undefined;
 
-  if (envUrl && !envUrl.includes("localhost") && !envUrl.includes("127.0.0.1")) {
-    return envUrl.replace(/\/$/, "");
+  if (Platform.OS === "web") {
+    const browserHost = typeof window !== "undefined" && window.location.hostname 
+      ? window.location.hostname 
+      : "localhost";
+    const resolvedHost = browserHost === "localhost" ? "127.0.0.1" : browserHost;
+    return `http://${resolvedHost}:8081/FISH_MARKET/api`;
   }
 
-  if (Platform.OS === "web") {
-    return (envUrl ?? extraUrl ?? buildApiUrl("localhost")).replace(/\/$/, "");
+  if (envUrl && !envUrl.includes("localhost") && !envUrl.includes("127.0.0.1")) {
+    return envUrl.replace(/\/$/, "");
   }
 
   const lanHost = getExpoDevMachineHost();
@@ -56,7 +60,7 @@ export function resolveApiBaseUrl(): string {
     return buildApiUrl("10.0.2.2");
   }
 
-  return (envUrl ?? extraUrl ?? buildApiUrl("localhost")).replace(/\/$/, "");
+  return (envUrl ?? extraUrl ?? buildApiUrl("127.0.0.1")).replace(/\/$/, "");
 }
 
 export const FULL_API_URL = resolveApiBaseUrl();

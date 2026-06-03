@@ -47,7 +47,7 @@ export default function WishlistPage() {
               <div className="relative aspect-[16/9] rounded-[16px] md:rounded-[28px] overflow-hidden bg-bg-secondary">
                  <div className="absolute inset-0 bg-gradient-to-t from-bg-primary to-transparent opacity-60" />
                  <div className="absolute top-2 md:top-4 left-2 md:left-4 z-10 flex flex-col gap-1 md:gap-2">
-                    <Badge variant="primary" className="shadow-glow-purple text-[8px] md:text-[10px]">{item.tag}</Badge>
+                    <Badge variant="default" className="shadow-glow-purple text-[8px] md:text-[10px]">{item.tag}</Badge>
                     {item.fresh && <Badge variant="success" className="bg-success/80 backdrop-blur-md uppercase text-[7px] md:text-[8px]">COLD-CHAIN ACTIVE</Badge>}
                  </div>
                  <div className="absolute top-2 md:top-4 right-2 md:right-4 z-10">

@@ -67,31 +67,11 @@ class OceanFreshMediaEngine:
             img = Image.open(input_path)
             orig_w, orig_h = img.size
             
-            # 2. Smart Crop to 4:5
-            center = self.detect_subject_center(input_path)
-            if not center:
-                center = (orig_w // 2, orig_h // 2)
-                
-            # Calculate target dimensions
-            target_w = orig_w
-            target_h = int(orig_w * (self.target_ratio[1] / self.target_ratio[0]))
+            # 2. Keep Aspect Ratio (No Crop) and Fit to Master Bounding Box (1200x1500 max)
+            img_master = img.copy()
+            img_master.thumbnail(self.master_size, Image.Resampling.LANCZOS)
             
-            if target_h > orig_h:
-                target_h = orig_h
-                target_w = int(orig_h * (self.target_ratio[0] / self.target_ratio[1]))
-                
-            # Define crop box centered on subject
-            left = max(0, min(center[0] - target_w // 2, orig_w - target_w))
-            top = max(0, min(center[1] - target_h // 2, orig_h - target_h))
-            right = left + target_w
-            bottom = top + target_h
-            
-            img_cropped = img.crop((left, top, right, bottom))
-            
-            # 3. Master Resize
-            img_master = img_cropped.resize(self.master_size, Image.Resampling.LANCZOS)
-            
-            # 4. Generate SEO Filename
+            # 3. Generate SEO Filename
             clean_name = self.slugify(seo_name)
             final_filename = f"{clean_name}.webp"
             optimized_path = os.path.join(self.upload_root, "optimized", final_filename)
@@ -103,25 +83,26 @@ class OceanFreshMediaEngine:
                 if opt_mtime > source_mtime:
                     return {"status": "skipped", "message": "Asset already optimized", "optimized_url": f"/uploads/optimized/{final_filename}"}
             
-            # 5. Save Master Optimized
+            # 4. Save Master Optimized
             img_master.save(optimized_path, "WEBP", quality=self.quality, method=self.webp_method)
             
-            # 6. Generate Thumbnails
+            # 5. Generate Thumbnails Preserving Aspect Ratio
             thumbnails = {}
             for t_name, t_size in self.thumbnail_sizes.items():
                 t_path = os.path.join(self.upload_root, "thumbnails", f"{t_name}-{final_filename}")
-                img_thumb = img_master.resize(t_size, Image.Resampling.LANCZOS)
+                img_thumb = img_master.copy()
+                img_thumb.thumbnail(t_size, Image.Resampling.LANCZOS)
                 img_thumb.save(t_path, "WEBP", quality=80)
                 thumbnails[t_name] = f"/uploads/thumbnails/{t_name}-{final_filename}"
                 
-            # 7. Metadata Summary
+            # 6. Metadata Summary
             processing_time = time.time() - start_time
             stats = {
                 "status": "success",
                 "original_name": os.path.basename(input_path),
                 "optimized_url": f"/uploads/optimized/{final_filename}",
                 "thumbnails": thumbnails,
-                "dimensions": self.master_size,
+                "dimensions": img_master.size,
                 "file_size_kb": os.path.getsize(optimized_path) // 1024,
                 "processing_time_sec": round(processing_time, 3),
                 "timestamp": datetime.now().isoformat()

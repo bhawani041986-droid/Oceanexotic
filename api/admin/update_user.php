@@ -43,6 +43,28 @@ try {
     ]);
 
     if ($result) {
+        // Synchronize delivery agent registry if the user is an AGENT
+        $role = strtoupper($data['role'] ?? '');
+        $status = strtoupper($data['status'] ?? '');
+        if ($role === 'AGENT') {
+            if ($status === 'ACTIVE') {
+                $stmt = $pdo->prepare("SELECT COUNT(*) FROM delivery_agents WHERE id = ?");
+                $stmt->execute([$data['id']]);
+                $exists = $stmt->fetchColumn() > 0;
+                if (!$exists) {
+                    $phone = '+91-9' . rand(100000000, 999999999);
+                    $stmt = $pdo->prepare("INSERT INTO delivery_agents (id, name, phone, zone, status) VALUES (?, ?, ?, 'Port Blair Central', 'ACTIVE')");
+                    $stmt->execute([$data['id'], $data['name'], $phone]);
+                } else {
+                    $stmt = $pdo->prepare("UPDATE delivery_agents SET status = 'ACTIVE' WHERE id = ?");
+                    $stmt->execute([$data['id']]);
+                }
+            } else {
+                $stmt = $pdo->prepare("UPDATE delivery_agents SET status = 'INACTIVE' WHERE id = ?");
+                $stmt->execute([$data['id']]);
+            }
+        }
+
         echo json_encode(["status" => "success", "message" => "Sovereign identity synchronized successfully."]);
     } else {
         throw new Exception("Handshake failed with the registry.");

@@ -231,37 +231,28 @@ const AndamanMaritimeMap = ({ territories }: { territories: any[] }) => {
       
       {/* HUD OVERLAYS */}
       <div className="absolute inset-0 pointer-events-none z-10">
-          {/* TOP RIGHT: COMPACT DIGITAL TELEMETRY (FLUSH TOP) */}
-          <div className="absolute top-0 right-8 px-4 py-1.5 bg-black/60 border-x border-b border-primary/20 backdrop-blur-3xl rounded-b-lg shadow-2xl flex items-center gap-4">
-              <div className="flex items-center gap-2 border-r border-primary/10 pr-4">
-                  <span className="text-[7px] font-black text-primary uppercase tracking-widest">Telemetry</span>
-                  <span className="text-[10px] font-mono text-[var(--foreground)] font-black">042.8° NE</span>
-              </div>
-              <div className="flex items-center gap-2 border-r border-primary/10 pr-4">
-                  <span className="text-[7px] font-black text-[var(--foreground)]/30 uppercase tracking-widest">Sector</span>
-                  <span className="text-[10px] font-mono text-[var(--foreground)] font-black">ALPHA-6</span>
-              </div>
-              <div className="flex items-center gap-2">
-                  <span className="text-[7px] font-black text-[var(--foreground)]/30 uppercase tracking-widest">Sync</span>
-                  <div className="flex gap-0.5">
-                      <div className="w-0.5 h-2.5 bg-primary" />
-                      <div className="w-0.5 h-2.5 bg-primary" />
-                      <div className="w-0.5 h-1.5 bg-primary/20" />
-                  </div>
-              </div>
+          {/* TOP RIGHT: Stable Connection */}
+          <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-black/60 border border-primary/20 px-2 py-1 rounded-lg z-30 pointer-events-none">
+              <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[7px] font-black text-white uppercase tracking-widest">Stable Connection</span>
           </div>
-
-          {/* BOTTOM LEFT: COMPACT SIGNAL MONITOR (FLUSH BOTTOM) */}
-          <div className="absolute bottom-0 left-8 px-3 py-1.5 bg-black/60 border-x border-t border-emerald-500/20 backdrop-blur-3xl rounded-t-lg flex items-center gap-3 shadow-xl">
-              <div className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_6px_#10b981]" />
-                  <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">Signal Stable</span>
-              </div>
-              <div className="h-3 w-[1px] bg-[var(--foreground)]/10" />
-              <span className="text-[8px] font-mono text-[var(--foreground)]/40">NODE: ACT_06</span>
+ 
+          {/* TOP LEFT: Sector: ALPHA-6 */}
+          <div className="absolute top-4 left-4 bg-black/60 border border-primary/20 px-2 py-1 rounded-lg z-30 pointer-events-none">
+              <span className="text-[7px] font-black text-primary uppercase">Sector: ALPHA-6</span>
+          </div>
+          
+          {/* BOTTOM LEFT: REF: MAR-PB-NODE */}
+          <div className="absolute bottom-4 left-4 bg-black/60 border border-primary/20 px-2 py-1 rounded-lg z-30 pointer-events-none">
+              <span className="text-[7px] font-mono text-muted-foreground uppercase">REF: MAR-PB-NODE</span>
+          </div>
+ 
+          {/* BOTTOM RIGHT: TELEMETRY 042.8° NE */}
+          <div className="absolute bottom-4 right-4 bg-black/60 border border-primary/20 px-2 py-1 rounded-lg z-30 pointer-events-none">
+              <span className="text-[7px] font-mono text-white uppercase">TELEMETRY 042.8° NE</span>
           </div>
       </div>
-
+ 
       {/* Minimalist Grid */}
       <div className="absolute inset-0 opacity-[0.02] pointer-events-none z-10" style={{ backgroundImage: 'radial-gradient(circle_at_center, var(--c-primary) 0.5px, transparent 1px)', backgroundSize: '80px 80px' }} />
     </div>
@@ -779,7 +770,18 @@ const LobsterSVG = () => (
   </svg>
 );
 
-const CATEGORIES = [
+const CATEGORIES: {
+  name: string;
+  image: string;
+  color: string;
+  glowColor: string;
+  slug: string;
+  blendMode?: string;
+  isFlipped?: boolean;
+  swimRight: number;
+  swimLeft: number;
+  isTransparent?: boolean;
+}[] = [
   // FIN FISH SECTOR
   { name: "Red Snapper", image: "/ICONS/Red-snapper.webp", color: "from-rose-600/40 to-red-900/60", glowColor: "#e11d48", slug: "snapper", blendMode: "screen", isFlipped: false, swimRight: -1, swimLeft: 1 },
   { name: "Kingfish", image: "/ICONS/kingfish.webp", color: "from-blue-500/40 to-indigo-900/60", glowColor: "#3b82f6", slug: "kingfish", isFlipped: true, swimRight: -1, swimLeft: 1 },
@@ -839,6 +841,32 @@ export default function CustomerHomePage() {
   const [cutOptions, setCutOptions] = React.useState<any[]>([]);
   const [isLoadingCuts, setIsLoadingCuts] = React.useState(false);
   const [selectedCut, setSelectedCut] = React.useState<any>(null);
+  const [featuredProducts, setFeaturedProducts] = React.useState<any[]>([]);
+
+  const formatTime12h = React.useCallback((timeStr: string) => {
+    if (!timeStr) return "";
+    const [hoursStr, minutesStr] = timeStr.split(":");
+    const hours = parseInt(hoursStr, 10);
+    const ampm = hours >= 12 ? "PM" : "AM";
+    const hours12 = hours % 12 || 12;
+    return `${hours12}:${minutesStr} ${ampm}`;
+  }, []);
+
+  const isStoreOpen = React.useMemo(() => {
+    if (!settings.ordersEnabled) return false;
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMin = now.getMinutes();
+    const currentTimeMinutes = currentHour * 60 + currentMin;
+
+    const [openH, openM] = (settings.ordersOpenTime || "09:00").split(":").map(Number);
+    const [closeH, closeM] = (settings.ordersCloseTime || "22:00").split(":").map(Number);
+
+    const openTimeMinutes = openH * 60 + openM;
+    const closeTimeMinutes = closeH * 60 + closeM;
+
+    return currentTimeMinutes >= openTimeMinutes && currentTimeMinutes <= closeTimeMinutes;
+  }, [settings.ordersEnabled, settings.ordersOpenTime, settings.ordersCloseTime]);
 
   // 1. Flash Deal Protocol Timer & CMS Sync
   React.useEffect(() => {
@@ -874,9 +902,20 @@ export default function CustomerHomePage() {
       finally { setIsLoadingCatch(false); }
     };
 
+    const fetchFeatured = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/products/list.php`);
+        const data = await res.json();
+        if (data.status === 'success') {
+          setFeaturedProducts(data.products || []);
+        }
+      } catch (err) { console.warn("Featured Fetch Failed"); }
+    };
+
     fetchCMS();
     fetchTerritories();
     fetchTodaysCatch();
+    fetchFeatured();
 
     if (!settings.flashDealActive) return;
 
@@ -952,6 +991,7 @@ export default function CustomerHomePage() {
       quantity: 1,
       image: selectedProductForCut.catch_image_url || selectedProductForCut.image_url || selectedProductForCut.image,
       sellerName: selectedProductForCut.seller_name || selectedProductForCut.sellerName,
+      sellerId: selectedProductForCut.seller_id || selectedProductForCut.sellerId || "SEL-000",
       metadata: {
         cut_type: selectedCut.cut_type,
         base_product_id: selectedProductForCut.product_id || selectedProductForCut.id
@@ -991,9 +1031,71 @@ export default function CustomerHomePage() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,var(--c-primary),transparent_50%)] opacity-10 hidden lg:block" />
         </div>
 
-        <div className="container mx-auto px-6 relative z-20 grid grid-cols-1 lg:grid-cols-2 gap-4 items-center">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 md:space-y-6 text-center lg:text-left">
-             <div className="space-y-4">
+        {/* Floating Dynamic Timing Card (Top Right Corner of Banner) */}
+        <div className="absolute top-4 right-4 md:top-8 md:right-8 z-30 pointer-events-auto">
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+            className={cn(
+              "p-3.5 md:p-5 rounded-2xl md:rounded-[24px] bg-[#0b0e14]/85 backdrop-blur-xl border flex flex-col gap-2 md:gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl shadow-premium max-w-[200px] md:max-w-[280px]",
+              isStoreOpen && settings.ordersEnabled
+                ? "border-emerald-500/20 hover:border-emerald-500/40 hover:shadow-emerald-500/5"
+                : "border-amber-500/20 hover:border-amber-500/40 hover:shadow-amber-500/5"
+            )}
+          >
+            {/* Header / Subtitle */}
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-1.5 md:gap-2">
+                <Clock className={cn("w-3.5 h-3.5 animate-pulse", 
+                  isStoreOpen && settings.ordersEnabled ? "text-emerald-400" : "text-amber-400"
+                )} />
+                <span className="text-[7px] md:text-[9px] font-black uppercase tracking-[0.25em] text-[var(--c-text-secondary)] opacity-60">Fleet Schedule</span>
+              </div>
+              <span className={cn("w-2 h-2 rounded-full",
+                isStoreOpen && settings.ordersEnabled ? "bg-emerald-500 animate-ping" : "bg-amber-500 animate-pulse"
+              )} />
+            </div>
+
+            {/* Status Title */}
+            <div className="space-y-0.5">
+              {isStoreOpen && settings.ordersEnabled ? (
+                <>
+                  <p className="text-[10px] md:text-sm font-black text-emerald-400 uppercase italic tracking-tighter leading-none">● LIVE DISPATCH OPEN</p>
+                  <p className="text-[7px] md:text-[9px] text-[var(--c-text-secondary)]/60 font-bold uppercase tracking-wider">Fastest cold-chain delivery</p>
+                </>
+              ) : (
+                <>
+                  <p className="text-[10px] md:text-sm font-black text-amber-400 uppercase italic tracking-tighter leading-none">● PRE-ORDERS ACTIVE</p>
+                  <p className="text-[7px] md:text-[9px] text-[var(--c-text-secondary)]/60 font-bold uppercase tracking-wider">Immediate delivery closed</p>
+                </>
+              )}
+            </div>
+
+            {/* Time slot registry details */}
+            <div className="p-2 rounded-xl bg-white/[0.02] border border-white/[0.04] space-y-1.5">
+              <div className="flex justify-between items-center text-[8px] md:text-[10px] font-bold text-[var(--c-text-secondary)] uppercase gap-4">
+                <span>Hours</span>
+                <span className="text-[var(--c-text-primary)] font-black text-right whitespace-nowrap">
+                  {formatTime12h(settings.ordersOpenTime || "09:00")} - {formatTime12h(settings.ordersCloseTime || "22:00")}
+                </span>
+              </div>
+              
+              {!isStoreOpen || !settings.ordersEnabled ? (
+                <div className="pt-1.5 border-t border-white/[0.04] flex flex-col gap-0.5">
+                  <span className="text-[6px] md:text-[7px] font-black text-amber-500/60 uppercase tracking-widest leading-none">Next Dispatch</span>
+                  <span className="text-[8px] md:text-[10px] font-black text-[var(--c-text-primary)] uppercase truncate">
+                    {settings.ordersNextOpenText || "Tomorrow at 09:00 AM"}
+                  </span>
+                </div>
+              ) : null}
+            </div>
+          </motion.div>
+        </div>
+
+        <div className="container mx-auto px-6 relative z-20 flex flex-col items-center justify-center min-h-[50vh]">
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-center max-w-4xl mx-auto">
+             <div className="space-y-6">
                 <Badge variant="outline" className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] text-[10px] md:text-[12px] font-black tracking-[0.4em] px-6 py-2 border-[var(--c-primary)]/20 uppercase shadow-[0_0_15px_rgba(var(--c-primary-rgb),0.1)]">
                    {cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.sector || 'Sovereign'} Market Sync: Active
                 </Badge>
@@ -1002,10 +1104,10 @@ export default function CustomerHomePage() {
                    <span className="text-[var(--c-primary)]">{cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.title?.split(':')[1] || 'Redefined.'}</span>
                 </h1>
              </div>
-             <p className="text-base md:text-2xl text-[var(--c-text-secondary)] font-medium italic max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                {cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.image_url ? 'Dynamic Asset Synchronized.' : 'Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers.'}
+             <p className="text-base md:text-2xl text-[var(--c-text-secondary)] font-medium italic max-w-2xl mx-auto leading-relaxed">
+                Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers.
              </p>
-            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center lg:justify-start pt-4">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center pt-6">
                <Button 
                   className="h-14 md:h-16 px-8 md:px-12 bg-[var(--c-primary)] hover:bg-[var(--c-primary-light)] text-[var(--foreground)] text-[10px] md:text-[12px] font-black uppercase tracking-widest shadow-[var(--c-shadow-glow)]"
                   style={{ clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)' }}
@@ -1022,89 +1124,6 @@ export default function CustomerHomePage() {
                   EXPLORE CATEGORIES
                </Button>
             </div>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="hidden lg:block relative">
-             <div className="absolute -inset-20 bg-[var(--c-primary)]/20 blur-[120px] rounded-full animate-pulse" />
-             <Card 
-                className="p-4 bg-[var(--c-card)]/40 backdrop-blur-[var(--c-glass-blur)] border-[var(--foreground)]/10 shadow-2xl space-y-2 relative z-10 hover:translate-y-[-1px] transition-transform duration-700 overflow-hidden group/hero"
-                style={{ clipPath: 'polygon(30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0 30px)' }}
-              >
-                
-                {/* 1. DYNAMIC AUDIT ANIMATION CONTAINER */}
-                <div className="aspect-square rounded-[calc(var(--c-radius-card)*0.8)] bg-[var(--c-bg)]/50 flex items-center justify-center overflow-hidden relative border border-[var(--foreground)]/5">
-                   {/* Background Asset */}
-                   {(cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.image_url || settings.customerAssets.promo) ? (
-                     <img 
-                       src={cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.image_url || settings.customerAssets.promo} 
-                       className="w-full h-full object-cover transition-transform duration-1000 group-hover/hero:scale-110" 
-                       alt="Promo" 
-                     />
-                   ) : (
-                     <span className="text-[180px] grayscale opacity-20">🍣</span>
-                   )}
-
-                   {/* SVG DECORATIVE SCANNER ELEMENTS */}
-                   <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-40" viewBox="0 0 400 400">
-                      <circle cx="200" cy="200" r="180" fill="none" stroke="var(--c-primary)" strokeWidth="0.5" strokeDasharray="10 20" className="animate-spin-slow" />
-                      <circle cx="200" cy="200" r="140" fill="none" stroke="var(--c-primary)" strokeWidth="0.2" strokeDasharray="5 5" className="animate-spin-reverse-slow" />
-                      <path d="M200 20 L200 40 M380 200 L360 200 M200 380 L200 360 M20 200 L40 200" stroke="var(--c-primary)" strokeWidth="2" />
-                   </svg>
-
-                   {/* AI Scanning Beam */}
-                   <div className="absolute inset-0 z-20 pointer-events-none">
-                      <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-transparent via-[var(--c-primary)] to-transparent shadow-[0_0_20px_var(--c-primary)] animate-scan" />
-                      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-[var(--c-primary)]/10 to-transparent opacity-0 group-hover/hero:opacity-100 transition-opacity" />
-                   </div>
-
-                   {/* Informative HUD Overlays */}
-                   <div className="absolute inset-0 z-30 p-6 flex flex-col justify-between pointer-events-none">
-                      <div className="flex justify-between items-start">
-                         <div className="px-3 py-1 bg-black/80 backdrop-blur-md border border-[var(--c-primary)]/40 rounded-full flex items-center gap-2">
-                            <div className="w-2 h-2 rounded-full bg-[var(--c-primary)] animate-pulse shadow-[0_0_8px_var(--c-primary)]" />
-                            <span className="text-[7px] font-black text-[var(--foreground)] uppercase tracking-[0.2em]">Sovereign Node: Certified</span>
-                         </div>
-                         <div className="flex flex-col items-end gap-1">
-                            <div className="w-8 h-8 border-t-2 border-r-2 border-[var(--c-primary)] opacity-60" />
-                            <p className="text-[6px] font-black text-[var(--c-primary)] uppercase">REF: MAR-99-AX</p>
-                         </div>
-                      </div>
-                      
-                      <div className="space-y-4">
-                         <div className="flex items-end justify-between">
-                            <div className="space-y-1 bg-black/40 p-3 rounded-xl backdrop-blur-sm border border-[var(--foreground)]/5">
-                               <p className="text-[8px] font-black text-[var(--c-primary)] uppercase tracking-widest">Freshness Index</p>
-                               <div className="flex items-baseline gap-2">
-                                  <p className="text-3xl font-black text-[var(--foreground)] italic">99.8</p>
-                                  <span className="text-[10px] font-black text-[var(--c-primary)]">%</span>
-                               </div>
-                            </div>
-                            <div className="w-16 h-16 border-b-2 border-l-2 border-[var(--c-primary)] opacity-60" />
-                         </div>
-                      </div>
-                   </div>
-                </div>
-
-                {/* Product Metadata */}
-                <div className="flex justify-between items-end relative z-40">
-                   <div className="space-y-0.5">
-                      <h3 className="text-4xl font-black text-[var(--c-text-primary)] uppercase italic leading-none">Saku Grade</h3>
-                      <p className="text-[10px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em]">Maritime Authority Cert.</p>
-                   </div>
-                   <p className="text-4xl font-black text-[var(--c-primary)] italic shadow-glow-primary">₹2,450</p>
-                </div>
-
-                <Button 
-                    className="w-full h-16 bg-[var(--c-primary)] text-[var(--foreground)] shadow-[var(--c-shadow-glow)] text-[12px] font-black uppercase tracking-widest group-hover/hero:scale-[1.02] transition-transform"
-                    style={{ clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)' }}
-                    onClick={() => router.push('/customer/products')}
-
-                 >
-                    COMMISSION HARVEST
-                 </Button>
-             </Card>
-             <div className="absolute -top-10 -right-10 w-32 h-32 bg-[var(--foreground)]/5 backdrop-blur-xl border border-[var(--foreground)]/10 rounded-3xl flex items-center justify-center text-5xl rotate-12 animate-float">🐟</div>
-             <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-[var(--foreground)]/5 backdrop-blur-xl border border-[var(--foreground)]/10 rounded-2xl flex items-center justify-center text-4xl -rotate-12 animate-float-delayed">🦐</div>
           </motion.div>
 
 
@@ -1217,10 +1236,10 @@ export default function CustomerHomePage() {
                            className="relative overflow-hidden bg-[var(--c-card)] border-[var(--foreground)]/5 group-hover:border-[var(--c-primary)]/30 transition-all duration-500 shadow-xl group-hover:shadow-[var(--c-shadow-glow)] cursor-pointer h-full"
                            style={{ clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)' }}
                         >
-                           <div className="relative aspect-[4/5] bg-[var(--c-bg-alt)]/60 overflow-hidden">
+                           <div className="relative aspect-[4/5] bg-black overflow-hidden">
                               <img 
                                  src={catchItem.catch_image_url || catchItem.image_url} 
-                                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
+                                 className="absolute inset-0 w-full h-full object-contain group-hover:scale-105 transition-transform duration-1000" 
                               />
                               <div className="absolute inset-0 bg-gradient-to-t from-[var(--c-bg-alt)] via-transparent to-transparent opacity-60" />
                               
@@ -1261,7 +1280,7 @@ export default function CustomerHomePage() {
                               <div>
                                  <div className="flex items-center gap-1 mb-0.5">
                                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                                    <p className="text-[8px] font-black text-emerald-500 uppercase tracking-tighter">Verified Daily Harvest</p>
+                                    <p className="text-[8px] font-black text-emerald-500 uppercase tracking-tighter">Fresh Catch of the Day</p>
                                  </div>
                                  <h4 className="text-sm md:text-xl font-black text-[var(--c-text-primary)] uppercase italic leading-tight group-hover:text-[var(--c-primary)] transition-colors line-clamp-1">{catchItem.name}</h4>
                                  <p className="text-[8px] font-medium text-[var(--c-text-secondary)] uppercase italic opacity-60">Handled by {catchItem.seller_name}</p>
@@ -1293,11 +1312,11 @@ export default function CustomerHomePage() {
       </section>
 
       {/* 5. FEATURED PRODUCTS GRID */}
-      <section className="py-2 bg-[var(--c-bg-alt)]/20 border-y border-[var(--foreground)]/5">
-         <div className="container mx-auto px-4 md:px-10">
+      <section className="py-6 container mx-auto px-[2px] md:px-10 mt-6">
+         <div className="space-y-6">
             <SectionTitle title="Featured Harvests" subtitle="Highest Authority Maritime Grade" />
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-               {FEATURED_PRODUCTS.map((prod) => (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-[2px] md:gap-8">
+               {(featuredProducts.length > 0 ? featuredProducts : FEATURED_PRODUCTS).slice(0, 4).map((prod) => (
                   <motion.div 
                     key={prod.id} 
                     initial={{ opacity: 0, y: 20 }}
@@ -1311,7 +1330,15 @@ export default function CustomerHomePage() {
                            style={{ clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)' }}
                         >
                            <div className="relative aspect-[4/5] bg-[var(--c-bg-alt)]/60 overflow-hidden">
-                              <div className="absolute inset-0 flex items-center justify-center text-6xl md:text-8xl group-hover:scale-110 transition-transform duration-700 select-none">{prod.image}</div>
+                              {typeof prod.image === 'string' && (prod.image.startsWith('http') || prod.image.startsWith('/') || prod.image.includes('.')) ? (
+                                 <img 
+                                    src={prod.image} 
+                                    className="absolute inset-0 w-full h-full object-contain group-hover:scale-105 transition-transform duration-1000" 
+                                    alt={prod.name}
+                                 />
+                              ) : (
+                                 <div className="absolute inset-0 flex items-center justify-center text-6xl md:text-8xl group-hover:scale-110 transition-transform duration-700 select-none">{prod.image}</div>
+                              )}
                               <div className="absolute inset-0 bg-gradient-to-t from-[var(--c-bg-alt)] via-transparent to-transparent opacity-60" />
                               <div className="absolute top-2 left-2 z-20"><Badge variant="glass" className="bg-black/40 text-[7px] font-black uppercase text-[var(--foreground)] border-[var(--foreground)]/10 px-2 py-0.5">GRADE A</Badge></div>
                               <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="absolute top-2 right-2 z-20 w-8 h-8 rounded-full bg-black/40 text-[var(--foreground)]/40 hover:text-danger flex items-center justify-center transition-all"><Heart className="w-4 h-4" /></button>
@@ -1465,8 +1492,8 @@ export default function CustomerHomePage() {
          <div className="container mx-auto px-4 md:px-10 grid grid-cols-1 lg:grid-cols-2 gap-4 items-center">
             <div className="space-y-12">
                <div className="mb-2 space-y-0.5 px-[2px] md:px-0">
-                  <h2 className="text-xl md:text-5xl font-black text-[var(--c-text-primary)] tracking-tight uppercase italic">Live Telemetry</h2>
-                  <p className="text-[9px] md:text-[11px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] italic opacity-60">Futuristic Cold-Chain Logistics Tracking</p>
+                  <h2 className="text-xl md:text-5xl font-black text-[var(--c-text-primary)] tracking-tight uppercase italic">Live Delivery Coverage</h2>
+                  <p className="text-[9px] md:text-[11px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] italic opacity-60">Real-Time Delivery Hub Mapping</p>
                </div>
                <div className="flex flex-row gap-4">
                   <button 
@@ -1492,25 +1519,31 @@ export default function CustomerHomePage() {
                </div>
             </div>
 
-            <div className="relative group">
+            <div className="relative group flex justify-center w-full">
                <div 
-                  className="border text-text-primary shadow-premium transition-all hover:border-primary/20 aspect-[4/3] bg-[#0B1120] border-[var(--foreground)]/10 overflow-hidden shadow-2xl relative"
+                  className="border text-text-primary transition-all hover:border-[var(--c-primary)]/30 w-full aspect-[4/3] bg-[#0B1120] border-[var(--foreground)]/10 overflow-hidden shadow-2xl relative"
                   style={{ clipPath: 'polygon(30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0 30px)' }}
                >
                   {/* ANDAMAN MARITIME NODE REGISTRY */}
                   <AndamanMaritimeMap territories={territories} />
                   
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120] via-transparent to-transparent opacity-0 pointer-events-none" />
-                  
-                  {/* Radar Scanning Line */}
-                  <div className="absolute left-0 right-0 h-[1px] bg-[var(--c-primary)]/40 shadow-[0_0_10px_var(--c-primary)] animate-scan z-10" />
-                  
-                  {/* Map Info Badge */}
+                  {/* Digital HUD Lines Overlay */}
+                  <svg 
+                    width="100%" 
+                    height="100%" 
+                    className="absolute inset-0 pointer-events-none z-[9]"
+                  >
+                    {/* Tactical Digital Background Grid Lines */}
+                    <line x1="0" y1="20%" x2="100%" y2="20%" stroke="rgba(0, 243, 255, 0.04)" strokeWidth="1" />
+                    <line x1="0" y1="40%" x2="100%" y2="40%" stroke="rgba(0, 243, 255, 0.04)" strokeWidth="1" />
+                    <line x1="0" y1="60%" x2="100%" y2="60%" stroke="rgba(0, 243, 255, 0.04)" strokeWidth="1" />
+                    <line x1="0" y1="80%" x2="100%" y2="80%" stroke="rgba(0, 243, 255, 0.04)" strokeWidth="1" />
+                    <line x1="20%" y1="0" x2="20%" y2="100%" stroke="rgba(0, 243, 255, 0.04)" strokeWidth="1" />
+                    <line x1="40%" y1="0" x2="40%" y2="100%" stroke="rgba(0, 243, 255, 0.04)" strokeWidth="1" />
+                    <line x1="60%" y1="0" x2="60%" y2="100%" stroke="rgba(0, 243, 255, 0.04)" strokeWidth="1" />
+                    <line x1="80%" y1="0" x2="80%" y2="100%" stroke="rgba(0, 243, 255, 0.04)" strokeWidth="1" />
+                  </svg>
                </div>
-               
-               {/* Decorative HUD corners */}
-               <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[var(--c-primary)]/40 pointer-events-none" />
-               <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[var(--c-primary)]/40 pointer-events-none" />
             </div>
          </div>
       </section>
@@ -1552,19 +1585,30 @@ export default function CustomerHomePage() {
          </div>
       </section>
 
-      {/* 10. CULINARY HUB - HARDENED HUD TILES */}
+      {/* 10. CHEF'S RECIPES - HARDENED HUD TILES */}
       <section className="py-6 container mx-auto px-[2px] md:px-10">
-         <div className="mb-4 space-y-0.5 px-[2px] md:px-0">
-            <h2 className="text-xl md:text-5xl font-black text-[var(--c-text-primary)] tracking-tight uppercase italic">Culinary Hub</h2>
-            <p className="text-[9px] md:text-[11px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] italic opacity-60">Verified Maritime Recipes</p>
+         <div className="mb-4 flex justify-between items-end px-[2px] md:px-0">
+            <div>
+               <h2 className="text-xl md:text-5xl font-black text-[var(--c-text-primary)] tracking-tight uppercase italic">Chef's Recipes</h2>
+               <p className="text-[9px] md:text-[11px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] italic opacity-60">Verified Maritime Recipes</p>
+            </div>
+            <button 
+               onClick={() => router.push('/customer/recipes')}
+               className="px-4 py-2 text-[10px] font-black uppercase tracking-widest text-[var(--c-primary)] border border-[var(--c-primary)]/20 rounded-xl bg-[var(--c-primary)]/5 hover:bg-[var(--c-primary)]/10 transition-all active:scale-95"
+            >
+               VIEW ALL ➜
+            </button>
          </div>
          
          <div className="grid grid-cols-2 gap-[3px] md:gap-10">
             {(cmsContent.filter(c => c.type === 'RECIPE' && c.status === 'PUBLISHED').length > 0 
                ? cmsContent.filter(c => c.type === 'RECIPE' && c.status === 'PUBLISHED')
-               : RECIPES).map((recipe: any) => (
+               : RECIPES).map((recipe: any) => {
+               const meta = recipe.metadata ? (typeof recipe.metadata === 'string' ? JSON.parse(recipe.metadata) : recipe.metadata) : {};
+               return (
                <div 
                   key={recipe.id} 
+                  onClick={() => router.push(`/customer/recipes/${recipe.id}`)}
                   className="aspect-[16/11] md:aspect-video relative group cursor-pointer overflow-hidden"
                   style={{ clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)' }}
                >
@@ -1576,8 +1620,8 @@ export default function CustomerHomePage() {
                   
                   <div className="absolute bottom-3 left-3 right-3 space-y-2 md:bottom-10 md:left-10 md:right-10 md:space-y-4">
                      <div className="flex gap-1.5">
-                        <Badge variant="glass" className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] border-[var(--c-primary)]/20 text-[7px] md:text-xs font-black uppercase px-2 py-0">{recipe.difficulty || 'Expert'}</Badge>
-                        <Badge variant="glass" className="bg-[var(--foreground)]/5 border-[var(--foreground)]/10 text-[7px] md:text-xs font-black uppercase px-2 py-0 text-[var(--foreground)]/60">{recipe.time || '25 min'}</Badge>
+                        <Badge variant="glass" className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] border-[var(--c-primary)]/20 text-[7px] md:text-xs font-black uppercase px-2 py-0">{meta.difficulty || recipe.difficulty || 'Expert'}</Badge>
+                        <Badge variant="glass" className="bg-[var(--foreground)]/5 border-[var(--foreground)]/10 text-[7px] md:text-xs font-black uppercase px-2 py-0 text-[var(--foreground)]/60">{meta.time || recipe.time || '25 min'}</Badge>
                      </div>
                      <h4 className="text-xs md:text-4xl font-black text-[var(--foreground)] uppercase italic leading-tight">{recipe.title}</h4>
                      <div className="flex items-center gap-2 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-[var(--c-primary)] opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
@@ -1585,7 +1629,8 @@ export default function CustomerHomePage() {
                      </div>
                   </div>
                </div>
-            ))}
+               );
+            })}
          </div>
       </section>
 
@@ -1599,9 +1644,9 @@ export default function CustomerHomePage() {
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center relative z-10">
                <div className="space-y-6">
-                  <Badge variant="glass" className="text-[var(--c-primary)] text-[9px] font-black tracking-[0.3em] border-[var(--c-primary)]/30 bg-[var(--c-primary)]/10 px-4 py-1">FLEET HANDHELD INTERFACE</Badge>
-                  <h2 className="text-4xl md:text-8xl font-black text-[var(--c-text-primary)] uppercase italic leading-[0.85] tracking-tighter">The Fleet in <br /> Your Pocket.</h2>
-                  <p className="text-xs md:text-lg text-[var(--c-text-secondary)] font-medium italic opacity-60 max-w-sm">Synchronize your culinary mission with our verified mobile node. Direct access, real-time telemetry.</p>
+                  <Badge variant="glass" className="text-[var(--c-primary)] text-[9px] font-black tracking-[0.3em] border-[var(--c-primary)]/30 bg-[var(--c-primary)]/10 px-4 py-1">OCEANFRESH MOBILE APP</Badge>
+                  <h2 className="text-4xl md:text-8xl font-black text-[var(--c-text-primary)] uppercase italic leading-[0.85] tracking-tighter">The Market in <br /> Your Pocket.</h2>
+                  <p className="text-xs md:text-lg text-[var(--c-text-secondary)] font-medium italic opacity-60 max-w-sm">Get our recipes and fresh catch updates right on your phone. Easy ordering, real-time order tracking.</p>
                   
                   <div className="flex flex-row gap-[4px] justify-center lg:justify-start">
                      <Button 
@@ -1852,12 +1897,12 @@ export default function CustomerHomePage() {
             <div className="max-w-xl mx-auto relative z-10 flex flex-col md:flex-row gap-2">
                <Input 
                   placeholder="Registry Email..." 
-                  className="h-12 md:h-20 rounded-none bg-black/40 border-[var(--foreground)]/10 text-center text-xs italic px-6 text-[var(--c-text-primary)]" 
-                  style={{ clipPath: 'polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px)' }}
+                  className="h-12 md:h-20 !rounded-none bg-black/40 border-[var(--foreground)]/10 text-center text-xs italic px-6 text-[var(--c-text-primary)]" 
+                  style={{ clipPath: 'polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px)', borderRadius: '0px' }}
                />
                <Button 
-                  className="h-12 md:h-20 px-10 rounded-none bg-[var(--c-primary)] text-[var(--foreground)] shadow-[var(--c-shadow-glow)] text-[10px] font-black uppercase tracking-[0.2em]"
-                  style={{ clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%)' }}
+                  className="h-12 md:h-20 px-10 !rounded-none bg-[var(--c-primary)] text-[var(--foreground)] shadow-[var(--c-shadow-glow)] text-[10px] font-black uppercase tracking-[0.2em]"
+                  style={{ clipPath: 'polygon(15px 0, 100% 0, calc(100% - 15px) 100%, 0 100%)', borderRadius: '0px' }}
                >
                   COMMISSION
                </Button>

@@ -18,6 +18,7 @@ interface SettingsState {
   marketplaceName: string;
   flashDealActive: boolean;
   flashDealEnd: string;
+  theme: string;
   customerAssets: CustomerAssets;
   fetchSettings: () => Promise<void>;
   setSettings: (partial: Partial<SettingsState>) => void;
@@ -26,8 +27,8 @@ interface SettingsState {
 const defaultAssets: CustomerAssets = {
   logo: "",
   hero: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80",
-  favicon: "",
-  appleIcon: "",
+  favicon: "/logo-icon.svg",
+  appleIcon: "/logo-icon.svg",
   promo: "https://images.unsplash.com/photo-1551970634-747846a548cb?auto=format&fit=crop&q=80",
   promoSecondary: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80",
   mobile: "",
@@ -40,6 +41,7 @@ export const useSettingsStore = create<SettingsState>()(
       marketplaceName: "OceanExotic Global",
       flashDealActive: true,
       flashDealEnd: new Date(Date.now() + 1000 * 60 * 60 * 3).toISOString(),
+      theme: "theme-zomato-passion",
       customerAssets: { ...defaultAssets },
 
       setSettings: (partial) => set((s) => ({ ...s, ...partial })),
@@ -65,6 +67,7 @@ export const useSettingsStore = create<SettingsState>()(
                 ? Boolean(settings.flashDealActive)
                 : get().flashDealActive,
             flashDealEnd: (settings.flashDealEnd as string) || get().flashDealEnd,
+            theme: (settings.customerTheme as string) || (settings.theme as string) || get().theme,
             customerAssets: sanitized,
           });
         } catch {

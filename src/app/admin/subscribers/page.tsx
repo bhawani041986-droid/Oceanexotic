@@ -164,70 +164,118 @@ export default function AdminSubscribersPage() {
              <p className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-primary animate-pulse italic">Hydrating Fleet Registry...</p>
           </div>
         ) : (
-          <div className="overflow-x-auto no-scrollbar">
-            <Table>
-              <TableHeader>
-                <TableRow className="border-[var(--foreground)]/5 bg-[var(--foreground)]/5">
-                  <TableHead className="text-[8px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary py-3 md:py-6 pl-4 md:pl-10">Email Node</TableHead>
-                  <TableHead className="text-[8px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Commissioned</TableHead>
-                  <TableHead className="text-[8px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Signal</TableHead>
-                  <TableHead className="text-right text-[8px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary pr-4 md:pr-10">Control</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredSubscribers.map((sub, i) => (
-                  <TableRow key={sub.id} className="border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all group/row">
-                    <TableCell className="py-3 md:py-6 pl-4 md:pl-10">
-                      <div className="flex items-center gap-2 md:gap-3">
-                         <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-[var(--foreground)]/5 flex items-center justify-center text-text-secondary group-hover/row:text-primary transition-all">
-                            <Mail className="w-3 h-3 md:w-4 md:h-4" />
-                         </div>
-                         <span className="font-black text-[var(--foreground)] italic tracking-tighter text-[10px] md:text-base group-hover/row:text-primary transition-colors">{sub.email}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1.5 text-[8px] md:text-xs font-black text-text-secondary italic">
-                         <Calendar className="w-3 h-3 opacity-40" />
-                         {new Date(sub.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={cn("text-[5px] md:text-[8px] font-black italic uppercase tracking-widest", sub.status === 'ACTIVE' ? "bg-success/10 text-success border-success/20" : "bg-danger/10 text-danger border-danger/20")}>
-                         {sub.status || 'ACTIVE'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right pr-4 md:pr-10">
-                      <div className="flex justify-end gap-1.5 md:gap-2">
-                        <button 
-                          onClick={() => handleToggleStatus(sub.id, sub.status || 'ACTIVE')}
-                          className="p-1.5 md:p-2.5 bg-[var(--foreground)]/5 rounded-lg md:rounded-xl text-text-secondary hover:text-warning transition-all shadow-glow-purple/5"
-                          title="Toggle Status"
-                        >
-                          <ShieldCheck className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                        </button>
-                        <button 
-                          onClick={() => handleDelete(sub.id)}
-                          className="p-1.5 md:p-2.5 bg-[var(--foreground)]/5 rounded-lg md:rounded-xl text-text-secondary hover:bg-danger hover:text-[var(--foreground)] transition-all shadow-glow-purple/5"
-                        >
-                          <Trash2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
-                        </button>
-                      </div>
-                    </TableCell>
+          <React.Fragment>
+            <div className="hidden lg:block overflow-x-auto no-scrollbar">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-[var(--foreground)]/5 bg-[var(--foreground)]/5">
+                    <TableHead className="text-[8px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary py-3 md:py-6 pl-4 md:pl-10">Email Node</TableHead>
+                    <TableHead className="text-[8px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Commissioned</TableHead>
+                    <TableHead className="text-[8px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Signal</TableHead>
+                    <TableHead className="text-right text-[8px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary pr-4 md:pr-10">Control</TableHead>
                   </TableRow>
-                ))}
-              {filteredSubscribers.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={4} className="py-20 text-center">
-                    <div className="space-y-4">
-                       <div className="text-6xl grayscale opacity-10">🚢</div>
-                       <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary italic">No signal nodes detected in this sector.</p>
+                </TableHeader>
+                <TableBody>
+                  {filteredSubscribers.map((sub, i) => (
+                    <TableRow key={sub.id} className="border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all group/row">
+                      <TableCell className="py-3 md:py-6 pl-4 md:pl-10">
+                        <div className="flex items-center gap-2 md:gap-3">
+                           <div className="w-6 h-6 md:w-8 md:h-8 rounded-lg bg-[var(--foreground)]/5 flex items-center justify-center text-text-secondary group-hover/row:text-primary transition-all">
+                              <Mail className="w-3 h-3 md:w-4 md:h-4" />
+                           </div>
+                           <span className="font-black text-[var(--foreground)] italic tracking-tighter text-[10px] md:text-base group-hover/row:text-primary transition-colors">{sub.email}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1.5 text-[8px] md:text-xs font-black text-text-secondary italic">
+                           <Calendar className="w-3 h-3 opacity-40" />
+                           {new Date(sub.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={cn("text-[5px] md:text-[8px] font-black italic uppercase tracking-widest", sub.status === 'ACTIVE' ? "bg-success/10 text-success border-success/20" : "bg-danger/10 text-danger border-danger/20")}>
+                           {sub.status || 'ACTIVE'}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right pr-4 md:pr-10">
+                        <div className="flex justify-end gap-1.5 md:gap-2">
+                          <button 
+                            onClick={() => handleToggleStatus(sub.id, sub.status || 'ACTIVE')}
+                            className="p-1.5 md:p-2.5 bg-[var(--foreground)]/5 rounded-lg md:rounded-xl text-text-secondary hover:text-warning transition-all shadow-glow-purple/5"
+                            title="Toggle Status"
+                          >
+                            <ShieldCheck className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                          </button>
+                          <button 
+                            onClick={() => handleDelete(sub.id)}
+                            className="p-1.5 md:p-2.5 bg-[var(--foreground)]/5 rounded-lg md:rounded-xl text-text-secondary hover:bg-danger hover:text-[var(--foreground)] transition-all shadow-glow-purple/5"
+                          >
+                            <Trash2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                          </button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {filteredSubscribers.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={4} className="py-20 text-center">
+                        <div className="space-y-4">
+                           <div className="text-6xl grayscale opacity-10">🚢</div>
+                           <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary italic">No signal nodes detected in this sector.</p>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Mobile card list */}
+            <div className="lg:hidden space-y-3 p-4">
+              {filteredSubscribers.map((sub) => (
+                <div key={sub.id} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-lg bg-[var(--foreground)]/5 flex items-center justify-center text-text-secondary">
+                        <Mail className="w-3.5 h-3.5" />
+                      </div>
+                      <span className="font-black text-[var(--foreground)] italic tracking-tighter text-sm truncate max-w-[180px]">{sub.email}</span>
                     </div>
-                  </TableCell>
-                </TableRow>
+                    <Badge className={cn("text-[8px] font-black italic uppercase tracking-widest", sub.status === 'ACTIVE' ? "bg-success/10 text-success border-success/20" : "bg-danger/10 text-danger border-danger/20")}>
+                      {sub.status || 'ACTIVE'}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5">
+                    <div className="flex items-center gap-1 text-[8px] font-black text-text-secondary italic">
+                      <Calendar className="w-3.5 h-3.5 opacity-40" />
+                      {new Date(sub.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                    </div>
+                    <div className="flex justify-end gap-1.5">
+                      <button 
+                        onClick={() => handleToggleStatus(sub.id, sub.status || 'ACTIVE')}
+                        className="p-1.5 bg-[var(--foreground)]/5 rounded-lg text-text-secondary hover:text-warning transition-all shadow-glow-purple/5"
+                        title="Toggle Status"
+                      >
+                        <ShieldCheck className="w-3.5 h-3.5" />
+                      </button>
+                      <button 
+                        onClick={() => handleDelete(sub.id)}
+                        className="p-1.5 bg-[var(--foreground)]/5 rounded-lg text-text-secondary hover:bg-danger hover:text-[var(--foreground)] transition-all shadow-glow-purple/5"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {filteredSubscribers.length === 0 && (
+                <div className="py-12 text-center space-y-3">
+                  <div className="text-4xl grayscale opacity-10">🚢</div>
+                  <p className="text-[9px] font-black uppercase tracking-widest text-text-secondary italic">No signal nodes detected in this sector.</p>
+                </div>
               )}
-            </TableBody>
-          </Table>
-          </div>
+            </div>
+          </React.Fragment>
         )}
       </Card>
     </div>

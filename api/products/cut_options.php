@@ -33,6 +33,16 @@ try {
     $base = $priceStmt->fetch(PDO::FETCH_ASSOC);
     $basePrice = $base ? (float)$base['base_price'] : 0;
 
+    $area = isset($_GET['area']) ? trim($_GET['area']) : '';
+    if ($area) {
+        $ovStmt = $pdo->prepare("SELECT price FROM product_location_overrides WHERE product_id = ? AND territory_name = ? AND price IS NOT NULL");
+        $ovStmt->execute([$product_id, $area]);
+        $override = $ovStmt->fetch(PDO::FETCH_ASSOC);
+        if ($override) {
+            $basePrice = (float)$override['price'];
+        }
+    }
+
     // Get cut options
     $cutsStmt = $pdo->prepare("
         SELECT

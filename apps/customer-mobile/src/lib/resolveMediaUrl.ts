@@ -5,7 +5,7 @@ import { resolveApiBaseUrl } from "@/config/api";
 export function resolveMediaUrl(url?: string | null): string {
   if (!url || typeof url !== "string") return "";
   const trimmed = url.trim();
-  if (!trimmed || trimmed.startsWith("blob:")) return "";
+  if (!trimmed || trimmed.startsWith("blob:") || trimmed === "null" || trimmed === "undefined" || trimmed.endsWith("/null") || trimmed.endsWith("/undefined")) return "";
 
   // If it's a base64-encoded image data URI, return it directly to render natively
   if (trimmed.startsWith("data:")) return trimmed;

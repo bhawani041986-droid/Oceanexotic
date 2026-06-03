@@ -33,6 +33,7 @@ try {
         status VARCHAR(50) DEFAULT 'DRAFT',
         sector VARCHAR(100) DEFAULT 'GLOBAL',
         image_url LONGTEXT,
+        metadata LONGTEXT,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )");
 
@@ -84,8 +85,7 @@ try {
         product_id VARCHAR(50) NOT NULL,
         quantity DECIMAL(10,2) NOT NULL,
         price DECIMAL(10,2) NOT NULL,
-        FOREIGN KEY (order_id) REFERENCES orders(id),
-        FOREIGN KEY (product_id) REFERENCES products(id)
+        FOREIGN KEY (order_id) REFERENCES orders(id)
     )");
 
     // 7. Create User Addresses Table

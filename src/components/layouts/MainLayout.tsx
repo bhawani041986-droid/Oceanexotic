@@ -28,7 +28,8 @@ import {
   Bell,
   Heart,
   ChevronDown,
-  ShieldCheck
+  ShieldCheck,
+  ChefHat
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 
@@ -71,36 +72,37 @@ export default function MainLayout({ children }: MainLayoutProps) {
   };
 
   const navItems = [
-    { label: "Home", href: "/customer", icon: <Home className="w-5 h-5" />, color: "#00D1FF" },
-    { label: "Market", href: "/customer/products", icon: <ShoppingBag className="w-5 h-5" />, color: "#10B981" },
-    { label: "Orders", href: "/customer/orders", icon: <Receipt className="w-5 h-5" />, color: "#FACC15" },
-    { label: "Profile", href: "/customer/profile", icon: <UserIcon className="w-5 h-5" />, color: "#EC4899" },
+    { label: "Home", href: "/customer", icon: <Home className="w-5 h-5" /> },
+    { label: "Market", href: "/customer/products", icon: <ShoppingBag className="w-5 h-5" /> },
+    { label: "Recipes", href: "/customer/recipes", icon: <ChefHat className="w-5 h-5" /> },
+    { label: "Orders", href: "/customer/orders", icon: <Receipt className="w-5 h-5" /> },
+    { label: "Profile", href: "/customer/profile", icon: <UserIcon className="w-5 h-5" /> },
   ];
 
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <div className={cn(
-      "min-h-screen flex flex-col bg-[var(--c-bg)] text-[var(--c-text-primary)] font-sans selection:bg-[var(--c-primary)]/30 pb-[92px] lg:pb-0 overflow-x-hidden transition-all duration-500"
+      "min-h-screen flex flex-col bg-[var(--c-bg)] text-[var(--c-text-primary)] font-sans selection:bg-[var(--c-primary)]/30 pb-[120px] lg:pb-0 overflow-x-hidden transition-all duration-500"
     )}>
       
       {/* 1. UNIVERSAL RESPONSIVE NAVBAR - THEME AWARE */}
       <header className={cn(
         "fixed top-0 left-0 right-0 z-[100] transition-all duration-500 border-b",
         scrolled 
-          ? "h-16 md:h-20 bg-[var(--c-bg)]/90 backdrop-blur-3xl border-[var(--foreground)]/10" 
-          : "h-20 md:h-24 bg-[var(--c-bg)]/60 backdrop-blur-xl border-[var(--foreground)]/5"
+          ? "h-20 md:h-28 bg-[var(--c-bg)]/90 backdrop-blur-3xl border-[var(--foreground)]/10" 
+  : "h-24 md:h-32 bg-[var(--c-bg)]/60 backdrop-blur-xl border-[var(--foreground)]/5"
       )}>
-        <div className="container mx-auto px-4 md:px-10 h-full flex items-center justify-between">
+        <div className="container mx-auto px-0 h-full flex items-center justify-between">
           <div className="flex items-center gap-3 lg:gap-10">
             <button 
               onClick={() => setIsMobileMenuOpen(true)}
-              className="p-2 lg:hidden text-[var(--c-text-primary)]"
+              className="p-2 text-[var(--c-text-primary)]"
             >
               <Menu className="w-6 h-6" />
             </button>
             <Link href="/customer" className="flex items-center gap-2 group">
-              <Logo size="lg" className="!w-[340px] !h-[85px]" />
+              <Logo size="lg" className="!w-[170px] !h-[45px] sm:!w-[240px] sm:!h-[64px] md:!w-[300px] md:!h-[80px] lg:!w-[355px] lg:!h-[95px]" />
             </Link>
 
             <nav className="hidden lg:flex items-center gap-8 ml-6">
@@ -158,7 +160,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && router.push(`/customer/products?search=${searchQuery}`)}
-                placeholder="Search harvests..." 
+                placeholder="Search for seafood..." 
                 className="w-full h-11 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 pl-11 pr-4 text-xs focus:border-[var(--c-primary)] text-[var(--c-text-primary)] transition-all outline-none" 
                 style={{ clipPath: 'polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)' }}
              />
@@ -168,27 +170,27 @@ export default function MainLayout({ children }: MainLayoutProps) {
           <div className="flex items-center gap-2 md:gap-4 lg:gap-6">
             <div className="hidden lg:flex items-center gap-3">
               <button onClick={() => router.push('/customer/wishlist')} className="p-3 text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)]"><Heart className="w-5 h-5" /></button>
-              <button onClick={() => router.push('/customer/notifications')} className="p-3 text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] relative">
-                <Bell className="w-5 h-5" />
-                <span className="absolute top-3 right-3 w-2 h-2 bg-red-500 rounded-full border-2 border-[var(--c-bg)]" />
-              </button>
             </div>
+            <button onClick={() => router.push('/customer/notifications')} className="p-2 md:p-3 text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] relative">
+              <Bell className="w-6 h-6 md:w-5 md:h-5" />
+              <span className="absolute top-2 right-2 md:top-3 md:right-3 w-2 h-2 bg-red-500 rounded-full border-2 border-[var(--c-bg)]" />
+            </button>
             <Link href="/customer/cart" className="p-2 md:px-4 md:py-2.5 bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/20 rounded-full flex items-center gap-3 relative transition-all">
                <ShoppingCart className="w-6 h-6 md:w-5 md:h-5 text-[var(--c-primary)]" />
                <span className="absolute top-1 right-1 md:relative md:top-0 md:right-0 bg-[var(--c-primary)] md:bg-transparent rounded-full text-[8px] md:text-xs font-black text-[var(--foreground)] md:text-[var(--c-primary)] px-1">
                  {mounted ? items.length : 0}
                </span>
             </Link>
-            <button onClick={() => router.push('/customer/profile')} className={cn(
-              "h-9 md:h-11 rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 flex items-center justify-center hover:border-[var(--c-primary)] transition-all overflow-hidden px-1 md:px-4 gap-2",
-              isAuthenticated ? "w-auto" : "w-9 md:w-11"
-            )}>
-              {isAuthenticated && (
-                <span className="hidden md:block text-[10px] font-black uppercase tracking-widest text-[var(--c-text-primary)]">
-                  {user?.name?.split(' ')[0] || "Citizen"}
-                </span>
+            <button onClick={() => router.push('/customer/profile')} className="h-9 w-9 md:h-11 md:w-11 rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 flex items-center justify-center hover:border-[var(--c-primary)] transition-all overflow-hidden relative group">
+              {isAuthenticated ? (
+                <img 
+                  src={(user?.avatar && user.avatar !== 'null' && user.avatar !== 'undefined') ? user.avatar : "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80"} 
+                  alt="Profile" 
+                  className="w-full h-full object-cover rounded-full"
+                />
+              ) : (
+                <UserIcon className="w-5 h-5 text-[var(--c-text-primary)]" />
               )}
-              <UserIcon className="w-5 h-5 text-[var(--c-text-primary)]" />
             </button>
           </div>
         </div>
@@ -196,8 +198,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
       {/* 2. STICKY BOTTOM NAVIGATION (MOBILE) */}
       <nav 
-        className="fixed bottom-4 left-4 right-4 z-[100] h-[48px] bg-[var(--c-card)]/90 backdrop-blur-3xl border border-[var(--foreground)]/10 shadow-2xl lg:hidden"
-        style={{ clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)' }}
+        className="fixed left-4 right-4 z-[100] h-[48px] bg-[var(--c-card)]/90 backdrop-blur-3xl border border-[var(--foreground)]/10 shadow-2xl lg:hidden"
+        style={{ 
+          clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)',
+          bottom: 'max(1rem, env(safe-area-inset-bottom))'
+        }}
       >
         <div className="flex items-center justify-around h-full px-2">
           {navItems.map((item, i) => {
@@ -214,14 +219,14 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 {isActive && (
                   <motion.div 
                     layoutId="activeGlowMain"
-                    className="absolute top-0 w-12 h-[3px] bg-[var(--c-primary)] rounded-b-full shadow-glow-purple"
-                    style={{ backgroundColor: item.color, boxShadow: `0 2px 10px ${item.color}` }}
+                    className="absolute top-0 w-12 h-[3px] bg-[var(--c-primary)] rounded-b-full shadow-[var(--c-shadow-glow)]"
+                    style={{ backgroundColor: 'var(--c-primary)' }}
                   />
                 )}
-                <div className={cn("transition-transform", isActive && "scale-110")} style={{ color: item.color, opacity: isActive ? 1 : 0.6 }}>
+                <div className={cn("transition-transform", isActive && "scale-110")} style={{ color: isActive ? 'var(--c-primary)' : 'var(--c-text-secondary)', opacity: isActive ? 1 : 0.6 }}>
                   {item.icon}
                 </div>
-                <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: isActive ? item.color : undefined, opacity: isActive ? 1 : 0.6 }}>{item.label}</span>
+                <span className="text-[9px] font-black uppercase tracking-widest" style={{ color: isActive ? 'var(--c-primary)' : undefined, opacity: isActive ? 1 : 0.6 }}>{item.label}</span>
               </button>
             );
           })}
@@ -237,14 +242,14 @@ export default function MainLayout({ children }: MainLayoutProps) {
               animate={{ opacity: 1 }} 
               exit={{ opacity: 0 }} 
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 z-[150] bg-black/60 backdrop-blur-sm lg:hidden" 
+              className="fixed inset-0 z-[150] bg-black/60 backdrop-blur-sm" 
             />
             <motion.div 
               initial={{ x: "-100%" }} 
               animate={{ x: 0 }} 
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 left-0 bottom-0 w-[85%] max-w-[320px] z-[600] bg-[var(--c-bg)] border-r border-[var(--foreground)]/5 p-8 flex flex-col lg:hidden shadow-2xl pt-16"
+              className="fixed top-0 left-0 bottom-0 w-[85%] max-w-[320px] z-[600] bg-[var(--c-bg)] border-r border-[var(--foreground)]/5 p-8 flex flex-col shadow-2xl pt-16"
             >
               {/* Close Button - Tactical Position */}
               <button 
@@ -261,7 +266,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <p className="text-[10px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] mb-4">Governance Nodes</p>
+                <p className="text-[10px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] mb-4">Quick Links</p>
                 {navItems.map((item, i) => {
                   const isActive = pathname === item.href;
                   return (
@@ -270,18 +275,18 @@ export default function MainLayout({ children }: MainLayoutProps) {
                       onClick={() => { router.push(item.href); setIsMobileMenuOpen(false); }}
                       className={cn(
                         "flex items-center gap-4 text-lg font-black uppercase italic transition-all relative overflow-hidden group px-5 py-4",
-                        isActive ? "text-white shadow-glow-purple" : "text-text-secondary hover:text-[var(--foreground)]"
+                        isActive ? "text-white shadow-[var(--c-shadow-glow)]" : "text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)]"
                       )}
                       style={{
                         clipPath: "polygon(12px 0%, 100% 0%, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0% 100%, 0% 12px)",
                         backgroundColor: isActive ? 'var(--c-primary)' : 'rgba(255,255,255,0.03)',
-                        boxShadow: isActive ? `inset 0 0 0 1px ${item.color}` : 'none',
+                        boxShadow: isActive ? 'inset 0 0 0 1px var(--c-primary)' : 'none',
                         borderLeftWidth: '5px',
                         borderLeftStyle: 'solid',
-                        borderLeftColor: item.color
+                        borderLeftColor: 'var(--c-primary)'
                       }}
                     >
-                      <span className={cn("transition-transform group-hover:scale-110", isActive ? "text-white" : "")} style={{ color: !isActive ? item.color : undefined }}>{item.icon}</span>
+                      <span className={cn("transition-transform group-hover:scale-110", isActive ? "text-white" : "text-[var(--c-text-secondary)]")}>{item.icon}</span>
                       <span className="text-[11px] font-black uppercase tracking-[0.2em]">{item.label}</span>
                       {isActive && (
                         <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent pointer-events-none" />
@@ -305,7 +310,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     borderLeftColor: '#EF4444'
                   }}
                 >
-                   <span className="text-[10px] font-black uppercase italic relative z-10 tracking-[0.2em]">TERMINATE ACCESS</span>
+                   <span className="text-[10px] font-black uppercase italic relative z-10 tracking-[0.2em]">SIGN OUT</span>
                    <LogOut className="w-5 h-5 transition-transform group-hover:scale-110" />
                 </button>
               </div>
@@ -327,19 +332,19 @@ export default function MainLayout({ children }: MainLayoutProps) {
                  <Link href="/customer" className="flex items-center gap-2">
                     <Logo size="lg" className="!w-[340px] !h-[85px]" />
                  </Link>
-                 <p className="text-[9px] md:text-base text-[var(--c-text-secondary)] font-medium italic">The global standard for modern maritime commerce.</p>
+                 <p className="text-[9px] md:text-base text-[var(--c-text-secondary)] font-medium italic">Your trusted local source for fresh, premium seafood delivered straight to your home.</p>
               </div>
 
               {/* BOX 2: MARKETPLACE */}
               <div className="p-6 md:p-10 space-y-4 border-b border-[var(--foreground)]/5 lg:border-none">
                  <h4 className="text-[10px] md:text-[12px] font-black text-[var(--c-text-primary)] uppercase tracking-[0.2em]">Collections</h4>
-                 <ul className="space-y-2 text-[10px] md:text-base text-[var(--c-text-secondary)] italic">{['Premium Saku', 'Wild Shellfish', 'Fresh Arrivals'].map(item => <li key={item} className="truncate">{item}</li>)}</ul>
+                 <ul className="space-y-2 text-[10px] md:text-base text-[var(--c-text-secondary)] italic">{['Fresh Catch', 'Premium Seafood', 'New Arrivals'].map(item => <li key={item} className="truncate">{item}</li>)}</ul>
               </div>
 
               {/* BOX 3: GOVERNANCE */}
               <div className="p-6 md:p-10 space-y-4 border-r border-[var(--foreground)]/5 lg:border-none">
-                 <h4 className="text-[10px] md:text-[12px] font-black text-[var(--c-text-primary)] uppercase tracking-[0.2em]">Governance</h4>
-                 <ul className="space-y-2 text-[10px] md:text-base text-[var(--c-text-secondary)] italic">{['Fleet Registry', 'Authority Node', 'Audit Logs'].map(item => <li key={item} className="truncate">{item}</li>)}</ul>
+                 <h4 className="text-[10px] md:text-[12px] font-black text-[var(--c-text-primary)] uppercase tracking-[0.2em]">About Us</h4>
+                 <ul className="space-y-2 text-[10px] md:text-base text-[var(--c-text-secondary)] italic">{['Our Fishermen', 'Our Story', 'Contact Us'].map(item => <li key={item} className="truncate">{item}</li>)}</ul>
               </div>
 
               {/* BOX 4: CONTACT & SOCIALS */}
@@ -350,11 +355,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
               </div>
            </div>
            <div className="p-6 border-t border-[var(--foreground)]/5 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left bg-black/20">
-              <p className="text-[9px] md:text-sm text-[var(--c-text-secondary)] italic uppercase tracking-widest">© 2026 {settings.marketplaceName || 'OceanExotic Global'}. Sovereignty Maintained.</p>
+              <p className="text-[9px] md:text-sm text-[var(--c-text-secondary)] italic uppercase tracking-widest">© 2026 OceanExotic Global. All Rights Reserved.</p>
               <div className="flex gap-6 text-[8px] md:text-xs text-[var(--c-text-secondary)] font-black uppercase tracking-widest">
-                 <span className="cursor-pointer hover:text-[var(--c-primary)] transition-colors">Protocols</span>
-                 <span className="cursor-pointer hover:text-[var(--c-primary)] transition-colors">Nodes</span>
-                 <span className="cursor-pointer hover:text-[var(--c-primary)] transition-colors">Security</span>
+                 <span className="cursor-pointer hover:text-[var(--c-primary)] transition-colors">How to Order</span>
+                 <span className="cursor-pointer hover:text-[var(--c-primary)] transition-colors">Store Locations</span>
+                 <span className="cursor-pointer hover:text-[var(--c-primary)] transition-colors">Safe Checkout</span>
               </div>
            </div>
         </div>

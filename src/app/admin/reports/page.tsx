@@ -17,7 +17,8 @@ import {
   ArrowDownRight,
   Activity,
   IndianRupee,
-  Users
+  Users,
+  Plus
 } from "lucide-react";
 
 const PERFORMANCE_METRICS = [
@@ -125,39 +126,76 @@ export default function AdminReportsPage() {
                VIEW FULL DIRECTIVE <ChevronRight className="w-3 h-3 md:w-4 md:h-4" />
             </Button>
          </div>
-         <Table>
-            <TableHeader>
-               <TableRow className="hover:bg-transparent">
-                  <TableHead>Maritime Sector</TableHead>
-                  <TableHead>Trade Volume</TableHead>
-                  <TableHead>Fulfillment SLA</TableHead>
-                  <TableHead>Merchant Health</TableHead>
-                  <TableHead className="text-right">Market Trend</TableHead>
-               </TableRow>
-            </TableHeader>
-            <TableBody>
-               {[
-                 { sector: "North Atlantic (SEC-01)", volume: "₹420K", sla: "98.4%", health: "OPTIMAL", trend: "+8.2%" },
-                 { sector: "Sea of Japan (SEC-04)", volume: "₹380K", sla: "99.1%", health: "OPTIMAL", trend: "+12.4%" },
-                 { sector: "Bering Sea (SEC-02)", volume: "₹240K", sla: "96.8%", health: "STABLE", trend: "-2.1%" },
-                 { sector: "Mediterranean (SEC-08)", volume: "₹180K", sla: "97.5%", health: "STABLE", trend: "+4.5%" },
-               ].map((row) => (
-                 <TableRow key={row.sector}>
-                    <TableCell className="font-bold text-[var(--foreground)] text-sm uppercase tracking-tight">{row.sector}</TableCell>
-                    <TableCell className="font-black text-primary">{row.volume}</TableCell>
-                    <TableCell className="font-black text-[var(--foreground)]">{row.sla}</TableCell>
-                    <TableCell>
-                       <Badge variant={row.health === "OPTIMAL" ? "success" : "secondary"}>
-                          {row.health}
-                       </Badge>
-                    </TableCell>
-                    <TableCell className={`text-right font-black uppercase tracking-widest text-[10px] ${row.trend.startsWith('+') ? 'text-success' : 'text-danger'}`}>
-                       {row.trend}
-                    </TableCell>
-                 </TableRow>
-               ))}
-            </TableBody>
-         </Table>
+         <div className="hidden lg:block">
+            <Table>
+               <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                     <TableHead>Maritime Sector</TableHead>
+                     <TableHead>Trade Volume</TableHead>
+                     <TableHead>Fulfillment SLA</TableHead>
+                     <TableHead>Merchant Health</TableHead>
+                     <TableHead className="text-right">Market Trend</TableHead>
+                  </TableRow>
+               </TableHeader>
+               <TableBody>
+                  {[
+                    { sector: "North Atlantic (SEC-01)", volume: "₹420K", sla: "98.4%", health: "OPTIMAL", trend: "+8.2%" },
+                    { sector: "Sea of Japan (SEC-04)", volume: "₹380K", sla: "99.1%", health: "OPTIMAL", trend: "+12.4%" },
+                    { sector: "Bering Sea (SEC-02)", volume: "₹240K", sla: "96.8%", health: "STABLE", trend: "-2.1%" },
+                    { sector: "Mediterranean (SEC-08)", volume: "₹180K", sla: "97.5%", health: "STABLE", trend: "+4.5%" },
+                  ].map((row) => (
+                    <TableRow key={row.sector}>
+                       <TableCell className="font-bold text-[var(--foreground)] text-sm uppercase tracking-tight">{row.sector}</TableCell>
+                       <TableCell className="font-black text-primary">{row.volume}</TableCell>
+                       <TableCell className="font-black text-[var(--foreground)]">{row.sla}</TableCell>
+                       <TableCell>
+                          <Badge variant={row.health === "OPTIMAL" ? "success" : "secondary"}>
+                             {row.health}
+                          </Badge>
+                       </TableCell>
+                       <TableCell className={`text-right font-black uppercase tracking-widest text-[10px] ${row.trend.startsWith('+') ? 'text-success' : 'text-danger'}`}>
+                          {row.trend}
+                       </TableCell>
+                    </TableRow>
+                  ))}
+               </TableBody>
+            </Table>
+         </div>
+
+         {/* Mobile card list */}
+         <div className="lg:hidden space-y-3 p-4">
+            {[
+              { sector: "North Atlantic (SEC-01)", volume: "₹420K", sla: "98.4%", health: "OPTIMAL", trend: "+8.2%" },
+              { sector: "Sea of Japan (SEC-04)", volume: "₹380K", sla: "99.1%", health: "OPTIMAL", trend: "+12.4%" },
+              { sector: "Bering Sea (SEC-02)", volume: "₹240K", sla: "96.8%", health: "STABLE", trend: "-2.1%" },
+              { sector: "Mediterranean (SEC-08)", volume: "₹180K", sla: "97.5%", health: "STABLE", trend: "+4.5%" },
+            ].map((row) => (
+               <div key={row.sector} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
+                  <div className="flex items-start justify-between">
+                     <p className="font-bold text-[var(--foreground)] text-sm uppercase tracking-tight">{row.sector}</p>
+                     <Badge variant={row.health === "OPTIMAL" ? "success" : "secondary"}>
+                        {row.health}
+                     </Badge>
+                  </div>
+                  <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5">
+                     <div className="space-y-0">
+                        <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Trade Volume</p>
+                        <p className="text-xs font-black text-primary italic">{row.volume}</p>
+                     </div>
+                     <div className="space-y-0">
+                        <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Fulfillment SLA</p>
+                        <p className="text-xs font-black text-[var(--foreground)] italic">{row.sla}</p>
+                     </div>
+                     <div className="text-right space-y-0">
+                        <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Market Trend</p>
+                        <span className={`font-black uppercase tracking-widest text-xs ${row.trend.startsWith('+') ? 'text-success' : 'text-danger'}`}>
+                           {row.trend}
+                        </span>
+                     </div>
+                  </div>
+               </div>
+            ))}
+         </div>
       </Card>
     </div>
   

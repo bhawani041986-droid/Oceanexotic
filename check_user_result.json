@@ -1,0 +1,57 @@
+{
+    "profile": {
+        "code": 200,
+        "body": {
+            "id": "USR-1778761853605",
+            "name": "John Doe",
+            "email": "john@gmail.com",
+            "role": "CUSTOMER",
+            "avatar_url": "\/uploads\/original\/1779073065591-1779071556_dfd2ecca-8f06-411f-aeab-ba850047a9a9.png",
+            "grade": "Maritime Citizen",
+            "loyalty_points": 0
+        }
+    },
+    "orders": {
+        "code": 200,
+        "body": [
+            {
+                "id": 23,
+                "date": "May 17, 2026",
+                "total": 210,
+                "status": "IN TRANSIT",
+                "item_count": 1,
+                "items": 1,
+                "tracking": "OCEAN-0023"
+            },
+            {
+                "id": 22,
+                "date": "May 17, 2026",
+                "total": 200,
+                "status": "IN TRANSIT",
+                "item_count": 1,
+                "items": 1,
+                "tracking": "OCEAN-0022"
+            }
+        ]
+    },
+    "addresses": {
+        "code": 200,
+        "body": [
+            {
+                "id": 6,
+                "user_id": "USR-1778761853605",
+                "label": "HOME",
+                "address_line1": "Dollygung ",
+                "city": "Port Blair",
+                "pincode": null,
+                "is_default": 1,
+                "hotel_name": "Bhawa",
+                "room_no": "2",
+                "jetty": "Phoenix Bay Jetty",
+                "phone": "9531828099",
+                "type": "HOME",
+                "address": "Dollygung "
+            }
+        ]
+    }
+}

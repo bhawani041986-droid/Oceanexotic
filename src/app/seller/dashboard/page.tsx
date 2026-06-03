@@ -99,7 +99,7 @@ export default function SellerDashboardPage() {
 
   return (
 
-    <div className="space-y-[10px] md:space-y-10 pt-4 md:pt-10 pb-24 md:pb-10 px-4 md:px-0 animate-fade-in">
+    <div className="space-y-[10px] md:space-y-10 pt-4 md:pt-10 pb-24 md:pb-10 px-0 animate-fade-in">
       {/* Stats Grid */}
       <div className="grid grid-cols-2 xl:grid-cols-4 gap-[10px] md:gap-6">
         {isLoading ? (
@@ -245,7 +245,7 @@ export default function SellerDashboardPage() {
         </div>
 
         {/* Mobile View: Cards */}
-        <div className="grid grid-cols-1 gap-[10px] md:hidden">
+        <div className="grid grid-cols-1 gap-[10px] lg:hidden">
           {isLoading ? (
              Array(3).fill(0).map((_, i) => (
                 <Card key={i} className="p-[10px] space-y-4 rounded-xl">
@@ -321,7 +321,7 @@ export default function SellerDashboardPage() {
         </div>
 
         {/* Desktop View: Table */}
-        <Card className="hidden md:block p-1 overflow-hidden rounded-[24px]">
+        <Card className="hidden lg:block p-1 overflow-hidden rounded-[24px]">
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>

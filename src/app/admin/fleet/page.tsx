@@ -259,7 +259,7 @@ export default function AgentMissionControl() {
                   </div>
                </div>
             </div>
-           <div className="overflow-x-auto">
+           <div className="hidden lg:block overflow-x-auto">
              <Table>
                 <TableHeader className="bg-[var(--foreground)]/5">
                    <TableRow className="border-[var(--foreground)]/5">
@@ -282,6 +282,42 @@ export default function AgentMissionControl() {
                    ))}
                 </TableBody>
              </Table>
+           </div>
+
+           {/* Mobile card list - visible below lg breakpoint */}
+           <div className="lg:hidden space-y-3 p-4">
+             {missions.length === 0 ? (
+               <p className="text-center py-8 text-xs font-black uppercase text-text-secondary italic">No active fleet missions.</p>
+             ) : missions.map((m) => (
+               <div
+                 key={m.order_id}
+                 onClick={() => setActiveOrder(m.order_id)}
+                 className={cn(
+                   "p-4 rounded-xl border cursor-pointer transition-all space-y-3",
+                   activeOrder === m.order_id
+                     ? "bg-primary/10 border-primary/40 shadow-glow-purple/10"
+                     : "bg-bg-card/40 border-[var(--foreground)]/5 hover:border-primary/20"
+                 )}
+               >
+                 <div className="flex items-start justify-between">
+                   <div className="space-y-0.5">
+                     <p className="font-black text-[var(--foreground)] italic text-sm tracking-tighter">{m.order_id}</p>
+                     <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">{m.agent_name || "UNASSIGNED"}</p>
+                   </div>
+                   <Badge className={cn("text-[8px] font-black tracking-widest uppercase px-2 py-0.5 italic", m.status === "IN_TRANSIT" ? "bg-primary/20 text-primary" : "bg-success/20 text-success")}>
+                     {m.status?.replace('_', ' ')}
+                   </Badge>
+                 </div>
+                 <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5">
+                   <div className="flex items-center gap-1.5 text-blue-400">
+                     <Droplets className="w-3.5 h-3.5" />
+                     <span className="font-black italic text-sm tracking-tighter">{m.current_temp}°C</span>
+                     <span className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60 ml-1">Cold-Chain</span>
+                   </div>
+                   <ChevronRight className="w-4 h-4 text-text-secondary opacity-40" />
+                 </div>
+               </div>
+             ))}
            </div>
         </Card>
 
@@ -315,13 +351,28 @@ export default function AgentMissionControl() {
         </div>
       </div>
 
-      <Modal isOpen={isDispatchModalOpen} onClose={() => setIsDispatchModalOpen(false)} title="FLEET DISPATCH">
-         <div className="space-y-4 lg:space-y-6 p-4 lg:p-6">
+      <Modal
+        isOpen={isDispatchModalOpen}
+        onClose={() => setIsDispatchModalOpen(false)}
+        title="FLEET DISPATCH"
+        description="Initialize a new vessel mission into the command registry."
+        className="md:max-w-md bg-bg-secondary/95 border border-primary/20 text-[var(--foreground)] shadow-[0_0_50px_rgba(168,85,247,0.15)] backdrop-blur-xl rounded-t-[28px] md:rounded-[28px] p-5 md:p-8"
+      >
+         <div className="space-y-4 lg:space-y-6">
             <div className="space-y-3 lg:space-y-4">
-               <div className="space-y-1 lg:space-y-2"><label className="text-[8px] lg:text-[9px] font-black text-text-secondary uppercase tracking-widest">Order Ref</label><Input value={dispatchForm.order_id} onChange={e => setDispatchForm(p => ({ ...p, order_id: e.target.value }))} className="h-10 lg:h-12 bg-[var(--foreground)]/5 border-[var(--foreground)]/10 text-xs" placeholder="ORD-XXXX" /></div>
-               <div className="space-y-1 lg:space-y-2"><label className="text-[8px] lg:text-[9px] font-black text-text-secondary uppercase tracking-widest">Agent Design.</label><Input value={dispatchForm.agent_name} onChange={e => setDispatchForm(p => ({ ...p, agent_name: e.target.value }))} className="h-10 lg:h-12 bg-[var(--foreground)]/5 border-[var(--foreground)]/10 text-xs" placeholder="Agent Name" /></div>
+               <div className="space-y-2">
+                 <label className="text-[8px] lg:text-[9px] font-black text-text-secondary uppercase tracking-widest italic">Order Ref</label>
+                 <Input value={dispatchForm.order_id} onChange={e => setDispatchForm(p => ({ ...p, order_id: e.target.value }))} className="h-10 lg:h-12 bg-[var(--foreground)]/5 border-[var(--foreground)]/10 text-xs rounded-xl" placeholder="ORD-XXXX" />
+               </div>
+               <div className="space-y-2">
+                 <label className="text-[8px] lg:text-[9px] font-black text-text-secondary uppercase tracking-widest italic">Agent Designation</label>
+                 <Input value={dispatchForm.agent_name} onChange={e => setDispatchForm(p => ({ ...p, agent_name: e.target.value }))} className="h-10 lg:h-12 bg-[var(--foreground)]/5 border-[var(--foreground)]/10 text-xs rounded-xl" placeholder="Agent Name" />
+               </div>
             </div>
-            <Button onClick={handleDispatch} className="w-full h-12 lg:h-14 bg-primary text-[9px] lg:text-[11px] font-black uppercase tracking-widest">INITIALIZE MISSION</Button>
+            <div className="flex gap-3 pt-2">
+              <Button onClick={() => setIsDispatchModalOpen(false)} variant="outline" className="flex-1 h-12 text-[10px] font-black uppercase tracking-widest border-[var(--foreground)]/10 rounded-xl italic">ABORT</Button>
+              <Button onClick={handleDispatch} className="flex-1 h-12 bg-primary shadow-glow-purple text-[9px] lg:text-[10px] font-black uppercase tracking-widest italic rounded-xl">INITIALIZE MISSION</Button>
+            </div>
          </div>
       </Modal>
     </div>

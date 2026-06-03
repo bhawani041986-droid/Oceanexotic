@@ -25,7 +25,8 @@ import {
   AlertCircle,
   Palette,
   Navigation as NavigationIcon,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Sliders
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/authStore";
@@ -33,27 +34,28 @@ import { AdminGuard } from "@/components/auth/AuthGuards";
 import { Logo } from "@/components/ui/Logo";
 
 const ADMIN_NAV = [
-  { label: "Dashboard", icon: <LayoutDashboard className="w-5 h-5" />, href: "/admin/dashboard", color: "#00D1FF" },
-  { label: "User Management", icon: <Users className="w-5 h-5" />, href: "/admin/users", color: "#3B82F6" },
-  { label: "Seller Registry", icon: <Store className="w-5 h-5" />, href: "/admin/sellers", color: "#F59E0B" },
-  { label: "Product Moderation", icon: <ShieldCheck className="w-5 h-5" />, href: "/admin/products", color: "#10B981" },
-  { label: "Order Pipeline", icon: <ShoppingCart className="w-5 h-5" />, href: "/admin/orders", color: "#F97316" },
-  { label: "Support Hub", icon: <MessageSquare className="w-5 h-5" />, href: "/admin/support", color: "#A855F7" },
-  { label: "Fraud & Security", icon: <ShieldAlert className="w-5 h-5" />, href: "/admin/security", color: "#EF4444" },
-  { label: "Financial Payouts", icon: <CreditCard className="w-5 h-5" />, href: "/admin/revenue", color: "#14B8A6" },
-  { label: "Logistics Control", icon: <Truck className="w-5 h-5" />, href: "/admin/logistics", color: "#06B6D4" },
-  { label: "Fleet Mission Control", icon: <NavigationIcon className="w-5 h-5" />, href: "/admin/fleet", color: "#8B5CF6" },
-  { label: "Review Governance", icon: <Scale className="w-5 h-5" />, href: "/admin/moderation", color: "#EAB308" },
-  { label: "Platform Analytics", icon: <Activity className="w-5 h-5" />, href: "/admin/analytics", color: "#6366F1" },
-  { label: "Media Optimization", icon: <ImageIcon className="w-5 h-5" />, href: "/admin/media", color: "#EC4899" },
-  { label: "CMS & Promotions", icon: <FileText className="w-5 h-5" />, href: "/admin/cms", color: "#84CC16" },
-  { label: "Coupon Engine", icon: <Zap className="w-5 h-5" />, href: "/admin/coupons", color: "#FACC15" },
-  { label: "Notification Radar", icon: <Bell className="w-5 h-5" />, href: "/admin/notifications", color: "#0EA5E9" },
-  { label: "Audit Ledger", icon: <FileText className="w-5 h-5" />, href: "/admin/logs", color: "#64748B" },
-  { label: "Role Governance", icon: <Lock className="w-5 h-5" />, href: "/admin/roles", color: "#475569" },
-  { label: "Global Settings", icon: <Settings className="w-5 h-5" />, href: "/admin/settings", color: "#94A3B8" },
-  { label: "Marketplace Theme", icon: <Palette className="w-5 h-5" />, href: "/admin/marketplace/theme", color: "#FF00FF" },
-  { label: "Emergency Panel", icon: <AlertCircle className="w-5 h-5" />, href: "/admin/emergency", danger: true, color: "#FF0000" },
+  { label: "Dashboard Overview", icon: <LayoutDashboard className="w-5 h-5" />, href: "/admin/dashboard", color: "#00D1FF" },
+  { label: "Customer Accounts", icon: <Users className="w-5 h-5" />, href: "/admin/users", color: "#3B82F6" },
+  { label: "Sellers & Shops", icon: <Store className="w-5 h-5" />, href: "/admin/sellers", color: "#F59E0B" },
+  { label: "Products Manager", icon: <ShieldCheck className="w-5 h-5" />, href: "/admin/products", color: "#10B981" },
+  { label: "Orders Panel", icon: <ShoppingCart className="w-5 h-5" />, href: "/admin/orders", color: "#F97316" },
+  { label: "Add-ons & Extras", icon: <Sliders className="w-5 h-5" />, href: "/admin/addons", color: "#F43F5E" },
+  { label: "Support Chats", icon: <MessageSquare className="w-5 h-5" />, href: "/admin/support", color: "#A855F7" },
+  { label: "Security & Fraud", icon: <ShieldAlert className="w-5 h-5" />, href: "/admin/security", color: "#EF4444" },
+  { label: "Payouts Control", icon: <CreditCard className="w-5 h-5" />, href: "/admin/revenue", color: "#14B8A6" },
+  { label: "Delivery Settings", icon: <Truck className="w-5 h-5" />, href: "/admin/logistics", color: "#06B6D4" },
+  { label: "Delivery Drivers & Fleet", icon: <NavigationIcon className="w-5 h-5" />, href: "/admin/fleet", color: "#8B5CF6" },
+  { label: "Ratings & Reviews", icon: <Scale className="w-5 h-5" />, href: "/admin/moderation", color: "#EAB308" },
+  { label: "Reports & Analytics", icon: <Activity className="w-5 h-5" />, href: "/admin/analytics", color: "#6366F1" },
+  { label: "Media Library", icon: <ImageIcon className="w-5 h-5" />, href: "/admin/media", color: "#EC4899" },
+  { label: "Recipes & Banners", icon: <FileText className="w-5 h-5" />, href: "/admin/cms", color: "#84CC16" },
+  { label: "Coupons & Offers", icon: <Zap className="w-5 h-5" />, href: "/admin/coupons", color: "#FACC15" },
+  { label: "Push Notifications", icon: <Bell className="w-5 h-5" />, href: "/admin/notifications", color: "#0EA5E9" },
+  { label: "Logs & History", icon: <FileText className="w-5 h-5" />, href: "/admin/logs", color: "#64748B" },
+  { label: "Staff Roles", icon: <Lock className="w-5 h-5" />, href: "/admin/roles", color: "#475569" },
+  { label: "General Settings", icon: <Settings className="w-5 h-5" />, href: "/admin/settings", color: "#94A3B8" },
+  { label: "Design & Themes", icon: <Palette className="w-5 h-5" />, href: "/admin/marketplace/theme", color: "#FF00FF" },
+  { label: "Emergency Stop", icon: <AlertCircle className="w-5 h-5" />, href: "/admin/emergency", danger: true, color: "#FF0000" },
 ];
 
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -108,7 +110,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     key={item.label}
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-2.5 px-4 py-2 text-[9px] font-black uppercase tracking-[0.2em] transition-all group relative overflow-hidden",
+                      "flex items-center gap-2.5 px-4 py-2 text-[9px] font-black uppercase tracking-[0.2em] transition-all group relative overflow-hidden pl-6",
                       isActive 
                         ? "text-white shadow-glow-purple" 
                         : item.danger
@@ -118,14 +120,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     style={{
                       clipPath: "polygon(12px 0%, 100% 0%, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0% 100%, 0% 12px)",
                       backgroundColor: isActive ? 'var(--primary)' : item.danger ? 'rgba(239, 68, 68, 0.05)' : 'rgba(255,255,255,0.03)',
-                      boxShadow: isActive ? `inset 0 0 0 1px ${item.color}` : 'none',
-                      borderLeftWidth: '5px',
-                      borderLeftStyle: 'solid',
-                      borderLeftColor: item.color || 'transparent'
+                      boxShadow: isActive ? `inset 0 0 0 1px ${item.color}` : 'none'
                     }}
                   >
+                    <div 
+                      className="absolute left-0 top-0 bottom-0 w-[5px]" 
+                      style={{ backgroundColor: item.color || 'transparent' }} 
+                    />
                     <span 
-                      className={cn("transition-transform group-hover:scale-110", isActive ? "text-white" : "")}
+                      className={cn("relative z-10 transition-transform group-hover:scale-110", isActive ? "text-white" : "")}
                       style={{ color: !isActive ? (item as any).color : undefined }}
                     >
                       {item.icon}
@@ -143,17 +146,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <button 
                 onClick={handleLogout}
                 className={cn(
-                  "w-full flex items-center gap-2.5 px-4 py-2 text-[9px] font-black uppercase tracking-[0.2em] text-danger transition-all group relative overflow-hidden"
+                  "w-full flex items-center gap-2.5 px-4 py-2 text-[9px] font-black uppercase tracking-[0.2em] text-danger transition-all group relative overflow-hidden pl-8"
                 )}
                 style={{
                   clipPath: "polygon(12px 0%, 100% 0%, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0% 100%, 0% 12px)",
-                  backgroundColor: 'rgba(239, 68, 68, 0.05)',
-                  borderLeftWidth: '3px',
-                  borderLeftStyle: 'solid',
-                  borderLeftColor: '#EF4444'
+                  backgroundColor: 'rgba(239, 68, 68, 0.05)'
                 }}
               >
-                <LogOut className="w-5 h-5 transition-transform group-hover:scale-110" />
+                <div 
+                  className="absolute left-0 top-0 bottom-0 w-[5px] bg-[#EF4444]" 
+                />
+                <LogOut className="w-5 h-5 relative z-10 transition-transform group-hover:scale-110" />
                 <span className="relative z-10">TERMINATE ACCESS</span>
               </button>
             </div>

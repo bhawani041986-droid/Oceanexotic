@@ -40,8 +40,36 @@ export const ThemeApplier = () => {
     fonts.forEach(f => root.classList.remove(f));
     
     // Add selected theme and font
-    if (theme) root.classList.add(theme);
-    if (font) root.classList.add(font);
+    if (theme) {
+      root.classList.add(theme);
+      const lightThemes = ['theme-light-sovereign', 'theme-swiggy-vibrant', 'theme-zomato-passion'];
+      if (lightThemes.includes(theme)) {
+        root.classList.add('light');
+        root.classList.remove('dark');
+      } else {
+        root.classList.add('dark');
+        root.classList.remove('light');
+      }
+    }
+    
+    if (font) {
+      // Map raw font names containing spaces to class tokens, slugifying others safely
+      let fontClass = font;
+      const lower = font.toLowerCase();
+      if (!lower.startsWith('font-')) {
+        if (lower === 'inter') fontClass = 'font-inter';
+        else if (lower === 'outfit') fontClass = 'font-outfit';
+        else if (lower === 'plus jakarta' || lower === 'plus jakarta sans') fontClass = 'font-plus-jakarta';
+        else if (lower === 'space grotesk' || lower === 'roboto mono') fontClass = 'font-space-grotesk';
+        else if (lower === 'kanit') fontClass = 'font-kanit';
+        else if (lower === 'cinzel') fontClass = 'font-cinzel';
+        else if (lower === 'roboto') fontClass = 'font-roboto';
+        else {
+          fontClass = `font-${lower.replace(/\s+/g, '-')}`;
+        }
+      }
+      root.classList.add(fontClass);
+    }
   }, [theme, font]);
 
   return null;

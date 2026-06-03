@@ -111,20 +111,26 @@ const ProductCard = ({ product }: { product: any }) => {
         onClick={() => router.push(`/customer/products/${hydratedProduct.id}`)}
         className="relative overflow-hidden bg-[var(--c-card)] border-[var(--foreground)]/5 rounded-[calc(var(--c-radius-card)*0.5)] group-hover:border-[var(--c-primary)]/30 transition-all duration-500 shadow-xl group-hover:shadow-[var(--c-shadow-glow)] cursor-pointer"
       >
-        <div className="relative aspect-[4/5] bg-[var(--c-bg-alt)] overflow-hidden">
-            <div className="absolute inset-0 flex items-center justify-center text-6xl md:text-8xl group-hover:scale-110 transition-transform duration-700 select-none">
+        <div className="relative aspect-[4/5] bg-black overflow-hidden">
+            <div className="absolute inset-0 flex items-center justify-center text-6xl md:text-8xl group-hover:scale-105 transition-transform duration-700 select-none">
               {(hydratedProduct.images?.[0]?.startsWith('http') || hydratedProduct.images?.[0]?.startsWith('/')) 
-                ? <img src={hydratedProduct.images[0]} className="w-full h-full object-cover" /> 
+                ? <img src={hydratedProduct.images[0]} className="w-full h-full object-contain" /> 
                 : (hydratedProduct.images?.[0] || hydratedProduct.image)}
             </div>
            <div className="absolute inset-0 bg-gradient-to-t from-[var(--c-bg-alt)] via-transparent to-transparent opacity-60" />
            <div className="absolute top-2 left-2 flex flex-col gap-1">
-              <Badge className={cn(
-                "shadow-[var(--c-shadow-glow)] text-[7px] font-black uppercase italic rounded-full border-none px-2 py-1 text-[var(--foreground)]",
-                hydratedProduct.is_live_inventory == 1 ? "bg-emerald-500 animate-pulse" : "bg-[var(--c-primary)]"
-              )}>
-                {hydratedProduct.is_live_inventory == 1 ? "LIVE BATCH" : (hydratedProduct.badge || "PREMIUM")}
-              </Badge>
+              {(hydratedProduct.status === 'COMING_SOON' || hydratedProduct.status === 'COMING SOON') ? (
+                <Badge className="shadow-[var(--c-shadow-glow)] text-[7px] font-black uppercase italic rounded-full border-none px-2 py-1 text-black bg-amber-500 animate-pulse">
+                  COMING SOON
+                </Badge>
+              ) : (
+                <Badge className={cn(
+                  "shadow-[var(--c-shadow-glow)] text-[7px] font-black uppercase italic rounded-full border-none px-2 py-1 text-[var(--foreground)]",
+                  hydratedProduct.is_live_inventory == 1 ? "bg-emerald-500 animate-pulse" : "bg-[var(--c-primary)]"
+                )}>
+                  {hydratedProduct.is_live_inventory == 1 ? "LIVE BATCH" : (hydratedProduct.badge || "PREMIUM")}
+                </Badge>
+              )}
               {hydratedProduct.discount && <Badge className="bg-success text-[7px] font-black uppercase italic rounded-full border-none px-2 py-1 text-white">{hydratedProduct.discount}</Badge>}
            </div>
            <button onClick={(e) => { e.stopPropagation(); toast("Added to Heart Registry.", "success"); }} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-[var(--c-text-primary)] hover:bg-danger hover:text-white transition-all flex items-center justify-center"><Heart className="w-4 h-4" /></button>
@@ -160,7 +166,11 @@ const ProductCard = ({ product }: { product: any }) => {
                  <p className="text-[7px] md:text-[9px] font-black text-[var(--c-text-secondary)] uppercase">{hydratedProduct.weight}</p>
                  <p className="text-sm md:text-2xl font-black text-[var(--c-text-primary)] italic leading-none">₹{hydratedProduct.price.toLocaleString()}</p>
               </div>
-              {quantity === 0 ? (
+              {(hydratedProduct.status === 'COMING_SOON' || hydratedProduct.status === 'COMING SOON') ? (
+                <Button disabled className="h-8 md:h-12 px-2 md:px-4 rounded-lg md:rounded-[var(--c-radius-btn)] bg-amber-500/20 text-amber-500 border border-amber-500/30 text-[8px] md:text-xs font-black uppercase tracking-tighter">
+                  COMING SOON
+                </Button>
+              ) : quantity === 0 ? (
                 <Button onClick={(e) => { e.stopPropagation(); handleAddToCart(); }} className="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-[var(--c-radius-btn)] bg-[var(--c-primary)] hover:bg-[var(--c-primary-light)] shadow-[var(--c-shadow-glow)] flex items-center justify-center p-0 transition-all active:scale-90 text-[var(--foreground)]"><Plus className="w-4 h-4 md:w-6 md:h-6" /></Button>
               ) : (
                 <div onClick={(e) => e.stopPropagation()} className="flex items-center bg-[var(--foreground)]/5 rounded-lg md:rounded-[var(--c-radius-btn)] border border-[var(--foreground)]/10 overflow-hidden h-8 md:h-12">
@@ -173,6 +183,39 @@ const ProductCard = ({ product }: { product: any }) => {
         </div>
       </Card>
     </motion.div>
+  );
+};
+
+const AddonCard = ({ addon }: { addon: any }) => {
+  const { addItem } = useCartStore();
+  const { toast } = useToast();
+  
+  const handleAdd = () => {
+     addItem({
+        id: addon.id,
+        name: addon.name,
+        price: addon.price,
+        image: addon.image_url || "https://images.unsplash.com/photo-1596683788737-88981f33f674?q=80&w=500",
+        quantity: 1,
+        sellerId: "SEL-ADDON"
+     });
+     toast(`${addon.name} added to cart.`, "success");
+  };
+
+  return (
+    <div className="w-[200px] flex-shrink-0 bg-[var(--c-card)] border border-[var(--foreground)]/10 rounded-xl p-3 flex flex-col gap-2 shadow-lg">
+       <div className="flex items-center gap-3">
+          <img src={addon.image_url || "https://images.unsplash.com/photo-1596683788737-88981f33f674?q=80&w=500"} className="w-12 h-12 rounded-lg object-cover bg-black/10" />
+          <div className="flex-1">
+             <h4 className="text-[10px] font-black uppercase text-[var(--c-text-primary)] leading-tight">{addon.name}</h4>
+             <p className="text-[8px] text-[var(--c-text-secondary)] italic">{addon.type || "Culinary Add-on"}</p>
+          </div>
+       </div>
+       <div className="flex items-center justify-between mt-auto pt-2 border-t border-[var(--foreground)]/5">
+          <span className="text-[12px] font-black text-emerald-400">₹{addon.price}</span>
+          <Button onClick={handleAdd} className="h-6 px-3 rounded-md bg-[var(--c-primary)] text-[var(--foreground)] text-[8px] font-black uppercase shadow-[var(--c-shadow-glow)]">+ ADD</Button>
+       </div>
+    </div>
   );
 };
 
@@ -216,6 +259,7 @@ function ProductListingContent() {
 
   // --- LIVE REGISTRY SYNC ENGINE ---
   const [products, setProducts] = React.useState<any[]>([]);
+  const [addons, setAddons] = React.useState<any[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [subscriberEmail, setSubscriberEmail] = React.useState("");
   const [isSubscribing, setIsSubscribing] = React.useState(false);
@@ -265,7 +309,26 @@ function ProductListingContent() {
   const fetchLiveRegistry = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch('/api/seller/products.php');
+      let area = "";
+      const user = authService.getCurrentUser();
+      if (user) {
+        try {
+          const addrRes = await fetch(`/api/user/addresses?userId=${user.id}`);
+          if (addrRes.ok) {
+            const addrData = await addrRes.json();
+            const addresses = Array.isArray(addrData) ? addrData : (addrData.data || []);
+            const defaultAddr = addresses.find((a: any) => a.is_default || a.primary) || addresses[0];
+            if (defaultAddr && defaultAddr.jetty) {
+              area = defaultAddr.jetty;
+            }
+          }
+        } catch (addrErr) {
+          console.error("Error fetching user address in products page:", addrErr);
+        }
+      }
+
+      const url = area ? `/api/seller/products.php?area=${encodeURIComponent(area)}` : '/api/seller/products.php';
+      const res = await fetch(url);
       const data = await res.json();
       
       // Hydrate Registry with extended metadata fallbacks
@@ -280,6 +343,19 @@ function ProductListingContent() {
       });
       
       setProducts(hydrated);
+
+      // Fetch Addons
+      try {
+        const addonUrl = area ? `/api/addons/list.php?area=${encodeURIComponent(area)}` : '/api/addons/list.php';
+        const addonRes = await fetch(addonUrl);
+        if (addonRes.ok) {
+           const addonData = await addonRes.json();
+           setAddons(Array.isArray(addonData) ? addonData : []);
+        }
+      } catch (addonErr) {
+        console.error("Addons sync failed", addonErr);
+      }
+
     } catch (err) {
       toast("Registry Sync Failure. Using cached fallback.", "error");
       setProducts(MASTER_PRODUCT_REGISTRY);
@@ -291,6 +367,20 @@ function ProductListingContent() {
   React.useEffect(() => {
     fetchLiveRegistry();
   }, []);
+
+  // --- LAYERED VIEW DATA ---
+  const bestsellers = React.useMemo(() => {
+    return products.slice(0, 8);
+  }, [products]);
+
+  const readyToCook = React.useMemo(() => {
+    return products.filter(p => 
+      p.category?.toLowerCase() === 'ready to cook' || 
+      /marinate|grill|fry|masala|ready|spice/i.test((p.name || '') + ' ' + (p.tagline || ''))
+    );
+  }, [products]);
+
+  const showLayers = activeTab === "All Seafood" && searchQuery === "";
 
   // --- FILTERING & PAGINATION LOGIC ---
   const filteredProducts = React.useMemo(() => {
@@ -430,6 +520,63 @@ function ProductListingContent() {
                      <Badge className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] border-[var(--c-primary)]/20 px-3 py-1 rounded-full text-[7px] font-black uppercase italic flex items-center gap-2">{activeTab} <X onClick={() => setActiveTab("All Seafood")} className="w-2 h-2 cursor-pointer" /></Badge>
                      {activeTab !== "All Seafood" && <button onClick={() => setActiveTab("All Seafood")} className="text-[7px] font-black text-[var(--c-primary)] uppercase hover:underline">Clear All</button>}
                   </div>
+
+                  {showLayers && (
+                    <div className="space-y-8 pb-8 border-b border-[var(--foreground)]/10 mb-8">
+                       {/* LAYER 1: BESTSELLERS */}
+                       <div className="space-y-4">
+                          <div className="flex items-center justify-between">
+                             <h3 className="text-xl md:text-3xl font-black text-[var(--c-text-primary)] uppercase italic">Today's <span className="text-[var(--c-primary)]">Catch</span></h3>
+                             <button onClick={() => setActiveTab("Fresh Fish")} className="text-[10px] font-black uppercase text-[var(--c-primary)] flex items-center gap-1 group">View All <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" /></button>
+                          </div>
+                          <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 snap-x">
+                             {bestsellers.map(product => (
+                               <div key={product.id} className="w-[280px] md:w-[320px] flex-shrink-0 snap-start">
+                                 <ProductCard product={product} />
+                               </div>
+                             ))}
+                          </div>
+                       </div>
+
+                       {/* LAYER 2: READY TO COOK */}
+                       {readyToCook.length > 0 && (
+                         <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                               <h3 className="text-xl md:text-3xl font-black text-[var(--c-text-primary)] uppercase italic">Chef's <span className="text-amber-500">Specials</span></h3>
+                            </div>
+                            <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 snap-x">
+                               {readyToCook.map(product => (
+                                 <div key={product.id} className="w-[280px] md:w-[320px] flex-shrink-0 snap-start">
+                                   <ProductCard product={product} />
+                                 </div>
+                               ))}
+                            </div>
+                         </div>
+                       )}
+
+                       {/* LAYER 3: CULINARY ADDONS */}
+                       {addons.length > 0 && (
+                         <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                               <h3 className="text-xl md:text-2xl font-black text-[var(--c-text-primary)] uppercase italic">Culinary <span className="text-emerald-500">Add-ons</span></h3>
+                            </div>
+                            <div className="flex gap-3 overflow-x-auto no-scrollbar pb-4 snap-x">
+                               {addons.map(addon => (
+                                 <div key={addon.id} className="snap-start">
+                                   <AddonCard addon={addon} />
+                                 </div>
+                               ))}
+                            </div>
+                         </div>
+                       )}
+
+                       <div className="pt-4 flex items-center gap-4">
+                          <div className="h-px bg-[var(--foreground)]/10 flex-1" />
+                          <h3 className="text-sm font-black text-[var(--c-text-secondary)] uppercase tracking-[0.2em] italic">Full Catalog</h3>
+                          <div className="h-px bg-[var(--foreground)]/10 flex-1" />
+                       </div>
+                    </div>
+                  )}
 
                   {paginatedProducts.length > 0 ? (
                     <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-[4px] md:gap-4">
@@ -625,7 +772,7 @@ function ProductListingContent() {
             ].map((item, i) => (
                <div key={i} className="text-center space-y-1 md:space-y-4 group">
                   <motion.div 
-                    {...item.animation}
+                    {...(item.animation as any)}
                     className={cn("w-10 h-10 md:w-20 md:h-20 mx-auto rounded-lg md:rounded-[calc(var(--c-radius-card)*0.5)] flex items-center justify-center transition-all [&>svg]:w-5 [&>svg]:h-5 md:[&>svg]:w-10 md:[&>svg]:h-10", item.bg, item.color)}
                   >
                     {React.cloneElement(item.icon as React.ReactElement, { className: "w-full h-full" })}
@@ -644,12 +791,14 @@ function ProductListingContent() {
                  value={subscriberEmail}
                  onChange={(e) => setSubscriberEmail(e.target.value)}
                  placeholder="Enter your email..." 
-                 className="h-10 md:h-20 rounded-full bg-[var(--c-bg)]/50 border-[var(--foreground)]/10 text-center md:text-left text-xs md:text-lg italic px-6 md:px-10 text-[var(--c-text-primary)]" 
+                 className="h-10 md:h-20 !rounded-none bg-[var(--c-bg)]/50 border-[var(--foreground)]/10 text-center md:text-left text-xs md:text-lg italic px-6 md:px-10 text-[var(--c-text-primary)]" 
+                 style={{ clipPath: 'polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px)', borderRadius: '0px' }}
                />
                <Button 
                  onClick={handleSubscribe}
                  disabled={isSubscribing}
-                 className="h-10 md:h-20 px-10 md:px-12 rounded-full bg-[var(--c-primary)] text-[var(--foreground)] shadow-[var(--c-shadow-glow)] text-[8px] md:text-[12px] font-black uppercase tracking-[0.3em]"
+                 className="h-10 md:h-20 px-10 md:px-12 !rounded-none bg-[var(--c-primary)] text-[var(--foreground)] shadow-[var(--c-shadow-glow)] text-[8px] md:text-[12px] font-black uppercase tracking-[0.3em]"
+                 style={{ clipPath: 'polygon(15px 0, 100% 0, calc(100% - 15px) 100%, 0 100%)', borderRadius: '0px' }}
                >
                  {isSubscribing ? <Loader2 className="w-5 h-5 animate-spin" /> : "COMMISSION"}
                </Button>

@@ -242,11 +242,11 @@ export default function AdminProductsPage() {
                     {isProcessing ? <RefreshCw className="w-4 h-4 animate-spin" /> : "DECOMMISSION"}
                  </Button>
               </div>
-           </Card>
-        </div>
+            </Card>
+         </div>
       )}
 
-      <div className="space-y-[10px] md:space-y-10 pt-4 md:pt-10 pb-20 px-4 md:px-0 animate-fade-in relative">
+      <div className="space-y-[10px] md:space-y-10 pt-4 md:pt-10 pb-20 px-0 animate-fade-in relative">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-[10px] md:gap-6 md:border-b md:border-[var(--foreground)]/5 md:pb-10">
           <div className="space-y-1 text-center md:text-left">
@@ -261,7 +261,7 @@ export default function AdminProductsPage() {
             </Button>
             <Link href="/admin/products/add" className="w-full sm:w-auto">
                 <Button variant="primary" className="w-full h-10 md:h-12 px-6 md:px-8 text-[8px] md:text-[10px] font-black tracking-widest uppercase shadow-glow-purple flex items-center justify-center gap-2 md:gap-3 rounded-lg md:rounded-xl italic">
-                  <Plus className="w-3.5 h-3.5 md:w-4 md:h-4" /> COMMISSION OVERRIDE
+                  <Plus className="w-3.5 md:w-4 h-3.5 md:h-4" /> COMMISSION OVERRIDE
                 </Button>
             </Link>
           </div>
@@ -304,7 +304,8 @@ export default function AdminProductsPage() {
                 </Button>
             </div>
           </div>
-          <div className="overflow-x-auto">
+
+          <div className="hidden lg:block overflow-x-auto">
             <Table>
               <TableHeader>
                   <TableRow className="border-[var(--foreground)]/5">
@@ -364,9 +365,7 @@ export default function AdminProductsPage() {
                             <div className="flex justify-end gap-1 md:gap-2">
                               <button 
                                 className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5" 
-                                onClick={() => { setSelectedProduct(prd
-  ); setIsAuditing(true
-  ); }}
+                                onClick={() => { setSelectedProduct(prd); setIsAuditing(true); }}
                               >
                                   <Eye className="w-3.5 md:w-4 h-3.5 md:h-4" />
                               </button>
@@ -377,9 +376,7 @@ export default function AdminProductsPage() {
                               </Link>
                               <button 
                                 className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5" 
-                                onClick={() => { setSelectedProduct(prd
-  ); setIsDeleting(true
-  ); }}
+                                onClick={() => { setSelectedProduct(prd); setIsDeleting(true); }}
                               >
                                   <Trash2 className="w-3.5 md:w-4 h-3.5 md:h-4" />
                               </button>
@@ -389,6 +386,84 @@ export default function AdminProductsPage() {
                   ))}
                 </TableBody>
             </Table>
+          </div>
+
+          {/* Mobile view cards - visible only on lg screens and below */}
+          <div className="lg:hidden space-y-4 p-4">
+            {products.map((prd) => (
+              <div 
+                key={prd.id} 
+                className="p-4 rounded-xl bg-bg-card/40 border border-[var(--foreground)]/5 space-y-3 shadow-md"
+              >
+                <div className="flex items-start justify-between">
+                  <div className="space-y-0.5">
+                    <p className="font-black text-[var(--foreground)] text-sm uppercase tracking-tighter italic">{prd.name}</p>
+                    <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">ID: {prd.id} • ₹{prd.price}</p>
+                  </div>
+                  <Badge variant={
+                    prd.status === "PUBLISHED" ? "success" : 
+                    prd.status === "PENDING AUDIT" ? "warning" : 
+                    "danger"
+                  } className="text-[7px] md:text-[9px] italic px-2 uppercase font-black tracking-widest">
+                    {prd.status}
+                  </Badge>
+                </div>
+
+                <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-3">
+                  <div className="space-y-0.5">
+                    <p className="text-[7px] font-black text-text-secondary uppercase tracking-widest italic opacity-40">Merchant Hub</p>
+                    <p className="text-[10px] font-black text-text-secondary italic opacity-60">via {prd.seller}</p>
+                  </div>
+                  <div className="text-right space-y-0.5">
+                    <p className="text-[7px] font-black text-text-secondary uppercase tracking-widest italic opacity-40">Category</p>
+                    <p className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest italic">{prd.category}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-3">
+                  <div className="space-y-1">
+                    <p className="text-[7px] font-black text-text-secondary uppercase tracking-widest italic opacity-40">Live Status / Harbor</p>
+                    <div className="flex flex-col gap-0.5">
+                      {prd.is_live_inventory == 1 ? (
+                        <>
+                          <div className="flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-glow-success" />
+                            <span className="text-[9px] font-black text-emerald-400 uppercase tracking-widest italic">LIVE BATCH</span>
+                          </div>
+                          <div className="flex items-center gap-1 opacity-60">
+                            <Anchor className="w-2 h-2 text-primary" />
+                            <span className="text-[8px] font-black text-primary uppercase">{prd.harbor_node || 'UNLINKED'}</span>
+                          </div>
+                        </>
+                      ) : (
+                        <span className="text-[8px] font-black text-text-secondary uppercase opacity-40 italic">STATIC CATALOG</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex gap-1.5 items-center">
+                    <button 
+                      title="View Details"
+                      className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5" 
+                      onClick={() => { setSelectedProduct(prd); setIsAuditing(true); }}
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                    </button>
+                    <Link href={`/admin/products/edit/${prd.id}`}>
+                      <button title="Edit" className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
+                        <Edit3 className="w-3.5 h-3.5" />
+                      </button>
+                    </Link>
+                    <button 
+                      title="Decommission"
+                      className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5" 
+                      onClick={() => { setSelectedProduct(prd); setIsDeleting(true); }}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </Card>
       </div>

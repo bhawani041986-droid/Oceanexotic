@@ -5,7 +5,9 @@ import {
   Pressable,
   ActivityIndicator,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
+import { useState, useEffect } from "react";
 import type { CutOption, TodaysCatchItem } from "@/services/homeService";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
@@ -18,7 +20,7 @@ interface CutSelectionModalProps {
   loading: boolean;
   onSelect: (cut: CutOption) => void;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (weight: number) => void;
 }
 
 export function CutSelectionModal({
@@ -31,6 +33,16 @@ export function CutSelectionModal({
   onClose,
   onConfirm,
 }: CutSelectionModalProps) {
+  const [weight, setWeight] = useState(1);
+
+  // Reset weight to 1 when modal opens
+  useEffect(() => {
+    if (visible) setWeight(1);
+  }, [visible]);
+
+  const handleDecrease = () => setWeight((w) => Math.max(1, w - 1));
+  const handleIncrease = () => setWeight((w) => Math.min(100, w + 1));
+
   return (
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
       <View className="flex-1 justify-end bg-black/70">
@@ -69,11 +81,27 @@ export function CutSelectionModal({
             </ScrollView>
           )}
 
-          <View className="mt-4 flex-row gap-3">
+          {/* Weight Selector UI */}
+          {!loading && options.length > 0 && (
+            <View className="mt-2 mb-4 flex-row items-center justify-between rounded-xl border border-white/10 bg-background/50 px-4 py-3">
+              <Text className="text-sm font-bold uppercase text-foreground">Weight</Text>
+              <View className="flex-row items-center gap-4">
+                <TouchableOpacity onPress={handleDecrease} className="h-8 w-8 items-center justify-center rounded-full bg-white/10">
+                  <Text className="text-white text-lg">-</Text>
+                </TouchableOpacity>
+                <Text className="text-base font-black text-foreground w-12 text-center">{weight} KG</Text>
+                <TouchableOpacity onPress={handleIncrease} className="h-8 w-8 items-center justify-center rounded-full bg-primary/20 border border-primary">
+                  <Text className="text-primary text-lg">+</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+
+          <View className="flex-row gap-3">
             <Button label="CANCEL" variant="ghost" onPress={onClose} className="flex-1" />
             <Button
               label="ADD TO CART"
-              onPress={onConfirm}
+              onPress={() => onConfirm(weight)}
               disabled={!selected || loading}
               className="flex-1"
             />

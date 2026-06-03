@@ -23,7 +23,9 @@ import {
   Image as ImageIcon,
   Video,
   Play,
-  Droplets
+  Droplets,
+  UtensilsCrossed,
+  Lock
 } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 import { reviewService } from "@/services/reviewService";
@@ -39,6 +41,13 @@ export default function OrderDetailsPage() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [evidence, setEvidence] = React.useState<File[]>([]);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [origin, setOrigin] = React.useState("http://localhost:3000");
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      setOrigin(window.location.origin);
+    }
+  }, []);
 
   React.useEffect(() => {
     const fetchOrderReviews = async () => {
@@ -221,6 +230,73 @@ export default function OrderDetailsPage() {
                </div>
             </div>
 
+            {/* 🚚 LIVE COLD-CHAIN DELIVERY RADAR */}
+            <Card className="p-6 bg-gradient-to-r from-primary/10 to-transparent border border-primary/20 rounded-[24px]">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary border border-primary/30 shadow-[var(--c-shadow-glow)] animate-pulse">
+                     <Truck className="w-6 h-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-black uppercase italic tracking-tighter text-[var(--foreground)]">Live Cold-Chain Delivery Radar</h3>
+                    <p className="text-[10px] font-medium text-text-secondary mt-1">
+                      Current Node: <span className="font-bold text-[var(--foreground)]">Port Blair Phoenix Bay Hub</span> • In-Transit
+                    </p>
+                  </div>
+                </div>
+                <div className="flex flex-wrap items-center gap-4 md:gap-6">
+                  <div className="bg-blue-500/10 px-3 py-1.5 border border-blue-500/35 rounded-xl flex items-center gap-2">
+                     <span className="w-2 h-2 rounded-full bg-blue-500 animate-ping" />
+                     <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Stable 1.2°C Chilled</span>
+                  </div>
+                  <div className="flex gap-1">
+                    {[-18.0, -18.2, -18.1, -18.2].map((t, idx) => (
+                      <span key={idx} className="bg-blue-500/5 px-2 py-1 border border-blue-500/10 rounded-md text-[9px] font-black text-blue-400">{t}°C</span>
+                    ))}
+                  </div>
+                  <div className="text-right">
+                     <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest">Estimated Arrival</p>
+                     <p className="text-sm font-black text-[var(--foreground)] italic">32 mins remaining</p>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* 🔐 SECURE HANDOFF PROTOCOL */}
+            <Card className="p-6 bg-gradient-to-r from-blue-500/10 to-transparent border border-blue-500/20 rounded-[24px] mt-4">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 border border-blue-500/30 shadow-[var(--c-shadow-glow)]">
+                     <Lock className="w-6 h-6 text-blue-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-black uppercase italic tracking-tighter text-[var(--foreground)]">Secure Handoff Protocol</h3>
+                    <p className="text-[10px] font-medium text-text-secondary mt-1">
+                      Show this QR code or provide the OTP below to the delivery agent to confirm your delivery.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex flex-col md:flex-row items-center gap-6">
+                  {/* OTP display */}
+                  <div className="text-center md:text-right">
+                     <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest">Verification Password (OTP)</p>
+                     <p className="text-2xl font-black text-primary tracking-[0.2em] italic mt-1 bg-primary/10 border border-primary/20 px-4 py-2 rounded-xl">
+                       {((parseInt((typeof id === 'string' ? id : String(id || "123")).replace(/[^0-9]/g, "")) || 123) * 997 + 12345) % 900000 + 100000}
+                     </p>
+                  </div>
+                  {/* QR Code */}
+                  <div className="p-2 bg-white rounded-2xl border border-white/10 shrink-0">
+                    <img 
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`${origin}/agent/confirm/${id}?otp=${((parseInt((typeof id === 'string' ? id : String(id || "123")).replace(/[^0-9]/g, "")) || 123) * 997 + 12345) % 900000 + 100000}`)}`} 
+                      alt="Delivery verification QR Code" 
+                      className="w-[100px] h-[100px] object-contain"
+                    />
+                  </div>
+                </div>
+              </div>
+            </Card>
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-[10px] md:gap-12">
                {/* Order Items Registry */}
                <div className="lg:col-span-2 space-y-[4px] md:space-y-8">
@@ -294,6 +370,51 @@ export default function OrderDetailsPage() {
                         );
                      })}
                   </div>
+
+                  {/* 🔄 "CATCH AGAIN" INSTANT REORDER HUB */}
+                  <div className="pt-6 border-t border-[var(--foreground)]/5 space-y-4">
+                     <h3 className="text-sm font-black text-[var(--foreground)] tracking-[0.2em] uppercase italic flex items-center gap-2">
+                        Reorder Hub
+                     </h3>
+                     <Card className="p-4 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 rounded-[20px] flex flex-col md:flex-row items-center justify-between gap-4">
+                       <div className="flex items-center gap-4">
+                         <span className="text-2xl">🐟</span>
+                         <div>
+                           <p className="text-xs font-bold text-[var(--foreground)] uppercase">Re-commission your last catch?</p>
+                           <p className="text-[9px] font-medium text-text-secondary">Instant one-click checkout for Premium Bluefin Tuna & Hokkaido Scallops.</p>
+                         </div>
+                       </div>
+                       <Button 
+                         onClick={() => {
+                           toast("Re-commissioning previous order items to cart...", "success");
+                         }}
+                         className="w-full md:w-auto h-10 px-6 text-[9px] font-black tracking-widest uppercase shadow-glow-purple rounded-xl"
+                       >
+                         CATCH AGAIN
+                       </Button>
+                     </Card>
+                  </div>
+
+                  {/* 🍳 CULINARY PREP & STORAGE LEDGER */}
+                  <div className="pt-6 border-t border-[var(--foreground)]/5 space-y-4">
+                     <h3 className="text-xs md:text-sm font-black text-[var(--foreground)] tracking-[0.2em] uppercase italic flex items-center gap-2">
+                        <UtensilsCrossed className="w-3.5 h-3.5 text-primary" /> Culinary Prep & Storage Ledger
+                     </h3>
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                       <Card className="p-4 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 rounded-[20px] space-y-2">
+                         <p className="text-[10px] font-black uppercase text-primary tracking-widest">❄️ Thawing & Storage Protocol</p>
+                         <p className="text-[10px] text-text-secondary font-medium leading-relaxed">
+                           For optimum freshness, keep vacuum-sealed Bluefin Tuna chilled at 0-2°C and consume within 24h, or freeze at -18°C. Thaw in cold water for 30 mins before preparation.
+                         </p>
+                       </Card>
+                       <Card className="p-4 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 rounded-[20px] space-y-2">
+                         <p className="text-[10px] font-black uppercase text-primary tracking-widest">👨‍🍳 Verified Culinary Guide</p>
+                         <p className="text-[10px] text-text-secondary font-medium leading-relaxed">
+                           Recommended preparation: Pan-seared Hokkaido Scallops with garlic herb butter (2 mins per side). Access matching chef recipes on product pages.
+                         </p>
+                       </Card>
+                     </div>
+                  </div>
                </div>
 
                {/* Settlement & Logistics Metadata */}
@@ -349,6 +470,26 @@ export default function OrderDetailsPage() {
                               {order.address.city}, {order.address.state} {order.address.zip}
                            </p>
                         </div>
+                     </div>
+                  </Card>
+
+                  {/* ⚓ FLEET IMPACT & SUSTAINABILITY LEDGER */}
+                  <Card className="p-6 bg-[var(--c-bg-alt)]/40 border border-[var(--foreground)]/5 space-y-4 rounded-[20px] md:rounded-[30px]">
+                     <h2 className="text-[9px] md:text-[10px] font-black text-[var(--foreground)] tracking-widest uppercase italic flex items-center gap-2">
+                        <Anchor className="w-3.5 h-3.5 text-primary" /> Fleet Impact & Sustainability
+                     </h2>
+                     <div className="space-y-3">
+                        <div className="flex justify-between text-[10px] font-medium text-text-secondary">
+                           <span>Harvest Method</span>
+                           <span className="text-[var(--foreground)] font-black uppercase text-[9px] italic">100% Line-Caught</span>
+                        </div>
+                        <div className="flex justify-between text-[10px] font-medium text-text-secondary">
+                           <span>Vessel Impact</span>
+                           <span className="text-[var(--foreground)] font-black">₹340 Crew Support</span>
+                        </div>
+                        <p className="text-[9px] text-text-secondary leading-normal font-medium italic pt-2 border-t border-[var(--foreground)]/5">
+                           Your purchase directly contributes to local artisanal fisherman groups at Junglighat & Phoenix Bay.
+                        </p>
                      </div>
                   </Card>
 

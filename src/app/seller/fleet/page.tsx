@@ -215,18 +215,33 @@ export default function SellerFleetControl() {
          </Button>
       </div>
 
-      <Modal isOpen={isDispatchModalOpen} onClose={() => setIsDispatchModalOpen(false)} title="DISPATCH MISSION">
-        <div className="space-y-4 lg:space-y-6 p-4">
-           <Input placeholder="ORD-XXXX" value={dispatchForm.order_id} onChange={(e) => setDispatchForm(p => ({ ...p, order_id: e.target.value }))} className="bg-[var(--foreground)]/5 h-10 lg:h-12" />
-           <Input placeholder="Agent Name" value={dispatchForm.agent_name} onChange={(e) => setDispatchForm(p => ({ ...p, agent_name: e.target.value }))} className="bg-[var(--foreground)]/5 h-10 lg:h-12" />
-           <Button onClick={handleDispatch} className="w-full h-12 lg:h-14 bg-primary text-[9px] lg:text-[11px] font-black uppercase tracking-widest">INITIALIZE</Button>
+      <Modal
+        isOpen={isDispatchModalOpen}
+        onClose={() => setIsDispatchModalOpen(false)}
+        title="DISPATCH MISSION"
+        description="Initialize a new vessel mission in the fleet registry."
+        className="md:max-w-md bg-bg-secondary/95 border border-primary/20 text-[var(--foreground)] shadow-[0_0_50px_rgba(168,85,247,0.15)] backdrop-blur-xl rounded-t-[28px] md:rounded-[28px] p-5 md:p-8"
+      >
+        <div className="space-y-4">
+           <div className="space-y-2">
+             <label className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic">Order Reference</label>
+             <Input placeholder="ORD-XXXX" value={dispatchForm.order_id} onChange={(e) => setDispatchForm(p => ({ ...p, order_id: e.target.value }))} className="bg-[var(--foreground)]/5 border-[var(--foreground)]/10 h-12 rounded-xl text-xs" />
+           </div>
+           <div className="space-y-2">
+             <label className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic">Agent Designation</label>
+             <Input placeholder="Agent Name" value={dispatchForm.agent_name} onChange={(e) => setDispatchForm(p => ({ ...p, agent_name: e.target.value }))} className="bg-[var(--foreground)]/5 border-[var(--foreground)]/10 h-12 rounded-xl text-xs" />
+           </div>
+           <div className="flex gap-3 pt-2">
+             <Button onClick={() => setIsDispatchModalOpen(false)} variant="outline" className="flex-1 h-12 text-[10px] font-black uppercase tracking-widest border-[var(--foreground)]/10 rounded-xl italic">ABORT</Button>
+             <Button onClick={handleDispatch} className="flex-1 h-12 bg-primary shadow-glow-purple text-[9px] lg:text-[10px] font-black uppercase tracking-widest italic rounded-xl">INITIALIZE</Button>
+           </div>
         </div>
       </Modal>
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 lg:gap-10">
         <div className="xl:col-span-8 space-y-4 lg:space-y-6">
            <Card className="p-0 bg-bg-secondary/10 border-[var(--foreground)]/5 overflow-hidden rounded-[20px] md:rounded-[40px] shadow-premium">
-              <div className="overflow-x-auto">
+              <div className="hidden lg:block overflow-x-auto">
                 <Table>
                    <TableHeader>
                      <TableRow className="border-[var(--foreground)]/5">
@@ -249,6 +264,43 @@ export default function SellerFleetControl() {
                       ))}
                    </TableBody>
                 </Table>
+              </div>
+
+              {/* Mobile card list - visible below lg breakpoint */}
+              <div className="lg:hidden space-y-3 p-4">
+                {missions.length === 0 ? (
+                  <p className="text-center py-8 text-xs font-black uppercase text-text-secondary italic">No active fleet missions.</p>
+                ) : missions.map((mission) => (
+                  <div
+                    key={mission.order_id}
+                    onClick={() => setActiveOrder(mission.order_id)}
+                    className={cn(
+                      "p-4 rounded-xl border cursor-pointer transition-all space-y-3",
+                      activeOrder === mission.order_id
+                        ? "bg-primary/10 border-primary/40 shadow-glow-purple/10"
+                        : "bg-bg-card/40 border-[var(--foreground)]/5 hover:border-primary/20"
+                    )}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="space-y-0.5">
+                        <p className="font-black text-[var(--foreground)] italic text-sm tracking-tighter">{mission.order_id}</p>
+                        <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">{mission.agent_name || "UNASSIGNED"}</p>
+                      </div>
+                      <Badge variant={mission.status === "DELIVERED" ? "glass" : "success"} className="text-[8px] font-black uppercase tracking-widest px-2 italic">
+                        {mission.status}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5">
+                      <div className="flex items-center gap-1.5">
+                        <Activity className={cn("w-3 h-3", mission.status === "IN_TRANSIT" ? "text-success animate-pulse" : "text-text-secondary opacity-20")} />
+                        <span className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">
+                          {mission.current_lat?.toFixed(3)}, {mission.current_lng?.toFixed(3)}
+                        </span>
+                      </div>
+                      <ChevronRight className="w-4 h-4 text-text-secondary opacity-40" />
+                    </div>
+                  </div>
+                ))}
               </div>
            </Card>
            <Card className="h-[300px] lg:h-[500px] relative overflow-hidden bg-black/40 border-primary/20"><div id="seller-command-map" className="absolute inset-0 z-10" /></Card>

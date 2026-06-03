@@ -12,8 +12,9 @@ interface FreshnessIndicatorProps {
   pct: number;           // 0-100
   minutesSince: number;
   harborNode: string;
-  catchStatus: CatchStatus;
-  stockPercent: number;
+  catchStatus?: CatchStatus;
+  stockPercent?: number;
+  variant?: 'compact' | 'default';
   className?: string;
 }
 
@@ -38,21 +39,47 @@ export default function FreshnessIndicator({
   harborNode,
   catchStatus,
   stockPercent,
+  variant = 'default',
   className,
 }: FreshnessIndicatorProps) {
   const colors = FRESHNESS_COLORS[label];
-  const statusBadge = STATUS_BADGE[catchStatus];
+  const statusBadge = catchStatus ? STATUS_BADGE[catchStatus] : null;
   const hoursAgo = minutesSince < 60
     ? `${minutesSince}m ago`
     : `${Math.floor(minutesSince / 60)}h ${minutesSince % 60}m ago`;
+
+  const isCompact = variant === 'compact';
+
+  if (isCompact) {
+    return (
+      <div className={cn('space-y-1.5', className)}>
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          <span className={cn('text-[7px] font-black uppercase tracking-widest', colors.text)}>
+            {label} ({pct}%)
+          </span>
+          <span className="text-[7px] font-bold text-white/40 uppercase tracking-widest">
+            🚢 {harborNode} • {hoursAgo}
+          </span>
+        </div>
+        <div className="h-1 w-full rounded-full bg-white/10 overflow-hidden">
+          <div
+            className={cn('h-full rounded-full transition-all duration-1000', colors.bar)}
+            style={{ width: `${pct}%` }}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={cn('space-y-2', className)}>
       {/* Status + harvest time */}
       <div className="flex items-center justify-between gap-2 flex-wrap">
-        <span className={cn('text-[7px] md:text-[8px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded-full border', statusBadge.cls)}>
-          {statusBadge.label}
-        </span>
+        {statusBadge && (
+          <span className={cn('text-[7px] md:text-[8px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded-full border', statusBadge.cls)}>
+            {statusBadge.label}
+          </span>
+        )}
         <span className="text-[7px] md:text-[8px] font-bold text-[var(--foreground)]/40 uppercase tracking-widest">
           🚢 {harborNode} • {hoursAgo}
         </span>
@@ -75,7 +102,7 @@ export default function FreshnessIndicator({
       </div>
 
       {/* Stock bar */}
-      {stockPercent < 100 && (
+      {stockPercent !== undefined && stockPercent < 100 && (
         <div className="space-y-0.5">
           <div className="flex items-center justify-between">
             <span className="text-[7px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">

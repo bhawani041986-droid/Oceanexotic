@@ -36,7 +36,14 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { toast } = useToast();
   const { items, getTotal, clearCart } = useCartStore();
-  const { payu } = useSettingsStore();
+  const { 
+    payu, 
+    ordersEnabled, 
+    ordersOpenTime, 
+    ordersCloseTime, 
+    ordersNextOpenText, 
+    fetchSettings 
+  } = useSettingsStore();
   const { user, isHydrated } = useAuthStore();
   
   const [isProcessing, setIsProcessing] = useState(false);
@@ -44,6 +51,8 @@ export default function CheckoutPage() {
   const [savedAddresses, setSavedAddresses] = useState<any[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<any>(null);
   const [activeStep, setActiveStep] = useState<number>(1);
+  const [isPreOrder, setIsPreOrder] = useState(false);
+  const [isClosed, setIsClosed] = useState(false);
 
   const total = getTotal();
 
@@ -94,6 +103,37 @@ export default function CheckoutPage() {
     }
   }, [user?.id, isHydrated]);
 
+  useEffect(() => {
+    fetchSettings();
+  }, [fetchSettings]);
+
+  useEffect(() => {
+    if (ordersOpenTime && ordersCloseTime) {
+      const now = new Date();
+      const currentHours = now.getHours().toString().padStart(2, '0');
+      const currentMinutes = now.getMinutes().toString().padStart(2, '0');
+      const currentTime = `${currentHours}:${currentMinutes}`;
+      
+      let outside = false;
+      if (ordersOpenTime < ordersCloseTime) {
+        if (currentTime < ordersOpenTime || currentTime > ordersCloseTime) {
+          outside = true;
+        }
+      } else {
+        if (currentTime < ordersOpenTime && currentTime > ordersCloseTime) {
+          outside = true;
+        }
+      }
+
+      if (!ordersEnabled || outside) {
+        setIsClosed(true);
+        setIsPreOrder(true); // Closed or disabled forces pre-order
+      } else {
+        setIsClosed(false);
+      }
+    }
+  }, [ordersEnabled, ordersOpenTime, ordersCloseTime]);
+
   const handlePlaceOrder = async () => {
     if (!selectedAddress) {
       toast("Delivery coordinates required.", "error");
@@ -111,7 +151,8 @@ export default function CheckoutPage() {
           total: total,
           address: `${selectedAddress.hotel_name}${selectedAddress.room_no ? ` (${selectedAddress.room_no})` : ''}, ${selectedAddress.address}, Jetty: ${selectedAddress.jetty}`,
           phone: selectedAddress.phone,
-          paymentMethod: "COD"
+          paymentMethod: "COD",
+          isPreOrder: isPreOrder ? 1 : 0
         })
       });
 
@@ -150,6 +191,30 @@ export default function CheckoutPage() {
           
           {/* Main Column */}
           <div className="lg:col-span-8 space-y-6">
+
+            {/* Pre-Order Warning Banner */}
+            {isClosed && (
+              <div className="p-5 rounded-2xl border border-amber-200 bg-amber-50/70 text-slate-800 space-y-3 shadow-premium animate-fade-in relative overflow-hidden">
+                <div className="absolute right-0 top-0 w-24 h-24 bg-amber-500/5 rounded-full blur-[20px] pointer-events-none" />
+                <div className="flex items-start gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-600 shrink-0">
+                    <AlertCircle className="w-5 h-5" />
+                  </div>
+                  <div className="space-y-1">
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-amber-800 flex items-center gap-2">
+                      Platform Closed (Pre-Order Active)
+                      <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+                    </h4>
+                    <p className="text-xs text-slate-600 leading-relaxed font-medium">
+                      Fleet instant deliveries are currently closed as we are outside of active operating hours (<span className="font-bold text-slate-800">{ordersOpenTime} - {ordersCloseTime}</span>) or the administrator has enabled Pre-Orders Only.
+                    </p>
+                    <p className="text-[11px] font-bold text-amber-700 uppercase tracking-wide mt-1.5 flex items-center gap-1.5">
+                      <Truck className="w-3.5 h-3.5" /> Next dispatch window starts: {ordersNextOpenText || "Tomorrow at 09:00 AM"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
             
             {/* Step 1: Shipping Address */}
             <div className={cn("border rounded-xl transition-all overflow-hidden shadow-sm", activeStep === 1 ? "border-primary/50 ring-1 ring-primary/20" : "border-slate-200")}>

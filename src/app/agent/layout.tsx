@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import { Logo } from "@/components/ui/Logo";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useAuthStore } from "@/store/authStore";
 
 // --- TACTICAL MOOD DEFINITIONS ---
 type TacticalMood = "SENTINEL" | "MIDNIGHT" | "DAYLIGHT";
@@ -75,6 +76,7 @@ const MOODS: Record<TacticalMood, MoodConfig> = {
 export default function AgentLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const { user, logout: authLogout } = useAuthStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [currentMood, setCurrentMood] = useState<TacticalMood>("SENTINEL");
   const [isHydrated, setIsHydrated] = useState(false);
@@ -87,7 +89,7 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
   };
 
   const logout = () => {
-    // Logic for logout
+    authLogout();
     router.push("/login");
   };
 
@@ -150,7 +152,25 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
           </Link>
         </div>
 
-        <nav className="flex-1 px-4 space-y-2 pt-10">
+        {/* Operator Profile Widget - Desktop Sidebar */}
+        <div className="px-6 py-4 mx-4 rounded-2xl border flex items-center gap-3 bg-black/10 backdrop-blur-md" style={{ borderColor: mood.border }}>
+          <Link href="/agent/profile" className="w-10 h-10 rounded-full overflow-hidden border flex items-center justify-center transition-all hover:scale-105 shrink-0" style={{ borderColor: mood.primary }}>
+            <img 
+              src={(user?.avatar && user.avatar !== 'null' && user.avatar !== 'undefined') ? user.avatar : "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80"} 
+              alt="Profile" 
+              className="w-full h-full object-cover"
+            />
+          </Link>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <p className="text-[8px] font-black uppercase tracking-wider" style={{ color: mood.primary }}>Agent Active</p>
+            </div>
+            <p className="text-[10px] font-bold truncate uppercase tracking-wide mt-0.5" style={{ color: mood.text }}>{user?.name || "Abijeet"}</p>
+          </div>
+        </div>
+
+        <nav className="flex-1 px-4 space-y-2 pt-6">
           {AGENT_NAV_ITEMS.map((item: any) => {
             const isActive = pathname === item.href;
             return (
@@ -296,14 +316,27 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
                  </div>
               </div>
 
-              <div className="p-6 border-t space-y-4" style={{ borderColor: mood.border }}>
-                 <div className="flex items-center gap-4 p-4 rounded-2xl transition-all" style={{ backgroundColor: mood.text + '05', border: `1px solid ${mood.border}` }}>
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center transition-all" style={{ backgroundColor: mood.primary + '20', color: mood.primary }}><Compass className="w-5 h-5 animate-spin-slow" /></div>
-                    <div className="space-y-0.5">
-                       <p className="text-[8px] font-bold uppercase tracking-widest leading-none" style={{ color: mood.primary }}>Sector</p>
-                       <p className="text-[10px] font-bold uppercase italic" style={{ color: mood.text }}>Andaman-S07</p>
-                    </div>
-                 </div>
+               <div className="p-6 border-t space-y-4" style={{ borderColor: mood.border }}>
+                  <div className="flex items-center gap-4 p-4 rounded-2xl transition-all" style={{ backgroundColor: mood.text + '05', border: `1px solid ${mood.border}` }}>
+                     <div className="w-10 h-10 rounded-full overflow-hidden border flex items-center justify-center" style={{ borderColor: mood.primary }}>
+                        <img 
+                          src={(user?.avatar && user.avatar !== 'null' && user.avatar !== 'undefined') ? user.avatar : "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80"} 
+                          alt="Profile" 
+                          className="w-full h-full object-cover"
+                        />
+                     </div>
+                     <div className="space-y-0.5">
+                        <p className="text-[8px] font-bold uppercase tracking-widest leading-none" style={{ color: mood.primary }}>Agent Active</p>
+                        <p className="text-[10px] font-bold uppercase italic" style={{ color: mood.text }}>{user?.name || "Abijeet"}</p>
+                     </div>
+                  </div>
+                  <div className="flex items-center gap-4 p-4 rounded-2xl transition-all" style={{ backgroundColor: mood.text + '05', border: `1px solid ${mood.border}` }}>
+                     <div className="w-10 h-10 rounded-full flex items-center justify-center transition-all" style={{ backgroundColor: mood.primary + '20', color: mood.primary }}><Compass className="w-5 h-5 animate-spin-slow" /></div>
+                     <div className="space-y-0.5">
+                        <p className="text-[8px] font-bold uppercase tracking-widest leading-none" style={{ color: mood.primary }}>Sector</p>
+                        <p className="text-[10px] font-bold uppercase italic" style={{ color: mood.text }}>Andaman-S07</p>
+                     </div>
+                  </div>
                  <button 
                     onClick={logout}
                     className={cn(
@@ -376,10 +409,19 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
                  <Logo size="lg" />
               </Link>
            </div>
-           <button className="w-10 h-10 rounded-full border flex items-center justify-center relative transition-colors" style={{ backgroundColor: mood.text + '10', borderColor: mood.border }}>
-              <Bell className="w-5 h-5 opacity-60" style={{ color: mood.text }} />
-              <div className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full border-2" style={{ backgroundColor: mood.primary, borderColor: mood.bg }} />
-           </button>
+           <div className="flex items-center gap-3">
+              <button className="w-10 h-10 rounded-full border flex items-center justify-center relative transition-colors" style={{ backgroundColor: mood.text + '10', borderColor: mood.border }}>
+                 <Bell className="w-5 h-5 opacity-60" style={{ color: mood.text }} />
+                 <div className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full border-2" style={{ backgroundColor: mood.primary, borderColor: mood.bg }} />
+              </button>
+              <Link href="/agent/profile" className="w-10 h-10 rounded-full border overflow-hidden flex items-center justify-center transition-all hover:scale-105 active:scale-95" style={{ borderColor: mood.border }}>
+                 <img 
+                   src={(user?.avatar && user.avatar !== 'null' && user.avatar !== 'undefined') ? user.avatar : "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80"} 
+                   alt="Profile" 
+                   className="w-full h-full object-cover"
+                 />
+              </Link>
+           </div>
         </header>
 
         <div className="animate-fade-in" style={{"--agent-primary": mood.primary, "--agent-glow": mood.glow, "--agent-text": mood.text, "--agent-card-bg": mood.cardBg, "--agent-border": mood.border} as any}>

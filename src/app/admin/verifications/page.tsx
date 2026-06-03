@@ -79,59 +79,103 @@ export default function AdminVerificationsPage() {
               <Search className="absolute left-3.5 md:left-4 top-1/2 -translate-y-1/2 w-3.5 md:w-4 h-3.5 md:h-4 text-text-secondary opacity-40 group-focus-within:opacity-100 transition-opacity" />
            </div>
         </div>
-        <Table>
-           <TableHeader>
-              <TableRow className="border-[var(--foreground)]/5">
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Identity Name</TableHead>
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Directive Type</TableHead>
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Attached Asset</TableHead>
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Registry Status</TableHead>
-                 <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary pr-4 md:pr-6">Governance</TableHead>
-              </TableRow>
-           </TableHeader>
-           <TableBody>
-              {VERIFICATION_REQUESTS.map((req) => (
-                 <TableRow key={req.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
-                    <TableCell>
-                       <div className="space-y-0.5 md:space-y-1">
-                          <p className="font-black text-[var(--foreground)] text-xs md:text-sm uppercase tracking-tighter italic group-hover/row:text-primary transition-colors">{req.name}</p>
-                          <p className="text-[7px] md:text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-40">Commissioned {req.time}</p>
-                       </div>
-                    </TableCell>
-                    <TableCell>
-                       <Badge variant="secondary" className="bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5 uppercase text-[7px] md:text-[8px] tracking-[0.2em] italic font-black px-2">
+        <div className="hidden lg:block">
+           <Table>
+              <TableHeader>
+                 <TableRow className="border-[var(--foreground)]/5">
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Identity Name</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Directive Type</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Attached Asset</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Registry Status</TableHead>
+                    <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary pr-4 md:pr-6">Governance</TableHead>
+                 </TableRow>
+              </TableHeader>
+              <TableBody>
+                 {VERIFICATION_REQUESTS.map((req) => (
+                    <TableRow key={req.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
+                       <TableCell>
+                          <div className="space-y-0.5 md:space-y-1">
+                             <p className="font-black text-[var(--foreground)] text-xs md:text-sm uppercase tracking-tighter italic group-hover/row:text-primary transition-colors">{req.name}</p>
+                             <p className="text-[7px] md:text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-40">Commissioned {req.time}</p>
+                          </div>
+                       </TableCell>
+                       <TableCell>
+                          <Badge variant="secondary" className="bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5 uppercase text-[7px] md:text-[8px] tracking-[0.2em] italic font-black px-2">
+                             {req.type}
+                          </Badge>
+                       </TableCell>
+                       <TableCell className="text-[9px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest italic flex items-center gap-2">
+                          <FileText className="w-3 md:w-3.5 h-3 md:h-3.5 text-primary shadow-glow-purple/10" /> {req.document}
+                       </TableCell>
+                       <TableCell>
+                          <Badge variant={
+                             req.status === "APPROVED" ? "success" : 
+                             req.status === "PENDING" ? "warning" : 
+                             "secondary"
+                          } className="text-[7px] md:text-[9px] italic px-2 uppercase font-black tracking-widest">
+                             {req.status}
+                          </Badge>
+                       </TableCell>
+                       <TableCell className="text-right pr-4 md:pr-6">
+                          <div className="flex justify-end gap-1 md:gap-2">
+                             <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
+                                <Eye className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                             </button>
+                             <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-success transition-all border border-[var(--foreground)]/5">
+                                <CheckCircle2 className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                             </button>
+                             <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5">
+                                <XCircle className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                             </button>
+                          </div>
+                       </TableCell>
+                    </TableRow>
+                 ))}
+              </TableBody>
+           </Table>
+        </div>
+
+        {/* Mobile card list */}
+        <div className="lg:hidden space-y-3 p-4">
+           {VERIFICATION_REQUESTS.map((req) => (
+              <div key={req.id} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
+                 <div className="flex items-start justify-between">
+                    <div className="space-y-0.5">
+                       <p className="font-black text-[var(--foreground)] italic text-sm tracking-tighter uppercase">{req.name}</p>
+                       <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">ID: {req.id} • {req.time}</p>
+                    </div>
+                    <div className="flex flex-col items-end gap-1.5">
+                       <Badge variant="secondary" className="bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5 uppercase text-[7px] tracking-[0.1em] italic font-black px-1.5">
                           {req.type}
                        </Badge>
-                    </TableCell>
-                    <TableCell className="text-[9px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest italic flex items-center gap-2">
-                       <FileText className="w-3 md:w-3.5 h-3 md:h-3.5 text-primary shadow-glow-purple/10" /> {req.document}
-                    </TableCell>
-                    <TableCell>
                        <Badge variant={
                           req.status === "APPROVED" ? "success" : 
                           req.status === "PENDING" ? "warning" : 
                           "secondary"
-                       } className="text-[7px] md:text-[9px] italic px-2 uppercase font-black tracking-widest">
+                       } className="text-[7px] italic px-1.5 uppercase font-black tracking-widest">
                           {req.status}
                        </Badge>
-                    </TableCell>
-                    <TableCell className="text-right pr-4 md:pr-6">
-                       <div className="flex justify-end gap-1 md:gap-2">
-                          <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
-                             <Eye className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                          <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-success transition-all border border-[var(--foreground)]/5">
-                             <CheckCircle2 className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                          <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5">
-                             <XCircle className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                       </div>
-                    </TableCell>
-                 </TableRow>
-              ))}
-           </TableBody>
-        </Table>
+                    </div>
+                 </div>
+                 <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5">
+                    <div className="text-[9px] font-black text-[var(--foreground)] uppercase tracking-widest italic flex items-center gap-1.5">
+                       <FileText className="w-3.5 h-3.5 text-primary" /> {req.document}
+                    </div>
+                    <div className="flex gap-1">
+                       <button className="p-1.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
+                          <Eye className="w-3.5 h-3.5" />
+                       </button>
+                       <button className="p-1.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-success transition-all border border-[var(--foreground)]/5">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                       </button>
+                       <button className="p-1.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5">
+                          <XCircle className="w-3.5 h-3.5" />
+                       </button>
+                    </div>
+                 </div>
+              </div>
+           ))}
+        </div>
       </Card>
 
       {/* Security Advisory */}

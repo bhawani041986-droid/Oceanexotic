@@ -89,53 +89,95 @@ export default function AdminRolesPage() {
                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-secondary opacity-40 group-focus-within:opacity-100 transition-opacity" />
               </div>
            </div>
-           <Table>
-              <TableHeader>
-                 <TableRow>
-                    <TableHead>Role Identity</TableHead>
-                    <TableHead>Active Users</TableHead>
-                    <TableHead>Sovereignty Level</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Governance</TableHead>
-                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                 {ROLE_REGISTRY.map((role) => (
-                    <TableRow key={role.id}>
-                       <TableCell>
-                          <div className="space-y-1">
-                             <p className="font-bold text-[var(--foreground)] text-sm">{role.name}</p>
-                             <p className="text-[9px] font-black text-text-secondary uppercase tracking-widest">ID: {role.id}</p>
-                          </div>
-                       </TableCell>
-                       <TableCell className="font-black text-[var(--foreground)]">{role.users}</TableCell>
-                       <TableCell>
-                          <Badge variant="glass" className="bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5 uppercase text-[8px] tracking-widest">
-                             {role.level}
-                          </Badge>
-                       </TableCell>
-                       <TableCell>
-                          <Badge variant={role.status === "IMMUTABLE" ? "primary" : "success"}>
-                             {role.status}
-                          </Badge>
-                       </TableCell>
-                       <TableCell className="text-right">
-                          <div className="flex justify-end gap-2">
-                             <button className="p-2.5 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all">
-                                <Eye className="w-4 h-4" />
-                             </button>
-                             <button className="p-2.5 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all">
-                                <Edit3 className="w-4 h-4" />
-                             </button>
-                             <button className="p-2.5 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all">
-                                <Trash2 className="w-4 h-4" />
-                             </button>
-                          </div>
-                       </TableCell>
-                    </TableRow>
-                 ))}
-              </TableBody>
-           </Table>
+            <div className="hidden lg:block">
+               <Table>
+                  <TableHeader>
+                     <TableRow>
+                        <TableHead>Role Identity</TableHead>
+                        <TableHead>Active Users</TableHead>
+                        <TableHead>Sovereignty Level</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead className="text-right">Governance</TableHead>
+                     </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                     {ROLE_REGISTRY.map((role) => (
+                        <TableRow key={role.id}>
+                           <TableCell>
+                              <div className="space-y-1">
+                                 <p className="font-bold text-[var(--foreground)] text-sm">{role.name}</p>
+                                 <p className="text-[9px] font-black text-text-secondary uppercase tracking-widest">ID: {role.id}</p>
+                              </div>
+                           </TableCell>
+                           <TableCell className="font-black text-[var(--foreground)]">{role.users}</TableCell>
+                           <TableCell>
+                              <Badge variant="glass" className="bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5 uppercase text-[8px] tracking-widest">
+                                 {role.level}
+                              </Badge>
+                           </TableCell>
+                           <TableCell>
+                              <Badge variant={role.status === "IMMUTABLE" ? "default" : "success"}>
+                                 {role.status}
+                              </Badge>
+                           </TableCell>
+                           <TableCell className="text-right">
+                              <div className="flex justify-end gap-2">
+                                 <button className="p-2.5 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all">
+                                    <Eye className="w-4 h-4" />
+                                 </button>
+                                 <button className="p-2.5 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all">
+                                    <Edit3 className="w-4 h-4" />
+                                 </button>
+                                 <button className="p-2.5 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all">
+                                    <Trash2 className="w-4 h-4" />
+                                 </button>
+                              </div>
+                           </TableCell>
+                        </TableRow>
+                     ))}
+                  </TableBody>
+               </Table>
+            </div>
+
+            {/* Mobile card list */}
+            <div className="lg:hidden space-y-3 p-4">
+               {ROLE_REGISTRY.map((role) => (
+                  <div key={role.id} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
+                     <div className="flex items-start justify-between">
+                        <div className="space-y-1">
+                           <p className="font-bold text-[var(--foreground)] text-sm">{role.name}</p>
+                           <p className="text-[9px] font-black text-text-secondary uppercase tracking-widest">ID: {role.id}</p>
+                        </div>
+                        <Badge variant={role.status === "IMMUTABLE" ? "default" : "success"}>
+                           {role.status}
+                        </Badge>
+                     </div>
+                     <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5">
+                        <div className="space-y-0">
+                           <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Users</p>
+                           <p className="font-black text-[var(--foreground)] text-xs">{role.users}</p>
+                        </div>
+                        <div className="space-y-0">
+                           <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Sovereignty Level</p>
+                           <Badge variant="glass" className="bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5 uppercase text-[7px] tracking-widest px-1 py-0.5">
+                              {role.level}
+                           </Badge>
+                        </div>
+                        <div className="flex gap-1">
+                           <button className="p-2 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all">
+                              <Eye className="w-4 h-4" />
+                           </button>
+                           <button className="p-2 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all">
+                              <Edit3 className="w-4 h-4" />
+                           </button>
+                           <button className="p-2 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all">
+                              <Trash2 className="w-4 h-4" />
+                           </button>
+                        </div>
+                     </div>
+                  </div>
+               ))}
+            </div>
         </Card>
       </div>
 

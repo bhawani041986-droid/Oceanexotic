@@ -16,6 +16,10 @@ api.interceptors.request.use(async (config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  // Strip leading slash if URL is relative to prevent Axios discarding the path of baseURL
+  if (config.url && config.url.startsWith("/")) {
+    config.url = config.url.substring(1);
+  }
   return config;
 });
 

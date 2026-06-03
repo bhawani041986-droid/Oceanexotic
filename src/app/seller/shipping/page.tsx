@@ -30,7 +30,7 @@ const SHIPMENTS = [
 export default function SellerShippingPage() {
   return (
 
-    <div className="space-y-[10px] md:space-y-12 pt-4 md:pt-10 pb-32 md:pb-10 px-4 md:px-0 animate-fade-in">
+    <div className="space-y-[10px] md:space-y-12 pt-4 md:pt-10 pb-32 md:pb-10 px-0 animate-fade-in">
       
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-[10px] md:gap-6 md:border-b md:border-[var(--foreground)]/5 md:pb-10">
@@ -82,7 +82,7 @@ export default function SellerShippingPage() {
             </div>
 
             {/* Mobile: Shipment Cards */}
-            <div className="grid grid-cols-1 gap-[10px] md:hidden">
+            <div className="grid grid-cols-1 gap-[10px] lg:hidden">
               {SHIPMENTS.map((shp) => (
                 <Card key={shp.id} className="p-[10px] space-y-3 rounded-[20px] bg-bg-secondary/20 border-[var(--foreground)]/5 shadow-glow-purple/5">
                   <div className="flex justify-between items-start">
@@ -90,7 +90,7 @@ export default function SellerShippingPage() {
                       <p className="text-[7px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Fleet Identifier</p>
                       <p className="text-[11px] font-black text-[var(--foreground)] uppercase italic tracking-tighter">{shp.id}</p>
                     </div>
-                    <Badge variant={shp.status === "DELIVERED" ? "success" : shp.status === "IN TRANSIT" ? "primary" : "warning"} className="h-5 text-[7px] px-1.5 shadow-glow-purple italic uppercase">
+                    <Badge variant={shp.status === "DELIVERED" ? "success" : shp.status === "IN TRANSIT" ? "default" : "warning"} className="h-5 text-[7px] px-1.5 shadow-glow-purple italic uppercase">
                       {shp.status}
                     </Badge>
                   </div>
@@ -123,7 +123,7 @@ export default function SellerShippingPage() {
             </div>
 
             {/* Desktop: Shipment Table */}
-            <Card className="hidden md:block p-1 rounded-[24px] overflow-hidden bg-bg-secondary/20 shadow-premium border-[var(--foreground)]/5">
+            <Card className="hidden lg:block p-1 rounded-[24px] overflow-hidden bg-bg-secondary/20 shadow-premium border-[var(--foreground)]/5">
                <Table>
                   <TableHeader>
                      <TableRow className="border-[var(--foreground)]/5">
@@ -151,7 +151,7 @@ export default function SellerShippingPage() {
                              </div>
                           </TableCell>
                           <TableCell>
-                             <Badge variant={shp.status === "DELIVERED" ? "success" : shp.status === "IN TRANSIT" ? "primary" : "warning"} className="shadow-glow-purple italic uppercase text-[8px] md:text-[10px] px-2">
+                             <Badge variant={shp.status === "DELIVERED" ? "success" : shp.status === "IN TRANSIT" ? "default" : "warning"} className="shadow-glow-purple italic uppercase text-[8px] md:text-[10px] px-2">
                                 {shp.status}
                              </Badge>
                           </TableCell>

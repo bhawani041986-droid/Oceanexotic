@@ -49,8 +49,8 @@ export default function LoginScreen() {
 
       if (result.success && result.user && result.token) {
         const user = toAuthUser(result.user);
-        if (user.role !== "customer") {
-          const message = "This mobile app is for customers only. Use the web dashboard for seller, agent, or admin access.";
+        if (user.role !== "customer" && user.role !== "agent" && user.role !== "seller" && user.role !== "admin") {
+          const message = "Access Denied: Only customers, agents, sellers, and admins can log in to this mobile app.";
           toast(message, "error");
           setSubmitError(message);
           return;

@@ -127,7 +127,7 @@ export default function SellerEarningsPage() {
         </div>
 
         {/* Mobile: Settlement Cards */}
-        <div className="grid grid-cols-1 gap-[10px] md:hidden">
+        <div className="grid grid-cols-1 gap-[10px] lg:hidden">
           {SETTLEMENT_HISTORY.map((settlement) => (
             <Card key={settlement.id} className="p-[10px] space-y-3 rounded-[20px] bg-bg-secondary/20">
               <div className="flex justify-between items-start">
@@ -156,7 +156,7 @@ export default function SellerEarningsPage() {
         </div>
 
         {/* Desktop: Settlement Table */}
-        <Card className="hidden md:block p-1 rounded-[24px] md:rounded-[40px] overflow-hidden shadow-premium bg-bg-secondary/10 border-[var(--foreground)]/5">
+        <Card className="hidden lg:block p-1 rounded-[24px] md:rounded-[40px] overflow-hidden shadow-premium bg-bg-secondary/10 border-[var(--foreground)]/5">
           <Table>
             <TableHeader>
               <TableRow className="border-[var(--foreground)]/5">

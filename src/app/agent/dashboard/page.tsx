@@ -126,6 +126,9 @@ export default function AgentDashboardPage() {
                         <div className="space-y-2">
                            <div className="flex items-center gap-3">
                               <h3 className="text-2xl font-black text-[var(--foreground)] italic tracking-tighter uppercase">{mission.id}</h3>
+                              {mission.is_pre_order === 1 && (
+                                 <span className="px-1.5 py-0.5 rounded-[4px] bg-amber-500/20 text-amber-500 text-[8px] font-black uppercase tracking-wider border border-amber-500/30">PRE-ORDER</span>
+                              )}
                               {mission.urgency === "HIGH" && (
                                  <Badge variant="danger" className="animate-pulse text-[8px] font-black uppercase tracking-widest">URGENT</Badge>
                               )}

@@ -3,7 +3,7 @@
 // Optimized for Port 8081
 
 define('SITE_URL', 'https://oceanexotic.com');
-define('DB_HOST', 'localhost');
+define('DB_HOST', '127.0.0.1');
 define('DB_NAME', 'ocean_fresh');
 define('DB_USER', 'root');
 define('DB_PASS', '');

@@ -5,18 +5,19 @@ import {
   ScrollView,
   Pressable,
   ActivityIndicator,
-  Alert,
 } from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useCartStore } from "@/store/cartStore";
 import { useAuthStore } from "@/store/authStore";
+import { useSettingsStore } from "@/store/settingsStore";
 import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 import { checkoutService, type SavedAddress } from "@/services/checkoutService";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { cn } from "@/lib/utils";
+import { useThemeColors } from "@/hooks/useThemeColors";
 
 type Step = 1 | 2 | 3;
 
@@ -25,6 +26,9 @@ export default function CheckoutScreen() {
   const { items, getTotal, clearCart } = useCartStore();
   const { user } = useAuthStore();
   const { toast, ToastHost } = useToast();
+  const colors = useThemeColors();
+
+  const primaryColor = colors.primary;
 
   const [activeStep, setActiveStep] = useState<Step>(1);
   const [isFetchingAddresses, setIsFetchingAddresses] = useState(true);
@@ -135,7 +139,7 @@ export default function CheckoutScreen() {
         colors={["#020617", "#0d1b2a"]}
         className="px-4 pt-14 pb-4 border-b border-white/5"
       >
-        <Text className="text-[9px] font-black uppercase tracking-[0.3em] text-primary mb-3">
+        <Text className="text-[9px] font-black uppercase tracking-[0.3em] mb-3" style={{ color: primaryColor }}>
           Sovereign Trade Authorization
         </Text>
         <View className="flex-row items-center gap-0">
@@ -151,14 +155,17 @@ export default function CheckoutScreen() {
                   className="items-center gap-1"
                 >
                   <View
-                    className={cn(
-                      "w-7 h-7 rounded-full items-center justify-center border",
-                      done
-                        ? "bg-emerald-500 border-emerald-500"
-                        : active
-                        ? "bg-primary border-primary"
-                        : "bg-transparent border-white/20"
-                    )}
+                    className="w-7 h-7 rounded-full items-center justify-center border"
+                    style={done ? {
+                      backgroundColor: "#10B981",
+                      borderColor: "#10B981"
+                    } : active ? {
+                      backgroundColor: primaryColor,
+                      borderColor: primaryColor
+                    } : {
+                      backgroundColor: "transparent",
+                      borderColor: "rgba(255, 255, 255, 0.2)"
+                    }}
                   >
                     {done ? (
                       <Text className="text-[10px] font-black text-white">✓</Text>
@@ -174,10 +181,10 @@ export default function CheckoutScreen() {
                     )}
                   </View>
                   <Text
-                    className={cn(
-                      "text-[7px] font-black uppercase tracking-widest",
-                      active ? "text-primary" : done ? "text-emerald-500" : "text-muted-foreground"
-                    )}
+                    className="text-[7px] font-black uppercase tracking-widest"
+                    style={{
+                      color: active ? primaryColor : done ? "#10B981" : "#94A3B8"
+                    }}
                   >
                     {labels[idx]}
                   </Text>
@@ -213,7 +220,7 @@ export default function CheckoutScreen() {
         >
           {isFetchingAddresses ? (
             <View className="py-10 items-center gap-3">
-              <ActivityIndicator color="#7C3AED" />
+              <ActivityIndicator color={primaryColor} />
               <Text className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
                 Syncing Address Vault...
               </Text>
@@ -226,12 +233,14 @@ export default function CheckoutScreen() {
                   <Pressable
                     key={String(addr.id)}
                     onPress={() => setSelectedAddress(addr)}
-                    className={cn(
-                      "rounded-xl border-2 p-4",
-                      selected
-                        ? "border-primary bg-primary/10"
-                        : "border-white/10 bg-secondary/40"
-                    )}
+                    className="rounded-xl border-2 p-4"
+                    style={selected ? {
+                      borderColor: primaryColor,
+                      backgroundColor: colors.primary + "1A"
+                    } : {
+                      borderColor: "rgba(255, 255, 255, 0.1)",
+                      backgroundColor: "rgba(255, 255, 255, 0.05)"
+                    }}
                   >
                     <View className="flex-row items-start justify-between mb-2">
                       <View className="bg-white/10 px-2 py-0.5 rounded">
@@ -240,7 +249,7 @@ export default function CheckoutScreen() {
                         </Text>
                       </View>
                       {selected && (
-                        <View className="w-4 h-4 rounded-full bg-primary items-center justify-center">
+                        <View className="w-4 h-4 rounded-full items-center justify-center" style={{ backgroundColor: primaryColor }}>
                           <Text className="text-[8px] text-foreground font-black">✓</Text>
                         </View>
                       )}
@@ -249,7 +258,7 @@ export default function CheckoutScreen() {
                       {addr.hotel_name}
                     </Text>
                     {addr.room_no ? (
-                      <Text className="text-[9px] font-black text-primary uppercase mt-0.5">
+                      <Text className="text-[9px] font-black uppercase mt-0.5" style={{ color: primaryColor }}>
                         ROOM: {addr.room_no}
                       </Text>
                     ) : null}
@@ -310,7 +319,13 @@ export default function CheckoutScreen() {
           onEdit={() => activeStep > 2 ? setActiveStep(2) : undefined}
         >
           {/* COD is the only method (mirrors web) */}
-          <View className="border-2 border-primary bg-primary/5 rounded-xl p-5 flex-row items-center gap-4">
+          <View 
+            className="border-2 rounded-xl p-5 flex-row items-center gap-4"
+            style={{
+              borderColor: primaryColor,
+              backgroundColor: colors.primary + "0D"
+            }}
+          >
             <Text className="text-3xl">🚚</Text>
             <View className="flex-1">
               <Text className="font-black uppercase italic text-foreground">
@@ -320,7 +335,7 @@ export default function CheckoutScreen() {
                 Handshake at the jetty upon trade fulfillment
               </Text>
             </View>
-            <View className="w-5 h-5 rounded-full bg-primary items-center justify-center">
+            <View className="w-5 h-5 rounded-full items-center justify-center" style={{ backgroundColor: primaryColor }}>
               <Text className="text-[9px] text-foreground font-black">✓</Text>
             </View>
           </View>
@@ -389,7 +404,7 @@ export default function CheckoutScreen() {
             </View>
             <View className="flex-row justify-between">
               <Text className="text-xs text-muted-foreground">Regulatory Tax (5%)</Text>
-              <Text className="text-xs font-bold text-primary">₹{tax.toLocaleString()}</Text>
+              <Text className="text-xs font-bold" style={{ color: primaryColor }}>₹{tax.toLocaleString()}</Text>
             </View>
             <View className="flex-row justify-between">
               <Text className="text-xs text-muted-foreground">Shipping &amp; Handling</Text>
@@ -397,7 +412,7 @@ export default function CheckoutScreen() {
             </View>
             <View className="border-t border-white/10 pt-2 flex-row justify-between">
               <Text className="text-sm font-black uppercase text-foreground">Order Total</Text>
-              <Text className="text-lg font-black italic text-primary">
+              <Text className="text-lg font-black italic" style={{ color: primaryColor }}>
                 ₹{grandTotal.toLocaleString()}
               </Text>
             </View>
@@ -405,8 +420,14 @@ export default function CheckoutScreen() {
 
           {/* Delivery summary */}
           {selectedAddress && (
-            <View className="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 gap-1">
-              <Text className="text-[8px] font-black uppercase tracking-widest text-primary mb-1">
+            <View 
+              className="border rounded-xl p-4 mb-6 gap-1"
+              style={{
+                backgroundColor: colors.primary + "0D",
+                borderColor: colors.primary + "33"
+              }}
+            >
+              <Text className="text-[8px] font-black uppercase tracking-widest mb-1" style={{ color: primaryColor }}>
                 Delivering to
               </Text>
               <Text className="text-sm font-black text-foreground">
@@ -436,7 +457,7 @@ export default function CheckoutScreen() {
               disabled={isPlacing}
               className="w-full"
             />
-            {isPlacing && <ActivityIndicator color="#7C3AED" />}
+            {isPlacing && <ActivityIndicator color={primaryColor} />}
           </View>
         </StepCard>
       </ScrollView>
@@ -484,30 +505,37 @@ interface StepCardProps {
 }
 
 function StepCard({ stepNum, label, active, done, summary, onEdit, children }: StepCardProps) {
+  const colors = useThemeColors();
+  const primaryColor = colors.primary;
+
   return (
     <View
-      className={cn(
-        "rounded-2xl border overflow-hidden",
-        active ? "border-primary/40" : "border-white/10"
-      )}
+      className="rounded-2xl border overflow-hidden"
+      style={{
+        borderColor: active
+          ? colors.primary + "66"
+          : "rgba(255, 255, 255, 0.1)"
+      }}
     >
       {/* Header */}
       <View
-        className={cn(
-          "flex-row items-center justify-between px-4 py-3",
-          active ? "bg-primary/5" : "bg-secondary/30"
-        )}
+        className="flex-row items-center justify-between px-4 py-3"
+        style={{
+          backgroundColor: active
+            ? colors.primary + "0D"
+            : "rgba(30, 41, 59, 0.3)"
+        }}
       >
         <View className="flex-row items-center gap-3">
           <View
-            className={cn(
-              "w-6 h-6 rounded-full items-center justify-center",
-              done
-                ? "bg-emerald-500"
-                : active
-                ? "bg-primary"
-                : "bg-white/10"
-            )}
+            className="w-6 h-6 rounded-full items-center justify-center"
+            style={done ? {
+              backgroundColor: "#10B981"
+            } : active ? {
+              backgroundColor: primaryColor
+            } : {
+              backgroundColor: "rgba(255, 255, 255, 0.1)"
+            }}
           >
             {done ? (
               <Text className="text-[9px] font-black text-white">✓</Text>
@@ -533,7 +561,7 @@ function StepCard({ stepNum, label, active, done, summary, onEdit, children }: S
         </View>
         {done && onEdit && (
           <Pressable onPress={onEdit} className="px-2 py-1">
-            <Text className="text-[9px] font-black text-primary uppercase">
+            <Text className="text-[9px] font-black uppercase" style={{ color: primaryColor }}>
               Change
             </Text>
           </Pressable>

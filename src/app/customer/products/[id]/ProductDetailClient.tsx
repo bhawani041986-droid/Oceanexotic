@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { 
@@ -17,10 +17,13 @@ import {
   TrendingUp,
   ChevronLeft,
   ChevronRight,
+  ChevronUp,
+  ChevronDown,
   Timer,
   ThermometerSnowflake,
   Plus,
   Minus,
+  Check,
   CheckCircle2,
   Clock,
   Loader2,
@@ -46,6 +49,7 @@ import { useSettingsStore } from "@/store/settingsStore";
 import { MASTER_PRODUCT_REGISTRY, MASTER_ADDONS_REGISTRY } from "@/constants/products";
 import { reviewService } from "@/services/reviewService";
 import { Schema, generateProductSchema } from "@/components/seo/Schema";
+import { authService } from "@/services/authService";
 // Generic fallback for unknown IDs not yet in the registry
 const UNKNOWN_PRODUCT_FALLBACK = (id: string) => ({
   id, name: `Seafood Product ${id}`, tagline: "Premium Maritime Catch",
@@ -80,7 +84,7 @@ export default function ProductDetailPage({
 }) {
   const router = useRouter();
   const { toast } = useToast();
-  const { addItem } = useCartStore();
+  const { items, addItem, removeItem } = useCartStore();
   const { currencySymbol } = useSettingsStore();
 
   const [product, setProduct] = useState<any>(initialProduct || baseline);
@@ -92,6 +96,73 @@ export default function ProductDetailPage({
   const [selectedCuts, setSelectedCuts] = useState<any>(null);
   const [currentPrice, setCurrentPrice] = useState(product?.price || 0);
 
+  const [baseSelectedPrice, setBaseSelectedPrice] = useState(product?.price || 0);
+  const [selectedPrepOption, setSelectedPrepOption] = useState<any>(
+    product?.prep_options?.find((o: any) => o.prep_type === 'RAW') || 
+    product?.prep_options?.[0] || 
+    null
+  );
+
+  // Client-side fetch logic for location overrides and prep options
+  useEffect(() => {
+    const fetchLiveDetails = async () => {
+      let area = "";
+      const user = authService.getCurrentUser();
+      if (user) {
+        try {
+          const addrRes = await fetch(`/api/user/addresses?userId=${user.id}`);
+          if (addrRes.ok) {
+            const addrData = await addrRes.json();
+            const addresses = Array.isArray(addrData) ? addrData : (addrData.data || []);
+            const defaultAddr = addresses.find((a: any) => a.is_default || a.primary) || addresses[0];
+            if (defaultAddr && defaultAddr.jetty) {
+              area = defaultAddr.jetty;
+            }
+          }
+        } catch (addrErr) {
+          console.error("Error fetching user address in details page:", addrErr);
+        }
+      }
+      
+      try {
+        const url = area ? `/api/products/detail.php?id=${encodeURIComponent(productId)}&area=${encodeURIComponent(area)}` : `/api/products/detail.php?id=${encodeURIComponent(productId)}`;
+        const res = await fetch(url);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.id) {
+            setProduct(data);
+            setBaseSelectedPrice(data.price);
+            if (data.prep_options && data.prep_options.length > 0) {
+              const rawOpt = data.prep_options.find((o: any) => o.prep_type === 'RAW');
+              setSelectedPrepOption(rawOpt || data.prep_options[0]);
+            }
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching live product detail:", err);
+      }
+    };
+    
+    fetchLiveDetails();
+  }, [productId]);
+
+  // Dynamically update currentPrice based on selection & prep options additions
+  useEffect(() => {
+    const addPrice = selectedPrepOption ? parseFloat(selectedPrepOption.price_flat_add) : 0;
+    setCurrentPrice(baseSelectedPrice + addPrice);
+  }, [baseSelectedPrice, selectedPrepOption]);
+
+  // Amazon Scroll Zoom States & Refs
+  const [zoomScale, setZoomScale] = useState(2.0);
+  const [isHovering, setIsHovering] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const thumbnailsRef = useRef<HTMLDivElement>(null);
+
+  // Amazon Lens Zoom States
+  const [lensPos, setLensPos] = useState({ x: 0, y: 0 });
+  const [zoomOffset, setZoomOffset] = useState({ x: 0, y: 0 });
+  const [isZooming, setIsZooming] = useState(false);
+
   const { scrollY } = useScroll();
   const subHeaderOpacity = useTransform(scrollY, [100, 200], [0, 1]);
 
@@ -101,19 +172,85 @@ export default function ProductDetailPage({
     }
   }, [productId]);
 
+  // Native wheel event listener to support zoom in/out on hover without page scroll
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const onNativeWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const delta = e.deltaY < 0 ? 0.25 : -0.25;
+      setZoomScale((prev) => {
+        const next = prev + delta;
+        return Math.max(1.2, Math.min(5.0, next));
+      });
+    };
+
+    container.addEventListener("wheel", onNativeWheel, { passive: false });
+    return () => {
+      container.removeEventListener("wheel", onNativeWheel);
+    };
+  }, []);
+
   const handleAddToCart = () => {
     if (!product) return;
     addItem({
       id: product.id,
-      name: product.name,
+      name: selectedPrepOption ? `${product.name} (${selectedPrepOption.name})` : product.name,
       price: currentPrice,
       image: product.images?.[0] || product.image,
       quantity,
       sellerId: product.seller_id || product.sellerId || "SEL-000",
-      metadata: selectedCuts // Store cut preferences in cart
+      metadata: {
+        ...selectedCuts,
+        prep_option: selectedPrepOption ? {
+          id: selectedPrepOption.id,
+          prep_type: selectedPrepOption.prep_type,
+          name: selectedPrepOption.name,
+          price_flat_add: selectedPrepOption.price_flat_add
+        } : null
+      }
     });
     toast(`${product.name} commissioned to cart.`, "success");
   };
+
+  const handleAddAddonToCart = (addon: any) => {
+    addItem({
+      id: addon.id,
+      name: addon.name,
+      price: parseFloat(addon.price),
+      image: addon.image_url || "/ICONS/masala.png",
+      quantity: 1,
+      sellerId: product.seller_id || product.sellerId || "SEL-000",
+      metadata: { is_addon: true }
+    });
+    toast(`${addon.name} added to cart.`, "success");
+  };
+
+  const isAddonInCart = (addonId: string) => {
+    return items.some((item: any) => item.id === addonId);
+  };
+
+  const handleToggleAddon = (addon: any) => {
+    if (isAddonInCart(addon.id)) {
+      removeItem(addon.id);
+      toast(`${addon.name} removed from cart.`, "info");
+    } else {
+      handleAddAddonToCart(addon);
+    }
+  };
+
+  const getPrepIcon = (type: string) => {
+    switch (type.toUpperCase()) {
+      case 'RAW': return '🐟';
+      case 'MARINATED': return '🧂';
+      case 'GRILLED': return '🔥';
+      case 'FRIED': return '🍳';
+      default: return '🍽️';
+    }
+  };
+
+  const isComingSoon = product.badge === 'COMING SOON' || product.badge === 'COMING_SOON' || product.availability === 'Coming Soon' || product.availability === 'COMING SOON';
 
   if (!product) {
     return (
@@ -124,8 +261,38 @@ export default function ProductDetailPage({
     );
   }
 
-  const allImages = product.images?.length > 0 ? product.images : [product.image];
-  const productAddons = product.addons?.map((id: string) => MASTER_ADDONS_REGISTRY.find(a => a.id === id)).filter(Boolean) || [];
+  const getProductGallery = (prod: any): string[] => {
+    if (!prod) return [];
+    const galleryVal = prod.gallery;
+    if (!galleryVal) return [];
+    if (Array.isArray(galleryVal)) return galleryVal;
+    try {
+      const parsed = JSON.parse(galleryVal);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
+    }
+  };
+
+  const allImages = [
+    prodImage(product.image),
+    ...(product.images || []),
+    ...getProductGallery(product)
+  ].filter(Boolean);
+
+  function prodImage(img: any) {
+    if (!img) return "";
+    return typeof img === 'string' ? img : "";
+  }
+
+  if (allImages.length === 0) {
+    allImages.push("🐟");
+  }
+
+  const productAddons = product.addons?.map((addon: any) => {
+    if (typeof addon === 'object' && addon !== null) return addon;
+    return MASTER_ADDONS_REGISTRY.find(a => a.id === addon);
+  }).filter(Boolean) || [];
 
   return (
     <MainLayout>
@@ -139,12 +306,25 @@ export default function ProductDetailPage({
                <div className="w-10 h-10 rounded-lg bg-[var(--foreground)]/5 flex items-center justify-center text-xl">{product.image}</div>
                <div>
                   <h3 className="text-sm font-black text-[var(--c-text-primary)] uppercase italic">{product.name}</h3>
-                  <p className="text-[9px] font-bold text-[var(--c-primary)] uppercase tracking-widest">{activeVariant?.label}</p>
+                  <p className="text-[9px] font-bold text-[var(--c-primary)] uppercase tracking-widest">
+                    {selectedPrepOption ? selectedPrepOption.name : (activeVariant?.label || "Standard")}
+                  </p>
                </div>
             </div>
             <div className="flex items-center gap-[10px]">
-               <p className="text-xl font-black text-[var(--c-text-primary)] italic">₹{activeVariant?.price?.toLocaleString()}</p>
-               <Button onClick={handleAddToCart} className="h-10 px-8 rounded-full bg-[var(--c-primary)] text-[var(--foreground)] text-[10px] font-black uppercase shadow-[var(--c-shadow-glow)]">ADD TO CART</Button>
+               <p className="text-xl font-black text-[var(--c-text-primary)] italic">₹{currentPrice.toLocaleString()}</p>
+               <Button 
+                 disabled={isComingSoon} 
+                 onClick={handleAddToCart} 
+                 className={cn(
+                   "h-10 px-8 rounded-full text-[10px] font-black uppercase",
+                   isComingSoon 
+                     ? "bg-amber-500/20 text-amber-500 border border-amber-500/30" 
+                     : "bg-[var(--c-primary)] text-[var(--foreground)] shadow-[var(--c-shadow-glow)]"
+                 )}
+               >
+                 {isComingSoon ? "COMING SOON" : "ADD TO CART"}
+               </Button>
             </div>
          </div>
       </motion.div>
@@ -154,11 +334,81 @@ export default function ProductDetailPage({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-[4px] md:gap-[10px]">
           
           {/* Visual Registry */}
-          <div className={cn("lg:col-span-7 space-y-[10px]", product.id === "PRD-002" && "flex flex-row-reverse gap-[6px] space-y-0")}>
-            <div className={cn(
-              "relative aspect-square md:aspect-[4/3] lg:aspect-square bg-[var(--c-bg-alt)] rounded-[20px] overflow-hidden group border border-[var(--foreground)]/5",
-              product.id === "PRD-002" ? "flex-1" : "w-full"
-            )}>
+          <div className="lg:col-span-7 flex flex-row gap-[4px] md:gap-[10px] relative">
+            
+            {/* THUMBNAIL CONTAINER - ALIGNED LEFT ON ALL DEVICES */}
+            <div className="relative flex flex-col h-full w-[32px] sm:w-[42px] md:w-[54px] shrink-0">
+               {/* Scroll Up Button */}
+               {allImages.length > 4 && (
+                 <button 
+                   onClick={() => thumbnailsRef.current?.scrollBy({ top: -80, left: -80, behavior: 'smooth' })}
+                   className="flex absolute top-0 left-0 right-0 h-5 bg-black/40 hover:bg-black/60 items-center justify-center text-white z-10 rounded-t-lg transition-all"
+                 >
+                   <ChevronUp className="w-3.5 h-3.5" />
+                 </button>
+               )}
+
+               <div 
+                 ref={thumbnailsRef}
+                 className="flex flex-col gap-[4px] lg:gap-[6px] no-scrollbar overflow-y-auto w-full h-[300px] md:h-[400px] lg:h-full py-1 lg:py-6 scroll-smooth items-stretch"
+               >
+                 {allImages.map((img: string, i: number) => (
+                   <button 
+                     key={i} 
+                     onMouseEnter={() => setActiveImage(i)}
+                     onClick={() => setActiveImage(i)} 
+                     className={cn(
+                       "relative overflow-hidden flex-shrink-0 border-2 transition-all bg-[var(--c-bg-alt)] flex items-center justify-center rounded-[8px] h-auto w-full aspect-square text-base sm:text-xl md:text-3xl",
+                       activeImage === i ? "border-[var(--c-primary)] scale-105 shadow-[var(--c-shadow-glow)]" : "border-[var(--foreground)]/5 opacity-60 hover:opacity-100"
+                     )}
+                   >
+                     {(img?.startsWith('http') || img?.startsWith('/')) ? <img src={img} className="w-full h-full object-contain" alt="thumbnail" /> : img}
+                   </button>
+                 ))}
+               </div>
+
+               {/* Scroll Down Button */}
+               {allImages.length > 4 && (
+                 <button 
+                   onClick={() => thumbnailsRef.current?.scrollBy({ top: 80, left: 80, behavior: 'smooth' })}
+                   className="flex absolute bottom-0 left-0 right-0 h-5 bg-black/40 hover:bg-black/60 items-center justify-center text-white z-10 rounded-b-lg transition-all"
+                 >
+                   <ChevronDown className="w-3.5 h-3.5" />
+                 </button>
+               )}
+            </div>
+
+            {/* MAIN IMAGE CONTAINER */}
+            <div 
+              ref={containerRef}
+              onMouseEnter={() => {
+                setIsHovering(true);
+                setIsZooming(true);
+              }}
+              onMouseLeave={() => {
+                setIsHovering(false);
+                setIsZooming(false);
+                setZoomScale(2.0);
+              }}
+              onMouseMove={(e) => {
+                const target = e.currentTarget;
+                const { left, top, width, height } = target.getBoundingClientRect();
+                const x_m = e.clientX - left;
+                const y_m = e.clientY - top;
+                const w_l = 150;
+                const h_l = 150;
+                let x_l = x_m - w_l / 2;
+                let y_l = y_m - h_l / 2;
+                x_l = Math.max(0, Math.min(width - w_l, x_l));
+                y_l = Math.max(0, Math.min(height - h_l, y_l));
+                setLensPos({ x: x_l, y: y_l });
+                const s = 3;
+                const offset_x = -x_l * (width * (s - 1)) / (width - w_l);
+                const offset_y = -y_l * (height * (s - 1)) / (height - h_l);
+                setZoomOffset({ x: offset_x, y: offset_y });
+              }}
+              className="relative aspect-square md:aspect-[4/3] lg:aspect-square bg-[var(--c-bg-alt)] rounded-[20px] overflow-hidden group border border-[var(--foreground)]/5 flex-1 w-full cursor-crosshair order-1 lg:order-none"
+            >
                <AnimatePresence mode="wait">
                  <motion.div 
                     key={activeImage} 
@@ -166,34 +416,22 @@ export default function ProductDetailPage({
                     animate={{ opacity: 1, scale: 1 }} 
                     exit={{ opacity: 0, scale: 0.9 }} 
                     transition={{ duration: 0.6 }} 
-                    className="w-full h-full flex items-center justify-center text-[10rem] md:text-[15rem] overflow-hidden cursor-crosshair"
-                    onMouseMove={(e) => {
-                      if (product.id === "PRD-002") {
-                        const target = e.currentTarget;
-                        const { left, top, width, height } = target.getBoundingClientRect();
-                        const x = ((e.clientX - left) / width) * 100;
-                        const y = ((e.clientY - top) / height) * 100;
-                        const img = target.querySelector('img');
-                        if (img) {
-                          img.style.transformOrigin = `${x}% ${y}%`;
-                        }
-                      }
-                    }}
+                    className="w-full h-full flex items-center justify-center text-[10rem] md:text-[15rem] overflow-hidden"
                  >
                    {(allImages[activeImage]?.startsWith('http') || allImages[activeImage]?.startsWith('/')) ? (
                      <img 
                         src={allImages[activeImage]} 
-                        className={cn(
-                          "w-full h-full object-cover transition-transform duration-300",
-                          product.id === "PRD-002" && "group-hover:scale-[2]"
-                        )} 
+                        className="w-full h-full object-contain transition-transform duration-100 ease-out"
+                        style={{
+                          transform: isHovering ? `scale(${zoomScale})` : 'scale(1)'
+                        }}
                         alt={product.name} 
                       />
                    ) : allImages[activeImage]}
                  </motion.div>
                </AnimatePresence>
                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
-                <div className="absolute top-[10px] left-[10px] pointer-events-none">
+                <div className="absolute top-[10px] left-[10px] pointer-events-none z-20">
                    <Badge className="bg-[var(--c-primary)] text-[var(--foreground)] border-none px-4 py-2 rounded-full text-[10px] font-black uppercase italic shadow-[var(--c-shadow-glow)]">{product.badge}</Badge>
                 </div>
                 
@@ -210,32 +448,54 @@ export default function ProductDetailPage({
                     </div>
                   </div>
                 </Link>
-
-               <div className="absolute bottom-[4px] md:bottom-[10px] right-[4px] md:right-[10px] flex gap-[2px] md:gap-[4px] z-10">
+ 
+               <div className="absolute bottom-[4px] md:bottom-[10px] right-[4px] md:right-[10px] flex gap-[2px] md:gap-[4px] z-20">
                   <button className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[var(--foreground)]/10 backdrop-blur-md border border-[var(--foreground)]/10 flex items-center justify-center text-[var(--foreground)] hover:bg-[var(--c-primary)] transition-all shadow-xl"><Share2 className="w-3.5 h-3.5 md:w-4 md:h-4" /></button>
                   <button className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-danger transition-all shadow-xl"><Heart className="w-3.5 h-3.5 md:w-4 md:h-4" /></button>
                </div>
+
+               {/* Amazon Lens Overlay (Yellow tinted square box) */}
+               {isZooming && (
+                 <div 
+                   className="hidden lg:block absolute bg-yellow-500/10 border border-yellow-500/30 rounded-lg pointer-events-none z-30"
+                   style={{
+                     left: lensPos.x,
+                     top: lensPos.y,
+                     width: 150,
+                     height: 150,
+                   }}
+                 />
+               )}
             </div>
 
-            <div className={cn(
-              "flex gap-[4px] no-scrollbar overflow-auto",
-              product.id === "PRD-002" ? "flex-col w-[60px] lg:w-[75px] shrink-0 h-full" : "flex-row pb-1"
-            )}>
-              {allImages.map((img: string, i: number) => (
-                <button 
-                  key={i} 
-                  onMouseEnter={() => product.id === "PRD-002" && setActiveImage(i)}
-                  onClick={() => setActiveImage(i)} 
-                  className={cn(
-                    "relative overflow-hidden flex-shrink-0 border-2 transition-all bg-[var(--c-bg-alt)] flex items-center justify-center rounded-[8px]",
-                    product.id === "PRD-002" ? "w-full aspect-square" : "w-16 h-16 md:w-24 md:h-24 text-xl md:text-3xl",
-                    activeImage === i ? "border-[var(--c-primary)] scale-105 shadow-[var(--c-shadow-glow)]" : "border-[var(--foreground)]/5 opacity-60 hover:opacity-100"
-                  )}
-                >
-                  {(img?.startsWith('http') || img?.startsWith('/')) ? <img src={img} className="w-full h-full object-cover" /> : img}
-                </button>
-              ))}
+            {/* Amazon Zoom Popover Window (Absolute Right) */}
+            <div 
+              className="hidden lg:block absolute top-0 -right-[465px] w-[450px] h-[450px] bg-[var(--c-bg-alt)] border border-[var(--foreground)]/10 z-[120] shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-2xl overflow-hidden pointer-events-none"
+              style={{
+                opacity: isZooming ? 1 : 0,
+                transition: 'opacity 0.15s ease-out',
+              }}
+            >
+              {(allImages[activeImage]?.startsWith('http') || allImages[activeImage]?.startsWith('/')) ? (
+                <img 
+                   src={allImages[activeImage]} 
+                   className="object-contain"
+                   style={{
+                     width: '300%',
+                     height: '300%',
+                     maxWidth: 'none',
+                     transform: `translate(${zoomOffset.x}px, ${zoomOffset.y}px)`,
+                     transition: 'transform 0.05s ease-out',
+                   }}
+                   alt={product.name} 
+                 />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-[20rem]">
+                  {allImages[activeImage]}
+                </div>
+              )}
             </div>
+
           </div>
 
           {/* Identity Hub - PERSISTENT ON DESKTOP */}
@@ -266,19 +526,20 @@ export default function ProductDetailPage({
                   </div>
                </div>
 
-               {/* Live Catch Info */}
-               {product.catch_date && (
-                 <div className="p-3 bg-primary/5 border border-primary/10 rounded-xl flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                       <Clock className="w-3 h-3 text-primary" />
-                       <span className="text-[8px] font-black uppercase text-primary">Freshness: {new Date(product.freshness_timestamp).toLocaleTimeString()}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                       <Anchor className="w-3 h-3 text-primary" />
-                       <span className="text-[8px] font-black uppercase text-primary">Node: {product.harbor_node}</span>
-                    </div>
-                 </div>
-               )}
+               {/* Live Catch & Freshness Decay Clock */}
+               <div className="p-3 bg-gradient-to-r from-[var(--c-primary)]/10 to-transparent border-l-2 border-[var(--c-primary)] rounded-r-xl flex items-center justify-between mt-2">
+                  <div className="flex items-center gap-2">
+                     <Clock className="w-3.5 h-3.5 text-[var(--c-primary)] animate-pulse" />
+                     <div>
+                        <p className="text-[8px] font-black uppercase text-[var(--foreground)]">Landed: 4h 12m ago</p>
+                        <p className="text-[7px] font-bold uppercase text-[var(--c-text-secondary)]">Prime Quality Index (A+)</p>
+                     </div>
+                  </div>
+                  <div className="flex items-center gap-1.5 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                     <span className="w-1 h-1 rounded-full bg-emerald-500 animate-ping" />
+                     <span className="text-[8px] font-black text-emerald-500 uppercase">98% FRESH</span>
+                  </div>
+               </div>
 
                <div className="space-y-[4px] w-full">
                   {initialCutOptions && initialCutOptions.length > 0 ? (
@@ -287,7 +548,7 @@ export default function ProductDetailPage({
                       basePrice={product.price} 
                       onSelectionChange={(cuts, price) => {
                         setSelectedCuts(cuts);
-                        setCurrentPrice(price);
+                        setBaseSelectedPrice(price);
                       }}
                     />
                   ) : (
@@ -299,7 +560,7 @@ export default function ProductDetailPage({
                              key={v.id} 
                              onClick={() => {
                                setActiveVariant(v);
-                               setCurrentPrice(v.price);
+                               setBaseSelectedPrice(v.price);
                              }} 
                              className={cn(
                                "relative flex flex-col items-center justify-center py-2 px-1 transition-all group overflow-hidden",
@@ -314,18 +575,121 @@ export default function ProductDetailPage({
                       </div>
                     </div>
                   )}
-                             <div className="flex gap-[4px] md:gap-[10px]">
-                  <div className="flex items-center bg-[var(--foreground)]/5 rounded-lg md:rounded-xl border border-[var(--foreground)]/10 overflow-hidden h-10 md:h-12 w-20 md:w-24">
-                     <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="flex-1 h-full flex items-center justify-center hover:bg-[var(--foreground)]/10 text-[var(--foreground)]"><Minus className="w-2.5 h-2.5 md:w-3 md:h-3" /></button>
-                     <span className="w-6 md:w-8 text-center font-black text-[var(--c-primary)] text-xs md:text-sm">{quantity}</span>
-                     <button onClick={() => setQuantity(q => q + 1)} className="flex-1 h-full flex items-center justify-center hover:bg-[var(--foreground)]/10 text-[var(--foreground)]"><Plus className="w-2.5 h-2.5 md:w-3 md:h-3" /></button>
-                  </div>
-                  <button onClick={handleAddToCart} className="whitespace-nowrap transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] hover:opacity-90 px-6 md:px-8 py-2 flex-1 h-10 md:h-12 rounded-lg md:rounded-xl bg-[var(--c-primary)] text-[var(--foreground)] text-[8px] md:text-[9px] font-black uppercase tracking-widest shadow-[var(--c-shadow-glow)] flex items-center justify-center gap-[4px]">
-                     <ShoppingCart className="w-3.5 h-3.5 md:w-4 md:h-4" /> ADD TO CART
-                  </button>
-               </div>
-    </div>
-            </div>
+
+                  {/* Preparation & Cooking Customizations */}
+                  {product.prep_options && product.prep_options.length > 0 && (
+                    <div className="space-y-2 mt-4">
+                      <p className="text-[8px] font-black text-[var(--c-text-secondary)] uppercase tracking-widest flex items-center gap-1.5">
+                        <UtensilsCrossed className="w-3.5 h-3.5 text-[var(--c-primary)]" /> Cooking Prep Customization
+                      </p>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        {product.prep_options.map((option: any) => (
+                          <button
+                            key={option.id}
+                            onClick={() => setSelectedPrepOption(option)}
+                            className={cn(
+                              "relative flex flex-col items-center justify-center py-3 px-2 transition-all border rounded-xl overflow-hidden text-center",
+                              selectedPrepOption?.id === option.id
+                                ? "bg-[var(--c-primary)]/10 border-[var(--c-primary)] text-[var(--foreground)] shadow-[0_0_15px_rgba(var(--c-primary-rgb),0.15)] animate-pulse"
+                                : "bg-[var(--foreground)]/5 border-[var(--foreground)]/5 text-[var(--c-text-secondary)] hover:border-[var(--foreground)]/15"
+                            )}
+                          >
+                            <span className="text-lg mb-1">{getPrepIcon(option.prep_type)}</span>
+                            <p className="text-[10px] font-black uppercase italic leading-none">{option.name}</p>
+                            <span className="text-[9px] font-bold mt-1 opacity-80">
+                              {option.price_flat_add > 0 ? `+ ₹${option.price_flat_add}` : "Included"}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Licious-Style Smart Add-ons Cross-Sell Engine */}
+                  {productAddons.length > 0 && (
+                    <div className="p-4 bg-emerald-500/[0.03] border border-emerald-500/10 rounded-[20px] mb-4">
+                      <div className="flex items-center justify-between mb-2">
+                         <h4 className="text-[10px] font-black text-emerald-400 uppercase tracking-wider flex items-center gap-1">
+                            <Plus className="w-3 h-3 text-emerald-400" /> Complete Your Recipe
+                         </h4>
+                         <span className="text-[6px] font-black text-emerald-400 uppercase tracking-widest bg-emerald-500/10 px-1 py-0.5 rounded border border-emerald-500/20">RECOMMENDED PAIRING</span>
+                      </div>
+                      <p className="text-[8px] text-[var(--c-text-secondary)] mb-2">Frequently bought together with this catch for a perfect culinary experience:</p>
+                      <div className="space-y-2">
+                        {productAddons.map((addon: any) => {
+                          const inCart = isAddonInCart(addon.id);
+                          return (
+                            <div key={addon.id} className="flex items-center gap-2 p-2 rounded-xl bg-[var(--c-bg-alt)] border border-[var(--foreground)]/5 hover:border-emerald-500/30 transition-all">
+                              {addon.image_url ? (
+                                <img src={addon.image_url} className="w-8 h-8 rounded-lg object-cover bg-black/10 border border-[var(--foreground)]/5" alt={addon.name} />
+                              ) : (
+                                <div className="w-8 h-8 rounded-lg bg-black/10 flex items-center justify-center text-sm border border-[var(--foreground)]/5">🧂</div>
+                              )}
+                              <div className="flex-1 min-w-0">
+                                <p className="text-[9px] font-bold text-[var(--foreground)] uppercase truncate leading-none">{addon.name}</p>
+                                <p className="text-[7px] text-[var(--c-text-secondary)] truncate mt-0.5 leading-none">{addon.description || "Fresh pairing selection."}</p>
+                                <p className="text-[8px] font-black text-[var(--c-primary)] mt-1 leading-none">₹{addon.price}</p>
+                              </div>
+                              <Button 
+                                onClick={() => handleToggleAddon(addon)}
+                                className={cn(
+                                  "h-6 px-2 text-[7px] font-black uppercase tracking-widest rounded-md transition-all shadow-none flex items-center gap-0.5",
+                                  inCart 
+                                    ? "bg-emerald-500 text-white hover:bg-emerald-600" 
+                                    : "bg-[var(--foreground)]/10 text-[var(--foreground)] hover:bg-[var(--c-primary)] hover:text-[var(--foreground)]"
+                                )}
+                              >
+                                {inCart ? <><Check className="w-2.5 h-2.5" /> ADDED</> : "+ ADD"}
+                              </Button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex gap-[4px] md:gap-[10px]">
+                    <div className="flex items-center bg-[var(--foreground)]/5 rounded-lg md:rounded-xl border border-[var(--foreground)]/10 overflow-hidden h-10 md:h-12 w-20 md:w-24">
+                       <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="flex-1 h-full flex items-center justify-center hover:bg-[var(--foreground)]/10 text-[var(--foreground)]"><Minus className="w-2.5 h-2.5 md:w-3 md:h-3" /></button>
+                       <span className="w-6 md:w-8 text-center font-black text-[var(--c-primary)] text-xs md:text-sm">{quantity}</span>
+                       <button onClick={() => setQuantity(q => q + 1)} className="flex-1 h-full flex items-center justify-center hover:bg-[var(--foreground)]/10 text-[var(--foreground)]"><Plus className="w-2.5 h-2.5 md:w-3 md:h-3" /></button>
+                    </div>
+                    <button 
+                       disabled={isComingSoon} 
+                       onClick={handleAddToCart} 
+                       className={cn(
+                          "whitespace-nowrap transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] hover:opacity-90 px-6 md:px-8 py-2 flex-1 h-10 md:h-12 rounded-lg md:rounded-xl text-[8px] md:text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-[4px]",
+                          isComingSoon 
+                            ? "bg-amber-500/20 text-amber-500 border border-amber-500/30" 
+                            : "bg-[var(--c-primary)] text-[var(--foreground)] shadow-[var(--c-shadow-glow)]"
+                       )}
+                    >
+                       {isComingSoon ? "COMING SOON" : <><ShoppingCart className="w-3.5 h-3.5 md:w-4 md:h-4" /> ADD TO CART</>}
+                    </button>
+                  </div>       </div>
+               
+                {/* Yield & Culinary Cut Visualizer */}
+                <div className="p-4 bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 rounded-[20px] space-y-3 mt-4">
+                   <h4 className="text-[9px] font-black text-[var(--c-primary)] uppercase tracking-widest flex items-center gap-1.5">
+                      <UtensilsCrossed className="w-3.5 h-3.5" /> Yield & Cut Reference
+                   </h4>
+                   <div className="space-y-2">
+                      {[
+                        { name: "Curry Cut", yield: "75% Yield", desc: "Bone-in, perfect for traditional slow curries." },
+                        { name: "Fillet", yield: "55% Yield", desc: "Boneless & skinless, ideal for pan-searing/grilling." },
+                        { name: "Whole Cleaned", yield: "85% Yield", desc: "Cleaned gills & entrails, best for baking/tandoor." }
+                      ].map((item, idx) => (
+                        <div key={idx} className="flex justify-between items-start py-1 border-b border-[var(--foreground)]/5 last:border-b-0">
+                          <div>
+                            <p className="text-[10px] font-black uppercase text-[var(--foreground)]">{item.name}</p>
+                            <p className="text-[8px] text-[var(--c-text-secondary)]">{item.desc}</p>
+                          </div>
+                          <span className="text-[10px] font-black italic text-[var(--c-primary)]">{item.yield}</span>
+                        </div>
+                      ))}
+                   </div>
+                </div>
+             </div>
 
             <div className="grid grid-cols-2 gap-[10px] mt-2">
                <div className="p-4 rounded-2xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 flex items-center gap-[10px]">
@@ -344,32 +708,6 @@ export default function ProductDetailPage({
                </div>
             </div>
 
-            {/* Addons Selection (Layer 1.5) */}
-            {productAddons.length > 0 && (
-              <div className="mt-4 p-6 bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 rounded-[24px]">
-                <h4 className="text-[10px] md:text-xs font-black text-[var(--foreground)] uppercase tracking-widest flex items-center gap-2 mb-4">
-                  <Plus className="w-3.5 h-3.5 text-[var(--c-primary)]" /> Complementary Add-ons
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {productAddons.map((addon: any) => (
-                    <div key={addon.id} className="flex items-center justify-between p-3 rounded-xl bg-[var(--c-bg-alt)] border border-[var(--foreground)]/10 hover:border-[var(--c-primary)]/50 transition-all cursor-pointer group">
-                      <div className="space-y-1">
-                        <p className="text-[10px] font-bold text-[var(--foreground)] uppercase truncate">{addon.name}</p>
-                        <p className="text-[8px] font-black text-[var(--c-primary)] italic">₹{addon.price}</p>
-                      </div>
-                      <Button 
-                        onClick={() => {
-                          handleAddToCart();
-                        }}
-                        className="h-7 px-3 text-[8px] font-black uppercase tracking-widest bg-[var(--foreground)]/10 text-[var(--foreground)] group-hover:bg-[var(--c-primary)] group-hover:text-[var(--foreground)] rounded-md transition-all shadow-none group-hover:shadow-[var(--c-shadow-glow)]"
-                      >
-                        ADD
-                      </Button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         </div>
 
@@ -449,6 +787,22 @@ export default function ProductDetailPage({
                  {/* Shimmer Line */}
                  <div className="absolute top-0 -left-[100%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[45deg] group-hover:left-[150%] transition-all duration-700" />
               </motion.div>
+
+              {/* Cold-Chain Telemetry Guard */}
+              <div className="p-3 bg-[var(--c-bg-alt)]/60 border border-[var(--foreground)]/5 rounded-[16px] space-y-2">
+                 <p className="text-[8px] font-black uppercase text-[var(--c-primary)] tracking-widest">❄️ Cold-Chain Telemetry Guard</p>
+                 <div className="flex justify-between items-center">
+                    <div>
+                       <p className="text-[10px] font-black text-[var(--foreground)]">Stable -18.2°C</p>
+                       <p className="text-[7px] font-bold uppercase text-[var(--c-text-secondary)]">Continuous Cold-Chain Active</p>
+                    </div>
+                    <div className="flex gap-1">
+                       {[-18.0, -18.2, -18.1, -18.2].map((t, idx) => (
+                         <span key={idx} className="bg-blue-500/10 px-1.5 py-0.5 border border-blue-500/20 rounded text-[7px] font-black text-blue-500">{t}°C</span>
+                       ))}
+                    </div>
+                 </div>
+              </div>
            </div>
 
            {/* Column 2: Culinary Intelligence */}
@@ -496,6 +850,26 @@ export default function ProductDetailPage({
                           <span className="text-[var(--foreground)]">Atlantic S4</span>
                        </div>
                     </div>
+
+                    {/* Live Vessel & Traceability Registry */}
+                    <div className="pt-3 border-t border-[var(--foreground)]/5 space-y-2">
+                       <p className="text-[8px] font-black uppercase text-[var(--c-primary)] tracking-widest">🚢 Live Vessel & Traceability</p>
+                       <div className="space-y-1 text-[8px] font-black uppercase text-[var(--c-text-secondary)]">
+                          <div className="flex justify-between">
+                             <span>Vessel ID</span>
+                             <span className="text-[var(--foreground)]">M.V. Samudra-III</span>
+                          </div>
+                          <div className="flex justify-between">
+                             <span>Gear Used</span>
+                             <span className="text-[var(--foreground)]">Handline / Line-Caught</span>
+                          </div>
+                          <div className="flex justify-between">
+                             <span>Captain</span>
+                             <span className="text-[var(--foreground)]">Capt. Anand Shekhar</span>
+                          </div>
+                       </div>
+                    </div>
+
                     <Button className="w-full h-10 rounded-xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[9px] font-black uppercase text-[var(--foreground)] hover:bg-[var(--foreground)]/10 flex items-center justify-center gap-2 mt-2"><MessageCircle className="w-3 h-3" /> DISPATCH CHAT</Button>
                  </Card>
               </div>
@@ -578,9 +952,9 @@ export default function ProductDetailPage({
            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-[10px]">
               {MASTER_PRODUCT_REGISTRY.slice(0, 5).map((item) => (
                 <div key={item.id} onClick={() => router.push(`/customer/products/${item.id}`)} className="group cursor-pointer">
-                   <Card className="aspect-square bg-[var(--c-bg-alt)] border-[var(--foreground)]/5 rounded-[20px] overflow-hidden relative group-hover:border-[var(--c-primary)]/30 transition-all">
-                      <div className="absolute inset-0 flex items-center justify-center text-4xl group-hover:scale-110 transition-transform">
-                        {item.images?.[0]?.startsWith('http') ? <img src={item.images[0]} className="w-full h-full object-cover" /> : item.image}
+                   <Card className="aspect-square bg-black border-[var(--foreground)]/5 rounded-[20px] overflow-hidden relative group-hover:border-[var(--c-primary)]/30 transition-all">
+                      <div className="absolute inset-0 flex items-center justify-center text-4xl group-hover:scale-105 transition-transform">
+                        {item.images?.[0]?.startsWith('http') ? <img src={item.images[0]} className="w-full h-full object-contain" /> : item.image}
                       </div>
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                       <div className="absolute bottom-[10px] left-[10px] right-[10px] translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">

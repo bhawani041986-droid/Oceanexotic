@@ -14,34 +14,86 @@ try {
         throw new Exception("Empty cart or invalid payload.");
     }
 
-    // Verify all products exist in the registry (stale cart check)
+    // Verify all products/addons exist in the registry (stale cart check)
     $product_check_stmt = $pdo->prepare("SELECT id FROM products WHERE id = :id");
+    $addon_check_stmt = $pdo->prepare("SELECT id FROM addons WHERE id = :id AND is_active = 1");
     $item_base_ids = [];
+    $item_is_addon = [];
+
     foreach ($data['items'] as $item) {
         $base_id = $item['id'];
-        $product_check_stmt->execute(['id' => $base_id]);
-        if (!$product_check_stmt->fetch()) {
-            $last_hyphen = strrpos($item['id'], '-');
-            if ($last_hyphen !== false) {
-                $stripped_id = substr($item['id'], 0, $last_hyphen);
-                $product_check_stmt->execute(['id' => $stripped_id]);
-                if ($product_check_stmt->fetch()) {
-                    $base_id = $stripped_id;
+        $is_addon = (strpos($base_id, 'ADD-') === 0);
+        $item_is_addon[$item['id']] = $is_addon;
+
+        if ($is_addon) {
+            $addon_check_stmt->execute(['id' => $base_id]);
+            if (!$addon_check_stmt->fetch()) {
+                throw new Exception("The add-on '" . $item['name'] . "' (ID: " . $item['id'] . ") is no longer available. Please return to the market and refresh your cargo.");
+            }
+        } else {
+            $product_check_stmt->execute(['id' => $base_id]);
+            if (!$product_check_stmt->fetch()) {
+                $last_hyphen = strrpos($item['id'], '-');
+                if ($last_hyphen !== false) {
+                    $stripped_id = substr($item['id'], 0, $last_hyphen);
+                    $product_check_stmt->execute(['id' => $stripped_id]);
+                    if ($product_check_stmt->fetch()) {
+                        $base_id = $stripped_id;
+                    } else {
+                        throw new Exception("The asset '" . $item['name'] . "' (ID: " . $item['id'] . ") is no longer available in the Sovereign Registry. Please return to the market and refresh your cargo.");
+                    }
                 } else {
                     throw new Exception("The asset '" . $item['name'] . "' (ID: " . $item['id'] . ") is no longer available in the Sovereign Registry. Please return to the market and refresh your cargo.");
                 }
-            } else {
-                throw new Exception("The asset '" . $item['name'] . "' (ID: " . $item['id'] . ") is no longer available in the Sovereign Registry. Please return to the market and refresh your cargo.");
             }
         }
         $item_base_ids[$item['id']] = $base_id;
     }
 
+    // Fetch order window settings
+    $settings = [];
+    try {
+        $set_stmt = $pdo->query("SELECT setting_key, setting_value FROM marketplace_settings WHERE setting_key IN ('ordersEnabled', 'ordersOpenTime', 'ordersCloseTime')");
+        while ($row = $set_stmt->fetch()) {
+            $settings[$row['setting_key']] = json_decode($row['setting_value'], true);
+        }
+    } catch (PDOException $se) {
+        // Table or columns might be missing/unseeded in a clean setup; fallback to defaults
+    }
+
+    $ordersEnabled = isset($settings['ordersEnabled']) ? (bool)$settings['ordersEnabled'] : true;
+    $ordersOpenTime = $settings['ordersOpenTime'] ?? '09:00';
+    $ordersCloseTime = $settings['ordersCloseTime'] ?? '22:00';
+
+    // Verify time window
+    $currentTime = date('H:i');
+    $isOutsideWindow = false;
+    
+    if ($ordersOpenTime && $ordersCloseTime) {
+        if ($ordersOpenTime < $ordersCloseTime) {
+            // normal window, e.g. 09:00 to 22:00
+            if ($currentTime < $ordersOpenTime || $currentTime > $ordersCloseTime) {
+                $isOutsideWindow = true;
+            }
+        } else {
+            // overnight window, e.g. 22:00 to 09:00 next day
+            if ($currentTime < $ordersOpenTime && $currentTime > $ordersCloseTime) {
+                $isOutsideWindow = true;
+            }
+        }
+    }
+
+    // Determine if this order is forced to be a pre-order
+    $is_pre_order = 0;
+    if (!$ordersEnabled || $isOutsideWindow || (isset($data['isPreOrder']) && $data['isPreOrder'] == 1)) {
+        $is_pre_order = 1;
+    }
+
     $pdo->beginTransaction();
 
     // 1. Create Order record
-    $stmt = $pdo->prepare("INSERT INTO orders (user_id, total_amount, status, delivery_address, payment_method) 
-                           VALUES (:user_id, :total_amount, 'PENDING', :address, :payment)");
+    $stmt = $pdo->prepare("INSERT INTO orders (user_id, total_amount, status, delivery_address, payment_method, is_pre_order) 
+                           VALUES (:user_id, :total_amount, 'PENDING', :address, :payment, :is_pre_order)");
     
     $user_id = $data['userId'] ?? 'GUEST-' . time();
     $total = $data['total'];
@@ -52,7 +104,8 @@ try {
         'user_id' => $user_id,
         'total_amount' => $total,
         'address' => $address,
-        'payment' => $payment
+        'payment' => $payment,
+        'is_pre_order' => $is_pre_order
     ]);
 
     $order_id = $pdo->lastInsertId();
@@ -70,9 +123,11 @@ try {
             'price' => $item['price']
         ]);
 
-        // 3. Optional: Deduct stock
-        $update_stmt = $pdo->prepare("UPDATE products SET stock = stock - :qty WHERE id = :id");
-        $update_stmt->execute(['qty' => $item['quantity'], 'id' => $base_id]);
+        // 3. Deduct stock for products only (bypass for addons)
+        if (!($item_is_addon[$item['id']] ?? false)) {
+            $update_stmt = $pdo->prepare("UPDATE products SET stock = stock - :qty WHERE id = :id");
+            $update_stmt->execute(['qty' => $item['quantity'], 'id' => $base_id]);
+        }
     }
 
     $pdo->commit();
@@ -80,7 +135,8 @@ try {
     echo json_encode([
         "status" => "success", 
         "orderId" => $order_id,
-        "message" => "Order #$order_id successfully synchronized with the fleet."
+        "isPreOrder" => $is_pre_order,
+        "message" => $is_pre_order ? "Pre-order #$order_id successfully queued for the next open slot!" : "Order #$order_id successfully synchronized with the fleet."
     ]);
 
 } catch (Exception $e) {

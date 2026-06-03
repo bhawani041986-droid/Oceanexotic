@@ -18,7 +18,6 @@ import {
 
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { Progress } from "@/components/ui/Progress";
 import MainLayout from "@/components/layouts/MainLayout";
 import { MASTER_PRODUCT_REGISTRY } from "@/constants/products";
 import { reviewService } from "@/services/reviewService";

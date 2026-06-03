@@ -114,6 +114,9 @@ export default function AgentHistoryPage() {
                       <div className="space-y-1.5">
                          <div className="flex items-center gap-3">
                             <h4 className="text-xl font-black text-[var(--foreground)] uppercase italic tracking-tighter leading-none">{job.id}</h4>
+                            {job.is_pre_order === 1 && (
+                               <span className="px-1.5 py-0.5 rounded-[4px] bg-amber-500/20 text-amber-500 text-[8px] font-black uppercase tracking-wider border border-amber-500/30">PRE-ORDER</span>
+                            )}
                             <Badge variant={job.status === 'DELIVERED' ? 'success' : 'glass'} className="text-[8px] font-black uppercase tracking-widest px-3 italic">
                                {job.status}
                             </Badge>

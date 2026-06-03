@@ -39,8 +39,8 @@ export const productService = {
     return Array.isArray(data) ? data : [];
   },
 
-  fetchById: async (id: string) => {
-    const { data } = await api.get(`/products/detail.php`, { params: { id } });
+  fetchById: async (id: string, area = "") => {
+    const { data } = await api.get(`/products/detail.php`, { params: { id, area } });
     return data;
   },
 

@@ -44,8 +44,9 @@ export default function CustomerProfilePage() {
   const [mounted, setMounted] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("overview");
   const [isHydrating, setIsHydrating] = React.useState(true);
-  const { user } = useAuthStore();
+  const { user, isHydrated, isAuthenticated, updateUser } = useAuthStore();
   const userId = user?.id || 1;
+  const router = useRouter();
 
   const [userProfile, setUserProfile] = React.useState<any>(null);
   const [addresses, setAddresses] = React.useState<any[]>([]);
@@ -56,20 +57,59 @@ export default function CustomerProfilePage() {
   const [editingItem, setEditingItem] = React.useState<any>(null);
   const [formData, setFormData] = React.useState<any>({});
   const [isSaving, setIsSaving] = React.useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = React.useState(false);
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploadingAvatar(true);
+    try {
+      const uploadData = new FormData();
+      uploadData.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", body: uploadData });
+      if (!res.ok) throw new Error("Upload failed");
+      const data = await res.json();
+      
+      const updateRes = await fetch("/api/user/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: userId,
+          name: displayName,
+          email: userProfile?.email || user?.email,
+          avatar_url: data.url
+        })
+      });
+      if (updateRes.ok) {
+        toast("Profile picture synchronized", "success");
+        fetchRegistry();
+        if (isModalOpen && modalType === "profile") {
+          setFormData((prev: any) => ({ ...prev, avatar_url: data.url }));
+        }
+      } else {
+        throw new Error("Profile sync failed");
+      }
+    } catch (err) {
+      toast("Avatar upload failed", "error");
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
   
   const displayName = userProfile?.name || user?.name || "Sovereign Citizen";
   const displayGrade = userProfile?.grade || "Maritime Citizen";
   const loyaltyPoints = Number(userProfile?.loyalty_points) || 0;
 
   const fetchRegistry = async () => {
+    if (!user?.id) return;
     setIsHydrating(true);
     try {
       const [pRes, aRes, payRes] = await Promise.all([
-        fetch(`/api/user/profile?id=${userId}`),
-        fetch(`/api/user/addresses?userId=${userId}`),
-        fetch(`/api/user/payments?userId=${userId}`)
+        fetch(`/api/user/profile?id=${user.id}`),
+        fetch(`/api/user/addresses?userId=${user.id}`),
+        fetch(`/api/user/payments?userId=${user.id}`)
       ]);
       
       const pData = await pRes.json();
@@ -94,6 +134,12 @@ export default function CustomerProfilePage() {
       setUserProfile(pData);
       setAddresses(aData);
       setPayments(payData);
+      if (pData) {
+        updateUser({
+          name: pData.name,
+          avatar: pData.avatar_url
+        });
+      }
     } catch (err) {
       toast("Registry Sync Failure", "error");
     } finally {
@@ -103,8 +149,18 @@ export default function CustomerProfilePage() {
 
   React.useEffect(() => {
     setMounted(true);
-    fetchRegistry();
   }, []);
+
+  React.useEffect(() => {
+    if (mounted && isHydrated) {
+      if (!isAuthenticated) {
+        toast("Session handshake required", "error");
+        router.push("/login");
+      } else if (user?.id) {
+        fetchRegistry();
+      }
+    }
+  }, [mounted, isHydrated, isAuthenticated, user?.id]);
 
   const handleOpenModal = (type: "address" | "card" | "profile", item: any = null) => {
     setModalType(type);
@@ -175,6 +231,7 @@ export default function CustomerProfilePage() {
 
   return (
     <MainLayout>
+      <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleAvatarUpload} />
       <div className="px-4 md:px-10 pb-20">
         <AnimatePresence>
           {isModalOpen && (
@@ -190,6 +247,24 @@ export default function CustomerProfilePage() {
                   <div className="space-y-4 md:space-y-6">
                      {modalType === "profile" && (
                         <>
+                           <div className="flex flex-col items-center justify-center space-y-3 pb-4">
+                              <div 
+                                 onClick={() => fileInputRef.current?.click()}
+                                 className="relative w-24 h-24 rounded-full border-4 border-primary/25 p-1 cursor-pointer overflow-hidden group/modal-avatar shadow-glow-purple/20 shadow-lg"
+                              >
+                                 <img src={formData.avatar_url || userProfile?.avatar_url || "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80"} className="w-full h-full rounded-full object-cover group-hover/modal-avatar:scale-110 transition-transform duration-300" alt="Avatar" />
+                                 <div className="absolute inset-0 bg-black/55 opacity-0 group-hover/modal-avatar:opacity-100 flex items-center justify-center transition-all duration-200">
+                                    {isUploadingAvatar ? (
+                                       <Loader2 className="w-6 h-6 text-white animate-spin" />
+                                    ) : (
+                                       <Camera className="w-6 h-6 text-white scale-75 group-hover/modal-avatar:scale-100 transition-transform" />
+                                    )}
+                                 </div>
+                              </div>
+                              <span className="text-[9px] font-black uppercase tracking-widest text-primary italic cursor-pointer hover:underline animate-pulse" onClick={() => fileInputRef.current?.click()}>
+                                 {isUploadingAvatar ? "UPLOADING AVATAR..." : "SYNCHRONIZE AVATAR"}
+                              </span>
+                           </div>
                            <div className="space-y-1.5">
                               <label className="text-[9px] font-black uppercase tracking-widest text-text-secondary italic">CITIZEN NAME</label>
                               <Input value={formData.name || ""} onChange={(e) => setFormData({...formData, name: e.target.value})} className="h-12 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 rounded-xl md:rounded-2xl italic" />
@@ -331,8 +406,18 @@ export default function CustomerProfilePage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-[10px] md:gap-10">
           <aside className="hidden lg:block lg:col-span-3 space-y-8">
              <Card className="p-[10px] md:p-8 bg-[#0B1120]/80 border-[var(--foreground)]/10 rounded-[24px] md:rounded-[40px] text-center space-y-[4px] md:space-y-6 relative overflow-hidden group shadow-2xl">
-                <div className="relative mx-auto w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-primary/20 p-1 group-hover:border-primary transition-all">
-                   <img src={userProfile?.avatar_url || "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80"} className="w-full h-full rounded-full object-cover shadow-2xl" alt="Profile" />
+                <div 
+                   onClick={() => fileInputRef.current?.click()} 
+                   className="relative mx-auto w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-primary/20 p-1 hover:border-primary transition-all cursor-pointer overflow-hidden group/avatar shadow-lg shadow-primary/10"
+                >
+                   <img src={userProfile?.avatar_url || "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80"} className="w-full h-full rounded-full object-cover shadow-2xl group-hover/avatar:scale-110 transition-transform duration-300" alt="Profile" />
+                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover/avatar:opacity-100 flex items-center justify-center transition-all duration-200 rounded-full">
+                      {isUploadingAvatar ? (
+                         <Loader2 className="w-6 h-6 text-white animate-spin" />
+                      ) : (
+                         <Camera className="w-6 h-6 text-white scale-75 group-hover/avatar:scale-100 transition-transform" />
+                      )}
+                   </div>
                 </div>
                 <div className="space-y-0.5 md:space-y-1">
                    <h3 className="text-xl md:text-2xl font-black uppercase italic text-primary drop-shadow-[0_0_15px_rgba(124,58,237,0.3)]">
@@ -374,8 +459,18 @@ export default function CustomerProfilePage() {
           <section className="lg:col-span-9 space-y-[10px] md:space-y-10">
              <div className="lg:hidden px-2">
                 <Card className="p-[10px] bg-[#0B1120]/80 border-[var(--foreground)]/10 rounded-[24px] flex items-center gap-4 relative overflow-hidden group shadow-xl">
-                   <div className="relative w-16 h-16 rounded-full border-2 border-primary/20 p-1">
-                      <img src={userProfile?.avatar_url || "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80"} className="w-full h-full rounded-full object-cover shadow-xl" alt="Profile" />
+                   <div 
+                      onClick={() => fileInputRef.current?.click()} 
+                      className="relative w-16 h-16 rounded-full border-2 border-primary/20 p-1 hover:border-primary transition-all cursor-pointer overflow-hidden group/avatar shadow-md shadow-primary/10"
+                   >
+                      <img src={userProfile?.avatar_url || "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80"} className="w-full h-full rounded-full object-cover shadow-xl group-hover/avatar:scale-110 transition-transform duration-300" alt="Profile" />
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover/avatar:opacity-100 flex items-center justify-center transition-all duration-200 rounded-full">
+                         {isUploadingAvatar ? (
+                            <Loader2 className="w-4 h-4 text-white animate-spin" />
+                         ) : (
+                            <Camera className="w-4 h-4 text-white scale-75 group-hover/avatar:scale-100 transition-transform" />
+                         )}
+                      </div>
                    </div>
                     <div className="flex-1 space-y-0.5">
                        <h3 className="text-lg font-black uppercase italic text-primary leading-tight">{displayName}</h3>

@@ -84,59 +84,109 @@ export default function AdminSubscriptionsPage() {
               </Button>
            </div>
         </div>
-        <Table>
-           <TableHeader>
-              <TableRow className="border-[var(--foreground)]/5">
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Merchant Hub</TableHead>
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Service Tier</TableHead>
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Billing Loop</TableHead>
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Registry Revenue</TableHead>
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Service Status</TableHead>
-                 <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary pr-4 md:pr-6">Governance</TableHead>
-              </TableRow>
-           </TableHeader>
-           <TableBody>
-              {SUBSCRIPTION_REGISTRY.map((sub) => (
-                 <TableRow key={sub.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
-                    <TableCell>
-                       <div className="space-y-0.5 md:space-y-1">
-                          <p className="font-black text-[var(--foreground)] text-xs md:text-sm uppercase tracking-tighter italic group-hover/row:text-primary transition-colors">{sub.merchant}</p>
-                          <p className="text-[7px] md:text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-40">Renewal: {sub.renewal}</p>
-                       </div>
-                    </TableCell>
-                    <TableCell>
-                       <Badge variant={sub.tier === "ENTERPRISE" ? "primary" : sub.tier === "PREMIUM" ? "warning" : "secondary"} className="shadow-glow-purple text-[7px] md:text-[8px] px-2 italic font-black uppercase">
+        <div className="hidden lg:block">
+           <Table>
+              <TableHeader>
+                 <TableRow className="border-[var(--foreground)]/5">
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Merchant Hub</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Service Tier</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Billing Loop</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Registry Revenue</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Service Status</TableHead>
+                    <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary pr-4 md:pr-6">Governance</TableHead>
+                 </TableRow>
+              </TableHeader>
+              <TableBody>
+                 {SUBSCRIPTION_REGISTRY.map((sub) => (
+                    <TableRow key={sub.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
+                       <TableCell>
+                          <div className="space-y-0.5 md:space-y-1">
+                             <p className="font-black text-[var(--foreground)] text-xs md:text-sm uppercase tracking-tighter italic group-hover/row:text-primary transition-colors">{sub.merchant}</p>
+                             <p className="text-[7px] md:text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-40">Renewal: {sub.renewal}</p>
+                          </div>
+                       </TableCell>
+                       <TableCell>
+                           <Badge variant={sub.tier === "ENTERPRISE" ? "default" : sub.tier === "PREMIUM" ? "warning" : "secondary"} className="shadow-glow-purple text-[7px] md:text-[8px] px-2 italic font-black uppercase">
+                             {sub.tier}
+                          </Badge>
+                       </TableCell>
+                       <TableCell className="text-[9px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">{sub.billing}</TableCell>
+                       <TableCell className="font-black text-[var(--foreground)] text-xs md:text-sm italic tracking-tighter">{sub.revenue}</TableCell>
+                       <TableCell>
+                          <Badge variant={
+                             sub.status === "ACTIVE" ? "success" : 
+                             sub.status === "GRACE PERIOD" ? "warning" : 
+                             "secondary"
+                          } className="text-[7px] md:text-[9px] italic px-2 uppercase font-black tracking-widest">
+                             {sub.status}
+                          </Badge>
+                       </TableCell>
+                       <TableCell className="text-right pr-4 md:pr-6">
+                          <div className="flex justify-end gap-1 md:gap-2">
+                             <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
+                                <RefreshCcw className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                             </button>
+                             <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
+                                <Edit3 className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                             </button>
+                             <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
+                                <MoreVertical className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                             </button>
+                          </div>
+                       </TableCell>
+                    </TableRow>
+                 ))}
+              </TableBody>
+           </Table>
+        </div>
+
+        {/* Mobile card list */}
+        <div className="lg:hidden space-y-3 p-4">
+           {SUBSCRIPTION_REGISTRY.map((sub) => (
+              <div key={sub.id} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
+                 <div className="flex items-start justify-between">
+                    <div className="space-y-0.5">
+                       <p className="font-black text-[var(--foreground)] italic text-sm tracking-tighter uppercase">{sub.merchant}</p>
+                       <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">ID: {sub.id}</p>
+                    </div>
+                    <div className="flex flex-col items-end gap-1.5">
+                       <Badge variant={sub.tier === "ENTERPRISE" ? "default" : sub.tier === "PREMIUM" ? "warning" : "secondary"} className="shadow-glow-purple text-[7px] px-1.5 italic font-black uppercase">
                           {sub.tier}
                        </Badge>
-                    </TableCell>
-                    <TableCell className="text-[9px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">{sub.billing}</TableCell>
-                    <TableCell className="font-black text-[var(--foreground)] text-xs md:text-sm italic tracking-tighter">{sub.revenue}</TableCell>
-                    <TableCell>
                        <Badge variant={
                           sub.status === "ACTIVE" ? "success" : 
                           sub.status === "GRACE PERIOD" ? "warning" : 
                           "secondary"
-                       } className="text-[7px] md:text-[9px] italic px-2 uppercase font-black tracking-widest">
+                       } className="text-[7px] italic px-1.5 uppercase font-black tracking-widest">
                           {sub.status}
                        </Badge>
-                    </TableCell>
-                    <TableCell className="text-right pr-4 md:pr-6">
-                       <div className="flex justify-end gap-1 md:gap-2">
-                          <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
-                             <RefreshCcw className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                          <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
-                             <Edit3 className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                          <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
-                             <MoreVertical className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                       </div>
-                    </TableCell>
-                 </TableRow>
-              ))}
-           </TableBody>
-        </Table>
+                    </div>
+                 </div>
+                 <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5">
+                    <div className="space-y-0">
+                       <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Billing Loop</p>
+                       <p className="text-xs font-black text-[var(--foreground)] italic">{sub.billing}</p>
+                    </div>
+                    <div className="space-y-0">
+                       <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Revenue</p>
+                       <p className="text-xs font-black text-primary italic">{sub.revenue}</p>
+                    </div>
+                    <div className="space-y-0">
+                       <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Renewal</p>
+                       <p className="text-[9px] font-black text-[var(--foreground)] opacity-80">{sub.renewal}</p>
+                    </div>
+                    <div className="flex gap-1">
+                       <button className="p-1.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
+                          <RefreshCcw className="w-3.5 h-3.5" />
+                       </button>
+                       <button className="p-1.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
+                          <Edit3 className="w-3.5 h-3.5" />
+                       </button>
+                    </div>
+                 </div>
+              </div>
+           ))}
+        </div>
       </Card>
     </div>
   

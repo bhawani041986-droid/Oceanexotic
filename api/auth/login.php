@@ -22,6 +22,18 @@ try {
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user['password'])) {
+        // Verify user status
+        if ($user['status'] === 'PENDING') {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'message' => 'Access Denied: Agent account is pending administrative approval.']);
+            exit;
+        }
+        if ($user['status'] === 'INACTIVE') {
+            http_response_code(403);
+            echo json_encode(['success' => false, 'message' => 'Access Denied: Account has been suspended.']);
+            exit;
+        }
+
         // High-Integrity Token Commissioning (Mocking for Demo)
         $token = bin2hex(random_bytes(32));
         

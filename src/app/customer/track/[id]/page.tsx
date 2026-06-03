@@ -15,23 +15,23 @@ import {
   ChevronLeft,
   Activity,
   Signal,
-  Wifi
+  Wifi,
+  Lock
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 export default function CustomerTrackPage() {
-  const { id } = useParams(
-  );
-  const router = useRouter(
-  );
-  const [mounted, setMounted] = React.useState(false
-  );
+  const { id } = useParams();
+  const router = useRouter();
+  const [mounted, setMounted] = React.useState(false);
+  const [origin, setOrigin] = React.useState("http://localhost:3000");
 
   React.useEffect(() => {
-    setMounted(true
-  );
-  }, []
-  );
+    setMounted(true);
+    if (typeof window !== "undefined") {
+      setOrigin(window.location.origin);
+    }
+  }, []);
 
   if (!mounted) return null;
 
@@ -181,6 +181,41 @@ export default function CustomerTrackPage() {
             </div>
           </motion.div>
         </div>
+      </div>
+
+      {/* 🔐 SECURE HANDOFF PROTOCOL */}
+      <div className="p-6 bg-slate-900/90 backdrop-blur-2xl border-t border-white/5 z-20">
+         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+           <div className="flex items-center gap-4">
+             <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 border border-blue-500/30 shadow-[var(--c-shadow-glow)]">
+                <Lock className="w-6 h-6 text-blue-400" />
+             </div>
+             <div>
+               <h3 className="text-sm font-black uppercase italic tracking-tighter text-white">Secure Handoff Protocol</h3>
+               <p className="text-[10px] font-medium text-slate-400 mt-1">
+                 Show this QR code or provide the OTP below to the delivery agent to confirm your delivery.
+               </p>
+             </div>
+           </div>
+           
+           <div className="flex flex-col md:flex-row items-center gap-6">
+             {/* OTP display */}
+             <div className="text-center md:text-right">
+                <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Verification Password (OTP)</p>
+                <p className="text-2xl font-black text-primary tracking-[0.2em] italic mt-1 bg-primary/10 border border-primary/20 px-4 py-2 rounded-xl">
+                  {((parseInt((typeof id === 'string' ? id : String(id || "123")).replace(/[^0-9]/g, "")) || 123) * 997 + 12345) % 900000 + 100000}
+                </p>
+             </div>
+             {/* QR Code */}
+             <div className="p-2 bg-white rounded-2xl border border-white/10 shrink-0">
+               <img 
+                 src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(`${origin}/agent/confirm/${id}?otp=${((parseInt((typeof id === 'string' ? id : String(id || "123")).replace(/[^0-9]/g, "")) || 123) * 997 + 12345) % 900000 + 100000}`)}`} 
+                 alt="Delivery verification QR Code" 
+                 className="w-[100px] h-[100px] object-contain"
+               />
+             </div>
+           </div>
+         </div>
       </div>
 
       {/* 4. SHIPMENT STATUS TIMELINE */}

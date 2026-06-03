@@ -68,22 +68,53 @@ const CUSTOMER_HARBOR_HTML = (primary: string) => `
 import { Suspense } from "react";
 
 function AgentTrackingContent() {
-  const searchParams = useSearchParams(
-  );
+  const searchParams = useSearchParams();
   const orderId = searchParams.get('order_id') || "ORD-9982";
-  const { toast } = useToast(
-  );
+  const { toast } = useToast();
+  const urlOtp = searchParams.get("otp");
   
-  const [coords, setCoords] = React.useState({ lat: 13.160704, lng: 92.946892 }
-  );
-  const [missionState, setMissionState] = React.useState<MissionState>(MissionState.NOT_STARTED
-  );
-  const [isSyncing, setIsSyncing] = React.useState(true
-  );
-  const [orderInfo, setOrderInfo] = React.useState<any>(null
-  );
-  const [mapMode, setMapMode] = React.useState<'tactical' | 'satellite'>('tactical'
-  );
+  const [coords, setCoords] = React.useState({ lat: 13.148500, lng: 92.938000 });
+  const [missionState, setMissionState] = React.useState<MissionState>(MissionState.NOT_STARTED);
+  const [isSyncing, setIsSyncing] = React.useState(true);
+  const [orderInfo, setOrderInfo] = React.useState<any>(null);
+  const [mapMode, setMapMode] = React.useState<'tactical' | 'satellite'>('tactical');
+
+  // OTP Verification States
+  const [otpInput, setOtpInput] = React.useState("");
+  const [verificationError, setVerificationError] = React.useState("");
+
+  const verifyOtp = async (code: string) => {
+    const cleanId = typeof orderId === 'string' ? orderId : String(orderId || "123");
+    const numericId = parseInt(cleanId.replace(/[^0-9]/g, "")) || 123;
+    const expectedOtp = String((numericId * 997 + 12345) % 900000 + 100000);
+
+    if (code.trim() === expectedOtp) {
+      setVerificationError("");
+      await handleStateTransition(MissionState.DELIVERED);
+      try {
+        await fetch("/api/seller/orders.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            order_id: cleanId,
+            status: "DELIVERED"
+          })
+        });
+        toast("Registry Status Synchronized: DELIVERED", "success");
+      } catch (err) {
+        console.error("Database update error:", err);
+      }
+    } else {
+      setVerificationError("Invalid Handoff OTP. Please confirm with customer.");
+    }
+  };
+
+  React.useEffect(() => {
+    if (urlOtp && missionState === MissionState.ARRIVED) {
+      setOtpInput(urlOtp);
+      verifyOtp(urlOtp);
+    }
+  }, [urlOtp, missionState]);
 
   const mapRef = React.useRef<any>(null
   );
@@ -129,20 +160,29 @@ function AgentTrackingContent() {
   };
 
   React.useEffect(() => {
-    fetchOrderDetails(
-  );
+    fetchOrderDetails();
     if (missionState === MissionState.IN_TRANSIT) {
+      const targetLat = 13.160704;
+      const targetLng = 92.946892;
       const interval = setInterval(() => {
-        setCoords(prev => ({ lat: prev.lat + (Math.random() - 0.5) * 0.0005, lng: prev.lng + (Math.random() - 0.5) * 0.0005 })
-  );
-      }, 20000
-  );
-      return (
-) => clearInterval(interval
-  );
+        setCoords(prev => {
+          const latDiff = targetLat - prev.lat;
+          const lngDiff = targetLng - prev.lng;
+          const distance = Math.sqrt(latDiff * latDiff + lngDiff * lngDiff);
+          if (distance < 0.0005) {
+            clearInterval(interval);
+            handleStateTransition(MissionState.ARRIVED);
+            return { lat: targetLat, lng: targetLng };
+          }
+          return {
+            lat: prev.lat + latDiff * 0.15,
+            lng: prev.lng + lngDiff * 0.15
+          };
+        });
+      }, 4000);
+      return () => clearInterval(interval);
     }
-  }, [missionState]
-  );
+  }, [missionState]);
 
   React.useEffect(() => { broadcastTelemetry(
   ); }, [coords]
@@ -156,11 +196,10 @@ function AgentTrackingContent() {
     mapRef.current = L.map('agent-tactical-map', { zoomControl: false }).setView([coords.lat, coords.lng], 16
   );
     
-    // DARK MATTER BY DEFAULT FOR TACTICAL LOOK
-    tileLayerRef.current = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { 
-      attribution: '&copy; CartoDB' 
-    }).addTo(mapRef.current
-  );
+    // OpenStreetMap BY DEFAULT FOR CLEAR VISIBILITY
+    tileLayerRef.current = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+      attribution: '&copy; OpenStreetMap contributors' 
+    }).addTo(mapRef.current);
 
     const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--agent-primary').trim() || "#00D1FF";
     const glow = getComputedStyle(document.documentElement).getPropertyValue('--agent-glow').trim() || "";
@@ -190,17 +229,13 @@ function AgentTrackingContent() {
     if (newMode === 'satellite') {
       tileLayerRef.current = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Tiles &copy; Esri'
-      }).addTo(mapRef.current
-  );
-      toast("Satellite Reconnaissance Active", "success"
-  );
+      }).addTo(mapRef.current);
+      toast("Satellite Reconnaissance Active", "success");
     } else {
-      tileLayerRef.current = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { 
-        attribution: '&copy; CartoDB' 
-      }).addTo(mapRef.current
-  );
-      toast("Tactical Vector View Active", "success"
-  );
+      tileLayerRef.current = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+        attribution: '&copy; OpenStreetMap contributors' 
+      }).addTo(mapRef.current);
+      toast("Tactical Vector View Active", "success");
     }
   };
 
@@ -282,7 +317,7 @@ function AgentTrackingContent() {
              {/* THE MAP NODE */}
              <div id="agent-tactical-map" className="w-full h-full" style={{ 
                 opacity: 1,
-                filter: mapMode === 'tactical' ? 'brightness(0.8) contrast(1.2) saturate(0.8)' : 'brightness(1.1) contrast(1.1)',
+                filter: 'none',
                 transition: 'all 0.5s ease-in-out',
                 backgroundColor: 'transparent'
              }} />
@@ -303,7 +338,7 @@ function AgentTrackingContent() {
                    animation: radar-sweep 5s linear infinite;
                 }
                 .leaflet-container {
-                   background: transparent !important;
+                   background: #e5e7eb !important;
                 }
              `}</style>
 
@@ -420,10 +455,55 @@ function AgentTrackingContent() {
                       </button>
                    )}
                    {missionState === MissionState.ARRIVED && (
-                      <button onClick={() => handleStateTransition(MissionState.DELIVERED)} className="w-full h-12 hover:opacity-90 text-white font-black uppercase tracking-[0.2em] italic text-[10px] flex items-center justify-center gap-2 -skew-x-12 transition-all shadow-lg" style={{ backgroundColor: 'var(--agent-primary)', boxShadow: `0 4px 15px var(--agent-glow)` }}>
-                         <CheckCircle className="w-4 h-4 skew-x-12" /> <span className="skew-x-12">Confirm Delivery</span>
-                      </button>
-                   )}
+                       <div className="space-y-4 border border-[var(--agent-border)] p-4 rounded-xl bg-slate-950/40 relative text-left">
+                          <div className="space-y-1">
+                             <label className="text-[8px] font-black uppercase tracking-[0.2em] block" style={{ color: 'var(--agent-primary)' }}>
+                                Verify Delivery Handoff Password (OTP)
+                             </label>
+                             <input 
+                                type="text" 
+                                maxLength={6}
+                                value={otpInput}
+                                onChange={(e) => {
+                                   setOtpInput(e.target.value.replace(/[^0-9]/g, ""));
+                                   setVerificationError("");
+                                }}
+                                placeholder="ENTER 6-DIGIT OTP" 
+                                className="w-full bg-slate-900 border border-slate-800 text-white rounded-lg h-10 px-4 text-center font-bold tracking-[0.2em] focus:outline-none focus:border-[var(--agent-primary)] transition-colors placeholder:text-slate-700 placeholder:tracking-normal placeholder:font-medium placeholder:text-[10px]"
+                             />
+                             {verificationError && (
+                                <p className="text-red-500 text-[8px] font-bold text-center mt-1 uppercase tracking-widest animate-pulse">
+                                   ⚠️ {verificationError}
+                                </p>
+                             )}
+                          </div>
+
+                          <div className="flex flex-col gap-2">
+                             <button 
+                                onClick={() => verifyOtp(otpInput)}
+                                disabled={otpInput.length !== 6}
+                                className="w-full h-10 text-white font-black uppercase tracking-[0.2em] italic text-[10px] flex items-center justify-center gap-2 -skew-x-12 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed" 
+                                style={{ backgroundColor: 'var(--agent-primary)', boxShadow: `0 4px 15px var(--agent-glow)` }}
+                             >
+                                <CheckCircle className="w-3.5 h-3.5 skew-x-12" /> 
+                                <span className="skew-x-12">Verify & Finalize Node</span>
+                             </button>
+
+                             <button 
+                                onClick={() => {
+                                   const cleanId = typeof orderId === 'string' ? orderId : String(orderId || "123");
+                                   const numericId = parseInt(cleanId.replace(/[^0-9]/g, "")) || 123;
+                                   const computed = String((numericId * 997 + 12345) % 900000 + 100000);
+                                   setOtpInput(computed);
+                                   verifyOtp(computed);
+                                }}
+                                className="w-full h-9 bg-slate-900 hover:bg-slate-850 text-slate-400 hover:text-white font-bold uppercase tracking-[0.1em] text-[8px] flex items-center justify-center gap-1 border border-slate-800 transition-all"
+                             >
+                                Simulate QR Scanner Input
+                             </button>
+                          </div>
+                       </div>
+                    )}
                    {missionState === MissionState.DELIVERED && (
                       <div className="p-3 flex items-center gap-4 -skew-x-12 border" style={{ backgroundColor: '#10B9811A', borderColor: '#10B9814D' }}>
                          <div className="w-8 h-8 bg-emerald-500/20 flex items-center justify-center text-emerald-400 skew-x-12">

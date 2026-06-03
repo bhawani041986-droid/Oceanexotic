@@ -115,85 +115,149 @@ export default function AdminMonitoringPage() {
             </div>
          </div>
 
-         <Table>
-            <TableHeader>
-               <TableRow className="border-[var(--foreground)]/5">
-                  <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Operation Identity</TableHead>
-                  <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Administrative Role</TableHead>
-                  <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Sovereign Action</TableHead>
-                  <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Signal Status</TableHead>
-                  <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Telemetry (Time/IP)</TableHead>
-                  <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary pr-4 md:pr-6">Governance</TableHead>
-               </TableRow>
-            </TableHeader>
-            <TableBody>
-               {MOCK_ACTIVITY.map((log) => (
-                 <TableRow key={log.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
-                    <TableCell>
-                       <div className="flex items-center gap-3 md:gap-4">
-                          <div className={cn(
-                            "w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-[14px] flex items-center justify-center text-[10px] md:text-xs font-black transition-all shadow-glow-purple/5",
-                            log.status === "BLOCKED" ? "bg-danger/10 text-danger border border-danger/20" : "bg-[var(--foreground)]/5 text-primary border border-[var(--foreground)]/10"
-                          )}>
-                             {log.user[0]}
+         <div className="hidden lg:block">
+            <Table>
+               <TableHeader>
+                  <TableRow className="border-[var(--foreground)]/5">
+                     <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Operation Identity</TableHead>
+                     <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Administrative Role</TableHead>
+                     <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Sovereign Action</TableHead>
+                     <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Signal Status</TableHead>
+                     <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Telemetry (Time/IP)</TableHead>
+                     <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary pr-4 md:pr-6">Governance</TableHead>
+                  </TableRow>
+               </TableHeader>
+               <TableBody>
+                  {MOCK_ACTIVITY.map((log) => (
+                    <TableRow key={log.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
+                       <TableCell>
+                          <div className="flex items-center gap-3 md:gap-4">
+                             <div className={cn(
+                               "w-9 h-9 md:w-10 md:h-10 rounded-lg md:rounded-[14px] flex items-center justify-center text-[10px] md:text-xs font-black transition-all shadow-glow-purple/5",
+                               log.status === "BLOCKED" ? "bg-danger/10 text-danger border border-danger/20" : "bg-[var(--foreground)]/5 text-primary border border-[var(--foreground)]/10"
+                             )}>
+                                {log.user[0]}
+                             </div>
+                             <div className="space-y-0.5 md:space-y-1">
+                                <p className="font-black text-[var(--foreground)] text-xs md:text-sm uppercase tracking-tighter italic group-hover/row:text-primary transition-colors">{log.user}</p>
+                                <p className="text-[7px] md:text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-40">ID: {log.id}</p>
+                             </div>
                           </div>
+                       </TableCell>
+                       <TableCell>
+                          <Badge variant={
+                            log.role === "ADMIN" ? "default" : 
+                            log.role === "SYSTEM" ? "success" :
+                            log.role === "SELLER" ? "secondary" : "glass"
+                          } className="text-[7px] md:text-[9px] italic px-2 uppercase font-black tracking-widest">
+                             {log.role}
+                          </Badge>
+                       </TableCell>
+                       <TableCell>
                           <div className="space-y-0.5 md:space-y-1">
-                             <p className="font-black text-[var(--foreground)] text-xs md:text-sm uppercase tracking-tighter italic group-hover/row:text-primary transition-colors">{log.user}</p>
-                             <p className="text-[7px] md:text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-40">ID: {log.id}</p>
+                             <p className="text-xs md:text-sm font-black text-[var(--foreground)] uppercase tracking-tighter italic">{log.action}</p>
+                             <p className="text-[7px] md:text-[8px] font-black text-primary uppercase tracking-widest italic opacity-60">Target: {log.target}</p>
                           </div>
-                       </div>
-                    </TableCell>
-                    <TableCell>
-                       <Badge variant={
-                         log.role === "ADMIN" ? "primary" : 
-                         log.role === "SYSTEM" ? "success" :
-                         log.role === "SELLER" ? "secondary" : "glass"
-                       } className="text-[7px] md:text-[9px] italic px-2 uppercase font-black tracking-widest">
-                          {log.role}
-                       </Badge>
-                    </TableCell>
-                    <TableCell>
-                       <div className="space-y-0.5 md:space-y-1">
-                          <p className="text-xs md:text-sm font-black text-[var(--foreground)] uppercase tracking-tighter italic">{log.action}</p>
-                          <p className="text-[7px] md:text-[8px] font-black text-primary uppercase tracking-widest italic opacity-60">Target: {log.target}</p>
-                       </div>
-                    </TableCell>
-                    <TableCell>
-                       <div className="flex items-center gap-1.5 md:gap-2">
-                          {log.status === "SUCCESS" ? (
-                            <ShieldCheck className="w-3.5 md:w-4 h-3.5 md:h-4 text-success shadow-glow" />
-                          ) : log.status === "BLOCKED" ? (
-                            <ShieldAlert className="w-3.5 md:w-4 h-3.5 md:h-4 text-danger shadow-glow" />
-                          ) : (
-                            <Clock className="w-3.5 md:w-4 h-3.5 md:h-4 text-warning shadow-glow" />
-                          )}
-                          <span className={cn(
-                            "text-[8px] md:text-[10px] font-black uppercase tracking-widest italic",
-                            log.status === "SUCCESS" ? "text-success" : 
-                            log.status === "BLOCKED" ? "text-danger" : "text-warning"
-                          )}>{log.status}</span>
-                       </div>
-                    </TableCell>
-                    <TableCell>
-                       <div className="space-y-0.5 md:space-y-1">
-                          <p className="text-[9px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest italic">{log.time}</p>
-                          <p className="text-[7px] md:text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-40">{log.ip}</p>
-                       </div>
-                    </TableCell>
-                    <TableCell className="text-right pr-4 md:pr-6">
-                       <div className="flex justify-end gap-1 md:gap-2">
-                          <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
-                             <Eye className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                          <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
-                             <Zap className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                       </div>
-                    </TableCell>
-                 </TableRow>
-               ))}
-            </TableBody>
-         </Table>
+                       </TableCell>
+                       <TableCell>
+                          <div className="flex items-center gap-1.5 md:gap-2">
+                             {log.status === "SUCCESS" ? (
+                               <ShieldCheck className="w-3.5 md:w-4 h-3.5 md:h-4 text-success shadow-glow" />
+                             ) : log.status === "BLOCKED" ? (
+                               <ShieldAlert className="w-3.5 md:w-4 h-3.5 md:h-4 text-danger shadow-glow" />
+                             ) : (
+                               <Clock className="w-3.5 md:w-4 h-3.5 md:h-4 text-warning shadow-glow" />
+                             )}
+                             <span className={cn(
+                               "text-[8px] md:text-[10px] font-black uppercase tracking-widest italic",
+                               log.status === "SUCCESS" ? "text-success" : 
+                               log.status === "BLOCKED" ? "text-danger" : "text-warning"
+                             )}>{log.status}</span>
+                          </div>
+                       </TableCell>
+                       <TableCell>
+                          <div className="space-y-0.5 md:space-y-1">
+                             <p className="text-[9px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest italic">{log.time}</p>
+                             <p className="text-[7px] md:text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-40">{log.ip}</p>
+                          </div>
+                       </TableCell>
+                       <TableCell className="text-right pr-4 md:pr-6">
+                          <div className="flex justify-end gap-1 md:gap-2">
+                             <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
+                                <Eye className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                             </button>
+                             <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
+                                <Zap className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                             </button>
+                          </div>
+                       </TableCell>
+                    </TableRow>
+                  ))}
+               </TableBody>
+            </Table>
+         </div>
+
+         {/* Mobile card list */}
+         <div className="lg:hidden space-y-3 p-4">
+            {MOCK_ACTIVITY.map((log) => (
+               <div key={log.id} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
+                  <div className="flex items-start justify-between">
+                     <div className="flex items-center gap-3">
+                        <div className={cn(
+                          "w-9 h-9 rounded-lg flex items-center justify-center text-xs font-black transition-all shadow-glow-purple/5",
+                          log.status === "BLOCKED" ? "bg-danger/10 text-danger border border-danger/20" : "bg-[var(--foreground)]/5 text-primary border border-[var(--foreground)]/10"
+                        )}>
+                           {log.user[0]}
+                        </div>
+                        <div className="space-y-0.5">
+                           <p className="font-black text-[var(--foreground)] text-sm uppercase tracking-tighter italic">{log.user}</p>
+                           <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">ID: {log.id}</p>
+                        </div>
+                     </div>
+                     <div className="flex flex-col items-end gap-1.5">
+                        <Badge variant={
+                          log.role === "ADMIN" ? "default" : 
+                          log.role === "SYSTEM" ? "success" :
+                          log.role === "SELLER" ? "secondary" : "glass"
+                        } className="text-[7px] italic px-1.5 uppercase font-black tracking-widest">
+                           {log.role}
+                        </Badge>
+                        <div className="flex items-center gap-1">
+                           {log.status === "SUCCESS" ? (
+                             <ShieldCheck className="w-3 h-3 text-success" />
+                           ) : log.status === "BLOCKED" ? (
+                             <ShieldAlert className="w-3 h-3 text-danger" />
+                           ) : (
+                             <Clock className="w-3 h-3 text-warning" />
+                           )}
+                           <span className={cn(
+                             "text-[7px] font-black uppercase tracking-widest italic",
+                             log.status === "SUCCESS" ? "text-success" : 
+                             log.status === "BLOCKED" ? "text-danger" : "text-warning"
+                           )}>{log.status}</span>
+                        </div>
+                     </div>
+                  </div>
+                  <div className="space-y-1 py-1">
+                     <p className="text-xs font-black text-[var(--foreground)] uppercase tracking-tighter italic">{log.action}</p>
+                     <p className="text-[8px] font-black text-primary uppercase tracking-widest italic opacity-60">Target: {log.target}</p>
+                  </div>
+                  <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5">
+                     <div className="text-[9px] font-black text-[var(--foreground)] uppercase tracking-widest italic">
+                        {log.time} • <span className="opacity-40">{log.ip}</span>
+                     </div>
+                     <div className="flex gap-1">
+                        <button className="p-1.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
+                           <Eye className="w-3.5 h-3.5" />
+                        </button>
+                        <button className="p-1.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
+                           <Zap className="w-3.5 h-3.5" />
+                        </button>
+                     </div>
+                  </div>
+               </div>
+            ))}
+         </div>
       </Card>
 
       {/* Real-Time Pulse Effect */}

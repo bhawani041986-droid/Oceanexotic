@@ -79,24 +79,37 @@ export default function AdminEditProductPage() {
       calories: "100 kcal",
       fat: "2g"
     },
-    cut_options: []
+    cut_options: [],
+    prep_options: [],
+    location_overrides: []
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const galleryInputRef = useRef<HTMLInputElement>(null);
+  const [territories, setTerritories] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchSellers = async () => {
       try {
-        const res = await fetch("/api/admin/get_users.php");
+        const res = await fetch("/api/admin/get_sellers.php");
         const data = await res.json();
-        setSellers(data.length > 0 ? data : [{ id: 'SEL-001', name: 'SHELLFISH ELITE' }]);
+        const formattedSellers = data.map((s: any) => ({
+          id: s.id.startsWith("SEL-") ? s.id : `SEL-${s.id}`,
+          name: s.name
+        }));
+        setSellers(formattedSellers.length > 0 ? formattedSellers : [{ id: 'SEL-USR-1778761853233', name: 'Rig Fishing Haddo' }]);
       } catch (err) {}
     };
 
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`/api/seller/products?id=${params.id}`);
+        // Fetch territories to build all location overrides
+        const terrRes = await fetch("/api/system/get_territories.php");
+        const terrData = terrRes.ok ? await terrRes.json() : [];
+        const activeTerrs = terrData.filter((t: any) => t.zone_type !== 'ISLAND' && t.status === 'ACTIVE');
+        setTerritories(activeTerrs);
+
+        const res = await fetch(`/api/seller/products.php?id=${params.id}`);
         const data = await res.json();
         
         // Handle nested JSON fields
@@ -104,13 +117,71 @@ export default function AdminEditProductPage() {
           protein: "20g", omega3: "300mg", calories: "100 kcal", fat: "2g"
         };
         
+        const dbOverrides = data.location_overrides || [];
+        const mergedOverrides = activeTerrs.map((t: any) => {
+          const existing = dbOverrides.find((o: any) => o.territory_name === t.name);
+          return {
+            territory_name: t.name,
+            price: existing ? (existing.price !== null ? String(existing.price) : "") : "",
+            stock: existing ? (existing.stock !== null ? String(existing.stock) : "") : "",
+            is_visible: existing ? Number(existing.is_visible) : 1,
+            status: existing ? existing.status : "ACTIVE"
+          };
+        });
+
+        const dbPrepOptions = data.prep_options || [];
+        const defaultPrepTypes = ['RAW', 'FRIED', 'MARINATED', 'GRILLED'];
+        const mergedPrep = defaultPrepTypes.map((type) => {
+          const existing = dbPrepOptions.find((p: any) => p.prep_type === type);
+          const defaultNames = {
+            'RAW': 'Raw / Cleaned',
+            'FRIED': 'Chettinad Fry Masala',
+            'MARINATED': 'Classic Tandoori Marinade',
+            'GRILLED': 'Charcoal Grill Garlic Butter Rub'
+          };
+          const defaultPrices = { 'RAW': 0, 'FRIED': 50, 'MARINATED': 80, 'GRILLED': 100 };
+          return {
+            prep_type: type,
+            name: existing ? existing.name : defaultNames[type as keyof typeof defaultNames],
+            price_flat_add: existing ? Number(existing.price_flat_add) : defaultPrices[type as keyof typeof defaultPrices],
+            is_available: existing ? Number(existing.is_available) : 1
+          };
+        });
+
         setFormData({
-          ...data,
-          nutrition,
-          cut_options: data.cut_options || [],
+          id: data.id || "",
+          name: data.name || "",
+          category: data.category || "SEAWATER FISH",
+          seller_id: data.seller_id || "",
+          price: data.price || "",
+          description: data.description || "",
+          stock: data.stock || "",
+          unit: data.unit || "KG (KILOGRAMS)",
+          min_order: data.min_order || "1",
+          image_url: data.image_url || "",
+          gallery: data.gallery || "[]",
+          status: data.status || "ACTIVE",
+          quality_rank: data.quality_rank || "VERIFIED",
+          harbor_node: data.harbor_node || "Phoenix Bay Harbor",
+          catch_date: data.catch_date || "",
+          nutrition: {
+            protein: nutrition.protein || "",
+            omega3: nutrition.omega3 || "",
+            calories: nutrition.calories || "",
+            fat: nutrition.fat || ""
+          },
+          cut_options: (data.cut_options || []).map((cut: any) => ({
+            ...cut,
+            cut_type: cut.cut_type || "WHOLE",
+            price_modifier_percent: cut.price_modifier_percent ?? 0,
+            price_flat_add: cut.price_flat_add ?? 0,
+            is_available: cut.is_available ?? 1
+          })),
           is_live_inventory: Number(data.is_live_inventory) || 0,
           catch_time: data.freshness_timestamp ? data.freshness_timestamp.split(' ')[1].substring(0, 5) : "05:30",
-          batch_label: data.batch_label || "MORNING"
+          batch_label: data.batch_label || "MORNING",
+          location_overrides: mergedOverrides,
+          prep_options: mergedPrep
         });
       } catch (err) {
         toast("Registry Retrieval Failure", "error");
@@ -126,12 +197,13 @@ export default function AdminEditProductPage() {
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      toast("Syncing Asset...", "info");
       const uploadData = new FormData();
       uploadData.append("file", file);
       try {
         const res = await fetch("/api/upload", { method: "POST", body: uploadData });
         const data = await res.json();
-        setFormData({ ...formData, image_url: data.url });
+        setFormData((prev: any) => ({ ...prev, image_url: data.url }));
         toast("Asset synchronized.", "success");
       } catch (err) {
         toast("Sync Failure", "error");
@@ -142,18 +214,50 @@ export default function AdminEditProductPage() {
   const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
-      const currentGallery = JSON.parse(formData.gallery || "[]");
+      toast(`Commissioning ${files.length} assets...`, "info");
+      const newUrls: string[] = [];
       for (let i = 0; i < files.length; i++) {
         const uploadData = new FormData();
         uploadData.append("file", files[i]);
         try {
           const response = await fetch("/api/upload", { method: "POST", body: uploadData });
           const data = await response.json();
-          if (data.url) currentGallery.push(data.url);
+          if (data.url) newUrls.push(data.url);
         } catch (err) {}
       }
-      setFormData((prev: any) => ({ ...prev, gallery: JSON.stringify(currentGallery) }));
-      toast("Gallery synchronized.", "success");
+      if (newUrls.length > 0) {
+        setFormData((prev: any) => {
+          const current = getGalleryArray(prev.gallery);
+          return {
+            ...prev,
+            gallery: JSON.stringify([...current, ...newUrls])
+          };
+        });
+        toast("Gallery synchronized.", "success");
+      }
+    }
+  };
+
+  const removeGalleryImage = (index: number) => {
+    setFormData((prev: any) => {
+      const current = getGalleryArray(prev.gallery);
+      const updated = current.filter((_, idx) => idx !== index);
+      return {
+        ...prev,
+        gallery: JSON.stringify(updated)
+      };
+    });
+    toast("Gallery asset removed.", "success");
+  };
+
+  const getGalleryArray = (galleryVal: any): string[] => {
+    if (!galleryVal) return [];
+    if (Array.isArray(galleryVal)) return galleryVal;
+    try {
+      const parsed = JSON.parse(galleryVal);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
     }
   };
 
@@ -174,7 +278,7 @@ export default function AdminEditProductPage() {
   const handleSave = async () => {
     setIsSubmitting(true);
     try {
-      const res = await fetch(`/api/seller/products`, {
+      const res = await fetch(`/api/seller/products.php`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -254,10 +358,14 @@ export default function AdminEditProductPage() {
                 <div className="space-y-2">
                   <label className="text-[10px] font-black uppercase tracking-widest ml-1">Category Registry</label>
                   <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} className="w-full h-[52px] border rounded-[16px] px-4 text-[10px] font-black uppercase tracking-widest outline-none focus:border-primary/50" style={{ backgroundColor: 'var(--agent-bg)', borderColor: 'var(--agent-border)', color: 'var(--agent-text)' }}>
-                     <option value="PREMIUM SAKU">PREMIUM SAKU</option>
-                     <option value="WILD CRUSTACEANS">WILD CRUSTACEANS</option>
-                     <option value="SHELLFISH ELITE">SHELLFISH ELITE</option>
-                     <option value="DEEP SEA WHITEFISH">DEEP SEA WHITEFISH</option>
+                     <option value="SEAWATER FISH">SEAWATER FISH</option>
+                     <option value="FRESHWATER FISH">FRESHWATER FISH</option>
+                     <option value="PRAWNS & SHRIMPS">PRAWNS & SHRIMPS</option>
+                     <option value="CRABS & LOBSTERS">CRABS & LOBSTERS</option>
+                     <option value="STEAKS & FILLETS">STEAKS & FILLETS</option>
+                     <option value="EXOTIC CATCH">EXOTIC CATCH</option>
+                     <option value="READY TO COOK">READY TO COOK</option>
+                     <option value="COASTAL DRY FISH">COASTAL DRY FISH</option>
                   </select>
                 </div>
                 <div className="space-y-2">
@@ -455,6 +563,162 @@ export default function AdminEditProductPage() {
               )}
             </div>
           </Card>
+
+          {/* STEP 04: LOCATION OVERRIDE REGISTRY */}
+          <Card className="p-10 space-y-8 border" style={{ backgroundColor: 'var(--agent-card-bg)', borderColor: 'var(--agent-border)' }}>
+            <div className="flex items-center gap-2 border-b pb-6" style={{ borderColor: 'var(--agent-border)' }}>
+              <div className="w-6 h-6 lg:w-8 lg:h-8 rounded-full flex items-center justify-center text-[10px] lg:text-xs font-black" style={{ backgroundColor: 'var(--agent-primary)30', color: 'var(--agent-primary)' }}>04</div>
+              <Anchor className="w-4 h-4 text-[var(--agent-primary)]" />
+              <h3 className="text-lg font-bold tracking-tight uppercase">Location Override Registry</h3>
+            </div>
+            
+            <div className="space-y-4">
+              {formData.location_overrides?.map((ov: any, idx: number) => (
+                <div key={idx} className="p-4 bg-bg-primary/40 border border-[var(--agent-border)] rounded-xl flex flex-col md:flex-row gap-4 items-center justify-between">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-black uppercase tracking-wider text-primary truncate">{ov.territory_name}</p>
+                    <p className="text-[8px] font-bold text-text-secondary uppercase mt-0.5">Location Override Node</p>
+                  </div>
+                  
+                  <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                    {/* Override Price */}
+                    <div className="relative w-28">
+                      <Input 
+                        type="number" 
+                        placeholder="Overr. Price"
+                        value={ov.price} 
+                        onChange={(e) => {
+                          const newOvs = [...formData.location_overrides];
+                          newOvs[idx].price = e.target.value;
+                          setFormData({...formData, location_overrides: newOvs});
+                        }}
+                        className="h-12 text-xs pl-8 font-black" 
+                      />
+                      <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-black opacity-40">₹</span>
+                    </div>
+
+                    {/* Override Stock */}
+                    <div className="relative w-24">
+                      <Input 
+                        type="number" 
+                        placeholder="Stock"
+                        value={ov.stock} 
+                        onChange={(e) => {
+                          const newOvs = [...formData.location_overrides];
+                          newOvs[idx].stock = e.target.value;
+                          setFormData({...formData, location_overrides: newOvs});
+                        }}
+                        className="h-12 text-xs pl-8 font-black" 
+                      />
+                      <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-black opacity-40">kg</span>
+                    </div>
+
+                    {/* Override Status */}
+                    <select 
+                      value={ov.status}
+                      onChange={(e) => {
+                        const newOvs = [...formData.location_overrides];
+                        newOvs[idx].status = e.target.value;
+                        setFormData({...formData, location_overrides: newOvs});
+                      }}
+                      className="h-12 border rounded-xl px-3 text-xs font-black uppercase tracking-widest outline-none"
+                      style={{ backgroundColor: 'var(--agent-bg)', borderColor: 'var(--agent-border)', color: 'var(--agent-text)' }}
+                    >
+                      <option value="ACTIVE">ACTIVE</option>
+                      <option value="COMING_SOON">COMING SOON</option>
+                      <option value="OUT_OF_STOCK">OUT OF STOCK</option>
+                    </select>
+
+                    {/* Visibility Toggle */}
+                    <label className="flex items-center gap-2 cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        checked={Number(ov.is_visible) === 1}
+                        onChange={(e) => {
+                          const newOvs = [...formData.location_overrides];
+                          newOvs[idx].is_visible = e.target.checked ? 1 : 0;
+                          setFormData({...formData, location_overrides: newOvs});
+                        }}
+                        className="w-5 h-5 rounded border-primary bg-bg-primary accent-primary"
+                      />
+                      <span className="text-xs font-black uppercase text-text-secondary">Visible</span>
+                    </label>
+                  </div>
+                </div>
+              ))}
+              {(!formData.location_overrides || formData.location_overrides.length === 0) && (
+                <p className="text-xs font-black uppercase opacity-40 italic text-center">Loading delivery zones...</p>
+              )}
+            </div>
+          </Card>
+
+          {/* STEP 05: PREPARATION & CUSTOMIZATION SERVICES */}
+          <Card className="p-10 space-y-8 border" style={{ backgroundColor: 'var(--agent-card-bg)', borderColor: 'var(--agent-border)' }}>
+            <div className="flex items-center gap-2 border-b pb-6" style={{ borderColor: 'var(--agent-border)' }}>
+              <div className="w-6 h-6 lg:w-8 lg:h-8 rounded-full flex items-center justify-center text-[10px] lg:text-xs font-black" style={{ backgroundColor: 'var(--agent-primary)30', color: 'var(--agent-primary)' }}>05</div>
+              <Fish className="w-4 h-4 text-[var(--agent-primary)]" />
+              <h3 className="text-lg font-bold tracking-tight uppercase">Preparation & Cooking Customizations</h3>
+            </div>
+            
+            <div className="space-y-4">
+              {formData.prep_options?.map((prep: any, idx: number) => (
+                <div key={idx} className="p-4 bg-bg-primary/40 border border-[var(--agent-border)] rounded-xl flex flex-col md:flex-row gap-4 items-center justify-between">
+                  <div className="flex-1 min-w-0">
+                    <span className="text-xs font-black uppercase tracking-wider text-primary">{prep.name}</span>
+                    <p className="text-[8px] font-bold text-text-secondary uppercase mt-0.5">Prep Style: {prep.prep_type}</p>
+                  </div>
+                  
+                  <div className="flex items-center gap-4 w-full md:w-auto">
+                    {/* Custom Label */}
+                    <div className="flex-1 md:w-60">
+                      <Input 
+                        type="text" 
+                        placeholder="Prep Display Name"
+                        value={prep.name}
+                        onChange={(e) => {
+                          const newPreps = [...formData.prep_options];
+                          newPreps[idx].name = e.target.value;
+                          setFormData({...formData, prep_options: newPreps});
+                        }}
+                        className="h-12 text-xs font-black" 
+                      />
+                    </div>
+
+                    {/* Price flat add */}
+                    <div className="relative w-28">
+                      <Input 
+                        type="number" 
+                        placeholder="Extra price"
+                        value={prep.price_flat_add} 
+                        onChange={(e) => {
+                          const newPreps = [...formData.prep_options];
+                          newPreps[idx].price_flat_add = e.target.value;
+                          setFormData({...formData, prep_options: newPreps});
+                        }}
+                        className="h-12 text-xs pl-8 font-black" 
+                      />
+                      <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-black opacity-40">+₹</span>
+                    </div>
+
+                    {/* Availability checkbox */}
+                    <label className="flex items-center gap-2 cursor-pointer select-none">
+                      <input 
+                        type="checkbox" 
+                        checked={Number(prep.is_available) === 1}
+                        onChange={(e) => {
+                          const newPreps = [...formData.prep_options];
+                          newPreps[idx].is_available = e.target.checked ? 1 : 0;
+                          setFormData({...formData, prep_options: newPreps});
+                        }}
+                        className="w-5 h-5 rounded border-primary bg-bg-primary accent-primary"
+                      />
+                      <span className="text-xs font-black uppercase text-text-secondary">Available</span>
+                    </label>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
         </div>
 
         {/* Sidebar */}
@@ -468,7 +732,20 @@ export default function AdminEditProductPage() {
                 style={{ backgroundColor: 'var(--agent-bg)', borderColor: 'var(--agent-border)' }}
               >
                 {formData.image_url ? (
-                  <img src={formData.image_url} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" />
+                  <div className="w-full h-full relative group">
+                    <img src={formData.image_url} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" />
+                    <button 
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setFormData((prev: any) => ({ ...prev, image_url: "" }));
+                        toast("Primary image removed.", "success");
+                      }}
+                      className="absolute top-3 right-3 p-2 rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-danger/80"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
                 ) : (
                   <>
                     <Upload className="w-8 h-8 opacity-20" />
@@ -477,9 +754,16 @@ export default function AdminEditProductPage() {
                 )}
               </div>
               <div className="grid grid-cols-3 gap-2">
-                  {JSON.parse(formData.gallery || "[]").map((img: string, idx: number) => (
+                  {getGalleryArray(formData.gallery).map((img: string, idx: number) => (
                     <div key={idx} className="relative aspect-square rounded-xl overflow-hidden group border border-[var(--agent-border)]">
                       <img src={img} className="w-full h-full object-cover" />
+                      <button 
+                        type="button"
+                        onClick={() => removeGalleryImage(idx)}
+                        className="absolute top-1 right-1 p-1 rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
                     </div>
                   ))}
                   <button onClick={() => galleryInputRef.current?.click()} className="aspect-square rounded-xl border-2 border-dashed border-primary/20 flex items-center justify-center hover:bg-primary/5 transition-all">

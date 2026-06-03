@@ -307,65 +307,97 @@ export default function AdminLogsPage() {
               </Button>
            </div>
         </div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Event ID</TableHead>
-              <TableHead>Actor / IP Node</TableHead>
-              <TableHead>Action Pattern</TableHead>
-              <TableHead>Target Resource</TableHead>
-              <TableHead>Severity</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Audit</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {MOCK_LOGS.map((log) => (
-              <TableRow key={log.id} className="group/row">
-                <TableCell className="font-black text-[var(--foreground)] group-hover/row:text-primary transition-colors tracking-widest">{log.id}</TableCell>
-                <TableCell>
-                  <div className="space-y-1">
-                    <p className="text-xs font-bold text-[var(--foreground)] uppercase tracking-tight italic">{log.actor}</p>
-                    <p className="text-[9px] font-black text-text-secondary uppercase tracking-widest flex items-center gap-2">
-                       <Globe className="w-2.5 h-2.5 text-primary/40" /> {log.ip}
-                    </p>
-                  </div>
-                </TableCell>
-                <TableCell>
-                   <Badge variant="glass" className="text-[8px] font-black tracking-widest bg-[var(--foreground)]/5 border-none">
-                      {log.action}
-                   </Badge>
-                </TableCell>
-                <TableCell className="font-bold text-[var(--foreground)] italic text-xs">{log.resource}</TableCell>
-                <TableCell>
-                   <div className="flex items-center gap-3">
-                      <div className={cn(
-                        "w-2 h-2 rounded-full",
-                        log.severity === "CRITICAL" ? "bg-danger animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.5)]" :
-                        log.severity === "HIGH" ? "bg-warning" : "bg-primary"
-                      )} />
-                      <span className={cn(
-                        "text-[9px] font-black uppercase tracking-widest",
-                        log.severity === "CRITICAL" ? "text-danger" : "text-text-secondary"
-                      )}>{log.severity}</span>
-                   </div>
-                </TableCell>
-                <TableCell>
-                  <Badge variant={
-                    log.status === "AUTHORIZED" || log.status === "SUCCESS" || log.status === "RESOLVED" ? "success" : "danger"
-                  }>
-                    {log.status}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-right">
-                   <button className="p-2.5 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all" onClick={() => setSelectedLog(log)}>
-                      <Eye className="w-4 h-4" />
-                   </button>
-                </TableCell>
+        <div className="hidden lg:block">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Event ID</TableHead>
+                <TableHead>Actor / IP Node</TableHead>
+                <TableHead>Action Pattern</TableHead>
+                <TableHead>Target Resource</TableHead>
+                <TableHead>Severity</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Audit</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {MOCK_LOGS.map((log) => (
+                <TableRow key={log.id} className="group/row">
+                  <TableCell className="font-black text-[var(--foreground)] group-hover/row:text-primary transition-colors tracking-widest">{log.id}</TableCell>
+                  <TableCell>
+                    <div className="space-y-1">
+                      <p className="text-xs font-bold text-[var(--foreground)] uppercase tracking-tight italic">{log.actor}</p>
+                      <p className="text-[9px] font-black text-text-secondary uppercase tracking-widest flex items-center gap-2">
+                         <Globe className="w-2.5 h-2.5 text-primary/40" /> {log.ip}
+                      </p>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                     <Badge variant="glass" className="text-[8px] font-black tracking-widest bg-[var(--foreground)]/5 border-none">
+                        {log.action}
+                     </Badge>
+                  </TableCell>
+                  <TableCell className="font-bold text-[var(--foreground)] italic text-xs">{log.resource}</TableCell>
+                  <TableCell>
+                     <div className="flex items-center gap-3">
+                        <div className={cn(
+                          "w-2 h-2 rounded-full",
+                          log.severity === "CRITICAL" ? "bg-danger animate-pulse shadow-[0_0_10px_rgba(239,68,68,0.5)]" :
+                          log.severity === "HIGH" ? "bg-warning" : "bg-primary"
+                        )} />
+                        <span className={cn(
+                          "text-[9px] font-black uppercase tracking-widest",
+                          log.severity === "CRITICAL" ? "text-danger" : "text-text-secondary"
+                        )}>{log.severity}</span>
+                     </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={
+                      log.status === "AUTHORIZED" || log.status === "SUCCESS" || log.status === "RESOLVED" ? "success" : "danger"
+                    }>
+                      {log.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-right">
+                     <button className="p-2.5 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all" onClick={() => setSelectedLog(log)}>
+                        <Eye className="w-4 h-4" />
+                     </button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Mobile card list */}
+        <div className="lg:hidden space-y-3 p-4">
+          {MOCK_LOGS.map((log) => (
+            <div key={log.id} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
+              <div className="flex items-start justify-between">
+                <div className="space-y-0.5">
+                  <p className="font-black text-[var(--foreground)] italic text-sm tracking-widest">{log.id}</p>
+                  <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">{log.actor}</p>
+                </div>
+                <div className="flex flex-col items-end gap-1">
+                  <Badge variant={log.status === "AUTHORIZED" || log.status === "SUCCESS" || log.status === "RESOLVED" ? "success" : "danger"} className="text-[7px] font-black uppercase tracking-widest px-2">{log.status}</Badge>
+                  <div className="flex items-center gap-1">
+                    <div className={cn("w-1.5 h-1.5 rounded-full", log.severity === "CRITICAL" ? "bg-danger animate-pulse" : log.severity === "HIGH" ? "bg-warning" : "bg-primary")} />
+                    <span className={cn("text-[7px] font-black uppercase tracking-widest", log.severity === "CRITICAL" ? "text-danger" : "text-text-secondary opacity-60")}>{log.severity}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="p-3 rounded-lg bg-[var(--foreground)]/5 flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Action</p>
+                  <p className="text-[9px] font-black text-primary italic uppercase tracking-tight">{log.action}</p>
+                </div>
+                <button onClick={() => setSelectedLog(log)} className="p-2 rounded-lg hover:bg-primary/10 text-primary transition-all border border-[var(--foreground)]/5">
+                  <Eye className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </Card>
     </div>
   

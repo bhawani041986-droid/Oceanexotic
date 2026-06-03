@@ -107,6 +107,31 @@ export default function MediaOptimizationCenter() {
     }
   };
 
+  const [isOptimizing, setIsOptimizing] = React.useState(false);
+
+  const handleRunOptimization = async () => {
+    setIsOptimizing(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/system/optimize_assets.php`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.status === 'success') {
+          alert("Optimization Complete: " + data.message);
+          await fetchLogs();
+        } else {
+          alert("Optimization Error: " + (data.message || 'Unknown error'));
+        }
+      } else {
+        alert("Failed to contact the optimization endpoint.");
+      }
+    } catch (err) {
+      console.error("Optimization trigger failure:", err);
+      alert("An unexpected error occurred during optimization.");
+    } finally {
+      setIsOptimizing(false);
+    }
+  };
+
   const handleFlushPipeline = async () => {
     if (confirm("CRITICAL ACTION: This will clear the processing history. Original images will remain in the vault. Proceed?")) {
         alert("Pipeline log flush command sent to server. Please refresh in a moment."
@@ -115,13 +140,7 @@ export default function MediaOptimizationCenter() {
   };
 
   React.useEffect(() => {
-    fetchLogs(
-  );
-    const interval = setInterval(fetchLogs, 10000
-  ); // 10s sync
-    return (
-) => clearInterval(interval
-  );
+    fetchLogs();
   }, []
   );
 
@@ -152,11 +171,20 @@ export default function MediaOptimizationCenter() {
             variant="outline" 
             className={cn("bg-[var(--foreground)]/5 border-[var(--foreground)]/10 hover:bg-[var(--foreground)]/10", isSyncing && "animate-spin")} 
             onClick={fetchLogs}
+            disabled={isOptimizing}
           >
             <RefreshCw className="w-4 h-4 mr-2" />
             {isSyncing ? "Syncing..." : "Re-Sync Registry"}
           </Button>
-          <Button className="bg-primary text-black font-black" onClick={() => alert("Pipeline configuration is locked to 'Sovereign-High' profile.")}>
+          <Button 
+            className="bg-primary text-black font-black hover:bg-primary/90" 
+            onClick={handleRunOptimization}
+            disabled={isOptimizing || isSyncing}
+          >
+            <Zap className={cn("w-4 h-4 mr-2", isOptimizing && "animate-bounce")} />
+            {isOptimizing ? "Optimizing..." : "Run Optimization"}
+          </Button>
+          <Button className="bg-[var(--foreground)]/5 border-[var(--foreground)]/10 hover:bg-[var(--foreground)]/10" onClick={() => alert("Pipeline configuration is locked to 'Sovereign-High' profile.")}>
             <Settings className="w-4 h-4 mr-2" />
             Pipeline Settings
           </Button>
@@ -233,7 +261,7 @@ export default function MediaOptimizationCenter() {
                   >
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-lg bg-black flex items-center justify-center border border-[var(--foreground)]/5 overflow-hidden">
-                          <img src={log.optimized_url} alt="" className="w-full h-full object-cover opacity-50 group-hover:opacity-100 transition-opacity" />
+                          <img src={log.optimized_url} alt="" className="w-full h-full object-contain opacity-50 group-hover:opacity-100 transition-opacity" />
                       </div>
                       <div>
                         <h4 className="font-bold text-sm text-[var(--foreground)] truncate max-w-[200px]">{log.original_name}</h4>
@@ -271,7 +299,7 @@ export default function MediaOptimizationCenter() {
                             className="bg-slate-900/40 border border-[var(--foreground)]/5 rounded-xl overflow-hidden group hover:border-primary/50 transition-all"
                         >
                             <div className="aspect-[4/5] bg-black relative">
-                                <img src={asset.url} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                <img src={asset.url} alt="" className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
                                     <p className="text-[8px] font-black text-[var(--foreground)] uppercase tracking-tighter truncate">{asset.name}</p>
                                 </div>

@@ -24,8 +24,8 @@ import {
   ExternalLink
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
 import { FULL_API_URL as API_BASE_URL } from "@/config/api";
+import { Modal } from "@/components/ui/Modal";
 
 export default function SellerVerificationPage() {
   const [mounted, setMounted] = useState(false
@@ -226,56 +226,96 @@ export default function SellerVerificationPage() {
                      <Upload className="w-3.5 h-3.5" /> UPLOAD ASSET
                   </Button>
                </div>
-               <Table>
-                  <TableHeader>
-                     <TableRow>
-                        <TableHead>Credential</TableHead>
-                        <TableHead>Validity</TableHead>
-                        <TableHead>Registry Status</TableHead>
-                        <TableHead className="text-right">Governance</TableHead>
-                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                     {loading ? (
+               <div className="hidden lg:block">
+                  <Table>
+                     <TableHeader>
                         <TableRow>
-                           <TableCell colSpan={4} className="text-center py-20">
-                              <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto opacity-20" />
-                           </TableCell>
+                           <TableHead>Credential</TableHead>
+                           <TableHead>Validity</TableHead>
+                           <TableHead>Registry Status</TableHead>
+                           <TableHead className="text-right">Governance</TableHead>
                         </TableRow>
-                     ) : data?.documents.map((doc: any) => (
-                        <TableRow key={doc.id} className="group">
-                           <TableCell>
-                              <div className="space-y-1">
-                                 <p className="font-bold text-[var(--foreground)] text-sm uppercase tracking-tight">{doc.title}</p>
-                                 <p className="text-[9px] font-black text-text-secondary uppercase tracking-widest">ID: {doc.id} • {doc.type}</p>
-                              </div>
-                           </TableCell>
-                           <TableCell className="text-xs font-medium text-text-secondary italic">until {doc.expiry}</TableCell>
-                           <TableCell>
-                              <Badge variant={doc.status === "VERIFIED" ? "success" : doc.status === "PENDING" ? "warning" : "danger"} className="shadow-glow-purple">
-                                 {doc.status}
-                              </Badge>
-                           </TableCell>
-                           <TableCell className="text-right">
-                              <div className="flex justify-end gap-2">
-                                 <button 
-                                   onClick={() => alert(`Reviewing asset ${doc.id} in registry...`)}
-                                   className="p-2.5 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all"
-                                 >
-                                    <Search className="w-4 h-4" />
-                                 </button>
-                                 <button 
-                                   onClick={() => handleUploadClick(doc)}
-                                   className="p-2.5 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all"
-                                 >
-                                    <Upload className="w-4 h-4" />
-                                 </button>
-                              </div>
-                           </TableCell>
-                        </TableRow>
-                     ))}
-                  </TableBody>
-               </Table>
+                     </TableHeader>
+                     <TableBody>
+                        {loading ? (
+                           <TableRow>
+                              <TableCell colSpan={4} className="text-center py-20">
+                                 <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto opacity-20" />
+                              </TableCell>
+                           </TableRow>
+                        ) : data?.documents.map((doc: any) => (
+                           <TableRow key={doc.id} className="group">
+                              <TableCell>
+                                 <div className="space-y-1">
+                                    <p className="font-bold text-[var(--foreground)] text-sm uppercase tracking-tight">{doc.title}</p>
+                                    <p className="text-[9px] font-black text-text-secondary uppercase tracking-widest">ID: {doc.id} • {doc.type}</p>
+                                 </div>
+                              </TableCell>
+                              <TableCell className="text-xs font-medium text-text-secondary italic">until {doc.expiry}</TableCell>
+                              <TableCell>
+                                 <Badge variant={doc.status === "VERIFIED" ? "success" : doc.status === "PENDING" ? "warning" : "danger"} className="shadow-glow-purple">
+                                    {doc.status}
+                                 </Badge>
+                              </TableCell>
+                              <TableCell className="text-right">
+                                 <div className="flex justify-end gap-2">
+                                    <button 
+                                      onClick={() => alert(`Reviewing asset ${doc.id} in registry...`)}
+                                      className="p-2.5 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all"
+                                    >
+                                       <Search className="w-4 h-4" />
+                                    </button>
+                                    <button 
+                                      onClick={() => handleUploadClick(doc)}
+                                      className="p-2.5 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all"
+                                    >
+                                       <Upload className="w-4 h-4" />
+                                    </button>
+                                 </div>
+                              </TableCell>
+                           </TableRow>
+                        ))}
+                     </TableBody>
+                  </Table>
+               </div>
+
+               {/* Mobile card list */}
+               <div className="lg:hidden space-y-3 p-4">
+                  {loading ? (
+                     <div className="text-center py-10">
+                        <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto opacity-20" />
+                     </div>
+                  ) : data?.documents.map((doc: any) => (
+                     <div key={doc.id} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
+                        <div className="flex items-start justify-between">
+                           <div className="space-y-0.5">
+                              <p className="font-bold text-[var(--foreground)] text-sm uppercase tracking-tight">{doc.title}</p>
+                              <p className="text-[9px] font-black text-text-secondary uppercase tracking-widest font-mono">ID: {doc.id} • {doc.type}</p>
+                           </div>
+                           <Badge variant={doc.status === "VERIFIED" ? "success" : doc.status === "PENDING" ? "warning" : "danger"} className="shadow-glow-purple text-[8px] px-1.5 py-0.5">
+                              {doc.status}
+                           </Badge>
+                        </div>
+                        <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5">
+                           <p className="text-[10px] font-medium text-text-secondary italic">until {doc.expiry}</p>
+                           <div className="flex gap-1.5">
+                              <button 
+                                onClick={() => alert(`Reviewing asset ${doc.id} in registry...`)}
+                                className="p-1.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5"
+                              >
+                                 <Search className="w-3.5 h-3.5" />
+                              </button>
+                              <button 
+                                onClick={() => handleUploadClick(doc)}
+                                className="p-1.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5"
+                              >
+                                 <Upload className="w-3.5 h-3.5" />
+                              </button>
+                           </div>
+                        </div>
+                     </div>
+                  ))}
+               </div>
             </Card>
 
             <Card className="p-10 space-y-8 bg-white/[0.02] border-[var(--foreground)]/5 relative overflow-hidden group">
@@ -298,96 +338,64 @@ export default function SellerVerificationPage() {
       </div>
 
       {/* Asset Commissioning Modal */}
-      <AnimatePresence>
-        {showModal && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowModal(false)}
-              className="absolute inset-0 bg-black/80 backdrop-blur-md"
-            />
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="relative w-full max-w-lg bg-bg-secondary border border-[var(--foreground)]/10 rounded-[32px] shadow-2xl overflow-hidden"
-            >
-              <form onSubmit={handleFileSubmit} className="p-8 space-y-8">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 bg-primary/10 border border-primary/20 rounded-[20px] flex items-center justify-center text-primary">
-                      <FileUp className="w-7 h-7 shadow-glow-purple" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-black text-[var(--foreground)] tracking-tight uppercase italic leading-none mb-1">Asset Commissioning</h3>
-                      <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest leading-none italic">Synchronizing with Maritime Registry</p>
-                    </div>
-                  </div>
-                  <Button 
-                    type="button"
-                    variant="outline" 
-                    onClick={() => setShowModal(false)}
-                    className="w-10 h-10 p-0 border-[var(--foreground)]/10 rounded-xl bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10"
-                  >
-                    <X className="w-5 h-5 text-slate-400" />
-                  </Button>
-                </div>
+      <Modal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        title="Asset Commissioning"
+        description="Synchronizing with Maritime Registry"
+        className="bg-bg-secondary border-[var(--foreground)]/10 text-[var(--foreground)]"
+      >
+        <form onSubmit={handleFileSubmit} className="space-y-6">
+          <div className="space-y-5">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">Credential Title</label>
+              <Input 
+                value={uploadTitle}
+                onChange={(e) => setUploadTitle(e.target.value)}
+                placeholder="e.g., Maritime Business License"
+                disabled={!!selectedDoc}
+                className="h-14 bg-bg-primary border-white/10 text-white font-bold rounded-2xl"
+              />
+            </div>
 
-                <div className="space-y-5">
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">Credential Title</label>
-                    <Input 
-                      value={uploadTitle}
-                      onChange={(e) => setUploadTitle(e.target.value)}
-                      placeholder="e.g., Maritime Business License"
-                      disabled={!!selectedDoc}
-                      className="h-14 bg-bg-primary border-white/10 text-white font-bold rounded-2xl"
-                    />
-                  </div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">Credential Type</label>
+              <select 
+                value={uploadType}
+                onChange={(e) => setUploadType(e.target.value)}
+                disabled={!!selectedDoc}
+                className="w-full h-14 bg-bg-primary border border-white/10 rounded-2xl px-6 text-[11px] font-bold text-white outline-none focus:border-primary/50 transition-all appearance-none cursor-pointer"
+              >
+                <option value="LEGAL">LEGAL</option>
+                <option value="QUALITY">QUALITY</option>
+                <option value="LOGISTICS">LOGISTICS</option>
+                <option value="IDENTITY">IDENTITY</option>
+              </select>
+            </div>
 
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">Credential Type</label>
-                    <select 
-                      value={uploadType}
-                      onChange={(e) => setUploadType(e.target.value)}
-                      disabled={!!selectedDoc}
-                      className="w-full h-14 bg-bg-primary border border-white/10 rounded-2xl px-6 text-[11px] font-bold text-white outline-none focus:border-primary/50 transition-all appearance-none cursor-pointer"
-                    >
-                      <option value="LEGAL">LEGAL</option>
-                      <option value="QUALITY">QUALITY</option>
-                      <option value="LOGISTICS">LOGISTICS</option>
-                      <option value="IDENTITY">IDENTITY</option>
-                    </select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">Asset File</label>
-                    <div 
-                      onClick={() => fileInputRef.current?.click()}
-                      className="h-32 border-2 border-dashed border-white/10 rounded-2xl flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all group"
-                    >
-                      <Upload className="w-8 h-8 text-slate-500 group-hover:text-primary transition-colors" />
-                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-primary transition-colors">Select PDF or High-Res Image</p>
-                      <input type="file" ref={fileInputRef} className="hidden" accept=".pdf,image/*" />
-                    </div>
-                  </div>
-                </div>
-
-                <Button 
-                  type="submit"
-                  disabled={uploading}
-                  className="w-full h-16 text-[11px] font-black tracking-widest uppercase shadow-glow-purple rounded-2xl flex items-center justify-center gap-4"
-                >
-                  {uploading ? <Loader2 className="w-5 h-5 animate-spin" /> : "COMMIT TO REGISTRY"}
-                  {!uploading && <ArrowRight className="w-4 h-4" />}
-                </Button>
-              </form>
-            </motion.div>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">Asset File</label>
+              <div 
+                onClick={() => fileInputRef.current?.click()}
+                className="h-32 border-2 border-dashed border-white/10 rounded-2xl flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-all group"
+              >
+                <Upload className="w-8 h-8 text-slate-500 group-hover:text-primary transition-colors" />
+                <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest group-hover:text-primary transition-colors">Select PDF or High-Res Image</p>
+                <input type="file" ref={fileInputRef} className="hidden" accept=".pdf,image/*" />
+              </div>
+            </div>
           </div>
-        )}
-      </AnimatePresence>
+
+          <Button 
+            type="submit"
+            disabled={uploading}
+            className="w-full h-16 text-[11px] font-black tracking-widest uppercase shadow-glow-purple rounded-2xl flex items-center justify-center gap-4 mt-6"
+          >
+            {uploading ? <Loader2 className="w-5 h-5 animate-spin" /> : "COMMIT TO REGISTRY"}
+            {!uploading && <ArrowRight className="w-4 h-4" />}
+          </Button>
+        </form>
+      </Modal>
 
     </div>
   

@@ -57,53 +57,55 @@ export default function AdminFAQPage() {
               </Button>
            </div>
         </div>
-        <Table>
-           <TableHeader>
-              <TableRow className="border-[var(--foreground)]/5">
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Support Inquiry</TableHead>
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Category</TableHead>
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Signal Intensity (Views)</TableHead>
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Registry Status</TableHead>
-                 <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary pr-4 md:pr-6">Governance</TableHead>
-              </TableRow>
-           </TableHeader>
-           <TableBody>
-              {FAQ_REGISTRY.map((faq) => (
-                 <TableRow key={faq.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
-                    <TableCell>
-                       <div className="space-y-0.5 md:space-y-1 max-w-md">
-                          <p className="font-black text-[var(--foreground)] text-xs md:text-sm uppercase tracking-tighter italic group-hover/row:text-primary transition-colors truncate">{faq.question}</p>
-                          <p className="text-[7px] md:text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-40">ID: {faq.id}</p>
-                       </div>
-                    </TableCell>
-                    <TableCell>
-                       <Badge variant="glass" className="bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5 uppercase text-[7px] md:text-[9px] italic font-black px-2">
-                          {faq.category}
-                       </Badge>
-                    </TableCell>
-                    <TableCell className="font-black text-[var(--foreground)] text-xs md:text-sm italic tracking-tighter">{faq.views}</TableCell>
-                    <TableCell>
-                       <Badge variant={faq.status === "PUBLISHED" ? "success" : "secondary"} className="text-[7px] md:text-[9px] italic px-2 uppercase font-black tracking-widest">
-                          {faq.status}
-                       </Badge>
-                    </TableCell>
-                    <TableCell className="text-right pr-4 md:pr-6">
-                       <div className="flex justify-end gap-1 md:gap-2">
-                          <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
-                             <Edit3 className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                          <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5">
-                             <Trash2 className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                          <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
-                             <MoreVertical className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                       </div>
-                    </TableCell>
+        <div className="hidden lg:block">
+           <Table>
+              <TableHeader>
+                 <TableRow className="border-[var(--foreground)]/5">
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Support Inquiry</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Category</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Signal Intensity (Views)</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Registry Status</TableHead>
+                    <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary pr-4 md:pr-6">Governance</TableHead>
                  </TableRow>
-              ))}
-           </TableBody>
-        </Table>
+              </TableHeader>
+              <TableBody>
+                 {FAQ_REGISTRY.map((faq) => (
+                    <TableRow key={faq.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
+                       <TableCell><div className="space-y-0.5 max-w-md"><p className="font-black text-[var(--foreground)] text-sm uppercase tracking-tighter italic group-hover/row:text-primary transition-colors truncate">{faq.question}</p><p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-40">ID: {faq.id}</p></div></TableCell>
+                       <TableCell><Badge variant="glass" className="bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5 uppercase text-[9px] italic font-black px-2">{faq.category}</Badge></TableCell>
+                       <TableCell className="font-black text-[var(--foreground)] text-sm italic tracking-tighter">{faq.views}</TableCell>
+                       <TableCell><Badge variant={faq.status === "PUBLISHED" ? "success" : "secondary"} className="text-[9px] italic px-2 uppercase font-black tracking-widest">{faq.status}</Badge></TableCell>
+                       <TableCell className="text-right pr-4 md:pr-6"><div className="flex justify-end gap-2"><button className="p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary border border-[var(--foreground)]/5"><Edit3 className="w-4 h-4" /></button><button className="p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger border border-[var(--foreground)]/5"><Trash2 className="w-4 h-4" /></button><button className="p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary border border-[var(--foreground)]/5"><MoreVertical className="w-4 h-4" /></button></div></TableCell>
+                    </TableRow>
+                 ))}
+              </TableBody>
+           </Table>
+        </div>
+
+        {/* Mobile card list */}
+        <div className="lg:hidden space-y-3 p-4">
+          {FAQ_REGISTRY.map((faq) => (
+            <div key={faq.id} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
+              <div className="flex items-start justify-between">
+                <div className="space-y-0.5 flex-1 pr-3">
+                  <p className="font-black text-[var(--foreground)] italic text-sm tracking-tighter uppercase line-clamp-2">{faq.question}</p>
+                  <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">{faq.id}</p>
+                </div>
+                <Badge variant={faq.status === "PUBLISHED" ? "success" : "secondary"} className="text-[7px] italic px-2 uppercase font-black tracking-widest shrink-0">{faq.status}</Badge>
+              </div>
+              <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5">
+                <div className="flex items-center gap-3">
+                  <Badge variant="glass" className="bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5 uppercase text-[8px] italic font-black px-2">{faq.category}</Badge>
+                  <span className="text-[9px] font-black text-primary italic">{faq.views} views</span>
+                </div>
+                <div className="flex gap-2">
+                  <button className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary border border-[var(--foreground)]/5"><Edit3 className="w-3.5 h-3.5" /></button>
+                  <button className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger border border-[var(--foreground)]/5"><Trash2 className="w-3.5 h-3.5" /></button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </Card>
 
       {/* Strategy Panel */}

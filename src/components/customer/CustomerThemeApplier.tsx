@@ -8,11 +8,11 @@ import { CUSTOMER_THEMES } from "@/config/customerThemes";
 export const CustomerThemeApplier = () => {
   const { customerTheme, customerAssets, fetchSettings } = useSettingsStore();
   const pathname = usePathname();
-  const isCustomerPath = pathname.startsWith('/customer');
+  const isCustomerPath = !pathname.startsWith('/admin') && !pathname.startsWith('/seller');
 
   React.useEffect(() => {
     fetchSettings();
-  }, [fetchSettings]);
+  }, [fetchSettings, pathname]);
 
   // High-Authority Asset Injection (Favicon/Apple Icon)
   React.useEffect(() => {
@@ -53,6 +53,8 @@ export const CustomerThemeApplier = () => {
       root.style.setProperty('--c-text-primary', theme.colors.textPrimary);
       root.style.setProperty('--c-text-secondary', theme.colors.textSecondary);
 
+      const isLight = theme.id.includes('light') || theme.id.includes('burst') || theme.id.includes('passion') || theme.colors.bg === '#F8FAFC' || theme.colors.bg === '#FFFFFF';
+
       // Apply Global Overrides to standard variables ONLY for customer pages
       root.style.setProperty('--primary', theme.colors.primary);
       root.style.setProperty('--primary-light', theme.colors.primaryLight);
@@ -61,7 +63,7 @@ export const CustomerThemeApplier = () => {
       root.style.setProperty('--card', theme.colors.card);
       root.style.setProperty('--foreground', theme.colors.textPrimary);
       root.style.setProperty('--muted-foreground', theme.colors.textSecondary);
-      root.style.setProperty('--border', 'rgba(255, 255, 255, 0.08)');
+      root.style.setProperty('--border', isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.08)');
 
       // Apply Visuals
       root.style.setProperty('--c-radius-btn', theme.visuals.radiusBtn);
@@ -78,9 +80,14 @@ export const CustomerThemeApplier = () => {
       root.style.setProperty('--radius-card', theme.visuals.radiusCard);
       root.style.setProperty('--shadow-glow', theme.visuals.shadowGlow);
 
-      // Force Dark Sovereignty
-      root.classList.add('customer-dark', 'dark');
-      root.classList.remove('customer-light');
+      // Force Dark/Light Sovereignty based on theme preference
+      if (isLight) {
+        root.classList.add('customer-light', 'light');
+        root.classList.remove('customer-dark', 'dark');
+      } else {
+        root.classList.add('customer-dark', 'dark');
+        root.classList.remove('customer-light', 'light');
+      }
     } catch (error) {
       console.warn("Theme Application Failure (Silenced):", error);
     }
@@ -91,9 +98,14 @@ export const CustomerThemeApplier = () => {
       const variables = [
         '--primary', '--primary-light', '--secondary', '--background', 
         '--card', '--foreground', '--muted-foreground', '--border',
-        '--font-sans', '--radius-button', '--radius-card', '--shadow-glow'
+        '--font-sans', '--radius-button', '--radius-card', '--shadow-glow',
+        '--c-primary', '--c-primary-light', '--c-secondary', '--c-accent',
+        '--c-bg', '--c-bg-alt', '--c-card', '--c-text-primary', '--c-text-secondary',
+        '--c-radius-btn', '--c-radius-card', '--c-shadow-glow', '--c-gradient-hero',
+        '--c-glass-opacity', '--c-glass-blur', '--c-font-family'
       ];
       variables.forEach(v => root.style.removeProperty(v));
+      root.classList.remove('customer-dark', 'dark', 'customer-light', 'light');
     };
   }, [customerTheme, isCustomerPath]);
 

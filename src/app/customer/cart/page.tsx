@@ -6,56 +6,75 @@ import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { useSettingsStore } from "@/store/settingsStore";
+import { useAuthStore } from "@/store/authStore";
 import { cn } from "@/lib/utils";
 import MainLayout from "@/components/layouts/MainLayout";
-import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { 
   ShoppingBag, 
-  Home as HomeIcon, 
-  Menu, 
-  Search, 
-  Receipt, 
-  User, 
-  Heart, 
   Trash2, 
   Clock, 
   Truck, 
   ShieldCheck,
-  ChevronDown,
-  Instagram,
-  Youtube,
-  Mail,
-  X,
   Plus,
-  Minus,
-  MessageCircle
+  Minus
 } from "lucide-react";
 
 export default function CartPage() {
-  const { items, updateQuantity, removeItem, getTotal } = useCartStore();
+  const { items, updateQuantity, removeItem, getTotal, toggleMarination } = useCartStore();
   const settings = useSettingsStore();
+  const { user } = useAuthStore();
   const router = useRouter();
   const pathname = usePathname();
 
   const [mounted, setMounted] = React.useState(false);
-  const [scrolled, setScrolled] = React.useState(false);
-  const [footerAccordion, setFooterAccordion] = React.useState<string | null>(null);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const [addons, setAddons] = React.useState<any[]>([]);
+  const [loadingAddons, setLoadingAddons] = React.useState(true);
 
   const subtotal = getTotal();
   const platformFee = (subtotal * settings.commissionRate) / 100;
-  const taxes = subtotal * 0.05; // 5% fixed tax for demo
+  const taxes = subtotal * 0.05; // 5% fixed tax
   const grandTotal = subtotal + platformFee + taxes;
 
-  // Absolute Hydration Handshake
   React.useEffect(() => {
     setMounted(true);
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  React.useEffect(() => {
+    const fetchAddons = async () => {
+      setLoadingAddons(true);
+      try {
+        let area = "";
+        if (user?.id) {
+          const res = await fetch(`/api/user/addresses?userId=${user.id}`);
+          if (res.ok) {
+            const addrData = await res.json();
+            const addresses = Array.isArray(addrData) ? addrData : (addrData.data || []);
+            // Find default address or fallback to first one
+            const defaultAddr = addresses.find((a: any) => a.is_default || a.primary) || addresses[0];
+            if (defaultAddr) {
+              area = defaultAddr.jetty || "";
+            }
+          }
+        }
+        
+        const addonsRes = await fetch(`/api/addons/list.php?area=${encodeURIComponent(area)}`);
+        if (addonsRes.ok) {
+          const data = await addonsRes.json();
+          setAddons(data);
+        }
+      } catch (err) {
+        console.error("Error fetching dynamic addons:", err);
+      } finally {
+        setLoadingAddons(false);
+      }
+    };
+
+    if (mounted) {
+      fetchAddons();
+    }
+  }, [mounted, user?.id]);
 
   if (!mounted) {
     return (
@@ -109,23 +128,99 @@ export default function CartPage() {
                       <div className="flex justify-between items-start">
                         <div>
                           <h3 className="text-sm md:text-xl font-black uppercase italic text-[var(--c-text-primary)] group-hover:text-[var(--c-primary)] transition-colors">{item.name}</h3>
+                          {item.sellerId !== 'ADDON' && (
+                            <div className="mt-2 flex flex-col gap-2">
+                              <label className="inline-flex items-center cursor-pointer select-none">
+                                <input 
+                                  type="checkbox" 
+                                  checked={!!item.isMarinated} 
+                                  onChange={() => toggleMarination(item.id)}
+                                  className="sr-only peer"
+                                />
+                                <div className="relative w-8 h-4 bg-[var(--foreground)]/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-[var(--c-primary)]"></div>
+                                <span className="ms-2 text-[9px] md:text-[10px] font-black uppercase text-rose-500 tracking-wider">🌶️ Pre-Marinate (+₹150)</span>
+                              </label>
+                              {item.isMarinated && (
+                                <Badge className="bg-rose-500/10 text-rose-500 border border-rose-500/20 text-[8px] font-black uppercase w-fit">
+                                  {item.selectedMarinade || 'Tandoori Island Rub'}
+                                </Badge>
+                              )}
+                            </div>
+                          )}
                         </div>
                         <button onClick={() => removeItem(item.id)} className="p-1.5 rounded-lg text-danger hover:bg-danger/10 transition-colors"><Trash2 className="w-3.5 h-3.5 md:w-5 md:h-5" /></button>
                       </div>
                       
-                      <div className="flex justify-between items-center mt-auto">
+                      <div className="flex justify-between items-center mt-auto pt-3">
                         <div className="flex items-center gap-1.5 md:gap-3 bg-[var(--foreground)]/5 rounded-full p-1 border border-[var(--border)]">
                           <button onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))} className="w-6 h-6 md:w-10 md:h-10 rounded-full hover:bg-[var(--foreground)]/10 flex items-center justify-center text-[var(--c-text-primary)] transition-all active:scale-90"><Minus className="w-3 h-3 md:w-4 md:h-4" /></button>
                           <span className="text-[10px] md:text-sm font-black w-4 md:w-6 text-center text-[var(--c-text-primary)]">{item.quantity}</span>
                           <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="w-6 h-6 md:w-10 md:h-10 rounded-full hover:bg-[var(--foreground)]/10 flex items-center justify-center text-[var(--c-text-primary)] transition-all active:scale-90"><Plus className="w-3 h-3 md:w-4 md:h-4" /></button>
                         </div>
-                        <p className="text-xs md:text-xl font-black text-[var(--c-text-primary)] italic">{settings.currencySymbol}{(item.price * item.quantity).toLocaleString()}</p>
+                        <p className="text-xs md:text-xl font-black text-[var(--c-text-primary)] italic">
+                          {settings.currencySymbol}{((item.price + (item.isMarinated ? 150 : 0)) * item.quantity).toLocaleString()}
+                        </p>
                       </div>
                     </div>
                   </div>
                 </Card>
               ))}
             </div>
+
+            {/* RECOMMENDED ADD-ONS SECTION */}
+            {addons.length > 0 && (
+              <div className="pt-6 md:pt-10 space-y-4 md:space-y-6 animate-fade-in">
+                <h2 className="text-lg md:text-2xl font-black uppercase italic text-[var(--c-text-primary)]">Complete Your BBQ & Curry</h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+                  {addons.map((addon) => {
+                    const alreadyInCart = items.some(i => i.id === addon.id);
+                    const fallbackImg = "https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=200&q=80";
+                    return (
+                      <Card key={addon.id} className="p-2 md:p-4 bg-[var(--foreground)]/5 border border-[var(--border)] rounded-[20px] flex flex-col justify-between hover:border-[var(--c-primary)]/40 transition-all group/addon">
+                        <div className="space-y-2">
+                          <div className="h-20 w-full rounded-lg overflow-hidden border border-[var(--foreground)]/5">
+                            <img 
+                              src={addon.image_url || fallbackImg} 
+                              alt={addon.name} 
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover/addon:scale-105" 
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = fallbackImg;
+                              }}
+                            />
+                          </div>
+                          <div>
+                            <h4 className="text-[10px] md:text-xs font-black uppercase text-[var(--c-text-primary)] truncate">{addon.name}</h4>
+                            <p className="text-[8px] text-[var(--c-text-secondary)] font-medium leading-none truncate">{addon.description || addon.type}</p>
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-center mt-3 pt-2 border-t border-[var(--foreground)]/5">
+                          <span className="text-[10px] md:text-xs font-black text-[var(--c-text-primary)]">₹{addon.price}</span>
+                          <Button 
+                            onClick={() => {
+                              if (!alreadyInCart) {
+                                useCartStore.getState().addItem({
+                                  id: addon.id,
+                                  name: addon.name,
+                                  price: addon.price,
+                                  quantity: 1,
+                                  image: addon.image_url || fallbackImg,
+                                  sellerId: 'ADDON'
+                                });
+                              }
+                            }}
+                            disabled={alreadyInCart}
+                            className="h-6 px-3 text-[8px] font-black tracking-wider uppercase rounded-full shadow-glow-purple"
+                          >
+                            {alreadyInCart ? 'ADDED' : 'ADD'}
+                          </Button>
+                        </div>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
           </div>
 
           {/* Summary Sidebar */}

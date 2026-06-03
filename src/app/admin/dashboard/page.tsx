@@ -45,19 +45,18 @@ export default function AdminDashboardPage() {
   const isMobile = useMediaQuery("(max-width: 1024px)"
   );
 
+  const [mounted, setMounted] = React.useState(false);
+
   const fetchAdmiralData = async () => {
-    setIsLoading(true
-  );
+    setIsLoading(true);
     try {
       // Parallel Authority Handshake
       const [healthData, globalStats] = await Promise.all([
         dbService.checkHealth(),
         orderService.getSellerStats() // Using seller stats as a base for global stats in demo
-      ]
-  );
+      ]);
 
-      setHealth(healthData
-  );
+      setHealth(healthData);
 
       const transformedStats = [
         { label: "Global Liquidity", value: `₹${(globalStats.revenue * 5).toLocaleString()}`, growth: "+24.5%", icon: <Globe className="w-5 h-5" />, trend: "up" },
@@ -66,13 +65,10 @@ export default function AdminDashboardPage() {
         { label: "System Latency", value: "12ms", growth: "-2ms", icon: <Zap className="w-5 h-5" />, trend: "up" },
       ];
 
-      setStats(transformedStats
-  );
+      setStats(transformedStats);
     } catch (err) {
-      console.error("Admiral Signal Disruption:", err
-  );
-      toast("Global authority handshake interrupted. Displaying cached registry.", "error"
-  );
+      console.error("Admiral Signal Disruption:", err);
+      toast("Global authority handshake interrupted. Displaying cached registry.", "error");
       
       // High-Fidelity Mock Fallback
       setStats([
@@ -80,21 +76,21 @@ export default function AdminDashboardPage() {
         { label: "Platform Nodes", value: "1,248", growth: "+12", icon: <Server className="w-5 h-5" />, trend: "up" },
         { label: "Sovereign Users", value: "48,250", growth: "+8.2%", icon: <ShieldCheck className="w-5 h-5" />, trend: "up" },
         { label: "System Latency", value: "12ms", growth: "-2ms", icon: <Zap className="w-5 h-5" />, trend: "up" },
-      ]
-  );
-      setHealth({ status: "Operational", uptime: "99.99%", database: "Connected" }
-  );
+      ]);
+      setHealth({ status: "Operational", uptime: "99.99%", database: "Connected" });
     } finally {
-      setIsLoading(false
-  );
+      setIsLoading(false);
     }
   };
 
   React.useEffect(() => {
-    fetchAdmiralData(
-  );
-  }, []
-  );
+    setMounted(true);
+    fetchAdmiralData();
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   if (isMobile) {
     return <AdminMobileDashboard stats={stats} health={health} isLoading={isLoading} />;
@@ -102,7 +98,7 @@ export default function AdminDashboardPage() {
 
   return (
 
-    <div className="space-y-[10px] md:space-y-10 pt-4 md:pt-10 pb-10 px-4 md:px-0 animate-fade-in">
+    <div className="space-y-[10px] md:space-y-10 pt-4 md:pt-10 pb-10 px-0 animate-fade-in">
       {/* Admiral Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-[10px] md:gap-6">
         {isLoading ? (
@@ -224,35 +220,67 @@ export default function AdminDashboardPage() {
            </div>
            <Button variant="ghost" className="text-[8px] md:text-[10px] font-black tracking-widest uppercase opacity-40 hover:opacity-100 italic">FULL AUDIT LOG</Button>
         </div>
-        <Table>
-          <TableHeader>
-            <TableRow className="border-[var(--foreground)]/5">
-              <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Event Directive</TableHead>
-              <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Node ID</TableHead>
-              <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Timestamp</TableHead>
-              <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Authority</TableHead>
-              <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Integrity</TableHead>
-            </TableRow>
-          </TableHeader>
-           <TableBody>
-            {[
-              { event: "Registry Synchronization", node: "DB-X991", time: "12:40:01", role: "SYSTEM", integrity: "100%" },
-              { event: "Node Access Granted", node: "USR-4421", time: "12:38:45", role: "ADMIN", integrity: "SECURE" },
-              { event: "Settlement Committed", node: "ORD-8821", time: "12:35:12", role: "MERCHANT", integrity: "VERIFIED" },
-              { event: "Security Handshake", node: "SEC-001", time: "12:30:00", role: "ADMIRAL", integrity: "HARDENED" },
-            ].map((row, i) => (
-              <TableRow key={i} className="border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all group/row">
-                <TableCell className="font-black text-[var(--foreground)] italic tracking-tighter text-xs md:text-sm group-hover/row:text-primary transition-colors">{row.event}</TableCell>
-                <TableCell className="text-[9px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest font-mono italic opacity-40">{row.node}</TableCell>
-                <TableCell className="text-[10px] md:text-xs font-black text-text-secondary italic opacity-40">{row.time}</TableCell>
-                <TableCell>
-                  <Badge variant="glass" className="bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5 text-[8px] md:text-[9px] px-2 italic uppercase">{row.role}</Badge>
-                </TableCell>
-                <TableCell className="text-right font-black text-primary italic text-[10px] md:text-xs shadow-glow-purple/10">{row.integrity}</TableCell>
+        <div className="hidden lg:block">
+          <Table>
+            <TableHeader>
+              <TableRow className="border-[var(--foreground)]/5">
+                <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Event Directive</TableHead>
+                <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Node ID</TableHead>
+                <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Timestamp</TableHead>
+                <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Authority</TableHead>
+                <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Integrity</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+             <TableBody>
+              {[
+                { event: "Registry Synchronization", node: "DB-X991", time: "12:40:01", role: "SYSTEM", integrity: "100%" },
+                { event: "Node Access Granted", node: "USR-4421", time: "12:38:45", role: "ADMIN", integrity: "SECURE" },
+                { event: "Settlement Committed", node: "ORD-8821", time: "12:35:12", role: "MERCHANT", integrity: "VERIFIED" },
+                { event: "Security Handshake", node: "SEC-001", time: "12:30:00", role: "ADMIRAL", integrity: "HARDENED" },
+              ].map((row, i) => (
+                <TableRow key={i} className="border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all group/row">
+                  <TableCell className="font-black text-[var(--foreground)] italic tracking-tighter text-xs md:text-sm group-hover/row:text-primary transition-colors">{row.event}</TableCell>
+                  <TableCell className="text-[9px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest font-mono italic opacity-40">{row.node}</TableCell>
+                  <TableCell className="text-[10px] md:text-xs font-black text-text-secondary italic opacity-40">{row.time}</TableCell>
+                  <TableCell>
+                    <Badge variant="glass" className="bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5 text-[8px] md:text-[9px] px-2 italic uppercase">{row.role}</Badge>
+                  </TableCell>
+                  <TableCell className="text-right font-black text-primary italic text-[10px] md:text-xs shadow-glow-purple/10">{row.integrity}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Mobile card list */}
+        <div className="lg:hidden space-y-3 p-4">
+          {[
+            { event: "Registry Synchronization", node: "DB-X991", time: "12:40:01", role: "SYSTEM", integrity: "100%" },
+            { event: "Node Access Granted", node: "USR-4421", time: "12:38:45", role: "ADMIN", integrity: "SECURE" },
+            { event: "Settlement Committed", node: "ORD-8821", time: "12:35:12", role: "MERCHANT", integrity: "VERIFIED" },
+            { event: "Security Handshake", node: "SEC-001", time: "12:30:00", role: "ADMIRAL", integrity: "HARDENED" },
+          ].map((row, i) => (
+             <div key={i} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
+                <div className="flex items-start justify-between">
+                   <div className="space-y-0.5">
+                      <p className="font-black text-[var(--foreground)] italic text-sm tracking-tighter uppercase">{row.event}</p>
+                      <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Node: {row.node}</p>
+                   </div>
+                   <Badge variant="glass" className="bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5 text-[8px] px-2 italic uppercase">{row.role}</Badge>
+                </div>
+                <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5">
+                   <div className="space-y-0">
+                      <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Timestamp</p>
+                      <p className="text-xs font-black text-[var(--foreground)] italic">{row.time}</p>
+                   </div>
+                   <div className="text-right space-y-0">
+                      <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Integrity</p>
+                      <p className="text-xs font-black text-primary italic">{row.integrity}</p>
+                   </div>
+                </div>
+             </div>
+          ))}
+        </div>
       </Card>
     </div>
   

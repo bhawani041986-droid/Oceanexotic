@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/Table";
 import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 import { 
   MessageSquare, 
   CheckCircle2, 

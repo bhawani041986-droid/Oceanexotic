@@ -26,7 +26,7 @@ import { Logo } from "@/components/ui/Logo";
 import { NotificationPopover } from "./NotificationPopover";
 
 const ThemeAnimatedIcon = () => (
-  <div className="relative w-10 h-10 flex items-center justify-center group cursor-pointer">
+  <div className="relative w-9 h-9 min-[375px]:w-10 min-[375px]:h-10 flex items-center justify-center group cursor-pointer">
     <motion.div 
       animate={{ 
         rotate: [0, 90, 180, 270, 360],
@@ -92,26 +92,26 @@ export function SellerMobileHeader({ onMenuClick }: { onMenuClick: () => void })
   }, [pathname]);
 
   return (
-    <header className="lg:hidden fixed top-0 left-0 right-0 z-[300] h-16 glass border-b border-[var(--foreground)]/5 px-4 flex items-center justify-between">
-      <div className="flex items-center gap-3">
+    <header className="lg:hidden fixed top-0 left-0 right-0 z-[300] h-16 glass border-b border-b-[var(--foreground)]/5 px-2 min-[375px]:px-4 flex items-center justify-between">
+      <div className="flex items-center gap-1.5 min-[375px]:gap-3">
         <button 
           onClick={onMenuClick}
-          className="p-2 -ml-2 text-text-secondary active:scale-90 transition-transform"
+          className="w-9 h-9 min-[375px]:w-10 min-[375px]:h-10 flex items-center justify-center text-text-secondary active:scale-90 transition-transform hover:bg-[var(--foreground)]/5 rounded-xl"
         >
-          <Menu className="w-6 h-6" />
+          <Menu className="w-5 h-5" />
         </button>
         <div className="flex items-center gap-2">
-          <Logo size="lg" />
+          <Logo size="sm" className="!w-[120px] !h-[30px] min-[375px]:!w-[144px] min-[375px]:!h-[36px]" />
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 min-[375px]:gap-2">
         <Link href="/seller/settings/appearance">
            <ThemeAnimatedIcon />
         </Link>
         <NotificationPopover />
         <Link href="/seller/profile">
-          <div className="w-9 h-9 rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 flex items-center justify-center text-[10px] font-black text-[var(--foreground)] overflow-hidden active:scale-90 transition-all">
+          <div className="w-7 h-7 min-[375px]:w-9 min-[375px]:h-9 rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 flex items-center justify-center text-[10px] font-black text-[var(--foreground)] overflow-hidden active:scale-90 transition-all">
              {user?.name?.[0] || "M"}
           </div>
         </Link>
@@ -148,8 +148,11 @@ export function SellerMobileDock() {
 
   return (
     <nav 
-      className="lg:hidden fixed bottom-6 left-4 right-4 z-[100] h-[48px] bg-[var(--c-card)]/90 backdrop-blur-3xl border border-[var(--foreground)]/10 shadow-premium flex items-center justify-around px-2"
-      style={{ clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)' }}
+      className="lg:hidden fixed left-4 right-4 z-[100] h-[48px] bg-[var(--c-card)]/90 backdrop-blur-3xl border border-[var(--foreground)]/10 shadow-premium flex items-center justify-around px-2"
+      style={{ 
+        clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)',
+        bottom: 'max(1.5rem, env(safe-area-inset-bottom))'
+      }}
     >
       {dockItems.map((item) => {
         const isActive = pathname === item.href;
@@ -240,20 +243,21 @@ export function SellerMobileDrawer({ isOpen, onClose }: { isOpen: boolean, onClo
                     href={item.href}
                     onClick={onClose}
                     className={cn(
-                      "flex items-center gap-3 px-4 py-3.5 text-[9px] font-black uppercase tracking-[0.2em] transition-all group relative overflow-hidden",
+                      "flex items-center gap-3 px-4 py-3.5 text-[9px] font-black uppercase tracking-[0.2em] transition-all group relative overflow-hidden pl-6",
                       isActive ? "text-white shadow-glow-purple" : "text-text-secondary hover:text-[var(--foreground)]"
                     )}
                     style={{
                       clipPath: "polygon(12px 0%, 100% 0%, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0% 100%, 0% 12px)",
                       backgroundColor: isActive ? 'var(--primary)' : (item as any).danger ? 'rgba(239, 68, 68, 0.05)' : 'rgba(255,255,255,0.03)',
-                      boxShadow: isActive ? `inset 0 0 0 1px ${(item as any).color}` : 'none',
-                      borderLeftWidth: '5px',
-                      borderLeftStyle: 'solid',
-                      borderLeftColor: (item as any).color || 'transparent'
+                      boxShadow: isActive ? `inset 0 0 0 1px ${(item as any).color}` : 'none'
                     }}
                   >
+                    <div 
+                      className="absolute left-0 top-0 bottom-0 w-[5px]" 
+                      style={{ backgroundColor: (item as any).color || 'transparent' }} 
+                    />
                     <span 
-                      className={cn("transition-transform group-hover:scale-110", isActive ? "text-white" : "")}
+                      className={cn("relative z-10 transition-transform group-hover:scale-110", isActive ? "text-white" : "")}
                       style={{ color: !isActive ? (item as any).color : undefined }}
                     >
                       {item.icon}
@@ -270,17 +274,17 @@ export function SellerMobileDrawer({ isOpen, onClose }: { isOpen: boolean, onClo
             <div className="mt-auto pt-6 border-t border-[var(--foreground)]/5">
               <button 
                 onClick={logout}
-                className="w-full flex items-center justify-between px-6 py-5 text-red-500 transition-all group relative overflow-hidden"
+                className="w-full flex items-center justify-between px-6 py-5 text-red-500 transition-all group relative overflow-hidden pl-8"
                 style={{
                   clipPath: "polygon(12px 0%, 100% 0%, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0% 100%, 0% 12px)",
-                  backgroundColor: 'rgba(239, 68, 68, 0.05)',
-                  borderLeftWidth: '5px',
-                  borderLeftStyle: 'solid',
-                  borderLeftColor: '#EF4444'
+                  backgroundColor: 'rgba(239, 68, 68, 0.05)'
                 }}
               >
+                <div 
+                  className="absolute left-0 top-0 bottom-0 w-[5px] bg-[#EF4444]" 
+                />
                 <span className="text-[10px] font-black uppercase italic relative z-10 tracking-[0.2em]">TERMINATE LINK</span>
-                <LogOut className="w-5 h-5 transition-transform group-hover:scale-110" />
+                <LogOut className="w-5 h-5 relative z-10 transition-transform group-hover:scale-110" />
               </button>
             </div>
           </motion.div>

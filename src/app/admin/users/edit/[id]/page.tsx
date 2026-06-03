@@ -326,23 +326,31 @@ export default function AdminEditUserPage() {
               </div>
               <div className="space-y-4">
                  {[
-                   { id: 'VERIFIED', label: 'VERIFIED CITIZEN', icon: <ShieldCheck className="w-3.5 h-3.5" />, active: true },
-                   { id: 'PENDING', label: 'PENDING AUDIT', icon: <Clock className="w-3.5 h-3.5" />, active: false },
-                   { id: 'SUSPENDED', label: 'SUSPENDED ACCESS', icon: <ShieldAlert className="w-3.5 h-3.5" />, active: false },
-                 ].map((status) => (
-                    <button key={status.id} className={cn(
-                      "w-full flex items-center gap-4 p-4 rounded-[20px] border transition-all duration-300",
-                      status.active ? "bg-primary/10 border-primary/40 text-[var(--foreground)] shadow-glow-purple" : "bg-[var(--foreground)]/5 border-[var(--foreground)]/5 text-text-secondary"
-                    )}>
-                       <div className={cn(
-                         "w-10 h-10 rounded-xl flex items-center justify-center",
-                         status.active ? "bg-primary text-[var(--foreground)]" : "bg-[var(--foreground)]/5"
-                       )}>
-                          {status.icon}
-                       </div>
-                       <p className="text-[10px] font-black uppercase tracking-widest">{status.label}</p>
-                    </button>
-                 ))}
+                   { id: 'ACTIVE', label: 'VERIFIED CITIZEN', icon: <ShieldCheck className="w-3.5 h-3.5" /> },
+                   { id: 'PENDING', label: 'PENDING AUDIT', icon: <Clock className="w-3.5 h-3.5" /> },
+                   { id: 'INACTIVE', label: 'SUSPENDED ACCESS', icon: <ShieldAlert className="w-3.5 h-3.5" /> },
+                 ].map((status) => {
+                    const isActive = formData.status === status.id;
+                    return (
+                       <button 
+                         key={status.id} 
+                         type="button"
+                         onClick={() => setFormData({ ...formData, status: status.id })}
+                         className={cn(
+                            "w-full flex items-center gap-4 p-4 rounded-[20px] border transition-all duration-300",
+                            isActive ? "bg-primary/10 border-primary/40 text-[var(--foreground)] shadow-glow-purple" : "bg-[var(--foreground)]/5 border-[var(--foreground)]/5 text-text-secondary"
+                         )}
+                       >
+                          <div className={cn(
+                            "w-10 h-10 rounded-xl flex items-center justify-center",
+                            isActive ? "bg-primary text-[var(--foreground)]" : "bg-[var(--foreground)]/5"
+                          )}>
+                             {status.icon}
+                          </div>
+                          <p className="text-[10px] font-black uppercase tracking-widest">{status.label}</p>
+                       </button>
+                    );
+                 })}
               </div>
            </Card>
 

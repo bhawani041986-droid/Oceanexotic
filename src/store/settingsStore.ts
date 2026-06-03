@@ -18,6 +18,7 @@ interface SettingsState {
   address: string;
   theme: string;
   font: string;
+  email: string;
   
   // Customer Theme Engine
   customerTheme: string;
@@ -42,6 +43,12 @@ interface SettingsState {
     mode: 'test' | 'live';
   };
 
+  // Order Window Control
+  ordersEnabled: boolean;
+  ordersOpenTime: string;       // HH:MM format e.g. "09:00"
+  ordersCloseTime: string;      // HH:MM format e.g. "22:00"
+  ordersNextOpenText: string;   // Human-readable label shown to customers
+
   setSettings: (settings: Partial<SettingsState>) => void;
   authorizeMultiSig: () => void;
   fetchSettings: () => Promise<void>;
@@ -50,24 +57,24 @@ interface SettingsState {
 
 export const useSettingsStore = create<SettingsState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       marketplaceName: "OceanExotic Global",
       currency: "INR",
       currencySymbol: "₹",
       timezone: "Asia/Kolkata (IST)",
       commissionRate: 12,
       multiSigAuthorized: false,
-      theme: "theme-ocean-neon",
+      theme: "theme-zomato-passion",
       font: "font-inter",
-      customerTheme: "theme-midnight-deep",
+      customerTheme: "theme-zomato-passion",
       atmosphericGlow: 15,
       flashDealActive: true,
       flashDealEnd: new Date(Date.now() + 1000 * 60 * 60 * 3).toISOString(), // 3 hours from now
       customerAssets: {
         logo: "",
         hero: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80",
-        favicon: "/favicon.ico",
-        appleIcon: "",
+        favicon: "/logo-icon.svg",
+        appleIcon: "/logo-icon.svg",
         promo: "https://images.unsplash.com/photo-1551970634-747846a548cb?auto=format&fit=crop&q=80",
         promoSecondary: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80",
         mobile: "",
@@ -79,6 +86,12 @@ export const useSettingsStore = create<SettingsState>()(
         merchantSalt: "PAYU_SALT_MOCK",
         mode: 'test'
       },
+
+      // Order Window Defaults
+      ordersEnabled: true,
+      ordersOpenTime: '09:00',
+      ordersCloseTime: '22:00',
+      ordersNextOpenText: 'Tomorrow at 09:00 AM',
       
       // Default Global Handshakes
       instagram: "@oceanexotic_global",
@@ -86,6 +99,7 @@ export const useSettingsStore = create<SettingsState>()(
       whatsapp: "+91 98765 43210",
       contactNumber: "+91 03192 123456",
       address: "Marine Hub, Phoenix Bay, Port Blair, Andaman & Nicobar Islands",
+      email: "dispatch@oceanexotic.com",
 
       setSettings: (newSettings) => set((state) => ({ ...state, ...newSettings })),
       authorizeMultiSig: () => set({ multiSigAuthorized: true }),
@@ -104,7 +118,7 @@ export const useSettingsStore = create<SettingsState>()(
 
       pushSettings: async () => {
         try {
-          const state = useSettingsStore.getState();
+          const state = get();
           const settingsToSave = {
             marketplaceName: state.marketplaceName,
             currency: state.currency,
@@ -119,7 +133,12 @@ export const useSettingsStore = create<SettingsState>()(
             contactNumber: state.contactNumber,
             address: state.address,
             theme: state.theme,
-            payu: state.payu
+            email: state.email,
+            payu: state.payu,
+            ordersEnabled: state.ordersEnabled,
+            ordersOpenTime: state.ordersOpenTime,
+            ordersCloseTime: state.ordersCloseTime,
+            ordersNextOpenText: state.ordersNextOpenText
           };
 
           const response = await fetch(`${API_BASE_URL}/system/settings.php`, {

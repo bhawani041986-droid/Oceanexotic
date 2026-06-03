@@ -20,6 +20,7 @@ try {
                 o.created_at as date, 
                 o.total_amount as total, 
                 o.status,
+                o.is_pre_order,
                 (SELECT COUNT(*) FROM order_items oi WHERE oi.order_id = o.id) as item_count
             FROM orders o
             WHERE o.user_id = :user_id 
@@ -35,6 +36,7 @@ try {
         $order['tracking'] = 'OCEAN-' . str_pad($order['id'], 4, '0', STR_PAD_LEFT);
         $order['date'] = date('M d, Y', strtotime($order['date']));
         $order['total'] = (float)$order['total'];
+        $order['is_pre_order'] = isset($order['is_pre_order']) ? (int)$order['is_pre_order'] : 0;
         
         // Status Normalization for UI Indicators
         $statusMap = [

@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     const addresses = await query(sql, [userId]);
     
     // Map the returned rows to what the client expects (type and address)
-    const formattedAddresses = (Array.isArray(addresses.data) ? addresses.data : []).map(addr => ({
+    const formattedAddresses = (Array.isArray(addresses.data) ? addresses.data : []).map((addr: any) => ({
       ...addr,
       type: addr.label,
       address: addr.address_line1

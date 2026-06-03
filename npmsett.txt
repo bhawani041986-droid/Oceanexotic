@@ -1,9 +1,23 @@
  npx expo start -c
-
+for mobile 
+npm run dev
+"""""""""""""""""""""""""""""""""""
 cd apps/customer-mobile
+npm run dev
 npx expo start --web
 npx expo start --web --clear
 
+> oceanexotic-mobile@1.0.0 dev
+> expo start --web --port 8082
+npx expo start --tunnel --port 8082
+
+env: load .env
+env: export EXPO_PUBLIC_API_URL EXPO_PUBLIC_API_PORT
+Starting project at C:\xampp\htdocs\FISH_MARKET\apps\customer-mobile
+Starting Metro Bundler
+""""""""""""""""""""""""""""""""""""""""
+
+exp://192.168.0.199:8081
 
 cursor api
 
@@ -12,4 +26,162 @@ crsr_7824f8a7b4de20c5238047a18b5cb491b3b2904dbb08f631b683e16a286a2e31
 openrouter ai api
 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
 
++++++++++++++++++++++++++++++++++++++++
 
+
+check profile check out and market all i finished in last update but non of them are opening please check and include all pages features all one by one 
+
+in web preview nothing shows what r the screen shot ypou need let me know
+
+parallogram shape NEED TO IMPLEMENT TO BUTTONS CARDS PLEASE GO THROUGH WEB CUSTOMER HOME CODE YOU WILL UNDERSTAND AND CHECK THE SCREEN SHOT,PLEASE IMPLEMENT AS IN WEB VIEW
+IN HEADER MENUE 
+
+THAN CHECK THE HEADER IN PLACE OF CART TEXT REPLACE WITH ICON OF CART AND ADD NOTIFICATION ICON
+
+IN ACQUARIUM ADD MORE CORALS NOW 4 CORALS INCLUDE 10 MORE 2 SNAIL INCLUDE 6 MORE 4 stars include 6 more and a diamond ruby sprinkling  by adding this to aqarium amke it perfect
+ 
+FEW MORE CARDS NEED TO UPDATE WITH parallogram shape LIKE CATEGORY CARDS, THAN THE FLEET ELETE LIVE, TELEMETRY MAP,GREEL MASTER, INSTANT 90 MINUTES AND OTHER THREE, JOIN THE FLEET FLEET TESTIMONIAL, CULINARY HUB PLEASE UPDATE 
+CHECK THE   RECTANGULAR BORDER STILL PRESENT PLEASE REMOVE THE RECTANGULAR BORDER ONLY
+
+IN BANNER/HERO REMOVE THE SECOND SMALL IMAGE TWO IN A SMALL AREA DOESENT FITPLEASE REMOVE AND UPDATE
+
+MOVE FLEET TESTIMONIAL JUST BELLOW CULINARY HUB SECTION THAN JOIN THE FLEET SECTION ARRANGE THIS SECTIONS 
+
+MOVE CULINARY HUB SECTION JUST BELLOW FEATURED HARVEST SECTION 
+
+REMOVE THE BOTTOM VIEW CART THAT IS DOUBLE PLEASE REMOVE
+
+PLEASE the current web theme is zomato, check UPDATE THE THEME WITH ZOMATO THEME AS THERE ITS ADMIN DRIVEN ADMIN CHANGE THEME AUTOMATICALLY when admin changes from admin dashboard ,  THE CUSTOMER THEME CHANGES PLEASE CHECK CURRENTLY THE THEME SET TO ZOMATO THEME COLOR, and the theme sync with admin properly all admin "http://localhost:3000/admin/marketplace/theme" please find the system properly working with admin action flow 
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+
+
+PLEASE CHECK PROFILE PICTURE IS NOT GETTING UPLOADED PLEASE CORRECT THE PATH OR FIND ANY OTHER ISSUE PLEASE SOLVE 
+
+in header in place of profile name replace the name with th profile image
+i can check the mobile map zoom in zoom out dont work please check 
+
+PLEASE CHECK THIS SECTION TELEMATRY MAP, THAT I UPLOADED THE WEBVIEW SCREENSHOT THAT IS UPLOADED AS IMAGE, IT SHOWS ANDAMAN WITH NO CIRCULAR SHAPE AND THIS TELEMATRY MAP IS DIFFERENT IN APP VIEW THAN WEB VIEW PLEASE CHECK THE CODE FOR CORRECTLY UNDERSTAND THAN UPDATE THE APP TELEMATRY MAP
+
+BOTTOM NAVIGATION NEED TO UPDATE WITH CORRECT ICONS AS WELL AND MAKE THEM COLORFUL CHECK THE WEBVERSION AND APPLY, I AM UPLOADING THE SCREENSHOT
+
+jOIN THE FLEET BUTTON IS NOT parallogram shape, MAKE IT PARALLOGRAM
+
+PLEASE CHECK THIS SECTION "Grill Mode
+MARITIME
+GRILL.
+Volcanic harvests.
+
+EXPLORE
+Node: Flame
+
+FLAME-SEA
+COLLECTIONS" THIS SECTION IMAGES ARE NOT PRESENT AND THE ICONS IN IT IS MISSING PLEASE INCLUDE AND THAN MOVE THIS SECTION JUST BELLOW SUMMER SEAFOOD FESTIVAL PROMO
+
+in header navigation notification than banner text than other violate texts that is (ocean neon) theme color, please check once again  those will update according to theme update 
+
+now check the theme background cokor card background color are properly synking with theme please have a throughly check its properly  sync through admin so please check 
+
+still in header navigation notification than, live telemetry section text need to update 
+check the logo icon light effect property its not matching with the web logo property please compare the cource of logo please include this 
+
+now check the white text/ fonts also need to match the theme please check and correct 
+
+as i can check  todays catch section buttons like (all, morning, afternoon and evening) text color in normal state its need to update please correct
+
+parallogram shape NEED TO check an extra corner left in most of the card need to update, like the cards shows extra corner than category card than explore category button in hero, than culinary hub cards than summer seafood festival promo card similarly most please go through and update  one by one 
+
+the product card size changes with product image update like the card bottom detailed section move up please make the asjustment for perfect constent same image area and details bottom area with image size card property shold not change , please correct 
+please check and do needfull
+
+"http://localhost:3002/admin/marketplace/theme" admin page check the themes all are correctly face to this app please apply correctly as like zomato implementation please check the chat histry and proceed 
+
+please find product details page in customer app dont show the sections present in  web vew is in this view equiped with section scientifi, than chef recipes, than authority registry, customer intelligence and similar fleet asset but in app this sections are missing please correct
+
+please integrate a delivary qr code as well password generated in customers end and a scanner or a field to enter delivary code in agents end please think AS AN EXPERT and integrate
+ customer end with delivary qr code as well OTP password generated IN SAME DASHBOARD  need to update by giving qr OR OTP BY CUSTOMER TO CONFIRM  DELIVARY 
+
+agent view by sync the proper gps location just guide as an technical advisor what need to do for this and what you can plan for this, for proper trust and proper navigation, and agent for track down the location by proper gps trigger with his current location 
+
+check this page "http://localhost:3001/customer/orders", need to add more sections for customer like grill product and addones according to local market need analyse code base and please think as an business expart and analyse most top fish delivary system and plan and let me know both in mobile app and web view 
+
+now check this page 
+"http://localhost:3000/customer/cart" need to add more sections for customer like grill product and addones according to local market need analyse code base and please think as an business expart and analyse most top fish delivary system and plan and let me know both in mobile app and web view 
+
+now make a section in admin dash board to controll adon show hide add adons and all control over addons please think and implement smetime adon service for some area place time may not available so admin can control those sectins please analyse and make such functionality without erorr 
+
+/migrate_addons.php
+
+please remove  "http://localhost:3000/agent/tracking?order_id=27" map is black layered overlayered or black opaced rectify this and how gps will navigate agent to the location to customer, analyse and let me know and find what to rectify
+
+http://localhost:3001/agent/tracking, CORRECT MAP NEED TO APPLY WITH CORRECT GPS QUARDINATION PLEASE INTEGRATE AS AN EXPERT PLEASE EXPERT FOLLOWING ALL RULES
+
+bottom navigation touches the mobile navigation please what is the solution
+
+now only this two theme are  not 
+getting applied correctly to mobile app please correct, midnight deep and arctic minimal than 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""  """
+
+correct the fevicon with glowing logo fish icon please analyse site app logo icon please replace ciurrent fevicon and apple icon with said in admin page "http://localhost:3000/admin/marketplace/theme", than link properly to display correct fevicon and apple icon please correct it 
+
+rduce the current banner height by 30% in mobile application adjust banner text and banner buttons accordingly  view and upadte
+
+
+now please suggest me which will be bes to migrate after customer  app need to start next admin agent or seller please suggest me similarly we need to plan and execute app migration just 
+
+agent approval from admin end required, please correct the fiunctioning to approve hold agents
+
+agent can edit there photo
+
+http://localhost:3001/admin/sellers and http://localhost:3001/admin/users this pages data is empty shows  "No merchant nodes registered in the registry. and No nodes found in current registry) please correct
+
+now please suggest me which will be bes to migrate after customer agent app need to start next admin  or seller please suggest me similarly we need to plan and execute app migration just both app need seperate app or how you feel to develop
+
+apply page section containeer, popup forms according to mobile view and size, analyse and make proper plan to execute this for proper mobile app view
+
+oder pipeline page need to have proper pagination and page color property than order detailed page please correct, analyse and plan for this to update properly
+
+please include order pipeline page in such way that admin can see order area wise seller wise, make a proper plan for all view to implement this  
+
+in customer home page need following update " category cards need to adjust its size to fit properly and reduce unwanted blank space to fit properly, plan and execute
+
+Than todays catch section in a auto scrolling belt adjust for adin control display todays catch order please plan for that type of update please plan accordingly
+
+analyse amazone shopping app product gallery style please implement same for my product gallery, make a proper execution plan and let me know to proceed 
+
+please as by analysing you arusing most of the ai cedi manag ad ueroely with accurate action 
+
+but thumbnil still position to bottom make it in amazone style side thumbnil position with product howover zooming effect by analysing amazone product gallery
+
+please correct order details page view and design in amin view to reduce vertical height of  this popup layer and iclud close button please make propr planning   for this update, to make switable view for mobile user, 
+
+
+to improve ""http://localhost:3000/customer/products" " plan as an busnisess manager and analyse other fish selling patform as they display there product please try to adopt the best switable for my app and web but all admin driven please check analyse and plan and let me know the plan before execute, you include different sections layer by layer, add on products, marinate, grill, fry etc, and this platform admin can controlall this with loacation price availavilability visibility, coming soon from admin end, also in "http://localhost:3000/customer/products" with admin control this product will visible to the customer 
+
+in mobile view make it 50% width of its current width and make it 2 by 2 to reduce vertical space in mobile view and can be show or hide by admin control panel please 
+
+now check while i trying to operate by pressing select cut and add function in product details page in mobile view the price is not correct please verify red snapper as example analys with admin product moderation page to get correct caluculation please plan and let me know the problem by checking uploaded images 
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+http://localhost:3000/agent/tracking
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""
+C:\xampp\htdocs\FISH_MARKET\blueprints\PRODUCT_MODERATION_SYSTEM_BLUEPRINT.md
+
+noin this app i need  orderin opening and closing time that can controlled by admin driven (like admin can set opening and closing time to start and stop getting delivary before next open) please analyse and make a proper plan to execute this, only they can make pre order for next available opening plan properly and let me know
+
+and how the the other recipies can find and how this can dedicate for fish category like curry grill fry than south indian bengali telegue and other possible local recipoes analyse as an expert in this field and include recipies for all fish with all category and make a navigation button for the main recipies page please with current add this for this make a proper plan
+
+go through than include pagination to the chef's recipies pages and replace culinary registry into  chef's recipies
+
+
+please sync correct and real product data in "http://localhost:3000/customer" web view mobile app is syncing correc data only web view correct data need to face please analyse the erroe and plan to execute before that let me know
+
+please sync correct and real product data in "http://localhost:3000/customer" web view mobile app is syncing correc data only web view correct data need to face please analyse the erroe and plan to execute before that let me know
+
+NOW CAN YOU INCLUDE AND DISPLAY THE OPENING AND CLOSING DYNAMIC TIMING TO CUSTOMERS HOMEPAGE ON RIGHT TOP CORNER OF BANNER
+
+IMPLEMENTED GOOD BUT THE LAYER HIDING BANNER TEXT PLEASE DESIGN IN SLIM MODEL ITS HEIGHT IS MORE ADJUST IN SUCH AN WAY INPLACE OF SHOP FRESH BUTTON AND CATEGORY BUTTON THIS CAN BE REPLACED AND IMPLEMENT SAME TO MOBILE APP

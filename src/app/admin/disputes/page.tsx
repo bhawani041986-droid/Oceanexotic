@@ -77,7 +77,7 @@ export default function AdminDisputesPage() {
                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-secondary opacity-40 group-focus-within:opacity-100 transition-opacity" />
              </div>
           </div>
-          <div className="overflow-x-auto">
+          <div className="hidden lg:block overflow-x-auto">
             <Table>
                <TableHeader>
                   <TableRow className="border-[var(--foreground)]/5">
@@ -124,6 +124,28 @@ export default function AdminDisputesPage() {
                   ))}
                </TableBody>
             </Table>
+          </div>
+
+          {/* Mobile card list */}
+          <div className="lg:hidden space-y-3 p-4">
+            {DISPUTE_REGISTRY.map((disp) => (
+              <div key={disp.id} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-0.5">
+                    <p className="font-black text-[var(--foreground)] italic text-sm tracking-tighter uppercase">{disp.type}</p>
+                    <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">{disp.id} • {disp.order}</p>
+                  </div>
+                  <Badge variant={disp.intensity === "CRITICAL" ? "danger" : disp.intensity === "HIGH" ? "warning" : "secondary"} className="uppercase text-[8px] italic px-2">{disp.intensity}</Badge>
+                </div>
+                <div className="p-3 rounded-lg bg-[var(--foreground)]/5 space-y-1">
+                  <p className="text-[9px] font-black text-[var(--foreground)] uppercase italic">{disp.claimant} <span className="text-text-secondary opacity-60">vs {disp.merchant}</span></p>
+                  <Badge variant="glass" className="bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5 uppercase text-[7px] tracking-[0.2em] italic">{disp.status}</Badge>
+                </div>
+                <button className="w-full p-2.5 rounded-lg bg-primary/5 border border-primary/20 text-primary transition-all flex items-center justify-center gap-2 text-[9px] font-black uppercase tracking-widest italic">
+                  MEDIATE <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ))}
           </div>
         </Card>
       </div>

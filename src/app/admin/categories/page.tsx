@@ -124,51 +124,82 @@ export default function AdminCategoriesPage() {
               <Filter className="w-3.5 md:w-4 h-3.5 md:h-4" /> FILTERS
            </Button>
         </div>
-        <Table>
-          <TableHeader>
-            <TableRow className="border-[var(--foreground)]/5">
-              <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Category Identity</TableHead>
-              <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Cataloged Species</TableHead>
-              <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Product Density</TableHead>
-              <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Trade Volume</TableHead>
-              <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Registry Status</TableHead>
-              <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Governance</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {MOCK_CATEGORIES.map((cat) => (
-              <TableRow key={cat.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
-                <TableCell>
-                  <div className="space-y-0.5 md:space-y-1">
-                    <p className="font-black text-[var(--foreground)] text-xs md:text-sm uppercase tracking-tighter group-hover/row:text-primary transition-colors italic">{cat.name}</p>
-                    <p className="text-[7px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">ID: {cat.id}</p>
-                  </div>
-                </TableCell>
-                <TableCell className="text-[10px] md:text-xs font-black text-text-secondary italic opacity-40">via {cat.species}</TableCell>
-                <TableCell className="font-black text-[var(--foreground)] italic text-[11px] md:text-sm">{cat.products} NODES</TableCell>
-                <TableCell className="font-black text-primary italic text-[11px] md:text-sm">{cat.volume}</TableCell>
-                <TableCell>
-                  <Badge variant={cat.status === "ACTIVE" ? "success" : "secondary"} className="italic uppercase text-[8px] md:text-[10px] px-2">
-                    {cat.status}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end gap-1 md:gap-2">
-                    <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
-                      <Edit3 className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                    </button>
-                    <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5">
-                      <Trash2 className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                    </button>
-                    <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
-                      <MoreVertical className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                    </button>
-                  </div>
-                </TableCell>
+        <div className="hidden lg:block">
+          <Table>
+            <TableHeader>
+              <TableRow className="border-[var(--foreground)]/5">
+                <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Category Identity</TableHead>
+                <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Cataloged Species</TableHead>
+                <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Product Density</TableHead>
+                <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Trade Volume</TableHead>
+                <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Registry Status</TableHead>
+                <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Governance</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {MOCK_CATEGORIES.map((cat) => (
+                <TableRow key={cat.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
+                  <TableCell>
+                    <div className="space-y-0.5 md:space-y-1">
+                      <p className="font-black text-[var(--foreground)] text-xs md:text-sm uppercase tracking-tighter group-hover/row:text-primary transition-colors italic">{cat.name}</p>
+                      <p className="text-[7px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">ID: {cat.id}</p>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-[10px] md:text-xs font-black text-text-secondary italic opacity-40">via {cat.species}</TableCell>
+                  <TableCell className="font-black text-[var(--foreground)] italic text-[11px] md:text-sm">{cat.products} NODES</TableCell>
+                  <TableCell className="font-black text-primary italic text-[11px] md:text-sm">{cat.volume}</TableCell>
+                  <TableCell>
+                    <Badge variant={cat.status === "ACTIVE" ? "success" : "secondary"} className="italic uppercase text-[8px] md:text-[10px] px-2">
+                      {cat.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-1 md:gap-2">
+                      <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
+                        <Edit3 className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                      </button>
+                      <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5">
+                        <Trash2 className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                      </button>
+                      <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
+                        <MoreVertical className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                      </button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Mobile card list */}
+        <div className="lg:hidden space-y-3 p-4">
+          {MOCK_CATEGORIES.map((cat) => (
+            <div key={cat.id} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
+              <div className="flex items-start justify-between">
+                <div className="space-y-0.5">
+                  <p className="font-black text-[var(--foreground)] italic text-sm tracking-tighter uppercase">{cat.name}</p>
+                  <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">{cat.id} • via {cat.species}</p>
+                </div>
+                <Badge variant={cat.status === "ACTIVE" ? "success" : "secondary"} className="italic uppercase text-[8px] px-2">{cat.status}</Badge>
+              </div>
+              <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5">
+                <div className="space-y-0">
+                  <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Products</p>
+                  <p className="text-xs font-black text-[var(--foreground)] italic">{cat.products} Nodes</p>
+                </div>
+                <div className="text-right space-y-0">
+                  <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Volume</p>
+                  <p className="text-xs font-black text-primary italic">{cat.volume}</p>
+                </div>
+                <div className="flex gap-2">
+                  <button className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5"><Edit3 className="w-3.5 h-3.5" /></button>
+                  <button className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5"><Trash2 className="w-3.5 h-3.5" /></button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </Card>
 
       {/* Global Intelligence Handshake */}

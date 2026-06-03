@@ -46,7 +46,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Card className="group relative overflow-hidden bg-bg-card border-[var(--foreground)]/5 hover:border-primary/30 transition-all duration-500 hover:shadow-glow-purple flex flex-col h-full rounded-[28px]">
-      <div className="relative aspect-[4/3] overflow-hidden">
+      <div className="relative w-full aspect-[4/3] bg-black/40 overflow-hidden shrink-0">
         {!imageLoaded && (
           <Skeleton className="absolute inset-0 z-10 rounded-none" />
         )}
@@ -55,7 +55,7 @@ export function ProductCard({ product }: ProductCardProps) {
           alt={`Harvest: ${product.name}`}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className={`object-cover transition-transform duration-700 group-hover:scale-105 ${
+          className={`object-contain transition-transform duration-700 group-hover:scale-105 ${
             imageLoaded ? "scale-100" : "scale-105"
           }`}
           onLoad={() => setImageLoaded(true)}
@@ -80,16 +80,16 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className="p-6 space-y-6 flex-1 flex flex-col justify-between">
         <div className="space-y-4">
            <div className="flex justify-between items-start gap-4">
-              <div className="space-y-1 flex-1">
-                 <h3 className="text-xl font-bold text-[var(--foreground)] tracking-tight leading-tight group-hover:text-primary transition-colors">
+              <div className="space-y-1 flex-1 min-w-0">
+                 <h3 className="text-xl font-bold text-[var(--foreground)] tracking-tight leading-tight group-hover:text-primary transition-colors truncate">
                     <NextLink href={`/customer/products/${product.id}`}>{product.name}</NextLink>
                  </h3>
-                 <p className="text-[10px] font-bold text-text-secondary uppercase tracking-[0.15em]">
+                 <p className="text-[10px] font-bold text-text-secondary uppercase tracking-[0.15em] truncate">
                     Origin: Global • SKU: OF-{product.id}
                  </p>
               </div>
               <button 
-                className="p-1 text-text-secondary hover:text-danger transition-colors group/heart"
+                className="p-1 text-text-secondary hover:text-danger transition-colors group/heart shrink-0"
                 aria-label="Add to Wishlist"
               >
                 <Heart className="w-6 h-6 group-hover/heart:fill-danger" />

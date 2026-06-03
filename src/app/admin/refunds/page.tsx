@@ -77,50 +77,73 @@ export default function AdminRefundsPage() {
               <Search className="absolute left-3.5 md:left-4 top-1/2 -translate-y-1/2 w-3.5 md:w-4 h-3.5 md:h-4 text-text-secondary opacity-40 group-focus-within:opacity-100 transition-opacity" />
            </div>
         </div>
-        <Table>
-           <TableHeader>
-              <TableRow className="border-[var(--foreground)]/5">
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Directive (Order)</TableHead>
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Settlement Amount</TableHead>
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Correction Reason</TableHead>
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Liable Merchant</TableHead>
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Registry Status</TableHead>
-                 <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary pr-4 md:pr-6">Governance</TableHead>
-              </TableRow>
-           </TableHeader>
-           <TableBody>
-              {REFUND_REGISTRY.map((ref) => (
-                 <TableRow key={ref.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
-                    <TableCell className="font-black text-primary text-[9px] md:text-[10px] uppercase tracking-widest italic">{ref.order}</TableCell>
-                    <TableCell className="font-black text-[var(--foreground)] text-xs md:text-sm italic">{ref.amount}</TableCell>
-                    <TableCell className="text-[10px] md:text-xs font-black text-text-secondary italic opacity-60">{ref.reason}</TableCell>
-                    <TableCell className="text-[9px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest italic">{ref.merchant}</TableCell>
-                    <TableCell>
-                       <Badge variant={
-                          ref.status === "AUTHORIZED" ? "success" : 
-                          ref.status === "PENDING" ? "warning" : 
-                          "secondary"
-                       } className="text-[7px] md:text-[9px] italic px-2 uppercase font-black tracking-widest">
-                          {ref.status}
-                       </Badge>
-                    </TableCell>
-                    <TableCell className="text-right pr-4 md:pr-6">
-                       <div className="flex justify-end gap-1 md:gap-2">
-                          <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
-                             <FileText className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                          <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-success transition-all border border-[var(--foreground)]/5">
-                             <CheckCircle2 className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                          <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5">
-                             <XCircle className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                       </div>
-                    </TableCell>
+        <div className="hidden lg:block">
+           <Table>
+              <TableHeader>
+                 <TableRow className="border-[var(--foreground)]/5">
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Directive (Order)</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Settlement Amount</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Correction Reason</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Liable Merchant</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Registry Status</TableHead>
+                    <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary pr-4 md:pr-6">Governance</TableHead>
                  </TableRow>
-              ))}
-           </TableBody>
-        </Table>
+              </TableHeader>
+              <TableBody>
+                 {REFUND_REGISTRY.map((ref) => (
+                    <TableRow key={ref.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
+                       <TableCell className="font-black text-primary text-[9px] md:text-[10px] uppercase tracking-widest italic">{ref.order}</TableCell>
+                       <TableCell className="font-black text-[var(--foreground)] text-xs md:text-sm italic">{ref.amount}</TableCell>
+                       <TableCell className="text-[10px] md:text-xs font-black text-text-secondary italic opacity-60">{ref.reason}</TableCell>
+                       <TableCell className="text-[9px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest italic">{ref.merchant}</TableCell>
+                       <TableCell>
+                          <Badge variant={ref.status === "AUTHORIZED" ? "success" : ref.status === "PENDING" ? "warning" : "secondary"} className="text-[7px] md:text-[9px] italic px-2 uppercase font-black tracking-widest">
+                             {ref.status}
+                          </Badge>
+                       </TableCell>
+                       <TableCell className="text-right pr-4 md:pr-6">
+                          <div className="flex justify-end gap-1 md:gap-2">
+                             <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
+                                <FileText className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                             </button>
+                             <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-success transition-all border border-[var(--foreground)]/5">
+                                <CheckCircle2 className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                             </button>
+                             <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5">
+                                <XCircle className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                             </button>
+                          </div>
+                       </TableCell>
+                    </TableRow>
+                 ))}
+              </TableBody>
+           </Table>
+        </div>
+
+        {/* Mobile card list */}
+        <div className="lg:hidden space-y-3 p-4">
+          {REFUND_REGISTRY.map((ref) => (
+            <div key={ref.id} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
+              <div className="flex items-start justify-between">
+                <div className="space-y-0.5">
+                  <p className="font-black text-primary italic text-sm tracking-widest">{ref.order}</p>
+                  <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">{ref.reason}</p>
+                </div>
+                <Badge variant={ref.status === "AUTHORIZED" ? "success" : ref.status === "PENDING" ? "warning" : "secondary"} className="text-[7px] italic px-2 uppercase font-black tracking-widest">{ref.status}</Badge>
+              </div>
+              <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5">
+                <div className="space-y-0.5">
+                  <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Amount • {ref.merchant}</p>
+                  <p className="text-sm font-black text-[var(--foreground)] italic">{ref.amount}</p>
+                </div>
+                <div className="flex gap-2">
+                  <button className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-success border border-[var(--foreground)]/5"><CheckCircle2 className="w-3.5 h-3.5" /></button>
+                  <button className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger border border-[var(--foreground)]/5"><XCircle className="w-3.5 h-3.5" /></button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </Card>
     </div>
   

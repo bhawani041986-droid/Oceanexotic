@@ -90,6 +90,37 @@ export default function OrderDetailsScreen() {
           </Text>
         </View>
 
+        {/* 🔐 SECURE HANDOFF PROTOCOL */}
+        <View className="mb-6 rounded-2xl border border-blue-500/20 bg-blue-500/5 p-5">
+          <View className="flex-row items-center gap-3">
+            <View className="h-10 w-10 items-center justify-center rounded-full bg-blue-500/20 border border-blue-500/30">
+              <Text className="text-lg">🔐</Text>
+            </View>
+            <View className="flex-1">
+              <Text className="text-xs font-black uppercase italic text-foreground">
+                Secure Handoff Protocol
+              </Text>
+              <Text className="mt-0.5 text-[9px] text-muted-foreground">
+                Provide QR or OTP to confirm delivery
+              </Text>
+            </View>
+          </View>
+          
+          <View className="mt-4 items-center justify-center border-t border-white/5 pt-4">
+            <Image
+              source={{ uri: `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`http://localhost:3000/agent/confirm/${id}?otp=${String((parseInt(id?.replace(/[^0-9]/g, "") || "123") * 997 + 12345) % 900000 + 100000)}`)}` }}
+              className="h-40 w-40 rounded-xl bg-white p-2"
+              contentFit="contain"
+            />
+            <Text className="mt-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+              Verification Password (OTP)
+            </Text>
+            <Text className="mt-1 text-2xl font-black tracking-widest text-primary italic">
+              {String((parseInt(id?.replace(/[^0-9]/g, "") || "123") * 997 + 12345) % 900000 + 100000)}
+            </Text>
+          </View>
+        </View>
+
         {/* Items */}
         <Text className="mb-4 text-xs font-black uppercase tracking-widest text-foreground">
           Manifest Items

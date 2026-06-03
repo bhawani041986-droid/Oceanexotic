@@ -99,6 +99,7 @@ export default function SearchResultsPage() {
       quantity: 1,
       image: selectedProductForCut.image,
       sellerName: selectedProductForCut.seller,
+      sellerId: selectedProductForCut.sellerId || selectedProductForCut.seller_id || "SEL-000",
       metadata: {
         cut_type: selectedCut.cut_type,
         base_product_id: selectedProductForCut.id
@@ -195,7 +196,7 @@ export default function SearchResultsPage() {
                 <div className="relative aspect-[4/3] rounded-[16px] md:rounded-[28px] overflow-hidden bg-bg-secondary">
                   <div className="absolute inset-0 bg-gradient-to-t from-bg-primary to-transparent opacity-60" />
                   <div className="absolute top-2 md:top-4 left-2 md:left-4 z-10 flex flex-col gap-1 md:gap-2">
-                    <Badge variant={product.is_live ? "primary" : "outline"} className="shadow-glow-purple text-[8px] md:text-[10px] uppercase">{product.tag}</Badge>
+                    <Badge variant={product.is_live ? "default" : "outline"} className="shadow-glow-purple text-[8px] md:text-[10px] uppercase">{product.tag}</Badge>
                     {product.is_live && (
                       <Badge variant="success" className="bg-success/80 backdrop-blur-md text-[7px] md:text-[8px] uppercase tracking-tighter">
                         ⚓ {product.harbor}

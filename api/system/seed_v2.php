@@ -38,8 +38,9 @@ try {
     $locations = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $sellerInsert = $pdo->prepare("INSERT INTO users (id, name, email, password, role, territory_id) VALUES (?, ?, ?, ?, 'SELLER', ?)");
-    $productInsert = $pdo->prepare("INSERT INTO products (name, price, category, description, seller_id, image, unit) VALUES (?, ?, ?, ?, ?, ?, 'kg')");
-
+    // Insert Products
+    $productInsert = $pdo->prepare("INSERT INTO products (id, seller_id, name, category, price, stock, status, image_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    
     $count = 0;
     foreach ($locations as $loc) {
         $sellerId = "SEL-" . strtoupper(substr(str_replace(' ', '', $loc['name']), 0, 4)) . "-" . sprintf("%03d", rand(1, 999));

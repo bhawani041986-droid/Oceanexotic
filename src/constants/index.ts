@@ -9,8 +9,8 @@ export const ROUTES = {
   SELLER_DASHBOARD: '/seller/dashboard',
   ADMIN_DASHBOARD: '/admin/dashboard',
   AUTH: {
-    LOGIN: '/auth/login',
-    REGISTER: '/auth/register',
+    LOGIN: '/login',
+    REGISTER: '/register',
   }
 };
 

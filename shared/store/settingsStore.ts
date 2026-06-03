@@ -66,8 +66,8 @@ export const useSettingsStore = create<SettingsState>()(
       customerAssets: {
         logo: "",
         hero: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80",
-        favicon: "/favicon.ico",
-        appleIcon: "",
+        favicon: "/logo-icon.svg",
+        appleIcon: "/logo-icon.svg",
         promo: "https://images.unsplash.com/photo-1551970634-747846a548cb?auto=format&fit=crop&q=80",
         promoSecondary: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80",
         mobile: "",

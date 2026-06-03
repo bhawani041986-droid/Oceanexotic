@@ -174,63 +174,118 @@ export default function AdminCouponsPage() {
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-secondary opacity-40 group-focus-within:opacity-100 transition-opacity" />
            </div>
         </div>
-        <Table>
-           <TableHeader>
-              <TableRow className="border-[var(--foreground)]/5">
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Fleet Code</TableHead>
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Incentive Type</TableHead>
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Value</TableHead>
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Usage Intensity</TableHead>
-                 <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Registry Status</TableHead>
-                 <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Governance</TableHead>
-              </TableRow>
-           </TableHeader>
-           <TableBody>
-              {coupons.map((coupon) => (
-                 <TableRow key={coupon.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
-                    <TableCell>
-                       <div className="space-y-0.5 md:space-y-1">
-                          <p className="font-mono text-[11px] md:text-xs font-black text-primary uppercase tracking-widest italic">{coupon.code}</p>
-                          <p className="text-[7px] md:text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Expiry: {coupon.expiry || "NEVER"}</p>
-                       </div>
-                    </TableCell>
-                    <TableCell className="text-[10px] md:text-xs font-black text-text-secondary uppercase italic opacity-40">{coupon.type}</TableCell>
-                    <TableCell className="font-black text-[var(--foreground)] italic text-[11px] md:text-sm tracking-tighter">
-                      {coupon.type === "PERCENTAGE" ? `${coupon.value}%` : `₹${coupon.value}`}
-                    </TableCell>
-                    <TableCell>
-                       <div className="space-y-1.5 md:space-y-2">
-                          <div className="flex justify-between text-[7px] md:text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">
-                             <span>{coupon.usage.split('/')[0]}</span>
-                             <span>{coupon.usage.split('/')[1]}</span>
-                          </div>
-                          <div className="h-1 w-20 md:w-24 bg-[var(--foreground)]/5 rounded-full overflow-hidden">
-                             <div className="h-full bg-primary shadow-glow-purple" style={{ width: '40%' }} />
-                          </div>
-                       </div>
-                    </TableCell>
-                    <TableCell>
-                       <Badge variant={coupon.status === "ACTIVE" ? "success" : "secondary"} className="uppercase text-[8px] md:text-[10px] italic px-2">
-                          {coupon.status}
-                       </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                       <div className="flex justify-end gap-1 md:gap-2">
-                          <button onClick={() => openModal(coupon, true)} className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
-                             <Eye className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                          <button onClick={() => openModal(coupon)} className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
-                             <Edit3 className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                          <button onClick={() => handleDelete(coupon.id)} className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5">
-                             <Trash2 className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                          </button>
-                       </div>
-                    </TableCell>
-                 </TableRow>
-              ))}
-           </TableBody>
-        </Table>
+        <div className="hidden lg:block">
+          <Table>
+             <TableHeader>
+                <TableRow className="border-[var(--foreground)]/5">
+                   <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Fleet Code</TableHead>
+                   <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Incentive Type</TableHead>
+                   <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Value</TableHead>
+                   <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Usage Intensity</TableHead>
+                   <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Registry Status</TableHead>
+                   <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Governance</TableHead>
+                </TableRow>
+             </TableHeader>
+             <TableBody>
+                {coupons.map((coupon) => (
+                   <TableRow key={coupon.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
+                      <TableCell>
+                         <div className="space-y-0.5 md:space-y-1">
+                            <p className="font-mono text-[11px] md:text-xs font-black text-primary uppercase tracking-widest italic">{coupon.code}</p>
+                            <p className="text-[7px] md:text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Expiry: {coupon.expiry || "NEVER"}</p>
+                         </div>
+                      </TableCell>
+                      <TableCell className="text-[10px] md:text-xs font-black text-text-secondary uppercase italic opacity-40">{coupon.type}</TableCell>
+                      <TableCell className="font-black text-[var(--foreground)] italic text-[11px] md:text-sm tracking-tighter">
+                        {coupon.type === "PERCENTAGE" ? `${coupon.value}%` : `₹${coupon.value}`}
+                      </TableCell>
+                      <TableCell>
+                         <div className="space-y-1.5 md:space-y-2">
+                            <div className="flex justify-between text-[7px] md:text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">
+                               <span>{coupon.usage.split('/')[0]}</span>
+                               <span>{coupon.usage.split('/')[1]}</span>
+                            </div>
+                            <div className="h-1 w-20 md:w-24 bg-[var(--foreground)]/5 rounded-full overflow-hidden">
+                               <div className="h-full bg-primary shadow-glow-purple" style={{ width: '40%' }} />
+                            </div>
+                         </div>
+                      </TableCell>
+                      <TableCell>
+                         <Badge variant={coupon.status === "ACTIVE" ? "success" : "secondary"} className="uppercase text-[8px] md:text-[10px] italic px-2">
+                            {coupon.status}
+                         </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                         <div className="flex justify-end gap-1 md:gap-2">
+                            <button onClick={() => openModal(coupon, true)} className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
+                               <Eye className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                            </button>
+                            <button onClick={() => openModal(coupon)} className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
+                               <Edit3 className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                            </button>
+                            <button onClick={() => handleDelete(coupon.id)} className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5">
+                               <Trash2 className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                            </button>
+                         </div>
+                      </TableCell>
+                   </TableRow>
+                ))}
+             </TableBody>
+          </Table>
+        </div>
+
+        {/* Mobile view cards - visible only on lg screens and below */}
+        <div className="lg:hidden space-y-4 p-4">
+          {coupons.map((coupon) => (
+            <div 
+              key={coupon.id} 
+              className="p-4 rounded-xl bg-bg-secondary/45 border border-[var(--foreground)]/5 space-y-3 shadow-md"
+            >
+              <div className="flex items-start justify-between">
+                <div className="space-y-1">
+                  <p className="font-mono text-sm font-black text-primary uppercase tracking-widest italic">{coupon.code}</p>
+                  <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Expiry: {coupon.expiry || "NEVER"}</p>
+                  <Badge variant={coupon.status === "ACTIVE" ? "success" : "secondary"} className="uppercase text-[8px] italic px-2 mt-1">
+                    {coupon.status}
+                  </Badge>
+                </div>
+                <div className="text-right">
+                  <p className="font-black text-[var(--foreground)] italic text-sm tracking-tighter">
+                    {coupon.type === "PERCENTAGE" ? `${coupon.value}%` : `₹${coupon.value}`}
+                  </p>
+                  <span className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60 block mt-1">
+                    {coupon.type}
+                  </span>
+                </div>
+              </div>
+
+              <div className="space-y-1 border-t border-[var(--foreground)]/5 pt-2">
+                <div className="flex justify-between text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">
+                  <span>Redeemed: {coupon.usage.split('/')[0]}</span>
+                  <span>Limit: {coupon.usage.split('/')[1]}</span>
+                </div>
+                <div className="h-1 w-full bg-[var(--foreground)]/5 rounded-full overflow-hidden">
+                  <div className="h-full bg-primary shadow-glow-purple" style={{ width: '40%' }} />
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center border-t border-[var(--foreground)]/5 pt-2.5">
+                <span className="text-[8px] font-mono font-bold text-text-secondary uppercase tracking-widest">ID: {coupon.id}</span>
+                <div className="flex gap-1.5">
+                  <button onClick={() => openModal(coupon, true)} className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
+                    <Eye className="w-3.5 h-3.5" />
+                  </button>
+                  <button onClick={() => openModal(coupon)} className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
+                    <Edit3 className="w-3.5 h-3.5" />
+                  </button>
+                  <button onClick={() => handleDelete(coupon.id)} className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5">
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </Card>
 
       {/* Governance Modal */}
@@ -239,7 +294,7 @@ export default function AdminCouponsPage() {
         onClose={() => setIsModalOpen(false)}
         title={viewOnly ? "Incentive Intel" : editingCoupon ? "Edit Incentive Protocol" : "Deploy New Incentive"}
         description={viewOnly ? "Full telemetry of the selected incentive protocol." : "Configure maritime trade discounts and financial commissions."}
-        className="max-w-2xl"
+        className="md:max-w-2xl bg-bg-secondary/95 border border-primary/20 text-[var(--foreground)] shadow-[0_0_50px_rgba(168,85,247,0.15)] backdrop-blur-xl rounded-t-[28px] md:rounded-[28px] p-5 md:p-8"
       >
         <div className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
