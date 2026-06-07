@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
   async rewrites() {
     // If DATABASE_URL is set, we are running online with Supabase.
     // Rewrite all PHP endpoints to their Next.js TypeScript API route handlers.
-    const isOnline = process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL;
+    const isOnline = process.env.NODE_ENV === 'production' || process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL;
     
     if (isOnline) {
       return [
