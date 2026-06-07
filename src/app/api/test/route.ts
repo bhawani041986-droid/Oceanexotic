@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import postgres from 'postgres';
+import dns from 'dns';
+dns.setDefaultResultOrder('ipv6first');
 
 export async function GET() {
   try {

@@ -1,4 +1,6 @@
 import postgres from 'postgres';
+import dns from 'dns';
+dns.setDefaultResultOrder('ipv6first');
 import { BRIDGE_URL } from '@/config/api';
 
 // Establish connection to Supabase PostgreSQL when running online
