@@ -3,7 +3,7 @@ import postgres from 'postgres';
 
 export async function GET() {
   try {
-    const connectionString = process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL || "postgres://postgres:Sankar%401986%2304@db.kyqmhibffbwoqlpdplfu.supabase.co:6543/postgres";
+    const connectionString = process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL || "postgres://postgres:Sankar%401986%2304@db.kyqmhibffbwoqlpdplfu.supabase.co:5432/postgres";
     
     // 1. Test environment vars
     const envStatus = {
