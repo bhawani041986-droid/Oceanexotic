@@ -65,3 +65,7 @@ mobile/.env
 
 # Exclude user uploads (images, avatars)
 public/uploads/
+
+# sensitive credentials
+*.txt
+*.csv
