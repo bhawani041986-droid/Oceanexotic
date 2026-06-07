@@ -2,7 +2,7 @@ import postgres from 'postgres';
 import { BRIDGE_URL } from '@/config/api';
 
 // Establish connection to Supabase PostgreSQL when running online
-const connectionString = process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL;
+const connectionString = process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL || "postgres://postgres:Sankar%401986%2304@db.kyqmhjbffbwoqqlpdplu.supabase.co:6543/postgres";
 
 let sql: any = null;
 if (connectionString) {
