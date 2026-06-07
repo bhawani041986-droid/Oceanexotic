@@ -2,7 +2,7 @@ import postgres from 'postgres';
 import { BRIDGE_URL } from '@/config/api';
 
 // Establish connection to Supabase PostgreSQL when running online
-const connectionString = process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL || "postgres://postgres:Sankar%401986%2304@db.kyqmhibffbwoqlpdplfu.supabase.co:5432/postgres";
+const connectionString = process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL || "postgres://postgres.kyqmhibffbwoqlpdplfu:Sankar%401986%2304@aws-0-ap-south-1.pooler.supabase.com:6543/postgres";
 
 let sql: any = null;
 if (connectionString) {
@@ -49,36 +49,11 @@ export async function query(sqlQuery: string, params: any[] = [], type: 'SELECT'
       }
     } catch (error: any) {
       console.error("❌ Supabase DB Query Error:", error);
-      throw error;
+      throw new Error(`Database Error: ${error.message}`);
     }
   }
 
-  // Fallback to PHP Bridge for local development
-  try {
-    const response = await fetch(BRIDGE_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: sqlQuery,
-        params: params,
-        type: type
-      }),
-      cache: 'no-store'
-    });
-
-    const result = await response.json();
-
-    if (!response.ok || !result.success) {
-      throw new Error(result.error || "Maritime Registry Failure");
-    }
-
-    return result;
-  } catch (error) {
-    console.error("❌ Sovereign Database Error:", error);
-    throw error;
-  }
+  throw new Error("No database connection string provided");
 }
 
 // Helper for single row fetch
