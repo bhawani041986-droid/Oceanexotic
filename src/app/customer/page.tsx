@@ -1019,7 +1019,7 @@ export default function CustomerHomePage() {
   return (
     <div className="w-full">
       {/* 3. HERO SECTION - THEME AWARE IMAGE & ATMOSPHERE */}
-      <section className="relative aspect-[4/3] sm:aspect-[16/9] lg:aspect-auto lg:min-h-[80vh] flex items-center justify-center overflow-hidden py-4 lg:py-0">
+      <section className="relative min-h-[40vh] lg:min-h-[80vh] flex items-center justify-center overflow-hidden pt-24 pb-8 lg:py-0">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[var(--c-gradient-hero)] z-10" />
           <img 
