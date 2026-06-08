@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { createClient } from "@supabase/supabase-js";
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,24 +12,31 @@ export async function POST(req: NextRequest) {
 
     const buffer = Buffer.from(await file.arrayBuffer());
     
-    // Define the Physical Vault Path - Redirected to original for pipeline processing
-    const uploadDir = path.join(process.cwd(), "public", "uploads", "original");
+    // Generate a unique filename
+    const fileName = `original/${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
     
-    // Ensure the directory exists (Automatic Path Repair)
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
+    // Connect to Supabase Storage
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    const { data, error } = await supabase.storage
+      .from("assets")
+      .upload(fileName, buffer, {
+        contentType: file.type || 'application/octet-stream',
+        upsert: false
+      });
+
+    if (error) {
+        console.error("❌ Supabase Storage Error:", error);
+        return NextResponse.json({ error: "Failed to upload to cloud storage" }, { status: 500 });
     }
 
-    // Generate a unique filename to prevent maritime collisions
-    const fileName = `${Date.now()}-${file.name.replace(/\s+/g, "-")}`;
-    const filePath = path.join(uploadDir, fileName);
+    // Get the public URL
+    const { data: publicUrlData } = supabase.storage.from("assets").getPublicUrl(fileName);
+    const publicUrl = publicUrlData.publicUrl;
 
-    // Commit to Filesystem
-    fs.writeFileSync(filePath, buffer);
-
-    // Return the stable Public URL (Original for now, background worker creates optimized)
-    const publicUrl = `/uploads/original/${fileName}`;
-    console.log(`✅ Asset Committed to Pipeline Inbox: ${publicUrl}`);
+    console.log(`✅ Asset Uploaded to Supabase Cloud: ${publicUrl}`);
 
     return NextResponse.json({ url: publicUrl });
   } catch (error) {
