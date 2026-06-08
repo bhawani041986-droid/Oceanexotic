@@ -42,7 +42,7 @@ export async function POST(request: Request) {
 
     // If setting as default, unset others
     if (is_default) {
-      await supabase.from('user_addresses').update({ is_default: false }).eq('user_id', user_id);
+      await supabase.from('user_addresses').update({ is_default: 0 }).eq('user_id', user_id);
     }
 
     const { error } = await supabase.from('user_addresses').insert([{
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
       jetty: jetty || '',
       address_line1: address,
       phone: phone || '',
-      is_default: is_default || false
+      is_default: is_default ? 1 : 0
     }]);
 
     if (error) throw error;
