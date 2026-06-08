@@ -10,27 +10,27 @@ export async function GET(request: Request) {
     if (id) {
       const { data: productData, error } = await supabase
         .from('products')
-        .select('*, sellers(name)')
+        .select('*')
         .eq('id', id)
         .single();
         
       if (error && error.code !== 'PGRST116') throw error;
       if (!productData) return NextResponse.json({ error: "Asset Not Found" }, { status: 404 });
       
-      const product = { ...productData, seller_name: productData.sellers?.name || '' };
+      const product = { ...productData, seller_name: '' };
       return NextResponse.json(product);
     }
 
     const { data: productsData, error } = await supabase
       .from('products')
-      .select('*, sellers(name)')
+      .select('*')
       .order('created_at', { ascending: false });
       
     if (error) throw error;
     
     const products = (productsData || []).map((p: any) => ({
       ...p,
-      seller_name: p.sellers?.name || ''
+      seller_name: ''
     }));
     return NextResponse.json(products);
   } catch (error: any) {
