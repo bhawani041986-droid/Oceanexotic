@@ -452,33 +452,44 @@ function ProductListingContent() {
                      </div>
                   </div>
                </div>
-               <div className="hidden lg:block relative h-full">
-                  <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="relative z-10 w-full h-full min-h-[400px] aspect-square bg-gradient-to-br from-[var(--c-primary)]/20 to-blue-500/20 rounded-[var(--c-radius-card)] flex items-center justify-center text-[12rem] shadow-[var(--c-shadow-glow)] overflow-hidden">
-                     <AnimatePresence mode="wait">
-                       {heroSlides ? (
-                          <motion.img 
-                            key={currentHeroSlide}
-                            initial={{ opacity: 0, scale: 1.05 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.8 }}
-                            src={heroSlides[currentHeroSlide]} 
-                            alt="Featured" 
-                            className="absolute inset-0 w-full h-full object-cover" 
-                          />
-                       ) : (
-                          <motion.div
-                            key="fallback"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                          >
-                            🦀
-                          </motion.div>
-                       )}
-                     </AnimatePresence>
-                  </motion.div>
-                  <div className="absolute -inset-20 bg-[var(--c-primary)]/10 blur-[120px] rounded-full animate-pulse" />
+               <div className="hidden lg:block relative w-full h-full">
+                  <div className="relative w-full h-full min-h-[300px] bg-gradient-to-br from-[var(--c-primary)]/20 to-blue-500/20 rounded-[var(--c-radius-card)] overflow-hidden shadow-[var(--c-shadow-glow)] group">
+                     {heroSlides ? (
+                       <>
+                         <AnimatePresence initial={false}>
+                           <motion.img 
+                             key={currentHeroSlide}
+                             initial={{ opacity: 0, x: 50 }}
+                             animate={{ opacity: 1, x: 0 }}
+                             exit={{ opacity: 0, x: -50 }}
+                             transition={{ duration: 0.6, ease: "easeInOut" }}
+                             src={heroSlides[currentHeroSlide]} 
+                             alt={`Featured Slide ${currentHeroSlide + 1}`} 
+                             className="absolute inset-0 w-full h-full object-cover" 
+                           />
+                         </AnimatePresence>
+                         {heroSlides.length > 1 && (
+                           <div className="absolute bottom-4 md:bottom-6 left-0 right-0 flex justify-center gap-2 md:gap-3 z-20">
+                             {heroSlides.map((_, i) => (
+                               <button 
+                                 key={i}
+                                 onClick={() => setCurrentHeroSlide(i)}
+                                 className={cn(
+                                   "w-2 h-2 md:w-2.5 md:h-2.5 rounded-full transition-all duration-300 shadow-sm",
+                                   currentHeroSlide === i ? "bg-[var(--c-primary)] scale-125" : "bg-white/60 hover:bg-white"
+                                 )}
+                               />
+                             ))}
+                           </div>
+                         )}
+                       </>
+                     ) : (
+                        <div className="absolute inset-0 flex items-center justify-center text-[10rem] xl:text-[14rem]">
+                          🦀
+                        </div>
+                     )}
+                     <div className="absolute -inset-20 bg-[var(--c-primary)]/5 blur-[120px] rounded-full animate-pulse pointer-events-none" />
+                  </div>
                </div>
             </div>
          </div>
