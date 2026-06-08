@@ -28,6 +28,8 @@ interface SettingsState {
   customerAssets: {
     logo: string;
     hero: string;
+    hero2?: string;
+    hero3?: string;
     favicon: string;
     appleIcon: string;
     promo: string;
@@ -73,6 +75,8 @@ export const useSettingsStore = create<SettingsState>()(
       customerAssets: {
         logo: "",
         hero: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80",
+        hero2: "",
+        hero3: "",
         favicon: "/logo-icon.svg",
         appleIcon: "/logo-icon.svg",
         promo: "https://images.unsplash.com/photo-1551970634-747846a548cb?auto=format&fit=crop&q=80",
