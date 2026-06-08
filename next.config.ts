@@ -1,7 +1,5 @@
 import type { NextConfig } from "next";
 
-process.env.NEXT_TELEMETRY_DISABLED = "1";
-
 const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
@@ -18,13 +16,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  experimental: {
-    workerThreads: false,
-    cpus: 1,
-    optimizePackageImports: ['lucide-react', 'framer-motion'],
-  },
   async rewrites() {
-    // Rewrite all PHP endpoints to their Next.js TypeScript API route handlers.
     return [
       {
         source: '/api/:path*.php',
@@ -32,7 +24,6 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-
 };
 
 export default nextConfig;
