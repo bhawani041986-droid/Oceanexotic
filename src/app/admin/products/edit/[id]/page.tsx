@@ -33,6 +33,7 @@ import Link from "next/link";
 import { useToast } from "@/components/ui/Toast";
 import { useRouter, useParams } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { PRODUCT_CATEGORIES } from "@/constants/categories";
 
 const CUT_TYPES = [
   { id: 'WHOLE', label: 'Whole Fish' },
@@ -358,14 +359,9 @@ export default function AdminEditProductPage() {
                 <div className="space-y-2">
                   <label className="text-[10px] font-black uppercase tracking-widest ml-1">Category Registry</label>
                   <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} className="w-full h-[52px] border rounded-[16px] px-4 text-[10px] font-black uppercase tracking-widest outline-none focus:border-primary/50" style={{ backgroundColor: 'var(--agent-bg)', borderColor: 'var(--agent-border)', color: 'var(--agent-text)' }}>
-                     <option value="SEAWATER FISH">SEAWATER FISH</option>
-                     <option value="FRESHWATER FISH">FRESHWATER FISH</option>
-                     <option value="PRAWNS & SHRIMPS">PRAWNS & SHRIMPS</option>
-                     <option value="CRABS & LOBSTERS">CRABS & LOBSTERS</option>
-                     <option value="STEAKS & FILLETS">STEAKS & FILLETS</option>
-                     <option value="EXOTIC CATCH">EXOTIC CATCH</option>
-                     <option value="READY TO COOK">READY TO COOK</option>
-                     <option value="COASTAL DRY FISH">COASTAL DRY FISH</option>
+                     {PRODUCT_CATEGORIES.map(cat => (
+                        <option key={cat.id} value={cat.id}>{cat.id}</option>
+                     ))}
                   </select>
                 </div>
                 <div className="space-y-2">

@@ -56,6 +56,7 @@ import { useToast } from "@/components/ui/Toast";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useCartStore } from "@/store/cartStore";
 import { MASTER_PRODUCT_REGISTRY } from "@/constants/products";
+import { PRODUCT_CATEGORIES } from "@/constants/categories";
 import { authService } from "@/services/authService";
 
 // --- BUSINESS INTELLIGENCE DATA ---
@@ -238,7 +239,7 @@ const FilterSection = ({ title, options }: { title: string, options: string[] })
   </div>
 );
 
-const CATEGORIES = ["All Seafood", "Fresh Fish", "Shellfish", "Exotic Shellfish", "Crustaceans", "Frozen", "Value Packs", "Premium Selection"];
+const CATEGORIES = ["All Seafood", ...PRODUCT_CATEGORIES.map(c => c.label)];
 import { Suspense } from "react";
 
 function ProductListingContent() {
@@ -403,7 +404,11 @@ function ProductListingContent() {
   // --- FILTERING & PAGINATION LOGIC ---
   const filteredProducts = React.useMemo(() => {
     return products.filter(p => {
-      const matchesTab = activeTab === "All Seafood" || p.category === activeTab;
+      // Find the label for the product's database category
+      const dbCat = PRODUCT_CATEGORIES.find(c => c.id === p.category);
+      const productCategoryLabel = dbCat ? dbCat.label : null;
+
+      const matchesTab = activeTab === "All Seafood" || productCategoryLabel === activeTab || p.category === activeTab;
       const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesTab && matchesSearch;
     });
