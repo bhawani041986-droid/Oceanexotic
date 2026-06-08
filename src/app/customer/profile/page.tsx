@@ -29,7 +29,8 @@ import {
   Image as ImageIcon,
   Loader2,
   Smartphone,
-  Wallet
+  Wallet,
+  Search
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -58,6 +59,8 @@ export default function CustomerProfilePage() {
   const [formData, setFormData] = React.useState<any>({});
   const [isSaving, setIsSaving] = React.useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [isSearching, setIsSearching] = React.useState(false);
 
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -209,6 +212,29 @@ export default function CustomerProfilePage() {
     }
   };
 
+  const handleManualSearch = async () => {
+    if (!searchQuery.trim()) {
+      toast("Enter a location to search.", "error");
+      return;
+    }
+    setIsSearching(true);
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery + ", Andaman")}`);
+      const data = await res.json();
+      if (data && data.length > 0) {
+        const topResult = data[0];
+        setFormData((prev: any) => ({ ...prev, address: topResult.display_name, locality: "Live Node" }));
+        toast("Location Found & Synced", "success");
+      } else {
+        toast("Location not found in registry.", "error");
+      }
+    } catch (err) {
+      toast("Search query failed.", "error");
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
   if (!mounted || isHydrating) {
     return (
       <MainLayout>
@@ -320,25 +346,34 @@ export default function CustomerProfilePage() {
                                       navigator.geolocation.getCurrentPosition(async (position) => {
                                         try {
                                           const { latitude, longitude } = position.coords;
+                                          
+                                          // Enforce Andaman & Nicobar Bounding Box
+                                          const isAndaman = latitude >= 6.0 && latitude <= 14.0 && longitude >= 92.0 && longitude <= 94.0;
+                                          if (!isAndaman) {
+                                            setFormData((prev: any) => ({ ...prev, address: "" }));
+                                            toast("Satellite deviation detected. Location falls outside the Andaman Maritime Zone. Please search manually.", "error");
+                                            return;
+                                          }
+
                                           const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
                                           const data = await res.json();
                                           if (data && data.display_name) {
                                             // The formData update must merge cleanly
-                                            setFormData(prev => ({ ...prev, address: data.display_name, locality: data.address?.city || data.address?.town || data.address?.suburb || "Live Node" }));
+                                            setFormData((prev: any) => ({ ...prev, address: data.display_name, locality: data.address?.city || data.address?.town || data.address?.suburb || "Live Node" }));
                                             toast("Coordinates Locked & Synced.", "success");
                                           } else {
                                             throw new Error("Geocoding failed");
                                           }
                                         } catch (err) {
-                                          setFormData(prev => ({ ...prev, address: "Failed to reverse geocode coordinates." }));
+                                          setFormData((prev: any) => ({ ...prev, address: "Failed to reverse geocode coordinates." }));
                                           toast("Satellite Sync Failed", "error");
                                         }
                                       }, (error) => {
-                                        setFormData(prev => ({ ...prev, address: "Location access denied or unavailable." }));
+                                        setFormData((prev: any) => ({ ...prev, address: "Location access denied or unavailable." }));
                                         toast("Location Access Denied.", "error");
                                       });
                                     } else {
-                                      setFormData(prev => ({ ...prev, address: "Geolocation not supported by browser." }));
+                                      setFormData((prev: any) => ({ ...prev, address: "Geolocation not supported by browser." }));
                                       toast("System Incompatible.", "error");
                                     }
                                  }} className="text-[8px] font-black uppercase text-primary flex items-center gap-1 hover:brightness-125 transition-all">
@@ -356,6 +391,12 @@ export default function CustomerProfilePage() {
                                  <div className="absolute bottom-3 left-3 flex items-center gap-2">
                                     <div className="px-2 py-1 bg-black/40 backdrop-blur-md rounded-md border border-white/5 text-[7px] font-black text-white uppercase italic">Active Satellite Link</div>
                                  </div>
+                              </div>
+                              <div className="flex gap-2">
+                                <Input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search Location (e.g. Diglipur)" className="flex-1 h-12 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 rounded-xl md:rounded-2xl italic" />
+                                <Button onClick={handleManualSearch} disabled={isSearching} className="h-12 md:h-14 px-6 rounded-xl md:rounded-2xl text-[10px] font-black uppercase shadow-glow-purple">
+                                  {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+                                </Button>
                               </div>
                               <Input value={formData.address || ""} onChange={(e) => setFormData({...formData, address: e.target.value})} placeholder="Full Street / Area" className="h-12 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 rounded-xl md:rounded-2xl italic" />
                            </div>
