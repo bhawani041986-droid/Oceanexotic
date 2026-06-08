@@ -20,7 +20,8 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     workerThreads: false,
-    cpus: 1
+    cpus: 1,
+    optimizePackageImports: ['lucide-react', 'framer-motion'],
   },
   async rewrites() {
     // Rewrite all PHP endpoints to their Next.js TypeScript API route handlers.
