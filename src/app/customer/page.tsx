@@ -205,7 +205,7 @@ const AndamanMaritimeMap = ({ territories }: { territories: any[] }) => {
         });
       }
     } catch (err) {
-      console.error("Cyber Sync Failure:", err);
+      console.error("Map Sync Failure:", err);
     }
   }, [territories, isMapInit]);
 
@@ -237,19 +237,19 @@ const AndamanMaritimeMap = ({ territories }: { territories: any[] }) => {
               <span className="text-[7px] font-black text-white uppercase tracking-widest">Stable Connection</span>
           </div>
  
-          {/* TOP LEFT: Sector: ALPHA-6 */}
+          {/* TOP LEFT: Sector: Andaman */}
           <div className="absolute top-4 left-4 bg-black/60 border border-primary/20 px-2 py-1 rounded-lg z-30 pointer-events-none">
-              <span className="text-[7px] font-black text-primary uppercase">Sector: ALPHA-6</span>
+              <span className="text-[7px] font-black text-primary uppercase">Sector: Andaman</span>
           </div>
           
-          {/* BOTTOM LEFT: REF: MAR-PB-NODE */}
+          {/* BOTTOM LEFT: Port Blair Node */}
           <div className="absolute bottom-4 left-4 bg-black/60 border border-primary/20 px-2 py-1 rounded-lg z-30 pointer-events-none">
-              <span className="text-[7px] font-mono text-muted-foreground uppercase">REF: MAR-PB-NODE</span>
+              <span className="text-[7px] font-mono text-muted-foreground uppercase">Port Blair Node</span>
           </div>
  
-          {/* BOTTOM RIGHT: TELEMETRY 042.8° NE */}
+          {/* BOTTOM RIGHT: LIVE TRACKING 042.8° NE */}
           <div className="absolute bottom-4 right-4 bg-black/60 border border-primary/20 px-2 py-1 rounded-lg z-30 pointer-events-none">
-              <span className="text-[7px] font-mono text-white uppercase">TELEMETRY 042.8° NE</span>
+              <span className="text-[7px] font-mono text-white uppercase">LIVE TRACKING 042.8° NE</span>
           </div>
       </div>
  
@@ -1011,7 +1011,7 @@ export default function CustomerHomePage() {
       image: product.image,
       sellerId: product.sellerId
     });
-    toast(`${product.name} added to mission registry`, "success");
+    toast(`${product.name} added to cart`, "success");
   };
 
 
@@ -1026,7 +1026,7 @@ export default function CustomerHomePage() {
             src={settings.customerAssets.hero} 
             fetchPriority="high"
             className="w-full h-full object-cover scale-110 opacity-40 grayscale-[20%]" 
-            alt="OceanExotic Global Maritime Hero" 
+            alt="OceanExotic Seafood Hero" 
           />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,var(--c-primary),transparent_50%)] opacity-10 hidden lg:block" />
         </div>
@@ -1050,7 +1050,7 @@ export default function CustomerHomePage() {
                 <Clock className={cn("w-3.5 h-3.5 animate-pulse", 
                   isStoreOpen && settings.ordersEnabled ? "text-emerald-400" : "text-amber-400"
                 )} />
-                <span className="text-[7px] md:text-[9px] font-black uppercase tracking-[0.25em] text-[var(--c-text-secondary)] opacity-60">Fleet Schedule</span>
+                <span className="text-[7px] md:text-[9px] font-black uppercase tracking-[0.25em] text-[var(--c-text-secondary)] opacity-60">Delivery Schedule</span>
               </div>
               <span className={cn("w-2 h-2 rounded-full",
                 isStoreOpen && settings.ordersEnabled ? "bg-emerald-500 animate-ping" : "bg-amber-500 animate-pulse"
@@ -1061,7 +1061,7 @@ export default function CustomerHomePage() {
             <div className="space-y-0.5">
               {isStoreOpen && settings.ordersEnabled ? (
                 <>
-                  <p className="text-[10px] md:text-sm font-black text-emerald-400 uppercase italic tracking-tighter leading-none">● LIVE DISPATCH OPEN</p>
+                  <p className="text-[10px] md:text-sm font-black text-emerald-400 uppercase italic tracking-tighter leading-none">● DELIVERY OPEN</p>
                   <p className="text-[7px] md:text-[9px] text-[var(--c-text-secondary)]/60 font-bold uppercase tracking-wider">Fastest cold-chain delivery</p>
                 </>
               ) : (
@@ -1097,10 +1097,10 @@ export default function CustomerHomePage() {
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-center max-w-4xl mx-auto">
              <div className="space-y-6">
                 <Badge variant="outline" className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] text-[10px] md:text-[12px] font-black tracking-[0.4em] px-6 py-2 border-[var(--c-primary)]/20 uppercase shadow-[0_0_15px_rgba(var(--c-primary-rgb),0.1)]">
-                   {cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.sector || 'Sovereign'} Market Sync: Active
+                   {cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.sector || 'Premium'} Seafood Market: Active
                 </Badge>
                 <h1 className="text-5xl md:text-8xl font-black text-[var(--c-text-primary)] uppercase italic leading-[0.9] md:leading-[0.85]">
-                   {cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.title?.split(':')[0] || 'Maritime'} <br /> 
+                   {cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.title?.split(':')[0] || 'Seafood'} <br /> 
                    <span className="text-[var(--c-primary)]">{cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.title?.split(':')[1] || 'Redefined.'}</span>
                 </h1>
              </div>
@@ -1267,7 +1267,7 @@ export default function CustomerHomePage() {
                                  </div>
                               </div>
                               
-                              {/* Stock Telemetry */}
+                              {/* Stock Level */}
                               <div className="absolute bottom-2 right-2 z-20">
                                  <div className="flex flex-col items-end">
                                     <p className="text-[7px] font-black text-[var(--foreground)]/60 uppercase">Stock Remaining</p>
@@ -1314,7 +1314,7 @@ export default function CustomerHomePage() {
       {/* 5. FEATURED PRODUCTS GRID */}
       <section className="py-6 container mx-auto px-[2px] md:px-10 mt-6">
          <div className="space-y-6">
-            <SectionTitle title="Featured Harvests" subtitle="Highest Authority Maritime Grade" />
+            <SectionTitle title="Featured Harvests" subtitle="Highest Quality Grade" />
             <div className="grid grid-cols-2 md:grid-cols-4 gap-[2px] md:gap-8">
                {(featuredProducts.length > 0 ? featuredProducts : FEATURED_PRODUCTS).slice(0, 4).map((prod) => (
                   <motion.div 
@@ -1384,7 +1384,7 @@ export default function CustomerHomePage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center relative z-10">
                    <div className="space-y-4 md:space-y-6">
                       <Badge className="bg-[var(--foreground)]/20 text-[8px] md:text-[10px] font-black tracking-[0.3em] px-4 md:px-6 py-2 border-[var(--foreground)]/20 uppercase">
-                        {cmsContent.find(c => c.type === 'PROMO' && c.status === 'PUBLISHED')?.sector || 'Flash Harvest'} Protocol
+                        {cmsContent.find(c => c.type === 'PROMO' && c.status === 'PUBLISHED')?.sector || 'Flash Harvest'} Live
                       </Badge>
                       <h2 className="text-4xl md:text-8xl font-black text-[var(--foreground)] uppercase italic leading-[0.9] md:leading-[0.85]">
                         {cmsContent.find(c => c.type === 'PROMO' && c.status === 'PUBLISHED')?.title || 'Flash Deals.'}
@@ -1417,8 +1417,8 @@ export default function CustomerHomePage() {
       {/* 7. PREMIUM SELLERS - MAX-DENSITY MOBILE (2PX RULE) */}
       <section className="py-6 container mx-auto px-0 md:px-10 relative">
          <div className="mb-3 space-y-0.5 px-[2px] md:px-0">
-            <h2 className="text-xl md:text-5xl font-black text-[var(--c-text-primary)] tracking-tight uppercase italic">The Fleet Elite</h2>
-            <p className="text-[9px] md:text-[11px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] italic opacity-60">Verified Maritime Sellers</p>
+            <h2 className="text-xl md:text-5xl font-black text-[var(--c-text-primary)] tracking-tight uppercase italic">Top Sellers</h2>
+            <p className="text-[9px] md:text-[11px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] italic opacity-60">Verified Sellers</p>
          </div>
          
          <div className="flex lg:grid lg:grid-cols-3 overflow-x-auto lg:overflow-visible gap-[3px] md:gap-6 no-scrollbar pb-4 px-[2px] md:px-2 snap-x snap-mandatory scroll-pl-[2px] touch-pan-x">
@@ -1475,7 +1475,7 @@ export default function CustomerHomePage() {
                            ))}
                         </div>
                         <div className="h-6 px-2 text-[7px] font-black uppercase tracking-widest text-[var(--c-primary)] hover:bg-[var(--c-primary)]/10 flex items-center justify-center transition-all">
-                           NODE <ArrowRight className="w-2.5 h-2.5 ml-0.5" />
+                           STORE <ArrowRight className="w-2.5 h-2.5 ml-0.5" />
                         </div>
                      </div>
                   </div>
@@ -1503,7 +1503,7 @@ export default function CustomerHomePage() {
                      <div className="w-10 h-10 bg-[var(--c-primary)]/10 flex items-center justify-center text-[var(--c-primary)] group-hover:scale-110 transition-transform" style={{ clipPath: 'polygon(8px 0, 100% 0, 100% 100%, 0 100%, 0 8px)' }}><ShieldCheck className="w-4 h-4" /></div>
                      <div className="flex-1 space-y-0.5">
                         <p className="text-[7px] font-black text-[var(--c-primary)] uppercase tracking-[0.1em]">Done</p>
-                        <h4 className="text-xs md:text-sm font-black text-[var(--c-text-primary)] uppercase italic">Fleet Auth</h4>
+                        <h4 className="text-xs md:text-sm font-black text-[var(--c-text-primary)] uppercase italic">Order Confirmed</h4>
                      </div>
                   </button>
                   <button 
@@ -1513,7 +1513,7 @@ export default function CustomerHomePage() {
                      <div className="w-10 h-10 bg-[var(--c-primary)]/10 flex items-center justify-center text-[var(--c-primary)] group-hover:scale-110 transition-transform" style={{ clipPath: 'polygon(8px 0, 100% 0, 100% 100%, 0 100%, 0 8px)' }}><Navigation className="w-4 h-4" /></div>
                      <div className="flex-1 space-y-0.5">
                         <p className="text-[7px] font-black text-[var(--c-primary)] uppercase tracking-[0.1em]">Active</p>
-                        <h4 className="text-xs md:text-sm font-black text-[var(--c-text-primary)] uppercase italic">Routing</h4>
+                        <h4 className="text-xs md:text-sm font-black text-[var(--c-text-primary)] uppercase italic">Delivery</h4>
                      </div>
                   </button>
                </div>
@@ -1524,7 +1524,7 @@ export default function CustomerHomePage() {
                   className="border text-text-primary transition-all hover:border-[var(--c-primary)]/30 w-full aspect-[4/3] bg-[#0B1120] border-[var(--foreground)]/10 overflow-hidden shadow-2xl relative"
                   style={{ clipPath: 'polygon(30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0 30px)' }}
                >
-                  {/* ANDAMAN MARITIME NODE REGISTRY */}
+                  {/* ANDAMAN DELIVERY MAP */}
                   <AndamanMaritimeMap territories={territories} />
                   
                   {/* Digital HUD Lines Overlay */}
@@ -1551,8 +1551,8 @@ export default function CustomerHomePage() {
       {/* 9. CUSTOMER REVIEWS - HARDENED HUD */}
       <section className="py-6 container mx-auto px-0 md:px-10">
          <div className="mb-4 space-y-0.5 px-[2px] md:px-0">
-            <h2 className="text-xl md:text-5xl font-black text-[var(--c-text-primary)] tracking-tight uppercase italic">Citizen Voice</h2>
-            <p className="text-[9px] md:text-[11px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] italic opacity-60">Verified Maritime Protocols</p>
+            <h2 className="text-xl md:text-5xl font-black text-[var(--c-text-primary)] tracking-tight uppercase italic">Customer Reviews</h2>
+            <p className="text-[9px] md:text-[11px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] italic opacity-60">Verified Reviews</p>
          </div>
          
          <div className="flex lg:grid lg:grid-cols-3 overflow-x-auto lg:overflow-visible gap-[3px] md:gap-8 no-scrollbar pb-4 px-[2px] md:px-2 snap-x snap-mandatory scroll-pl-[2px] touch-pan-x">
@@ -1590,7 +1590,7 @@ export default function CustomerHomePage() {
          <div className="mb-4 flex justify-between items-end px-[2px] md:px-0">
             <div>
                <h2 className="text-xl md:text-5xl font-black text-[var(--c-text-primary)] tracking-tight uppercase italic">Chef's Recipes</h2>
-               <p className="text-[9px] md:text-[11px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] italic opacity-60">Verified Maritime Recipes</p>
+               <p className="text-[9px] md:text-[11px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] italic opacity-60">Verified Recipes</p>
             </div>
             <button 
                onClick={() => router.push('/customer/recipes')}
@@ -1625,7 +1625,7 @@ export default function CustomerHomePage() {
                      </div>
                      <h4 className="text-xs md:text-4xl font-black text-[var(--foreground)] uppercase italic leading-tight">{recipe.title}</h4>
                      <div className="flex items-center gap-2 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-[var(--c-primary)] opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
-                        OPEN PROTOCOL <ArrowRight className="w-3 h-3" />
+                        VIEW RECIPE <ArrowRight className="w-3 h-3" />
                      </div>
                   </div>
                </div>
@@ -1788,7 +1788,7 @@ export default function CustomerHomePage() {
                     </motion.div>
                     <div className="space-y-0.5 md:space-y-1">
                        <h3 className="text-lg md:text-5xl font-black text-[var(--c-text-primary)] uppercase italic leading-[0.85] tracking-tighter">
-                          MARITIME <br />
+                          SEAFOOD <br />
                           <span className="text-[var(--c-primary)]">GRILL.</span>
                        </h3>
                        <p className="text-[8px] md:text-xs text-[var(--c-text-secondary)] font-medium italic opacity-80 leading-tight">
@@ -1891,12 +1891,12 @@ export default function CustomerHomePage() {
          >
             <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[var(--c-primary)] to-transparent opacity-20" />
             <div className="space-y-2">
-               <p className="text-[8px] md:text-[10px] font-black text-[var(--c-primary)] uppercase tracking-[0.4em]">Global Dispatch Subscription</p>
-               <h2 className="text-3xl md:text-7xl font-black text-[var(--c-text-primary)] uppercase italic leading-none">Join the Fleet.</h2>
+               <p className="text-[8px] md:text-[10px] font-black text-[var(--c-primary)] uppercase tracking-[0.4em]">Newsletter Subscription</p>
+               <h2 className="text-3xl md:text-7xl font-black text-[var(--c-text-primary)] uppercase italic leading-none">Join our Newsletter.</h2>
             </div>
             <div className="max-w-xl mx-auto relative z-10 flex flex-col md:flex-row gap-2">
                <Input 
-                  placeholder="Registry Email..." 
+                  placeholder="Your Email..." 
                   className="h-12 md:h-20 !rounded-none bg-black/40 border-[var(--foreground)]/10 text-center text-xs italic px-6 text-[var(--c-text-primary)]" 
                   style={{ clipPath: 'polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px)', borderRadius: '0px' }}
                />
@@ -1904,7 +1904,7 @@ export default function CustomerHomePage() {
                   className="h-12 md:h-20 px-10 !rounded-none bg-[var(--c-primary)] text-[var(--foreground)] shadow-[var(--c-shadow-glow)] text-[10px] font-black uppercase tracking-[0.2em]"
                   style={{ clipPath: 'polygon(15px 0, 100% 0, calc(100% - 15px) 100%, 0 100%)', borderRadius: '0px' }}
                >
-                  COMMISSION
+                  SUBSCRIBE
                </Button>
             </div>
          </div>
@@ -1932,7 +1932,7 @@ export default function CustomerHomePage() {
               {/* Modal Header */}
               <div className="p-6 md:p-8 bg-[var(--c-bg-alt)]/60 border-b border-[var(--foreground)]/5 flex justify-between items-center">
                 <div className="space-y-1">
-                  <Badge variant="glass" className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] border-[var(--c-primary)]/20 text-[9px] font-black uppercase tracking-widest px-3">Order Customization Protocol</Badge>
+                  <Badge variant="glass" className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] border-[var(--c-primary)]/20 text-[9px] font-black uppercase tracking-widest px-3">Order Customization</Badge>
                   <h3 className="text-xl md:text-3xl font-black text-[var(--c-text-primary)] uppercase italic leading-tight">
                     {selectedProductForCut?.name}
                   </h3>
@@ -1995,7 +1995,7 @@ export default function CustomerHomePage() {
 
                     <div className="pt-6 border-t border-[var(--foreground)]/5 flex flex-col md:flex-row items-center justify-between gap-6">
                       <div className="space-y-1 text-center md:text-left">
-                        <p className="text-[8px] font-black text-[var(--c-text-secondary)] uppercase tracking-widest">Commission Total</p>
+                        <p className="text-[8px] font-black text-[var(--c-text-secondary)] uppercase tracking-widest">Item Total</p>
                         <p className="text-3xl font-black text-[var(--c-text-primary)] italic">₹{selectedCut?.final_price || 0}</p>
                       </div>
                       
@@ -2013,7 +2013,7 @@ export default function CustomerHomePage() {
                           className="flex-[2] md:px-12 h-14 bg-[var(--c-primary)] text-[var(--foreground)] shadow-glow-primary text-[10px] font-black uppercase tracking-widest"
                           style={{ clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%)' }}
                         >
-                          Confirm & Commission
+                          Confirm & Add
                         </Button>
                       </div>
                     </div>
