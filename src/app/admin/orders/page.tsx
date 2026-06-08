@@ -546,8 +546,8 @@ export default function AdminOrders() {
 
   const filteredOrders = useMemo(() => {
     return orders.filter(o => {
-      const matchesSearch = o.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          o.customer_name.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = String(o.id).toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          String(o.customer_name || '').toLowerCase().includes(searchTerm.toLowerCase());
       const matchesStatus = statusFilter === "ALL" || o.status === statusFilter;
       return matchesSearch && matchesStatus;
     });
@@ -555,8 +555,8 @@ export default function AdminOrders() {
 
   const mapFilteredOrders = useMemo(() => {
     return orders.filter(o => {
-      const matchesSearch = o.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          o.customer_name.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesSearch = String(o.id).toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          String(o.customer_name || '').toLowerCase().includes(searchTerm.toLowerCase());
       if (!matchesSearch) return false;
 
       // 'all' → every order gets plotted
