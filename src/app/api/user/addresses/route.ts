@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { query } from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 
 // --- FETCH ADDRESS VAULT ---
 export async function GET(request: Request) {
@@ -10,11 +10,16 @@ export async function GET(request: Request) {
     if (!userId) return NextResponse.json({ error: "Missing Citizen ID" }, { status: 400 });
 
     // Ensure we handle both numeric and string IDs gracefully
-    const sql = "SELECT * FROM user_addresses WHERE user_id = ? ORDER BY is_default DESC";
-    const addresses = await query(sql, [userId]);
+    const { data: addresses, error } = await supabase
+      .from('user_addresses')
+      .select('*')
+      .eq('user_id', userId)
+      .order('is_default', { ascending: false });
+      
+    if (error) throw error;
     
     // Map the returned rows to what the client expects (type and address)
-    const formattedAddresses = (Array.isArray(addresses.data) ? addresses.data : []).map((addr: any) => ({
+    const formattedAddresses = (addresses || []).map((addr: any) => ({
       ...addr,
       type: addr.label,
       address: addr.address_line1
@@ -37,23 +42,21 @@ export async function POST(request: Request) {
 
     // If setting as default, unset others
     if (is_default) {
-      await query("UPDATE user_addresses SET is_default = FALSE WHERE user_id = ?", [user_id], 'UPDATE');
+      await supabase.from('user_addresses').update({ is_default: false }).eq('user_id', user_id);
     }
 
-    await query(
-      "INSERT INTO user_addresses (user_id, label, hotel_name, room_no, jetty, address_line1, phone, is_default) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-      [
-        user_id, 
-        type || 'HOME', 
-        hotel_name || '', 
-        room_no || '', 
-        jetty || '', 
-        address, 
-        phone || '', 
-        is_default || false
-      ],
-      'INSERT'
-    );
+    const { error } = await supabase.from('user_addresses').insert([{
+      user_id,
+      label: type || 'HOME',
+      hotel_name: hotel_name || '',
+      room_no: room_no || '',
+      jetty: jetty || '',
+      address_line1: address,
+      phone: phone || '',
+      is_default: is_default || false
+    }]);
+
+    if (error) throw error;
 
     return NextResponse.json({ success: true, message: "Coordinate Node Commissioned" });
   } catch (error: any) {
@@ -69,7 +72,8 @@ export async function DELETE(request: Request) {
 
     if (!id) return NextResponse.json({ error: "Missing Node ID" }, { status: 400 });
 
-    await query("DELETE FROM user_addresses WHERE id = ?", [id], 'DELETE');
+    const { error } = await supabase.from('user_addresses').delete().eq('id', id);
+    if (error) throw error;
 
     return NextResponse.json({ success: true, message: "Coordinate Node Purged" });
   } catch (error: any) {

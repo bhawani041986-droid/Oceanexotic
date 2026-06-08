@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { query, queryOne } from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 
 // --- FETCH MERCHANT CATALOG OR SPECIFIC NODE ---
 export async function GET(request: Request) {
@@ -8,18 +8,31 @@ export async function GET(request: Request) {
     const id = searchParams.get('id');
 
     if (id) {
-      const product = await queryOne(
-        "SELECT p.*, s.name as seller_name FROM products p LEFT JOIN sellers s ON p.seller_id = s.id WHERE p.id = ?",
-        [id]
-      );
-      if (!product) return NextResponse.json({ error: "Asset Not Found" }, { status: 404 });
+      const { data: productData, error } = await supabase
+        .from('products')
+        .select('*, sellers(name)')
+        .eq('id', id)
+        .single();
+        
+      if (error && error.code !== 'PGRST116') throw error;
+      if (!productData) return NextResponse.json({ error: "Asset Not Found" }, { status: 404 });
+      
+      const product = { ...productData, seller_name: productData.sellers?.name || '' };
       return NextResponse.json(product);
     }
 
-    const products = await query(
-      "SELECT p.*, s.name as seller_name FROM products p LEFT JOIN sellers s ON p.seller_id = s.id ORDER BY p.created_at DESC"
-    );
-    return NextResponse.json(products.data);
+    const { data: productsData, error } = await supabase
+      .from('products')
+      .select('*, sellers(name)')
+      .order('created_at', { ascending: false });
+      
+    if (error) throw error;
+    
+    const products = (productsData || []).map((p: any) => ({
+      ...p,
+      seller_name: p.sellers?.name || ''
+    }));
+    return NextResponse.json(products);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -37,11 +50,20 @@ export async function POST(request: Request) {
 
     const resolvedSellerId = seller_id || 'SEL-001';
 
-    await query(
-      "INSERT INTO products (id, seller_id, name, category, price, stock, status, image_url, gallery, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [id, resolvedSellerId, name, category || 'PREMIUM SAKU', price, stock || 100, status || 'ACTIVE', image_url || '', gallery || '[]', description || ''],
-      'INSERT'
-    );
+    const { error } = await supabase.from('products').insert([{
+      id,
+      seller_id: resolvedSellerId,
+      name,
+      category: category || 'PREMIUM SAKU',
+      price,
+      stock: stock || 100,
+      status: status || 'ACTIVE',
+      image_url: image_url || '',
+      gallery: gallery || '[]',
+      description: description || ''
+    }]);
+
+    if (error) throw error;
 
     return NextResponse.json({ success: true, message: "Harvest commissioned in Sovereign Registry" });
   } catch (error: any) {
@@ -58,11 +80,11 @@ export async function PUT(request: Request) {
 
     if (!id) return NextResponse.json({ error: "Missing Asset ID" }, { status: 400 });
 
-    await query(
-      "UPDATE products SET name = ?, category = ?, price = ?, stock = ?, status = ?, image_url = ?, gallery = ?, description = ? WHERE id = ?",
-      [name, category, price, stock, status, image_url, gallery, description, id],
-      'UPDATE'
-    );
+    const { error } = await supabase.from('products').update({
+      name, category, price, stock, status, image_url, gallery, description
+    }).eq('id', id);
+
+    if (error) throw error;
 
     return NextResponse.json({ success: true, message: "Asset Node Synchronized" });
   } catch (error: any) {
@@ -78,7 +100,8 @@ export async function DELETE(request: Request) {
 
     if (!id) return NextResponse.json({ error: "Missing Asset ID" }, { status: 400 });
 
-    await query("DELETE FROM products WHERE id = ?", [id], 'DELETE');
+    const { error } = await supabase.from('products').delete().eq('id', id);
+    if (error) throw error;
 
     return NextResponse.json({ success: true, message: "Asset Purged from Registry" });
   } catch (error: any) {

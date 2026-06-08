@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { query } from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 
 // --- FETCH PAYMENT REGISTRY ---
 export async function GET(request: Request) {
@@ -9,8 +9,14 @@ export async function GET(request: Request) {
 
     if (!userId) return NextResponse.json({ error: "Missing Citizen ID" }, { status: 400 });
 
-    const payments = await query("SELECT * FROM user_payments WHERE user_id = ? ORDER BY is_default DESC", [userId]);
-    return NextResponse.json(payments.data);
+    const { data: payments, error } = await supabase
+      .from('user_payments')
+      .select('*')
+      .eq('user_id', userId)
+      .order('is_default', { ascending: false });
+      
+    if (error) throw error;
+    return NextResponse.json(payments || []);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -25,14 +31,21 @@ export async function POST(request: Request) {
     if (!user_id) return NextResponse.json({ error: "Missing Citizen ID" }, { status: 400 });
 
     if (is_default) {
-      await query("UPDATE user_payments SET is_default = FALSE WHERE user_id = ?", [user_id], 'UPDATE');
+      await supabase.from('user_payments').update({ is_default: false }).eq('user_id', user_id);
     }
 
-    await query(
-      "INSERT INTO user_payments (user_id, type, card_holder, card_type, last4, expiry, upi_id, is_default) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-      [user_id, type || 'CARD', card_holder, card_type || 'VISA', last4 || '', expiry || '', upi_id || '', is_default || false],
-      'INSERT'
-    );
+    const { error } = await supabase.from('user_payments').insert([{
+      user_id,
+      type: type || 'CARD',
+      card_holder,
+      card_type: card_type || 'VISA',
+      last4: last4 || '',
+      expiry: expiry || '',
+      upi_id: upi_id || '',
+      is_default: is_default || false
+    }]);
+
+    if (error) throw error;
 
     return NextResponse.json({ success: true, message: "Payment Signature Commissioned" });
   } catch (error: any) {
@@ -48,7 +61,8 @@ export async function DELETE(request: Request) {
 
     if (!id) return NextResponse.json({ error: "Missing Protocol ID" }, { status: 400 });
 
-    await query("DELETE FROM user_payments WHERE id = ?", [id], 'DELETE');
+    const { error } = await supabase.from('user_payments').delete().eq('id', id);
+    if (error) throw error;
 
     return NextResponse.json({ success: true, message: "Payment Signature Purged" });
   } catch (error: any) {

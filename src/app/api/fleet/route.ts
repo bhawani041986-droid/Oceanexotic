@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { query, queryOne } from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 
 // --- AGENT SIGNAL HANDSHAKE (POST) ---
 export async function POST(request: Request) {
@@ -12,30 +12,29 @@ export async function POST(request: Request) {
     }
 
     // --- UPSERT FLEET REGISTRY ---
-    // Check if order exists in fleet tracking
-    const existing = await queryOne("SELECT order_id FROM fleet_tracking WHERE order_id = ?", [order_id]);
+    const { error: upsertError } = await supabase
+      .from('fleet_tracking')
+      .upsert({
+        order_id,
+        agent_id: 'AGENT-007',
+        agent_name: 'Vikram S.',
+        current_lat: lat,
+        current_lng: lng,
+        current_temp: temp || -20.0,
+        status: status || 'IN_TRANSIT',
+        last_updated: new Date().toISOString()
+      }, { onConflict: 'order_id' });
 
-    if (existing) {
-      await query(
-        "UPDATE fleet_tracking SET current_lat = ?, current_lng = ?, current_temp = ?, status = ?, last_updated = CURRENT_TIMESTAMP WHERE order_id = ?",
-        [lat, lng, temp || -20.0, status || 'IN_TRANSIT', order_id],
-        'UPDATE'
-      );
-    } else {
-      await query(
-        "INSERT INTO fleet_tracking (order_id, agent_id, agent_name, current_lat, current_lng, current_temp, status) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        [order_id, 'AGENT-007', 'Vikram S.', lat, lng, temp || -20.0, status || 'ASSIGNED'],
-        'INSERT'
-      );
-    }
+    if (upsertError) throw upsertError;
 
     // --- ADD LOG ENTRY ---
     if (log_entry) {
-      await query(
-        "INSERT INTO fleet_logs (order_id, status, location_name) VALUES (?, ?, ?)",
-        [order_id, log_entry.status || status, log_entry.location || 'Current Position'],
-        'INSERT'
-      );
+      const { error: logError } = await supabase.from('fleet_logs').insert([{
+        order_id,
+        status: log_entry.status || status,
+        location_name: log_entry.location || 'Current Position'
+      }]);
+      if (logError) throw logError;
     }
 
     return NextResponse.json({ success: true, message: "Signal Registered in Sovereign Spine" });
@@ -53,29 +52,33 @@ export async function GET(request: Request) {
 
     if (!order_id) {
       // Admin Discovery Mode: Return all active fleet nodes
-      const allFleet = await query("SELECT * FROM fleet_tracking ORDER BY last_updated DESC");
-      return NextResponse.json(allFleet.data);
+      const { data: allFleet, error } = await supabase.from('fleet_tracking').select('*').order('last_updated', { ascending: false });
+      if (error) throw error;
+      return NextResponse.json(allFleet || []);
     }
 
     // Fetch Specific Order Telemetry
-    const data = await queryOne("SELECT * FROM fleet_tracking WHERE order_id = ?", [order_id]);
+    const { data: trackingData, error: trackingError } = await supabase.from('fleet_tracking').select('*').eq('order_id', order_id).single();
 
-    if (!data) {
+    if (trackingError && trackingError.code !== 'PGRST116') throw trackingError;
+    if (!trackingData) {
       return NextResponse.json({ error: "Order Not in Active Fleet" }, { status: 404 });
     }
 
     // Fetch Logs for this order
-    const logs = await query("SELECT status, location_name as location, timestamp as time FROM fleet_logs WHERE order_id = ? ORDER BY timestamp DESC", [order_id]);
+    const { data: logsData, error: logsError } = await supabase.from('fleet_logs').select('status, location_name, timestamp').eq('order_id', order_id).order('timestamp', { ascending: false });
+    if (logsError) throw logsError;
     
     // Format logs for frontend
-    const formattedLogs = logs.data.map((l: any) => ({
-      ...l,
-      time: new Date(l.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    const formattedLogs = (logsData || []).map((l: any) => ({
+      status: l.status,
+      location: l.location_name,
+      time: new Date(l.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       active: true // The latest one is active in UI logic
     }));
 
     return NextResponse.json({
-      ...data,
+      ...trackingData,
       logs: formattedLogs
     });
   } catch (error: any) {

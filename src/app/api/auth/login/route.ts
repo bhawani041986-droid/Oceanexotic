@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { queryOne } from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 import bcrypt from 'bcryptjs';
 
 export async function POST(request: Request) {
@@ -16,7 +16,15 @@ export async function POST(request: Request) {
     }
 
     // Retrieve user by email
-    const user = await queryOne("SELECT * FROM users WHERE email = ?", [email]);
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .single();
+
+    if (error && error.code !== 'PGRST116') {
+      throw error;
+    }
 
     if (user && user.password) {
       // Compare password hash (supports bcrypt $2y$ hashes from PHP)

@@ -1,11 +1,17 @@
 import { NextResponse } from 'next/server';
-import { query, queryOne } from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 
 // --- FETCH AGENT SETTINGS ---
 export async function GET() {
   try {
     const agentId = "AGENT-007"; // In production, get from session
-    const settings = await queryOne("SELECT current_mood FROM agent_settings WHERE agent_id = ?", [agentId]);
+    const { data: settings, error } = await supabase
+      .from('agent_settings')
+      .select('current_mood')
+      .eq('agent_id', agentId)
+      .single();
+    
+    if (error && error.code !== 'PGRST116') throw error;
     
     if (!settings) {
       return NextResponse.json({ current_mood: "SENTINEL" });
@@ -25,13 +31,11 @@ export async function POST(request: Request) {
 
     if (!mood) return NextResponse.json({ error: "Missing Mood Node" }, { status: 400 });
 
-    const existing = await queryOne("SELECT agent_id FROM agent_settings WHERE agent_id = ?", [agentId]);
+    const { error } = await supabase
+      .from('agent_settings')
+      .upsert({ agent_id: agentId, current_mood: mood }, { onConflict: 'agent_id' });
 
-    if (existing) {
-      await query("UPDATE agent_settings SET current_mood = ? WHERE agent_id = ?", [mood, agentId], 'UPDATE');
-    } else {
-      await query("INSERT INTO agent_settings (agent_id, current_mood) VALUES (?, ?)", [agentId, mood], 'INSERT');
-    }
+    if (error) throw error;
 
     return NextResponse.json({ success: true, message: "Tactical Environment Anchored" });
   } catch (error: any) {

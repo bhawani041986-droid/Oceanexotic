@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { query, queryOne } from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 
 // --- FETCH CITIZEN PROFILE ---
 export async function GET(request: Request) {
@@ -9,7 +9,8 @@ export async function GET(request: Request) {
 
     if (!id) return NextResponse.json({ error: "Missing Identity ID" }, { status: 400 });
 
-    const user = await queryOne("SELECT * FROM users WHERE id = ?", [id]);
+    const { data: user, error } = await supabase.from('users').select('*').eq('id', id).single();
+    if (error && error.code !== 'PGRST116') throw error;
     
     // Sovereign Graceful Fallback: Return a default profile instead of 404 to prevent console noise
     if (!user) {
@@ -38,11 +39,8 @@ export async function PUT(request: Request) {
 
     if (!id) return NextResponse.json({ error: "Missing Identity ID" }, { status: 400 });
 
-    await query(
-      "UPDATE users SET name = ?, email = ?, avatar_url = ? WHERE id = ?",
-      [name, email, avatar_url, id],
-      'UPDATE'
-    );
+    const { error } = await supabase.from('users').update({ name, email, avatar_url }).eq('id', id);
+    if (error) throw error;
 
     return NextResponse.json({ success: true, message: "Identity Node Synchronized" });
   } catch (error: any) {

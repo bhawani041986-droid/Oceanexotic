@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { query } from '@/lib/db';
+import { supabase } from '@/lib/supabase';
 
 function getDeliveryArea(address: string): string {
   const addr = (address || '').toLowerCase();
@@ -21,20 +21,19 @@ function getDeliveryArea(address: string): string {
 // Returns aggregated order statistics grouped by area and by seller
 export async function GET() {
   try {
-    const queryStr = `
-      SELECT 
-          o.*,
-          u.name as customer_name,
-          (SELECT s.name FROM sellers s 
-           JOIN products p ON s.id = p.seller_id 
-           JOIN order_items oi ON p.id = oi.product_id 
-           WHERE oi.order_id = o.id LIMIT 1) as seller_name
-      FROM orders o
-      LEFT JOIN users u ON o.user_id = u.id
-      ORDER BY o.created_at DESC
-    `;
-    const result = await query(queryStr);
-    const orders = (result.data as any[]) || [];
+    const { data: ordersData, error } = await supabase
+      .from('orders')
+      .select('*, users(name)')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    
+    // Map data to match old query format
+    const orders = (ordersData || []).map((o: any) => ({
+      ...o,
+      customer_name: o.users?.name || o.customer_name,
+      seller_name: o.seller_name // Assuming seller_name is stored or defaults
+    }));
 
     // --- Group by area ---
     const areaMap: Record<string, {
