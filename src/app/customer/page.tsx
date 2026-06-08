@@ -1133,25 +1133,43 @@ export default function CustomerHomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
                 className={cn(
-                  "px-3 py-2 rounded-xl bg-[#0b0e14]/80 backdrop-blur-md border flex items-center justify-between transition-all duration-300 w-full",
+                  "p-2.5 rounded-xl bg-[#0b0e14]/90 backdrop-blur-xl border flex flex-col gap-1.5 transition-all duration-300 w-full",
                   isStoreOpen && settings.ordersEnabled
-                    ? "border-emerald-500/20"
-                    : "border-amber-500/20"
+                    ? "border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)]"
+                    : "border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.1)]"
                 )}
               >
-                <div className="flex items-center gap-1.5">
-                  <span className={cn("w-1.5 h-1.5 rounded-full",
-                    isStoreOpen && settings.ordersEnabled ? "bg-emerald-500 animate-pulse" : "bg-amber-500 animate-pulse"
-                  )} />
-                  <p className={cn("text-[9px] font-black uppercase italic tracking-tighter leading-none",
-                    isStoreOpen && settings.ordersEnabled ? "text-emerald-400" : "text-amber-400"
-                  )}>
-                    {isStoreOpen && settings.ordersEnabled ? "DELIVERY OPEN" : "PRE-ORDERS"}
-                  </p>
+                {/* Top Row: Status and Hours */}
+                <div className="flex items-center justify-between w-full">
+                  <div className="flex items-center gap-1.5">
+                    <span className={cn("w-1.5 h-1.5 rounded-full",
+                      isStoreOpen && settings.ordersEnabled ? "bg-emerald-500 animate-pulse" : "bg-amber-500 animate-pulse"
+                    )} />
+                    <p className={cn("text-[10px] font-black uppercase italic tracking-wider leading-none",
+                      isStoreOpen && settings.ordersEnabled ? "text-emerald-400" : "text-amber-400"
+                    )}>
+                      {isStoreOpen && settings.ordersEnabled ? "DELIVERY OPEN" : "PRE-ORDERS"}
+                    </p>
+                  </div>
+                  <div className="text-[9px] font-bold text-white uppercase tracking-wider">
+                    {formatTime12h(settings.ordersOpenTime || "09:00")} - {formatTime12h(settings.ordersCloseTime || "22:00")}
+                  </div>
                 </div>
 
-                <div className="text-[8px] font-bold text-[var(--c-text-primary)] uppercase">
-                  {formatTime12h(settings.ordersOpenTime || "09:00")} - {formatTime12h(settings.ordersCloseTime || "22:00")}
+                {/* Bottom Row: Details */}
+                <div className="flex items-center justify-between w-full pt-1.5 border-t border-white/10">
+                   {isStoreOpen && settings.ordersEnabled ? (
+                      <span className="text-[8px] font-bold text-emerald-100/90 uppercase tracking-widest w-full text-center">
+                        Fastest cold-chain delivery
+                      </span>
+                   ) : (
+                      <div className="flex items-center justify-between w-full">
+                         <span className="text-[8px] font-black text-amber-300/90 uppercase tracking-widest">Next Dispatch</span>
+                         <span className="text-[8px] font-black text-white uppercase truncate">
+                           {settings.ordersNextOpenText || "Tomorrow at 09:00 AM"}
+                         </span>
+                      </div>
+                   )}
                 </div>
               </motion.div>
             </div>
