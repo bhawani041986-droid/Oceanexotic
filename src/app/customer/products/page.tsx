@@ -42,7 +42,11 @@ import {
   Home as HomeIcon,
   Receipt,
   MessageCircle,
-  Loader2
+  Loader2,
+  Snowflake,
+  Anchor,
+  Compass,
+  Activity
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -108,9 +112,13 @@ const ProductCard = ({ product }: { product: any }) => {
       >
         <div className="relative aspect-[4/5] bg-black overflow-hidden">
             <div className="absolute inset-0 flex items-center justify-center text-6xl md:text-8xl group-hover:scale-105 transition-transform duration-700 select-none">
-              {(hydratedProduct.images?.[0]?.startsWith('http') || hydratedProduct.images?.[0]?.startsWith('/')) 
-                ? <img src={hydratedProduct.images[0]} className="w-full h-full object-contain" /> 
-                : (hydratedProduct.images?.[0] || hydratedProduct.image)}
+              {(() => {
+                const imgStr = hydratedProduct.images?.[0] || hydratedProduct.image;
+                if (typeof imgStr === 'string' && (imgStr.startsWith('http') || imgStr.startsWith('/'))) {
+                  return <img src={imgStr} className="w-full h-full object-contain" />;
+                }
+                return <span>{imgStr}</span>;
+              })()}
             </div>
            <div className="absolute inset-0 bg-gradient-to-t from-[var(--c-bg-alt)] via-transparent to-transparent opacity-60" />
            <div className="absolute top-2 left-2 flex flex-col gap-1">
