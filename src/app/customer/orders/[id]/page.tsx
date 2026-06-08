@@ -113,6 +113,21 @@ export default function OrderDetailsPage() {
     }
   };
 
+  // ── Print & PDF handlers ──────────────────────────────────────────────────
+  const handlePrint = useCallback(() => {
+    window.print();
+  }, []);
+
+  const handleDownloadPDF = useCallback(() => {
+    // Trigger browser Save-as-PDF via print dialog
+    // The print stylesheet (below) hides everything except #order-printable
+    const prevTitle = document.title;
+    document.title = `OceanExotic-Order-${id}`;
+    window.print();
+    document.title = prevTitle;
+  }, [id]);
+  // ─────────────────────────────────────────────────────────────────────────
+
   if (isLoading) {
     return (
       <div className="bg-bg-primary min-h-screen flex items-center justify-center">
@@ -130,20 +145,7 @@ export default function OrderDetailsPage() {
     );
   }
 
-  // ── Print & PDF handlers ──────────────────────────────────────────────────
-  const handlePrint = useCallback(() => {
-    window.print();
-  }, []);
 
-  const handleDownloadPDF = useCallback(() => {
-    // Trigger browser Save-as-PDF via print dialog
-    // The print stylesheet (below) hides everything except #order-printable
-    const prevTitle = document.title;
-    document.title = `OceanExotic-Order-${id}`;
-    window.print();
-    document.title = prevTitle;
-  }, [id]);
-  // ─────────────────────────────────────────────────────────────────────────
 
   const handleReviewSubmit = async () => {
     if (!comment.trim()) {
