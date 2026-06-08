@@ -1314,7 +1314,7 @@ export default function CustomerHomePage() {
       {/* 5. FEATURED PRODUCTS GRID */}
       <section className="py-6 container mx-auto px-[2px] md:px-10 mt-6">
          <div className="space-y-6">
-            <SectionTitle title="Featured Harvests" subtitle="Highest Quality Grade" />
+            <SectionTitle title="Featured Seafood" subtitle="Highest Quality Grade" />
             <div className="grid grid-cols-2 md:grid-cols-4 gap-[2px] md:gap-8">
                {(featuredProducts.length > 0 ? featuredProducts : FEATURED_PRODUCTS).slice(0, 4).map((prod) => (
                   <motion.div 
