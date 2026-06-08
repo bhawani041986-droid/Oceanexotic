@@ -128,7 +128,7 @@ export default function OrderDetailsPage() {
         })
       );
 
-      const response = await fetch("/api/reviews/create.php", {
+      const response = await fetch("/api/reviews/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

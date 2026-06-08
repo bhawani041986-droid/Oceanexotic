@@ -69,7 +69,7 @@ export default function AdminCMSPage() {
   const fetchContent = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`${API_BASE_URL}/system/cms.php`);
+      const response = await fetch(`${API_BASE_URL}/system/cms`);
       const data = await response.json();
       if (data.status === 'success') {
         setContent(data.content || []);
@@ -336,7 +336,7 @@ export default function AdminCMSPage() {
         metadata: updatedMeta
       };
 
-      fetch(`${API_BASE_URL}/system/cms.php`, {
+      fetch(`${API_BASE_URL}/system/cms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -368,7 +368,7 @@ export default function AdminCMSPage() {
         id: editingItem?.id
       };
 
-      const response = await fetch(`${API_BASE_URL}/system/cms.php`, {
+      const response = await fetch(`${API_BASE_URL}/system/cms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -389,7 +389,7 @@ export default function AdminCMSPage() {
     if (!confirm("Are you sure you want to delete this content item?")) return;
     
     try {
-      const response = await fetch(`${API_BASE_URL}/system/cms.php?id=${id}`, {
+      const response = await fetch(`${API_BASE_URL}/system/cms?id=${id}`, {
         method: 'DELETE'
       });
       const data = await response.json();
@@ -405,7 +405,7 @@ export default function AdminCMSPage() {
   const toggleStatus = async (item: any) => {
     const newStatus = item.status === 'PUBLISHED' ? 'DRAFT' : 'PUBLISHED';
     try {
-      await fetch(`${API_BASE_URL}/system/cms.php`, {
+      await fetch(`${API_BASE_URL}/system/cms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...item, status: newStatus })

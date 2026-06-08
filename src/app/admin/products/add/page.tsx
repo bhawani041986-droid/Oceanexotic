@@ -99,7 +99,7 @@ export default function AdminAddProductPage() {
   useEffect(() => {
     const fetchSellers = async () => {
       try {
-        const res = await fetch("/api/admin/get_sellers.php");
+        const res = await fetch("/api/admin/get_sellers");
         const data = await res.json();
         const formattedSellers = data.map((s: any) => ({
           id: s.id.startsWith("SEL-") ? s.id : `SEL-${s.id}`,
@@ -119,7 +119,7 @@ export default function AdminAddProductPage() {
 
     const fetchTerritories = async () => {
       try {
-        const res = await fetch("/api/system/get_territories.php");
+        const res = await fetch("/api/system/get_territories");
         if (res.ok) {
           const data = await res.json();
           const filtered = data.filter((t: any) => t.zone_type !== 'ISLAND' && t.status === 'ACTIVE');
@@ -233,7 +233,7 @@ export default function AdminAddProductPage() {
 
     setIsSubmitting(true);
     try {
-      const res = await fetch('/api/seller/products.php', {
+      const res = await fetch('/api/seller/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

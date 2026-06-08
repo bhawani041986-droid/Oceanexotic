@@ -41,7 +41,7 @@ export default function TerritoryManagementPage() {
 
   const fetchTerritories = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/system/get_territories.php?island=${encodeURIComponent(activeIsland)}`);
+      const res = await fetch(`${API_BASE_URL}/system/get_territories?island=${encodeURIComponent(activeIsland)}`);
       const data = await res.json(
   );
       setTerritories(data
@@ -63,7 +63,7 @@ export default function TerritoryManagementPage() {
 
   const toggleStatus = async (id: number) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/system/toggle_territory_status.php`, {
+      const res = await fetch(`${API_BASE_URL}/system/toggle_territory_status`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id })
@@ -84,7 +84,7 @@ export default function TerritoryManagementPage() {
   const handleAddArea = async () => {
     if (!newArea.name) return;
     try {
-      const res = await fetch(`${API_BASE_URL}/system/add_territory.php`, {
+      const res = await fetch(`${API_BASE_URL}/system/add_territory`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -118,7 +118,7 @@ export default function TerritoryManagementPage() {
   const handleEditArea = async () => {
     if (!editingArea.name) return;
     try {
-      const res = await fetch(`${API_BASE_URL}/system/edit_territory.php`, {
+      const res = await fetch(`${API_BASE_URL}/system/edit_territory`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -142,7 +142,7 @@ export default function TerritoryManagementPage() {
   const handleDeleteArea = async (id: number, name: string) => {
     if (!confirm(`Are you sure you want to decommission ${name}?`)) return;
     try {
-      const res = await fetch(`${API_BASE_URL}/system/delete_territory.php`, {
+      const res = await fetch(`${API_BASE_URL}/system/delete_territory`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id })

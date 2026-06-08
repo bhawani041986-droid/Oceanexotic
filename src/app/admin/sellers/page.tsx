@@ -66,7 +66,7 @@ export default function AdminSellersPage() {
 
   const fetchSellers = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/admin/get_sellers.php?t=${Date.now()}`
+      const res = await fetch(`${API_BASE_URL}/admin/get_sellers?t=${Date.now()}`
 );
       const data = await res.json(
   );
@@ -94,7 +94,7 @@ export default function AdminSellersPage() {
     setSellerDocs([]
   );
     try {
-      const res = await fetch(`${API_BASE_URL}/admin/get_seller_docs.php?seller_id=${sellerId}&t=${Date.now()}`
+      const res = await fetch(`${API_BASE_URL}/admin/get_seller_docs?seller_id=${sellerId}&t=${Date.now()}`
 );
       const data = await res.json(
   );
@@ -113,7 +113,7 @@ export default function AdminSellersPage() {
     setAuditingId(docId
   );
     try {
-      const res = await fetch(`${API_BASE_URL}/admin/update_doc_status.php`, {
+      const res = await fetch(`${API_BASE_URL}/admin/update_doc_status`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: docId, status })
@@ -142,7 +142,7 @@ export default function AdminSellersPage() {
     setStatusLoading(sellerId
   );
     try {
-      const res = await fetch(`${API_BASE_URL}/admin/update_seller_status.php`, {
+      const res = await fetch(`${API_BASE_URL}/admin/update_seller_status`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: sellerId, status: targetStatus })

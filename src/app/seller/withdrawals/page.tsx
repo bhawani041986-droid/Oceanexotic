@@ -44,8 +44,8 @@ export default function SellerWithdrawalsPage() {
   const fetchData = async () => {
     try {
       const [wRes, sRes] = await Promise.all([
-        fetch(`${API_BASE_URL}/seller/get_withdrawals.php?seller_id=${sellerId}&t=${Date.now()}`),
-        fetch(`${API_BASE_URL}/seller/get_stats.php?seller_id=${sellerId}&t=${Date.now()}`)
+        fetch(`${API_BASE_URL}/seller/get_withdrawals?seller_id=${sellerId}&t=${Date.now()}`),
+        fetch(`${API_BASE_URL}/seller/get_stats?seller_id=${sellerId}&t=${Date.now()}`)
       ]
   );
       
@@ -73,7 +73,7 @@ export default function SellerWithdrawalsPage() {
     setSubmitting(true
   );
     try {
-      const res = await fetch(`${API_BASE_URL}/seller/create_withdrawal.php`, {
+      const res = await fetch(`${API_BASE_URL}/seller/create_withdrawal`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

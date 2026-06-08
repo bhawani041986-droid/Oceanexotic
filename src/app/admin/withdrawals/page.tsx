@@ -43,7 +43,7 @@ export default function AdminWithdrawalsPage() {
 
   const fetchWithdrawals = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/admin/get_all_withdrawals.php?t=${Date.now()}`);
+      const res = await fetch(`${API_BASE_URL}/admin/get_all_withdrawals?t=${Date.now()}`);
       const data = await res.json(
   );
       if (Array.isArray(data)) {
@@ -63,7 +63,7 @@ export default function AdminWithdrawalsPage() {
     setProcessingId(id
   );
     try {
-      const res = await fetch(`${API_BASE_URL}/admin/update_withdrawal_status.php`, {
+      const res = await fetch(`${API_BASE_URL}/admin/update_withdrawal_status`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, status })

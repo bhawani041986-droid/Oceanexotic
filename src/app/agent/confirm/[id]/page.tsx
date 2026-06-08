@@ -39,7 +39,7 @@ export default function AgentConfirmPage() {
       setStatus('verifying');
       
       // Update DB status to DELIVERED
-      fetch("/api/seller/orders.php", {
+      fetch("/api/seller/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

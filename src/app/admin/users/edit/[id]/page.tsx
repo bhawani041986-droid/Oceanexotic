@@ -52,7 +52,7 @@ export default function AdminEditUserPage() {
     const fetchUser = async () => {
       if (!params?.id) return;
       try {
-        const res = await fetch(`/api/admin/get_user.php?id=${params.id}`);
+        const res = await fetch(`/api/admin/get_user?id=${params.id}`);
         const data = await res.json();
         if (data && !data.error) {
           setUser(data);
@@ -90,7 +90,7 @@ export default function AdminEditUserPage() {
 
     setIsSubmitting(true);
     try {
-      const res = await fetch('/api/admin/update_user.php', {
+      const res = await fetch('/api/admin/update_user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -125,7 +125,7 @@ export default function ProductDetailPage({
       }
       
       try {
-        const url = area ? `/api/products/detail.php?id=${encodeURIComponent(productId)}&area=${encodeURIComponent(area)}` : `/api/products/detail.php?id=${encodeURIComponent(productId)}`;
+        const url = area ? `/api/products/detail?id=${encodeURIComponent(productId)}&area=${encodeURIComponent(area)}` : `/api/products/detail?id=${encodeURIComponent(productId)}`;
         const res = await fetch(url);
         if (res.ok) {
           const data = await res.json();

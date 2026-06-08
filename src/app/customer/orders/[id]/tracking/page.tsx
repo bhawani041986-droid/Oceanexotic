@@ -29,7 +29,7 @@ export default function OrderTrackingPage() {
 
   const fetchTelemetry = async () => {
     try {
-      const res = await fetch(`/api/fleet.php?order_id=${id}`);
+      const res = await fetch(`/api/fleet?order_id=${id}`);
       if (res.ok) {
         const data = await res.json();
         setTrackingData(data);

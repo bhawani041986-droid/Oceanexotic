@@ -94,7 +94,7 @@ export default function AdminAddonsPage() {
     formDataUpload.append("file", file);
 
     try {
-      const res = await fetch("/api/upload.php", {
+      const res = await fetch("/api/upload", {
         method: "POST",
         body: formDataUpload,
       });
@@ -118,8 +118,8 @@ export default function AdminAddonsPage() {
     setIsLoading(true);
     try {
       const [addonsRes, territoriesRes] = await Promise.all([
-        fetch("/api/admin/addons.php"),
-        fetch("/api/system/get_territories.php")
+        fetch("/api/admin/addons"),
+        fetch("/api/system/get_territories")
       ]);
 
       if (addonsRes.ok) {
@@ -228,7 +228,7 @@ export default function AdminAddonsPage() {
     };
 
     try {
-      const res = await fetch("/api/admin/addons.php", {
+      const res = await fetch("/api/admin/addons", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -253,7 +253,7 @@ export default function AdminAddonsPage() {
   const handleToggleActive = async (addon: Addon) => {
     const newStatus = addon.is_active === 1 ? 0 : 1;
     try {
-      const res = await fetch("/api/admin/addons.php", {
+      const res = await fetch("/api/admin/addons", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -295,7 +295,7 @@ export default function AdminAddonsPage() {
     if (!addonToDelete) return;
 
     try {
-      const res = await fetch("/api/admin/addons.php", {
+      const res = await fetch("/api/admin/addons", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

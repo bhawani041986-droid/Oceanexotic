@@ -53,7 +53,7 @@ export default function SellerVerificationPage() {
 
   const fetchVerification = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/seller/get_verification.php?seller_id=${sellerId}&t=${Date.now()}`);
+      const res = await fetch(`${API_BASE_URL}/seller/get_verification?seller_id=${sellerId}&t=${Date.now()}`);
       const result = await res.json(
   );
       setData(result
@@ -107,7 +107,7 @@ export default function SellerVerificationPage() {
   );
 
     try {
-      const res = await fetch(`${API_BASE_URL}/seller/upload_doc.php`, {
+      const res = await fetch(`${API_BASE_URL}/seller/upload_doc`, {
         method: 'POST',
         body: formData
       }

@@ -32,7 +32,7 @@ export default function CustomerRecipeDetailsPage() {
   useEffect(() => {
     const fetchCms = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/system/cms.php`);
+        const res = await fetch(`${API_BASE_URL}/system/cms`);
         const data = await res.json();
         if (data.status === 'success') {
           setCmsContent(data.content || []);

@@ -88,7 +88,7 @@ export default function SellerOrdersPage() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch("/api/seller/orders.php"
+      const res = await fetch("/api/seller/orders"
   );
       if (res.ok) {
         const data = await res.json(
@@ -107,7 +107,7 @@ export default function SellerOrdersPage() {
 
   const fetchAgents = async () => {
     try {
-      const res = await fetch("/api/agent/list.php"
+      const res = await fetch("/api/agent/list"
   );
       if (res.ok) {
         const data = await res.json(
@@ -160,7 +160,7 @@ export default function SellerOrdersPage() {
     setIsUpdating(true
   );
     try {
-      const res = await fetch("/api/seller/orders.php", {
+      const res = await fetch("/api/seller/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

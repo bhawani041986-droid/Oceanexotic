@@ -40,7 +40,7 @@ export default function AdminSupportHub() {
 
   const fetchConversations = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/chat/get_conversations.php?user_id=${currentUserId}&t=${Date.now()}`);
+      const res = await fetch(`${API_BASE_URL}/chat/get_conversations?user_id=${currentUserId}&t=${Date.now()}`);
       const data = await res.json(
   );
       if (Array.isArray(data)) {
@@ -58,7 +58,7 @@ export default function AdminSupportHub() {
 
   const fetchMessages = async (convId: number) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/chat/get_messages.php?conversation_id=${convId}&t=${Date.now()}`);
+      const res = await fetch(`${API_BASE_URL}/chat/get_messages?conversation_id=${convId}&t=${Date.now()}`);
       const data = await res.json(
   );
       if (Array.isArray(data)) {
@@ -83,7 +83,7 @@ export default function AdminSupportHub() {
     };
 
     try {
-      const res = await fetch(`${API_BASE_URL}/chat/send_message.php`, {
+      const res = await fetch(`${API_BASE_URL}/chat/send_message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(packet)

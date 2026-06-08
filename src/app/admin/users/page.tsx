@@ -38,7 +38,7 @@ export default function AdminUsersPage() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch("/api/admin/get_users.php");
+      const res = await fetch("/api/admin/get_users");
       const data = await res.json();
       if (Array.isArray(data)) {
         setUsers(data);
@@ -57,7 +57,7 @@ export default function AdminUsersPage() {
 
   const handleUpdateStatus = async (userId: string, newStatus: string) => {
     try {
-      const res = await fetch("/api/admin/update_user_status.php", {
+      const res = await fetch("/api/admin/update_user_status", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: userId, status: newStatus }),
@@ -81,7 +81,7 @@ export default function AdminUsersPage() {
     }
     
     try {
-      const res = await fetch("/api/admin/delete_user.php", {
+      const res = await fetch("/api/admin/delete_user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: userId }),

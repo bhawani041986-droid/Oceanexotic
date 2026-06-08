@@ -872,7 +872,7 @@ export default function CustomerHomePage() {
   React.useEffect(() => {
     const fetchCMS = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/system/cms.php`);
+        const res = await fetch(`${API_BASE_URL}/system/cms`);
         const data = await res.json();
         if (data.status === 'success') {
           setCmsContent(data.content || []);
@@ -882,7 +882,7 @@ export default function CustomerHomePage() {
     
     const fetchTerritories = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/system/get_territories.php`);
+        const res = await fetch(`${API_BASE_URL}/system/get_territories`);
         if (res.ok) {
           const data = await res.json();
           setTerritories(data);
@@ -893,7 +893,7 @@ export default function CustomerHomePage() {
     const fetchTodaysCatch = async () => {
       try {
         setIsLoadingCatch(true);
-        const res = await fetch(`${API_BASE_URL}/products/todays_catch.php`);
+        const res = await fetch(`${API_BASE_URL}/products/todays_catch`);
         const data = await res.json();
         if (data.status === 'success') {
           setTodaysCatch(data.items || []);
@@ -904,7 +904,7 @@ export default function CustomerHomePage() {
 
     const fetchFeatured = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/products/list.php`);
+        const res = await fetch(`${API_BASE_URL}/products/list`);
         const data = await res.json();
         if (data.status === 'success') {
           setFeaturedProducts(data.products || []);
@@ -966,7 +966,7 @@ export default function CustomerHomePage() {
     
     try {
       const prodId = product.product_id || product.id;
-      const res = await fetch(`${API_BASE_URL}/products/cut_options.php?product_id=${prodId}`);
+      const res = await fetch(`${API_BASE_URL}/products/cut_options?product_id=${prodId}`);
       const data = await res.json();
       if (data.status === 'success') {
         setCutOptions(data.cut_options || []);

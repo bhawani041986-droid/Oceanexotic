@@ -59,7 +59,7 @@ export default function CartPage() {
           }
         }
         
-        const addonsRes = await fetch(`/api/addons/list.php?area=${encodeURIComponent(area)}`);
+        const addonsRes = await fetch(`/api/addons/list?area=${encodeURIComponent(area)}`);
         if (addonsRes.ok) {
           const data = await addonsRes.json();
           setAddons(data);

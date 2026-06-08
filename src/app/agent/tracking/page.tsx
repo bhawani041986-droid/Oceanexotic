@@ -92,7 +92,7 @@ function AgentTrackingContent() {
       setVerificationError("");
       await handleStateTransition(MissionState.DELIVERED);
       try {
-        await fetch("/api/seller/orders.php", {
+        await fetch("/api/seller/orders", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

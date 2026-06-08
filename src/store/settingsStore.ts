@@ -106,7 +106,7 @@ export const useSettingsStore = create<SettingsState>()(
 
       fetchSettings: async () => {
         try {
-          const response = await fetch(`${API_BASE_URL}/system/settings.php`);
+          const response = await fetch(`${API_BASE_URL}/system/settings`);
           const data = await response.json();
           if (data.status === 'success' && data.settings) {
             set((state) => ({ ...state, ...data.settings }));
@@ -141,7 +141,7 @@ export const useSettingsStore = create<SettingsState>()(
             ordersNextOpenText: state.ordersNextOpenText
           };
 
-          const response = await fetch(`${API_BASE_URL}/system/settings.php`, {
+          const response = await fetch(`${API_BASE_URL}/system/settings`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ settings: settingsToSave })

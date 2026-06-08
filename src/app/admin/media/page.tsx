@@ -87,7 +87,7 @@ export default function MediaOptimizationCenter() {
       }
 
       // 2. Fetch Full Vault (All optimized files)
-      const vaultRes = await fetch(`${API_BASE_URL}/system/media_vault.php`);
+      const vaultRes = await fetch(`${API_BASE_URL}/system/media_vault`);
       if (vaultRes.ok) {
           const vaultData = await vaultRes.json(
   );
@@ -112,7 +112,7 @@ export default function MediaOptimizationCenter() {
   const handleRunOptimization = async () => {
     setIsOptimizing(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/system/optimize_assets.php`);
+      const res = await fetch(`${API_BASE_URL}/system/optimize_assets`);
       if (res.ok) {
         const data = await res.json();
         if (data.status === 'success') {

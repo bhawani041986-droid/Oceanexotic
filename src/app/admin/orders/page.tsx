@@ -260,7 +260,7 @@ export default function AdminOrders() {
     setIsLoading(true
   );
     try {
-      const res = await fetch('/api/admin/orders.php'
+      const res = await fetch('/api/admin/orders'
   );
       const data = await res.json(
   );
@@ -502,7 +502,7 @@ export default function AdminOrders() {
     try {
       setIsLoading(true
   );
-      const res = await fetch('/api/admin/orders.php', {
+      const res = await fetch('/api/admin/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ order_id: orderId, status: 'VERIFIED' })

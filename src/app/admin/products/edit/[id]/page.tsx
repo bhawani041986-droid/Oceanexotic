@@ -91,7 +91,7 @@ export default function AdminEditProductPage() {
   useEffect(() => {
     const fetchSellers = async () => {
       try {
-        const res = await fetch("/api/admin/get_sellers.php");
+        const res = await fetch("/api/admin/get_sellers");
         const data = await res.json();
         const formattedSellers = data.map((s: any) => ({
           id: s.id.startsWith("SEL-") ? s.id : `SEL-${s.id}`,
@@ -104,12 +104,12 @@ export default function AdminEditProductPage() {
     const fetchProduct = async () => {
       try {
         // Fetch territories to build all location overrides
-        const terrRes = await fetch("/api/system/get_territories.php");
+        const terrRes = await fetch("/api/system/get_territories");
         const terrData = terrRes.ok ? await terrRes.json() : [];
         const activeTerrs = terrData.filter((t: any) => t.zone_type !== 'ISLAND' && t.status === 'ACTIVE');
         setTerritories(activeTerrs);
 
-        const res = await fetch(`/api/seller/products.php?id=${params.id}`);
+        const res = await fetch(`/api/seller/products?id=${params.id}`);
         const data = await res.json();
         
         // Handle nested JSON fields
@@ -278,7 +278,7 @@ export default function AdminEditProductPage() {
   const handleSave = async () => {
     setIsSubmitting(true);
     try {
-      const res = await fetch(`/api/seller/products.php`, {
+      const res = await fetch(`/api/seller/products`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

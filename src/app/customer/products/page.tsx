@@ -327,7 +327,7 @@ function ProductListingContent() {
         }
       }
 
-      const url = area ? `/api/seller/products.php?area=${encodeURIComponent(area)}` : '/api/seller/products.php';
+      const url = area ? `/api/seller/products?area=${encodeURIComponent(area)}` : '/api/seller/products';
       const res = await fetch(url);
       const data = await res.json();
       
@@ -346,7 +346,7 @@ function ProductListingContent() {
 
       // Fetch Addons
       try {
-        const addonUrl = area ? `/api/addons/list.php?area=${encodeURIComponent(area)}` : '/api/addons/list.php';
+        const addonUrl = area ? `/api/addons/list?area=${encodeURIComponent(area)}` : '/api/addons/list';
         const addonRes = await fetch(addonUrl);
         if (addonRes.ok) {
            const addonData = await addonRes.json();

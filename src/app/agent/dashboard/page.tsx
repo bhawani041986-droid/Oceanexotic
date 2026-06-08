@@ -33,7 +33,7 @@ export default function AgentDashboardPage() {
 
   const fetchMissions = async () => {
     try {
-      const res = await fetch("/api/agent/orders.php?agent_id=AGENT-742"
+      const res = await fetch("/api/agent/orders?agent_id=AGENT-742"
   );
       if (res.ok) {
         const data = await res.json(

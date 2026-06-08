@@ -48,7 +48,7 @@ export default function SearchResultsPage() {
   const fetchResults = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/products/search.php?q=${encodeURIComponent(searchTerm)}&category=${encodeURIComponent(activeCategory)}`);
+      const res = await fetch(`${API_BASE_URL}/products/search?q=${encodeURIComponent(searchTerm)}&category=${encodeURIComponent(activeCategory)}`);
       const data = await res.json();
       if (data.status === 'success') {
         setResults(data.results || []);
@@ -74,7 +74,7 @@ export default function SearchResultsPage() {
     setSelectedCut(null);
     
     try {
-      const res = await fetch(`${API_BASE_URL}/products/cut_options.php?product_id=${product.id}`);
+      const res = await fetch(`${API_BASE_URL}/products/cut_options?product_id=${product.id}`);
       const data = await res.json();
       if (data.status === 'success') {
         setCutOptions(data.cut_options || []);

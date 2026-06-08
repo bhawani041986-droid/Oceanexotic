@@ -44,7 +44,7 @@ export default function SellerProductsPage() {
     setIsHydrating(true
   );
     try {
-      const res = await fetch('/api/seller/products.php'
+      const res = await fetch('/api/seller/products'
   );
       const data = await res.json(
   );
@@ -98,7 +98,7 @@ export default function SellerProductsPage() {
     toast(`Decommissioning ${id}...`, "info"
   );
     try {
-      const res = await fetch(`/api/seller/products.php?id=${id}`, { method: 'DELETE' }
+      const res = await fetch(`/api/seller/products?id=${id}`, { method: 'DELETE' }
   );
       if (res.ok) {
         toast(`${id} purged from registry.`, "success"

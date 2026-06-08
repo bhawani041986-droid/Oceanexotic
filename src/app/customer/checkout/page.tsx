@@ -142,7 +142,7 @@ export default function CheckoutPage() {
 
     setIsProcessing(true);
     try {
-      const res = await fetch("/api/marketplace/checkout.php", {
+      const res = await fetch("/api/marketplace/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

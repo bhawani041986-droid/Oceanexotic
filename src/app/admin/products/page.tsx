@@ -56,7 +56,7 @@ export default function AdminProductsPage() {
     setIsLoading(true
   );
     try {
-      const res = await fetch('/api/seller/products.php'
+      const res = await fetch('/api/seller/products'
   );
       const data = await res.json(
   );
@@ -88,7 +88,7 @@ export default function AdminProductsPage() {
     setIsProcessing(true);
     try {
       const updatedProduct = { ...product, status: 'PUBLISHED' };
-      const res = await fetch('/api/seller/products.php', {
+      const res = await fetch('/api/seller/products', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedProduct)
@@ -120,7 +120,7 @@ export default function AdminProductsPage() {
     setIsProcessing(true
   );
     try {
-      const res = await fetch(`/api/seller/products.php?id=${selectedProduct.id}`, {
+      const res = await fetch(`/api/seller/products?id=${selectedProduct.id}`, {
         method: 'DELETE'
       }
   );

@@ -86,7 +86,7 @@ export default function SellerEditProductPage() {
       const id = params?.id as string;
       if (!id) return;
       try {
-        const res = await fetch(`/api/seller/products.php?id=${id}`);
+        const res = await fetch(`/api/seller/products?id=${id}`);
         const data = await res.json();
         if (data.id) {
           const nutrition = data.nutrition ? (typeof data.nutrition === 'string' ? JSON.parse(data.nutrition) : data.nutrition) : {
@@ -219,7 +219,7 @@ export default function SellerEditProductPage() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
-      const res = await fetch('/api/seller/products.php', {
+      const res = await fetch('/api/seller/products', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

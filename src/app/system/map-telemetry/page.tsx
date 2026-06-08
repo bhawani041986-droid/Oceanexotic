@@ -114,7 +114,7 @@ export default function MapTelemetryPage() {
   const [territories, setTerritories] = useState([]);
 
   useEffect(() => {
-    fetch('/FISH_MARKET/api/products/todays_catch.php')
+    fetch('/FISH_MARKET/api/products/todays_catch')
       .then(res => res.json())
       .then(data => {
         if (data.status === 'success') setTerritories(data.items || []);

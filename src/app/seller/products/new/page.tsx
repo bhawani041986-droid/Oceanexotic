@@ -178,7 +178,7 @@ export default function SellerNewProductPage() {
     setIsSaving(true);
     try {
       const seller_id = user?.id ? (user.id.startsWith("SEL-") ? user.id : `SEL-${user.id}`) : 'SEL-USR-1778761853233';
-      const res = await fetch('/api/seller/products.php', {
+      const res = await fetch('/api/seller/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formData, seller_id })
