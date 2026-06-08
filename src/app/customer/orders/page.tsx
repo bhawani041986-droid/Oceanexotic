@@ -46,7 +46,7 @@ export default function OrdersPage() {
     fetchOrders();
   }, [user?.id, isHydrated]);
   return (
-    <div className="bg-bg-primary pb-10 md:pb-20">
+    <div className="bg-bg-primary pt-24 md:pt-32 pb-10 md:pb-20">
         <div className="container mx-auto px-4 md:px-10 pb-10 md:pb-20">
           
           <div className="max-w-5xl mx-auto space-y-[10px] md:space-y-12">
@@ -97,7 +97,7 @@ export default function OrdersPage() {
                             VIEW DETAILS
                           </Button>
                         </Link>
-                        {order.status === "IN TRANSIT" && (
+                        {order.status !== "DELIVERED" && (
                           <Link href={`/customer/orders/${order.id}/tracking`} className="flex-1 lg:flex-none">
                             <Button className="w-full lg:w-auto h-10 md:h-12 px-6 md:px-8 text-[9px] md:text-[10px] font-black tracking-widest uppercase shadow-glow-purple rounded-lg md:rounded-xl">
                               TRACK
