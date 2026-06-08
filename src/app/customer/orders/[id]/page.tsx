@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 import { reviewService } from "@/services/reviewService";
+import { orderService } from "@/services/orderService";
 
 export default function OrderDetailsPage() {
   const { toast } = useToast();
@@ -41,13 +42,57 @@ export default function OrderDetailsPage() {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [evidence, setEvidence] = React.useState<File[]>([]);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
-  const [origin, setOrigin] = React.useState("http://localhost:3000");
+  const [order, setOrder] = React.useState<any>(null);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [origin, setOrigin] = React.useState("https://oceanexotic.com");
 
   React.useEffect(() => {
     if (typeof window !== "undefined") {
       setOrigin(window.location.origin);
     }
   }, []);
+
+  React.useEffect(() => {
+    const fetchOrderDetails = async () => {
+      if (!id) return;
+      try {
+        const data = await orderService.getUserOrderDetails(id as string);
+        if (data) {
+          // Map backend structure to the frontend format expected by the UI
+          setOrder({
+            id: data.id,
+            date: new Date(data.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            status: data.status,
+            total: parseFloat(data.total_amount) || 0,
+            shipping: 0,
+            tax: 0, // Simplified tax calculation
+            subtotal: parseFloat(data.total_amount) || 0,
+            address: {
+              name: data.customer_name || "Customer",
+              line1: data.delivery_address || "",
+              city: data.delivery_area || "Port Blair",
+              state: "Andaman & Nicobar",
+              zip: ""
+            },
+            items: (data.items || []).map((item: any) => ({
+              id: item.product_id,
+              name: item.product_id, // Would need product join for real name
+              price: parseFloat(item.price) || 0,
+              qty: parseFloat(item.quantity) || 1,
+              sellerId: "1",
+              image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400"
+            }))
+          });
+        }
+      } catch (err) {
+        console.error("Failed to fetch order details:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchOrderDetails();
+  }, [id]);
 
   React.useEffect(() => {
     const fetchOrderReviews = async () => {
@@ -68,27 +113,22 @@ export default function OrderDetailsPage() {
     }
   };
 
-  // High-Fidelity Mock Order Metadata
-  const order = {
-    id: id,
-    date: "May 09, 2026",
-    status: "DELIVERED",
-    total: 12800,
-    shipping: 500,
-    tax: 640,
-    subtotal: 11660,
-    address: {
-      name: "Bhawani Singh",
-      line1: "North Jetty Road, Phoenix Bay",
-      city: "Port Blair",
-      state: "South Andaman",
-      zip: "744101"
-    },
-    items: [
-      { id: "p1", name: "Premium Bluefin Tuna", price: 8500, qty: 1, sellerId: "4", image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400" },
-      { id: "p2", name: "Hokkaido Scallops", price: 3160, qty: 1, sellerId: "4", image: "https://images.unsplash.com/photo-1599084993091-1cb5c0721cc6?q=80&w=400" },
-    ]
-  };
+  if (isLoading) {
+    return (
+      <div className="bg-bg-primary min-h-screen flex items-center justify-center">
+        <Loader2 className="w-10 h-10 text-primary animate-spin" />
+      </div>
+    );
+  }
+
+  if (!order) {
+    return (
+      <div className="bg-bg-primary min-h-screen flex flex-col items-center justify-center gap-4">
+        <h1 className="text-2xl font-black uppercase text-[var(--foreground)]">Order Not Found</h1>
+        <Button onClick={() => router.back()} variant="outline">Go Back</Button>
+      </div>
+    );
+  }
 
   // ── Print & PDF handlers ──────────────────────────────────────────────────
   const handlePrint = useCallback(() => {

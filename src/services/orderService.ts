@@ -24,6 +24,12 @@ export const orderService = {
     return response.data;
   },
 
+  // Sovereign Ledger Detail: Fetch specific order with items
+  getUserOrderDetails: async (id: string) => {
+    const response = await api.get(`/user/orders/details?id=${id}`);
+    return response.data;
+  },
+
   // Fleet Performance: Fetch high-fidelity merchant stats
   getSellerStats: async () => {
     const response = await api.get("/admin/orders/pipeline");
