@@ -10,7 +10,7 @@ export async function GET() {
     const { data: products, error } = await supabase
       .from('products')
       .select('*')
-      .eq('is_active', 1)
+      .eq('status', 'ACTIVE')
       .order('created_at', { ascending: false });
 
     if (error) {
