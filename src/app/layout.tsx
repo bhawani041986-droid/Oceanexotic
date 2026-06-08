@@ -5,6 +5,9 @@ import { ToastProvider } from "@/components/ui/Toast";
 
 // Fonts disabled to bypass network issues during build
 
+export const dynamic = 'force-dynamic';
+export const fetchCache = 'force-no-store';
+
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
