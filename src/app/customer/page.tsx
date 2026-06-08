@@ -1019,13 +1019,13 @@ export default function CustomerHomePage() {
   return (
     <div className="w-full">
       {/* 3. HERO SECTION - THEME AWARE IMAGE & ATMOSPHERE */}
-      <section className="relative min-h-[35vh] lg:min-h-[80vh] flex items-center justify-center overflow-hidden py-4 lg:py-0">
+      <section className="relative min-h-[25vh] lg:min-h-[80vh] flex items-center justify-center overflow-hidden py-4 lg:py-0">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[var(--c-gradient-hero)] z-10" />
           <img 
             src={settings.customerAssets.hero} 
             fetchPriority="high"
-            className="w-full h-full object-cover scale-110 opacity-40 grayscale-[20%]" 
+            className="w-full h-full object-cover lg:scale-110 opacity-40 grayscale-[20%] object-center" 
             alt="OceanExotic Seafood Hero" 
           />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,var(--c-primary),transparent_50%)] opacity-10 hidden lg:block" />
@@ -1093,7 +1093,7 @@ export default function CustomerHomePage() {
           </motion.div>
         </div>
 
-        <div className="container mx-auto px-6 relative z-20 flex flex-col items-center justify-center min-h-[30vh] lg:min-h-[70vh]">
+        <div className="container mx-auto px-6 relative z-20 flex flex-col items-center justify-center min-h-[20vh] lg:min-h-[70vh]">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 lg:space-y-6 text-center max-w-4xl mx-auto flex flex-col items-center w-full">
              <div className="space-y-4 lg:space-y-6 flex flex-col items-center">
                 <Badge variant="outline" className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] text-[10px] md:text-[12px] font-black tracking-[0.4em] px-6 py-2 border-[var(--c-primary)]/20 uppercase shadow-[0_0_15px_rgba(var(--c-primary-rgb),0.1)]">
@@ -1127,7 +1127,7 @@ export default function CustomerHomePage() {
             </div>
 
             {/* Embedded Timing Card (Mobile Only - Bottom of Hero) */}
-            <div className="block lg:hidden w-full max-w-[300px] mt-4 z-30 pointer-events-auto">
+            <div className="block lg:hidden w-full max-w-[300px] mt-2 z-30 pointer-events-auto">
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
