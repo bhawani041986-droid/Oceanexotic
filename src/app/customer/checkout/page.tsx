@@ -183,7 +183,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans pb-32">
+    <div className="min-h-screen bg-[var(--c-bg)] text-[var(--c-text-primary)] font-sans pb-32">
 
 
       <main className="container mx-auto max-w-5xl px-4 pt-8 md:pt-12">
@@ -217,11 +217,11 @@ export default function CheckoutPage() {
             )}
             
             {/* Step 1: Shipping Address */}
-            <div className={cn("border rounded-xl transition-all overflow-hidden shadow-sm", activeStep === 1 ? "border-primary/50 ring-1 ring-primary/20" : "border-slate-200")}>
-              <div className={cn("px-6 py-4 flex items-center justify-between", activeStep === 1 ? "bg-slate-50" : "bg-white")}>
+            <div className={cn("border rounded-xl transition-all overflow-hidden shadow-sm", activeStep === 1 ? "border-[var(--c-primary)]/50 ring-1 ring-[var(--c-primary)]/20" : "border-[var(--foreground)]/10")}>
+              <div className={cn("px-6 py-4 flex items-center justify-between", activeStep === 1 ? "bg-[var(--c-bg-alt)]" : "bg-[var(--c-bg)]")}>
                 <div className="flex items-center gap-4">
-                  <span className={cn("w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold", activeStep === 1 ? "bg-primary text-black" : "bg-slate-100 text-slate-400")}>1</span>
-                  <h2 className="text-lg font-bold">Shipping Address</h2>
+                  <span className={cn("w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold", activeStep === 1 ? "bg-[var(--c-primary)] text-[var(--c-bg)]" : "bg-[var(--foreground)]/5 text-[var(--c-text-secondary)]")}>1</span>
+                  <h2 className="text-lg font-bold text-[var(--c-text-primary)]">Shipping Address</h2>
                 </div>
                 {activeStep !== 1 && selectedAddress && (
                    <button onClick={() => setActiveStep(1)} className="text-xs font-bold text-blue-600 hover:underline">Change</button>
@@ -229,7 +229,7 @@ export default function CheckoutPage() {
               </div>
               
               {activeStep === 1 ? (
-                 <div className="p-6 space-y-6 bg-white animate-in slide-in-from-top-2 duration-300">
+                 <div className="p-6 space-y-6 bg-[var(--c-bg)] animate-in slide-in-from-top-2 duration-300">
                     {isFetchingData ? (
                        <div className="flex flex-col items-center justify-center py-12 space-y-4">
                           <Loader2 className="w-8 h-8 text-primary animate-spin" />
@@ -274,8 +274,8 @@ export default function CheckoutPage() {
                     </div>
                  </div>
               ) : selectedAddress && (
-                 <div className="px-12 pb-6 text-sm text-slate-600">
-                    <p className="font-bold text-slate-900">{selectedAddress.hotel_name}</p>
+                 <div className="px-12 pb-6 text-sm text-[var(--c-text-secondary)]">
+                    <p className="font-bold text-[var(--c-text-primary)]">{selectedAddress.hotel_name}</p>
                     <p>{selectedAddress.address}</p>
                     <p>Contact: {selectedAddress.phone}</p>
                  </div>
@@ -283,11 +283,11 @@ export default function CheckoutPage() {
             </div>
 
             {/* Step 2: Payment Method */}
-            <div className={cn("border rounded-xl transition-all overflow-hidden shadow-sm", activeStep === 2 ? "border-primary/50 ring-1 ring-primary/20" : "border-slate-200")}>
-              <div className={cn("px-6 py-4 flex items-center justify-between", activeStep === 2 ? "bg-slate-50" : "bg-white")}>
+            <div className={cn("border rounded-xl transition-all overflow-hidden shadow-sm", activeStep === 2 ? "border-[var(--c-primary)]/50 ring-1 ring-[var(--c-primary)]/20" : "border-[var(--foreground)]/10")}>
+              <div className={cn("px-6 py-4 flex items-center justify-between", activeStep === 2 ? "bg-[var(--c-bg-alt)]" : "bg-[var(--c-bg)]")}>
                 <div className="flex items-center gap-4">
-                  <span className={cn("w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold", activeStep === 2 ? "bg-primary text-black" : "bg-slate-100 text-slate-400")}>2</span>
-                  <h2 className="text-lg font-bold">Payment Method</h2>
+                  <span className={cn("w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold", activeStep === 2 ? "bg-[var(--c-primary)] text-[var(--c-bg)]" : "bg-[var(--foreground)]/5 text-[var(--c-text-secondary)]")}>2</span>
+                  <h2 className="text-lg font-bold text-[var(--c-text-primary)]">Payment Method</h2>
                 </div>
                 {activeStep > 2 && (
                    <button onClick={() => setActiveStep(2)} className="text-xs font-bold text-blue-600 hover:underline">Change</button>
@@ -295,7 +295,7 @@ export default function CheckoutPage() {
               </div>
 
               {activeStep === 2 ? (
-                 <div className="p-6 bg-white animate-in slide-in-from-top-2 duration-300">
+                 <div className="p-6 bg-[var(--c-bg)] animate-in slide-in-from-top-2 duration-300">
                     <div className="p-6 border-2 border-primary bg-primary/5 rounded-xl flex items-center justify-between">
                        <div className="flex items-center gap-5">
                           <Truck className="w-8 h-8 text-primary" />
@@ -311,43 +311,44 @@ export default function CheckoutPage() {
                     </div>
                  </div>
               ) : activeStep > 2 && (
-                 <div className="px-12 pb-6 text-sm text-slate-600 font-bold italic uppercase">
+                 <div className="px-12 pb-6 text-sm text-[var(--c-text-secondary)] font-bold italic uppercase">
                     Cash on Delivery
                  </div>
               )}
             </div>
 
             {/* Step 3: Review Items and Shipping */}
-            <div className={cn("border rounded-xl transition-all overflow-hidden shadow-sm", activeStep === 3 ? "border-primary/50 ring-1 ring-primary/20" : "border-slate-200")}>
-              <div className={cn("px-6 py-4 flex items-center justify-between", activeStep === 3 ? "bg-slate-50" : "bg-white")}>
+            <div className={cn("border rounded-xl transition-all overflow-hidden shadow-sm", activeStep === 3 ? "border-[var(--c-primary)]/50 ring-1 ring-[var(--c-primary)]/20" : "border-[var(--foreground)]/10")}>
+              <div className={cn("px-6 py-4 flex items-center justify-between", activeStep === 3 ? "bg-[var(--c-bg-alt)]" : "bg-[var(--c-bg)]")}>
                 <div className="flex items-center gap-4">
-                  <span className={cn("w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold", activeStep === 3 ? "bg-primary text-black" : "bg-slate-100 text-slate-400")}>3</span>
-                  <h2 className="text-lg font-bold">Review Items and Shipping</h2>
+                  <span className={cn("w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold", activeStep === 3 ? "bg-[var(--c-primary)] text-[var(--c-bg)]" : "bg-[var(--foreground)]/5 text-[var(--c-text-secondary)]")}>3</span>
+                  <h2 className="text-lg font-bold text-[var(--c-text-primary)]">Review Items and Shipping</h2>
                 </div>
               </div>
 
               {activeStep === 3 && (
-                 <div className="p-6 bg-white animate-in slide-in-from-top-2 duration-300 space-y-8">
+                 <div className="p-6 bg-[var(--c-bg)] animate-in slide-in-from-top-2 duration-300 space-y-8">
                     <div className="space-y-4">
                        {items.map((item) => (
                           <div key={item.id} className="flex gap-6 items-center p-4 rounded-xl border border-slate-100">
+                          <div key={item.id} className="flex gap-6 items-center p-4 rounded-xl border border-[var(--foreground)]/10">
                              <div className="w-16 h-16 rounded-lg overflow-hidden shrink-0">
                                 <img src={item.image} className="w-full h-full object-cover" alt={item.name} />
                              </div>
                              <div className="flex-1">
                                 <h4 className="text-sm font-bold">{item.name}</h4>
-                                <p className="text-xs text-slate-400 font-bold uppercase mt-1">QTY: {item.quantity} KG</p>
-                                <p className="text-sm font-bold text-slate-900 mt-1 italic">₹{(item.price * item.quantity).toLocaleString()}</p>
+                                <p className="text-xs text-[var(--c-text-secondary)] font-bold uppercase mt-1">QTY: {item.quantity} KG</p>
+                                <p className="text-sm font-bold text-[var(--c-text-primary)] mt-1 italic">₹{(item.price * item.quantity).toLocaleString()}</p>
                              </div>
                           </div>
                        ))}
                     </div>
 
-                    <div className="p-8 bg-slate-50 rounded-2xl flex flex-col items-center text-center space-y-6">
-                       <ShieldCheck className="w-12 h-12 text-primary" />
+                    <div className="p-8 bg-[var(--c-bg-alt)]/40 rounded-2xl flex flex-col items-center text-center space-y-6">
+                       <ShieldCheck className="w-12 h-12 text-[var(--c-primary)]" />
                        <div>
                           <p className="text-sm font-black uppercase tracking-widest mb-2 italic">Authorize Final Handshake</p>
-                          <p className="text-xs text-slate-400 max-w-sm italic">By finalizing, you authorize the secure transfer of maritime assets to your designated coordinates.</p>
+                          <p className="text-xs text-[var(--c-text-secondary)] max-w-sm italic">By finalizing, you authorize the secure transfer of maritime assets to your designated coordinates.</p>
                        </div>
                        <Button 
                           onClick={handlePlaceOrder} 
@@ -364,7 +365,7 @@ export default function CheckoutPage() {
 
           {/* Sidebar Summary */}
           <div className="lg:col-span-4">
-            <Card className="sticky top-10 p-8 space-y-8 border-slate-200 shadow-xl rounded-2xl">
+            <Card className="sticky top-10 p-8 space-y-8 border-[var(--foreground)]/10 bg-[var(--c-bg-alt)] shadow-xl rounded-2xl">
                <div className="space-y-4">
                   <Button 
                     onClick={handlePlaceOrder} 
@@ -376,30 +377,30 @@ export default function CheckoutPage() {
                   <p className="text-[10px] text-center text-slate-400 italic">By placing your order, you agree to OceanExotic's Trade Handshake Privacy Policy and Conditions of Use.</p>
                </div>
 
-               <div className="border-t pt-6 space-y-4">
+               <div className="border-t border-[var(--foreground)]/10 pt-6 space-y-4">
                   <h3 className="font-bold text-sm">Order Summary</h3>
                   <div className="space-y-2 text-xs">
-                     <div className="flex justify-between text-slate-500">
+                     <div className="flex justify-between text-[var(--c-text-secondary)]">
                         <span>Items:</span>
                         <span>₹{total.toLocaleString()}</span>
                      </div>
-                     <div className="flex justify-between text-slate-500">
+                     <div className="flex justify-between text-[var(--c-text-secondary)]">
                         <span>Shipping & Handling:</span>
                         <span>₹0</span>
                      </div>
-                     <div className="border-t pt-2 flex justify-between font-bold text-lg text-rose-700">
+                     <div className="border-t border-[var(--foreground)]/10 pt-2 flex justify-between font-bold text-lg text-rose-500">
                         <span>Order Total:</span>
                         <span>₹{total.toLocaleString()}</span>
                      </div>
                   </div>
                </div>
 
-               <div className="bg-slate-50 p-4 rounded-xl space-y-2">
-                  <div className="flex items-center gap-2 text-primary">
+               <div className="bg-[var(--c-bg)]/40 border border-[var(--foreground)]/5 p-4 rounded-xl space-y-2">
+                  <div className="flex items-center gap-2 text-[var(--c-primary)]">
                     <ShieldCheck className="w-4 h-4" />
                     <p className="text-[10px] font-black uppercase tracking-widest">Sovereign Protection</p>
                   </div>
-                  <p className="text-[9px] text-slate-500 italic leading-relaxed">Your trade is protected by the Andaman Maritime Protocol. Secure handshake guaranteed upon delivery.</p>
+                  <p className="text-[9px] text-[var(--c-text-secondary)] italic leading-relaxed">Your trade is protected by the Andaman Maritime Protocol. Secure handshake guaranteed upon delivery.</p>
                </div>
             </Card>
           </div>
