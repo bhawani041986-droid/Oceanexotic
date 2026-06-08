@@ -88,11 +88,6 @@ const ProductCard = ({ product }: { product: any }) => {
   const hydratedProduct = product;
 
   const handleAddToCart = () => {
-    if (!authService.getCurrentUser()) {
-      toast("Identity required. Redirecting to Login...", "error");
-      router.push("/login");
-      return;
-    }
     addItem({
       id: hydratedProduct.id,
       name: hydratedProduct.name,
@@ -171,12 +166,12 @@ const ProductCard = ({ product }: { product: any }) => {
                   COMING SOON
                 </Button>
               ) : quantity === 0 ? (
-                <Button onClick={(e) => { e.stopPropagation(); handleAddToCart(); }} className="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-[var(--c-radius-btn)] bg-[var(--c-primary)] hover:bg-[var(--c-primary-light)] shadow-[var(--c-shadow-glow)] flex items-center justify-center p-0 transition-all active:scale-90 text-[var(--foreground)]"><Plus className="w-4 h-4 md:w-6 md:h-6" /></Button>
+                <Button onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(); }} className="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-[var(--c-radius-btn)] bg-[var(--c-primary)] hover:bg-[var(--c-primary-light)] shadow-[var(--c-shadow-glow)] flex items-center justify-center p-0 transition-all active:scale-90 text-[var(--foreground)]"><Plus className="w-4 h-4 md:w-6 md:h-6" /></Button>
               ) : (
-                <div onClick={(e) => e.stopPropagation()} className="flex items-center bg-[var(--foreground)]/5 rounded-lg md:rounded-[var(--c-radius-btn)] border border-[var(--foreground)]/10 overflow-hidden h-8 md:h-12">
-                   <button onClick={(e) => { e.stopPropagation(); setQuantity(q => Math.max(0, q - 1)); }} className="w-6 md:w-10 h-full flex items-center justify-center hover:bg-[var(--foreground)]/10 text-[var(--c-text-primary)]"><Minus className="w-2.5 h-2.5 md:w-3 md:h-3" /></button>
+                <div onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="flex items-center bg-[var(--foreground)]/5 rounded-lg md:rounded-[var(--c-radius-btn)] border border-[var(--foreground)]/10 overflow-hidden h-8 md:h-12">
+                   <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); setQuantity(q => Math.max(0, q - 1)); }} className="w-6 md:w-10 h-full flex items-center justify-center hover:bg-[var(--foreground)]/10 text-[var(--c-text-primary)]"><Minus className="w-2.5 h-2.5 md:w-3 md:h-3" /></button>
                    <span className="w-6 md:w-8 text-center text-[10px] md:text-xs font-black text-[var(--c-primary)]">{quantity}</span>
-                   <button onClick={(e) => { e.stopPropagation(); setQuantity(q => q + 1); }} className="w-6 md:w-10 h-full flex items-center justify-center hover:bg-[var(--foreground)]/10 text-[var(--c-text-primary)]"><Plus className="w-2.5 h-2.5 md:w-3 md:h-3" /></button>
+                   <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); setQuantity(q => q + 1); }} className="w-6 md:w-10 h-full flex items-center justify-center hover:bg-[var(--foreground)]/10 text-[var(--c-text-primary)]"><Plus className="w-2.5 h-2.5 md:w-3 md:h-3" /></button>
                 </div>
               )}
            </div>
