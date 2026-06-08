@@ -43,7 +43,6 @@ import { Badge } from "@/components/ui/Badge";
 import { useToast } from "@/components/ui/Toast";
 import { cn } from "@/lib/utils";
 
-import MainLayout from "@/components/layouts/MainLayout";
 import { useCartStore } from "@/store/cartStore";
 import { useSettingsStore } from "@/store/settingsStore";
 import { MASTER_PRODUCT_REGISTRY, MASTER_ADDONS_REGISTRY } from "@/constants/products";
@@ -256,7 +255,7 @@ export default function ProductDetailPage({
     return (
         <div className="h-[70vh] flex flex-col items-center justify-center space-y-4">
           <Loader2 className="w-10 h-10 text-[var(--c-primary)] animate-spin" />
-          <p className="text-[10px] font-black uppercase tracking-widest text-[var(--c-primary)] italic">Establishing ID Handshake...</p>
+          <p className="text-[10px] font-black uppercase tracking-widest text-[var(--c-primary)] italic">Loading product details...</p>
         </div>
     );
   }
@@ -295,7 +294,7 @@ export default function ProductDetailPage({
   }).filter(Boolean) || [];
 
   return (
-    <MainLayout>
+    <>
       {/* Dynamic Structured Data for Search Engines */}
       <Schema type="Product" data={generateProductSchema(product)} />
       
@@ -509,7 +508,7 @@ export default function ProductDetailPage({
                <div className="flex items-center justify-between">
                   <div className="space-y-[2px]">
                      <div className="flex items-center gap-[4px]">
-                        <p className="text-[8px] font-black text-[var(--c-text-secondary)] uppercase tracking-widest">Settlement Price</p>
+                        <p className="text-[8px] font-black text-[var(--c-text-secondary)] uppercase tracking-widest">Price</p>
                         <span className="text-[8px] font-bold text-[var(--c-primary)] uppercase tracking-widest italic">• {product.weight}</span>
                      </div>
                <div className="flex items-baseline gap-[4px]">
@@ -526,13 +525,12 @@ export default function ProductDetailPage({
                   </div>
                </div>
 
-               {/* Live Catch & Freshness Decay Clock */}
                <div className="p-3 bg-gradient-to-r from-[var(--c-primary)]/10 to-transparent border-l-2 border-[var(--c-primary)] rounded-r-xl flex items-center justify-between mt-2">
                   <div className="flex items-center gap-2">
                      <Clock className="w-3.5 h-3.5 text-[var(--c-primary)] animate-pulse" />
                      <div>
                         <p className="text-[8px] font-black uppercase text-[var(--foreground)]">Landed: 4h 12m ago</p>
-                        <p className="text-[7px] font-bold uppercase text-[var(--c-text-secondary)]">Prime Quality Index (A+)</p>
+                        <p className="text-[7px] font-bold uppercase text-[var(--c-text-secondary)]">Premium Quality</p>
                      </div>
                   </div>
                   <div className="flex items-center gap-1.5 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
@@ -580,7 +578,7 @@ export default function ProductDetailPage({
                   {product.prep_options && product.prep_options.length > 0 && (
                     <div className="space-y-2 mt-4">
                       <p className="text-[8px] font-black text-[var(--c-text-secondary)] uppercase tracking-widest flex items-center gap-1.5">
-                        <UtensilsCrossed className="w-3.5 h-3.5 text-[var(--c-primary)]" /> Cooking Prep Customization
+                        <UtensilsCrossed className="w-3.5 h-3.5 text-[var(--c-primary)]" /> Preparation Style
                       </p>
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                         {product.prep_options.map((option: any) => (
@@ -610,7 +608,7 @@ export default function ProductDetailPage({
                     <div className="p-4 bg-emerald-500/[0.03] border border-emerald-500/10 rounded-[20px] mb-4">
                       <div className="flex items-center justify-between mb-2">
                          <h4 className="text-[10px] font-black text-emerald-400 uppercase tracking-wider flex items-center gap-1">
-                            <Plus className="w-3 h-3 text-emerald-400" /> Complete Your Recipe
+                            <Plus className="w-3 h-3 text-emerald-400" /> Recommended Add-ons
                          </h4>
                          <span className="text-[6px] font-black text-emerald-400 uppercase tracking-widest bg-emerald-500/10 px-1 py-0.5 rounded border border-emerald-500/20">RECOMMENDED PAIRING</span>
                       </div>
@@ -671,7 +669,7 @@ export default function ProductDetailPage({
                 {/* Yield & Culinary Cut Visualizer */}
                 <div className="p-4 bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 rounded-[20px] space-y-3 mt-4">
                    <h4 className="text-[9px] font-black text-[var(--c-primary)] uppercase tracking-widest flex items-center gap-1.5">
-                      <UtensilsCrossed className="w-3.5 h-3.5" /> Yield & Cut Reference
+                      <UtensilsCrossed className="w-3.5 h-3.5" /> Yield Information
                    </h4>
                    <div className="space-y-2">
                       {[
@@ -720,9 +718,9 @@ export default function ProductDetailPage({
                  <div className="flex items-center justify-between px-2">
                     <h4 className="text-[11px] font-black text-[var(--foreground)] uppercase italic tracking-tighter flex items-center gap-[4px]">
                        <Zap className="w-3 h-3 text-[var(--c-primary)] fill-[var(--c-primary)]/20" />
-                       Scientific Intelligence
+                       Nutrition Facts
                     </h4>
-                    <span className="text-[7px] font-black text-[var(--c-primary)] uppercase tracking-widest bg-[var(--c-primary)]/10 px-1.5 py-0.5 rounded-sm border border-[var(--c-primary)]/20">ALPHA-v1.1</span>
+                    <span className="text-[7px] font-black text-[var(--c-primary)] uppercase tracking-widest bg-[var(--c-primary)]/10 px-1.5 py-0.5 rounded-sm border border-[var(--c-primary)]/20">VERIFIED</span>
                  </div>
 
                  <div className="grid grid-cols-2 gap-[4px]">
@@ -776,7 +774,7 @@ export default function ProductDetailPage({
                     
                     <div className="flex-1 min-w-0">
                        <div className="flex items-center gap-2">
-                          <p className="text-[8px] font-black text-success uppercase tracking-widest">Sovereign Lab Verified</p>
+                          <p className="text-[8px] font-black text-success uppercase tracking-widest">Quality Verified</p>
                           <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
                        </div>
                        <p className="text-[9px] text-[var(--foreground)]/60 italic leading-tight truncate">
@@ -790,7 +788,7 @@ export default function ProductDetailPage({
 
               {/* Cold-Chain Telemetry Guard */}
               <div className="p-3 bg-[var(--c-bg-alt)]/60 border border-[var(--foreground)]/5 rounded-[16px] space-y-2">
-                 <p className="text-[8px] font-black uppercase text-[var(--c-primary)] tracking-widest">❄️ Cold-Chain Telemetry Guard</p>
+                 <p className="text-[8px] font-black uppercase text-[var(--c-primary)] tracking-widest">❄️ Temperature Tracking</p>
                  <div className="flex justify-between items-center">
                     <div>
                        <p className="text-[10px] font-black text-[var(--foreground)]">Stable -18.2°C</p>
@@ -807,7 +805,7 @@ export default function ProductDetailPage({
 
            {/* Column 2: Culinary Intelligence */}
            <div className="lg:col-span-4 space-y-[4px]">
-              <h4 className="text-lg font-black text-[var(--foreground)] uppercase italic tracking-tighter flex items-center gap-[4px]"><UtensilsCrossed className="w-4 h-4 text-[var(--c-primary)]" /> Chef Recipes</h4>
+              <h4 className="text-lg font-black text-[var(--foreground)] uppercase italic tracking-tighter flex items-center gap-[4px]"><UtensilsCrossed className="w-4 h-4 text-[var(--c-primary)]" /> Cooking Tips & Recipes</h4>
               <div className="space-y-[4px]">
                  {product.recipes?.map((recipe: any, i: number) => (
                     <div key={i} className="p-4 rounded-[16px] bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 flex items-center justify-between group hover:bg-[var(--c-primary)]/10 transition-all cursor-pointer">
@@ -831,7 +829,7 @@ export default function ProductDetailPage({
            {/* Column 3: Authority & Trust Intelligence */}
            <div className="lg:col-span-4 space-y-[10px]">
               <div className="space-y-[4px]">
-                 <h4 className="text-lg font-black text-[var(--foreground)] uppercase italic tracking-tighter flex items-center gap-[4px]"><ShieldCheck className="w-4 h-4 text-success" /> Authority Registry</h4>
+                 <h4 className="text-lg font-black text-[var(--foreground)] uppercase italic tracking-tighter flex items-center gap-[4px]"><ShieldCheck className="w-4 h-4 text-success" /> Seller Information</h4>
                  <Card className="p-4 bg-[var(--c-bg-alt)]/40 border-[var(--foreground)]/5 rounded-[20px] space-y-4">
                     <div className="flex items-center gap-4">
                        <div className="w-12 h-12 rounded-full bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/20 flex items-center justify-center text-xl rotate-12">⚓</div>
@@ -842,18 +840,18 @@ export default function ProductDetailPage({
                     </div>
                     <div className="space-y-2 pt-2 border-t border-[var(--foreground)]/5">
                        <div className="flex items-center justify-between text-[9px] font-black uppercase text-[var(--c-text-secondary)]">
-                          <span>Sovereign ID</span>
+                          <span>Seller ID</span>
                           <span className="text-[var(--foreground)]">REG-{product.sellerId}</span>
                        </div>
                        <div className="flex items-center justify-between text-[9px] font-black uppercase text-[var(--c-text-secondary)]">
-                          <span>Port Authority</span>
+                          <span>Location</span>
                           <span className="text-[var(--foreground)]">Atlantic S4</span>
                        </div>
                     </div>
 
                     {/* Live Vessel & Traceability Registry */}
                     <div className="pt-3 border-t border-[var(--foreground)]/5 space-y-2">
-                       <p className="text-[8px] font-black uppercase text-[var(--c-primary)] tracking-widest">🚢 Live Vessel & Traceability</p>
+                       <p className="text-[8px] font-black uppercase text-[var(--c-primary)] tracking-widest">🚢 Sourcing Details</p>
                        <div className="space-y-1 text-[8px] font-black uppercase text-[var(--c-text-secondary)]">
                           <div className="flex justify-between">
                              <span>Vessel ID</span>
@@ -887,9 +885,9 @@ export default function ProductDetailPage({
         <section id="reviews-section" className="mt-[10px] pt-[10px] border-t border-[var(--foreground)]/5 space-y-[10px] scroll-mt-20">
            <div className="flex items-center justify-between px-2">
               <div>
-                <h4 className="text-xl font-black text-[var(--foreground)] uppercase italic tracking-tighter flex items-center gap-2"><Star className="w-5 h-5 text-warning" /> Customer Intelligence</h4>
+                <h4 className="text-xl font-black text-[var(--foreground)] uppercase italic tracking-tighter flex items-center gap-2"><Star className="w-5 h-5 text-warning" /> Customer Reviews</h4>
                 <div className="flex items-center gap-4 mt-1">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-[var(--c-text-secondary)]">Reputation Ledger</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-[var(--c-text-secondary)]">Ratings & Reviews</p>
                   <Link 
                     href={`/customer/products/${product.id}/reviews`}
                     className="text-[10px] font-black uppercase tracking-widest text-[var(--c-primary)] hover:underline flex items-center gap-1"
@@ -948,7 +946,7 @@ export default function ProductDetailPage({
 
         {/* --- LAYER 4: DISCOVERY LAYER (RELATED) --- */}
         <section className="mt-[10px] pt-[10px] border-t border-[var(--foreground)]/5 space-y-[10px]">
-           <h4 className="text-xl font-black text-[var(--foreground)] uppercase italic tracking-tighter flex items-center gap-2"><TrendingUp className="w-5 h-5 text-[var(--c-primary)]" /> Similar Fleet Assets</h4>
+           <h4 className="text-xl font-black text-[var(--foreground)] uppercase italic tracking-tighter flex items-center gap-2"><TrendingUp className="w-5 h-5 text-[var(--c-primary)]" /> Similar Products</h4>
            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-[10px]">
               {MASTER_PRODUCT_REGISTRY.slice(0, 5).map((item) => (
                 <div key={item.id} onClick={() => router.push(`/customer/products/${item.id}`)} className="group cursor-pointer">
@@ -969,6 +967,6 @@ export default function ProductDetailPage({
 
       </div>
 
-    </MainLayout>
+    </>
   );
 }

@@ -38,7 +38,7 @@ export default function OrdersPage() {
           setOrders([]);
         }
       } catch (err) {
-        console.error("Ledger Sync Failure:", err);
+        console.error("Order Sync Failure:", err);
       } finally {
         setIsLoading(false);
       }
@@ -52,14 +52,14 @@ export default function OrdersPage() {
           <div className="max-w-5xl mx-auto space-y-[10px] md:space-y-12">
             <div className="space-y-1 md:space-y-4">
               <h1 className="text-2xl md:text-[40px] font-black uppercase italic tracking-tighter text-[var(--foreground)] leading-tight">Order History</h1>
-              <p className="text-[10px] md:text-[11px] font-black text-text-secondary uppercase tracking-[0.2em]">Tracking {orders.length} Active & Past Commissions</p>
+              <p className="text-[10px] md:text-[11px] font-black text-text-secondary uppercase tracking-[0.2em]">Tracking {orders.length} Active & Past Orders</p>
             </div>
 
             <div className="space-y-[10px] md:space-y-6">
               {isLoading ? (
                 <div className="py-20 flex flex-col items-center justify-center gap-4">
                   <Loader2 className="w-8 h-8 text-primary animate-spin" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary italic">Synchronizing Ledger...</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary italic">Loading Orders...</p>
                 </div>
               ) : orders.length > 0 ? orders.map((order) => (
                 <Card key={order.id} className="group hover:border-primary/30 transition-all overflow-hidden rounded-[20px] md:rounded-[28px]">
@@ -87,7 +87,7 @@ export default function OrdersPage() {
 
                     <div className="flex flex-col lg:flex-row lg:items-center gap-[10px] md:gap-10">
                       <div className="space-y-0.5 md:space-y-1 lg:text-right">
-                        <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest">Settlement Total</p>
+                        <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest">Order Total</p>
                         <p className="text-xl md:text-2xl font-black text-[var(--foreground)] leading-none italic">₹{order.total.toLocaleString()}</p>
                       </div>
                       <div className="h-px lg:h-10 w-full lg:w-px bg-[var(--foreground)]/5" />
@@ -139,7 +139,7 @@ export default function OrdersPage() {
               )) : (
                 <div className="py-20 text-center space-y-4 bg-[var(--foreground)]/5 rounded-3xl border border-dashed border-[var(--foreground)]/10">
                    <Package className="w-12 h-12 text-primary/20 mx-auto" />
-                   <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary italic">No trade directives found in registry</p>
+                   <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary italic">No orders found in history</p>
                 </div>
               )}
             </div>
@@ -150,7 +150,7 @@ export default function OrdersPage() {
                 <CheckCircle2 className="w-12 h-12 text-primary opacity-40" />
               </div>
               <div className="space-y-4">
-                <h2 className="text-2xl font-bold text-[var(--foreground)] tracking-tight">Expand Your Fleet</h2>
+                <h2 className="text-2xl font-bold text-[var(--foreground)] tracking-tight">Start Shopping</h2>
                 <p className="text-sm text-text-secondary font-medium leading-relaxed">Continue your discovery of the world's most premium sustainable seafood harvest.</p>
               </div>
               <Link href="/customer/products">

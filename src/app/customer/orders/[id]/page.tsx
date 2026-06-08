@@ -101,7 +101,7 @@ export default function OrderDetailsPage() {
         const data = await reviewService.getOrderReviews(id as string);
         setExistingReviews(data || []);
       } catch (err) {
-        console.error("Order Registry Check Failure:", err);
+        console.error("Failed to load reviews:", err);
       }
     };
     fetchOrderReviews();
@@ -238,7 +238,7 @@ export default function OrderDetailsPage() {
                  onClick={() => router.back()}
                  className="group gap-2 md:gap-3 text-[9px] md:text-[10px] font-black uppercase tracking-widest opacity-60 hover:opacity-100 h-8 md:h-10 px-0 md:px-4"
                >
-                 <ArrowLeft className="w-3.5 h-3.5 md:w-4 md:h-4 transition-transform group-hover:-translate-x-1" /> BACK TO COMMISSIONS
+                 <ArrowLeft className="w-3.5 h-3.5 md:w-4 md:h-4 transition-transform group-hover:-translate-x-1" /> BACK TO ORDERS
                </Button>
                <div className="flex gap-[4px] md:gap-4">
                   <Button
@@ -264,15 +264,15 @@ export default function OrderDetailsPage() {
                      <h1 className="text-3xl md:text-5xl font-black tracking-tighter text-[var(--foreground)] uppercase italic">{order.id}</h1>
                      <Badge variant="success" className="px-3 md:px-4 py-1 md:py-1.5 shadow-glow-purple text-[8px] md:text-[10px]">IN TRANSIT</Badge>
                   </div>
-                  <p className="text-text-secondary font-medium uppercase tracking-[0.2em] text-[9px] md:text-[11px]">Sovereign Settlement Manifest • {order.date}</p>
+                  <p className="text-text-secondary font-medium uppercase tracking-[0.2em] text-[9px] md:text-[11px]">Order Details • {order.date}</p>
                </div>
                <div className="text-left md:text-right space-y-0.5 md:space-y-1">
-                  <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest">Total Manifest Value</p>
+                  <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest">Order Total</p>
                   <p className="text-2xl md:text-4xl font-black text-[var(--foreground)] leading-none tracking-tighter italic">₹{order.total.toLocaleString()}</p>
                </div>
             </div>
 
-            {/* 🚚 LIVE COLD-CHAIN DELIVERY RADAR */}
+            {/* 🚚 LIVE DELIVERY TRACKING */}
             <Card className="p-6 bg-gradient-to-r from-primary/10 to-transparent border border-primary/20 rounded-[24px]">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="flex items-center gap-4">
@@ -280,7 +280,7 @@ export default function OrderDetailsPage() {
                      <Truck className="w-6 h-6 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-black uppercase italic tracking-tighter text-[var(--foreground)]">Live Cold-Chain Delivery Radar</h3>
+                    <h3 className="text-sm font-black uppercase italic tracking-tighter text-[var(--foreground)]">Live Delivery Tracking</h3>
                     <p className="text-[10px] font-medium text-text-secondary mt-1">
                       Current Node: <span className="font-bold text-[var(--foreground)]">Port Blair Phoenix Bay Hub</span> • In-Transit
                     </p>
@@ -304,7 +304,7 @@ export default function OrderDetailsPage() {
               </div>
             </Card>
 
-            {/* 🔐 SECURE HANDOFF PROTOCOL */}
+            {/* 🔐 SECURE DELIVERY PROTOCOL */}
             <Card className="p-6 bg-gradient-to-r from-blue-500/10 to-transparent border border-blue-500/20 rounded-[24px] mt-4">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div className="flex items-center gap-4">
@@ -312,7 +312,7 @@ export default function OrderDetailsPage() {
                      <Lock className="w-6 h-6 text-blue-400" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-black uppercase italic tracking-tighter text-[var(--foreground)]">Secure Handoff Protocol</h3>
+                    <h3 className="text-sm font-black uppercase italic tracking-tighter text-[var(--foreground)]">Secure Delivery Protocol</h3>
                     <p className="text-[10px] font-medium text-text-secondary mt-1">
                       Show this QR code or provide the OTP below to the delivery agent to confirm your delivery.
                     </p>
@@ -343,7 +343,7 @@ export default function OrderDetailsPage() {
                {/* Order Items Registry */}
                <div className="lg:col-span-2 space-y-[4px] md:space-y-8">
                   <h2 className="text-[10px] md:text-sm font-black text-[var(--foreground)] tracking-[0.2em] uppercase italic flex items-center gap-2 md:gap-3">
-                     <Package className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" /> Manifest Items
+                     <Package className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" /> Order Items
                   </h2>
                    <div className="space-y-[4px] md:space-y-4">
                      {order.items.map((item) => {
@@ -464,7 +464,7 @@ export default function OrderDetailsPage() {
                   <Card className="p-[10px] md:p-8 bg-bg-secondary/40 border-[var(--foreground)]/5 space-y-[10px] md:space-y-8 rounded-[20px] md:rounded-[30px]">
                      <div className="space-y-[4px] md:space-y-6">
                         <h2 className="text-[9px] md:text-[10px] font-black text-[var(--foreground)] tracking-widest uppercase italic flex items-center gap-2 md:gap-3">
-                           <FileText className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" /> Manifest Summary
+                           <FileText className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" /> Order Summary
                         </h2>
                         <div className="space-y-2 md:space-y-4">
                            <div className="flex justify-between text-[10px] md:text-xs font-medium text-text-secondary">
@@ -472,15 +472,15 @@ export default function OrderDetailsPage() {
                               <span className="text-[var(--foreground)]">₹{order.subtotal.toLocaleString()}</span>
                            </div>
                            <div className="flex justify-between text-[10px] md:text-xs font-medium text-text-secondary">
-                              <span>Maritime Transit</span>
+                              <span>Delivery</span>
                               <span className="text-[var(--foreground)] font-black text-success uppercase text-[8px] md:text-[10px]">Complimentary</span>
                            </div>
                            <div className="flex justify-between text-[10px] md:text-xs font-medium text-text-secondary">
-                              <span>Settlement Tax</span>
+                              <span>Tax</span>
                               <span className="text-[var(--foreground)]">₹{order.tax.toLocaleString()}</span>
                            </div>
                            <div className="pt-3 md:pt-4 border-t border-[var(--foreground)]/5 flex justify-between items-center">
-                              <span className="text-[9px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest">Total Settlement</span>
+                              <span className="text-[9px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest">Order Total</span>
                               <span className="text-xl md:text-2xl font-black text-primary italic">₹{order.total.toLocaleString()}</span>
                            </div>
                         </div>
@@ -488,7 +488,7 @@ export default function OrderDetailsPage() {
 
                      <div className="space-y-[4px] md:space-y-6 pt-[10px] md:pt-6 border-t border-[var(--foreground)]/5">
                         <h2 className="text-[9px] md:text-[10px] font-black text-[var(--foreground)] tracking-widest uppercase italic flex items-center gap-2 md:gap-3">
-                           <CreditCard className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" /> Settlement Method
+                           <CreditCard className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" /> Payment Method
                         </h2>
                         <div className="flex items-center gap-3 md:gap-4">
                            <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-[var(--foreground)]/5 flex items-center justify-center border border-[var(--foreground)]/5">
@@ -503,7 +503,7 @@ export default function OrderDetailsPage() {
 
                      <div className="space-y-[4px] md:space-y-6 pt-[10px] md:pt-6 border-t border-[var(--foreground)]/5">
                         <h2 className="text-[9px] md:text-[10px] font-black text-[var(--foreground)] tracking-widest uppercase italic flex items-center gap-2 md:gap-3">
-                           <Truck className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" /> Port of Destination
+                           <Truck className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" /> Delivery Address
                         </h2>
                         <div className="space-y-1 md:space-y-2">
                            <p className="text-[10px] md:text-[11px] font-bold text-[var(--foreground)] tracking-tight uppercase italic">{order.address.name}</p>
@@ -518,7 +518,7 @@ export default function OrderDetailsPage() {
                   {/* ⚓ FLEET IMPACT & SUSTAINABILITY LEDGER */}
                   <Card className="p-6 bg-[var(--c-bg-alt)]/40 border border-[var(--foreground)]/5 space-y-4 rounded-[20px] md:rounded-[30px]">
                      <h2 className="text-[9px] md:text-[10px] font-black text-[var(--foreground)] tracking-widest uppercase italic flex items-center gap-2">
-                        <Anchor className="w-3.5 h-3.5 text-primary" /> Fleet Impact & Sustainability
+                        <Anchor className="w-3.5 h-3.5 text-primary" /> Sourcing Details
                      </h2>
                      <div className="space-y-3">
                         <div className="flex justify-between text-[10px] font-medium text-text-secondary">
@@ -538,14 +538,14 @@ export default function OrderDetailsPage() {
                   <Card className="p-[10px] md:p-8 bg-primary/5 border-primary/20 relative overflow-hidden group rounded-[20px] md:rounded-[30px]">
                      <Anchor className="absolute -bottom-4 -right-4 w-20 md:w-24 h-20 md:h-24 text-primary opacity-5 group-hover:rotate-12 transition-transform duration-1000" />
                      <div className="space-y-3 md:space-y-4 relative z-10">
-                        <h3 className="text-[10px] md:text-xs font-black text-[var(--foreground)] tracking-[0.1em] uppercase italic">Need Maritime Assistance?</h3>
-                        <p className="text-[9px] md:text-[11px] text-text-secondary font-medium italic leading-tight">Our sovereign harvest support node is available 24/7 for manifest inquiries.</p>
+                        <h3 className="text-[10px] md:text-xs font-black text-[var(--foreground)] tracking-[0.1em] uppercase italic">Need Help?</h3>
+                        <p className="text-[9px] md:text-[11px] text-text-secondary font-medium italic leading-tight">Our support team is available 24/7 for order inquiries.</p>
                         <Button 
                            variant="outline" 
-                           onClick={() => toast("Maritime Support Dispatch: Connecting to Sovereign Harvest Node...", "info")}
+                           onClick={() => toast("Connecting to Support...", "info")}
                            className="w-full h-10 text-[8px] md:text-[9px] font-black tracking-widest uppercase border-primary/20 hover:bg-primary/10 rounded-lg md:rounded-xl"
                         >
-                           CONTACT HARVEST NODE
+                           CONTACT SUPPORT
                         </Button>
                      </div>
                   </Card>
@@ -579,11 +579,11 @@ export default function OrderDetailsPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottomWidth: '3px', borderBottomStyle: 'solid', borderBottomColor: '#0ea5e9', paddingBottom: '20px', marginBottom: '28px' }}>
               <div>
                 <div style={{ fontSize: '22px', fontWeight: 900, letterSpacing: '-0.5px', color: '#0f172a', textTransform: 'uppercase' }}>OCEAN<span style={{ color: '#0ea5e9' }}>EXOTIC</span></div>
-                <div style={{ fontSize: '10px', color: '#64748b', letterSpacing: '3px', textTransform: 'uppercase', marginTop: '4px' }}>Global Maritime Registry</div>
+                <div style={{ fontSize: '10px', color: '#64748b', letterSpacing: '3px', textTransform: 'uppercase', marginTop: '4px' }}>Seafood Market</div>
                 <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '2px' }}>oceanexotic.com • support@oceanexotic.com</div>
               </div>
               <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '2px' }}>Settlement Manifest</div>
+                <div style={{ fontSize: '11px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '2px' }}>Order Receipt</div>
                 <div style={{ fontSize: '20px', fontWeight: 900, color: '#0f172a', marginTop: '2px' }}>{order.id}</div>
                 <div style={{ display: 'inline-block', marginTop: '6px', padding: '3px 10px', background: '#dcfce7', borderWidth: '1px', borderStyle: 'solid', borderColor: '#86efac', borderRadius: '20px', fontSize: '9px', fontWeight: 700, color: '#166534', letterSpacing: '2px', textTransform: 'uppercase' }}>DELIVERED</div>
               </div>

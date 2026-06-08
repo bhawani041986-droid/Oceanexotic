@@ -35,7 +35,7 @@ export default function OrderTrackingPage() {
         setTrackingData(data);
       }
     } catch (error) {
-      console.error("Telemetry Drift:", error);
+      console.error("Tracking Error:", error);
     } finally {
       setLoading(false);
     }
@@ -53,7 +53,7 @@ export default function OrderTrackingPage() {
     estimated_arrival: "ACQUIRING...",
     current_lat: 13.160704,
     current_lng: 92.946892,
-    logs: [{ time: "Now", status: "Registry Live", location: "Andaman Sector", active: true }]
+    logs: [{ time: "Now", status: "Order Picked Up", location: "Andaman Sector", active: true }]
   };
 
   const initMapInstance = () => {
@@ -192,7 +192,7 @@ export default function OrderTrackingPage() {
                     <Droplets className="w-4 h-4 lg:w-6 lg:h-6 animate-pulse" />
                  </div>
                  <div className="space-y-0">
-                    <p className="text-[8px] lg:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest leading-none">Cold-Chain</p>
+                    <p className="text-[8px] lg:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest leading-none">Temperature</p>
                     <p className="text-sm lg:text-xl font-black text-primary leading-tight">{displayData.current_temp}°C STABLE</p>
                  </div>
               </div>
@@ -203,7 +203,7 @@ export default function OrderTrackingPage() {
                   <div id="map" className="w-full h-full rounded-[22px] lg:rounded-[38px]" />
                   
                   <div className="absolute top-3 left-3 z-[1000] space-y-1 pointer-events-none">
-                      <Badge variant="glass" className="bg-[var(--foreground)]/90 text-primary border-primary/20 uppercase tracking-[0.2em] text-[7px] font-black backdrop-blur-md">Maritime Command Map</Badge>
+                      <Badge variant="glass" className="bg-[var(--foreground)]/90 text-primary border-primary/20 uppercase tracking-[0.2em] text-[7px] font-black backdrop-blur-md">Live Delivery Map</Badge>
                   </div>
 
                   <div className="absolute bottom-3 left-3 right-3 p-2.5 lg:p-4 rounded-xl lg:rounded-[20px] bg-[var(--foreground)]/95 backdrop-blur-xl border border-[var(--foreground)]/10 flex items-center justify-between z-[1000] shadow-2xl pointer-events-none">
@@ -228,7 +228,7 @@ export default function OrderTrackingPage() {
 
                <div className="space-y-4 lg:space-y-8">
                   <div className="space-y-1">
-                     <h2 className="text-base lg:text-xl font-black text-[var(--foreground)] tracking-tighter uppercase italic">MISSION REGISTRY</h2>
+                     <h2 className="text-base lg:text-xl font-black text-[var(--foreground)] tracking-tighter uppercase italic">TRACKING HISTORY</h2>
                   </div>
                   <div className="space-y-4 lg:space-y-8 relative before:absolute before:left-3 before:top-0 before:bottom-0 before:w-px before:bg-[var(--foreground)]/10">
                      {(displayData.logs || []).map((event: any, i: number) => (
@@ -244,7 +244,7 @@ export default function OrderTrackingPage() {
                   </div>
                   <Card className="p-4 lg:p-6 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 flex items-center gap-3">
                      <ShieldCheck className="w-4 h-4 lg:w-5 lg:h-5 text-success" />
-                     <span className="text-[8px] lg:text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]/80">Harvest Secured</span>
+                     <span className="text-[8px] lg:text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]/80">Package Delivered</span>
                   </Card>
                </div>
             </div>
