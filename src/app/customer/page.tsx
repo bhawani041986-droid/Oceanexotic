@@ -1019,7 +1019,7 @@ export default function CustomerHomePage() {
   return (
     <div className="w-full">
       {/* 3. HERO SECTION - THEME AWARE IMAGE & ATMOSPHERE */}
-      <section className="relative min-h-[25vh] lg:min-h-[80vh] flex items-center justify-center overflow-hidden py-4 lg:py-0">
+      <section className="relative min-h-[15vh] lg:min-h-[80vh] flex items-center justify-center overflow-hidden py-4 lg:py-0">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[var(--c-gradient-hero)] z-10" />
           <img 
@@ -1093,97 +1093,65 @@ export default function CustomerHomePage() {
           </motion.div>
         </div>
 
-        <div className="container mx-auto px-6 relative z-20 flex flex-col items-center justify-center min-h-[20vh] lg:min-h-[70vh]">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-3 lg:space-y-6 text-center max-w-4xl mx-auto flex flex-col items-center w-full">
-             <div className="space-y-3 lg:space-y-6 flex flex-col items-center">
-                <Badge variant="outline" className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] text-[10px] md:text-[12px] font-black tracking-[0.4em] px-4 md:px-6 py-1.5 md:py-2 border-[var(--c-primary)]/20 uppercase shadow-[0_0_15px_rgba(var(--c-primary-rgb),0.1)]">
-                   {cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.sector || 'Premium'} Seafood Market: Active
+        <div className="container mx-auto px-4 lg:px-6 relative z-20 flex flex-col items-center justify-center min-h-[15vh] lg:min-h-[70vh]">
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-1.5 lg:space-y-6 text-center max-w-4xl mx-auto flex flex-col items-center w-full">
+             <div className="space-y-1.5 lg:space-y-6 flex flex-col items-center">
+                <Badge variant="outline" className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] text-[9px] md:text-[12px] font-black tracking-[0.4em] px-3 md:px-6 py-1 md:py-2 border-[var(--c-primary)]/20 uppercase shadow-[0_0_15px_rgba(var(--c-primary-rgb),0.1)]">
+                   {cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.sector || 'Premium'} Seafood Market
                 </Badge>
-                <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-[var(--c-text-primary)] uppercase italic leading-[1] md:leading-[0.85] text-center">
+                <h1 className="text-3xl md:text-5xl lg:text-7xl font-black text-[var(--c-text-primary)] uppercase italic leading-[1] md:leading-[0.85] text-center">
                    {cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.title?.split(':')[0] || 'Seafood'} <br /> 
                    <span className="text-[var(--c-primary)]">{cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.title?.split(':')[1] || 'Redefined.'}</span>
                 </h1>
              </div>
-             <p className="text-xs md:text-2xl text-[var(--c-text-secondary)] font-medium italic max-w-2xl mx-auto leading-relaxed px-2 md:px-4">
+             <p className="text-[10px] md:text-2xl text-[var(--c-text-secondary)] font-medium italic max-w-2xl mx-auto leading-relaxed px-1 md:px-4">
                 Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers.
              </p>
              
-            <div className="flex flex-col sm:flex-row gap-2.5 md:gap-4 justify-center pt-3 md:pt-6 w-full sm:w-auto">
+            <div className="flex flex-row gap-2 md:gap-4 justify-center pt-2 md:pt-6 w-full sm:w-auto">
                <Button 
-                  className="w-full sm:w-auto h-12 md:h-16 px-6 md:px-12 bg-[var(--c-primary)] hover:bg-[var(--c-primary-light)] text-[var(--foreground)] text-[9px] md:text-[12px] font-black uppercase tracking-widest shadow-[var(--c-shadow-glow)]"
-                  style={{ clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)' }}
+                  className="w-1/2 sm:w-auto h-10 md:h-16 px-1 md:px-12 bg-[var(--c-primary)] hover:bg-[var(--c-primary-light)] text-[var(--foreground)] text-[8px] md:text-[12px] font-black uppercase tracking-wider md:tracking-widest shadow-[var(--c-shadow-glow)]"
+                  style={{ clipPath: 'polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)' }}
                   onClick={() => router.push('/customer/products')}
                >
-                  SHOP FRESH SEAFOOD
+                  SHOP FRESH
                </Button>
                <Button 
                   variant="outline" 
-                  className="w-full sm:w-auto h-12 md:h-16 px-6 md:px-12 text-[9px] md:text-[12px] font-black uppercase tracking-widest border-[var(--foreground)]/10 text-[var(--c-text-primary)] backdrop-blur-md"
-                  style={{ clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)' }}
+                  className="w-1/2 sm:w-auto h-10 md:h-16 px-1 md:px-12 text-[8px] md:text-[12px] font-black uppercase tracking-wider md:tracking-widest border-[var(--foreground)]/20 text-[var(--c-text-primary)] backdrop-blur-md"
+                  style={{ clipPath: 'polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)' }}
                   onClick={() => router.push('/customer/categories')}
                >
-                  EXPLORE CATEGORIES
+                  CATEGORIES
                </Button>
             </div>
 
-            {/* Embedded Timing Card (Mobile Only - Bottom of Hero) */}
-            <div className="block lg:hidden w-full max-w-[300px] mt-2 z-30 pointer-events-auto">
+            {/* Embedded Timing Card (Mobile Only - Slim Banner at Bottom) */}
+            <div className="block lg:hidden w-full max-w-[340px] mt-3 z-30 pointer-events-auto">
               <motion.div 
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
                 className={cn(
-                  "p-4 rounded-[20px] bg-[#0b0e14]/85 backdrop-blur-xl border flex flex-col gap-2 transition-all duration-300 shadow-premium w-full text-left",
+                  "px-3 py-2 rounded-xl bg-[#0b0e14]/80 backdrop-blur-md border flex items-center justify-between transition-all duration-300 w-full",
                   isStoreOpen && settings.ordersEnabled
-                    ? "border-emerald-500/20 shadow-emerald-500/5"
-                    : "border-amber-500/20 shadow-amber-500/5"
+                    ? "border-emerald-500/20"
+                    : "border-amber-500/20"
                 )}
               >
-                {/* Header / Subtitle */}
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-1.5">
-                    <Clock className={cn("w-3.5 h-3.5 animate-pulse", 
-                      isStoreOpen && settings.ordersEnabled ? "text-emerald-400" : "text-amber-400"
-                    )} />
-                    <span className="text-[8px] font-black uppercase tracking-[0.2em] text-[var(--c-text-secondary)] opacity-60">Delivery Schedule</span>
-                  </div>
-                  <span className={cn("w-2 h-2 rounded-full",
-                    isStoreOpen && settings.ordersEnabled ? "bg-emerald-500 animate-ping" : "bg-amber-500 animate-pulse"
+                <div className="flex items-center gap-1.5">
+                  <span className={cn("w-1.5 h-1.5 rounded-full",
+                    isStoreOpen && settings.ordersEnabled ? "bg-emerald-500 animate-pulse" : "bg-amber-500 animate-pulse"
                   )} />
+                  <p className={cn("text-[9px] font-black uppercase italic tracking-tighter leading-none",
+                    isStoreOpen && settings.ordersEnabled ? "text-emerald-400" : "text-amber-400"
+                  )}>
+                    {isStoreOpen && settings.ordersEnabled ? "DELIVERY OPEN" : "PRE-ORDERS"}
+                  </p>
                 </div>
 
-                {/* Status Title */}
-                <div className="space-y-0.5">
-                  {isStoreOpen && settings.ordersEnabled ? (
-                    <>
-                      <p className="text-[11px] font-black text-emerald-400 uppercase italic tracking-tighter leading-none">● DELIVERY OPEN</p>
-                      <p className="text-[8px] text-[var(--c-text-secondary)]/60 font-bold uppercase tracking-wider">Fastest cold-chain delivery</p>
-                    </>
-                  ) : (
-                    <>
-                      <p className="text-[11px] font-black text-amber-400 uppercase italic tracking-tighter leading-none">● PRE-ORDERS ACTIVE</p>
-                      <p className="text-[8px] text-[var(--c-text-secondary)]/60 font-bold uppercase tracking-wider">Immediate delivery closed</p>
-                    </>
-                  )}
-                </div>
-
-                {/* Time slot registry details */}
-                <div className="p-2 rounded-xl bg-white/[0.02] border border-white/[0.04] space-y-1.5 mt-1">
-                  <div className="flex justify-between items-center text-[9px] font-bold text-[var(--c-text-secondary)] uppercase gap-4">
-                    <span>Hours</span>
-                    <span className="text-[var(--c-text-primary)] font-black text-right whitespace-nowrap">
-                      {formatTime12h(settings.ordersOpenTime || "09:00")} - {formatTime12h(settings.ordersCloseTime || "22:00")}
-                    </span>
-                  </div>
-                  
-                  {!isStoreOpen || !settings.ordersEnabled ? (
-                    <div className="pt-1 border-t border-white/[0.04] flex flex-col gap-0.5">
-                      <span className="text-[6px] font-black text-amber-500/60 uppercase tracking-widest leading-none">Next Dispatch</span>
-                      <span className="text-[9px] font-black text-[var(--c-text-primary)] uppercase truncate">
-                        {settings.ordersNextOpenText || "Tomorrow at 09:00 AM"}
-                      </span>
-                    </div>
-                  ) : null}
+                <div className="text-[8px] font-bold text-[var(--c-text-primary)] uppercase">
+                  {formatTime12h(settings.ordersOpenTime || "09:00")} - {formatTime12h(settings.ordersCloseTime || "22:00")}
                 </div>
               </motion.div>
             </div>
