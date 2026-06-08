@@ -1038,10 +1038,10 @@ export default function CustomerHomePage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
             className={cn(
-              "p-5 rounded-[24px] bg-[#0b0e14]/85 backdrop-blur-xl border flex flex-col gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl shadow-premium max-w-[280px]",
+              "p-5 rounded-[24px] bg-[#0b0e14]/90 backdrop-blur-xl border flex flex-col gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl shadow-premium max-w-[280px]",
               isStoreOpen && settings.ordersEnabled
-                ? "border-emerald-500/20 hover:border-emerald-500/40 hover:shadow-emerald-500/5"
-                : "border-amber-500/20 hover:border-amber-500/40 hover:shadow-amber-500/5"
+                ? "border-emerald-500/30 hover:border-emerald-500/50 hover:shadow-emerald-500/10 shadow-[0_0_20px_rgba(16,185,129,0.1)]"
+                : "border-amber-500/30 hover:border-amber-500/50 hover:shadow-amber-500/10 shadow-[0_0_20px_rgba(245,158,11,0.1)]"
             )}
           >
             {/* Header / Subtitle */}
@@ -1050,7 +1050,7 @@ export default function CustomerHomePage() {
                 <Clock className={cn("w-3.5 h-3.5 animate-pulse", 
                   isStoreOpen && settings.ordersEnabled ? "text-emerald-400" : "text-amber-400"
                 )} />
-                <span className="text-[9px] font-black uppercase tracking-[0.25em] text-[var(--c-text-secondary)] opacity-60">Delivery Schedule</span>
+                <span className="text-[9px] font-black uppercase tracking-[0.25em] text-[var(--c-text-secondary)] opacity-80">Delivery Schedule</span>
               </div>
               <span className={cn("w-2 h-2 rounded-full",
                 isStoreOpen && settings.ordersEnabled ? "bg-emerald-500 animate-ping" : "bg-amber-500 animate-pulse"
@@ -1062,29 +1062,29 @@ export default function CustomerHomePage() {
               {isStoreOpen && settings.ordersEnabled ? (
                 <>
                   <p className="text-sm font-black text-emerald-400 uppercase italic tracking-tighter leading-none">● DELIVERY OPEN</p>
-                  <p className="text-[9px] text-[var(--c-text-secondary)]/60 font-bold uppercase tracking-wider">Fastest cold-chain delivery</p>
+                  <p className="text-[9px] text-emerald-100/90 font-bold uppercase tracking-wider">Fastest cold-chain delivery</p>
                 </>
               ) : (
                 <>
                   <p className="text-sm font-black text-amber-400 uppercase italic tracking-tighter leading-none">● PRE-ORDERS ACTIVE</p>
-                  <p className="text-[9px] text-[var(--c-text-secondary)]/60 font-bold uppercase tracking-wider">Immediate delivery closed</p>
+                  <p className="text-[9px] text-amber-100/90 font-bold uppercase tracking-wider">Immediate delivery closed</p>
                 </>
               )}
             </div>
 
             {/* Time slot registry details */}
-            <div className="p-2 rounded-xl bg-white/[0.02] border border-white/[0.04] space-y-1.5">
-              <div className="flex justify-between items-center text-[10px] font-bold text-[var(--c-text-secondary)] uppercase gap-4">
+            <div className="p-2 rounded-xl bg-white/[0.04] border border-white/[0.06] space-y-1.5">
+              <div className="flex justify-between items-center text-[10px] font-bold text-white/70 uppercase gap-4">
                 <span>Hours</span>
-                <span className="text-[var(--c-text-primary)] font-black text-right whitespace-nowrap">
+                <span className="text-white font-black text-right whitespace-nowrap">
                   {formatTime12h(settings.ordersOpenTime || "09:00")} - {formatTime12h(settings.ordersCloseTime || "22:00")}
                 </span>
               </div>
               
               {!isStoreOpen || !settings.ordersEnabled ? (
-                <div className="pt-1.5 border-t border-white/[0.04] flex flex-col gap-0.5">
-                  <span className="text-[7px] font-black text-amber-500/60 uppercase tracking-widest leading-none">Next Dispatch</span>
-                  <span className="text-[10px] font-black text-[var(--c-text-primary)] uppercase truncate">
+                <div className="pt-1.5 border-t border-white/[0.08] flex flex-col gap-0.5">
+                  <span className="text-[7px] font-black text-amber-300/90 uppercase tracking-widest leading-none">Next Dispatch</span>
+                  <span className="text-[10px] font-black text-white uppercase truncate">
                     {settings.ordersNextOpenText || "Tomorrow at 09:00 AM"}
                   </span>
                 </div>
