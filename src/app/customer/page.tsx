@@ -1094,9 +1094,9 @@ export default function CustomerHomePage() {
         </div>
 
         <div className="container mx-auto px-6 relative z-20 flex flex-col items-center justify-center min-h-[20vh] lg:min-h-[70vh]">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 lg:space-y-6 text-center max-w-4xl mx-auto flex flex-col items-center w-full">
-             <div className="space-y-4 lg:space-y-6 flex flex-col items-center">
-                <Badge variant="outline" className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] text-[10px] md:text-[12px] font-black tracking-[0.4em] px-6 py-2 border-[var(--c-primary)]/20 uppercase shadow-[0_0_15px_rgba(var(--c-primary-rgb),0.1)]">
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-3 lg:space-y-6 text-center max-w-4xl mx-auto flex flex-col items-center w-full">
+             <div className="space-y-3 lg:space-y-6 flex flex-col items-center">
+                <Badge variant="outline" className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] text-[10px] md:text-[12px] font-black tracking-[0.4em] px-4 md:px-6 py-1.5 md:py-2 border-[var(--c-primary)]/20 uppercase shadow-[0_0_15px_rgba(var(--c-primary-rgb),0.1)]">
                    {cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.sector || 'Premium'} Seafood Market: Active
                 </Badge>
                 <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-[var(--c-text-primary)] uppercase italic leading-[1] md:leading-[0.85] text-center">
@@ -1104,13 +1104,13 @@ export default function CustomerHomePage() {
                    <span className="text-[var(--c-primary)]">{cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.title?.split(':')[1] || 'Redefined.'}</span>
                 </h1>
              </div>
-             <p className="text-sm md:text-2xl text-[var(--c-text-secondary)] font-medium italic max-w-2xl mx-auto leading-relaxed px-4">
+             <p className="text-xs md:text-2xl text-[var(--c-text-secondary)] font-medium italic max-w-2xl mx-auto leading-relaxed px-2 md:px-4">
                 Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers.
              </p>
              
-            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center pt-6 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row gap-2.5 md:gap-4 justify-center pt-3 md:pt-6 w-full sm:w-auto">
                <Button 
-                  className="w-full sm:w-auto h-14 md:h-16 px-8 md:px-12 bg-[var(--c-primary)] hover:bg-[var(--c-primary-light)] text-[var(--foreground)] text-[10px] md:text-[12px] font-black uppercase tracking-widest shadow-[var(--c-shadow-glow)]"
+                  className="w-full sm:w-auto h-12 md:h-16 px-6 md:px-12 bg-[var(--c-primary)] hover:bg-[var(--c-primary-light)] text-[var(--foreground)] text-[9px] md:text-[12px] font-black uppercase tracking-widest shadow-[var(--c-shadow-glow)]"
                   style={{ clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)' }}
                   onClick={() => router.push('/customer/products')}
                >
@@ -1118,7 +1118,7 @@ export default function CustomerHomePage() {
                </Button>
                <Button 
                   variant="outline" 
-                  className="w-full sm:w-auto h-14 md:h-16 px-8 md:px-12 text-[10px] md:text-[12px] font-black uppercase tracking-widest border-[var(--foreground)]/10 text-[var(--c-text-primary)] backdrop-blur-md"
+                  className="w-full sm:w-auto h-12 md:h-16 px-6 md:px-12 text-[9px] md:text-[12px] font-black uppercase tracking-widest border-[var(--foreground)]/10 text-[var(--c-text-primary)] backdrop-blur-md"
                   style={{ clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)' }}
                   onClick={() => router.push('/customer/categories')}
                >
