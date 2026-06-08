@@ -952,7 +952,7 @@ export default function ProductDetailPage({
                 <div key={item.id} onClick={() => router.push(`/customer/products/${item.id}`)} className="group cursor-pointer">
                    <Card className="aspect-square bg-black border-[var(--foreground)]/5 rounded-[20px] overflow-hidden relative group-hover:border-[var(--c-primary)]/30 transition-all">
                       <div className="absolute inset-0 flex items-center justify-center text-4xl group-hover:scale-105 transition-transform">
-                        {item.images?.[0]?.startsWith('http') ? <img src={item.images[0]} className="w-full h-full object-contain" /> : item.image}
+                        {(item.images?.[0]?.startsWith('http') || item.images?.[0]?.startsWith('/')) ? <img src={item.images[0]} className="w-full h-full object-contain" /> : (item.image?.startsWith('/') || item.image?.startsWith('http')) ? <img src={item.image} className="w-full h-full object-cover" /> : item.image}
                       </div>
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                       <div className="absolute bottom-[10px] left-[10px] right-[10px] translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
