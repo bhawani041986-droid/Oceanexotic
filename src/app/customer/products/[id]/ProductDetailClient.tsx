@@ -950,14 +950,21 @@ export default function ProductDetailPage({
            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-[10px]">
               {MASTER_PRODUCT_REGISTRY.slice(0, 5).map((item) => (
                 <div key={item.id} onClick={() => router.push(`/customer/products/${item.id}`)} className="group cursor-pointer">
-                   <Card className="aspect-square bg-black border-[var(--foreground)]/5 rounded-[20px] overflow-hidden relative group-hover:border-[var(--c-primary)]/30 transition-all">
-                      <div className="absolute inset-0 flex items-center justify-center text-4xl group-hover:scale-105 transition-transform">
-                        {(item.images?.[0]?.startsWith('http') || item.images?.[0]?.startsWith('/')) ? <img src={item.images[0]} className="w-full h-full object-contain" /> : (item.image?.startsWith('/') || item.image?.startsWith('http')) ? <img src={item.image} className="w-full h-full object-cover" /> : item.image}
+                   <Card className="flex flex-col h-full bg-[var(--c-bg-alt)] border-[var(--foreground)]/5 rounded-[20px] overflow-hidden group hover:border-[var(--c-primary)]/30 transition-all">
+                      <div className="relative aspect-square w-full bg-[var(--foreground)]/5 overflow-hidden">
+                         <div className="absolute inset-0 flex items-center justify-center text-4xl group-hover:scale-105 transition-transform duration-500">
+                           {(item.images?.[0]?.startsWith('http') || item.images?.[0]?.startsWith('/')) ? <img src={item.images[0]} className="w-full h-full object-cover" /> : (item.image?.startsWith('/') || item.image?.startsWith('http')) ? <img src={item.image} className="w-full h-full object-cover" /> : item.image}
+                         </div>
+                         <div className="absolute top-2 left-2 z-10">
+                            <Badge className="bg-black/40 backdrop-blur-md text-white border-white/10 text-[7px] uppercase font-black">{item.category}</Badge>
+                         </div>
                       </div>
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                      <div className="absolute bottom-[10px] left-[10px] right-[10px] translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
-                         <p className="text-[10px] font-black text-[var(--foreground)] uppercase truncate">{item.name}</p>
-                         <p className="text-[9px] font-black text-[var(--c-primary)] italic">₹{item.price.toLocaleString()}</p>
+                      <div className="p-3 space-y-1 bg-gradient-to-b from-transparent to-[var(--c-bg-alt)] z-20 flex-1 flex flex-col justify-end">
+                         <p className="text-[10px] font-black text-[var(--foreground)] uppercase truncate italic" title={item.name}>{item.name}</p>
+                         <div className="flex items-center justify-between">
+                            <p className="text-[11px] font-black text-[var(--c-primary)] italic">₹{item.price.toLocaleString()}</p>
+                            <p className="text-[8px] font-bold text-[var(--c-text-secondary)] uppercase">{item.weight}</p>
+                         </div>
                       </div>
                    </Card>
                 </div>
