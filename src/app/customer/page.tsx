@@ -1025,7 +1025,7 @@ export default function CustomerHomePage() {
           <img 
             src={settings.customerAssets.hero} 
             fetchPriority="high"
-            className="w-full h-full object-contain lg:object-cover lg:scale-110 opacity-40 grayscale-[20%] object-center" 
+            className="w-full h-full object-cover lg:scale-110 opacity-40 grayscale-[20%] object-center" 
             alt="OceanExotic Seafood Hero" 
           />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,var(--c-primary),transparent_50%)] opacity-10 hidden lg:block" />
