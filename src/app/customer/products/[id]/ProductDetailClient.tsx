@@ -275,7 +275,7 @@ export default function ProductDetailPage({
   };
 
   const allImages = [
-    prodImage(product.image),
+    prodImage(product.image_url || product.image),
     ...(product.images || []),
     ...getProductGallery(product)
   ].filter(Boolean);

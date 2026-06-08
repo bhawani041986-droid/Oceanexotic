@@ -9,9 +9,9 @@ export async function GET() {
     
     // We do a manual join because there's no FK constraints guaranteeing products relation in Supabase schema
     const { data: catches, error } = await supabase
-      .from('live_harbor_inventory')
+      .from('todays_catch')
       .select('*')
-      .eq('status', 'AVAILABLE');
+      .eq('status', 'FRESH');
 
     if (error) {
       return NextResponse.json({ status: "error", message: error.message }, { status: 500 });
