@@ -1019,7 +1019,7 @@ export default function CustomerHomePage() {
   return (
     <div className="w-full">
       {/* 3. HERO SECTION - THEME AWARE IMAGE & ATMOSPHERE */}
-      <section className="relative min-h-[60vh] lg:min-h-[80vh] flex items-center justify-center overflow-hidden py-10 lg:py-0">
+      <section className="relative min-h-[35vh] lg:min-h-[80vh] flex items-center justify-center overflow-hidden py-4 lg:py-0">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[var(--c-gradient-hero)] z-10" />
           <img 
@@ -1093,13 +1093,13 @@ export default function CustomerHomePage() {
           </motion.div>
         </div>
 
-        <div className="container mx-auto px-6 relative z-20 flex flex-col items-center justify-center min-h-[50vh] lg:min-h-[70vh]">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 text-center max-w-4xl mx-auto flex flex-col items-center w-full">
-             <div className="space-y-6 flex flex-col items-center">
+        <div className="container mx-auto px-6 relative z-20 flex flex-col items-center justify-center min-h-[30vh] lg:min-h-[70vh]">
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-4 lg:space-y-6 text-center max-w-4xl mx-auto flex flex-col items-center w-full">
+             <div className="space-y-4 lg:space-y-6 flex flex-col items-center">
                 <Badge variant="outline" className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] text-[10px] md:text-[12px] font-black tracking-[0.4em] px-6 py-2 border-[var(--c-primary)]/20 uppercase shadow-[0_0_15px_rgba(var(--c-primary-rgb),0.1)]">
                    {cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.sector || 'Premium'} Seafood Market: Active
                 </Badge>
-                <h1 className="text-4xl md:text-6xl lg:text-[7rem] font-black text-[var(--c-text-primary)] uppercase italic leading-[1] md:leading-[0.85] text-center">
+                <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-[var(--c-text-primary)] uppercase italic leading-[1] md:leading-[0.85] text-center">
                    {cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.title?.split(':')[0] || 'Seafood'} <br /> 
                    <span className="text-[var(--c-primary)]">{cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.title?.split(':')[1] || 'Redefined.'}</span>
                 </h1>
@@ -1127,7 +1127,7 @@ export default function CustomerHomePage() {
             </div>
 
             {/* Embedded Timing Card (Mobile Only - Bottom of Hero) */}
-            <div className="block lg:hidden w-full max-w-[300px] mt-8 z-30 pointer-events-auto">
+            <div className="block lg:hidden w-full max-w-[300px] mt-4 z-30 pointer-events-auto">
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
