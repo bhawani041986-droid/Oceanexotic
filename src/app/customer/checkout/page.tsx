@@ -330,7 +330,6 @@ export default function CheckoutPage() {
                  <div className="p-6 bg-[var(--c-bg)] animate-in slide-in-from-top-2 duration-300 space-y-8">
                     <div className="space-y-4">
                        {items.map((item) => (
-                          <div key={item.id} className="flex gap-6 items-center p-4 rounded-xl border border-slate-100">
                           <div key={item.id} className="flex gap-6 items-center p-4 rounded-xl border border-[var(--foreground)]/10">
                              <div className="w-16 h-16 rounded-lg overflow-hidden shrink-0">
                                 <img src={item.image} className="w-full h-full object-cover" alt={item.name} />
