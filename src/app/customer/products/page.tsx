@@ -56,11 +56,11 @@ import { authService } from "@/services/authService";
 
 // --- BUSINESS INTELLIGENCE DATA ---
 const TICKER_ITEMS = [
-  "⚡ FLASH HARVEST: Tiger Prawns from Havelock Node just arrived",
-  "🚢 FLEET SYNC: Deep Sea Vessel 'Andaman Queen' docking in 20m",
-  "🔥 HOT ASSET: Red Snapper demand +24% in last hour",
-  "🛡️ SECURITY: Cold-chain integrity verified for all current shipments",
-  "⚓ NODE UPDATE: Port Blair central hub at 98% capacity"
+  "⚡ FLASH DEAL: Tiger Prawns from Havelock just arrived",
+  "🚢 NEW ARRIVAL: Fresh catch from 'Andaman Queen' docking in 20m",
+  "🔥 TRENDING: Red Snapper demand is high today",
+  "🛡️ QUALITY: Freshness guaranteed for all seafood",
+  "⚓ STORE UPDATE: Port Blair hub is fully stocked"
 ];
 
 const AUTHORITY_BADGES = [
@@ -71,8 +71,8 @@ const AUTHORITY_BADGES = [
 ];
 
 const CULINARY_PROTOCOLS = [
-  { title: "Snapper Prep", subtitle: "Chef's Protocol", image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&q=80" },
-  { title: "Crustacean Storage", subtitle: "Maritime Standard", image: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80" }
+  { title: "Snapper Recipe", subtitle: "Chef's Recommendation", image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&q=80" },
+  { title: "Crab Storage", subtitle: "Best Practices", image: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80" }
 ];
 
 // --- Sub-Components ---
@@ -101,7 +101,7 @@ const ProductCard = ({ product }: { product: any }) => {
       quantity: 1,
       sellerId: hydratedProduct.seller_id || "SEL-000"
     });
-    toast(`${hydratedProduct.name} commissioned to cart.`, "success");
+    toast(`${hydratedProduct.name} added to cart.`, "success");
     setQuantity(1);
   };
 
@@ -133,7 +133,7 @@ const ProductCard = ({ product }: { product: any }) => {
               )}
               {hydratedProduct.discount && <Badge className="bg-success text-[7px] font-black uppercase italic rounded-full border-none px-2 py-1 text-white">{hydratedProduct.discount}</Badge>}
            </div>
-           <button onClick={(e) => { e.stopPropagation(); toast("Added to Heart Registry.", "success"); }} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-[var(--c-text-primary)] hover:bg-danger hover:text-white transition-all flex items-center justify-center"><Heart className="w-4 h-4" /></button>
+           <button onClick={(e) => { e.stopPropagation(); toast("Added to Wishlist.", "success"); }} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-[var(--c-text-primary)] hover:bg-danger hover:text-white transition-all flex items-center justify-center"><Heart className="w-4 h-4" /></button>
         </div>
         <div className="p-[10px] md:p-4 space-y-[4px] md:space-y-2">
            <div className="flex justify-between items-start">
@@ -266,7 +266,7 @@ function ProductListingContent() {
 
   const handleSubscribe = async () => {
     if (!subscriberEmail || !subscriberEmail.includes('@')) {
-      toast("Invalid Communication Node Address", "error");
+      toast("Invalid Email Address", "error");
       return;
     }
     setIsSubscribing(true);
@@ -277,13 +277,13 @@ function ProductListingContent() {
         body: JSON.stringify({ email: subscriberEmail })
       });
       if (res.ok) {
-        toast("Commission Successful. Welcome to the Fleet!", "success");
+        toast("Subscription Successful. Welcome to Ocean Exotic!", "success");
         setSubscriberEmail("");
       } else {
         throw new Error();
       }
     } catch (err) {
-      toast("Comm Link Failure", "error");
+      toast("Subscription Failed", "error");
     } finally {
       setIsSubscribing(false);
     }
@@ -357,7 +357,7 @@ function ProductListingContent() {
       }
 
     } catch (err) {
-      toast("Registry Sync Failure. Using cached fallback.", "error");
+      toast("Failed to load catalog. Using cached fallback.", "error");
       setProducts(MASTER_PRODUCT_REGISTRY);
     } finally {
       setIsLoading(false);
@@ -407,7 +407,7 @@ function ProductListingContent() {
       <div className="bg-[var(--c-bg)] min-h-screen flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
            <Loader2 className="w-12 h-12 text-[var(--c-primary)] animate-spin" />
-           <p className="text-[10px] font-black uppercase tracking-widest opacity-40">Syncing Trade Registry...</p>
+           <p className="text-[10px] md:text-sm font-black uppercase tracking-widest opacity-40">Loading Catalog...</p>
         </div>
       </div>
     );
@@ -432,8 +432,8 @@ function ProductListingContent() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 md:gap-8 items-center">
                <div className="space-y-1 md:space-y-4">
                   <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="space-y-0.5 md:space-y-2">
-                     <Badge className="bg-[var(--c-primary)]/20 text-[var(--c-primary)] border-[var(--c-primary)]/20 text-[6px] md:text-[8px] font-black px-2 md:px-3 py-0.5 md:py-1 uppercase italic tracking-widest">Premium Seafood Discovery</Badge>
-                     <h2 className="text-xl md:text-5xl lg:text-6xl font-black uppercase italic leading-[0.9] tracking-tighter text-[var(--c-text-primary)]">The World's <span className="text-[var(--c-primary)]">Freshest</span> <br /> Harvest Registry</h2>
+                     <Badge className="bg-[var(--c-primary)]/20 text-[var(--c-primary)] border-[var(--c-primary)]/20 text-[6px] md:text-[10px] font-black px-2 md:px-3 py-0.5 md:py-1 uppercase italic tracking-widest">Premium Seafood Discovery</Badge>
+                     <h2 className="text-xl md:text-5xl lg:text-6xl font-black uppercase italic leading-[0.9] tracking-tighter text-[var(--c-text-primary)]">The World's <span className="text-[var(--c-primary)]">Freshest</span> <br /> Seafood Market</h2>
                   </motion.div>
                   <div className="flex flex-col md:flex-row gap-1 md:gap-2">
                      <div className="flex-1 relative group">
@@ -455,8 +455,8 @@ function ProductListingContent() {
          <div className="container mx-auto px-2 md:px-10">
             <div className="flex items-center justify-between gap-4 md:gap-10 overflow-hidden">
                <div className="flex flex-col flex-shrink-0">
-                  <span className="text-[6px] md:text-[10px] font-black text-[var(--c-primary)] uppercase tracking-widest">Authority</span>
-                  <h3 className="text-[10px] md:text-xl font-black text-[var(--c-text-primary)] uppercase italic">Nodes.</h3>
+                  <span className="text-[6px] md:text-[10px] font-black text-[var(--c-primary)] uppercase tracking-widest">Quality</span>
+                  <h3 className="text-[10px] md:text-xl font-black text-[var(--c-text-primary)] uppercase italic">Certifications.</h3>
                </div>
                <div className="flex items-center gap-4 md:gap-12 overflow-x-auto no-scrollbar pb-1">
                   {AUTHORITY_BADGES.map((badge, i) => (
@@ -494,7 +494,7 @@ function ProductListingContent() {
                            <Input placeholder="MAX" className="h-8 bg-[var(--c-bg)] border-[var(--foreground)]/10 rounded-lg text-[10px] text-[var(--c-text-primary)]" />
                         </div>
                      </div>
-                     <Button className="w-full h-10 rounded-lg bg-[var(--c-primary)] text-[var(--foreground)] font-black uppercase text-[9px] shadow-[var(--c-shadow-glow)]">Apply Protocols</Button>
+                     <Button className="w-full h-10 rounded-lg bg-[var(--c-primary)] text-[var(--foreground)] font-black uppercase text-[10px] md:text-xs shadow-[var(--c-shadow-glow)]">Apply Filters</Button>
                   </div>
                </aside>
 
@@ -653,9 +653,9 @@ function ProductListingContent() {
          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-16 items-center">
             <div className="space-y-4 md:space-y-8">
                <div className="space-y-0.5 md:space-y-2">
-                  <Badge className="bg-amber-500/20 text-amber-500 border-amber-500/20 text-[6px] md:text-[8px] font-black uppercase">Chef's Handshake</Badge>
-                  <h2 className="text-2xl md:text-6xl font-black text-[var(--c-text-primary)] uppercase italic leading-[0.9]">Master the <br /> Harvest Protocols.</h2>
-                  <p className="text-[9px] md:text-lg text-[var(--c-text-secondary)] font-medium italic max-w-md">Real-time culinary intelligence for every fleet delivery.</p>
+                  <Badge className="bg-amber-500/20 text-amber-500 border-amber-500/20 text-[8px] md:text-[10px] font-black uppercase">Chef's Recommendations</Badge>
+                  <h2 className="text-2xl md:text-6xl font-black text-[var(--c-text-primary)] uppercase italic leading-[0.9]">Master the <br /> Seafood Recipes.</h2>
+                  <p className="text-[10px] md:text-lg text-[var(--c-text-secondary)] font-medium italic max-w-md">Real-time culinary advice for every seafood meal.</p>
                </div>
                <div className="grid grid-cols-2 gap-2 md:gap-4">
                   {CULINARY_PROTOCOLS.map((p, i) => (
@@ -678,16 +678,16 @@ function ProductListingContent() {
                   <div className="flex items-center gap-3 md:gap-4">
                      <div className="w-10 h-10 md:w-16 md:h-16 rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 flex items-center justify-center text-amber-500"><Mic className="w-5 h-5 md:w-8 md:h-8" /></div>
                      <div>
-                        <h4 className="text-xs md:text-xl font-black text-[var(--foreground)] uppercase italic">Fleet Radio</h4>
-                        <p className="text-[8px] md:text-[10px] text-amber-500/60 font-black uppercase tracking-widest">LIVE BROADCAST</p>
+                        <h4 className="text-xs md:text-xl font-black text-[var(--foreground)] uppercase italic">Chef's Tips</h4>
+                        <p className="text-[8px] md:text-[10px] text-amber-500/60 font-black uppercase tracking-widest">LIVE UPDATES</p>
                      </div>
                   </div>
-                  <p className="text-[10px] md:text-base text-[var(--c-text-secondary)] font-medium italic leading-relaxed">"The Red Snapper harvest from sector 7 is exceptional today. I recommend a light volcanic salt sear to preserve the fat-integrity. Secure your cuts before registry closure."</p>
+                  <p className="text-[10px] md:text-base text-[var(--c-text-secondary)] font-medium italic leading-relaxed">"The Red Snapper catch is exceptional today. I recommend a light pan sear to preserve the flavor. Secure yours before we sell out."</p>
                   <div className="pt-2 md:pt-4 flex items-center gap-3">
                      <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[var(--foreground)]/10 border border-[var(--foreground)]/10" />
                      <div>
-                        <p className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-tighter">Admiral Chef Vikram</p>
-                        <p className="text-[6px] md:text-[8px] text-[var(--c-text-secondary)] uppercase">Senior Fleet Intelligence</p>
+                        <p className="text-[10px] md:text-[12px] font-black text-[var(--foreground)] uppercase tracking-tighter">Chef Vikram</p>
+                        <p className="text-[8px] md:text-[10px] text-[var(--c-text-secondary)] uppercase">Senior Culinary Expert</p>
                      </div>
                   </div>
                </div>
@@ -700,13 +700,13 @@ function ProductListingContent() {
          <div className="container mx-auto px-2 md:px-10">
             <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-4 mb-6 md:mb-12">
                <div className="space-y-1">
-                  <h3 className="text-xl md:text-5xl font-black text-[var(--foreground)] uppercase italic leading-[0.9]">Community Dispatch</h3>
-                  <p className="text-[7px] md:text-[10px] font-black text-[var(--c-primary)] uppercase tracking-[0.4em]">Real-time Network Feed</p>
+                  <h3 className="text-xl md:text-5xl font-black text-[var(--foreground)] uppercase italic leading-[0.9]">Customer Reviews</h3>
+                  <p className="text-[8px] md:text-[10px] font-black text-[var(--c-primary)] uppercase tracking-[0.4em]">Real-time Feedback</p>
                </div>
                <div className="flex items-center gap-3">
                   <div className="text-left md:text-right">
                      <p className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-tighter">4.9/5 RATING</p>
-                     <p className="text-[6px] md:text-[8px] text-[var(--c-text-secondary)] uppercase">8.2k Handshakes</p>
+                     <p className="text-[8px] md:text-[10px] text-[var(--c-text-secondary)] uppercase">8.2k Reviews</p>
                   </div>
                   <div className="flex -space-x-3 md:-space-x-4">
                      {[1,2,3].map(i => <div key={i} className="w-8 h-8 md:w-14 md:h-14 rounded-full border-2 border-[var(--c-bg)] bg-[var(--foreground)]/10" />)}
@@ -715,9 +715,9 @@ function ProductListingContent() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-8">
                {[
-                  { user: "Merchant Raj", text: "Registry integrity is top-tier. The Kingfish arrived at protocol.", node: "PORT BLAIR" },
-                  { user: "Chef Ananya", text: "Absolute saku grade. Fleet sync is perfect.", node: "HAVELOCK" },
-                  { user: "Fleet Scout Sam", text: "Secured the Mud Crabs in 35m.", node: "NEIL NODE" }
+                  { user: "Customer Raj", text: "Quality is top-tier. The Kingfish arrived perfectly fresh.", node: "PORT BLAIR" },
+                  { user: "Chef Ananya", text: "Absolute premium grade. Delivery is perfect.", node: "HAVELOCK" },
+                  { user: "Local Guide Sam", text: "Got the Mud Crabs delivered in 35 mins.", node: "NEIL ISLAND" }
                ].map((review, i) => (
                   <div key={i} className="p-4 md:p-8 rounded-2xl md:rounded-3xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 space-y-3 hover:border-[var(--c-primary)]/40 transition-all group">
                      <div className="flex items-center justify-between">
