@@ -168,11 +168,7 @@ export default function OrderTrackingPage() {
 
   React.useEffect(() => { updateMapElements(); }, [updateMapElements]);
 
-  if (loading && !trackingData) {
-    return (
-      <div className="bg-bg-primary flex items-center justify-center text-white italic font-black uppercase tracking-widest text-[10px] py-40">Registry Sync...</div>
-    );
-  }
+
 
   return (
     <div className="bg-bg-primary">
