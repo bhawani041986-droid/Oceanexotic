@@ -203,7 +203,7 @@ const AddonCard = ({ addon }: { addon: any }) => {
           <img src={addon.image_url || "https://images.unsplash.com/photo-1596683788737-88981f33f674?q=80&w=500"} className="w-12 h-12 rounded-lg object-cover bg-black/10" />
           <div className="flex-1">
              <h4 className="text-[10px] font-black uppercase text-[var(--c-text-primary)] leading-tight">{addon.name}</h4>
-             <p className="text-[8px] text-[var(--c-text-secondary)] italic">{addon.type || "Culinary Add-on"}</p>
+             <p className="text-[8px] text-[var(--c-text-secondary)] italic">{addon.type || "Add-on"}</p>
           </div>
        </div>
        <div className="flex items-center justify-between mt-auto pt-2 border-t border-[var(--foreground)]/5">
@@ -438,7 +438,13 @@ function ProductListingContent() {
                   </div>
                </div>
                <div className="hidden lg:block relative">
-                  <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="relative z-10 aspect-square bg-gradient-to-br from-[var(--c-primary)]/20 to-blue-500/20 rounded-[var(--c-radius-card)] flex items-center justify-center text-[12rem] shadow-[var(--c-shadow-glow)]">🦀</motion.div>
+                  <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="relative z-10 aspect-square bg-gradient-to-br from-[var(--c-primary)]/20 to-blue-500/20 rounded-[var(--c-radius-card)] flex items-center justify-center text-[12rem] shadow-[var(--c-shadow-glow)] overflow-hidden">
+                     {settings.customerAssets?.hero ? (
+                        <img src={settings.customerAssets.hero} alt="Featured" className="absolute inset-0 w-full h-full object-cover rounded-[var(--c-radius-card)]" />
+                     ) : (
+                        "🦀"
+                     )}
+                  </motion.div>
                   <div className="absolute -inset-20 bg-[var(--c-primary)]/10 blur-[120px] rounded-full animate-pulse" />
                </div>
             </div>
@@ -552,9 +558,9 @@ function ProductListingContent() {
                        {/* LAYER 3: CULINARY ADDONS */}
                        {addons.length > 0 && (
                          <div className="space-y-4">
-                            <div className="flex items-center justify-between">
-                               <h3 className="text-xl md:text-2xl font-black text-[var(--c-text-primary)] uppercase italic">Culinary <span className="text-emerald-500">Add-ons</span></h3>
-                            </div>
+                             <div className="flex items-center justify-between">
+                                <h3 className="text-xl md:text-2xl font-black text-[var(--c-text-primary)] uppercase italic">Extras & <span className="text-emerald-500">Add-ons</span></h3>
+                             </div>
                             <div className="flex gap-3 overflow-x-auto no-scrollbar pb-4 snap-x">
                                {addons.map(addon => (
                                  <div key={addon.id} className="snap-start">
