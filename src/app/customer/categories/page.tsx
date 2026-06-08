@@ -14,14 +14,28 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-const CATEGORIES = [
-  { id: "1", name: "Premium Reef Cod", count: 24, icon: "🐟", desc: "Elite-grade Deep Sea Reef Cod from the Andaman sea floor.", color: "from-blue-500/20" },
-  { id: "2", name: "Mangrove Crustaceans", count: 18, icon: "🦀", desc: "Mud Crabs and Jumbo Tiger Prawns from the South Andaman mangroves.", color: "from-red-500/20" },
-  { id: "3", name: "Shellfish Reserve", count: 42, icon: "🦪", desc: "Oysters and Mussels sourced from Shaheed Dweep sustainable reefs.", color: "from-emerald-500/20" },
-  { id: "4", name: "Junglighat Harvests", count: 31, icon: "🦑", desc: "Fresh Squids and Octopus from the Junglighat Port sector.", color: "from-sky-500/20" },
-  { id: "5", name: "Swaraj Dweep Specials", count: 12, icon: "🍤", desc: "Premium Prawns and Lobsters for international trade commissions.", color: "from-purple-500/20" },
-  { id: "6", name: "Roe & Delicacies", count: 8, icon: "💎", desc: "The platform's most elite-rank luxury harvests and delicacy eggs.", color: "from-amber-500/20" },
-];
+import { PRODUCT_CATEGORIES } from "@/constants/categories";
+import { MASTER_PRODUCT_REGISTRY } from "@/constants/products";
+
+const CATEGORY_UI_MAPPING: Record<string, { desc: string, icon: string, color: string }> = {
+  'FRESHWATER FISH': { icon: "🐟", color: "from-cyan-500/20", desc: "Freshwater river catch and aquaculture species." },
+  'SEAWATER FISH': { icon: "🌊", color: "from-blue-500/20", desc: "Ocean and deep-sea harvests from the maritime sector." },
+  'PRAWNS & SHRIMPS': { icon: "🍤", color: "from-orange-500/20", desc: "Premium prawns and shrimps sourced for global trade." },
+  'CRABS & LOBSTERS': { icon: "🦀", color: "from-red-500/20", desc: "Elite mud crabs and lobsters from sustainable reefs." },
+  'STEAKS & FILLETS': { icon: "🥩", color: "from-rose-500/20", desc: "Premium cuts, steaks, and fillets for culinary excellence." },
+  'FROZEN': { icon: "❄️", color: "from-sky-500/20", desc: "Flash-frozen maritime assets preserving maximum freshness." },
+  'DRY FISH': { icon: "🐡", color: "from-amber-500/20", desc: "Coastal dry fish and preserved delicacies." },
+  'READY TO COOK': { icon: "🍳", color: "from-emerald-500/20", desc: "Marinated, prepped, and ready-to-cook selections." }
+};
+
+const CATEGORIES = PRODUCT_CATEGORIES.map(cat => ({
+   id: cat.id,
+   name: cat.label,
+   count: MASTER_PRODUCT_REGISTRY.filter(p => p.category === cat.id).length,
+   icon: CATEGORY_UI_MAPPING[cat.id]?.icon || "🐟",
+   desc: CATEGORY_UI_MAPPING[cat.id]?.desc || "Premium maritime harvest.",
+   color: CATEGORY_UI_MAPPING[cat.id]?.color || "from-blue-500/20"
+}));
 
 export default function CustomerCategoriesPage() {
   return (
@@ -50,7 +64,7 @@ export default function CustomerCategoriesPage() {
       {/* Categories Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[10px] md:gap-10">
         {CATEGORIES.map((cat) => (
-          <Link key={cat.id} href={`/customer/search?category=${cat.name}`}>
+          <Link key={cat.id} href={`/customer/products?category=${cat.name}`}>
             <Card className={`p-[4px] md:p-1 group cursor-pointer transition-all hover:border-primary/40 bg-gradient-to-br ${cat.color} to-bg-secondary/40 border-[var(--foreground)]/5 rounded-[20px] md:rounded-[32px]`}>
               <div className="p-4 md:p-10 space-y-4 md:space-y-10">
                  <div className="flex items-center justify-between">
