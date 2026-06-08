@@ -4,7 +4,7 @@ import { authService } from "./authService";
 export const orderService = {
   // Trade Commitment: Commit a new settlement directive
   createOrder: async (orderData: any) => {
-    const response = await api.post("/orders/create.php", {
+    const response = await api.post("/admin/orders", {
       ...orderData,
       userId: authService.getCurrentUser()?.id || "1"
     });
@@ -14,31 +14,31 @@ export const orderService = {
   // Sovereign Ledger: Fetch customer's trade history
   getCustomerOrders: async (userId?: string) => {
     const id = userId || authService.getCurrentUser()?.id || "1";
-    const response = await api.get(`/orders/customer_history.php?userId=${id}`);
+    const response = await api.get(`/user/orders?userId=${id}`);
     return response.data;
   },
 
   // Fleet Ledger: Fetch merchant's fulfillment history
   getSellerOrders: async () => {
-    const response = await api.get("/orders/seller_history.php");
+    const response = await api.get("/seller/orders");
     return response.data;
   },
 
   // Fleet Performance: Fetch high-fidelity merchant stats
   getSellerStats: async () => {
-    const response = await api.get("/orders/seller_stats.php");
+    const response = await api.get("/admin/orders/pipeline");
     return response.data;
   },
 
   // Logistics Monitoring: Fetch specific order and fleet status
   getOrderDetails: async (id: string) => {
-    const response = await api.get(`/orders/detail.php?id=${id}`);
+    const response = await api.get(`/admin/orders?id=${id}`);
     return response.data;
   },
 
   // Logistics Directives: Update order status (Sellers/Admins)
   updateOrderStatus: async (id: string, status: string) => {
-    const response = await api.post(`/orders/update_status.php?id=${id}`, { status });
+    const response = await api.post(`/admin/orders?id=${id}`, { status });
     return response.data;
   }
 };

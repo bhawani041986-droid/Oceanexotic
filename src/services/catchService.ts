@@ -24,7 +24,7 @@ const SEO_FETCH: RequestInit = {
  * Uses no-store since inventory changes constantly.
  */
 export async function getTodaysCatch(batch?: 'MORNING' | 'AFTERNOON' | 'EVENING'): Promise<TodaysCatchResponse> {
-  const url = new URL(`${API_BASE}/products/todays_catch.php`);
+  const url = new URL(`${API_BASE}/seller/products`);
   if (batch) url.searchParams.set('batch', batch);
   url.searchParams.set('limit', '20');
 
@@ -55,7 +55,7 @@ export async function getMorningCatch(): Promise<TodaysCatchResponse> {
  * Fetch limited/selling-fast items (low stock).
  */
 export async function getLimitedCatch(): Promise<TodaysCatchResponse> {
-  const url = `${API_BASE}/products/todays_catch.php?limit=6`;
+  const url = `${API_BASE}/seller/products?limit=6`;
   try {
     const res = await fetch(url, LIVE_FETCH);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -82,7 +82,7 @@ export async function getLimitedCatch(): Promise<TodaysCatchResponse> {
  * Uses ISR 5min since cut options don't change frequently.
  */
 export async function getCutOptions(productId: string): Promise<CutOptionsResponse> {
-  const url = `${API_BASE}/products/cut_options.php?product_id=${encodeURIComponent(productId)}`;
+  const url = `${API_BASE}/products/cut_options?product_id=${encodeURIComponent(productId)}`;
   try {
     const res = await fetch(url, SEO_FETCH);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -100,7 +100,7 @@ export async function getCutOptions(productId: string): Promise<CutOptionsRespon
  * Fetch detailed live information for a specific product.
  */
 export async function getProductLiveDetail(productId: string): Promise<any> {
-  const url = `${API_BASE}/products/detail.php?id=${encodeURIComponent(productId)}`;
+  const url = `${API_BASE}/seller/products?id=${encodeURIComponent(productId)}`;
   try {
     const res = await fetch(url, LIVE_FETCH);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
