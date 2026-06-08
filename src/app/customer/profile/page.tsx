@@ -315,11 +315,34 @@ export default function CustomerProfilePage() {
                               <div className="flex items-center justify-between">
                                  <label className="text-[9px] font-black uppercase tracking-widest text-text-secondary italic">PRIMARY MARITIME COORDINATES</label>
                                  <button onClick={() => {
-                                    setFormData({ ...formData, address: "Fetching from Google Maps...", locality: "Live Telemetry" });
-                                    setTimeout(() => setFormData({ ...formData, address: "Junglighat Jetty, Port Blair, Andaman", locality: "Haddo Node" }), 1500);
-                                    toast("Google Maps Synced", "success");
+                                    setFormData({ ...formData, address: "Connecting to Satellite...", locality: "Locating" });
+                                    if ("geolocation" in navigator) {
+                                      navigator.geolocation.getCurrentPosition(async (position) => {
+                                        try {
+                                          const { latitude, longitude } = position.coords;
+                                          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+                                          const data = await res.json();
+                                          if (data && data.display_name) {
+                                            // The formData update must merge cleanly
+                                            setFormData(prev => ({ ...prev, address: data.display_name, locality: data.address?.city || data.address?.town || data.address?.suburb || "Live Node" }));
+                                            toast("Coordinates Locked & Synced.", "success");
+                                          } else {
+                                            throw new Error("Geocoding failed");
+                                          }
+                                        } catch (err) {
+                                          setFormData(prev => ({ ...prev, address: "Failed to reverse geocode coordinates." }));
+                                          toast("Satellite Sync Failed", "error");
+                                        }
+                                      }, (error) => {
+                                        setFormData(prev => ({ ...prev, address: "Location access denied or unavailable." }));
+                                        toast("Location Access Denied.", "error");
+                                      });
+                                    } else {
+                                      setFormData(prev => ({ ...prev, address: "Geolocation not supported by browser." }));
+                                      toast("System Incompatible.", "error");
+                                    }
                                  }} className="text-[8px] font-black uppercase text-primary flex items-center gap-1 hover:brightness-125 transition-all">
-                                    <Zap className="w-3 h-3" /> SYNC WITH GOOGLE MAPS
+                                    <Zap className="w-3 h-3" /> SYNC WITH SATELLITE
                                  </button>
                               </div>
                               <div className="relative w-full h-32 md:h-40 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-2xl overflow-hidden group">
