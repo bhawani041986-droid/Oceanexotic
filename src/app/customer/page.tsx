@@ -1126,7 +1126,7 @@ export default function CustomerHomePage() {
                 </h1>
              </div>
              <p className="text-[10px] md:text-2xl text-[var(--c-text-secondary)] font-medium italic max-w-2xl mx-auto leading-relaxed px-1 md:px-4">
-                Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers.
+                {(settings.customerAssets as any)?.heroSubtitle || "Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers."}
              </p>
              
             <div className="flex flex-row gap-2 md:gap-4 justify-center pt-2 md:pt-6 w-full sm:w-auto">

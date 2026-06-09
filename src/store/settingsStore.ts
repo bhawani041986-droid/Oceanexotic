@@ -29,6 +29,7 @@ interface SettingsState {
     logo: string;
     hero: string;
     mobileHero?: string;
+    heroSubtitle?: string;
     hero2?: string;
     hero3?: string;
     favicon: string;
@@ -77,6 +78,7 @@ export const useSettingsStore = create<SettingsState>()(
         logo: "",
         hero: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80",
         mobileHero: "",
+        heroSubtitle: "Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers.",
         hero2: "",
         hero3: "",
         favicon: "/logo-icon.svg",

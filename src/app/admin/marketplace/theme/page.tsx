@@ -283,6 +283,18 @@ export default function MarketplaceThemeControl() {
                     />
                  </div>
 
+                 <div className="space-y-4 pt-4 border-t border-[var(--foreground)]/5">
+                    <div className="flex flex-col gap-2">
+                      <h4 className="text-xs font-black text-[var(--foreground)] uppercase tracking-widest italic">Hero Subtitle</h4>
+                      <textarea 
+                        value={(tempAssets as any).heroSubtitle || ""}
+                        onChange={(e) => setTempAssets(prev => ({ ...prev, heroSubtitle: e.target.value }))}
+                        className="w-full bg-black/40 border border-[var(--foreground)]/10 rounded-xl px-4 py-3 text-[10px] font-bold text-[var(--foreground)] placeholder-text-secondary focus:outline-none focus:border-primary/50 transition-colors resize-none h-16"
+                        placeholder="e.g. Delivered Fresh in Under 90 Minutes."
+                      />
+                    </div>
+                 </div>
+
                  <Button 
                    onClick={handleCommit}
                    disabled={isCommitting || !isDirty}
