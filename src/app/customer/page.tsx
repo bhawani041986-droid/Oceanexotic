@@ -1020,15 +1020,22 @@ export default function CustomerHomePage() {
     <div className="w-full">
       {/* 3. HERO SECTION - THEME AWARE IMAGE & ATMOSPHERE */}
       <section className="relative min-h-[40vh] lg:min-h-[80vh] flex items-center justify-center overflow-hidden pt-8 pb-8 lg:py-0">
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-[var(--c-gradient-hero)] z-10" />
+        <div className="absolute inset-0 z-0 bg-[#0b0e14]">
+          {/* Blurred background layer to fill empty spaces on mobile */}
+          <img 
+            src={settings.customerAssets.hero} 
+            className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-30 lg:scale-110 grayscale-[30%] object-center" 
+            alt="" 
+          />
+          {/* Sharp, perfectly fitted foreground layer (head to tail visible) */}
           <img 
             src={settings.customerAssets.hero} 
             fetchPriority="high"
-            className="w-full h-full object-cover lg:scale-110 opacity-40 grayscale-[20%] object-center" 
+            className="absolute inset-0 w-full h-full object-contain lg:object-cover lg:scale-110 opacity-50 grayscale-[10%] object-center z-0" 
             alt="OceanExotic Seafood Hero" 
           />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,var(--c-primary),transparent_50%)] opacity-10 hidden lg:block" />
+          <div className="absolute inset-0 bg-[var(--c-gradient-hero)] z-10" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,var(--c-primary),transparent_50%)] opacity-10 hidden lg:block z-10" />
         </div>
 
         {/* Floating Dynamic Timing Card (Desktop Only - Top Right) */}
