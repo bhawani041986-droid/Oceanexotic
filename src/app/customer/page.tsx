@@ -1118,11 +1118,11 @@ export default function CustomerHomePage() {
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-1.5 lg:space-y-6 text-center max-w-4xl mx-auto flex flex-col items-center w-full">
              <div className="space-y-1.5 lg:space-y-6 flex flex-col items-center">
                 <Badge variant="outline" className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] text-[9px] md:text-[12px] font-black tracking-[0.4em] px-3 md:px-6 py-1 md:py-2 border-[var(--c-primary)]/20 uppercase shadow-[0_0_15px_rgba(var(--c-primary-rgb),0.1)]">
-                   {cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.sector || 'Premium'} Seafood Market
+                   {(settings.customerAssets as any)?.heroBadge || "Premium Seafood Market"}
                 </Badge>
                 <h1 className="text-3xl md:text-5xl lg:text-7xl font-black text-[var(--c-text-primary)] uppercase italic leading-[1] md:leading-[0.85] text-center">
-                   {cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.title?.split(':')[0] || 'Seafood'} <br /> 
-                   <span className="text-[var(--c-primary)]">{cmsContent.find(c => c.type === 'BANNER' && c.status === 'PUBLISHED')?.title?.split(':')[1] || 'Redefined.'}</span>
+                   {(settings.customerAssets as any)?.heroTitle1 || 'Seafood'} <br /> 
+                   <span className="text-[var(--c-primary)]">{(settings.customerAssets as any)?.heroTitle2 || 'Redefined.'}</span>
                 </h1>
              </div>
              <p className="text-[10px] md:text-2xl text-[var(--c-text-secondary)] font-medium italic max-w-2xl mx-auto leading-relaxed px-1 md:px-4">

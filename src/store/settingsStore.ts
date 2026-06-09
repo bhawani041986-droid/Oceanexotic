@@ -29,6 +29,9 @@ interface SettingsState {
     logo: string;
     hero: string;
     mobileHero?: string;
+    heroBadge?: string;
+    heroTitle1?: string;
+    heroTitle2?: string;
     heroSubtitle?: string;
     hero2?: string;
     hero3?: string;
@@ -78,6 +81,9 @@ export const useSettingsStore = create<SettingsState>()(
         logo: "",
         hero: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80",
         mobileHero: "",
+        heroBadge: "Premium Seafood Market",
+        heroTitle1: "Seafood",
+        heroTitle2: "Redefined.",
         heroSubtitle: "Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers.",
         hero2: "",
         hero3: "",

@@ -285,6 +285,38 @@ export default function MarketplaceThemeControl() {
 
                  <div className="space-y-4 pt-4 border-t border-[var(--foreground)]/5">
                     <div className="flex flex-col gap-2">
+                      <h4 className="text-xs font-black text-[var(--foreground)] uppercase tracking-widest italic">Hero Badge</h4>
+                      <input 
+                        type="text" 
+                        value={(tempAssets as any).heroBadge || ""}
+                        onChange={(e) => setTempAssets(prev => ({ ...prev, heroBadge: e.target.value }))}
+                        className="w-full bg-black/40 border border-[var(--foreground)]/10 rounded-xl px-4 py-3 text-[10px] font-bold text-[var(--foreground)] placeholder-text-secondary focus:outline-none focus:border-primary/50 transition-colors"
+                        placeholder="e.g. Premium Seafood Market"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <div className="flex flex-col gap-2 w-1/2">
+                        <h4 className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest italic">Title Part 1</h4>
+                        <input 
+                          type="text" 
+                          value={(tempAssets as any).heroTitle1 || ""}
+                          onChange={(e) => setTempAssets(prev => ({ ...prev, heroTitle1: e.target.value }))}
+                          className="w-full bg-black/40 border border-[var(--foreground)]/10 rounded-xl px-4 py-3 text-[10px] font-bold text-[var(--foreground)] placeholder-text-secondary focus:outline-none focus:border-primary/50 transition-colors"
+                          placeholder="e.g. Seafood"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-2 w-1/2">
+                        <h4 className="text-[10px] font-black text-primary uppercase tracking-widest italic">Title Part 2</h4>
+                        <input 
+                          type="text" 
+                          value={(tempAssets as any).heroTitle2 || ""}
+                          onChange={(e) => setTempAssets(prev => ({ ...prev, heroTitle2: e.target.value }))}
+                          className="w-full bg-primary/5 border border-primary/20 rounded-xl px-4 py-3 text-[10px] font-bold text-primary placeholder-text-secondary focus:outline-none focus:border-primary transition-colors"
+                          placeholder="e.g. Redefined."
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-2">
                       <h4 className="text-xs font-black text-[var(--foreground)] uppercase tracking-widest italic">Hero Subtitle</h4>
                       <textarea 
                         value={(tempAssets as any).heroSubtitle || ""}
