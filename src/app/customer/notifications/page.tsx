@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Modal } from "@/components/ui/Modal";
 import { 
@@ -18,16 +17,12 @@ import {
   X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const INITIAL_NOTIFICATIONS = [
-  { id: "1", type: "ORDER", title: "Harvest Initiated", message: "Your order #ORD-9982 has been commissioned from Swaraj Dweep. Cold-chain protocol is now active. The assigned fleet agent is currently awaiting departure clearance.", time: "2m ago", read: false },
-  { id: "2", type: "SECURITY", title: "New Authority Link", message: "A new device has linked to your Admiral Registry from a node in Port Blair. If this was not you, please secure your account immediately.", time: "14m ago", read: false },
-  { id: "3", type: "PROMO", title: "Midnight Catch Alert", message: "Premium Mud Crab is now available at Phoenix Bay Jetty. 15% discount for Platinum ranks. Use code MUDCRAB15 at checkout before sunrise.", time: "2h ago", read: true },
-  { id: "4", type: "ORDER", title: "Delivery Docked", message: "Order #ORD-9975 has reached Junglighat Port and is ready for final fulfillment. Please ensure someone is available at the delivery coordinate.", time: "5h ago", read: true },
-];
+import { useAuthStore } from "@/store/authStore";
 
 export default function NotificationsPage() {
-  const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
+  const { user } = useAuthStore();
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
@@ -39,24 +34,81 @@ export default function NotificationsPage() {
     promo: false
   });
 
+  // Fetch notifications from real Supabase DB
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      // Use fallback testing ID if not logged in
+      const userId = user?.id || "USR-1001"; 
+      
+      try {
+        const res = await fetch(`/api/customer/notifications?userId=${userId}`);
+        const result = await res.json();
+        if (result.status === "success") {
+          setNotifications(result.data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch notifications:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchNotifications();
+  }, [user]);
+
   const unreadCount = notifications.filter(n => !n.read).length;
 
-  const markAllRead = () => {
+  const markAllRead = async () => {
+    const userId = user?.id || "USR-1001";
+    // Optimistic UI update
     setNotifications(notifications.map(n => ({ ...n, read: true })));
+    
+    // DB Update
+    try {
+      await fetch('/api/customer/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'MARK_ALL_READ', userId })
+      });
+    } catch (e) { console.error(e); }
   };
 
-  const handleNotificationClick = (id: string) => {
-    // Toggle expand and mark as read
+  const handleNotificationClick = async (id: string) => {
+    const isAlreadyRead = notifications.find(n => n.id === id)?.read;
+    
+    // Toggle expand
     setExpandedId(prev => prev === id ? null : id);
+    
+    // Mark as read in UI
     setNotifications(notifications.map(n => 
       n.id === id ? { ...n, read: true } : n
     ));
+
+    // DB Update if it wasn't read
+    if (!isAlreadyRead) {
+      try {
+        await fetch('/api/customer/notifications', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'MARK_READ', notificationId: id })
+        });
+      } catch (e) { console.error(e); }
+    }
   };
 
-  const deleteNotification = (e: React.MouseEvent, id: string) => {
+  const deleteNotification = async (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
+    // UI Update
     setNotifications(notifications.filter(n => n.id !== id));
     if (expandedId === id) setExpandedId(null);
+
+    // DB Update
+    try {
+      await fetch('/api/customer/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'DELETE', notificationId: id })
+      });
+    } catch (e) { console.error(e); }
   };
 
   return (
@@ -72,7 +124,7 @@ export default function NotificationsPage() {
         <div className="flex items-center gap-[4px] md:gap-4">
           <Button 
             onClick={markAllRead}
-            disabled={unreadCount === 0}
+            disabled={unreadCount === 0 || isLoading}
             variant="outline" 
             className="h-10 md:h-12 px-6 md:px-8 text-[9px] md:text-[10px] font-black tracking-widest uppercase flex items-center gap-2 md:gap-3 rounded-lg md:rounded-xl"
           >
@@ -91,7 +143,9 @@ export default function NotificationsPage() {
 
       {/* Notification List */}
       <div className="space-y-[4px] md:space-y-4">
-        {notifications.length > 0 ? notifications.map((notification) => (
+        {isLoading ? (
+           <div className="text-center py-20 animate-pulse text-[10px] text-text-secondary tracking-widest uppercase italic">SYNCING WITH REGISTRY...</div>
+        ) : notifications.length > 0 ? notifications.map((notification) => (
           <Card 
             key={notification.id} 
             onClick={() => handleNotificationClick(notification.id)}
