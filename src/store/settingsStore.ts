@@ -80,7 +80,7 @@ export const useSettingsStore = create<SettingsState>()(
       customerAssets: {
         logo: "",
         hero: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80",
-        mobileHero: "",
+        mobileHero: "/images/premium_mobile_hero.png",
         heroBadge: "Premium Seafood Market",
         heroTitle1: "Seafood",
         heroTitle2: "Redefined.",
