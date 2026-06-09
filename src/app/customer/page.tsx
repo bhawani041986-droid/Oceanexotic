@@ -1138,8 +1138,7 @@ export default function CustomerHomePage() {
                   SHOP FRESH
                </Button>
                <Button 
-                  variant="outline" 
-                  className="w-1/2 sm:w-auto h-10 md:h-16 px-1 md:px-12 text-[8px] md:text-[12px] font-black uppercase tracking-wider md:tracking-widest border-[var(--foreground)]/20 text-[var(--c-text-primary)] backdrop-blur-md"
+                  className="w-1/2 sm:w-auto h-10 md:h-16 px-1 md:px-12 text-[8px] md:text-[12px] font-black uppercase tracking-wider md:tracking-widest bg-black/60 hover:bg-black/80 border border-white/20 text-white backdrop-blur-xl shadow-xl transition-all"
                   style={{ clipPath: 'polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)' }}
                   onClick={() => router.push('/customer/categories')}
                >
