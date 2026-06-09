@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { useAuthStore } from "@/store/authStore";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useCartStore } from "@/store/cartStore";
+import { useNotificationStore } from "@/store/notificationStore";
 import { 
   ShoppingCart, 
   LogOut, 
@@ -52,6 +53,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const { user, isAuthenticated, logout } = useAuthStore();
   const settings = useSettingsStore();
   const { items } = useCartStore();
+  const { unreadCount, setUnreadCount } = useNotificationStore();
   const router = useRouter();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
@@ -65,6 +67,19 @@ export default function MainLayout({ children }: MainLayoutProps) {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (user?.id) {
+      fetch(`/api/customer/notifications?userId=${user.id}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            setUnreadCount(data.data.filter((n: any) => !n.read).length);
+          }
+        })
+        .catch(console.error);
+    }
+  }, [user?.id, setUnreadCount]);
 
   const handleLogout = () => {
     logout();
@@ -173,7 +188,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
             </div>
             <button onClick={() => router.push('/customer/notifications')} className="p-2 md:p-3 text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] relative">
               <Bell className="w-6 h-6 md:w-5 md:h-5" />
-              <span className="absolute top-2 right-2 md:top-3 md:right-3 w-2 h-2 bg-red-500 rounded-full border-2 border-[var(--c-bg)]" />
+              {mounted && unreadCount > 0 && (
+                <span className="absolute top-2 right-2 md:top-3 md:right-3 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[var(--c-bg)] animate-pulse" />
+              )}
             </button>
             <Link href="/customer/cart" className="p-2 md:px-4 md:py-2.5 bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/20 rounded-full flex items-center gap-3 relative transition-all">
                <ShoppingCart className="w-6 h-6 md:w-5 md:h-5 text-[var(--c-primary)]" />

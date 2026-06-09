@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/authStore";
+import { useNotificationStore } from "@/store/notificationStore";
 
 export default function NotificationsPage() {
   const { user } = useAuthStore();
@@ -25,6 +26,7 @@ export default function NotificationsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const { setUnreadCount: setGlobalUnreadCount } = useNotificationStore();
 
   // Settings State
   const [prefs, setPrefs] = useState({
@@ -56,6 +58,11 @@ export default function NotificationsPage() {
   }, [user]);
 
   const unreadCount = notifications.filter(n => !n.read).length;
+
+  // Sync with global store so navbar updates instantly
+  useEffect(() => {
+    setGlobalUnreadCount(unreadCount);
+  }, [unreadCount, setGlobalUnreadCount]);
 
   const markAllRead = async () => {
     const userId = user?.id || "USR-1001";
