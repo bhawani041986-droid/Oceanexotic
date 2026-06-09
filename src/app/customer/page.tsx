@@ -1256,8 +1256,8 @@ export default function CustomerHomePage() {
       </section>
 
       {/* 4.5 TODAY'S CATCH - LIVE HARBOR INVENTORY */}
-      <section className="py-12 container mx-auto px-4 md:px-10">
-         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+      <section className="py-2 container mx-auto px-4 md:px-10">
+         <div className="flex flex-col md:flex-row md:items-end justify-between gap-1 mb-4">
             <SectionTitle 
               title="Today's Catch" 
               subtitle="Live Harbor Arrival • Freshness Guaranteed" 
@@ -1380,7 +1380,7 @@ export default function CustomerHomePage() {
       </section>
 
       {/* 5. FEATURED PRODUCTS GRID */}
-      <section className="py-6 container mx-auto px-[2px] md:px-10 mt-6">
+      <section className="py-1 container mx-auto px-[2px] md:px-10 mt-1">
          <div className="space-y-6">
             <SectionTitle title="Featured Seafood" subtitle="Highest Quality Grade" />
             <div className="grid grid-cols-2 md:grid-cols-4 gap-[2px] md:gap-8">
@@ -1617,13 +1617,13 @@ export default function CustomerHomePage() {
       </section>
 
       {/* 9. CUSTOMER REVIEWS - HARDENED HUD */}
-      <section className="py-6 container mx-auto px-0 md:px-10">
+      <section className="py-1 container mx-auto px-0 md:px-10">
          <div className="mb-4 space-y-0.5 px-[2px] md:px-0">
             <h2 className="text-xl md:text-5xl font-black text-[var(--c-text-primary)] tracking-tight uppercase italic">Customer Reviews</h2>
             <p className="text-[9px] md:text-[11px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] italic opacity-60">Verified Reviews</p>
          </div>
          
-         <div className="flex lg:grid lg:grid-cols-3 overflow-x-auto lg:overflow-visible gap-[3px] md:gap-8 no-scrollbar pb-4 px-[2px] md:px-2 snap-x snap-mandatory scroll-pl-[2px] touch-pan-x">
+         <div className="flex lg:grid lg:grid-cols-3 overflow-x-auto lg:overflow-visible gap-1 md:gap-8 no-scrollbar pb-4 px-[2px] md:px-2 snap-x snap-mandatory scroll-pl-[2px] touch-pan-x">
             {REVIEWS.map((rev) => (
                <div key={rev.id} className="relative flex-shrink-0 w-[240px] md:w-full group snap-start">
                   {/* Polygonal Background */}
@@ -1654,7 +1654,7 @@ export default function CustomerHomePage() {
       </section>
 
       {/* 10. CHEF'S RECIPES - HARDENED HUD TILES */}
-      <section className="py-6 container mx-auto px-[2px] md:px-10">
+      <section className="py-1 container mx-auto px-[2px] md:px-10">
          <div className="mb-4 flex justify-between items-end px-[2px] md:px-0">
             <div>
                <h2 className="text-xl md:text-5xl font-black text-[var(--c-text-primary)] tracking-tight uppercase italic">Chef's Recipes</h2>
@@ -1668,7 +1668,7 @@ export default function CustomerHomePage() {
             </button>
          </div>
          
-         <div className="grid grid-cols-2 gap-[3px] md:gap-10">
+         <div className="grid grid-cols-2 gap-1 md:gap-10">
             {(cmsContent.filter(c => c.type === 'RECIPE' && c.status === 'PUBLISHED').length > 0 
                ? cmsContent.filter(c => c.type === 'RECIPE' && c.status === 'PUBLISHED')
                : RECIPES).map((recipe: any) => {
@@ -1686,13 +1686,13 @@ export default function CustomerHomePage() {
                   {/* Decorative Scan Line */}
                   <div className="absolute top-0 left-0 w-full h-[1px] bg-[var(--c-primary)] opacity-0 group-hover:opacity-40 transition-opacity animate-scan" />
                   
-                  <div className="absolute bottom-3 left-3 right-3 space-y-2 md:bottom-10 md:left-10 md:right-10 md:space-y-4">
+                  <div className="absolute bottom-3 left-3 right-3 space-y-1 md:bottom-10 md:left-10 md:right-10 md:space-y-4">
                      <div className="flex gap-1.5">
                         <Badge variant="glass" className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] border-[var(--c-primary)]/20 text-[7px] md:text-xs font-black uppercase px-2 py-0">{meta.difficulty || recipe.difficulty || 'Expert'}</Badge>
                         <Badge variant="glass" className="bg-[var(--foreground)]/5 border-[var(--foreground)]/10 text-[7px] md:text-xs font-black uppercase px-2 py-0 text-[var(--foreground)]/60">{meta.time || recipe.time || '25 min'}</Badge>
                      </div>
                      <h4 className="text-xs md:text-4xl font-black text-[var(--foreground)] uppercase italic leading-tight">{recipe.title}</h4>
-                     <div className="flex items-center gap-2 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-[var(--c-primary)] opacity-0 group-hover:opacity-100 transition-all transform translate-y-2 group-hover:translate-y-0">
+                     <div className="flex items-center gap-2 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] text-[var(--c-primary)] opacity-0 group-hover:opacity-100 transition-all transform translate-y-1 group-hover:translate-y-0">
                         VIEW RECIPE <ArrowRight className="w-3 h-3" />
                      </div>
                   </div>
@@ -1703,20 +1703,20 @@ export default function CustomerHomePage() {
       </section>
 
       {/* 11. MOBILE APP PROMOTION - HARDENED SHELL */}
-      <section className="py-6 container mx-auto px-[2px] md:px-10">
+      <section className="py-1 container mx-auto px-[2px] md:px-10">
          <div 
             className="relative p-6 md:p-12 bg-gradient-to-br from-[var(--c-bg-alt)]/80 to-[var(--c-bg)] border border-[var(--foreground)]/5 shadow-premium overflow-hidden group"
             style={{ clipPath: 'polygon(30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0 30px)' }}
          >
             <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--c-primary)]/5 blur-[120px] rounded-full pointer-events-none" />
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-1 items-center relative z-10">
                <div className="space-y-6">
                   <Badge variant="glass" className="text-[var(--c-primary)] text-[9px] font-black tracking-[0.3em] border-[var(--c-primary)]/30 bg-[var(--c-primary)]/10 px-4 py-1">OCEANFRESH MOBILE APP</Badge>
                   <h2 className="text-4xl md:text-8xl font-black text-[var(--c-text-primary)] uppercase italic leading-[0.85] tracking-tighter">The Market in <br /> Your Pocket.</h2>
                   <p className="text-xs md:text-lg text-[var(--c-text-secondary)] font-medium italic opacity-60 max-w-sm">Get our recipes and fresh catch updates right on your phone. Easy ordering, real-time order tracking.</p>
                   
-                  <div className="flex flex-row gap-[4px] justify-center lg:justify-start">
+                  <div className="flex flex-row gap-1 justify-center lg:justify-start">
                      <Button 
                         className="flex-1 h-14 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 gap-3 flex items-center justify-center hover:bg-[var(--c-primary)]/20 transition-all group/btn"
                         style={{ clipPath: 'polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)' }}
@@ -1864,7 +1864,7 @@ export default function CustomerHomePage() {
                        </p>
                     </div>
                     <Button 
-                       className="h-6 md:h-10 px-3 md:px-6 mt-2 bg-[var(--c-primary)] text-[var(--foreground)] text-[6px] md:text-[8px] font-black uppercase"
+                       className="h-6 md:h-10 px-3 md:px-6 mt-1 bg-[var(--c-primary)] text-[var(--foreground)] text-[6px] md:text-[8px] font-black uppercase"
                        style={{ clipPath: 'polygon(4px 0, 100% 0, 100% 100%, 0 100%, 0 4px)' }}
                     >
                        EXPLORE
@@ -1934,7 +1934,7 @@ export default function CustomerHomePage() {
 
       {/* 12. TRUST & NEWSLETTER - VIBRANT & POLYGONAL */}
       <section className="py-8 container mx-auto px-[2px] md:px-10 space-y-4">
-         <div className="grid grid-cols-4 gap-[2px] md:gap-12 border-b border-[var(--foreground)]/5 pb-4">
+         <div className="grid grid-cols-4 gap-1 border-b border-[var(--foreground)]/5 pb-4">
             {[ 
                { icon: <ShieldCheck className="w-full h-full" />, title: "Authorized", color: "text-[#00ff88] bg-[#00ff88]/5" }, 
                { icon: <Zap className="w-full h-full" />, title: "Instant", color: "text-warning bg-warning/5" }, 
