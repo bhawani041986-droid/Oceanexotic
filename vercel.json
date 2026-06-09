@@ -6,7 +6,7 @@
   "crons": [
     {
       "path": "/api/system/cron/cleanup_catches",
-      "schedule": "0 * * * *"
+      "schedule": "0 0 * * *"
     }
   ]
 }
