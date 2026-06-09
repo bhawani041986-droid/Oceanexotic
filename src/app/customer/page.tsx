@@ -1021,17 +1021,31 @@ export default function CustomerHomePage() {
       {/* 3. HERO SECTION - THEME AWARE IMAGE & ATMOSPHERE */}
       <section className="relative min-h-[40vh] lg:min-h-[80vh] flex items-center justify-center overflow-hidden pt-8 pb-8 lg:py-0">
         <div className="absolute inset-0 z-0 bg-[#0b0e14]">
-          {/* Blurred background layer to fill empty spaces on mobile */}
-          <img 
-            src={settings.customerAssets.hero} 
-            className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-30 lg:scale-110 grayscale-[30%] object-center" 
-            alt="" 
-          />
-          {/* Sharp, perfectly fitted foreground layer (head to tail visible) */}
+          {/* Desktop Background */}
           <img 
             src={settings.customerAssets.hero} 
             fetchPriority="high"
-            className="absolute inset-0 w-full h-full object-contain lg:object-cover lg:scale-110 opacity-50 grayscale-[10%] object-center z-0" 
+            className="absolute inset-0 w-full h-full hidden lg:block object-cover scale-110 opacity-50 grayscale-[10%] object-center z-0" 
+            alt="OceanExotic Seafood Hero" 
+          />
+
+          {/* Mobile Blurred Background (Fallback for wide images) */}
+          {!settings.customerAssets.mobileHero && (
+            <img 
+              src={settings.customerAssets.hero} 
+              className="absolute inset-0 w-full h-full lg:hidden object-cover blur-2xl opacity-30 grayscale-[30%] object-center" 
+              alt="" 
+            />
+          )}
+
+          {/* Mobile Foreground */}
+          <img 
+            src={settings.customerAssets.mobileHero || settings.customerAssets.hero} 
+            fetchPriority="high"
+            className={cn(
+               "absolute inset-0 w-full h-full lg:hidden opacity-50 grayscale-[10%] object-center z-0",
+               settings.customerAssets.mobileHero ? "object-cover" : "object-contain"
+            )} 
             alt="OceanExotic Seafood Hero" 
           />
           <div className="absolute inset-0 bg-[var(--c-gradient-hero)] z-10" />

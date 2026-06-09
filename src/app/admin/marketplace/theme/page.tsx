@@ -125,7 +125,8 @@ export default function MarketplaceThemeControl() {
 
   const uploadStations = [
     { id: 'logo', title: 'Master Logo', desc: 'PNG', icon: <ImageIcon className="w-5 h-5 text-primary" />, aspect: 'aspect-[3/1]', preview: tempAssets.logo },
-    { id: 'hero', title: 'Hero Slide 1', desc: 'Primary', icon: <Zap className="w-5 h-5 text-warning" />, aspect: 'aspect-video', preview: tempAssets.hero },
+    { id: 'hero', title: 'Hero Slide 1', desc: 'Desktop (16:9)', icon: <Zap className="w-5 h-5 text-warning" />, aspect: 'aspect-video', preview: tempAssets.hero },
+    { id: 'mobileHero', title: 'Mobile Hero', desc: 'Portrait (4:5 or 9:16)', icon: <Smartphone className="w-5 h-5 text-warning" />, aspect: 'aspect-[4/5] w-32 mx-auto', preview: (tempAssets as any).mobileHero || null },
     { id: 'hero2', title: 'Hero Slide 2', desc: 'Optional', icon: <Zap className="w-5 h-5 text-warning" />, aspect: 'aspect-video', preview: (tempAssets as any).hero2 || null },
     { id: 'hero3', title: 'Hero Slide 3', desc: 'Optional', icon: <Zap className="w-5 h-5 text-warning" />, aspect: 'aspect-video', preview: (tempAssets as any).hero3 || null },
     { id: 'favicon', title: 'System Favicon', desc: '32x32', icon: <Globe className="w-5 h-5 text-blue-500" />, aspect: 'aspect-square w-16 mx-auto', preview: tempAssets.favicon },
