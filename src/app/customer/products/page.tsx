@@ -742,7 +742,7 @@ function ProductListingContent() {
                   </div>
                   <p className="text-[10px] md:text-base text-[var(--c-text-secondary)] font-medium italic leading-relaxed">"The Red Snapper catch is exceptional today. I recommend a light pan sear to preserve the flavor. Secure yours before we sell out."</p>
                   <div className="pt-2 md:pt-4 flex items-center gap-3">
-                     <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[var(--foreground)]/10 border border-[var(--foreground)]/10" />
+                     <img src="https://i.pravatar.cc/150?img=11" alt="Chef Vikram" className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-[var(--foreground)]/10 object-cover" />
                      <div>
                         <p className="text-[10px] md:text-[12px] font-black text-[var(--foreground)] uppercase tracking-tighter">Chef Vikram</p>
                         <p className="text-[8px] md:text-[10px] text-[var(--c-text-secondary)] uppercase">Senior Culinary Expert</p>
@@ -767,15 +767,15 @@ function ProductListingContent() {
                      <p className="text-[8px] md:text-[10px] text-[var(--c-text-secondary)] uppercase">8.2k Reviews</p>
                   </div>
                   <div className="flex -space-x-3 md:-space-x-4">
-                     {[1,2,3].map(i => <div key={i} className="w-8 h-8 md:w-14 md:h-14 rounded-full border-2 border-[var(--c-bg)] bg-[var(--foreground)]/10" />)}
+                     {[32, 44, 68].map(i => <img key={i} src={`https://i.pravatar.cc/150?img=${i}`} alt="Customer" className="w-8 h-8 md:w-14 md:h-14 rounded-full border-2 border-[var(--c-bg)] object-cover" />)}
                   </div>
                </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-8">
                {[
-                  { user: "Customer Raj", text: "Quality is top-tier. The Kingfish arrived perfectly fresh.", node: "PORT BLAIR" },
-                  { user: "Chef Ananya", text: "Absolute premium grade. Delivery is perfect.", node: "HAVELOCK" },
-                  { user: "Local Guide Sam", text: "Got the Mud Crabs delivered in 35 mins.", node: "NEIL ISLAND" }
+                  { user: "Customer Raj", text: "Quality is top-tier. The Kingfish arrived perfectly fresh.", node: "PORT BLAIR", img: 32 },
+                  { user: "Chef Ananya", text: "Absolute premium grade. Delivery is perfect.", node: "HAVELOCK", img: 44 },
+                  { user: "Local Guide Sam", text: "Got the Mud Crabs delivered in 35 mins.", node: "NEIL ISLAND", img: 68 }
                ].map((review, i) => (
                   <div key={i} className="p-4 md:p-8 rounded-2xl md:rounded-3xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 space-y-3 hover:border-[var(--c-primary)]/40 transition-all group">
                      <div className="flex items-center justify-between">
@@ -786,7 +786,7 @@ function ProductListingContent() {
                      </div>
                      <p className="text-[10px] md:text-sm text-[var(--c-text-secondary)] font-medium italic">"{review.text}"</p>
                      <div className="flex items-center gap-2 pt-1">
-                        <div className="w-6 h-6 rounded-full bg-[var(--c-primary)]/20" />
+                        <img src={`https://i.pravatar.cc/150?img=${review.img}`} alt={review.user} className="w-6 h-6 rounded-full object-cover border border-[var(--foreground)]/10" />
                         <p className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-tighter">{review.user}</p>
                      </div>
                   </div>
