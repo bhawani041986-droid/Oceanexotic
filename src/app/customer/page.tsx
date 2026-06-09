@@ -1483,7 +1483,7 @@ export default function CustomerHomePage() {
       </AnimatePresence>
 
       {/* 7. PREMIUM SELLERS - MAX-DENSITY MOBILE (2PX RULE) */}
-      <section className="py-6 container mx-auto px-0 md:px-10 relative">
+      <section className="py-1 container mx-auto px-0 md:px-10 relative">
          <div className="mb-3 space-y-0.5 px-[2px] md:px-0">
             <h2 className="text-xl md:text-5xl font-black text-[var(--c-text-primary)] tracking-tight uppercase italic">Top Sellers</h2>
             <p className="text-[9px] md:text-[11px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] italic opacity-60">Verified Sellers</p>
@@ -1933,7 +1933,7 @@ export default function CustomerHomePage() {
       </section>
 
       {/* 12. TRUST & NEWSLETTER - VIBRANT & POLYGONAL */}
-      <section className="py-8 container mx-auto px-[2px] md:px-10 space-y-4">
+      <section className="py-1 container mx-auto px-[2px] md:px-10 space-y-4">
          <div className="grid grid-cols-4 gap-1 border-b border-[var(--foreground)]/5 pb-4">
             {[ 
                { icon: <ShieldCheck className="w-full h-full" />, title: "Authorized", color: "text-[#00ff88] bg-[#00ff88]/5" }, 
