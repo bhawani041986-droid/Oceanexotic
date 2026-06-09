@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { Modal } from "@/components/ui/Modal";
 import { 
   Bell, 
   Package, 
@@ -12,32 +13,77 @@ import {
   CheckCircle2,
   MoreVertical,
   Settings,
-  ChevronRight
+  ChevronRight,
+  ChevronDown,
+  X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const MOCK_NOTIFICATIONS = [
-  { id: "1", type: "ORDER", title: "Harvest Initiated", message: "Your order #ORD-9982 has been commissioned from Swaraj Dweep. Cold-chain protocol is now active.", time: "2m ago", read: false },
-  { id: "2", type: "SECURITY", title: "New Authority Link", message: "A new device has linked to your Admiral Registry from a node in Port Blair.", time: "14m ago", read: false },
-  { id: "3", type: "PROMO", title: "Midnight Catch Alert", message: "Premium Mud Crab is now available at Phoenix Bay Jetty. 15% discount for Platinum ranks.", time: "2h ago", read: true },
-  { id: "4", type: "ORDER", title: "Delivery Docked", message: "Order #ORD-9975 has reached Junglighat Port and is ready for final fulfillment.", time: "5h ago", read: true },
+const INITIAL_NOTIFICATIONS = [
+  { id: "1", type: "ORDER", title: "Harvest Initiated", message: "Your order #ORD-9982 has been commissioned from Swaraj Dweep. Cold-chain protocol is now active. The assigned fleet agent is currently awaiting departure clearance.", time: "2m ago", read: false },
+  { id: "2", type: "SECURITY", title: "New Authority Link", message: "A new device has linked to your Admiral Registry from a node in Port Blair. If this was not you, please secure your account immediately.", time: "14m ago", read: false },
+  { id: "3", type: "PROMO", title: "Midnight Catch Alert", message: "Premium Mud Crab is now available at Phoenix Bay Jetty. 15% discount for Platinum ranks. Use code MUDCRAB15 at checkout before sunrise.", time: "2h ago", read: true },
+  { id: "4", type: "ORDER", title: "Delivery Docked", message: "Order #ORD-9975 has reached Junglighat Port and is ready for final fulfillment. Please ensure someone is available at the delivery coordinate.", time: "5h ago", read: true },
 ];
 
 export default function NotificationsPage() {
-  return (
+  const [notifications, setNotifications] = useState(INITIAL_NOTIFICATIONS);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
-    <div className="max-w-4xl mx-auto space-y-[10px] md:space-y-10 pt-4 md:pt-10 pb-10 animate-fade-in px-4 md:px-0">
+  // Settings State
+  const [prefs, setPrefs] = useState({
+    push: true,
+    email: false,
+    sms: true,
+    promo: false
+  });
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+  const markAllRead = () => {
+    setNotifications(notifications.map(n => ({ ...n, read: true })));
+  };
+
+  const handleNotificationClick = (id: string) => {
+    // Toggle expand and mark as read
+    setExpandedId(prev => prev === id ? null : id);
+    setNotifications(notifications.map(n => 
+      n.id === id ? { ...n, read: true } : n
+    ));
+  };
+
+  const deleteNotification = (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    setNotifications(notifications.filter(n => n.id !== id));
+    if (expandedId === id) setExpandedId(null);
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto space-y-[10px] md:space-y-10 pt-4 md:pt-10 pb-10 animate-fade-in px-4 md:px-0 relative">
       {/* Header & Global Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-[10px] md:gap-6 border-b border-[var(--foreground)]/5 pb-[10px] md:pb-10">
         <div className="space-y-1">
           <h2 className="text-2xl md:text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic">Notification Radar</h2>
-          <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest italic">Monitoring {MOCK_NOTIFICATIONS.length} Global Signal Streams</p>
+          <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest italic">
+            Monitoring {notifications.length} Signals • <span className={unreadCount > 0 ? "text-primary" : ""}>{unreadCount} Unread</span>
+          </p>
         </div>
         <div className="flex items-center gap-[4px] md:gap-4">
-          <Button variant="outline" className="h-10 md:h-12 px-6 md:px-8 text-[9px] md:text-[10px] font-black tracking-widest uppercase flex items-center gap-2 md:gap-3 rounded-lg md:rounded-xl">
-            <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" /> MARK ALL READ
+          <Button 
+            onClick={markAllRead}
+            disabled={unreadCount === 0}
+            variant="outline" 
+            className="h-10 md:h-12 px-6 md:px-8 text-[9px] md:text-[10px] font-black tracking-widest uppercase flex items-center gap-2 md:gap-3 rounded-lg md:rounded-xl"
+          >
+            <CheckCircle2 className={cn("w-3.5 h-3.5 md:w-4 md:h-4", unreadCount > 0 ? "text-primary" : "text-text-secondary opacity-50")} /> 
+            MARK ALL READ
           </Button>
-          <Button variant="outline" className="h-10 md:h-12 w-10 md:w-12 p-0 flex items-center justify-center rounded-lg md:rounded-xl">
+          <Button 
+            onClick={() => setIsSettingsOpen(true)}
+            variant="outline" 
+            className="h-10 md:h-12 w-10 md:w-12 p-0 flex items-center justify-center rounded-lg md:rounded-xl"
+          >
             <Settings className="w-4 h-4 md:w-5 md:h-5 text-text-secondary" />
           </Button>
         </div>
@@ -45,66 +91,140 @@ export default function NotificationsPage() {
 
       {/* Notification List */}
       <div className="space-y-[4px] md:space-y-4">
-        {MOCK_NOTIFICATIONS.map((notification) => (
+        {notifications.length > 0 ? notifications.map((notification) => (
           <Card 
             key={notification.id} 
+            onClick={() => handleNotificationClick(notification.id)}
             className={cn(
-              "p-[10px] md:p-6 group flex items-start gap-4 md:gap-6 hover:border-primary/30 transition-all cursor-pointer rounded-[15px] md:rounded-[24px]",
+              "p-[10px] md:p-6 group flex flex-col hover:border-primary/30 transition-all cursor-pointer rounded-[15px] md:rounded-[24px] overflow-hidden",
               !notification.read ? "bg-primary/5 border-primary/20 shadow-glow-purple/5" : "bg-bg-secondary/40 border-white/5"
             )}
           >
-            <div className={cn(
-              "w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-[16px] flex items-center justify-center border shrink-0",
-              notification.type === "ORDER" ? "bg-success/10 border-success/20 text-success" :
-              notification.type === "SECURITY" ? "bg-danger/10 border-danger/20 text-danger" :
-              "bg-primary/10 border-primary/20 text-primary"
-            )}>
-              {notification.type === "ORDER" && <Package className="w-4 h-4 md:w-5 md:h-5" />}
-              {notification.type === "SECURITY" && <ShieldAlert className="w-4 h-4 md:w-5 md:h-5" />}
-              {notification.type === "PROMO" && <Tag className="w-4 h-4 md:w-5 md:h-5" />}
-            </div>
-
-            <div className="flex-1 space-y-1">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 md:gap-3">
-                  <h4 className={cn(
-                    "text-xs md:text-sm font-black tracking-tight uppercase italic",
-                    !notification.read ? "text-[var(--foreground)]" : "text-text-secondary"
-                  )}>
-                    {notification.title}
-                  </h4>
-                  {!notification.read && <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-primary shadow-glow-purple animate-pulse" />}
-                </div>
-                <span className="text-[8px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest italic">{notification.time}</span>
+            <div className="flex items-start gap-4 md:gap-6">
+              <div className={cn(
+                "w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-[16px] flex items-center justify-center border shrink-0 transition-colors",
+                notification.type === "ORDER" ? "bg-success/10 border-success/20 text-success" :
+                notification.type === "SECURITY" ? "bg-danger/10 border-danger/20 text-danger" :
+                "bg-primary/10 border-primary/20 text-primary"
+              )}>
+                {notification.type === "ORDER" && <Package className="w-4 h-4 md:w-5 md:h-5" />}
+                {notification.type === "SECURITY" && <ShieldAlert className="w-4 h-4 md:w-5 md:h-5" />}
+                {notification.type === "PROMO" && <Tag className="w-4 h-4 md:w-5 md:h-5" />}
               </div>
-              <p className="text-[10px] md:text-xs font-medium text-text-secondary leading-tight line-clamp-2 italic">
-                {notification.message}
-              </p>
-            </div>
 
-            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all hidden md:flex">
-              <button className="p-2 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all">
-                <MoreVertical className="w-3.5 h-3.5 md:w-4 md:h-4" />
-              </button>
-              <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-primary -translate-x-2 group-hover:translate-x-0 transition-all" />
+              <div className="flex-1 space-y-1">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 md:gap-3">
+                    <h4 className={cn(
+                      "text-xs md:text-sm font-black tracking-tight uppercase italic transition-colors",
+                      !notification.read ? "text-[var(--foreground)]" : "text-text-secondary"
+                    )}>
+                      {notification.title}
+                    </h4>
+                    {!notification.read && <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-primary shadow-glow-purple animate-pulse" />}
+                  </div>
+                  <span className="text-[8px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest italic">{notification.time}</span>
+                </div>
+                <p className={cn(
+                  "text-[10px] md:text-xs font-medium text-text-secondary leading-tight italic transition-all",
+                  expandedId === notification.id ? "line-clamp-none mt-2 text-[var(--foreground)] opacity-90" : "line-clamp-2"
+                )}>
+                  {notification.message}
+                </p>
+
+                {/* Expanded Actions */}
+                <div className={cn(
+                  "overflow-hidden transition-all duration-300",
+                  expandedId === notification.id ? "max-h-20 opacity-100 mt-4" : "max-h-0 opacity-0"
+                )}>
+                  <div className="flex gap-3 pt-2">
+                    {notification.type === "ORDER" && (
+                      <Button size="sm" variant="primary" className="h-8 text-[9px] px-4 rounded-md">TRACK ORDER</Button>
+                    )}
+                    {notification.type === "SECURITY" && (
+                      <Button size="sm" variant="outline" className="h-8 text-[9px] px-4 rounded-md border-danger/30 text-danger hover:bg-danger/10">SECURE ACCOUNT</Button>
+                    )}
+                    <Button size="sm" variant="outline" onClick={(e) => deleteNotification(e, notification.id)} className="h-8 text-[9px] px-4 rounded-md">DISMISS</Button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 transition-all opacity-50 md:opacity-100">
+                {expandedId === notification.id ? (
+                  <ChevronDown className="w-4 h-4 md:w-5 md:h-5 text-text-secondary transition-transform" />
+                ) : (
+                  <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-primary group-hover:translate-x-1 transition-transform" />
+                )}
+              </div>
             </div>
           </Card>
-        ))}
+        )) : (
+          /* Empty State / All Clear */
+          <div className="pt-10 md:pt-20 text-center max-w-sm mx-auto space-y-[10px] md:space-y-6">
+            <div className="p-6 md:p-8 rounded-full bg-success/5 border border-dashed border-success/20 inline-block animate-pulse">
+              <CheckCircle2 className="w-10 md:w-12 h-10 md:h-12 text-success opacity-80" />
+            </div>
+            <div className="space-y-1 md:space-y-2">
+              <h2 className="text-lg md:text-xl font-black text-[var(--foreground)] tracking-tighter uppercase italic">Radar Status: Clear</h2>
+              <p className="text-[9px] md:text-[10px] text-text-secondary font-black uppercase tracking-widest leading-relaxed italic">
+                All global signals have been acknowledged.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Empty State / All Clear */}
-      <div className="pt-10 md:pt-20 text-center max-w-sm mx-auto space-y-[10px] md:space-y-6">
-        <div className="p-6 md:p-8 rounded-full bg-[var(--foreground)]/5 border border-dashed border-[var(--foreground)]/10 inline-block">
-          <Bell className="w-10 md:w-12 h-10 md:h-12 text-primary opacity-40" />
+      {/* Settings Modal */}
+      <Modal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)}>
+        <div className="p-6 md:p-8 space-y-6">
+          <div className="flex items-center justify-between border-b border-[var(--foreground)]/5 pb-4">
+            <div>
+              <h3 className="text-xl font-black text-[var(--foreground)] tracking-tighter uppercase italic flex items-center gap-3">
+                <Settings className="w-5 h-5 text-primary" /> Radar Preferences
+              </h3>
+              <p className="text-[10px] text-text-secondary uppercase tracking-widest italic mt-1">Configure your incoming signals</p>
+            </div>
+            <button onClick={() => setIsSettingsOpen(false)} className="p-2 hover:bg-[var(--foreground)]/5 rounded-full transition-colors text-text-secondary hover:text-[var(--foreground)]">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div className="space-y-4">
+            {[
+              { id: 'push', label: 'In-App Radar Alerts', desc: 'Real-time dashboard notifications' },
+              { id: 'email', label: 'Email Dispatches', desc: 'Order receipts and security logs' },
+              { id: 'sms', label: 'SMS Carrier Signals', desc: 'Live fleet delivery tracking' },
+              { id: 'promo', label: 'Trade Promotions', desc: 'Discounts and midnight catches' }
+            ].map((setting) => (
+              <div key={setting.id} className="flex items-center justify-between p-4 rounded-xl border border-[var(--foreground)]/5 bg-[var(--foreground)]/5">
+                <div className="space-y-1 pr-4">
+                  <h4 className="text-xs md:text-sm font-black text-[var(--foreground)] uppercase italic tracking-tight">{setting.label}</h4>
+                  <p className="text-[9px] text-text-secondary uppercase tracking-widest opacity-80">{setting.desc}</p>
+                </div>
+                <button 
+                  onClick={() => setPrefs({...prefs, [setting.id]: !(prefs as any)[setting.id]})}
+                  className={cn(
+                    "w-12 h-6 rounded-full transition-all relative flex-shrink-0",
+                    (prefs as any)[setting.id] ? "bg-primary shadow-glow-purple/20" : "bg-bg-secondary border border-[var(--foreground)]/10"
+                  )}
+                >
+                  <span className={cn(
+                    "absolute top-1 w-4 h-4 rounded-full transition-all shadow-md",
+                    (prefs as any)[setting.id] ? "right-1 bg-black" : "left-1 bg-text-secondary"
+                  )} />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="pt-4 flex justify-end">
+            <Button onClick={() => setIsSettingsOpen(false)} className="px-8 text-[10px] font-black tracking-widest uppercase italic shadow-glow-purple">
+              SAVE PROTOCOLS
+            </Button>
+          </div>
         </div>
-        <div className="space-y-1 md:space-y-2">
-          <h2 className="text-lg md:text-xl font-black text-[var(--foreground)] tracking-tighter uppercase italic">Radar Status: Clear</h2>
-          <p className="text-[9px] md:text-[10px] text-text-secondary font-black uppercase tracking-widest leading-relaxed italic">
-            All global signals have been acknowledged.
-          </p>
-        </div>
-      </div>
+      </Modal>
+
     </div>
-  
   );
 }

@@ -2,5 +2,11 @@
   "version": 2,
   "framework": "nextjs",
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "crons": [
+    {
+      "path": "/api/system/cron/cleanup_catches",
+      "schedule": "0 * * * *"
+    }
+  ]
 }
