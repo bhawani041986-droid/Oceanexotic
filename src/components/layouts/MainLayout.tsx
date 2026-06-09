@@ -90,8 +90,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
       <header className={cn(
         "fixed top-0 left-0 right-0 z-[100] transition-all duration-500 border-b",
         scrolled 
-          ? "h-20 md:h-28 bg-[var(--c-bg)]/90 backdrop-blur-3xl border-[var(--foreground)]/10" 
-  : "h-24 md:h-32 bg-[var(--c-bg)]/60 backdrop-blur-xl border-[var(--foreground)]/5"
+          ? "h-16 md:h-20 bg-[var(--c-bg)]/90 backdrop-blur-3xl border-[var(--foreground)]/10" 
+  : "h-20 md:h-24 bg-[var(--c-bg)]/60 backdrop-blur-xl border-[var(--foreground)]/5"
       )}>
         <div className="container mx-auto px-0 h-full flex items-center justify-between">
           <div className="flex items-center gap-3 lg:gap-10">
@@ -102,7 +102,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
               <Menu className="w-6 h-6" />
             </button>
             <Link href="/customer" className="flex items-center gap-2 group">
-              <Logo size="lg" className="!w-[170px] !h-[45px] sm:!w-[240px] sm:!h-[64px] md:!w-[300px] md:!h-[80px] lg:!w-[355px] lg:!h-[95px]" />
+              <Logo size="lg" className="!w-[130px] !h-[35px] sm:!w-[160px] sm:!h-[42px] md:!w-[200px] md:!h-[53px] lg:!w-[240px] lg:!h-[64px]" />
             </Link>
 
             <nav className="hidden lg:flex items-center gap-8 ml-6">
@@ -110,7 +110,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 <button 
                   onMouseEnter={() => setIsCategoryDropdownOpen(true)}
                   onMouseLeave={() => setIsCategoryDropdownOpen(false)}
-                  className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[var(--c-text-primary)] hover:text-[var(--c-primary)] transition-colors h-24"
+                  className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[var(--c-text-primary)] hover:text-[var(--c-primary)] transition-colors h-full py-4"
                 >
                   Categories <ChevronDown className={cn("w-3 h-3 transition-transform duration-300", isCategoryDropdownOpen && "rotate-180")} />
                 </button>
