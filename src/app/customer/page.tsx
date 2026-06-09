@@ -1289,36 +1289,36 @@ export default function CustomerHomePage() {
                                  src={catchItem.catch_image_url || catchItem.image_url} 
                                  className="absolute inset-0 w-full h-full object-contain group-hover:scale-105 transition-transform duration-1000" 
                               />
-                              <div className="absolute inset-0 bg-gradient-to-t from-[var(--c-bg-alt)] via-transparent to-transparent opacity-60" />
+                              <div className="absolute inset-0 bg-gradient-to-t from-[#0b0e14]/90 via-[#0b0e14]/30 to-transparent" />
                               
                               {/* Live Status Overlay */}
                               <div className="absolute top-2 left-2 z-20 flex flex-col gap-1">
-                                 <Badge variant="glass" className="bg-emerald-500/80 text-[7px] font-black uppercase text-white border-none px-2 py-0.5 animate-pulse">
+                                 <Badge variant="glass" className="bg-emerald-500/90 text-[7px] font-black uppercase text-white border-none px-2 py-0.5 animate-pulse shadow-md">
                                     {catchItem.freshness_label}
                                  </Badge>
-                                 <Badge variant="glass" className="bg-black/40 text-[7px] font-black uppercase text-[var(--foreground)] border-[var(--foreground)]/10 px-2 py-0.5">
+                                 <Badge variant="glass" className="bg-black/70 backdrop-blur-md text-[7px] font-black uppercase text-white border-white/10 px-2 py-0.5">
                                     {catchItem.batch_label} BATCH
                                  </Badge>
                               </div>
 
                               <div className="absolute top-2 right-2 z-20">
-                                 <div className="w-8 h-8 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-[var(--c-primary)] border border-[var(--c-primary)]/20">
+                                 <div className="w-8 h-8 rounded-full bg-black/60 backdrop-blur-md flex items-center justify-center text-[var(--c-primary)] border border-white/10 shadow-lg">
                                     <Anchor className="w-4 h-4" />
                                  </div>
                               </div>
 
                               {/* Harbor Info */}
                               <div className="absolute bottom-2 left-2 z-20 flex flex-col gap-1">
-                                 <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-black/60 backdrop-blur-xl border border-[var(--foreground)]/10">
+                                 <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-black/70 backdrop-blur-xl border border-white/10 shadow-lg">
                                     <MapPin className="w-2.5 h-2.5 text-[var(--c-primary)]" />
-                                    <span className="text-[7px] font-black text-[var(--foreground)] uppercase truncate max-w-[80px]">{catchItem.harbor_node}</span>
+                                    <span className="text-[7px] font-black text-white uppercase truncate max-w-[80px]">{catchItem.harbor_node}</span>
                                  </div>
                               </div>
                               
                               {/* Stock Level */}
                               <div className="absolute bottom-2 right-2 z-20">
-                                 <div className="flex flex-col items-end">
-                                    <p className="text-[7px] font-black text-[var(--foreground)]/60 uppercase">Stock Remaining</p>
+                                 <div className="flex flex-col items-end px-2 py-1 rounded-lg bg-black/70 backdrop-blur-xl border border-white/10 shadow-lg">
+                                    <p className="text-[7px] font-black text-white/70 uppercase">Stock</p>
                                     <p className="text-[10px] font-black text-[var(--c-primary)]">{catchItem.remaining_kg}kg</p>
                                  </div>
                               </div>
