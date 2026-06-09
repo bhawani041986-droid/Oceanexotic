@@ -1125,7 +1125,7 @@ export default function CustomerHomePage() {
                    <span className="text-[var(--c-primary)]">{(settings.customerAssets as any)?.heroTitle2 || 'Redefined.'}</span>
                 </h1>
              </div>
-             <p className="text-[10px] md:text-2xl text-[var(--c-text-secondary)] font-medium italic max-w-2xl mx-auto leading-relaxed px-1 md:px-4">
+             <p className="text-[10px] md:text-2xl text-white/90 font-medium italic max-w-2xl mx-auto leading-relaxed px-1 md:px-4 drop-shadow-md">
                 {(settings.customerAssets as any)?.heroSubtitle || "Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers."}
              </p>
              
