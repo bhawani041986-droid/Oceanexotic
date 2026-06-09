@@ -71,9 +71,9 @@ export const useSettingsStore = create<SettingsState>()(
       timezone: "Asia/Kolkata (IST)",
       commissionRate: 12,
       multiSigAuthorized: false,
-      theme: "theme-zomato-passion",
+      theme: "theme-ocean-neon",
       font: "font-inter",
-      customerTheme: "theme-zomato-passion",
+      customerTheme: "theme-ocean-neon",
       atmosphericGlow: 15,
       flashDealActive: true,
       flashDealEnd: new Date(Date.now() + 1000 * 60 * 60 * 3).toISOString(), // 3 hours from now

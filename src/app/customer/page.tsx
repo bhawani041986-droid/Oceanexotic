@@ -1199,7 +1199,7 @@ export default function CustomerHomePage() {
       </section>
 
       {/* MARITIME WAVE DIVIDER - MOBILE SPACED */}
-      <div className="mt-[5px] md:mt-0">
+      <div>
          <MaritimeWaveDivider />
       </div>
 
