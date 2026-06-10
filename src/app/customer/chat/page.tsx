@@ -66,8 +66,8 @@ export default function ChatPage() {
         }
 
         // Detect incoming calls
-        const recentCall = data.find(c => {
-          if (c.last_message && c.last_message.includes('[VIDEO_CALL_INVITE]:') && c.unread_count > 0) {
+        const recentCall = data.find((c: any) => {
+          if (c.unread_count > 0 && c.last_message && c.last_message_sender_id !== currentUserId && c.last_message.includes('[VIDEO_CALL_INVITE]:')) {
             const roomID = c.last_message.replace('[VIDEO_CALL_INVITE]:', '').trim();
             if (!processedInvites.current.has(roomID) && (Date.now() - c.timestamp < 60000)) {
               return true;

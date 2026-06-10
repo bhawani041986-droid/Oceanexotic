@@ -62,7 +62,7 @@ export default function AdminSupportHub() {
         
         // Detect incoming calls
         const recentCall = data.find((c: any) => {
-          if (c.unread_count > 0 && c.last_message) {
+          if (c.unread_count > 0 && c.last_message && c.last_message_sender_id !== currentUserId) {
             if (c.last_message.includes('[VIDEO_CALL_INVITE]:')) {
               // Extract RoomID. Format: "[VIDEO_CALL_INVITE]:ROOM_1_17180000"
               const roomID = c.last_message.replace('[VIDEO_CALL_INVITE]:', '').trim();

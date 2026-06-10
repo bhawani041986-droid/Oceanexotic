@@ -61,6 +61,14 @@ export async function GET(request: Request) {
         .neq('sender_id', userId)
         .eq('is_read', 0);
 
+      const { data: lastMsg } = await supabase
+        .from('chat_messages')
+        .select('sender_id')
+        .eq('conversation_id', conv.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
       const lastTime = conv.last_message_time ? new Date(conv.last_message_time) : new Date();
 
       return {
@@ -69,6 +77,7 @@ export async function GET(request: Request) {
         other_party_name: otherName,
         other_party_role: role,
         last_message: conv.last_message_text || "Secure channel opened.",
+        last_message_sender_id: lastMsg?.sender_id || null,
         time: lastTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         timestamp: lastTime.getTime(),
         unread_count: count || 0,
