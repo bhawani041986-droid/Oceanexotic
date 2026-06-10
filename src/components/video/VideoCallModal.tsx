@@ -67,15 +67,21 @@ export function VideoCallModal({ roomID, userName, userID, onClose }: VideoCallM
     };
   }, [roomID, userName, userID, onClose]);
 
-  return (
-    <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center">
+  const modalContent = (
+    <div className="fixed inset-0 z-[99999] bg-black flex items-center justify-center">
       <button 
         onClick={onClose}
-        className="absolute top-4 left-4 z-[101] bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-white font-bold backdrop-blur-md transition-colors"
+        className="absolute top-4 left-4 z-[99999] bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg text-white font-bold backdrop-blur-md transition-colors"
       >
         Leave Call
       </button>
       <div className="w-full h-full" ref={containerRef} />
     </div>
   );
+
+  if (typeof document === 'undefined') return null;
+  
+  // Use React Portal to break out of any parent stacking contexts
+  const { createPortal } = require('react-dom');
+  return createPortal(modalContent, document.body);
 }
