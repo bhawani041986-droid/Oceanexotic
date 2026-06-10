@@ -499,47 +499,6 @@ export default function AgentSupportHub() {
                     <>
                       <div className="flex items-center gap-3">
                         <button onClick={() => setActiveChat(null)} className="p-2 text-slate-400 hover:text-[var(--foreground)] transition-colors lg:hidden">
-                      <ChevronLeft className="w-6 h-6" />
-                    </button>
-                    <div className="flex items-center gap-3">
-                      <div className="relative hidden sm:block">
-                        <div className="w-10 h-10 rounded-xl bg-primary/20 border border-primary/20 flex items-center justify-center text-primary font-black text-xs">
-                          {(currentChat?.other_party_name || "??").substring(0, 2).toUpperCase()}
-                        </div>
-                        {currentChat?.online && <div className="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full border-2 border-[#0B1120]" />}
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h3 className="text-xs font-black text-[var(--foreground)] uppercase italic leading-tight">{currentChat?.other_party_name}</h3>
-                          {currentChat?.order_id && (
-                            <span className="text-[8px] px-1.5 py-0.5 rounded bg-primary/10 text-primary font-black border border-primary/20">
-                              {currentChat.order_id}
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-[8px] font-black text-success uppercase tracking-widest italic opacity-60">{currentChat?.other_party_role} NODE</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {currentChat?.status !== 'RESOLVED' ? (
-                      <button 
-                        onClick={() => handleUpdateStatus(activeChat, 'RESOLVED')}
-                        className="h-8 px-3 rounded-lg bg-success/10 text-success border border-success/20 hover:bg-success/20 flex items-center gap-1.5 text-[8px] font-black uppercase tracking-widest transition-all"
-                      >
-                        <CheckCircle2 className="w-3.5 h-3.5" /> Resolve
-                      </button>
-                    ) : (
-                      <button 
-                        onClick={() => handleUpdateStatus(activeChat, 'OPEN')}
-                        className="h-8 px-3 rounded-lg bg-warning/10 text-warning border border-warning/20 hover:bg-warning/20 flex items-center gap-1.5 text-[8px] font-black uppercase tracking-widest transition-all"
-                      >
-                        <AlertCircle className="w-3.5 h-3.5" /> Reopen
-                      </button>
-                    )}
-                     <button className="p-2 text-slate-400 hover:text-primary transition-colors hidden sm:block"><Phone className="w-5 h-5" /></button>
-                     <button 
-                       onClick={handleInitiateVideoCall}
                           <ChevronLeft className="w-6 h-6" />
                         </button>
                         <div className="flex items-center gap-3">
