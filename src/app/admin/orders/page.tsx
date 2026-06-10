@@ -277,7 +277,10 @@ export default function AdminOrders() {
   };
 
   const handleExport = async () => {
-    if (orders.length === 0) return;
+    if (filteredOrders.length === 0) {
+      toast("No orders to export", "info");
+      return;
+    }
     
     const now = new Date(
   );
@@ -290,7 +293,7 @@ export default function AdminOrders() {
     const ninetyDaysAgo = now.getTime() - (90 * 24 * 60 * 60 * 1000
   );
 
-    const exportOrders = orders.filter(o => {
+    const exportOrders = filteredOrders.filter(o => {
       const orderDate = safeParseDate(o.created_at).getTime();
       if (exportRange === "DAILY") return orderDate >= today;
       if (exportRange === "WEEKLY") return orderDate >= sevenDaysAgo;
@@ -763,7 +766,7 @@ export default function AdminOrders() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
-                    <div className="grid grid-cols-4 sm:flex bg-[var(--foreground)]/5 p-1 border border-[var(--foreground)]/5 rounded-xl w-full sm:w-auto">
+                    <div className="grid grid-cols-5 sm:flex bg-[var(--foreground)]/5 p-1 border border-[var(--foreground)]/5 rounded-xl w-full sm:w-auto">
                         {["ALL", "PENDING", "VERIFIED", "SHIPPED", "DELIVERED"].map((s) => (
                             <button
                                 key={s}
