@@ -62,11 +62,13 @@ export default function AdminSupportHub() {
         
         // Detect incoming calls
         const recentCall = data.find((c: any) => {
-          if (c.last_message && c.last_message.startsWith('[VIDEO_CALL_INVITE]:') && c.unread_count > 0) {
-            const roomID = c.last_message.replace('[VIDEO_CALL_INVITE]:', '').trim();
-            // Trigger ring if less than 60 seconds old and not processed yet
-            if (!processedInvites.current.has(roomID) && (Date.now() - c.timestamp < 60000)) {
-              return true;
+          if (c.unread_count > 0 && c.last_message) {
+            if (c.last_message.includes('[VIDEO_CALL_INVITE]')) {
+              // Extract RoomID. Format: "[VIDEO_CALL_INVITE] ROOM_1_17180000"
+              const roomID = c.last_message.replace('[VIDEO_CALL_INVITE]', '').trim();
+              if (!processedInvites.current.has(roomID)) {
+                return true;
+              }
             }
           }
           return false;
@@ -465,8 +467,8 @@ export default function AdminSupportHub() {
                   </div>
 
                   {messages.map((msg) => {
-                    const isVideoInvite = msg.message_text.startsWith("[VIDEO_CALL_INVITE]:");
-                    const roomID = isVideoInvite ? msg.message_text.split(":")[1] : null;
+                    const isVideoInvite = msg.message_text.includes("[VIDEO_CALL_INVITE]");
+                    const roomID = isVideoInvite ? msg.message_text.replace("[VIDEO_CALL_INVITE]", "").trim() : null;
 
                     return (
                       <div 

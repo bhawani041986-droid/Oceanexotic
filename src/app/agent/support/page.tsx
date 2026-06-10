@@ -73,8 +73,8 @@ export default function AgentSupportHub() {
         
         // Detect incoming calls
         const recentCall = data.find(c => {
-          if (c.last_message && c.last_message.startsWith('[VIDEO_CALL_INVITE]:') && c.unread_count > 0) {
-            const roomID = c.last_message.replace('[VIDEO_CALL_INVITE]:', '').trim();
+          if (c.last_message && c.last_message.includes('[VIDEO_CALL_INVITE]') && c.unread_count > 0) {
+            const roomID = c.last_message.replace('[VIDEO_CALL_INVITE]', '').trim();
             // Trigger ring if less than 60 seconds old and not processed yet
             if (!processedInvites.current.has(roomID) && (Date.now() - c.timestamp < 60000)) {
               return true;
@@ -84,7 +84,7 @@ export default function AgentSupportHub() {
         });
 
         if (recentCall) {
-          const roomID = recentCall.last_message.replace('[VIDEO_CALL_INVITE]:', '').trim();
+          const roomID = recentCall.last_message.replace('[VIDEO_CALL_INVITE]', '').trim();
           setIncomingCall({ roomID, callerName: recentCall.other_party_name });
           processedInvites.current.add(roomID);
         }
@@ -483,8 +483,8 @@ export default function AgentSupportHub() {
                   </div>
 
                   {messages.map((msg) => {
-                    const isVideoInvite = msg.message_text.startsWith("[VIDEO_CALL_INVITE]:");
-                    const roomID = isVideoInvite ? msg.message_text.split(":")[1] : null;
+                    const isVideoInvite = msg.message_text.includes("[VIDEO_CALL_INVITE]");
+                    const roomID = isVideoInvite ? msg.message_text.replace("[VIDEO_CALL_INVITE]", "").trim() : null;
 
                     return (
                       <div 
