@@ -6,7 +6,7 @@ export async function GET() {
     // Fetch all pending orders that have not been delivered or cancelled
     const { data: orders, error } = await supabase
       .from('orders')
-      .select('id, user_id, status, total_amount, created_at, customer_name, delivery_address, delivery_area')
+      .select('*')
       .in('status', ['PENDING', 'PROCESSING', 'SHIPPED']) // Include orders that might be ready for dispatch
       .order('created_at', { ascending: false });
 
