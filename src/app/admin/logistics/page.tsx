@@ -39,21 +39,32 @@ export default function AdminLogisticsPage() {
   const { toast } = useToast(
   );
 
-  const handleAddArea = () => {
+  const [editingAreaId, setEditingAreaId] = useState<string | null>(null);
+
+  const handleSaveArea = () => {
     if (!newArea.name || !newArea.sector) {
-      toast("Manifest incomplete. Name and Sector required.", "error"
-  );
+      toast("Manifest incomplete. Name and Sector required.", "error");
       return;
     }
-    const id = `LOC-00${areas.length + 1}`;
-    setAreas([...areas, { ...newArea, id, status: "ACTIVE" }]
-  );
-    setShowAddForm(false
-  );
-    setNewArea({ name: "", sector: "", coverage: "", fee: "" }
-  );
-    toast(`Logistics node ${newArea.name} commissioned.`, "success"
-  );
+    
+    if (editingAreaId) {
+      setAreas(areas.map(a => a.id === editingAreaId ? { ...a, ...newArea } : a));
+      toast(`Logistics node ${newArea.name} directives updated.`, "success");
+    } else {
+      const id = `LOC-00${areas.length + 1}`;
+      setAreas([...areas, { ...newArea, id, status: "ACTIVE" }]);
+      toast(`Logistics node ${newArea.name} commissioned.`, "success");
+    }
+    
+    setShowAddForm(false);
+    setEditingAreaId(null);
+    setNewArea({ name: "", sector: "", coverage: "", fee: "" });
+  };
+
+  const handleEditArea = (area: any) => {
+    setEditingAreaId(area.id);
+    setNewArea({ name: area.name, sector: area.sector, coverage: area.coverage, fee: area.fee });
+    setShowAddForm(true);
   };
 
   const handleDeleteArea = (id: string) => {
@@ -82,7 +93,11 @@ export default function AdminLogisticsPage() {
             </Button>
           </Link>
           <Button 
-            onClick={() => setShowAddForm(true)}
+            onClick={() => {
+              setEditingAreaId(null);
+              setNewArea({ name: "", sector: "", coverage: "", fee: "" });
+              setShowAddForm(true);
+            }}
             className="h-10 md:h-14 px-6 md:px-10 text-[9px] md:text-[11px] font-black tracking-widest uppercase shadow-glow-purple flex items-center justify-center gap-2 md:gap-3 rounded-lg md:rounded-xl italic"
           >
             <Plus className="w-3.5 md:w-4 h-3.5 md:h-4" /> COMMISSION NEW SECTOR
@@ -135,7 +150,7 @@ export default function AdminLogisticsPage() {
                           </TableCell>
                           <TableCell className="text-right">
                              <div className="flex justify-end gap-1 md:gap-2">
-                                <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5" onClick={() => toast("Editing sector directives for " + area.id, "info")}>
+                                <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5" onClick={() => handleEditArea(area)}>
                                    <Edit3 className="w-3.5 md:w-4 h-3.5 md:h-4" />
                                 </button>
                                 <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5" onClick={() => handleDeleteArea(area.id)}>
@@ -176,7 +191,7 @@ export default function AdminLogisticsPage() {
                            <p className="text-xs font-black text-primary italic">{area.fee}</p>
                         </div>
                         <div className="flex gap-1">
-                           <button className="p-1.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5" onClick={() => toast("Editing sector directives for " + area.id, "info")}>
+                           <button className="p-1.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5" onClick={() => handleEditArea(area)}>
                               <Edit3 className="w-3.5 h-3.5" />
                            </button>
                            <button className="p-1.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5" onClick={() => handleDeleteArea(area.id)}>
@@ -194,7 +209,7 @@ export default function AdminLogisticsPage() {
              {showAddForm && (
                 <Card className="p-[10px] md:p-6 space-y-6 md:space-y-8 bg-bg-secondary/20 border-primary/30 animate-in slide-in-from-top-4 duration-500 rounded-[24px] md:rounded-[40px] shadow-glow-purple/10">
                    <div className="flex items-center justify-between border-b border-[var(--foreground)]/5 pb-4 md:pb-6">
-                      <h3 className="text-base md:text-lg font-black text-[var(--foreground)] tracking-tighter uppercase italic">Commission Sector</h3>
+                      <h3 className="text-base md:text-lg font-black text-[var(--foreground)] tracking-tighter uppercase italic">{editingAreaId ? "Update Sector Directives" : "Commission Sector"}</h3>
                       <Button variant="ghost" size="sm" onClick={() => setShowAddForm(false)} className="w-8 h-8 p-0 rounded-lg"><X className="w-4 h-4" /></Button>
                    </div>
                   <div className="space-y-4 md:space-y-6">
@@ -236,8 +251,8 @@ export default function AdminLogisticsPage() {
                            />
                         </div>
                      </div>
-                     <Button onClick={handleAddArea} className="w-full h-12 md:h-14 text-[9px] md:text-[11px] font-black tracking-widest uppercase shadow-glow-purple rounded-lg md:rounded-xl italic">
-                        AUTHORIZE COMMISSION
+                     <Button onClick={handleSaveArea} className="w-full h-12 md:h-14 text-[9px] md:text-[11px] font-black tracking-widest uppercase shadow-glow-purple rounded-lg md:rounded-xl italic">
+                        {editingAreaId ? "UPDATE DIRECTIVES" : "AUTHORIZE COMMISSION"}
                      </Button>
                   </div>
                </Card>
