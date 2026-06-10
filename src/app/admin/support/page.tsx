@@ -91,7 +91,10 @@ export default function AdminSupportHub() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(packet)
       });
-      if (res.ok) {
+      const data = await res.json();
+      if (!res.ok) {
+        toast(data.error ? String(data.error) : "Failed to transmit signal.", "error");
+      } else {
         if (!customMsg) setMessage("");
         fetchMessages(activeChat);
         fetchConversations();
@@ -128,7 +131,7 @@ export default function AdminSupportHub() {
 
   const handleCreateContactDirect = async (userId: string) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/chat/create_conversation.php`, {
+      const res = await fetch(`${API_BASE_URL}/chat/create_conversation`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ participant_1: currentUserId, participant_2: userId })
@@ -141,7 +144,7 @@ export default function AdminSupportHub() {
         await fetchConversations();
         setActiveChat(data.conversation_id);
       } else {
-        toast(data.error || "Failed to establish channel.", "error");
+        toast(data.error ? String(data.error) : "Failed to establish channel.", "error");
       }
     } catch (err) {
       toast("Transmission error", "error");

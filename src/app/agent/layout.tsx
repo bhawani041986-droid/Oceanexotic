@@ -134,6 +134,7 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
     { label: "Missions", icon: <LayoutDashboard className="w-5 h-5" />, href: "/agent/dashboard", color: "#00D1FF" },
     { label: "Live Trace", icon: <NavigationIcon className="w-5 h-5" />, href: "/agent/tracking", color: "#10B981" },
     { label: "History", icon: <History className="w-5 h-5" />, href: "/agent/history", color: "#FACC15" },
+    { label: "Comms", icon: <Monitor className="w-5 h-5" />, href: "/agent/support", color: "#8b5cf6" },
     { label: "Profile", icon: <User className="w-5 h-5" />, href: "/agent/profile", color: "#EC4899" },
   ];
 
