@@ -7,7 +7,7 @@ export async function GET() {
   try {
     const { data: users, error } = await supabase
       .from('users')
-      .select('id, name, email, role, status, created_at')
+      .select('*')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -23,7 +23,8 @@ export async function GET() {
         email: user.email,
         role: user.role,
         status: user.status,
-        rank: user.role === 'seller' ? 'Level 2 Node' : 'Level 1 Node',
+        rank: user.rank || (user.role === 'seller' ? 'Level 2 Node' : 'Level 1 Node'),
+        avatar_url: user.avatar_url || null,
         orders: 0,
         joined: joinedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
       };
