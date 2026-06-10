@@ -557,6 +557,7 @@ export default function AdminSupportHub() {
             )}
           </div>
 
+        </div>
       </div>
 
       <AnimatePresence>

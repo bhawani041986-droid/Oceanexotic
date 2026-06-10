@@ -573,6 +573,7 @@ export default function AgentSupportHub() {
             )}
           </div>
 
+        </div>
       </div>
 
       <AnimatePresence>
