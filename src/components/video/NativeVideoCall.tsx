@@ -64,7 +64,11 @@ export function NativeVideoCall({ roomID, userName, userID, onClose }: NativeVid
         };
 
         // 3. Initialize Supabase Signaling Channel
-        const chan = supabase.channel(`video-${roomID}`);
+        const chan = supabase.channel(`video-${roomID}`, {
+          config: {
+            broadcast: { ack: false }
+          }
+        });
         channel.current = chan;
 
         // Handle ICE Candidates generated locally
@@ -84,15 +88,34 @@ export function NativeVideoCall({ roomID, userName, userID, onClose }: NativeVid
 
           try {
             if (payload.type === 'peer-joined') {
-              // The OTHER peer joined. We should create an Offer!
-              const offer = await pc.createOffer();
-              await pc.setLocalDescription(offer);
+              // Acknowledge so the late joiner knows the early joiner is already here
               chan.send({
                 type: 'broadcast',
                 event: 'webrtc',
-                payload: { type: 'offer', offer, sender: userID }
+                payload: { type: 'peer-joined-ack', sender: userID }
               });
-            } 
+
+              if (userID < payload.sender && pc.signalingState === 'stable') {
+                const offer = await pc.createOffer();
+                await pc.setLocalDescription(offer);
+                chan.send({
+                  type: 'broadcast',
+                  event: 'webrtc',
+                  payload: { type: 'offer', offer, sender: userID }
+                });
+              }
+            }
+            else if (payload.type === 'peer-joined-ack') {
+              if (userID < payload.sender && pc.signalingState === 'stable') {
+                const offer = await pc.createOffer();
+                await pc.setLocalDescription(offer);
+                chan.send({
+                  type: 'broadcast',
+                  event: 'webrtc',
+                  payload: { type: 'offer', offer, sender: userID }
+                });
+              }
+            }
             else if (payload.type === 'offer') {
               await pc.setRemoteDescription(new RTCSessionDescription(payload.offer));
               
