@@ -111,9 +111,9 @@ export default function AdminModerationPage() {
           sellerId: r.seller_id,
           sellerRating: r.seller_avg_rating || 0,
           sellerReviewCount: r.seller_total_reviews || 0,
-          orderNumber: r.order_number,
+          orderNumber: r.order_id || r.order_number,
           productId: r.product_id,
-          photos: r.photos // Evidence Registry
+          photos: r.evidence_gallery || r.photos // Evidence Registry
         })
   );
         setReviews(mapped
