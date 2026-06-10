@@ -76,13 +76,21 @@ export async function PUT(request: Request) {
 export async function PATCH(request: Request) {
   try {
     const body = await request.json();
-    const { order_id, status } = body;
+    const { order_id, status, logistics_status } = body;
 
-    if (!order_id || !status) {
-      return NextResponse.json({ status: "error", message: "Missing required fields" }, { status: 400 });
+    if (!order_id) {
+      return NextResponse.json({ status: "error", message: "Missing order_id" }, { status: 400 });
     }
 
-    const { error } = await supabase.from('orders').update({ status }).eq('id', order_id);
+    const updates: any = {};
+    if (status) updates.status = status;
+    if (logistics_status) updates.logistics_status = logistics_status;
+
+    if (Object.keys(updates).length === 0) {
+      return NextResponse.json({ status: "error", message: "No fields to update" }, { status: 400 });
+    }
+
+    const { error } = await supabase.from('orders').update(updates).eq('id', order_id);
     if (error) throw error;
 
     return NextResponse.json({ status: "success", message: "Trade Status Synchronized" });

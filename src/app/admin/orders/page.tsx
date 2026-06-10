@@ -527,9 +527,24 @@ export default function AdminOrders() {
     }
   };
 
-  const handleAlert = (orderId: string) => {
-    toast(`LOGISTICS ALERT: Immediate review triggered for Node ${orderId}. Merchant & Peer notified.`, "info"
-  );
+  const handleAlert = async (orderId: string) => {
+    toast(`Initiating CRITICAL ALERT for Node ${orderId}...`, "info");
+    try {
+      const res = await fetch('/api/admin/orders', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_id: orderId, logistics_status: 'CRITICAL ALERT' })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        toast(`LOGISTICS ALERT: Immediate review triggered for Node ${orderId}. Merchant & Peer notified.`, "warning");
+        fetchLedger();
+      } else {
+        toast("Alert Failure: Could not sync warning state.", "error");
+      }
+    } catch (e) {
+      toast("Critical API Node Timeout during Alert", "error");
+    }
   };
 
   const handleDelete = async (orderId: string) => {
@@ -574,7 +589,7 @@ export default function AdminOrders() {
       if (mapTimeFilter === 'all') return true;
 
       if (mapTimeFilter === 'active') {
-        return o.status === 'PENDING' || o.status === 'SHIPPED';
+        return o.status === 'PENDING' || o.status === 'VERIFIED' || o.status === 'SHIPPED';
       }
       if (mapTimeFilter === 'today_delivered') {
         const orderDate = safeParseDate(o.created_at).toDateString();
@@ -605,6 +620,7 @@ export default function AdminOrders() {
       orders: any[];
       revenue: number;
       pending: number;
+      verified: number;
       shipped: number;
       delivered: number;
       cancelled: number;
@@ -618,6 +634,7 @@ export default function AdminOrders() {
           orders: [],
           revenue: 0,
           pending: 0,
+          verified: 0,
           shipped: 0,
           delivered: 0,
           cancelled: 0,
@@ -626,6 +643,7 @@ export default function AdminOrders() {
       grouped[area].orders.push(o);
       grouped[area].revenue += Number(o.total_amount) || 0;
       if (o.status === 'PENDING') grouped[area].pending++;
+      else if (o.status === 'VERIFIED') grouped[area].verified++;
       else if (o.status === 'SHIPPED') grouped[area].shipped++;
       else if (o.status === 'DELIVERED') grouped[area].delivered++;
       else grouped[area].cancelled++;
@@ -640,6 +658,7 @@ export default function AdminOrders() {
       orders: any[];
       revenue: number;
       pending: number;
+      verified: number;
       shipped: number;
       delivered: number;
       cancelled: number;
@@ -653,6 +672,7 @@ export default function AdminOrders() {
           orders: [],
           revenue: 0,
           pending: 0,
+          verified: 0,
           shipped: 0,
           delivered: 0,
           cancelled: 0,
@@ -661,6 +681,7 @@ export default function AdminOrders() {
       grouped[seller].orders.push(o);
       grouped[seller].revenue += Number(o.total_amount) || 0;
       if (o.status === 'PENDING') grouped[seller].pending++;
+      else if (o.status === 'VERIFIED') grouped[seller].verified++;
       else if (o.status === 'SHIPPED') grouped[seller].shipped++;
       else if (o.status === 'DELIVERED') grouped[seller].delivered++;
       else grouped[seller].cancelled++;
@@ -743,7 +764,7 @@ export default function AdminOrders() {
 
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
                     <div className="grid grid-cols-4 sm:flex bg-[var(--foreground)]/5 p-1 border border-[var(--foreground)]/5 rounded-xl w-full sm:w-auto">
-                        {["ALL", "PENDING", "SHIPPED", "DELIVERED"].map((s) => (
+                        {["ALL", "PENDING", "VERIFIED", "SHIPPED", "DELIVERED"].map((s) => (
                             <button
                                 key={s}
                                 onClick={() => {
@@ -899,6 +920,9 @@ export default function AdminOrders() {
                               <span className="px-2 py-0.5 text-[6.5px] font-black uppercase tracking-widest bg-warning/10 text-warning border border-warning/20 rounded">
                                 {areaItem.pending} Pnd
                               </span>
+                              <span className="px-2 py-0.5 text-[6.5px] font-black uppercase tracking-widest bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded">
+                                {areaItem.verified} Ver
+                              </span>
                               <span className="px-2 py-0.5 text-[6.5px] font-black uppercase tracking-widest bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded">
                                 {areaItem.shipped} Shp
                               </span>
@@ -927,7 +951,7 @@ export default function AdminOrders() {
                                 </thead>
                                 <tbody className="divide-y divide-[var(--foreground)]/5">
                                   {areaItem.orders.map((o: any) => (
-                                    <tr key={o.id} className="hover:bg-[var(--foreground)]/5 transition-colors">
+                                    <tr key={o.id} className={cn("transition-colors", o.logistics_status === 'CRITICAL ALERT' ? "bg-red-500/10 animate-pulse border-y border-red-500/50" : "hover:bg-[var(--foreground)]/5")}>
                                       <td className="px-4 py-2.5">
                                         <div className="flex items-center gap-1.5">
                                           <span className="text-[9px] font-black text-primary italic leading-none">{o.id}</span>
@@ -943,6 +967,7 @@ export default function AdminOrders() {
                                         <Badge variant={
                                           o.status === 'DELIVERED' ? 'success' :
                                           o.status === 'SHIPPED' ? 'secondary' :
+                                          o.status === 'VERIFIED' ? 'default' :
                                           o.status === 'PENDING' ? 'warning' : 'danger'
                                         } className="text-[6.5px] font-black uppercase tracking-widest px-1.5">
                                           {o.status}
@@ -1042,7 +1067,7 @@ export default function AdminOrders() {
                                 </thead>
                                 <tbody className="divide-y divide-[var(--foreground)]/5">
                                   {sellerItem.orders.map((o: any) => (
-                                    <tr key={o.id} className="hover:bg-[var(--foreground)]/5 transition-colors">
+                                    <tr key={o.id} className={cn("transition-colors", o.logistics_status === 'CRITICAL ALERT' ? "bg-red-500/10 animate-pulse border-y border-red-500/50" : "hover:bg-[var(--foreground)]/5")}>
                                       <td className="px-4 py-2.5">
                                         <div className="flex items-center gap-1.5">
                                           <span className="text-[9px] font-black text-primary italic leading-none">{o.id}</span>
@@ -1058,6 +1083,7 @@ export default function AdminOrders() {
                                         <Badge variant={
                                           o.status === 'DELIVERED' ? 'success' :
                                           o.status === 'SHIPPED' ? 'secondary' :
+                                          o.status === 'VERIFIED' ? 'default' :
                                           o.status === 'PENDING' ? 'warning' : 'danger'
                                         } className="text-[6.5px] font-black uppercase tracking-widest px-1.5">
                                           {o.status}
@@ -1110,7 +1136,7 @@ export default function AdminOrders() {
                                     <td colSpan={6} className="p-10 text-center text-[8px] font-black uppercase tracking-widest opacity-40 italic text-text-secondary">No Nodes Found</td>
                                 </tr>
                             ) : paginatedOrders.map((o) => (
-                                <tr key={o.id} className="group hover:bg-[var(--foreground)]/5 transition-colors">
+                                <tr key={o.id} className={cn("group transition-colors", o.logistics_status === 'CRITICAL ALERT' ? "bg-red-500/10 animate-pulse border-y border-red-500/50" : "hover:bg-[var(--foreground)]/5")}>
                                     <td className="px-4 py-3">
                                         <div className="flex items-center gap-2">
                                             <div className="w-0.5 h-4 bg-primary/20 rounded-full group-hover:bg-primary" />
@@ -1148,6 +1174,7 @@ export default function AdminOrders() {
                                         <Badge variant={
                                             o.status === 'DELIVERED' ? 'success' :
                                             o.status === 'SHIPPED' ? 'secondary' :
+                                            o.status === 'VERIFIED' ? 'default' :
                                             o.status === 'PENDING' ? 'warning' : 'danger'
                                         } className="text-[7px] font-black uppercase tracking-widest px-2">
                                             {o.status}
@@ -1190,7 +1217,7 @@ export default function AdminOrders() {
                     paginatedOrders.map((o) => (
                       <div 
                         key={o.id} 
-                        className="p-4 rounded-xl bg-bg-card/40 border border-[var(--foreground)]/5 space-y-3"
+                        className={cn("p-4 rounded-xl border space-y-3", o.logistics_status === 'CRITICAL ALERT' ? "bg-red-500/10 animate-pulse border-red-500/50" : "bg-bg-card/40 border-[var(--foreground)]/5")}
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-2">
@@ -1208,6 +1235,7 @@ export default function AdminOrders() {
                           <Badge variant={
                               o.status === 'DELIVERED' ? 'success' :
                               o.status === 'SHIPPED' ? 'secondary' :
+                              o.status === 'VERIFIED' ? 'default' :
                               o.status === 'PENDING' ? 'warning' : 'danger'
                           } className="text-[7px] font-black uppercase tracking-widest px-2">
                             {o.status}
