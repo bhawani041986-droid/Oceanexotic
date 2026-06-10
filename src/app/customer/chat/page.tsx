@@ -26,44 +26,66 @@ import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
 import { cn } from "@/lib/utils";
 import { FULL_API_URL as API_BASE_URL } from "@/config/api";
+import { useAuthStore } from "@/store/authStore";
+import { useToast } from "@/components/ui/Toast";
+import dynamic from "next/dynamic";
+import { IncomingCallOverlay } from "@/components/video/IncomingCallOverlay";
+
+const NativeVideoCall = dynamic(
+  () => import("@/components/video/NativeVideoCall").then(mod => mod.NativeVideoCall),
+  { ssr: false }
+);
 
 export default function ChatPage() {
-  const router = useRouter(
-  );
-  const [mounted, setMounted] = React.useState(false
-  );
-  const [message, setMessage] = React.useState(""
-  );
-  const [activeChat, setActiveChat] = React.useState<number | null>(null
-  );
-  const [isSidebarOpen, setIsSidebarOpen] = React.useState(true
-  );
-  const [conversations, setConversations] = React.useState<any[]>([]
-  );
-  const [messages, setMessages] = React.useState<any[]>([]
-  );
-  const [isLoading, setIsLoading] = React.useState(true
-  );
-  const currentUserId = "USR-001"; // Default for demo
+  const router = useRouter();
+  const { user } = useAuthStore();
+  const { toast } = useToast();
+  
+  const [mounted, setMounted] = React.useState(false);
+  const [message, setMessage] = React.useState("");
+  const [activeChat, setActiveChat] = React.useState<number | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
+  const [conversations, setConversations] = React.useState<any[]>([]);
+  const [messages, setMessages] = React.useState<any[]>([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [activeVideoRoom, setActiveVideoRoom] = React.useState<string | null>(null);
+  const [incomingCall, setIncomingCall] = React.useState<{roomID: string, callerName: string} | null>(null);
+  
+  const processedInvites = React.useRef<Set<string>>(new Set());
+  const currentUserId = user?.id || "USR-001";
 
   // --- FETCH CONVERSATIONS ---
   const fetchConversations = async () => {
     try {
       const res = await fetch(`${API_BASE_URL}/chat/get_conversations?user_id=${currentUserId}&t=${Date.now()}`);
-      const data = await res.json(
-  );
-      setConversations(data
-  );
-      if (data.length > 0 && activeChat === null) {
-        setActiveChat(data[0].id
-  );
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setConversations(data);
+        if (data.length > 0 && activeChat === null) {
+          setActiveChat(data[0].id);
+        }
+
+        // Detect incoming calls
+        const recentCall = data.find(c => {
+          if (c.last_message && c.last_message.includes('[VIDEO_CALL_INVITE]:') && c.unread_count > 0) {
+            const roomID = c.last_message.replace('[VIDEO_CALL_INVITE]:', '').trim();
+            if (!processedInvites.current.has(roomID) && (Date.now() - c.timestamp < 60000)) {
+              return true;
+            }
+          }
+          return false;
+        });
+
+        if (recentCall) {
+          const roomID = recentCall.last_message.replace('[VIDEO_CALL_INVITE]:', '').trim();
+          setIncomingCall({ roomID, callerName: recentCall.other_party_name });
+          processedInvites.current.add(roomID);
+        }
       }
     } catch (err) {
-      console.error("Signal failure:", err
-  );
+      console.error("Signal failure:", err);
     } finally {
-      setIsLoading(false
-  );
+      setIsLoading(false);
     }
   };
 
@@ -82,13 +104,14 @@ export default function ChatPage() {
   };
 
   // --- SEND MESSAGE ---
-  const handleSendMessage = async () => {
-    if (!message.trim() || activeChat === null) return;
+  const handleSendMessage = async (customMsg?: string) => {
+    const textToSend = customMsg || message;
+    if (!textToSend.trim() || activeChat === null) return;
     
     const packet = {
       conversation_id: activeChat,
       sender_id: currentUserId,
-      message_text: message
+      message_text: textToSend
     };
 
     try {
@@ -96,20 +119,23 @@ export default function ChatPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(packet)
-      }
-  );
+      });
       if (res.ok) {
-        setMessage(""
-  );
-        fetchMessages(activeChat
-  );
-        fetchConversations(
-  );
+        if (!customMsg) setMessage("");
+        fetchMessages(activeChat);
+        fetchConversations();
       }
     } catch (err) {
-      console.error("Signal lost:", err
-  );
+      console.error("Signal lost:", err);
+      toast("Failed to transmit signal", "error");
     }
+  };
+
+  const handleInitiateVideoCall = () => {
+    if (!activeChat) return;
+    const roomID = `ROOM_${activeChat}_${Date.now()}`;
+    handleSendMessage(`[VIDEO_CALL_INVITE]:${roomID}`);
+    setActiveVideoRoom(roomID);
   };
 
   React.useEffect(() => {
@@ -147,6 +173,18 @@ export default function ChatPage() {
   return (
 
     <div className="bg-[#0B1120] h-screen text-white font-inter flex flex-col selection:bg-primary/30 overflow-hidden">
+      
+      <IncomingCallOverlay 
+        roomID={incomingCall?.roomID || null}
+        callerName={incomingCall?.callerName || ""}
+        onAccept={() => {
+          if (incomingCall) {
+            setActiveVideoRoom(incomingCall.roomID);
+            setIncomingCall(null);
+          }
+        }}
+        onDecline={() => setIncomingCall(null)}
+      />
       
       {/* 1. UNIVERSAL COMMUNICATION HEADER */}
       <header className="h-20 bg-[#0B1120]/80 backdrop-blur-2xl border-b border-[var(--foreground)]/5 px-6 flex items-center justify-between shrink-0 z-50">
@@ -242,14 +280,18 @@ export default function ChatPage() {
                </div>
                <div className="flex items-center gap-2 md:gap-4">
                   <button className="p-3 bg-white/5 rounded-xl hover:bg-primary transition-colors"><Phone className="w-5 h-5" /></button>
-                  <button className="p-3 bg-white/5 rounded-xl hover:bg-primary transition-colors"><Video className="w-5 h-5" /></button>
+                  <button onClick={handleInitiateVideoCall} className="p-3 bg-white/5 rounded-xl hover:bg-primary transition-colors"><Video className="w-5 h-5" /></button>
                   <button className="p-3 bg-[var(--foreground)]/5 rounded-xl hover:bg-[var(--foreground)]/10 transition-colors"><MoreVertical className="w-5 h-5" /></button>
                </div>
             </header>
 
             {/* Message Stream */}
             <div className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-8">
-               {messages.map((msg, i) => (
+               {messages.map((msg, i) => {
+                 const isVideoInvite = msg.message_text.includes("[VIDEO_CALL_INVITE]:");
+                 const roomID = isVideoInvite ? msg.message_text.replace("[VIDEO_CALL_INVITE]:", "").trim() : null;
+
+                 return (
                  <motion.div 
                    key={msg.id}
                    initial={{ opacity: 0, x: msg.sender_id === currentUserId ? 20 : -20 }}
@@ -262,7 +304,22 @@ export default function ChatPage() {
                          msg.sender_id === currentUserId ? "bg-primary text-white rounded-tr-none shadow-glow-purple" : "bg-white/5 border border-white/10 text-white rounded-tl-none"
                        )}>
                           <div className={cn("absolute top-0 w-4 h-4", msg.sender_id === currentUserId ? "right-0 bg-primary -mr-2" : "left-0 bg-white/5 border-l border-t border-white/10 -ml-2")} style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }} />
-                          {msg.message_text}
+                          
+                          {isVideoInvite ? (
+                            <div className="flex flex-col items-center gap-3 p-2">
+                              <Video className="w-8 h-8 opacity-80" />
+                              <p className="text-[10px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
+                              <button 
+                                onClick={() => setActiveVideoRoom(roomID!)}
+                                className="w-full py-2 rounded-xl bg-[var(--foreground)] text-bg-primary font-black text-[9px] uppercase tracking-widest hover:scale-95 transition-all"
+                              >
+                                Join Connection
+                              </button>
+                            </div>
+                          ) : (
+                            <p className="leading-relaxed font-medium">{msg.message_text}</p>
+                          )}
+
                           <div className={cn("mt-4 flex items-center gap-2 text-[9px] font-black opacity-40 uppercase", msg.sender_id === currentUserId ? "justify-end" : "justify-start")}>
                              {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                              {msg.sender_id === currentUserId && <CheckCheck className="w-3 h-3 text-[var(--foreground)]" />}
@@ -270,7 +327,8 @@ export default function ChatPage() {
                        </div>
                     </div>
                  </motion.div>
-               ))}
+                 );
+               })}
             </div>
 
             {/* Input Hub */}
@@ -301,6 +359,17 @@ export default function ChatPage() {
          </main>
 
       </div>
+
+      <AnimatePresence>
+        {activeVideoRoom && (
+          <NativeVideoCall
+            roomID={activeVideoRoom}
+            userID={currentUserId}
+            userName={user?.name || "Customer Node"}
+            onClose={() => setActiveVideoRoom(null)}
+          />
+        )}
+      </AnimatePresence>
 
     </div>
   
