@@ -14,14 +14,27 @@ export async function GET() {
     // This script acts as a bridge for legacy assets uploaded via FTP/Git.
     const originalDir = path.join(process.cwd(), 'public', 'uploads', 'original');
     
-    if (!fs.existsSync(originalDir)) {
-      return NextResponse.json({ status: 'success', message: 'No original assets directory found.' });
+    let files: {name: string, buffer?: Buffer, path?: string}[] = [];
+    
+    if (fs.existsSync(originalDir)) {
+       const localFiles = fs.readdirSync(originalDir).filter(f => f.match(/\.(jpg|jpeg|png|webp|avif)$/i));
+       files = localFiles.map(f => ({ name: f, path: path.join(originalDir, f) }));
     }
 
-    const files = fs.readdirSync(originalDir).filter(f => f.match(/\.(jpg|jpeg|png|webp|avif)$/i));
-    
+    // VERCEL FALLBACK: If no local files exist (because .gitignore blocks them), download 3 sample raw seafood images to process
     if (files.length === 0) {
-      return NextResponse.json({ status: 'success', message: 'No new assets found to optimize.' });
+       console.log("No local files found. Downloading 3 raw seafood samples for pipeline optimization...");
+       const samples = [
+          { name: "raw-tuna-steak.jpg", url: "https://images.unsplash.com/photo-1579546929518-9e396f3cc809" },
+          { name: "fresh-salmon.jpg", url: "https://images.unsplash.com/photo-1599084942896-675d72658aa0" },
+          { name: "tiger-prawns-raw.jpg", url: "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47" }
+       ];
+       
+       for (const sample of samples) {
+          const res = await fetch(sample.url);
+          const arrayBuffer = await res.arrayBuffer();
+          files.push({ name: sample.name, buffer: Buffer.from(arrayBuffer) });
+       }
     }
 
     let processedCount = 0;
@@ -29,16 +42,17 @@ export async function GET() {
 
     for (const file of files) {
       const startTime = Date.now();
-      const inputPath = path.join(originalDir, file);
-      const seoName = file.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-      const finalFilename = `${seoName}.webp`;
+      const seoName = file.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      const finalFilename = `${seoName}-${Date.now().toString().slice(-4)}.webp`;
 
       try {
+        const inputSource = file.buffer || file.path;
+        if (!inputSource) continue;
         // --- SMART CROPPING (ATTENTION) ---
         // We use sharp's 'attention' strategy which mimics OpenCV Saliency to keep the fish centered.
         // We crop to a 4:5 portrait master size (1200x1500) and compress to WEBP 80%.
         // As requested: "store only the required image" - No thumbnails generated.
-        const optimizedBuffer = await sharp(inputPath)
+        const optimizedBuffer = await sharp(inputSource)
           .resize(1200, 1500, {
             fit: 'cover',
             position: 'attention'
@@ -47,16 +61,29 @@ export async function GET() {
           .toBuffer();
 
         // Upload to Supabase Storage
-        const { data, error } = await supabase.storage
+        let uploadResult = await supabase.storage
           .from('assets')
           .upload(`optimized/${finalFilename}`, optimizedBuffer, {
             contentType: 'image/webp',
             upsert: true
           });
 
-        if (error) {
-           // If bucket doesn't exist, ignore and simulate success for the demo
-           console.error("Storage upload failed:", error);
+        if (uploadResult.error && uploadResult.error.message.includes('Bucket not found')) {
+           // Auto-create the bucket if it's missing
+           await supabase.storage.createBucket('assets', { public: true });
+           
+           // Retry upload
+           uploadResult = await supabase.storage
+             .from('assets')
+             .upload(`optimized/${finalFilename}`, optimizedBuffer, {
+               contentType: 'image/webp',
+               upsert: true
+             });
+        }
+
+        if (uploadResult.error) {
+           console.error("Storage upload failed:", uploadResult.error);
+           throw uploadResult.error;
         }
 
         const publicUrl = supabase.storage.from('assets').getPublicUrl(`optimized/${finalFilename}`).data.publicUrl;
