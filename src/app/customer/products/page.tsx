@@ -536,7 +536,7 @@ function ProductListingContent() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 md:gap-8">
                
                {/* STICKY LEFT SIDEBAR */}
-               <aside className="hidden lg:block lg:col-span-3 space-y-4 sticky top-24 h-fit">
+               <aside className="hidden lg:block lg:col-span-2 space-y-4 sticky top-24 h-fit">
                   <div className="space-y-6 bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 p-4 rounded-xl">
                      <h4 className="text-sm font-black uppercase italic border-b border-[var(--foreground)]/5 pb-2 text-[var(--c-text-primary)]">Filters</h4>
                      <div className="space-y-4">
@@ -557,7 +557,7 @@ function ProductListingContent() {
                </aside>
 
                {/* MAIN GRID HUB */}
-               <main className="lg:col-span-9 space-y-2 md:space-y-4">
+               <main className="lg:col-span-10 space-y-2 md:space-y-4">
                   <div className="flex flex-col md:flex-row items-center justify-between gap-2 bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 p-2 rounded-xl backdrop-blur-md">
                      <div className="flex items-center gap-1 overflow-x-auto no-scrollbar w-full md:w-auto">
                         {CATEGORIES.map((cat) => (
@@ -785,49 +785,7 @@ function ProductListingContent() {
          </div>
       </section>
 
-      {/* 4.2 VERIFIED COMMUNITY DISPATCH (SOCIAL PROOF) */}
-      <section className="py-4 md:py-16 bg-[var(--foreground)]/5 border-y border-[var(--foreground)]/5">
-         <div className="container mx-auto px-2 md:px-10">
-            <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-4 mb-6 md:mb-12">
-               <div className="space-y-1">
-                  <h3 className="text-xl md:text-5xl font-black text-[var(--foreground)] uppercase italic leading-[0.9]">Customer Reviews</h3>
-                  <p className="text-[8px] md:text-[10px] font-black text-[var(--c-primary)] uppercase tracking-[0.4em]">Real-time Feedback</p>
-               </div>
-               <div className="flex items-center gap-3">
-                  <div className="text-left md:text-right">
-                     <p className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-tighter">4.9/5 RATING</p>
-                     <p className="text-[8px] md:text-[10px] text-[var(--c-text-secondary)] uppercase">8.2k Reviews</p>
-                  </div>
-                  <div className="flex -space-x-3 md:-space-x-4">
-                     {[32, 44, 68].map(i => <img key={i} src={`https://i.pravatar.cc/150?img=${i}`} alt="Customer" className="w-8 h-8 md:w-14 md:h-14 rounded-full border-2 border-[var(--c-bg)] object-cover" />)}
-                  </div>
-               </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-8">
-               {[
-                  { user: "Customer Raj", text: "Quality is top-tier. The Kingfish arrived perfectly fresh.", node: "PORT BLAIR", img: 32 },
-                  { user: "Chef Ananya", text: "Absolute premium grade. Delivery is perfect.", node: "HAVELOCK", img: 44 },
-                  { user: "Local Guide Sam", text: "Got the Mud Crabs delivered in 35 mins.", node: "NEIL ISLAND", img: 68 }
-               ].map((review, i) => (
-                  <div key={i} className="p-4 md:p-8 rounded-2xl md:rounded-3xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 space-y-3 hover:border-[var(--c-primary)]/40 transition-all group">
-                     <div className="flex items-center justify-between">
-                        <div className="flex gap-0.5">
-                           {[1,2,3,4,5].map(s => <Star key={s} className="w-2.5 h-2.5 text-warning fill-warning" />)}
-                        </div>
-                        <Badge variant="glass" className="text-[6px] md:text-[8px] font-black uppercase border-[var(--foreground)]/10">{review.node}</Badge>
-                     </div>
-                     <p className="text-[10px] md:text-sm text-[var(--c-text-secondary)] font-medium italic">"{review.text}"</p>
-                     <div className="flex items-center gap-2 pt-1">
-                        <img src={`https://i.pravatar.cc/150?img=${review.img}`} alt={review.user} className="w-6 h-6 rounded-full object-cover border border-[var(--foreground)]/10" />
-                        <p className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-tighter">{review.user}</p>
-                     </div>
-                  </div>
-               ))}
-            </div>
-         </div>
-      </section>
-
-      {/* 5. TRUST & NEWSLETTER */}
+      {/* 5. TRUST */}
       <section className="py-2 md:py-10 container mx-auto px-2 md:px-10 space-y-2 md:space-y-6">
          <div className="grid grid-cols-4 gap-2 md:gap-12 border-b border-[var(--foreground)]/5 pb-2 md:pb-12">
             {[ 
@@ -871,29 +829,6 @@ function ProductListingContent() {
                </div>
             ))}
          </div>
-         <Card className="p-4 md:p-12 bg-[var(--c-bg-alt)]/40 border-[var(--foreground)]/5 rounded-[var(--c-radius-card)] text-center space-y-4 md:space-y-10 relative overflow-hidden shadow-premium">
-            <div className="space-y-1 md:space-y-4">
-               <p className="text-[7px] md:text-[10px] font-black text-[var(--c-primary)] uppercase tracking-[0.4em]">Subscribe for Global Updates</p>
-               <h2 className="text-2xl md:text-7xl font-black text-[var(--c-text-primary)] uppercase italic leading-[0.9]">Join the Fleet.</h2>
-            </div>
-            <div className="max-w-2xl mx-auto relative z-10 flex flex-col md:flex-row gap-2 md:gap-4">
-               <Input 
-                 value={subscriberEmail}
-                 onChange={(e) => setSubscriberEmail(e.target.value)}
-                 placeholder="Enter your email..." 
-                 className="h-10 md:h-20 !rounded-none bg-[var(--c-bg)]/50 border-[var(--foreground)]/10 text-center md:text-left text-xs md:text-lg italic px-6 md:px-10 text-[var(--c-text-primary)]" 
-                 style={{ clipPath: 'polygon(10px 0, 100% 0, 100% 100%, 0 100%, 0 10px)', borderRadius: '0px' }}
-               />
-               <Button 
-                 onClick={handleSubscribe}
-                 disabled={isSubscribing}
-                 className="h-10 md:h-20 px-10 md:px-12 !rounded-none bg-[var(--c-primary)] text-[var(--foreground)] shadow-[var(--c-shadow-glow)] text-[8px] md:text-[12px] font-black uppercase tracking-[0.3em]"
-                 style={{ clipPath: 'polygon(15px 0, 100% 0, calc(100% - 15px) 100%, 0 100%)', borderRadius: '0px' }}
-               >
-                 {isSubscribing ? <Loader2 className="w-5 h-5 animate-spin" /> : "COMMISSION"}
-               </Button>
-            </div>
-         </Card>
       </section>
 
 
