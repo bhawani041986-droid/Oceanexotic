@@ -35,11 +35,20 @@ export async function POST(request: Request) {
       .update(updates)
       .eq('id', id);
 
-    // Graceful fallback if rank column does not exist yet
-    if (error && error.message && error.message.includes('rank') && error.message.includes('column')) {
-      delete updates.rank;
-      const fallback = await supabase.from('users').update(updates).eq('id', id);
-      error = fallback.error;
+    // Robust graceful fallback: If any column is missing in the DB schema, strip it and retry.
+    let retryCount = 0;
+    while (error && error.message && error.message.includes('column') && retryCount < 5) {
+      const match = error.message.match(/'([^']+)' column/) || error.message.match(/column "([^"]+)"/);
+      if (match && match[1]) {
+        const missingColumn = match[1];
+        delete updates[missingColumn];
+        console.warn(`Stripped missing column from update payload: ${missingColumn}`);
+        const retry = await supabase.from('users').update(updates).eq('id', id);
+        error = retry.error;
+        retryCount++;
+      } else {
+        break;
+      }
     }
 
     if (error) {
