@@ -29,6 +29,18 @@ export async function GET() {
       };
     });
 
+    // Inject Fleet Agents so Admin can chat with them
+    formattedUsers.push({
+      id: 'FLEET-8',
+      name: 'Agent Maverick (Fleet 8)',
+      email: 'maverick@oceanexotic.fleet',
+      role: 'Agent',
+      status: 'active',
+      rank: 'Level 3 Delivery Node',
+      orders: 142,
+      joined: 'Oct 12, 2025'
+    });
+
     return NextResponse.json(formattedUsers);
   } catch (error: any) {
     console.error("Fetch users API error:", error);
