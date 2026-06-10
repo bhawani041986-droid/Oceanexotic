@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { FULL_API_URL as API_BASE_URL } from "@/config/api";
 import { useToast } from "@/components/ui/Toast";
+import { VideoCallModal } from "@/components/video/VideoCallModal";
 
 export default function AdminSupportHub() {
   const { toast } = useToast();
@@ -34,6 +35,7 @@ export default function AdminSupportHub() {
   const [message, setMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [activeVideoRoom, setActiveVideoRoom] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const currentUserId = "ADM-001"; 
 
@@ -108,6 +110,13 @@ export default function AdminSupportHub() {
     }
   };
 
+  const handleInitiateVideoCall = () => {
+    if (!activeChat || !currentChat) return;
+    const roomID = `ROOM_${activeChat}_${Date.now()}`;
+    setActiveVideoRoom(roomID);
+    handleSendMessage(undefined, `[VIDEO_CALL_INVITE]:${roomID}`);
+  };
+
   useEffect(() => {
     setMounted(true);
     fetchConversations();
@@ -148,6 +157,14 @@ export default function AdminSupportHub() {
 
   return (
     <>
+      {activeVideoRoom && (
+        <VideoCallModal 
+          roomID={activeVideoRoom} 
+          userName="OceanExotic Admin" 
+          userID={currentUserId}
+          onClose={() => setActiveVideoRoom(null)}
+        />
+      )}
       <div className="h-[calc(100vh-12rem)] bg-bg-secondary/20 rounded-[32px] border border-[var(--foreground)]/5 overflow-hidden flex flex-col relative">
         <div className="flex-1 flex flex-col lg:flex-row h-full overflow-hidden">
           
@@ -280,7 +297,13 @@ export default function AdminSupportHub() {
                       </button>
                     )}
                      <button className="p-2 text-slate-400 hover:text-primary transition-colors hidden sm:block"><Phone className="w-5 h-5" /></button>
-                     <button className="p-2 text-slate-400 hover:text-primary transition-colors hidden sm:block"><Video className="w-5 h-5" /></button>
+                     <button 
+                       onClick={handleInitiateVideoCall}
+                       className="p-2 text-slate-400 hover:text-primary transition-colors hidden sm:block"
+                       title="Initiate Secure Video Link"
+                     >
+                       <Video className="w-5 h-5" />
+                     </button>
                   </div>
                 </header>
 
@@ -290,30 +313,48 @@ export default function AdminSupportHub() {
                      <p className="text-[8px] font-black uppercase tracking-[0.2em] text-center">ENCRYPTED CHANNEL <br/> SIGNAL STABILITY: 99.8%</p>
                   </div>
 
-                  {messages.map((msg) => (
-                    <div 
-                      key={msg.id}
-                      className={cn(
-                        "flex flex-col",
-                        msg.sender_id === currentUserId ? "items-end" : "items-start"
-                      )}
-                    >
-                      <div className={cn(
-                        "max-w-[85%] p-4 rounded-3xl relative shadow-2xl transition-all",
-                        msg.sender_id === currentUserId 
-                          ? "bg-primary text-[var(--foreground)] rounded-tr-none shadow-glow-purple" 
-                          : "bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] rounded-tl-none"
-                      )}>
-                        <p className="text-xs leading-relaxed font-medium">{msg.message_text}</p>
+                  {messages.map((msg) => {
+                    const isVideoInvite = msg.message_text.startsWith("[VIDEO_CALL_INVITE]:");
+                    const roomID = isVideoInvite ? msg.message_text.split(":")[1] : null;
+
+                    return (
+                      <div 
+                        key={msg.id}
+                        className={cn(
+                          "flex flex-col",
+                          msg.sender_id === currentUserId ? "items-end" : "items-start"
+                        )}
+                      >
                         <div className={cn(
-                          "flex items-center gap-2 mt-2 opacity-40",
-                          msg.sender_id === currentUserId ? "justify-end" : "justify-start"
+                          "max-w-[85%] p-4 rounded-3xl relative shadow-2xl transition-all",
+                          msg.sender_id === currentUserId 
+                            ? "bg-primary text-[var(--foreground)] rounded-tr-none shadow-glow-purple" 
+                            : "bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] rounded-tl-none"
                         )}>
-                          <span className="text-[8px] font-black uppercase italic">{new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                          {isVideoInvite ? (
+                            <div className="flex flex-col items-center gap-3 p-2">
+                              <Video className="w-8 h-8 opacity-80" />
+                              <p className="text-[10px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
+                              <button 
+                                onClick={() => setActiveVideoRoom(roomID)}
+                                className="w-full py-2 rounded-xl bg-[var(--foreground)] text-bg-primary font-black text-[9px] uppercase tracking-widest hover:scale-95 transition-all"
+                              >
+                                Join Connection
+                              </button>
+                            </div>
+                          ) : (
+                            <p className="text-xs leading-relaxed font-medium">{msg.message_text}</p>
+                          )}
+                          <div className={cn(
+                            "flex items-center gap-2 mt-2 opacity-40",
+                            msg.sender_id === currentUserId ? "justify-end" : "justify-start"
+                          )}>
+                            <span className="text-[8px] font-black uppercase italic">{new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
 
                 <div className="p-4 bg-bg-secondary/40 backdrop-blur-xl border-t border-[var(--foreground)]/5 shrink-0">
