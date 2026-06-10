@@ -58,42 +58,37 @@ export default function MediaOptimizationCenter() {
     setIsSyncing(true
   );
     try {
-      // 1. Fetch Live Feed (Recent logs)
-      const res = await fetch('/uploads/processing_log.json?t=' + Date.now()
-  );
-      if (res.ok) {
-        const data = await res.json(
-  );
-        // Filter out errors for a clean maritime feed
-        const successfulLogs = data.filter((l: any) => l.status === 'success'
-  );
-        setLogs(successfulLogs
-  );
-        
-        if (successfulLogs.length > 0) {
-            const totalOpt = successfulLogs.reduce((acc: number, log: any) => acc + (log.file_size_kb || 0), 0
-  );
-            const totalOrig = successfulLogs.length * 800; // Realistic average for high-res raw uploads
-            const savings = totalOrig > 0 ? Math.round(((totalOrig - totalOpt) / totalOrig) * 100) : 0;
-            
-            setStats({
-                totalProcessed: successfulLogs.length,
-                avgSpaceSaved: `${savings}%`,
-                totalSizeOriginal: totalOrig,
-                totalSizeOptimized: totalOpt
-            }
-  );
-        }
+      // 1. Fetch Live Feed (Gracefully fallback if no local logs exist on Vercel)
+      try {
+         const res = await fetch('/uploads/processing_log.json?t=' + Date.now());
+         if (res.ok) {
+           const data = await res.json();
+           const successfulLogs = data.filter((l: any) => l.status === 'success');
+           setLogs(successfulLogs);
+           
+           if (successfulLogs.length > 0) {
+               const totalOpt = successfulLogs.reduce((acc: number, log: any) => acc + (log.file_size_kb || 0), 0);
+               const totalOrig = successfulLogs.length * 800;
+               const savings = totalOrig > 0 ? Math.round(((totalOrig - totalOpt) / totalOrig) * 100) : 0;
+               
+               setStats({
+                   totalProcessed: successfulLogs.length,
+                   avgSpaceSaved: `${savings}%`,
+                   totalSizeOriginal: totalOrig,
+                   totalSizeOptimized: totalOpt
+               });
+           }
+         }
+      } catch (e) {
+         // Vercel Ephemeral Fallback
       }
 
-      // 2. Fetch Full Vault (All optimized files)
-      const vaultRes = await fetch(`${API_BASE_URL}/system/media_vault`);
+      // 2. Fetch Full Vault (All optimized files from Supabase Storage via Serverless Route)
+      const vaultRes = await fetch(`/api/system/media_vault`);
       if (vaultRes.ok) {
-          const vaultData = await vaultRes.json(
-  );
+          const vaultData = await vaultRes.json();
           if (vaultData.status === 'success') {
-              setVault(vaultData.assets
-  );
+              setVault(vaultData.assets);
           }
       }
     } catch (err) {
@@ -112,7 +107,7 @@ export default function MediaOptimizationCenter() {
   const handleRunOptimization = async () => {
     setIsOptimizing(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/system/optimize_assets`);
+      const res = await fetch(`/api/system/optimize_assets`);
       if (res.ok) {
         const data = await res.json();
         if (data.status === 'success') {
