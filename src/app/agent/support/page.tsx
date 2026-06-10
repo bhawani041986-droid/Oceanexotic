@@ -20,13 +20,18 @@ import {
   AlertCircle,
   Zap,
   Plus,
-  Radar
+  Radar,
+  X,
+  ShieldCheck,
+  MapPin,
+  Package
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { FULL_API_URL as API_BASE_URL } from "@/config/api";
 import { useToast } from "@/components/ui/Toast";
 import dynamic from "next/dynamic";
+import { IncomingCallOverlay } from "@/components/video/IncomingCallOverlay";
 
 const VideoCallModal = dynamic(
   () => import("@/components/video/VideoCallModal").then(mod => mod.VideoCallModal),
@@ -46,6 +51,8 @@ export default function AgentSupportHub() {
   const [isCreatingContact, setIsCreatingContact] = useState(false);
   const [availableUsers, setAvailableUsers] = useState<any[]>([]);
   const [contactSearchQuery, setContactSearchQuery] = useState("");
+  const [incomingCall, setIncomingCall] = React.useState<{roomID: string, callerName: string} | null>(null);
+  const processedInvites = React.useRef<Set<string>>(new Set());
   const scrollRef = useRef<HTMLDivElement>(null);
   const currentUserId = "FLEET-8"; 
 
@@ -63,6 +70,24 @@ export default function AgentSupportHub() {
       const data = await res.json();
       if (Array.isArray(data)) {
         setConversations(data);
+        
+        // Detect incoming calls
+        const recentCall = data.find(c => {
+          if (c.last_message && c.last_message.startsWith('[VIDEO_CALL_INVITE]:') && c.unread_count > 0) {
+            const roomID = c.last_message.replace('[VIDEO_CALL_INVITE]:', '').trim();
+            // Trigger ring if less than 60 seconds old and not processed yet
+            if (!processedInvites.current.has(roomID) && (Date.now() - c.timestamp < 60000)) {
+              return true;
+            }
+          }
+          return false;
+        });
+
+        if (recentCall) {
+          const roomID = recentCall.last_message.replace('[VIDEO_CALL_INVITE]:', '').trim();
+          setIncomingCall({ roomID, callerName: recentCall.other_party_name });
+          processedInvites.current.add(roomID);
+        }
       }
     } catch (err) {
       console.error("Signal failure:", err);
@@ -218,6 +243,23 @@ export default function AgentSupportHub() {
 
   return (
     <>
+      <IncomingCallOverlay 
+        roomID={incomingCall?.roomID || null}
+        callerName={incomingCall?.callerName || ""}
+        onAccept={() => {
+          if (incomingCall) {
+            setActiveVideoRoom(incomingCall.roomID);
+            setIncomingCall(null);
+          }
+        }}
+        onDecline={() => {
+          setIncomingCall(null);
+          // Auto-send decline message
+          if (incomingCall && activeChat) {
+            handleSendMessage(undefined, `[CALL_DECLINED]:${incomingCall.roomID}`);
+          }
+        }}
+      />
       {activeVideoRoom && (
         <VideoCallModal 
           roomID={activeVideoRoom} 
