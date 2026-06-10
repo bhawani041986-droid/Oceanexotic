@@ -20,7 +20,9 @@ import {
   AlertCircle,
   Zap,
   Plus,
-  Trash2
+  Trash2,
+  Circle,
+  X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -49,6 +51,7 @@ export default function AdminSupportHub() {
   const [isCreatingContact, setIsCreatingContact] = useState(false);
   const [availableUsers, setAvailableUsers] = useState<any[]>([]);
   const [contactSearchQuery, setContactSearchQuery] = useState("");
+  const [selectedMessages, setSelectedMessages] = useState<number[]>([]);
   const [incomingCall, setIncomingCall] = React.useState<{roomID: string, callerName: string} | null>(null);
   const processedInvites = React.useRef<Set<string>>(new Set());
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -142,10 +145,36 @@ export default function AdminSupportHub() {
     }
   };
 
-  const handleDeleteMessage = async (msgId: number) => {
-    // Optimistically remove from state
-    setMessages(prev => prev.filter(m => m.id !== msgId));
+  const toggleSelection = (msgId: number) => {
+    setSelectedMessages(prev => 
+      prev.includes(msgId) ? prev.filter(id => id !== msgId) : [...prev, msgId]
+    );
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedMessages.length === 0) return;
     
+    const idsToDelete = [...selectedMessages];
+    
+    // Optimistically remove from state
+    setMessages(prev => prev.filter(m => !idsToDelete.includes(m.id)));
+    setSelectedMessages([]);
+    
+    try {
+      await fetch(`${API_BASE_URL}/chat/delete_message`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message_ids: idsToDelete, sender_id: currentUserId })
+      });
+    } catch (err) {
+      console.error("Failed to delete messages", err);
+      toast("Failed to delete messages", "error");
+      fetchMessages(activeChat!); // revert on failure
+    }
+  };
+
+  const handleDeleteMessage = async (msgId: number) => {
+    setMessages(prev => prev.filter(m => m.id !== msgId));
     try {
       await fetch(`${API_BASE_URL}/chat/delete_message`, {
         method: 'POST',
@@ -155,7 +184,7 @@ export default function AdminSupportHub() {
     } catch (err) {
       console.error("Failed to delete message", err);
       toast("Failed to delete message", "error");
-      fetchMessages(activeChat!); // revert on failure
+      fetchMessages(activeChat!);
     }
   };
 
@@ -437,8 +466,25 @@ export default function AdminSupportHub() {
               </div>
             ) : (
               <>
-                <header className="h-16 px-4 bg-[var(--foreground)]/5 border-b border-[var(--foreground)]/5 flex items-center justify-between shrink-0">
-                  <div className="flex items-center gap-3">
+                <header className={cn(
+                  "h-16 px-4 border-b flex items-center justify-between shrink-0 transition-colors",
+                  selectedMessages.length > 0 ? "bg-primary/20 border-primary/30" : "bg-[var(--foreground)]/5 border-[var(--foreground)]/5"
+                )}>
+                  {selectedMessages.length > 0 ? (
+                    <>
+                      <div className="flex items-center gap-3">
+                        <button onClick={() => setSelectedMessages([])} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+                          <X className="w-5 h-5 text-primary" />
+                        </button>
+                        <span className="font-black text-primary uppercase tracking-widest text-sm">{selectedMessages.length} Selected</span>
+                      </div>
+                      <button onClick={handleBulkDelete} className="p-2 text-danger hover:bg-danger/10 rounded-full transition-colors" title="Delete Selected Messages">
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex items-center gap-3">
                     <button onClick={() => setActiveChat(null)} className="p-2 text-slate-400 hover:text-[var(--foreground)] transition-colors lg:hidden">
                       <ChevronLeft className="w-6 h-6" />
                     </button>
@@ -487,6 +533,8 @@ export default function AdminSupportHub() {
                        <Video className="w-5 h-5" />
                      </button>
                   </div>
+                    </>
+                  )}
                 </header>
 
                 <div ref={scrollRef} className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-6">
@@ -509,49 +557,64 @@ export default function AdminSupportHub() {
                           exit={{ opacity: 0, scale: 0.8, height: 0, marginTop: 0, marginBottom: 0, overflow: 'hidden' }}
                           transition={{ duration: 0.2, type: 'spring', stiffness: 300, damping: 25 }}
                           className={cn(
-                            "flex flex-col",
-                            msg.sender_id === currentUserId ? "items-end" : "items-start"
+                            "flex items-center gap-3",
+                            msg.sender_id === currentUserId ? "justify-end" : "justify-start"
                           )}
                         >
-                          <div className={cn(
-                            "max-w-[85%] p-4 rounded-3xl relative shadow-2xl transition-all",
-                            msg.sender_id === currentUserId 
-                              ? "bg-primary text-[var(--foreground)] rounded-tr-none shadow-glow-purple" 
-                              : "bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] rounded-tl-none"
-                          )}>
+                          {msg.sender_id === currentUserId && (
+                            <button 
+                              onClick={() => toggleSelection(msg.id)}
+                              className={cn(
+                                "p-1 rounded-full transition-colors",
+                                selectedMessages.includes(msg.id) ? "text-primary" : "text-white/20 hover:text-white/40"
+                              )}
+                            >
+                              {selectedMessages.includes(msg.id) ? <CheckCircle2 className="w-5 h-5" /> : <Circle className="w-5 h-5" />}
+                            </button>
+                          )}
+
+                          <div 
+                            onClick={() => selectedMessages.length > 0 && msg.sender_id === currentUserId ? toggleSelection(msg.id) : undefined}
+                            className={cn(
+                              "max-w-[85%] p-4 rounded-3xl relative shadow-2xl transition-all",
+                              msg.sender_id === currentUserId 
+                                ? "bg-primary text-[var(--foreground)] rounded-tr-none shadow-glow-purple" 
+                                : "bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] rounded-tl-none",
+                              selectedMessages.length > 0 && msg.sender_id === currentUserId ? "cursor-pointer hover:brightness-110" : ""
+                            )}>
+                            
                             {isVideoInvite ? (
                               <div className="flex flex-col items-center gap-3 p-2">
                                 <Video className="w-8 h-8 opacity-80" />
                                 <p className="text-[10px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
                                 <button 
-                                  onClick={() => setActiveVideoRoom(roomID)}
+                                  onClick={(e) => { e.stopPropagation(); setActiveVideoRoom(roomID); }}
                                   className="w-full py-2 rounded-xl bg-[var(--foreground)] text-bg-primary font-black text-[9px] uppercase tracking-widest hover:scale-95 transition-all"
                                 >
                                   Join Connection
                                 </button>
                               </div>
                             ) : (
-                              <>
-                                <p className="text-xs leading-relaxed font-medium">{msg.message_text}</p>
-                                <div className={cn(
-                                  "flex items-center gap-2 mt-1",
-                                  msg.sender_id === currentUserId ? "justify-end" : "justify-start"
-                                )}>
-                                  <span className="text-[8px] opacity-40 font-black">
-                                    {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                  </span>
-                                  {msg.sender_id === currentUserId && (
-                                    <button 
-                                      onClick={() => handleDeleteMessage(msg.id)}
-                                      className="text-[var(--foreground)]/20 hover:text-danger transition-colors"
-                                      title="Delete Message"
-                                    >
-                                      <Trash2 className="w-3 h-3" />
-                                    </button>
-                                  )}
-                                </div>
-                              </>
+                              <p className="text-xs leading-relaxed font-medium">{msg.message_text}</p>
                             )}
+
+                            <div className={cn(
+                              "flex items-center gap-2 mt-2",
+                              msg.sender_id === currentUserId ? "justify-end" : "justify-start"
+                            )}>
+                              <span className="text-[8px] opacity-40 font-black">
+                                {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </span>
+                              {msg.sender_id === currentUserId && selectedMessages.length === 0 && (
+                                <button 
+                                  onClick={(e) => { e.stopPropagation(); handleDeleteMessage(msg.id); }}
+                                  className="text-[var(--foreground)]/20 hover:text-danger transition-colors"
+                                  title="Delete Message"
+                                >
+                                  <Trash2 className="w-3 h-3" />
+                                </button>
+                              )}
+                            </div>
                           </div>
                         </motion.div>
                       );

@@ -25,7 +25,8 @@ import {
   ShieldCheck,
   MapPin,
   Package,
-  Trash2
+  Trash2,
+  Circle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -53,6 +54,7 @@ export default function AgentSupportHub() {
   const [availableUsers, setAvailableUsers] = useState<any[]>([]);
   const [contactSearchQuery, setContactSearchQuery] = useState("");
   const [incomingCall, setIncomingCall] = React.useState<{roomID: string, callerName: string} | null>(null);
+  const [selectedMessages, setSelectedMessages] = useState<number[]>([]);
   const processedInvites = React.useRef<Set<string>>(new Set());
   const scrollRef = useRef<HTMLDivElement>(null);
   const currentUserId = "FLEET-8"; 
@@ -144,6 +146,34 @@ export default function AgentSupportHub() {
     } catch (err) {
       console.error("Signal lost:", err);
       toast("Failed to transmit signal", "error");
+    }
+  };
+
+  const toggleSelection = (msgId: number) => {
+    setSelectedMessages(prev => 
+      prev.includes(msgId) ? prev.filter(id => id !== msgId) : [...prev, msgId]
+    );
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedMessages.length === 0) return;
+    
+    const idsToDelete = [...selectedMessages];
+    
+    // Optimistically remove from state
+    setMessages(prev => prev.filter(m => !idsToDelete.includes(m.id)));
+    setSelectedMessages([]);
+    
+    try {
+      await fetch(`${API_BASE_URL}/chat/delete_message`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message_ids: idsToDelete, sender_id: currentUserId })
+      });
+    } catch (err) {
+      console.error("Failed to delete messages", err);
+      toast("Failed to delete messages", "error");
+      fetchMessages(activeChat!); // revert on failure
     }
   };
 
@@ -449,9 +479,26 @@ export default function AgentSupportHub() {
               </div>
             ) : (
               <>
-                <header className="h-16 px-4 bg-[var(--foreground)]/5 border-b border-[var(--foreground)]/5 flex items-center justify-between shrink-0">
-                  <div className="flex items-center gap-3">
-                    <button onClick={() => setActiveChat(null)} className="p-2 text-slate-400 hover:text-[var(--foreground)] transition-colors lg:hidden">
+                <header className={cn(
+                  "h-16 px-4 border-b flex items-center justify-between shrink-0 transition-colors",
+                  selectedMessages.length > 0 ? "bg-primary/20 border-primary/30" : "bg-[var(--foreground)]/5 border-[var(--foreground)]/5"
+                )}>
+                  {selectedMessages.length > 0 ? (
+                    <>
+                      <div className="flex items-center gap-3">
+                        <button onClick={() => setSelectedMessages([])} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+                          <X className="w-5 h-5 text-primary" />
+                        </button>
+                        <span className="font-black text-primary uppercase tracking-widest text-sm">{selectedMessages.length} Selected</span>
+                      </div>
+                      <button onClick={handleBulkDelete} className="p-2 text-danger hover:bg-danger/10 rounded-full transition-colors" title="Delete Selected Messages">
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex items-center gap-3">
+                        <button onClick={() => setActiveChat(null)} className="p-2 text-slate-400 hover:text-[var(--foreground)] transition-colors lg:hidden">
                       <ChevronLeft className="w-6 h-6" />
                     </button>
                     <div className="flex items-center gap-3">
@@ -493,12 +540,55 @@ export default function AgentSupportHub() {
                      <button className="p-2 text-slate-400 hover:text-primary transition-colors hidden sm:block"><Phone className="w-5 h-5" /></button>
                      <button 
                        onClick={handleInitiateVideoCall}
-                       className="p-2 text-slate-400 hover:text-primary transition-colors hidden sm:block"
-                       title="Initiate Secure Video Link"
-                     >
-                       <Video className="w-5 h-5" />
-                     </button>
-                  </div>
+                          <ChevronLeft className="w-6 h-6" />
+                        </button>
+                        <div className="flex items-center gap-3">
+                          <div className="relative hidden sm:block">
+                            <div className="w-10 h-10 rounded-xl bg-primary/20 border border-primary/20 flex items-center justify-center text-primary font-black text-xs">
+                              {(currentChat?.other_party_name || "??").substring(0, 2).toUpperCase()}
+                            </div>
+                            {currentChat?.online && <div className="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full border-2 border-[#0B1120]" />}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <h3 className="text-xs font-black text-[var(--foreground)] uppercase italic leading-tight">{currentChat?.other_party_name}</h3>
+                              {currentChat?.order_id && (
+                                <span className="text-[8px] px-1.5 py-0.5 rounded bg-primary/10 text-primary font-black border border-primary/20">
+                                  {currentChat.order_id}
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-[8px] font-black text-success uppercase tracking-widest italic opacity-60">{currentChat?.other_party_role} NODE</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {currentChat?.status !== 'RESOLVED' ? (
+                          <button 
+                            onClick={() => handleUpdateStatus(activeChat, 'RESOLVED')}
+                            className="h-8 px-3 rounded-lg bg-success/10 text-success border border-success/20 hover:bg-success/20 flex items-center gap-1.5 text-[8px] font-black uppercase tracking-widest transition-all"
+                          >
+                            <CheckCircle2 className="w-3.5 h-3.5" /> Resolve
+                          </button>
+                        ) : (
+                          <button 
+                            onClick={() => handleUpdateStatus(activeChat, 'OPEN')}
+                            className="h-8 px-3 rounded-lg bg-warning/10 text-warning border border-warning/20 hover:bg-warning/20 flex items-center gap-1.5 text-[8px] font-black uppercase tracking-widest transition-all"
+                          >
+                            <AlertCircle className="w-3.5 h-3.5" /> Reopen
+                          </button>
+                        )}
+                        <button className="p-2 text-slate-400 hover:text-primary transition-colors hidden sm:block"><Phone className="w-5 h-5" /></button>
+                        <button 
+                          onClick={handleInitiateVideoCall}
+                          className="p-2 text-slate-400 hover:text-primary transition-colors hidden sm:block"
+                          title="Initiate Secure Video Link"
+                        >
+                          <Video className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </header>
 
                 <div ref={scrollRef} className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-6">
@@ -521,52 +611,67 @@ export default function AgentSupportHub() {
                           exit={{ opacity: 0, scale: 0.8, height: 0, marginTop: 0, marginBottom: 0, overflow: 'hidden' }}
                           transition={{ duration: 0.2, type: 'spring', stiffness: 300, damping: 25 }}
                           className={cn(
-                            "flex flex-col",
-                            msg.sender_id === currentUserId ? "items-end" : "items-start"
+                            "flex items-center gap-3",
+                            msg.sender_id === currentUserId ? "justify-end" : "justify-start"
                           )}
                         >
-                        <div className={cn(
-                          "max-w-[85%] p-4 rounded-3xl relative shadow-2xl transition-all",
-                          msg.sender_id === currentUserId 
-                            ? "bg-primary text-[var(--foreground)] rounded-tr-none shadow-glow-purple" 
-                            : "bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] rounded-tl-none"
-                        )}>
-                          {isVideoInvite ? (
-                            <div className="flex flex-col items-center gap-3 p-2">
-                              <Video className="w-8 h-8 opacity-80" />
-                              <p className="text-[10px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
-                              <button 
-                                onClick={() => setActiveVideoRoom(roomID)}
-                                className="w-full py-2 rounded-xl bg-[var(--foreground)] text-bg-primary font-black text-[9px] uppercase tracking-widest hover:scale-95 transition-all"
-                              >
-                                Join Connection
-                              </button>
-                            </div>
-                          ) : (
-                            <>
-                              <p className="text-xs leading-relaxed font-medium">{msg.message_text}</p>
-                              <div className={cn(
-                                "flex items-center gap-2 mt-1",
-                                msg.sender_id === currentUserId ? "justify-end" : "justify-start"
-                              )}>
-                                <span className="text-[8px] opacity-40 font-black">
-                                  {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                </span>
-                                {msg.sender_id === currentUserId && (
-                                  <button 
-                                    onClick={() => handleDeleteMessage(msg.id)}
-                                    className="text-[var(--foreground)]/20 hover:text-danger transition-colors"
-                                    title="Delete Message"
-                                  >
-                                    <Trash2 className="w-3 h-3" />
-                                  </button>
-                                )}
-                              </div>
-                            </>
+                          {msg.sender_id === currentUserId && (
+                            <button 
+                              onClick={() => toggleSelection(msg.id)}
+                              className={cn(
+                                "p-1 rounded-full transition-colors",
+                                selectedMessages.includes(msg.id) ? "text-primary" : "text-white/20 hover:text-white/40"
+                              )}
+                            >
+                              {selectedMessages.includes(msg.id) ? <CheckCircle2 className="w-5 h-5" /> : <Circle className="w-5 h-5" />}
+                            </button>
                           )}
-                        </div>
-                      </motion.div>
-                    );
+
+                          <div 
+                            onClick={() => selectedMessages.length > 0 && msg.sender_id === currentUserId ? toggleSelection(msg.id) : undefined}
+                            className={cn(
+                              "max-w-[85%] p-4 rounded-3xl relative shadow-2xl transition-all",
+                              msg.sender_id === currentUserId 
+                                ? "bg-primary text-[var(--foreground)] rounded-tr-none shadow-glow-purple" 
+                                : "bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] rounded-tl-none",
+                              selectedMessages.length > 0 && msg.sender_id === currentUserId ? "cursor-pointer hover:brightness-110" : ""
+                            )}>
+                            
+                            {isVideoInvite ? (
+                              <div className="flex flex-col items-center gap-3 p-2">
+                                <Video className="w-8 h-8 opacity-80" />
+                                <p className="text-[10px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
+                                <button 
+                                  onClick={(e) => { e.stopPropagation(); setActiveVideoRoom(roomID); }}
+                                  className="w-full py-2 rounded-xl bg-[var(--foreground)] text-bg-primary font-black text-[9px] uppercase tracking-widest hover:scale-95 transition-all"
+                                >
+                                  Join Connection
+                                </button>
+                              </div>
+                            ) : (
+                              <p className="text-xs leading-relaxed font-medium">{msg.message_text}</p>
+                            )}
+
+                            <div className={cn(
+                              "flex items-center gap-2 mt-2",
+                              msg.sender_id === currentUserId ? "justify-end" : "justify-start"
+                            )}>
+                              <span className="text-[8px] opacity-40 font-black">
+                                {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              </span>
+                              {msg.sender_id === currentUserId && selectedMessages.length === 0 && (
+                                <button 
+                                  onClick={(e) => { e.stopPropagation(); handleDeleteMessage(msg.id); }}
+                                  className="text-[var(--foreground)]/20 hover:text-danger transition-colors"
+                                  title="Delete Message"
+                                >
+                                  <Trash2 className="w-3 h-3" />
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </motion.div>
+                      );
                   })}
                 </AnimatePresence>
                 </div>

@@ -19,7 +19,9 @@ import {
   Zap,
   Clock,
   X,
-  Trash2
+  Trash2,
+  Circle,
+  CheckCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -51,6 +53,7 @@ export default function ChatPage() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [activeVideoRoom, setActiveVideoRoom] = React.useState<string | null>(null);
   const [incomingCall, setIncomingCall] = React.useState<{roomID: string, callerName: string} | null>(null);
+  const [selectedMessages, setSelectedMessages] = React.useState<number[]>([]);
   
   const processedInvites = React.useRef<Set<string>>(new Set());
   const currentUserId = user?.id || "USR-001";
@@ -139,6 +142,34 @@ export default function ChatPage() {
     } catch (err) {
       console.error("Signal lost:", err);
       toast("Failed to transmit signal", "error");
+    }
+  };
+
+  const toggleSelection = (msgId: number) => {
+    setSelectedMessages(prev => 
+      prev.includes(msgId) ? prev.filter(id => id !== msgId) : [...prev, msgId]
+    );
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedMessages.length === 0) return;
+    
+    const idsToDelete = [...selectedMessages];
+    
+    // Optimistically remove from state
+    setMessages((prev: any) => prev.filter((m: any) => !idsToDelete.includes(m.id)));
+    setSelectedMessages([]);
+    
+    try {
+      await fetch(`${API_BASE_URL}/chat/delete_message`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message_ids: idsToDelete, sender_id: currentUserId })
+      });
+    } catch (err) {
+      console.error("Failed to delete messages", err);
+      toast("Failed to delete messages", "error");
+      fetchMessages(activeChat!); // revert on failure
     }
   };
 
@@ -290,8 +321,25 @@ export default function ChatPage() {
          <main className="flex-1 flex flex-col bg-[#0B1120] relative">
             
             {/* Conversation Header */}
-            <header className="h-20 bg-[var(--foreground)]/5 border-b border-[var(--foreground)]/5 px-6 flex items-center justify-between shrink-0">
-               <div className="flex items-center gap-4">
+            <header className={cn(
+               "h-20 px-6 border-b flex items-center justify-between shrink-0 transition-colors",
+               selectedMessages.length > 0 ? "bg-primary/20 border-primary/30" : "bg-[var(--foreground)]/5 border-[var(--foreground)]/5"
+            )}>
+               {selectedMessages.length > 0 ? (
+                 <>
+                   <div className="flex items-center gap-4">
+                     <button onClick={() => setSelectedMessages([])} className="p-2 hover:bg-white/10 rounded-full transition-colors">
+                       <X className="w-5 h-5 text-primary" />
+                     </button>
+                     <span className="font-black text-primary uppercase tracking-widest text-sm">{selectedMessages.length} Selected</span>
+                   </div>
+                   <button onClick={handleBulkDelete} className="p-3 text-danger hover:bg-danger/10 rounded-xl transition-colors" title="Delete Selected Messages">
+                     <Trash2 className="w-5 h-5" />
+                   </button>
+                 </>
+               ) : (
+                 <>
+                   <div className="flex items-center gap-4">
                   <button onClick={() => setIsSidebarOpen(true)} className="md:hidden p-2"><ArrowLeft className="w-5 h-5" /></button>
                   <div className="w-12 h-12 bg-[var(--foreground)]/5 rounded-xl flex items-center justify-center text-2xl shadow-xl">
                      {currentChat?.other_party_role === 'SELLER' ? "🚢" : "🌊"}
@@ -322,6 +370,8 @@ export default function ChatPage() {
 
                   <button className="p-3 bg-[var(--foreground)]/5 rounded-xl hover:bg-[var(--foreground)]/10 transition-colors"><MoreVertical className="w-5 h-5" /></button>
                </div>
+                 </>
+               )}
             </header>
 
             {/* Message Stream */}
@@ -339,11 +389,32 @@ export default function ChatPage() {
                      animate={{ opacity: 1, x: 0 }}
                      exit={{ opacity: 0, scale: 0.8, height: 0, marginTop: 0, marginBottom: 0, overflow: 'hidden' }}
                      transition={{ duration: 0.2, type: 'spring', stiffness: 300, damping: 25 }}
-                     className={cn("flex flex-col", msg.sender_id === currentUserId ? "items-end" : "items-start")}
+                     className={cn(
+                       "flex items-center gap-3",
+                       msg.sender_id === currentUserId ? "justify-end" : "justify-start"
+                     )}
                    >
-                      <div className="max-w-[85%] md:max-w-[60%] space-y-2">
+                      {msg.sender_id === currentUserId && (
+                        <button 
+                          onClick={() => toggleSelection(msg.id)}
+                          className={cn(
+                            "p-1 rounded-full transition-colors",
+                            selectedMessages.includes(msg.id) ? "text-primary" : "text-white/20 hover:text-white/40"
+                          )}
+                        >
+                          {selectedMessages.includes(msg.id) ? <CheckCircle className="w-5 h-5" /> : <Circle className="w-5 h-5" />}
+                        </button>
+                      )}
+
+                      <div 
+                        onClick={() => selectedMessages.length > 0 && msg.sender_id === currentUserId ? toggleSelection(msg.id) : undefined}
+                        className={cn(
+                          "max-w-[85%] md:max-w-[60%] space-y-2 cursor-pointer",
+                          selectedMessages.length > 0 && msg.sender_id === currentUserId ? "hover:brightness-110" : ""
+                        )}
+                      >
                          <div className={cn(
-                           "p-6 rounded-[32px] text-sm italic relative group",
+                           "p-6 rounded-[32px] text-sm italic relative group transition-all",
                            msg.sender_id === currentUserId ? "bg-primary text-white rounded-tr-none shadow-glow-purple" : "bg-white/5 border border-white/10 text-white rounded-tl-none"
                          )}>
                             <div className={cn("absolute top-0 w-4 h-4", msg.sender_id === currentUserId ? "right-0 bg-primary -mr-2" : "left-0 bg-white/5 border-l border-t border-white/10 -ml-2")} style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }} />
@@ -353,7 +424,7 @@ export default function ChatPage() {
                                 <Video className="w-8 h-8 opacity-80" />
                                 <p className="text-[10px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
                                 <button 
-                                  onClick={() => setActiveVideoRoom(roomID!)}
+                                  onClick={(e) => { e.stopPropagation(); setActiveVideoRoom(roomID!); }}
                                   className="w-full py-2 rounded-xl bg-[var(--foreground)] text-bg-primary font-black text-[9px] uppercase tracking-widest hover:scale-95 transition-all"
                                 >
                                   Join Connection
@@ -368,13 +439,15 @@ export default function ChatPage() {
                                {msg.sender_id === currentUserId && (
                                  <div className="flex items-center gap-2 ml-1">
                                     <CheckCheck className="w-3 h-3 text-[var(--foreground)]" />
-                                    <button 
-                                      onClick={() => handleDeleteMessage(msg.id)}
-                                      className="text-white/40 hover:text-white transition-colors"
-                                      title="Delete Message"
-                                    >
-                                      <Trash2 className="w-3 h-3" />
-                                    </button>
+                                    {selectedMessages.length === 0 && (
+                                      <button 
+                                        onClick={(e) => { e.stopPropagation(); handleDeleteMessage(msg.id); }}
+                                        className="text-white/40 hover:text-white transition-colors"
+                                        title="Delete Message"
+                                      >
+                                        <Trash2 className="w-3 h-3" />
+                                      </button>
+                                    )}
                                  </div>
                                )}
                             </div>

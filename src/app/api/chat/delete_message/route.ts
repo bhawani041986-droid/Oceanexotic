@@ -4,20 +4,31 @@ import { supabase } from '@/lib/supabase';
 export async function POST(request: Request) {
   try {
     const data = await request.json();
-    const { message_id, sender_id } = data;
+    const { message_id, message_ids, sender_id } = data;
 
-    if (!message_id || !sender_id) {
+    if ((!message_id && (!message_ids || message_ids.length === 0)) || !sender_id) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Delete message where id and sender_id matches to prevent unauthorized deletion
-    const { error: deleteError } = await supabase
-      .from('chat_messages')
-      .delete()
-      .eq('id', message_id)
-      .eq('sender_id', sender_id);
-
-    if (deleteError) throw deleteError;
+    if (message_ids && Array.isArray(message_ids)) {
+      // Bulk delete
+      const { error: deleteError } = await supabase
+        .from('chat_messages')
+        .delete()
+        .in('id', message_ids)
+        .eq('sender_id', sender_id);
+      
+      if (deleteError) throw deleteError;
+    } else {
+      // Single delete
+      const { error: deleteError } = await supabase
+        .from('chat_messages')
+        .delete()
+        .eq('id', message_id)
+        .eq('sender_id', sender_id);
+        
+      if (deleteError) throw deleteError;
+    }
 
     return NextResponse.json({ status: 'success' });
   } catch (error: any) {
