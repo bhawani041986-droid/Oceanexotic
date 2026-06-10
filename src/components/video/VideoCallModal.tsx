@@ -14,9 +14,9 @@ export function VideoCallModal({ roomID, userName, userID, onClose }: VideoCallM
   React.useEffect(() => {
     if (!containerRef.current) return;
 
-    // Get your AppID and ServerSecret from environment variables
-    const appID = parseInt(process.env.NEXT_PUBLIC_ZEGO_APP_ID || "0", 10);
-    const serverSecret = process.env.NEXT_PUBLIC_ZEGO_SERVER_SECRET || "";
+    // Hardcoded credentials for immediate functionality
+    const appID = 1965621224;
+    const serverSecret = "c441055133b191867d11992d5c04412b";
 
     if (!appID || !serverSecret) {
       console.error("ZegoCloud credentials missing.");

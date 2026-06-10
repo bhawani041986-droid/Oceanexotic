@@ -18,7 +18,8 @@ import {
   Info,
   CheckCircle2,
   AlertCircle,
-  Zap
+  Zap,
+  Plus
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -36,6 +37,8 @@ export default function AdminSupportHub() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [activeVideoRoom, setActiveVideoRoom] = useState<string | null>(null);
+  const [isCreatingContact, setIsCreatingContact] = useState(false);
+  const [newContactId, setNewContactId] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const currentUserId = "ADM-001"; 
 
@@ -117,6 +120,31 @@ export default function AdminSupportHub() {
     handleSendMessage(undefined, `[VIDEO_CALL_INVITE]:${roomID}`);
   };
 
+  const handleCreateContact = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newContactId.trim()) return;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/chat/create_conversation.php`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ participant_1: currentUserId, participant_2: newContactId.trim() })
+      });
+      const data = await res.json();
+      if (res.ok && data.status === 'success') {
+        toast("Secure channel established.", "success");
+        setIsCreatingContact(false);
+        setNewContactId("");
+        await fetchConversations();
+        setActiveChat(data.conversation_id);
+      } else {
+        toast(data.error || "Failed to establish channel.", "error");
+      }
+    } catch (err) {
+      toast("Transmission error", "error");
+    }
+  };
+
   useEffect(() => {
     setMounted(true);
     fetchConversations();
@@ -181,10 +209,40 @@ export default function AdminSupportHub() {
                   <h2 className="text-xl font-black text-[var(--foreground)] uppercase italic tracking-tighter">Support Registry</h2>
                   <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Active Communication Nodes</p>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-glow-purple/20">
-                  <MessageSquare className="w-5 h-5" />
-                </div>
+                <button 
+                  onClick={() => setIsCreatingContact(!isCreatingContact)}
+                  className={cn(
+                    "w-10 h-10 rounded-full flex items-center justify-center border transition-all active:scale-90",
+                    isCreatingContact 
+                      ? "bg-danger/10 text-danger border-danger/20" 
+                      : "bg-primary/10 text-primary border-primary/20 shadow-glow-purple/20"
+                  )}
+                >
+                  {isCreatingContact ? <Plus className="w-5 h-5 rotate-45 transition-transform" /> : <Plus className="w-5 h-5 transition-transform" />}
+                </button>
               </div>
+
+              <AnimatePresence>
+                {isCreatingContact && (
+                  <motion.form 
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    onSubmit={handleCreateContact}
+                    className="overflow-hidden"
+                  >
+                    <div className="flex gap-2 p-3 rounded-2xl bg-primary/10 border border-primary/20 mb-2">
+                      <input 
+                        value={newContactId}
+                        onChange={(e) => setNewContactId(e.target.value)}
+                        placeholder="TARGET NODE ID (e.g. USR-001)"
+                        className="flex-1 bg-transparent text-xs font-black uppercase text-[var(--foreground)] outline-none placeholder:text-primary/40"
+                      />
+                      <button type="submit" className="px-3 py-1.5 rounded-xl bg-primary text-black font-black text-[8px] uppercase tracking-widest">Link</button>
+                    </div>
+                  </motion.form>
+                )}
+              </AnimatePresence>
 
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
