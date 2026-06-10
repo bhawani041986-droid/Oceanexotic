@@ -18,7 +18,8 @@ import {
   ShoppingBag,
   Zap,
   Clock,
-  X
+  X,
+  Trash2
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -114,6 +115,18 @@ export default function ChatPage() {
       message_text: textToSend
     };
 
+    // Optimistically add message
+    const tempMsg = {
+      id: Date.now(),
+      conversation_id: activeChat,
+      sender_id: currentUserId,
+      message_text: textToSend,
+      is_read: 0,
+      created_at: new Date().toISOString()
+    };
+    setMessages((prev: any) => [...prev, tempMsg]);
+    if (!customMsg) setMessage("");
+
     try {
       const res = await fetch(`${API_BASE_URL}/chat/send_message`, {
         method: 'POST',
@@ -121,13 +134,28 @@ export default function ChatPage() {
         body: JSON.stringify(packet)
       });
       if (res.ok) {
-        if (!customMsg) setMessage("");
-        fetchMessages(activeChat);
         fetchConversations();
       }
     } catch (err) {
       console.error("Signal lost:", err);
       toast("Failed to transmit signal", "error");
+    }
+  };
+
+  const handleDeleteMessage = async (msgId: number) => {
+    // Optimistically remove from state
+    setMessages((prev: any) => prev.filter((m: any) => m.id !== msgId));
+    
+    try {
+      await fetch(`${API_BASE_URL}/chat/delete_message`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message_id: msgId, sender_id: currentUserId })
+      });
+    } catch (err) {
+      console.error("Failed to delete message", err);
+      toast("Failed to delete message", "error");
+      fetchMessages(activeChat!); // revert on failure
     }
   };
 
@@ -298,48 +326,64 @@ export default function ChatPage() {
 
             {/* Message Stream */}
             <div className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-8">
-               {messages.map((msg, i) => {
-                 const isVideoInvite = msg.message_text.includes("[VIDEO_CALL_INVITE]:");
-                 const roomID = isVideoInvite ? msg.message_text.replace("[VIDEO_CALL_INVITE]:", "").trim() : null;
+               <AnimatePresence initial={false}>
+                 {messages.map((msg: any) => {
+                   const isVideoInvite = msg.message_text.includes("[VIDEO_CALL_INVITE]:");
+                   const roomID = isVideoInvite ? msg.message_text.replace("[VIDEO_CALL_INVITE]:", "").trim() : null;
 
-                 return (
-                 <motion.div 
-                   key={msg.id}
-                   initial={{ opacity: 0, x: msg.sender_id === currentUserId ? 20 : -20 }}
-                   animate={{ opacity: 1, x: 0 }}
-                   className={cn("flex flex-col", msg.sender_id === currentUserId ? "items-end" : "items-start")}
-                 >
-                    <div className="max-w-[85%] md:max-w-[60%] space-y-2">
-                       <div className={cn(
-                         "p-6 rounded-[32px] text-sm italic relative group",
-                         msg.sender_id === currentUserId ? "bg-primary text-white rounded-tr-none shadow-glow-purple" : "bg-white/5 border border-white/10 text-white rounded-tl-none"
-                       )}>
-                          <div className={cn("absolute top-0 w-4 h-4", msg.sender_id === currentUserId ? "right-0 bg-primary -mr-2" : "left-0 bg-white/5 border-l border-t border-white/10 -ml-2")} style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }} />
-                          
-                          {isVideoInvite ? (
-                            <div className="flex flex-col items-center gap-3 p-2">
-                              <Video className="w-8 h-8 opacity-80" />
-                              <p className="text-[10px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
-                              <button 
-                                onClick={() => setActiveVideoRoom(roomID!)}
-                                className="w-full py-2 rounded-xl bg-[var(--foreground)] text-bg-primary font-black text-[9px] uppercase tracking-widest hover:scale-95 transition-all"
-                              >
-                                Join Connection
-                              </button>
+                   return (
+                   <motion.div 
+                     key={msg.id}
+                     layout
+                     initial={{ opacity: 0, x: msg.sender_id === currentUserId ? 20 : -20 }}
+                     animate={{ opacity: 1, x: 0 }}
+                     exit={{ opacity: 0, scale: 0.8, height: 0, marginTop: 0, marginBottom: 0, overflow: 'hidden' }}
+                     transition={{ duration: 0.2, type: 'spring', stiffness: 300, damping: 25 }}
+                     className={cn("flex flex-col", msg.sender_id === currentUserId ? "items-end" : "items-start")}
+                   >
+                      <div className="max-w-[85%] md:max-w-[60%] space-y-2">
+                         <div className={cn(
+                           "p-6 rounded-[32px] text-sm italic relative group",
+                           msg.sender_id === currentUserId ? "bg-primary text-white rounded-tr-none shadow-glow-purple" : "bg-white/5 border border-white/10 text-white rounded-tl-none"
+                         )}>
+                            <div className={cn("absolute top-0 w-4 h-4", msg.sender_id === currentUserId ? "right-0 bg-primary -mr-2" : "left-0 bg-white/5 border-l border-t border-white/10 -ml-2")} style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }} />
+                            
+                            {isVideoInvite ? (
+                              <div className="flex flex-col items-center gap-3 p-2">
+                                <Video className="w-8 h-8 opacity-80" />
+                                <p className="text-[10px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
+                                <button 
+                                  onClick={() => setActiveVideoRoom(roomID!)}
+                                  className="w-full py-2 rounded-xl bg-[var(--foreground)] text-bg-primary font-black text-[9px] uppercase tracking-widest hover:scale-95 transition-all"
+                                >
+                                  Join Connection
+                                </button>
+                              </div>
+                            ) : (
+                              <p className="leading-relaxed font-medium">{msg.message_text}</p>
+                            )}
+
+                            <div className={cn("mt-4 flex items-center gap-2 text-[9px] font-black opacity-40 uppercase", msg.sender_id === currentUserId ? "justify-end" : "justify-start")}>
+                               {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                               {msg.sender_id === currentUserId && (
+                                 <div className="flex items-center gap-2 ml-1">
+                                    <CheckCheck className="w-3 h-3 text-[var(--foreground)]" />
+                                    <button 
+                                      onClick={() => handleDeleteMessage(msg.id)}
+                                      className="text-white/40 hover:text-white transition-colors"
+                                      title="Delete Message"
+                                    >
+                                      <Trash2 className="w-3 h-3" />
+                                    </button>
+                                 </div>
+                               )}
                             </div>
-                          ) : (
-                            <p className="leading-relaxed font-medium">{msg.message_text}</p>
-                          )}
-
-                          <div className={cn("mt-4 flex items-center gap-2 text-[9px] font-black opacity-40 uppercase", msg.sender_id === currentUserId ? "justify-end" : "justify-start")}>
-                             {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                             {msg.sender_id === currentUserId && <CheckCheck className="w-3 h-3 text-[var(--foreground)]" />}
-                          </div>
-                       </div>
-                    </div>
-                 </motion.div>
-                 );
-               })}
+                         </div>
+                      </div>
+                   </motion.div>
+                   );
+                 })}
+               </AnimatePresence>
             </div>
 
             {/* Input Hub */}

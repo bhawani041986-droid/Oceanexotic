@@ -19,7 +19,8 @@ import {
   CheckCircle2,
   AlertCircle,
   Zap,
-  Plus
+  Plus,
+  Trash2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -110,6 +111,18 @@ export default function AdminSupportHub() {
       message_text: textToSend
     };
 
+    // Optimistically add message
+    const tempMsg = {
+      id: Date.now(),
+      conversation_id: activeChat,
+      sender_id: currentUserId,
+      message_text: textToSend,
+      is_read: 0,
+      created_at: new Date().toISOString()
+    };
+    setMessages(prev => [...prev, tempMsg]);
+    if (!customMsg) setMessage("");
+
     try {
       const res = await fetch(`${API_BASE_URL}/chat/send_message`, {
         method: 'POST',
@@ -120,13 +133,29 @@ export default function AdminSupportHub() {
       if (!res.ok) {
         toast(data.error ? String(data.error) : "Failed to transmit signal.", "error");
       } else {
-        if (!customMsg) setMessage("");
-        fetchMessages(activeChat);
         fetchConversations();
+        fetchMessages(activeChat);
       }
     } catch (err) {
       console.error("Signal lost:", err);
       toast("Failed to transmit signal", "error");
+    }
+  };
+
+  const handleDeleteMessage = async (msgId: number) => {
+    // Optimistically remove from state
+    setMessages(prev => prev.filter(m => m.id !== msgId));
+    
+    try {
+      await fetch(`${API_BASE_URL}/chat/delete_message`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message_id: msgId, sender_id: currentUserId })
+      });
+    } catch (err) {
+      console.error("Failed to delete message", err);
+      toast("Failed to delete message", "error");
+      fetchMessages(activeChat!); // revert on failure
     }
   };
 
@@ -466,48 +495,68 @@ export default function AdminSupportHub() {
                      <p className="text-[8px] font-black uppercase tracking-[0.2em] text-center">ENCRYPTED CHANNEL <br/> SIGNAL STABILITY: 99.8%</p>
                   </div>
 
-                  {messages.map((msg) => {
-                    const isVideoInvite = msg.message_text.includes("[VIDEO_CALL_INVITE]:");
-                    const roomID = isVideoInvite ? msg.message_text.replace("[VIDEO_CALL_INVITE]:", "").trim() : null;
+                  <AnimatePresence initial={false}>
+                    {messages.map((msg) => {
+                      const isVideoInvite = msg.message_text.includes("[VIDEO_CALL_INVITE]:");
+                      const roomID = isVideoInvite ? msg.message_text.replace("[VIDEO_CALL_INVITE]:", "").trim() : null;
 
-                    return (
-                      <div 
-                        key={msg.id}
-                        className={cn(
-                          "flex flex-col",
-                          msg.sender_id === currentUserId ? "items-end" : "items-start"
-                        )}
-                      >
-                        <div className={cn(
-                          "max-w-[85%] p-4 rounded-3xl relative shadow-2xl transition-all",
-                          msg.sender_id === currentUserId 
-                            ? "bg-primary text-[var(--foreground)] rounded-tr-none shadow-glow-purple" 
-                            : "bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] rounded-tl-none"
-                        )}>
-                          {isVideoInvite ? (
-                            <div className="flex flex-col items-center gap-3 p-2">
-                              <Video className="w-8 h-8 opacity-80" />
-                              <p className="text-[10px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
-                              <button 
-                                onClick={() => setActiveVideoRoom(roomID)}
-                                className="w-full py-2 rounded-xl bg-[var(--foreground)] text-bg-primary font-black text-[9px] uppercase tracking-widest hover:scale-95 transition-all"
-                              >
-                                Join Connection
-                              </button>
-                            </div>
-                          ) : (
-                            <p className="text-xs leading-relaxed font-medium">{msg.message_text}</p>
+                      return (
+                        <motion.div 
+                          key={msg.id}
+                          layout
+                          initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                          animate={{ opacity: 1, scale: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.8, height: 0, marginTop: 0, marginBottom: 0, overflow: 'hidden' }}
+                          transition={{ duration: 0.2, type: 'spring', stiffness: 300, damping: 25 }}
+                          className={cn(
+                            "flex flex-col",
+                            msg.sender_id === currentUserId ? "items-end" : "items-start"
                           )}
+                        >
                           <div className={cn(
-                            "flex items-center gap-2 mt-2 opacity-40",
-                            msg.sender_id === currentUserId ? "justify-end" : "justify-start"
+                            "max-w-[85%] p-4 rounded-3xl relative shadow-2xl transition-all",
+                            msg.sender_id === currentUserId 
+                              ? "bg-primary text-[var(--foreground)] rounded-tr-none shadow-glow-purple" 
+                              : "bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] rounded-tl-none"
                           )}>
-                            <span className="text-[8px] font-black uppercase italic">{new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                            {isVideoInvite ? (
+                              <div className="flex flex-col items-center gap-3 p-2">
+                                <Video className="w-8 h-8 opacity-80" />
+                                <p className="text-[10px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
+                                <button 
+                                  onClick={() => setActiveVideoRoom(roomID)}
+                                  className="w-full py-2 rounded-xl bg-[var(--foreground)] text-bg-primary font-black text-[9px] uppercase tracking-widest hover:scale-95 transition-all"
+                                >
+                                  Join Connection
+                                </button>
+                              </div>
+                            ) : (
+                              <>
+                                <p className="text-xs leading-relaxed font-medium">{msg.message_text}</p>
+                                <div className={cn(
+                                  "flex items-center gap-2 mt-1",
+                                  msg.sender_id === currentUserId ? "justify-end" : "justify-start"
+                                )}>
+                                  <span className="text-[8px] opacity-40 font-black">
+                                    {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                  </span>
+                                  {msg.sender_id === currentUserId && (
+                                    <button 
+                                      onClick={() => handleDeleteMessage(msg.id)}
+                                      className="text-[var(--foreground)]/20 hover:text-danger transition-colors"
+                                      title="Delete Message"
+                                    >
+                                      <Trash2 className="w-3 h-3" />
+                                    </button>
+                                  )}
+                                </div>
+                              </>
+                            )}
                           </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                        </motion.div>
+                      );
+                    })}
+                  </AnimatePresence>
                 </div>
 
                 <div className="p-4 bg-bg-secondary/40 backdrop-blur-xl border-t border-[var(--foreground)]/5 shrink-0">
