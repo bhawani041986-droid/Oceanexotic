@@ -629,77 +629,109 @@ function ProductListingContent() {
                        )}
 
                        <div className="pt-4 flex items-center gap-4">
-                          <div className="h-px bg-[var(--foreground)]/10 flex-1" />
-                          <h3 className="text-sm font-black text-[var(--c-text-secondary)] uppercase tracking-[0.2em] italic">Full Catalog</h3>
-                          <div className="h-px bg-[var(--foreground)]/10 flex-1" />
-                       </div>
-                    </div>
-                  )}
+                           <div className="h-px bg-[var(--foreground)]/10 flex-1" />
+                           <h3 className="text-sm font-black text-[var(--c-text-secondary)] uppercase tracking-[0.2em] italic">Categories</h3>
+                           <div className="h-px bg-[var(--foreground)]/10 flex-1" />
+                        </div>
 
-                  {paginatedProducts.length > 0 ? (
-                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-[4px] md:gap-4">
-                       {paginatedProducts.map((product) => (
-                         <ProductCard key={product.id} product={product} />
-                       ))}
-                    </div>
-                  ) : (
-                    <div className="py-10 text-center space-y-2">
-                       <div className="text-4xl grayscale opacity-30">🐚</div>
-                       <p className="text-[10px] font-black uppercase tracking-widest text-[var(--c-text-secondary)] italic">No assets found in this sector.</p>
-                    </div>
-                  )}
-
-                  {/* DYNAMIC PAGINATION CONTROLS */}
-                  {totalPages > 1 && (
-                    <div className="flex flex-col items-center gap-3 md:gap-6 pt-4 md:pt-10">
-                       <div className="flex items-center gap-1 md:gap-2">
-                          <button 
-                            disabled={currentPage === 1}
-                            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                            className="w-9 h-9 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 flex items-center justify-center text-[var(--c-text-secondary)] hover:text-[var(--foreground)] disabled:opacity-20 transition-all"
-                          >
-                             <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
-                          </button>
-
-                          {Array.from({ length: totalPages }).map((_, i) => {
-                             const pageNum = i + 1;
-                             // Smart Pagination: Show current, 1st, last, and neighbors
-                             const isVisible = totalPages <= 5 || 
-                               pageNum === 1 || 
-                               pageNum === totalPages || 
-                               Math.abs(pageNum - currentPage) <= 1;
-
-                             if (!isVisible) {
-                               if (pageNum === 2 || pageNum === totalPages - 1) {
-                                 return <span key={i} className="text-[var(--c-text-secondary)] opacity-20 px-1">...</span>;
-                               }
-                               return null;
-                             }
-
-                             return (
-                                <button 
-                                  key={i} 
-                                  onClick={() => setCurrentPage(pageNum)}
-                                  className={cn(
-                                    "w-9 h-9 md:w-12 md:h-12 rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase transition-all border",
-                                    currentPage === pageNum ? "bg-[var(--c-primary)] border-[var(--c-primary)] text-[var(--foreground)] shadow-[var(--c-shadow-glow)]" : "bg-[var(--foreground)]/5 border-[var(--foreground)]/5 text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)]"
-                                  )}
-                                >
-                                  {pageNum}
-                                </button>
-                             );
+                        {/* CATEGORY-WISE SECTIONS */}
+                        <div className="space-y-12">
+                          {PRODUCT_CATEGORIES.map((category) => {
+                            const categoryProducts = products.filter(p => {
+                              const dbCat = PRODUCT_CATEGORIES.find(c => c.id === p.category);
+                              return (dbCat ? dbCat.label : null) === category.label || p.category === category.label || p.category === category.id;
+                            });
+                            
+                            if (categoryProducts.length === 0) return null;
+                            
+                            return (
+                              <div key={category.id} className="space-y-4">
+                                 <div className="flex items-center justify-between">
+                                    <h3 className="text-xl md:text-2xl font-black text-[var(--c-text-primary)] uppercase italic">{category.label}</h3>
+                                    <button onClick={() => setActiveTab(category.label)} className="text-[10px] font-black uppercase text-[var(--c-primary)] flex items-center gap-1 group">View All <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" /></button>
+                                 </div>
+                                 <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 snap-x">
+                                    {categoryProducts.map(product => (
+                                      <div key={product.id} className="w-[280px] md:w-[320px] flex-shrink-0 snap-start">
+                                        <ProductCard product={product} />
+                                      </div>
+                                    ))}
+                                 </div>
+                              </div>
+                            );
                           })}
+                        </div>
+                     </div>
+                  )}
 
-                          <button 
-                            disabled={currentPage === totalPages}
-                            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                            className="w-9 h-9 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 flex items-center justify-center text-[var(--c-text-secondary)] hover:text-[var(--foreground)] disabled:opacity-20 transition-all"
-                          >
-                             <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
-                          </button>
-                       </div>
-                       <p className="text-[8px] md:text-[9px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.2em] italic">Sector {currentPage} of {totalPages} • {filteredProducts.length} Results</p>
-                    </div>
+                  {!showLayers && (
+                    <>
+                      {paginatedProducts.length > 0 ? (
+                        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-[4px] md:gap-4">
+                           {paginatedProducts.map((product) => (
+                             <ProductCard key={product.id} product={product} />
+                           ))}
+                        </div>
+                      ) : (
+                        <div className="py-10 text-center space-y-2">
+                           <div className="text-4xl grayscale opacity-30">🐚</div>
+                           <p className="text-[10px] font-black uppercase tracking-widest text-[var(--c-text-secondary)] italic">No assets found in this sector.</p>
+                        </div>
+                      )}
+
+                      {/* DYNAMIC PAGINATION CONTROLS */}
+                      {totalPages > 1 && (
+                        <div className="flex flex-col items-center gap-3 md:gap-6 pt-4 md:pt-10">
+                           <div className="flex items-center gap-1 md:gap-2">
+                              <button 
+                                disabled={currentPage === 1}
+                                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                className="w-9 h-9 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 flex items-center justify-center text-[var(--c-text-secondary)] hover:text-[var(--foreground)] disabled:opacity-20 transition-all"
+                              >
+                                 <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
+                              </button>
+
+                              {Array.from({ length: totalPages }).map((_, i) => {
+                                 const pageNum = i + 1;
+                                 // Smart Pagination: Show current, 1st, last, and neighbors
+                                 const isVisible = totalPages <= 5 || 
+                                   pageNum === 1 || 
+                                   pageNum === totalPages || 
+                                   Math.abs(pageNum - currentPage) <= 1;
+
+                                 if (!isVisible) {
+                                   if (pageNum === 2 || pageNum === totalPages - 1) {
+                                     return <span key={i} className="text-[var(--c-text-secondary)] opacity-20 px-1">...</span>;
+                                   }
+                                   return null;
+                                 }
+
+                                 return (
+                                    <button 
+                                      key={i} 
+                                      onClick={() => setCurrentPage(pageNum)}
+                                      className={cn(
+                                        "w-9 h-9 md:w-12 md:h-12 rounded-xl md:rounded-2xl text-[8px] md:text-[10px] font-black uppercase transition-all border",
+                                        currentPage === pageNum ? "bg-[var(--c-primary)] border-[var(--c-primary)] text-[var(--foreground)] shadow-[var(--c-shadow-glow)]" : "bg-[var(--foreground)]/5 border-[var(--foreground)]/5 text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)]"
+                                      )}
+                                    >
+                                      {pageNum}
+                                    </button>
+                                 );
+                              })}
+
+                              <button 
+                                disabled={currentPage === totalPages}
+                                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                                className="w-9 h-9 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 flex items-center justify-center text-[var(--c-text-secondary)] hover:text-[var(--foreground)] disabled:opacity-20 transition-all"
+                              >
+                                 <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
+                              </button>
+                           </div>
+                           <p className="text-[8px] md:text-[9px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.2em] italic">Sector {currentPage} of {totalPages} • {filteredProducts.length} Results</p>
+                        </div>
+                      )}
+                    </>
                   )}
                </main>
             </div>
