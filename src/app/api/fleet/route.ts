@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { order_id, lat, lng, temp, status, log_entry } = body;
+    const { order_id, lat, lng, temp, status, log_entry, agent_name } = body;
 
     if (!order_id || lat === undefined || lng === undefined) {
       return NextResponse.json({ error: "Missing Telemetry Nodes" }, { status: 400 });
@@ -16,8 +16,8 @@ export async function POST(request: Request) {
       .from('fleet_tracking')
       .upsert({
         order_id,
-        agent_id: 'AGENT-007',
-        agent_name: 'Vikram S.',
+        agent_id: `AGT-${Math.floor(Math.random() * 1000)}`,
+        agent_name: agent_name || 'UNASSIGNED AGENT',
         current_lat: lat,
         current_lng: lng,
         current_temp: temp || -20.0,

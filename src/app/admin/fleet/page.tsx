@@ -159,10 +159,24 @@ export default function AgentMissionControl() {
   );
   const [missions, setMissions] = React.useState<any[]>([]
   );
-  const [isDispatchModalOpen, setIsDispatchModalOpen] = React.useState(false
-  );
+  const [isDispatchModalOpen, setIsDispatchModalOpen] = React.useState(false);
+  const [pendingOrders, setPendingOrders] = React.useState<any[]>([]);
   const [dispatchForm, setDispatchForm] = React.useState({ order_id: "", agent_name: "", lat: 11.6667, lng: 92.7500 });
   const [editForm, setEditForm] = React.useState({ lat: 11.6667, lng: 92.7500, temp: -22.4, status: "IN_TRANSIT", log_status: "", location_name: "" });
+
+  const fetchPendingOrders = async () => {
+    try {
+      const res = await fetch('/api/fleet/pending');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success) {
+          setPendingOrders(data.orders);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const fetchFleetTelemetry = async () => {
     try {
@@ -183,10 +197,9 @@ export default function AgentMissionControl() {
   };
 
   React.useEffect(() => {
-    fetchFleetTelemetry(
-  );
-    const interval = setInterval(fetchFleetTelemetry, 20000
-  );
+    fetchFleetTelemetry();
+    fetchPendingOrders();
+    const interval = setInterval(fetchFleetTelemetry, 20000);
     return (
 ) => clearInterval(interval
   );
@@ -361,8 +374,28 @@ export default function AgentMissionControl() {
          <div className="space-y-4 lg:space-y-6">
             <div className="space-y-3 lg:space-y-4">
                <div className="space-y-2">
-                 <label className="text-[8px] lg:text-[9px] font-black text-text-secondary uppercase tracking-widest italic">Order Ref</label>
-                 <Input value={dispatchForm.order_id} onChange={e => setDispatchForm(p => ({ ...p, order_id: e.target.value }))} className="h-10 lg:h-12 bg-[var(--foreground)]/5 border-[var(--foreground)]/10 text-xs rounded-xl" placeholder="ORD-XXXX" />
+                 <label className="text-[8px] lg:text-[9px] font-black text-text-secondary uppercase tracking-widest italic">Upcoming Deliveries (Select to Dispatch)</label>
+                 <div className="max-h-[160px] overflow-y-auto space-y-2 pr-2 scrollbar-hide border border-[var(--foreground)]/5 rounded-xl p-2 bg-[var(--foreground)]/5">
+                   {pendingOrders.length === 0 ? (
+                     <p className="text-[9px] text-center text-text-secondary italic uppercase p-4 font-black">No upcoming deliveries found</p>
+                   ) : pendingOrders.map((order: any) => (
+                     <div 
+                       key={order.order_id} 
+                       onClick={() => setDispatchForm(p => ({ ...p, order_id: order.order_id }))}
+                       className={cn("p-2 rounded-lg cursor-pointer flex justify-between items-center border transition-all", dispatchForm.order_id === order.order_id ? "bg-primary/20 border-primary" : "border-[var(--foreground)]/10 hover:border-primary/50")}
+                     >
+                       <div className="space-y-0.5">
+                         <p className="text-[10px] font-black uppercase italic text-[var(--foreground)] tracking-tighter">{order.order_id}</p>
+                         <p className="text-[8px] font-black uppercase italic text-text-secondary tracking-widest opacity-80">{order.customer_name} • {order.area}</p>
+                       </div>
+                       <Badge className="text-[7px] px-1 py-0 uppercase italic">{order.status}</Badge>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+               <div className="space-y-2">
+                 <label className="text-[8px] lg:text-[9px] font-black text-text-secondary uppercase tracking-widest italic">Order Ref (Manual Override)</label>
+                 <Input value={dispatchForm.order_id} onChange={e => setDispatchForm(p => ({ ...p, order_id: e.target.value }))} className="h-10 lg:h-12 bg-[var(--foreground)]/5 border-[var(--foreground)]/10 text-xs rounded-xl italic font-black uppercase text-primary" placeholder="ORD-XXXX" />
                </div>
                <div className="space-y-2">
                  <label className="text-[8px] lg:text-[9px] font-black text-text-secondary uppercase tracking-widest italic">Agent Designation</label>
