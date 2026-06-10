@@ -63,9 +63,9 @@ export default function AdminSupportHub() {
         // Detect incoming calls
         const recentCall = data.find((c: any) => {
           if (c.unread_count > 0 && c.last_message) {
-            if (c.last_message.includes('[VIDEO_CALL_INVITE]')) {
-              // Extract RoomID. Format: "[VIDEO_CALL_INVITE] ROOM_1_17180000"
-              const roomID = c.last_message.replace('[VIDEO_CALL_INVITE]', '').trim();
+            if (c.last_message.includes('[VIDEO_CALL_INVITE]:')) {
+              // Extract RoomID. Format: "[VIDEO_CALL_INVITE]:ROOM_1_17180000"
+              const roomID = c.last_message.replace('[VIDEO_CALL_INVITE]:', '').trim();
               if (!processedInvites.current.has(roomID)) {
                 return true;
               }
@@ -467,8 +467,8 @@ export default function AdminSupportHub() {
                   </div>
 
                   {messages.map((msg) => {
-                    const isVideoInvite = msg.message_text.includes("[VIDEO_CALL_INVITE]");
-                    const roomID = isVideoInvite ? msg.message_text.replace("[VIDEO_CALL_INVITE]", "").trim() : null;
+                    const isVideoInvite = msg.message_text.includes("[VIDEO_CALL_INVITE]:");
+                    const roomID = isVideoInvite ? msg.message_text.replace("[VIDEO_CALL_INVITE]:", "").trim() : null;
 
                     return (
                       <div 
