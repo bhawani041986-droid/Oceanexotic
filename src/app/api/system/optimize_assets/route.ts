@@ -4,12 +4,16 @@ import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://kyqmhibffbwoqlpdplfu.supabase.co';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 export async function GET() {
   try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://kyqmhibffbwoqlpdplfu.supabase.co';
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    
+    if (!supabaseKey) {
+       return NextResponse.json({ status: 'error', message: 'Missing Supabase Key in environment variables.' }, { status: 500 });
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseKey);
     // Note: In a true Vercel production environment, scanning local folders is unreliable.
     // This script acts as a bridge for legacy assets uploaded via FTP/Git.
     const originalDir = path.join(process.cwd(), 'public', 'uploads', 'original');
