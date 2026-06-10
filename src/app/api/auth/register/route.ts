@@ -35,10 +35,13 @@ export async function POST(request: Request) {
     // Default status: Sellers might require approval, but let's default to ACTIVE for immediate entry unless otherwise specified
     const newStatus = 'ACTIVE';
 
+    const uniqueId = Date.now();
+
     const { data: newUser, error } = await supabase
       .from('users')
       .insert([
         {
+          id: uniqueId,
           name,
           email,
           password: hashedPassword,
