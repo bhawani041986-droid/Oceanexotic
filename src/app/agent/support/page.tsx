@@ -573,8 +573,19 @@ export default function AgentSupportHub() {
             )}
           </div>
 
-        </div>
       </div>
+
+      <AnimatePresence>
+        {activeVideoRoom && (
+          <NativeVideoCall
+            roomID={activeVideoRoom}
+            userID={currentUserId}
+            userName="Fleet Agent Node"
+            onClose={() => setActiveVideoRoom(null)}
+          />
+        )}
+      </AnimatePresence>
+
     </>
   );
 }

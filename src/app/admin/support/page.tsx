@@ -557,8 +557,19 @@ export default function AdminSupportHub() {
             )}
           </div>
 
-        </div>
       </div>
+
+      <AnimatePresence>
+        {activeVideoRoom && (
+          <NativeVideoCall
+            roomID={activeVideoRoom}
+            userID={currentUserId}
+            userName="OceanExotic Command"
+            onClose={() => setActiveVideoRoom(null)}
+          />
+        )}
+      </AnimatePresence>
+
     </>
   );
 }

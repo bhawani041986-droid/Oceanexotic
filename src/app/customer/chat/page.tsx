@@ -280,7 +280,18 @@ export default function ChatPage() {
                </div>
                <div className="flex items-center gap-2 md:gap-4">
                   <button className="p-3 bg-white/5 rounded-xl hover:bg-primary transition-colors"><Phone className="w-5 h-5" /></button>
-                  <button onClick={handleInitiateVideoCall} className="p-3 bg-white/5 rounded-xl hover:bg-primary transition-colors"><Video className="w-5 h-5" /></button>
+                  
+                  {/* Restrict Video Call: Only allow calling Admins or Delivery Agents */}
+                  {(currentChat?.other_party_role === 'Admin' || currentChat?.other_party_role === 'Agent') ? (
+                    <button onClick={handleInitiateVideoCall} className="p-3 bg-white/5 rounded-xl hover:bg-primary transition-colors" title="Initiate Secure Video Link">
+                      <Video className="w-5 h-5 text-success animate-pulse" />
+                    </button>
+                  ) : (
+                    <button className="p-3 bg-white/5 rounded-xl opacity-20 cursor-not-allowed" title="Video Link Unavailable for this Node">
+                      <Video className="w-5 h-5" />
+                    </button>
+                  )}
+
                   <button className="p-3 bg-[var(--foreground)]/5 rounded-xl hover:bg-[var(--foreground)]/10 transition-colors"><MoreVertical className="w-5 h-5" /></button>
                </div>
             </header>

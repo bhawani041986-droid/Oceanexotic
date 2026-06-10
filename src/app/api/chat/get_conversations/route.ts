@@ -48,6 +48,9 @@ export async function GET(request: Request) {
       } else if (admin || otherPartyId === 'ADM-001') {
         otherName = admin ? admin.name : 'OceanExotic Admin';
         role = 'Admin';
+      } else if (otherPartyId.startsWith('FLEET-')) {
+        otherName = `Delivery Agent (${otherPartyId})`;
+        role = 'Agent';
       }
 
       // Fetch unread count
