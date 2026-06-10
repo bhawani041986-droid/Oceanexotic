@@ -206,8 +206,15 @@ export default function AdminUsersPage() {
                   <TableRow key={user.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
                     <TableCell>
                       <div className="flex items-center gap-3 md:gap-4">
-                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-[16px] bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 flex items-center justify-center text-primary group-hover/row:bg-primary group-hover/row:text-[var(--foreground)] transition-all shadow-glow-purple/5">
-                          <User className="w-4 md:w-5 h-4 md:h-5" />
+                        <div className={cn(
+                          "w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-[16px] border border-[var(--foreground)]/10 flex items-center justify-center text-primary group-hover/row:bg-primary group-hover/row:text-[var(--foreground)] transition-all shadow-glow-purple/5 overflow-hidden",
+                          user.avatar_url ? "bg-transparent p-0" : "bg-[var(--foreground)]/5"
+                        )}>
+                          {user.avatar_url ? (
+                            <img src={user.avatar_url} alt={user.name} className="w-full h-full object-cover group-hover/row:scale-110 transition-transform duration-300" />
+                          ) : (
+                            <User className="w-4 md:w-5 h-4 md:h-5" />
+                          )}
                         </div>
                         <div className="space-y-0.5 md:space-y-1">
                           <p className="font-black text-[var(--foreground)] text-xs md:text-sm uppercase tracking-tighter italic group-hover/row:text-primary transition-colors">{user.name}</p>
@@ -308,8 +315,15 @@ export default function AdminUsersPage() {
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 flex items-center justify-center text-primary">
-                      <User className="w-5 h-5" />
+                    <div className={cn(
+                      "w-10 h-10 rounded-lg border border-[var(--foreground)]/10 flex items-center justify-center text-primary overflow-hidden",
+                      user.avatar_url ? "bg-transparent p-0" : "bg-[var(--foreground)]/5"
+                    )}>
+                      {user.avatar_url ? (
+                        <img src={user.avatar_url} alt={user.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <User className="w-5 h-5" />
+                      )}
                     </div>
                     <div className="space-y-0.5">
                       <p className="font-black text-[var(--foreground)] text-sm uppercase tracking-tighter italic">{user.name}</p>
