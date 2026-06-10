@@ -15,71 +15,63 @@ import {
   Lock,
   Phone,
   Video,
-  Info
+  Info,
+  CheckCircle2,
+  AlertCircle,
+  Zap
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { FULL_API_URL as API_BASE_URL } from "@/config/api";
+import { useToast } from "@/components/ui/Toast";
 
 export default function AdminSupportHub() {
-  const [mounted, setMounted] = useState(false
-  );
-  const [activeChat, setActiveChat] = useState<number | null>(null
-  );
-  const [conversations, setConversations] = useState<any[]>([]
-  );
-  const [messages, setMessages] = useState<any[]>([]
-  );
-  const [message, setMessage] = useState(""
-  );
-  const [isLoading, setIsLoading] = useState(true
-  );
-  const scrollRef = useRef<HTMLDivElement>(null
-  );
+  const { toast } = useToast();
+  const [mounted, setMounted] = useState(false);
+  const [activeChat, setActiveChat] = useState<number | null>(null);
+  const [conversations, setConversations] = useState<any[]>([]);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [message, setMessage] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const currentUserId = "ADM-001"; 
 
   const fetchConversations = async () => {
     try {
       const res = await fetch(`${API_BASE_URL}/chat/get_conversations?user_id=${currentUserId}&t=${Date.now()}`);
-      const data = await res.json(
-  );
+      const data = await res.json();
       if (Array.isArray(data)) {
-        setConversations(data
-  );
+        setConversations(data);
       }
     } catch (err) {
-      console.error("Signal failure:", err
-  );
+      console.error("Signal failure:", err);
     } finally {
-      setIsLoading(false
-  );
+      setIsLoading(false);
     }
   };
 
   const fetchMessages = async (convId: number) => {
     try {
       const res = await fetch(`${API_BASE_URL}/chat/get_messages?conversation_id=${convId}&t=${Date.now()}`);
-      const data = await res.json(
-  );
+      const data = await res.json();
       if (Array.isArray(data)) {
-        setMessages(data
-  );
+        setMessages(data);
       }
     } catch (err) {
-      console.error("Transmission error:", err
-  );
+      console.error("Transmission error:", err);
     }
   };
 
-  const handleSendMessage = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault(
-  );
-    if (!message.trim() || activeChat === null) return;
+  const handleSendMessage = async (e?: React.FormEvent, customMsg?: string) => {
+    if (e) e.preventDefault();
+    const textToSend = customMsg || message;
+    if (!textToSend.trim() || activeChat === null) return;
     
     const packet = {
       conversation_id: activeChat,
       sender_id: currentUserId,
-      message_text: message
+      message_text: textToSend
     };
 
     try {
@@ -87,223 +79,292 @@ export default function AdminSupportHub() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(packet)
-      }
-  );
+      });
       if (res.ok) {
-        setMessage(""
-  );
-        fetchMessages(activeChat
-  );
-        fetchConversations(
-  );
+        if (!customMsg) setMessage("");
+        fetchMessages(activeChat);
+        fetchConversations();
       }
     } catch (err) {
-      console.error("Signal lost:", err
-  );
+      console.error("Signal lost:", err);
+      toast("Failed to transmit signal", "error");
+    }
+  };
+
+  const handleUpdateStatus = async (convId: number, status: string) => {
+    try {
+      const res = await fetch(`/api/admin/chat`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ conversation_id: convId, status })
+      });
+      if (res.ok) {
+        toast(`Ticket marked as ${status}`, "success");
+        fetchConversations();
+        if (status === 'RESOLVED') setActiveChat(null);
+      }
+    } catch (err) {
+      toast("Failed to update status", "error");
     }
   };
 
   useEffect(() => {
-    setMounted(true
-  );
-    fetchConversations(
-  );
-    const interval = setInterval(fetchConversations, 3000
-  );
-    return (
-) => clearInterval(interval
-  );
-  }, []
-  );
+    setMounted(true);
+    fetchConversations();
+    const interval = setInterval(fetchConversations, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (activeChat !== null) {
-      fetchMessages(activeChat
-  );
-      const interval = setInterval(() => fetchMessages(activeChat), 3000
-  );
-      return (
-) => clearInterval(interval
-  );
+      fetchMessages(activeChat);
+      const interval = setInterval(() => fetchMessages(activeChat), 3000);
+      return () => clearInterval(interval);
     }
-  }, [activeChat]
-  );
+  }, [activeChat]);
 
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages]
-  );
+  }, [messages]);
 
-  const currentChat = conversations.find(c => c.id === activeChat
+  const currentChat = conversations.find(c => c.id === activeChat);
+
+  const filteredConversations = conversations.filter(c => 
+    (c.other_party_name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (c.last_message || "").toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   if (!mounted) return null;
 
   if (isLoading) {
     return (
-
-      <>
-        <div className="flex items-center justify-center h-[60vh]">
-          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-        </div>
-      </>
-    
-  );
+      <div className="flex items-center justify-center h-[60vh]">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
   }
 
   return (
-
     <>
       <div className="h-[calc(100vh-12rem)] bg-bg-secondary/20 rounded-[32px] border border-[var(--foreground)]/5 overflow-hidden flex flex-col relative">
-        
-        <AnimatePresence mode="wait">
-          {activeChat === null ? (
-            <motion.div 
-              key="list"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="flex-1 flex flex-col h-full overflow-hidden"
-            >
-              <div className="p-4 space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-xl font-black text-[var(--foreground)] uppercase italic tracking-tighter">Support Registry</h2>
-                    <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Active Communication Nodes</p>
-                  </div>
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-glow-purple/20">
-                    <MessageSquare className="w-5 h-5" />
-                  </div>
+        <div className="flex-1 flex flex-col lg:flex-row h-full overflow-hidden">
+          
+          {/* LIST VIEW */}
+          <div 
+            className={cn(
+              "flex flex-col h-full overflow-hidden lg:w-[380px] lg:border-r lg:border-[var(--foreground)]/5 shrink-0",
+              activeChat !== null ? "hidden lg:flex" : "flex w-full"
+            )}
+          >
+            <div className="p-4 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-black text-[var(--foreground)] uppercase italic tracking-tighter">Support Registry</h2>
+                  <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Active Communication Nodes</p>
                 </div>
-
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                  <input 
-                    placeholder="Search Protocols..." 
-                    className="w-full h-12 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-2xl pl-10 pr-4 text-xs font-black uppercase text-[var(--foreground)] outline-none focus:border-primary/50 transition-all italic"
-                  />
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shadow-glow-purple/20">
+                  <MessageSquare className="w-5 h-5" />
                 </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto px-4 pb-20 space-y-3 no-scrollbar">
-                {conversations.length === 0 ? (
-                  <div className="text-center py-20 opacity-20 italic text-sm">No active signals found in the registry.</div>
-                ) : (
-                  conversations.map((conv) => (
-                    <button
-                      key={conv.id}
-                      onClick={() => setActiveChat(conv.id)}
-                      className="w-full p-4 rounded-3xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 flex items-center gap-4 active:scale-95 transition-all relative overflow-hidden shadow-xl"
-                    >
-                      <div className="relative">
-                        <div className="w-12 h-12 rounded-2xl bg-primary/20 border border-primary/20 flex items-center justify-center text-primary font-black text-sm">
-                          {(conv.other_party_name || "??").substring(0, 2).toUpperCase()}
-                        </div>
-                        {conv.online && <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-[#0B1120] bg-success shadow-lg" />}
-                      </div>
-                      
-                      <div className="flex-1 text-left min-w-0">
-                        <div className="flex items-center justify-between mb-1">
-                          <p className="text-xs font-black text-[var(--foreground)] uppercase italic truncate pr-2">{conv.other_party_name}</p>
-                          <span className="text-[8px] font-black text-slate-500 uppercase">{conv.time}</span>
-                        </div>
-                        <p className="text-[10px] font-medium text-slate-400 truncate opacity-80">{conv.last_message}</p>
-                      </div>
-                    </button>
-                  ))
-                )}
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <input 
+                  placeholder="Search Protocols..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full h-12 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-2xl pl-10 pr-4 text-xs font-black uppercase text-[var(--foreground)] outline-none focus:border-primary/50 transition-all italic"
+                />
               </div>
-            </motion.div>
-          ) : (
-            <motion.div 
-              key="chat"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              className="flex-1 flex flex-col h-full overflow-hidden"
-            >
-              <header className="h-16 px-4 bg-[var(--foreground)]/5 border-b border-[var(--foreground)]/5 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <button onClick={() => setActiveChat(null)} className="p-2 text-slate-400 hover:text-[var(--foreground)] transition-colors">
-                    <ChevronLeft className="w-6 h-6" />
-                  </button>
-                  <div className="flex items-center gap-3">
-                    <div className="relative">
-                      <div className="w-10 h-10 rounded-xl bg-primary/20 border border-primary/20 flex items-center justify-center text-primary font-black text-xs">
-                        {(currentChat?.other_party_name || "??").substring(0, 2).toUpperCase()}
-                      </div>
-                      {currentChat?.online && <div className="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full border-2 border-[#0B1120]" />}
-                    </div>
-                    <div>
-                      <h3 className="text-xs font-black text-[var(--foreground)] uppercase italic leading-tight">{currentChat?.other_party_name}</h3>
-                      <p className="text-[8px] font-black text-success uppercase tracking-widest italic opacity-60">{currentChat?.other_party_role} NODE</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                   <button className="p-2 text-slate-400 hover:text-primary transition-colors"><Phone className="w-5 h-5" /></button>
-                   <button className="p-2 text-slate-400 hover:text-primary transition-colors"><Video className="w-5 h-5" /></button>
-                </div>
-              </header>
+            </div>
 
-              <div ref={scrollRef} className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-6">
-                <div className="flex flex-col items-center gap-2 mb-8 opacity-20">
-                   <Lock className="w-3 h-3" />
-                   <p className="text-[8px] font-black uppercase tracking-[0.2em] text-center">ENCRYPTED CHANNEL <br/> SIGNAL STABILITY: 99.8%</p>
-                </div>
-
-                {messages.map((msg) => (
-                  <div 
-                    key={msg.id}
+            <div className="flex-1 overflow-y-auto px-4 pb-20 space-y-3 no-scrollbar">
+              {filteredConversations.length === 0 ? (
+                <div className="text-center py-20 opacity-40 italic text-xs font-black uppercase tracking-widest text-slate-500">No active signals found.</div>
+              ) : (
+                filteredConversations.map((conv) => (
+                  <button
+                    key={conv.id}
+                    onClick={() => setActiveChat(conv.id)}
                     className={cn(
-                      "flex flex-col",
-                      msg.sender_id === currentUserId ? "items-end" : "items-start"
+                      "w-full p-4 rounded-3xl border flex items-start gap-4 transition-all relative overflow-hidden",
+                      activeChat === conv.id 
+                        ? "bg-[var(--foreground)]/10 border-primary/30 shadow-glow-purple/10" 
+                        : "bg-[var(--foreground)]/5 border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10"
                     )}
                   >
-                    <div className={cn(
-                      "max-w-[85%] p-4 rounded-3xl relative shadow-2xl transition-all",
-                      msg.sender_id === currentUserId 
-                        ? "bg-primary text-[var(--foreground)] rounded-tr-none shadow-glow-purple" 
-                        : "bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] rounded-tl-none"
-                    )}>
-                      <p className="text-xs leading-relaxed font-medium">{msg.message_text}</p>
-                      <div className={cn(
-                        "flex items-center gap-2 mt-2 opacity-40",
-                        msg.sender_id === currentUserId ? "justify-end" : "justify-start"
-                      )}>
-                        <span className="text-[8px] font-black uppercase italic">{new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    <div className="relative shrink-0">
+                      <div className="w-12 h-12 rounded-2xl bg-primary/20 border border-primary/20 flex items-center justify-center text-primary font-black text-sm">
+                        {(conv.other_party_name || "??").substring(0, 2).toUpperCase()}
+                      </div>
+                      {conv.online && <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-[#0B1120] bg-success shadow-lg" />}
+                    </div>
+                    
+                    <div className="flex-1 text-left min-w-0 pt-0.5">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <p className="text-xs font-black text-[var(--foreground)] uppercase italic truncate pr-2">{conv.other_party_name}</p>
+                        <span className="text-[8px] font-black text-slate-500 uppercase">{conv.time}</span>
+                      </div>
+                      <p className="text-[10px] font-medium text-slate-400 truncate opacity-80 mb-2">{conv.last_message}</p>
+                      <div className="flex items-center gap-2">
+                        <Badge variant={conv.status === 'RESOLVED' ? 'success' : 'warning'} className="text-[6px] px-1 py-0 border-none">
+                          {conv.status || 'OPEN'}
+                        </Badge>
+                        {conv.priority === 'HIGH' && (
+                          <Badge variant="danger" className="text-[6px] px-1 py-0 border-none">URGENT</Badge>
+                        )}
+                      </div>
+                    </div>
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* CHAT VIEW */}
+          <div 
+            className={cn(
+              "flex flex-col h-full overflow-hidden lg:flex-1 relative",
+              activeChat === null ? "hidden lg:flex" : "flex w-full"
+            )}
+          >
+            {activeChat === null ? (
+              <div className="flex-1 flex flex-col items-center justify-center opacity-20">
+                <MessageSquare className="w-16 h-16 mb-4" />
+                <h3 className="text-lg font-black uppercase tracking-widest italic">Intercepting Signals</h3>
+                <p className="text-xs font-bold">Select a node from the registry</p>
+              </div>
+            ) : (
+              <>
+                <header className="h-16 px-4 bg-[var(--foreground)]/5 border-b border-[var(--foreground)]/5 flex items-center justify-between shrink-0">
+                  <div className="flex items-center gap-3">
+                    <button onClick={() => setActiveChat(null)} className="p-2 text-slate-400 hover:text-[var(--foreground)] transition-colors lg:hidden">
+                      <ChevronLeft className="w-6 h-6" />
+                    </button>
+                    <div className="flex items-center gap-3">
+                      <div className="relative hidden sm:block">
+                        <div className="w-10 h-10 rounded-xl bg-primary/20 border border-primary/20 flex items-center justify-center text-primary font-black text-xs">
+                          {(currentChat?.other_party_name || "??").substring(0, 2).toUpperCase()}
+                        </div>
+                        {currentChat?.online && <div className="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full border-2 border-[#0B1120]" />}
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-xs font-black text-[var(--foreground)] uppercase italic leading-tight">{currentChat?.other_party_name}</h3>
+                          {currentChat?.order_id && (
+                            <span className="text-[8px] px-1.5 py-0.5 rounded bg-primary/10 text-primary font-black border border-primary/20">
+                              {currentChat.order_id}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-[8px] font-black text-success uppercase tracking-widest italic opacity-60">{currentChat?.other_party_role} NODE</p>
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
-
-              <div className="p-4 bg-[var(--foreground)]/5 border-t border-[var(--foreground)]/5">
-                <form onSubmit={handleSendMessage} className="flex items-center gap-2 max-w-lg mx-auto">
-                  <div className="flex-1 flex items-center gap-2 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-full px-4 py-2">
-                    <button type="button" className="p-1.5 text-slate-500 hover:text-primary transition-colors"><Smile className="w-5 h-5" /></button>
-                    <textarea 
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      placeholder="SIGNAL TRANSMISSION..."
-                      rows={1}
-                      className="flex-1 bg-transparent border-none outline-none text-xs text-[var(--foreground)] placeholder:text-slate-600 font-medium py-1.5 resize-none max-h-32 no-scrollbar"
-                    />
-                    <button type="button" className="p-1.5 text-slate-500 hover:text-primary transition-colors"><Paperclip className="w-5 h-5" /></button>
+                  <div className="flex items-center gap-2">
+                    {currentChat?.status !== 'RESOLVED' ? (
+                      <button 
+                        onClick={() => handleUpdateStatus(activeChat, 'RESOLVED')}
+                        className="h-8 px-3 rounded-lg bg-success/10 text-success border border-success/20 hover:bg-success/20 flex items-center gap-1.5 text-[8px] font-black uppercase tracking-widest transition-all"
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5" /> Resolve
+                      </button>
+                    ) : (
+                      <button 
+                        onClick={() => handleUpdateStatus(activeChat, 'OPEN')}
+                        className="h-8 px-3 rounded-lg bg-warning/10 text-warning border border-warning/20 hover:bg-warning/20 flex items-center gap-1.5 text-[8px] font-black uppercase tracking-widest transition-all"
+                      >
+                        <AlertCircle className="w-3.5 h-3.5" /> Reopen
+                      </button>
+                    )}
+                     <button className="p-2 text-slate-400 hover:text-primary transition-colors hidden sm:block"><Phone className="w-5 h-5" /></button>
+                     <button className="p-2 text-slate-400 hover:text-primary transition-colors hidden sm:block"><Video className="w-5 h-5" /></button>
                   </div>
-                  <button type="submit" className="w-12 h-12 rounded-full bg-primary text-[var(--foreground)] flex items-center justify-center shadow-glow-purple active:scale-90 transition-all shrink-0">
-                    <Send className="w-5 h-5 ml-0.5" />
-                  </button>
-                </form>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                </header>
 
+                <div ref={scrollRef} className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-6">
+                  <div className="flex flex-col items-center gap-2 mb-8 opacity-20">
+                     <Lock className="w-3 h-3" />
+                     <p className="text-[8px] font-black uppercase tracking-[0.2em] text-center">ENCRYPTED CHANNEL <br/> SIGNAL STABILITY: 99.8%</p>
+                  </div>
+
+                  {messages.map((msg) => (
+                    <div 
+                      key={msg.id}
+                      className={cn(
+                        "flex flex-col",
+                        msg.sender_id === currentUserId ? "items-end" : "items-start"
+                      )}
+                    >
+                      <div className={cn(
+                        "max-w-[85%] p-4 rounded-3xl relative shadow-2xl transition-all",
+                        msg.sender_id === currentUserId 
+                          ? "bg-primary text-[var(--foreground)] rounded-tr-none shadow-glow-purple" 
+                          : "bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] rounded-tl-none"
+                      )}>
+                        <p className="text-xs leading-relaxed font-medium">{msg.message_text}</p>
+                        <div className={cn(
+                          "flex items-center gap-2 mt-2 opacity-40",
+                          msg.sender_id === currentUserId ? "justify-end" : "justify-start"
+                        )}>
+                          <span className="text-[8px] font-black uppercase italic">{new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="p-4 bg-bg-secondary/40 backdrop-blur-xl border-t border-[var(--foreground)]/5 shrink-0">
+                  
+                  {/* Quick Replies */}
+                  {currentChat?.status !== 'RESOLVED' && (
+                    <div className="flex gap-2 overflow-x-auto no-scrollbar mb-3 pb-1 max-w-3xl mx-auto">
+                      {[
+                        "I am checking with the logistics fleet.",
+                        "Your payment has been fully verified.",
+                        "The shipment is out for delivery."
+                      ].map((qr, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => handleSendMessage(undefined, qr)}
+                          className="px-3 py-1.5 rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 hover:border-primary/50 text-[9px] font-black uppercase tracking-widest whitespace-nowrap flex items-center gap-1.5 transition-all text-text-secondary hover:text-primary"
+                        >
+                          <Zap className="w-3 h-3" /> {qr.substring(0, 20)}...
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
+                  <form onSubmit={handleSendMessage} className="flex items-center gap-2 max-w-3xl mx-auto">
+                    <div className="flex-1 flex items-center gap-2 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-full px-4 py-2 focus-within:border-primary/50 transition-colors">
+                      <button type="button" className="p-1.5 text-slate-500 hover:text-primary transition-colors"><Smile className="w-5 h-5" /></button>
+                      <textarea 
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        placeholder={currentChat?.status === 'RESOLVED' ? "TICKET CLOSED" : "SIGNAL TRANSMISSION..."}
+                        disabled={currentChat?.status === 'RESOLVED'}
+                        rows={1}
+                        className="flex-1 bg-transparent border-none outline-none text-xs text-[var(--foreground)] placeholder:text-slate-600 font-medium py-1.5 resize-none max-h-32 no-scrollbar disabled:opacity-50"
+                      />
+                      <button type="button" className="p-1.5 text-slate-500 hover:text-primary transition-colors"><Paperclip className="w-5 h-5" /></button>
+                    </div>
+                    <button 
+                      type="submit" 
+                      disabled={!message.trim() || currentChat?.status === 'RESOLVED'}
+                      className="w-12 h-12 rounded-full bg-primary text-[var(--foreground)] flex items-center justify-center shadow-glow-purple active:scale-90 transition-all shrink-0 disabled:opacity-50 disabled:shadow-none"
+                    >
+                      <Send className="w-5 h-5 ml-0.5 text-black" />
+                    </button>
+                  </form>
+                </div>
+              </>
+            )}
+          </div>
+
+        </div>
       </div>
     </>
-  
   );
 }
