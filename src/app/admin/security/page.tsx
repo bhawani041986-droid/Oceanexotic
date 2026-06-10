@@ -35,6 +35,12 @@ export default function AdminSecurityPage() {
   );
   
   // Security States
+  const [mfaMethods, setMfaMethods] = useState<any[]>([]);
+  const [sessions, setSessions] = useState([
+    { id: 1, user: "Admiral Morgan", device: "macOS • Chrome v124", ip: "192.168.1.42", location: "Global Fleet HQ", status: "CURRENT" },
+    { id: 2, user: "Fleet Master Jin", device: "Windows 11 • Edge v122", ip: "45.12.8.210", location: "Pacific Node", status: "ACTIVE" },
+    { id: 3, user: "Sea Scout Sarah", device: "iPhone 15 • Safari Mobile", ip: "103.4.22.15", location: "Mobile Node", status: "ACTIVE" },
+  ]);
   const [sessionTimeout, setSessionTimeout] = useState("30 MINUTES");
   const [maxLoginAttempts, setMaxLoginAttempts] = useState("5 ATTEMPTS");
   const [isSaving, setIsSaving] = useState(false);
