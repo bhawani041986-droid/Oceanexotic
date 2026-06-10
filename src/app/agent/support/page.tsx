@@ -19,7 +19,8 @@ import {
   CheckCircle2,
   AlertCircle,
   Zap,
-  Plus
+  Plus,
+  Radar
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
