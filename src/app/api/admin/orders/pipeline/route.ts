@@ -23,7 +23,7 @@ export async function GET() {
   try {
     const { data: ordersData, error } = await supabase
       .from('orders')
-      .select('*, users(name)')
+      .select('*')
       .order('created_at', { ascending: false });
 
     if (error) throw error;

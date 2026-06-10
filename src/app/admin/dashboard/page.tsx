@@ -50,16 +50,21 @@ export default function AdminDashboardPage() {
   const fetchAdmiralData = async () => {
     setIsLoading(true);
     try {
-      // Parallel Authority Handshake
-      const [healthData, globalStats] = await Promise.all([
+      // Parallel Authority Handshake without breaking each other
+      const [healthRes, statsRes] = await Promise.allSettled([
         dbService.checkHealth(),
         orderService.getSellerStats() // Using seller stats as a base for global stats in demo
       ]);
 
+      const healthData = healthRes.status === 'fulfilled' ? healthRes.value : { status: "Offline", uptime: "0%", database: "Disconnected" };
+      const globalStats = statsRes.status === 'fulfilled' ? statsRes.value : { revenue: 0, byArea: [], bySeller: [], summary: { totalRevenue: 0 } };
+
       setHealth(healthData);
 
+      const revenueVal = globalStats.summary?.totalRevenue || globalStats.revenue || 0;
+
       const transformedStats = [
-        { label: "Global Liquidity", value: `₹${(globalStats.revenue * 5).toLocaleString()}`, growth: "+24.5%", icon: <Globe className="w-5 h-5" />, trend: "up" },
+        { label: "Global Liquidity", value: `₹${(revenueVal * 5).toLocaleString()}`, growth: "+24.5%", icon: <Globe className="w-5 h-5" />, trend: "up" },
         { label: "Platform Nodes", value: "1,248", growth: "+12", icon: <Server className="w-5 h-5" />, trend: "up" },
         { label: "Sovereign Users", value: "48,250", growth: "+8.2%", icon: <ShieldCheck className="w-5 h-5" />, trend: "up" },
         { label: "System Latency", value: "12ms", growth: "-2ms", icon: <Zap className="w-5 h-5" />, trend: "up" },
