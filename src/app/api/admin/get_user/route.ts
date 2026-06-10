@@ -25,6 +25,9 @@ export async function GET(request: Request) {
        return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
+    // Do not return the hashed password to the client
+    delete user.password;
+
     return NextResponse.json(user);
   } catch (error: any) {
     console.error('Error fetching user:', error);

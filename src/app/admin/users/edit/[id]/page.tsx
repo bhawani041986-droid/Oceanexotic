@@ -46,6 +46,21 @@ export default function AdminEditUserPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // In a real app, you would upload this to Supabase Storage.
+      // Here we just preview it.
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result as string);
+        toast("Biometric asset captured locally. Commit to sync.", "success");
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   useEffect(() => {
     setIsMounted(true);
@@ -61,7 +76,7 @@ export default function AdminEditUserPage() {
             email: data.email || "",
             role: data.role || "",
             status: data.status || "",
-            password: data.password || ""
+            password: ""
           });
         }
       } catch (err) {
@@ -195,7 +210,8 @@ export default function AdminEditUserPage() {
                           type={showPassword ? "text" : "password"} 
                           value={formData.password} 
                           onChange={(e) => setFormData({...formData, password: e.target.value})}
-                          className="h-14 pl-12 pr-12 bg-bg-secondary border-primary/20 font-black tracking-widest text-primary" 
+                          placeholder="Leave blank to keep unchanged"
+                          className="h-14 pl-12 pr-12 bg-bg-secondary border-primary/20 font-black tracking-widest text-primary placeholder:opacity-50 placeholder:italic placeholder:font-medium placeholder:tracking-normal" 
                         />
                        <Key className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primary opacity-40" />
                        <button 
@@ -300,8 +316,15 @@ export default function AdminEditUserPage() {
               </div>
               <div 
                 className="aspect-square rounded-[32px] border-2 border-dashed border-[var(--foreground)]/10 bg-[var(--foreground)]/5 flex flex-col items-center justify-center gap-4 cursor-pointer hover:border-primary/30 transition-all overflow-hidden relative group"
-                onClick={() => toast("Initializing biometric asset capture...", "info")}
+                onClick={() => fileInputRef.current?.click()}
               >
+                 <input 
+                   type="file" 
+                   ref={fileInputRef} 
+                   className="hidden" 
+                   accept="image/png, image/jpeg" 
+                   onChange={handleImageUpload} 
+                 />
                  {profileImage ? (
                    <img src={profileImage} alt="Avatar" className="w-full h-full object-cover" />
                  ) : (
