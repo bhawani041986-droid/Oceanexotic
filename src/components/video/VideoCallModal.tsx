@@ -54,6 +54,7 @@ export function VideoCallModal({ roomID, userName, userID, onClose }: VideoCallM
       scenario: {
         mode: ZegoUIKitPrebuilt.OneONoneCall, // 1-on-1 calls
       },
+      showPreJoinView: false,
       onLeaveRoom: () => {
         onClose();
       },
