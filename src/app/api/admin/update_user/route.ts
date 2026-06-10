@@ -36,7 +36,7 @@ export async function POST(request: Request) {
       .eq('id', id);
 
     // Graceful fallback if rank column does not exist yet
-    if (error && error.message && error.message.includes('column "rank"')) {
+    if (error && error.message && error.message.includes('rank') && error.message.includes('column')) {
       delete updates.rank;
       const fallback = await supabase.from('users').update(updates).eq('id', id);
       error = fallback.error;

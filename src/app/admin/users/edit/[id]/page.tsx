@@ -136,7 +136,7 @@ export default function AdminEditUserPage() {
         toast("Identity profile and credentials successfully synchronized.", "success");
         router.push("/admin/users");
       } else {
-        throw new Error(data.message || "Handshake failed.");
+        throw new Error(data.error || data.message || `Handshake failed. Payload: ${JSON.stringify(data)}`);
       }
     } catch (err: any) {
       console.error("Registry Sync Failure:", err);
