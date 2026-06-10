@@ -239,9 +239,9 @@ export default function CustomerRecipesPage() {
                   <img 
                     src={recipe.image} 
                     alt={recipe.title} 
-                    className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-[1200ms] ease-out" 
+                    className="absolute inset-0 w-full h-full object-cover opacity-100 group-hover:scale-110 transition-transform duration-[1200ms] ease-out" 
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[var(--c-bg)] via-[var(--c-bg)]/40 to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-transparent pointer-events-none" />
 
                   <div className="absolute top-0 left-0 w-full h-[1.5px] bg-[var(--c-primary)] opacity-0 group-hover:opacity-60 transition-opacity animate-scan pointer-events-none" />
 
