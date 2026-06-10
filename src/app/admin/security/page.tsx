@@ -35,28 +35,72 @@ export default function AdminSecurityPage() {
   );
   
   // Security States
-  const [mfaMethods, setMfaMethods] = useState([
-    { label: "Biometric Handshake", desc: "Require FaceID/TouchID for admin nodes.", active: true },
-    { label: "Authenticator App (TOTP)", desc: "Mandatory 6-digit dynamic signal codes.", active: true },
-    { label: "SMS Fallback Registry", desc: "Emergency backup via authorized mobile nodes.", active: false },
-    { label: "Hardware Security Key", desc: "Support for YubiKey / FIDO2 protocols.", active: false },
-  ]
-  );
+  const [sessionTimeout, setSessionTimeout] = useState("30 MINUTES");
+  const [maxLoginAttempts, setMaxLoginAttempts] = useState("5 ATTEMPTS");
+  const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const [sessions, setSessions] = useState([
-    { id: 1, user: "Admiral Morgan", device: "macOS • Chrome v124", ip: "192.168.1.42", location: "Global Fleet HQ", status: "CURRENT" },
-    { id: 2, user: "Fleet Master Jin", device: "Windows 11 • Edge v122", ip: "45.12.8.210", location: "Pacific Node", status: "ACTIVE" },
-    { id: 3, user: "Sea Scout Sarah", device: "iPhone 15 • Safari Mobile", ip: "103.4.22.15", location: "Mobile Node", status: "ACTIVE" },
-  ]
-  );
+  React.useEffect(() => {
+    const fetchConfig = async () => {
+      try {
+        const res = await fetch('/api/admin/security');
+        const data = await res.json();
+        if (data.status === 'success' && data.config) {
+          setMfaMethods(data.config.mfaMethods || []);
+          setIpWhitelist(data.config.ipWhitelist || "");
+          setSessionTimeout(data.config.sessionTimeout || "30 MINUTES");
+          setMaxLoginAttempts(data.config.maxLoginAttempts || "5 ATTEMPTS");
+        }
+      } catch (err) {
+        console.error("Failed to fetch security config", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchConfig();
+  }, []);
+
+  const saveConfig = async (newConfig: any) => {
+    try {
+      const res = await fetch('/api/admin/security', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newConfig)
+      });
+      const data = await res.json();
+      if (data.status !== 'success') throw new Error(data.message);
+    } catch (err: any) {
+      console.error("Failed to save security config", err);
+      toast("Configuration sync failed.", "error");
+    }
+  };
 
   const toggleMfa = (label: string) => {
-    setMfaMethods(prev => prev.map(m => 
+    const newMfa = mfaMethods.map(m => 
       m.label === label ? { ...m, active: !m.active } : m
-    )
-  );
-    toast(`${label} configuration updated.`, "info"
-  );
+    );
+    setMfaMethods(newMfa);
+    
+    saveConfig({
+      mfaMethods: newMfa,
+      ipWhitelist,
+      sessionTimeout,
+      maxLoginAttempts
+    });
+    
+    toast(`${label} configuration updated & synchronized.`, "info");
+  };
+
+  const handleSaveDirectives = async () => {
+    setIsSaving(true);
+    await saveConfig({
+      mfaMethods,
+      ipWhitelist,
+      sessionTimeout,
+      maxLoginAttempts
+    });
+    setIsSaving(false);
+    toast("Administrative access protocols synchronized.", "success");
   };
 
   const handleTerminateSession = (id: number) => {
@@ -161,7 +205,7 @@ export default function AdminSecurityPage() {
                     <div className="grid grid-cols-2 gap-3 md:gap-6">
                        <div className="space-y-[4px] md:space-y-2">
                           <label className="text-[7px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Session Timeout</label>
-                          <select defaultValue="30 MINUTES" className="w-full h-10 md:h-12 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-[8px] md:rounded-xl px-3 md:px-4 text-[8px] md:text-xs font-black text-[var(--foreground)] outline-none focus:border-primary/50 uppercase italic">
+                          <select value={sessionTimeout} onChange={(e) => setSessionTimeout(e.target.value)} className="w-full h-10 md:h-12 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-[8px] md:rounded-xl px-3 md:px-4 text-[8px] md:text-xs font-black text-[var(--foreground)] outline-none focus:border-primary/50 uppercase italic">
                              <option>15 MINUTES</option>
                              <option>30 MINUTES</option>
                              <option>1 HOUR</option>
@@ -169,15 +213,15 @@ export default function AdminSecurityPage() {
                        </div>
                        <div className="space-y-[4px] md:space-y-2">
                           <label className="text-[7px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Max Login Attempts</label>
-                          <select defaultValue="5 ATTEMPTS" className="w-full h-10 md:h-12 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-[8px] md:rounded-xl px-3 md:px-4 text-[8px] md:text-xs font-black text-[var(--foreground)] outline-none focus:border-primary/50 uppercase italic">
+                          <select value={maxLoginAttempts} onChange={(e) => setMaxLoginAttempts(e.target.value)} className="w-full h-10 md:h-12 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-[8px] md:rounded-xl px-3 md:px-4 text-[8px] md:text-xs font-black text-[var(--foreground)] outline-none focus:border-primary/50 uppercase italic">
                              <option>3 ATTEMPTS</option>
                              <option>5 ATTEMPTS</option>
                              <option>10 ATTEMPTS</option>
                           </select>
                        </div>
                     </div>
-                    <Button className="w-full h-12 md:h-14 text-[9px] md:text-[10px] font-black tracking-widest uppercase shadow-glow-purple italic rounded-[12px] md:rounded-xl" onClick={() => toast("Administrative access protocols synchronized.", "success")}>
-                       SAVE SECURITY DIRECTIVES
+                    <Button disabled={isSaving} className="w-full h-12 md:h-14 text-[9px] md:text-[10px] font-black tracking-widest uppercase shadow-glow-purple italic rounded-[12px] md:rounded-xl" onClick={handleSaveDirectives}>
+                       {isSaving ? "SYNCHRONIZING..." : "SAVE SECURITY DIRECTIVES"}
                     </Button>
                  </div>
               </Card>
