@@ -29,8 +29,8 @@ import { useToast } from "@/components/ui/Toast";
 import dynamic from "next/dynamic";
 import { IncomingCallOverlay } from "@/components/video/IncomingCallOverlay";
 
-const VideoCallModal = dynamic(
-  () => import("@/components/video/VideoCallModal").then(mod => mod.VideoCallModal),
+const NativeVideoCall = dynamic(
+  () => import("@/components/video/NativeVideoCall").then(mod => mod.NativeVideoCall),
   { ssr: false }
 );
 
@@ -248,7 +248,7 @@ export default function AdminSupportHub() {
         }}
       />
       {activeVideoRoom && (
-        <VideoCallModal 
+        <NativeVideoCall 
           roomID={activeVideoRoom} 
           userName="OceanExotic Admin" 
           userID={currentUserId}
