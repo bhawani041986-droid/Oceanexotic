@@ -8,7 +8,7 @@ export async function GET() {
     const { data: sellers, error } = await supabase
       .from('users')
       .select('id, name, email, status, created_at')
-      .eq('role', 'seller')
+      .ilike('role', 'seller')
       .order('created_at', { ascending: false });
 
     if (error) {
