@@ -21,15 +21,30 @@ export async function POST(request: Request) {
     if (password) {
        updates.password = password; // Warning: In production, hash this password before saving!
     }
+    
+    if (data.avatar_url) {
+       updates.avatar_url = data.avatar_url;
+    }
 
-    const { error } = await supabase
+    if (data.rank) {
+       updates.rank = data.rank;
+    }
+
+    let { error } = await supabase
       .from('users')
       .update(updates)
       .eq('id', id);
 
+    // Graceful fallback if rank column does not exist yet
+    if (error && error.message && error.message.includes('column "rank"')) {
+      delete updates.rank;
+      const fallback = await supabase.from('users').update(updates).eq('id', id);
+      error = fallback.error;
+    }
+
     if (error) {
       console.error("Error updating user:", error);
-      return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });
+      return NextResponse.json({ error: error.message || 'Failed to update user' }, { status: 500 });
     }
 
     return NextResponse.json({ status: 'success' });

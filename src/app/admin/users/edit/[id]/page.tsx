@@ -48,17 +48,28 @@ export default function AdminEditUserPage() {
   const [isLoading, setIsLoading] = useState(true);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // In a real app, you would upload this to Supabase Storage.
-      // Here we just preview it.
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result as string);
-        toast("Biometric asset captured locally. Commit to sync.", "success");
-      };
-      reader.readAsDataURL(file);
+      toast("Uploading biometric asset...", "info");
+      try {
+        const uploadData = new FormData();
+        uploadData.append('file', file);
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          body: uploadData
+        });
+        const data = await res.json();
+        if (data.url) {
+          setProfileImage(data.url);
+          setFormData(prev => ({ ...prev, avatar_url: data.url }));
+          toast("Biometric asset captured. Commit to sync.", "success");
+        } else {
+          toast("Failed to upload image.", "error");
+        }
+      } catch (err) {
+        toast("Upload error occurred.", "error");
+      }
     }
   };
 
@@ -71,12 +82,15 @@ export default function AdminEditUserPage() {
         const data = await res.json();
         if (data && !data.error) {
           setUser(data);
+          setProfileImage(data.avatar_url || null);
           setFormData({
             name: data.name || "",
             email: data.email || "",
             role: data.role || "",
             status: data.status || "",
-            password: ""
+            password: "",
+            avatar_url: data.avatar_url || "",
+            rank: data.rank || "BRONZE"
           });
         }
       } catch (err) {
@@ -89,12 +103,14 @@ export default function AdminEditUserPage() {
     fetchUser();
   }, [params?.id]);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<any>({
     name: "",
     email: "",
     role: "",
     status: "",
-    password: ""
+    password: "",
+    avatar_url: "",
+    rank: "BRONZE"
   });
 
   const handleSave = async () => {
@@ -385,24 +401,32 @@ export default function AdminEditUserPage() {
               </div>
               <div className="space-y-4">
                  {[
-                   { id: 'PLATINUM', label: 'PLATINUM ADMIRAL', icon: <ShieldCheck className="w-3.5 h-3.5" />, active: true },
-                   { id: 'GOLD', label: 'GOLD MASTER', icon: <Star className="w-3.5 h-3.5" />, active: false },
-                   { id: 'SILVER', label: 'SILVER VOYAGER', icon: <Globe className="w-3.5 h-3.5" />, active: false },
-                   { id: 'BRONZE', label: 'BRONZE CITIZEN', icon: <Zap className="w-3.5 h-3.5" />, active: false },
-                 ].map((rank) => (
-                    <button key={rank.id} className={cn(
-                      "w-full flex items-center gap-4 p-4 rounded-[20px] border transition-all duration-300 text-left",
-                      rank.active ? "bg-primary/10 border-primary/40 text-[var(--foreground)] shadow-glow-purple" : "bg-[var(--foreground)]/5 border-[var(--foreground)]/5 text-text-secondary"
-                    )}>
-                       <div className={cn(
-                         "w-10 h-10 rounded-xl flex items-center justify-center",
-                         rank.active ? "bg-primary text-[var(--foreground)]" : "bg-[var(--foreground)]/5"
-                       )}>
-                          {rank.icon}
-                       </div>
-                       <p className="text-[10px] font-black uppercase tracking-widest">{rank.label}</p>
-                    </button>
-                 ))}
+                   { id: 'PLATINUM', label: 'PLATINUM ADMIRAL', icon: <ShieldCheck className="w-3.5 h-3.5" /> },
+                   { id: 'GOLD', label: 'GOLD MASTER', icon: <Star className="w-3.5 h-3.5" /> },
+                   { id: 'SILVER', label: 'SILVER VOYAGER', icon: <Globe className="w-3.5 h-3.5" /> },
+                   { id: 'BRONZE', label: 'BRONZE CITIZEN', icon: <Zap className="w-3.5 h-3.5" /> },
+                 ].map((rank) => {
+                    const isActive = formData.rank === rank.id;
+                    return (
+                      <button 
+                        key={rank.id} 
+                        type="button"
+                        onClick={() => setFormData({ ...formData, rank: rank.id })}
+                        className={cn(
+                          "w-full flex items-center gap-4 p-4 rounded-[20px] border transition-all duration-300 text-left",
+                          isActive ? "bg-primary/10 border-primary/40 text-[var(--foreground)] shadow-glow-purple" : "bg-[var(--foreground)]/5 border-[var(--foreground)]/5 text-text-secondary"
+                        )}
+                      >
+                         <div className={cn(
+                           "w-10 h-10 rounded-xl flex items-center justify-center",
+                           isActive ? "bg-primary text-[var(--foreground)]" : "bg-[var(--foreground)]/5"
+                         )}>
+                            {rank.icon}
+                         </div>
+                         <p className="text-[10px] font-black uppercase tracking-widest">{rank.label}</p>
+                      </button>
+                    );
+                 })}
               </div>
            </Card>
         </div>
