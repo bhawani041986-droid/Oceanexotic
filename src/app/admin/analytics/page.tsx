@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -16,10 +16,54 @@ import {
   ChevronRight,
   Layers,
   Cpu,
-  Monitor
+  Monitor,
+  Loader2
 } from "lucide-react";
 
 export default function AdminAnalyticsPage() {
+  const [data, setData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        const res = await fetch('/api/admin/analytics');
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success) setData(json.data);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchAnalytics();
+    const interval = setInterval(fetchAnalytics, 30000); // Live refresh every 30s
+    return () => clearInterval(interval);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="h-[80vh] flex flex-col items-center justify-center gap-4 animate-fade-in">
+        <Loader2 className="w-12 h-12 text-primary animate-spin" />
+        <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40 italic">Synchronizing Live Macro-Metrics...</p>
+      </div>
+    );
+  }
+
+  const chartData = data?.chartData || [60, 45, 80, 55, 90, 70, 85, 40, 65, 75, 50, 95, 82, 68, 55, 88, 72, 90, 60, 45, 85, 70, 95, 80];
+  const pulseData = data?.pulse || [
+    { label: "Pacific Node Yield", value: "+12.4%", trend: "up" },
+    { label: "Arctic Fulfilment", value: "-2.1%", trend: "down" },
+    { label: "Atlantic Sourcing", value: "+8.5%", trend: "up" },
+  ];
+  const readinessMetrics = data?.metrics || [
+    { label: "Cold-Chain Integrity", value: "99.98%", status: "OPTIMAL" },
+    { label: "Fulfillment SLA", value: "98.2h", status: "STABLE" },
+    { label: "Node Latency", value: "14ms", status: "FAST" },
+  ];
+
   return (
 
     <div className="space-y-[10px] md:space-y-10 pt-4 md:pt-10 pb-20 px-4 md:px-0 animate-fade-in">
@@ -56,7 +100,7 @@ export default function AdminAnalyticsPage() {
             </div>
             
             <div className="h-40 md:h-72 flex items-end gap-1 md:gap-3 px-1 md:px-2 relative z-10">
-               {[60, 45, 80, 55, 90, 70, 85, 40, 65, 75, 50, 95, 82, 68, 55, 88, 72, 90, 60, 45, 85, 70, 95, 80].map((h, i) => (
+               {chartData.map((h: number, i: number) => (
                  <div key={i} className="flex-1 space-y-2 md:space-y-4 group">
                     <div className="relative w-full bg-[var(--foreground)]/5 rounded-t-[2px] md:rounded-t-[8px] overflow-hidden min-h-[2px] md:min-h-[5px]" style={{ height: `${h}%` }}>
                        <div className="absolute inset-0 bg-primary opacity-20 group-hover:opacity-100 transition-all duration-500 shadow-glow-purple" />
@@ -69,11 +113,11 @@ export default function AdminAnalyticsPage() {
                <div className="flex gap-4 md:gap-8">
                   <div className="space-y-0.5 md:space-y-1">
                      <p className="text-[7px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Peak Velocity</p>
-                     <p className="text-base md:text-lg font-black text-[var(--foreground)] italic tracking-tighter">₹14,240/hr</p>
+                     <p className="text-base md:text-lg font-black text-[var(--foreground)] italic tracking-tighter">₹{data?.peakVelocity?.toLocaleString('en-IN') || "0"}</p>
                   </div>
                   <div className="space-y-0.5 md:space-y-1">
                      <p className="text-[7px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Avg. Settlement</p>
-                     <p className="text-base md:text-lg font-black text-[var(--foreground)] italic tracking-tighter">₹420.50</p>
+                     <p className="text-base md:text-lg font-black text-[var(--foreground)] italic tracking-tighter">₹{data?.avgSettlement?.toLocaleString('en-IN', { maximumFractionDigits: 2 }) || "0"}</p>
                   </div>
                </div>
                <Button variant="ghost" className="text-[8px] md:text-[10px] font-black tracking-widest uppercase opacity-40 hover:opacity-100 flex items-center gap-2 md:gap-3 italic">
@@ -90,11 +134,7 @@ export default function AdminAnalyticsPage() {
                   <h3 className="text-base md:text-lg font-black text-[var(--foreground)] tracking-tighter uppercase italic">Sourcing Pulse</h3>
                </div>
                <div className="space-y-4 md:space-y-8">
-                  {[
-                    { label: "Pacific Node Yield", value: "+12.4%", trend: "up" },
-                    { label: "Arctic Fulfilment", value: "-2.1%", trend: "down" },
-                    { label: "Atlantic Sourcing", value: "+8.5%", trend: "up" },
-                  ].map((node) => (
+                  {pulseData.map((node: any) => (
                     <div key={node.label} className="flex items-center justify-between px-1">
                        <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">{node.label}</p>
                        <div className={`flex items-center gap-1.5 md:gap-2 text-[10px] md:text-xs font-black italic tracking-tighter ${node.trend === 'up' ? 'text-success' : 'text-danger'}`}>
@@ -113,11 +153,11 @@ export default function AdminAnalyticsPage() {
                <div className="space-y-3 md:space-y-4 relative z-10">
                   <h4 className="text-xs md:text-sm font-black text-[var(--foreground)] uppercase tracking-tighter italic">Macro-Sourcing Reach</h4>
                   <div className="space-y-1">
-                     <p className="text-3xl md:text-4xl font-black text-[var(--foreground)] italic tracking-tighter">84</p>
+                     <p className="text-3xl md:text-4xl font-black text-[var(--foreground)] italic tracking-tighter">{data?.activeSectors || 1}</p>
                      <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Active Maritime Sectors</p>
                   </div>
                   <div className="h-1 md:h-1.5 w-full bg-[var(--foreground)]/5 rounded-full overflow-hidden">
-                     <div className="h-full bg-primary rounded-full shadow-glow-purple" style={{ width: '84%' }} />
+                     <div className="h-full bg-primary rounded-full shadow-glow-purple" style={{ width: `${Math.min((data?.activeSectors || 1) * 10, 100)}%` }} />
                   </div>
                </div>
             </Card>
@@ -126,17 +166,15 @@ export default function AdminAnalyticsPage() {
 
       {/* Operational Readiness Matrix */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-[10px] md:gap-10">
-         {[
-           { label: "Cold-Chain Integrity", value: "99.98%", status: "OPTIMAL", icon: <Layers className="w-5 h-5 md:w-6 md:h-6 text-primary" /> },
-           { label: "Fulfillment SLA", value: "98.2h", status: "STABLE", icon: <Clock className="w-5 h-5 md:w-6 md:h-6 text-success" /> },
-           { label: "Node Latency", value: "14ms", status: "FAST", icon: <Cpu className="w-5 h-5 md:w-6 md:h-6 text-warning" /> },
-         ].map((stat) => (
+         {readinessMetrics.map((stat: any, index: number) => (
             <Card key={stat.label} className="p-[10px] md:p-8 space-y-4 md:space-y-6 bg-bg-secondary/20 hover:border-primary/20 transition-all border-[var(--foreground)]/5 group rounded-[24px] md:rounded-[40px] shadow-glow-purple/5">
                <div className="flex items-center justify-between">
                   <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-[16px] bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                     {stat.icon}
+                     {index === 0 && <Layers className="w-5 h-5 md:w-6 md:h-6 text-primary" />}
+                     {index === 1 && <Clock className="w-5 h-5 md:w-6 md:h-6 text-success" />}
+                     {index === 2 && <Cpu className="w-5 h-5 md:w-6 md:h-6 text-warning" />}
                   </div>
-                  <Badge variant={stat.status === "OPTIMAL" ? "success" : "secondary"} className="h-5 md:h-6 px-2 md:px-3 text-[7px] md:text-[8px] font-black tracking-widest italic uppercase">
+                  <Badge variant={stat.status === "OPTIMAL" ? "success" : stat.status === "WARNING" ? "warning" : "secondary"} className="h-5 md:h-6 px-2 md:px-3 text-[7px] md:text-[8px] font-black tracking-widest italic uppercase">
                      {stat.status}
                   </Badge>
                </div>
