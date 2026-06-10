@@ -159,10 +159,18 @@ export default function AgentMissionControl() {
   );
   const [missions, setMissions] = React.useState<any[]>([]
   );
-  const [isDispatchModalOpen, setIsDispatchModalOpen] = React.useState(false);
   const [pendingOrders, setPendingOrders] = React.useState<any[]>([]);
-  const [dispatchForm, setDispatchForm] = React.useState({ order_id: "", agent_name: "", lat: 11.6667, lng: 92.7500 });
+  const [selectedPendingOrders, setSelectedPendingOrders] = React.useState<string[]>([]);
+  const [batchAgentName, setBatchAgentName] = React.useState("");
   const [editForm, setEditForm] = React.useState({ lat: 11.6667, lng: 92.7500, temp: -22.4, status: "IN_TRANSIT", log_status: "", location_name: "" });
+
+  const toggleOrderSelection = (orderId: string) => {
+    setSelectedPendingOrders(prev => 
+      prev.includes(orderId) 
+        ? prev.filter(id => id !== orderId) 
+        : [...prev, orderId]
+    );
+  };
 
   const fetchPendingOrders = async () => {
     try {
@@ -221,19 +229,42 @@ export default function AgentMissionControl() {
   ); }
   };
 
-  const handleDispatch = async () => {
+  const handleBatchDispatch = async () => {
+    if (selectedPendingOrders.length === 0) {
+      toast("No missions selected for dispatch", "error");
+      return;
+    }
+    if (!batchAgentName) {
+      toast("Agent Designation required for dispatch", "error");
+      return;
+    }
+
     try {
-      const res = await fetch('/api/fleet', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...dispatchForm, status: "ASSIGNED" })
-      }
-  );
-      if (res.ok) { toast("Vessel Dispatched", "success"
-  ); setIsDispatchModalOpen(false
-  ); fetchFleetTelemetry(
-  ); }
-    } catch (err) { toast("Dispatch Failed", "error"
-  ); }
+      const dispatchPromises = selectedPendingOrders.map(order_id => 
+        fetch('/api/fleet', {
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            order_id, 
+            agent_name: batchAgentName, 
+            lat: 11.6667, 
+            lng: 92.7500, 
+            status: "ASSIGNED" 
+          })
+        })
+      );
+
+      await Promise.all(dispatchPromises);
+      
+      toast(`Successfully dispatched ${selectedPendingOrders.length} vessels under ${batchAgentName}`, "success");
+      
+      setSelectedPendingOrders([]);
+      setBatchAgentName("");
+      fetchFleetTelemetry();
+      fetchPendingOrders();
+    } catch (err) {
+      toast("Batch Dispatch Failed", "error");
+    }
   };
 
   return (
@@ -244,9 +275,6 @@ export default function AgentMissionControl() {
             <h1 className="text-xl md:text-3xl font-black uppercase italic tracking-tighter text-[var(--foreground)] leading-none shadow-glow-purple/5">Global Command Hub</h1>
             <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-[0.4em] flex items-center justify-center md:justify-start gap-2 italic opacity-60"><Activity className="w-3 h-3 text-primary shadow-glow-purple" /> Real-Time Authority Sector: Andaman</p>
          </div>
-         <Button onClick={() => setIsDispatchModalOpen(true)} className="h-10 md:h-12 px-6 md:px-8 gap-2 md:gap-4 text-[9px] md:text-[10px] font-black uppercase tracking-widest shadow-glow-purple bg-primary w-full md:w-auto italic rounded-lg md:rounded-xl">
-           <Plus className="w-3.5 md:w-4 h-3.5 md:h-4" /> INITIALIZE DISPATCH
-         </Button>
       </div>
 
       <Card className="h-[250px] md:h-[450px] relative overflow-hidden border-primary/20 bg-black/40 rounded-[24px] md:rounded-[48px] shadow-glow-purple/10">
@@ -259,8 +287,68 @@ export default function AgentMissionControl() {
          </div>
       </Card>
 
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-[10px] md:gap-10">
-         <Card className="xl:col-span-8 p-1 border-[var(--foreground)]/5 bg-bg-secondary/20 rounded-[24px] md:rounded-[40px] shadow-premium overflow-hidden">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-[10px] md:gap-6">
+         {/* Left Aside: Pending Missions (4 cols) */}
+         <Card className="xl:col-span-4 p-[10px] md:p-6 bg-bg-secondary/20 border-primary/20 shadow-glow-purple/5 rounded-[24px] md:rounded-[40px] flex flex-col h-[500px] xl:h-[600px]">
+            <div className="border-b border-[var(--foreground)]/5 pb-4 mb-4">
+               <h3 className="text-base md:text-lg font-black text-[var(--foreground)] uppercase italic tracking-tighter flex items-center gap-2">
+                 <ShieldCheck className="w-4 h-4 text-primary" /> Pending Missions
+               </h3>
+               <p className="text-[8px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Select upcoming deliveries to assign</p>
+            </div>
+            
+            {/* Scrollable list */}
+            <div className="flex-1 overflow-y-auto space-y-2 pr-2 scrollbar-hide">
+               {pendingOrders.length === 0 ? (
+                 <div className="h-full flex items-center justify-center">
+                   <p className="text-[9px] text-text-secondary italic uppercase font-black text-center opacity-50">No pending orders found</p>
+                 </div>
+               ) : pendingOrders.map((order: any) => {
+                 const isSelected = selectedPendingOrders.includes(order.order_id);
+                 return (
+                   <div 
+                     key={order.order_id} 
+                     onClick={() => toggleOrderSelection(order.order_id)}
+                     className={cn("p-3 rounded-xl cursor-pointer flex items-start gap-3 border transition-all", isSelected ? "bg-primary/20 border-primary shadow-glow-purple/10" : "bg-[var(--foreground)]/5 border-[var(--foreground)]/5 hover:border-primary/50")}
+                   >
+                     {/* Custom Checkbox */}
+                     <div className={cn("mt-0.5 w-4 h-4 rounded border flex items-center justify-center transition-all", isSelected ? "bg-primary border-primary" : "border-[var(--foreground)]/20")}>
+                        {isSelected && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="w-3 h-3 text-[var(--foreground)]"><polyline points="20 6 9 17 4 12"></polyline></svg>}
+                     </div>
+                     <div className="space-y-1 flex-1">
+                       <div className="flex justify-between items-center">
+                         <p className="text-[11px] font-black uppercase italic text-[var(--foreground)] tracking-tighter">{order.order_id}</p>
+                         <Badge className={cn("text-[7px] px-1.5 py-0 uppercase italic", order.status === "PENDING" ? "bg-warning/20 text-warning" : "bg-success/20 text-success")}>{order.status}</Badge>
+                       </div>
+                       <p className="text-[8px] font-black uppercase italic text-text-secondary tracking-widest opacity-80">{order.customer_name} • {order.area}</p>
+                     </div>
+                   </div>
+                 );
+               })}
+            </div>
+
+            {/* Batch Dispatch Controls */}
+            <div className="pt-4 mt-4 border-t border-[var(--foreground)]/5 space-y-3">
+               <div className="space-y-1.5">
+                 <label className="text-[8px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest italic ml-1">Agent Designation</label>
+                 <Input 
+                   value={batchAgentName} 
+                   onChange={e => setBatchAgentName(e.target.value)} 
+                   className="h-10 bg-[var(--foreground)]/5 border-[var(--foreground)]/10 text-[10px] rounded-xl italic font-black uppercase text-primary placeholder:text-text-secondary/40" 
+                   placeholder="e.g. Agent Vikram" 
+                 />
+               </div>
+               <Button 
+                 onClick={handleBatchDispatch} 
+                 disabled={selectedPendingOrders.length === 0}
+                 className="w-full h-12 bg-primary shadow-glow-purple text-[9px] md:text-[10px] font-black uppercase tracking-widest italic rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+               >
+                 <Navigation className="w-3.5 h-3.5 mr-2" /> DISPATCH BATCH ({selectedPendingOrders.length})
+               </Button>
+            </div>
+         </Card>
+
+         <Card className="xl:col-span-5 p-1 border-[var(--foreground)]/5 bg-bg-secondary/20 rounded-[24px] md:rounded-[40px] shadow-premium overflow-hidden">
             <div className="p-[10px] md:p-6 border-b border-[var(--foreground)]/5 flex items-center justify-between">
                <h2 className="text-base md:text-lg font-black text-[var(--foreground)] uppercase italic tracking-tighter flex items-center gap-2 md:gap-3">
                   <Truck className="w-4 md:w-5 h-4 md:h-5 text-primary shadow-glow-purple" /> Active Fleet Registry
@@ -334,7 +422,7 @@ export default function AgentMissionControl() {
            </div>
         </Card>
 
-        <div className="xl:col-span-4 space-y-[10px] md:space-y-6">
+        <div className="xl:col-span-3 space-y-[10px] md:space-y-6">
            <Card className="p-[10px] md:p-6 border-primary/20 bg-primary/5 shadow-glow-purple/10 rounded-[24px] md:rounded-[40px] space-y-4 md:space-y-6">
               <div className="flex items-center justify-between">
                  <h3 className="text-base md:text-lg font-black text-[var(--foreground)] uppercase italic tracking-tighter">Mission Pulse</h3>
@@ -364,50 +452,6 @@ export default function AgentMissionControl() {
         </div>
       </div>
 
-      <Modal
-        isOpen={isDispatchModalOpen}
-        onClose={() => setIsDispatchModalOpen(false)}
-        title="FLEET DISPATCH"
-        description="Initialize a new vessel mission into the command registry."
-        className="md:max-w-md bg-bg-secondary/95 border border-primary/20 text-[var(--foreground)] shadow-[0_0_50px_rgba(168,85,247,0.15)] backdrop-blur-xl rounded-t-[28px] md:rounded-[28px] p-5 md:p-8"
-      >
-         <div className="space-y-4 lg:space-y-6">
-            <div className="space-y-3 lg:space-y-4">
-               <div className="space-y-2">
-                 <label className="text-[8px] lg:text-[9px] font-black text-text-secondary uppercase tracking-widest italic">Upcoming Deliveries (Select to Dispatch)</label>
-                 <div className="max-h-[160px] overflow-y-auto space-y-2 pr-2 scrollbar-hide border border-[var(--foreground)]/5 rounded-xl p-2 bg-[var(--foreground)]/5">
-                   {pendingOrders.length === 0 ? (
-                     <p className="text-[9px] text-center text-text-secondary italic uppercase p-4 font-black">No upcoming deliveries found</p>
-                   ) : pendingOrders.map((order: any) => (
-                     <div 
-                       key={order.order_id} 
-                       onClick={() => setDispatchForm(p => ({ ...p, order_id: order.order_id }))}
-                       className={cn("p-2 rounded-lg cursor-pointer flex justify-between items-center border transition-all", dispatchForm.order_id === order.order_id ? "bg-primary/20 border-primary" : "border-[var(--foreground)]/10 hover:border-primary/50")}
-                     >
-                       <div className="space-y-0.5">
-                         <p className="text-[10px] font-black uppercase italic text-[var(--foreground)] tracking-tighter">{order.order_id}</p>
-                         <p className="text-[8px] font-black uppercase italic text-text-secondary tracking-widest opacity-80">{order.customer_name} • {order.area}</p>
-                       </div>
-                       <Badge className="text-[7px] px-1 py-0 uppercase italic">{order.status}</Badge>
-                     </div>
-                   ))}
-                 </div>
-               </div>
-               <div className="space-y-2">
-                 <label className="text-[8px] lg:text-[9px] font-black text-text-secondary uppercase tracking-widest italic">Order Ref (Manual Override)</label>
-                 <Input value={dispatchForm.order_id} onChange={e => setDispatchForm(p => ({ ...p, order_id: e.target.value }))} className="h-10 lg:h-12 bg-[var(--foreground)]/5 border-[var(--foreground)]/10 text-xs rounded-xl italic font-black uppercase text-primary" placeholder="ORD-XXXX" />
-               </div>
-               <div className="space-y-2">
-                 <label className="text-[8px] lg:text-[9px] font-black text-text-secondary uppercase tracking-widest italic">Agent Designation</label>
-                 <Input value={dispatchForm.agent_name} onChange={e => setDispatchForm(p => ({ ...p, agent_name: e.target.value }))} className="h-10 lg:h-12 bg-[var(--foreground)]/5 border-[var(--foreground)]/10 text-xs rounded-xl" placeholder="Agent Name" />
-               </div>
-            </div>
-            <div className="flex gap-3 pt-2">
-              <Button onClick={() => setIsDispatchModalOpen(false)} variant="outline" className="flex-1 h-12 text-[10px] font-black uppercase tracking-widest border-[var(--foreground)]/10 rounded-xl italic">ABORT</Button>
-              <Button onClick={handleDispatch} className="flex-1 h-12 bg-primary shadow-glow-purple text-[9px] lg:text-[10px] font-black uppercase tracking-widest italic rounded-xl">INITIALIZE MISSION</Button>
-            </div>
-         </div>
-      </Modal>
     </div>
   
   );
