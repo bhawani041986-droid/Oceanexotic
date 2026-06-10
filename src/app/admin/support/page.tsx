@@ -25,7 +25,12 @@ import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { FULL_API_URL as API_BASE_URL } from "@/config/api";
 import { useToast } from "@/components/ui/Toast";
-import { VideoCallModal } from "@/components/video/VideoCallModal";
+import dynamic from "next/dynamic";
+
+const VideoCallModal = dynamic(
+  () => import("@/components/video/VideoCallModal").then(mod => mod.VideoCallModal),
+  { ssr: false }
+);
 
 export default function AdminSupportHub() {
   const { toast } = useToast();
@@ -38,7 +43,8 @@ export default function AdminSupportHub() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeVideoRoom, setActiveVideoRoom] = useState<string | null>(null);
   const [isCreatingContact, setIsCreatingContact] = useState(false);
-  const [newContactId, setNewContactId] = useState("");
+  const [availableUsers, setAvailableUsers] = useState<any[]>([]);
+  const [contactSearchQuery, setContactSearchQuery] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
   const currentUserId = "ADM-001"; 
 
@@ -120,21 +126,18 @@ export default function AdminSupportHub() {
     handleSendMessage(undefined, `[VIDEO_CALL_INVITE]:${roomID}`);
   };
 
-  const handleCreateContact = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newContactId.trim()) return;
-
+  const handleCreateContactDirect = async (userId: string) => {
     try {
       const res = await fetch(`${API_BASE_URL}/chat/create_conversation.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ participant_1: currentUserId, participant_2: newContactId.trim() })
+        body: JSON.stringify({ participant_1: currentUserId, participant_2: userId })
       });
       const data = await res.json();
       if (res.ok && data.status === 'success') {
         toast("Secure channel established.", "success");
         setIsCreatingContact(false);
-        setNewContactId("");
+        setContactSearchQuery("");
         await fetchConversations();
         setActiveChat(data.conversation_id);
       } else {
@@ -144,6 +147,22 @@ export default function AdminSupportHub() {
       toast("Transmission error", "error");
     }
   };
+
+  const fetchAvailableUsers = async () => {
+    try {
+      const res = await fetch(`/api/admin/get_users`);
+      const data = await res.json();
+      if (Array.isArray(data)) setAvailableUsers(data);
+    } catch (err) {
+      console.error("Failed to fetch target nodes");
+    }
+  };
+
+  useEffect(() => {
+    if (isCreatingContact && availableUsers.length === 0) {
+      fetchAvailableUsers();
+    }
+  }, [isCreatingContact]);
 
   useEffect(() => {
     setMounted(true);
@@ -224,23 +243,54 @@ export default function AdminSupportHub() {
 
               <AnimatePresence>
                 {isCreatingContact && (
-                  <motion.form 
+                  <motion.div 
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    onSubmit={handleCreateContact}
                     className="overflow-hidden"
                   >
-                    <div className="flex gap-2 p-3 rounded-2xl bg-primary/10 border border-primary/20 mb-2">
+                    <div className="flex flex-col gap-2 p-3 rounded-2xl bg-primary/10 border border-primary/20 mb-2">
                       <input 
-                        value={newContactId}
-                        onChange={(e) => setNewContactId(e.target.value)}
-                        placeholder="TARGET NODE ID (e.g. USR-001)"
-                        className="flex-1 bg-transparent text-xs font-black uppercase text-[var(--foreground)] outline-none placeholder:text-primary/40"
+                        value={contactSearchQuery}
+                        onChange={(e) => setContactSearchQuery(e.target.value)}
+                        placeholder="SEARCH NODE DIRECTORY..."
+                        autoFocus
+                        className="w-full bg-black/20 rounded-xl px-3 py-2 text-xs font-black uppercase text-[var(--foreground)] outline-none placeholder:text-primary/40 border border-primary/10 focus:border-primary/50 transition-all"
                       />
-                      <button type="submit" className="px-3 py-1.5 rounded-xl bg-primary text-black font-black text-[8px] uppercase tracking-widest">Link</button>
+                      <div className="max-h-40 overflow-y-auto no-scrollbar space-y-1">
+                        {availableUsers.filter(u => 
+                          (u.name || "").toLowerCase().includes(contactSearchQuery.toLowerCase()) || 
+                          (u.id || "").toLowerCase().includes(contactSearchQuery.toLowerCase())
+                        ).map(user => (
+                          <button
+                            key={user.id}
+                            onClick={() => handleCreateContactDirect(user.id)}
+                            className="w-full text-left px-3 py-2 rounded-xl hover:bg-primary/20 flex items-center justify-between group transition-all border border-transparent hover:border-primary/30"
+                          >
+                            <div>
+                              <p className="text-xs font-black uppercase truncate leading-tight">{user.name}</p>
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                <span className="text-[8px] font-bold text-slate-500 uppercase">{user.id}</span>
+                                <span className="text-[8px] px-1 py-0.5 rounded bg-[var(--foreground)]/5 text-[var(--foreground)] font-bold uppercase">{user.role}</span>
+                              </div>
+                            </div>
+                            <span className="text-[8px] font-black uppercase tracking-widest text-primary opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1"><Plus className="w-3 h-3" /> LINK</span>
+                          </button>
+                        ))}
+                        {availableUsers.length > 0 && availableUsers.filter(u => 
+                          (u.name || "").toLowerCase().includes(contactSearchQuery.toLowerCase()) || 
+                          (u.id || "").toLowerCase().includes(contactSearchQuery.toLowerCase())
+                        ).length === 0 && (
+                          <p className="text-[9px] text-center text-slate-500 py-3 font-black uppercase tracking-widest italic">NO NODES FOUND</p>
+                        )}
+                        {availableUsers.length === 0 && (
+                           <div className="flex items-center justify-center py-4">
+                             <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                           </div>
+                        )}
+                      </div>
                     </div>
-                  </motion.form>
+                  </motion.div>
                 )}
               </AnimatePresence>
 
