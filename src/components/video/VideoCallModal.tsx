@@ -23,12 +23,15 @@ export function VideoCallModal({ roomID, userName, userID, onClose }: VideoCallM
       return;
     }
 
+    // Sanitize userID to ensure Zego accepts it
+    const safeUserID = userID.replace(/[^a-zA-Z0-9]/g, '');
+
     // Generate Kit Token
     const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
       appID,
       serverSecret,
       roomID,
-      userID,
+      safeUserID,
       userName
     );
 
