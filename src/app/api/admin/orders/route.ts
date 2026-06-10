@@ -71,3 +71,41 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
+// --- PARTIAL UPDATE (PATCH) ---
+export async function PATCH(request: Request) {
+  try {
+    const body = await request.json();
+    const { order_id, status } = body;
+
+    if (!order_id || !status) {
+      return NextResponse.json({ status: "error", message: "Missing required fields" }, { status: 400 });
+    }
+
+    const { error } = await supabase.from('orders').update({ status }).eq('id', order_id);
+    if (error) throw error;
+
+    return NextResponse.json({ status: "success", message: "Trade Status Synchronized" });
+  } catch (error: any) {
+    return NextResponse.json({ status: "error", message: error.message }, { status: 500 });
+  }
+}
+
+// --- DECOMMISSION ORDER (DELETE) ---
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const order_id = searchParams.get('order_id');
+
+    if (!order_id) {
+      return NextResponse.json({ status: "error", message: "Missing order id" }, { status: 400 });
+    }
+
+    const { error } = await supabase.from('orders').delete().eq('id', order_id);
+    if (error) throw error;
+
+    return NextResponse.json({ status: "success", message: "Node permanently deleted" });
+  } catch (error: any) {
+    return NextResponse.json({ status: "error", message: error.message }, { status: 500 });
+  }
+}

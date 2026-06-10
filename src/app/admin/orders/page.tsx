@@ -503,11 +503,10 @@ export default function AdminOrders() {
       setIsLoading(true
   );
       const res = await fetch('/api/admin/orders', {
-        method: 'POST',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ order_id: orderId, status: 'VERIFIED' })
-      }
-  );
+      });
       const data = await res.json(
   );
       if (data.status === 'success') {
@@ -536,12 +535,22 @@ export default function AdminOrders() {
   const handleDelete = async (orderId: string) => {
     if (!confirm(`CAUTION: Are you sure you want to decommission Maritime Node ${orderId}? This action is permanent.`)) return;
     
-    toast(`Decommissioning Protocol 4-6 initiated for ${orderId}...`, "info"
-  );
-    setOrders(prev => prev.filter(o => o.id !== orderId)
-  );
-    toast(`ARCHIVE SUCCESS: Node ${orderId} removed from live registry.`, "success"
-  );
+    toast(`Decommissioning Protocol 4-6 initiated for ${orderId}...`, "info");
+    
+    try {
+      const res = await fetch(`/api/admin/orders?order_id=${orderId}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        setOrders(prev => prev.filter(o => o.id !== orderId));
+        toast(`ARCHIVE SUCCESS: Node ${orderId} removed from live registry.`, "success");
+      } else {
+        toast(`Archive Failure: ${data.message}`, "error");
+      }
+    } catch (err) {
+      toast("Critical API Node Timeout during deletion", "error");
+    }
   };
 
   const filteredOrders = useMemo(() => {
@@ -558,6 +567,8 @@ export default function AdminOrders() {
       const matchesSearch = String(o.id).toLowerCase().includes(searchTerm.toLowerCase()) ||
                           String(o.customer_name || '').toLowerCase().includes(searchTerm.toLowerCase());
       if (!matchesSearch) return false;
+
+      if (statusFilter !== "ALL" && o.status !== statusFilter) return false;
 
       // 'all' → every order gets plotted
       if (mapTimeFilter === 'all') return true;
@@ -758,7 +769,8 @@ export default function AdminOrders() {
                           >
                               <option value="ALL" className="bg-bg-secondary text-[var(--foreground)]">ALL TIME</option>
                               <option value="DAILY" className="bg-bg-secondary text-[var(--foreground)]">DAILY</option>
-                              <option value="MONTH" className="bg-bg-secondary text-[var(--foreground)]">MONTHLY</option>
+                              <option value="WEEKLY" className="bg-bg-secondary text-[var(--foreground)]">WEEKLY</option>
+                              <option value="MONTHLY" className="bg-bg-secondary text-[var(--foreground)]">MONTHLY</option>
                           </select>
                           <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-2.5 h-2.5 text-text-secondary pointer-events-none" />
                         </div>
