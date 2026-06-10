@@ -259,7 +259,7 @@ function ProductListingContent() {
 
   // --- DYNAMIC NAVIGATION ENGINE STATE ---
   const [currentPage, setCurrentPage] = React.useState(1);
-  const itemsPerPage = 6;
+  const itemsPerPage = 8;
 
   // --- LIVE REGISTRY SYNC ENGINE ---
   const [products, setProducts] = React.useState<any[]>([]);
@@ -589,7 +589,7 @@ function ProductListingContent() {
                           </div>
                           <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 snap-x">
                              {bestsellers.map(product => (
-                               <div key={product.id} className="w-[280px] md:w-[320px] flex-shrink-0 snap-start">
+                               <div key={product.id} className="w-[280px] lg:w-[calc(25%-12px)] flex-shrink-0 snap-start">
                                  <ProductCard product={product} />
                                </div>
                              ))}
@@ -604,7 +604,7 @@ function ProductListingContent() {
                             </div>
                             <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 snap-x">
                                {readyToCook.map(product => (
-                                 <div key={product.id} className="w-[280px] md:w-[320px] flex-shrink-0 snap-start">
+                                 <div key={product.id} className="w-[280px] lg:w-[calc(25%-12px)] flex-shrink-0 snap-start">
                                    <ProductCard product={product} />
                                  </div>
                                ))}
@@ -652,7 +652,7 @@ function ProductListingContent() {
                                  </div>
                                  <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 snap-x">
                                     {categoryProducts.map(product => (
-                                      <div key={product.id} className="w-[280px] md:w-[320px] flex-shrink-0 snap-start">
+                                      <div key={product.id} className="w-[280px] lg:w-[calc(25%-12px)] flex-shrink-0 snap-start">
                                         <ProductCard product={product} />
                                       </div>
                                     ))}
@@ -667,7 +667,7 @@ function ProductListingContent() {
                   {!showLayers && (
                     <>
                       {paginatedProducts.length > 0 ? (
-                        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-[4px] md:gap-4">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[4px] md:gap-4">
                            {paginatedProducts.map((product) => (
                              <ProductCard key={product.id} product={product} />
                            ))}
