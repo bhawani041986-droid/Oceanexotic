@@ -1,9 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
+function getSupabase() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://kyqmhibffbwoqlpdplfu.supabase.co';
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!supabaseKey) return null;
+  return createClient(supabaseUrl, supabaseKey);
+}
+
 export async function GET() {
   try {
-    const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+    const supabase = getSupabase();
+    if (!supabase) return NextResponse.json({ status: "success", content: [] });
+
     const { data, error } = await supabase.from('cms_content').select('*').order('id', { ascending: false });
 
     if (error) {
@@ -18,9 +27,11 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
+    const supabase = getSupabase();
+    if (!supabase) return NextResponse.json({ status: "error", message: "Supabase configuration missing" }, { status: 500 });
+
     const body = await req.json();
     const { id, title, type, status, sector, image_url, metadata } = body;
-    const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
     const payload = {
       title,
@@ -51,7 +62,9 @@ export async function DELETE(req: NextRequest) {
     const id = req.nextUrl.searchParams.get('id');
     if (!id) return NextResponse.json({ status: "error", message: "Missing id" }, { status: 400 });
 
-    const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
+    const supabase = getSupabase();
+    if (!supabase) return NextResponse.json({ status: "error", message: "Supabase configuration missing" }, { status: 500 });
+
     const { error } = await supabase.from('cms_content').delete().eq('id', id);
 
     if (error) throw error;
