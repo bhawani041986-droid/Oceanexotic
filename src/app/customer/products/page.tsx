@@ -473,25 +473,25 @@ function ProductListingContent() {
       {activeCoupons.length > 0 && (
          <section className="pt-6 md:pt-10">
             <div className="container mx-auto px-2 md:px-10">
-               <div className="relative w-full overflow-hidden rounded-[calc(var(--c-radius-card)*1.2)] bg-gradient-to-r from-primary/20 via-primary/5 to-transparent border border-primary/20 p-6 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-glow-primary group">
+               <div className="relative w-full overflow-hidden rounded-2xl md:rounded-[calc(var(--c-radius-card)*1.2)] bg-gradient-to-r from-primary/20 via-primary/5 to-transparent border border-primary/20 p-4 md:p-10 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6 shadow-glow-primary group">
                   <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-gradient-to-l from-primary/10 to-transparent pointer-events-none" />
                   <div className="absolute -left-10 -top-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl pointer-events-none group-hover:bg-primary/30 transition-all duration-700" />
                   
-                  <div className="relative z-10 space-y-2 text-center md:text-left">
+                  <div className="relative z-10 space-y-1.5 md:space-y-2 text-center md:text-left w-full md:w-auto">
                      <Badge className="bg-primary text-black text-[8px] md:text-[10px] font-black uppercase tracking-widest italic border-none">Exclusive Offer</Badge>
-                     <h2 className="text-2xl md:text-4xl font-black uppercase italic text-[var(--c-text-primary)]">
+                     <h2 className="text-xl sm:text-2xl md:text-4xl font-black uppercase italic text-[var(--c-text-primary)] leading-tight">
                         Save <span className="text-primary">{activeCoupons[0].type === 'PERCENTAGE' ? `${activeCoupons[0].value}%` : `₹${activeCoupons[0].value}`}</span> Today
                      </h2>
-                     <p className="text-[10px] md:text-sm font-medium text-[var(--c-text-secondary)] max-w-md">
+                     <p className="text-[9px] md:text-sm font-medium text-[var(--c-text-secondary)] max-w-md mx-auto md:mx-0">
                         Apply this code at checkout to instantly upgrade your seafood experience.
                         {activeCoupons[0].min_purchase > 0 && ` Minimum order: ₹${activeCoupons[0].min_purchase}.`}
                      </p>
                   </div>
 
-                  <div className="relative z-10 flex flex-col items-center gap-2 bg-[var(--c-bg)] p-4 md:p-6 rounded-2xl md:rounded-3xl border border-[var(--foreground)]/10 shadow-xl">
+                  <div className="relative z-10 flex flex-col items-center gap-2 bg-[var(--c-bg)] p-3 md:p-6 rounded-xl md:rounded-3xl border border-[var(--foreground)]/10 shadow-xl w-full md:w-auto shrink-0">
                      <span className="text-[8px] font-black uppercase tracking-widest text-[var(--c-text-secondary)] italic">Your Promo Code</span>
-                     <div className="px-6 py-3 bg-primary/10 border-2 border-primary/30 rounded-xl">
-                        <span className="text-lg md:text-2xl font-black text-primary tracking-[0.2em]">{activeCoupons[0].code}</span>
+                     <div className="px-4 py-2 md:px-6 md:py-3 bg-primary/10 border-2 border-primary/30 rounded-lg md:rounded-xl w-full flex justify-center">
+                        <span className="text-base sm:text-lg md:text-2xl font-black text-primary tracking-[0.2em]">{activeCoupons[0].code}</span>
                      </div>
                   </div>
                </div>
