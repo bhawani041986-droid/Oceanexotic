@@ -117,10 +117,10 @@ export const AdminMobileTopNav = ({ title }: { title: string }) => {
           >
             <Search className="w-5 h-5" />
           </button>
-          <button className="w-9 h-9 min-[375px]:w-10 min-[375px]:h-10 flex items-center justify-center text-text-secondary hover:text-text-primary relative active:scale-90">
+          <Link href="/admin/notifications" className="w-9 h-9 min-[375px]:w-10 min-[375px]:h-10 flex items-center justify-center text-text-secondary hover:text-text-primary relative active:scale-90">
             <Bell className="w-5 h-5" />
             <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-danger rounded-full border-2 border-bg-primary" />
-          </button>
+          </Link>
           <div className="w-7 h-7 min-[375px]:w-8 min-[375px]:h-8 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center ml-1 min-[375px]:ml-2 overflow-hidden shadow-glow-purple">
              <span className="text-[10px] font-black text-primary">{user?.name?.[0] || 'A'}</span>
           </div>

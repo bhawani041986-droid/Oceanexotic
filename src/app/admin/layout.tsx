@@ -187,10 +187,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest italic">3 Admins Active</p>
                 </div>
                 <div className="h-6 w-px bg-[var(--foreground)]/10" />
-                <button className="relative group p-3 rounded-full hover:bg-[var(--foreground)]/5 transition-all">
+                <Link href="/admin/notifications" className="relative group p-3 rounded-full hover:bg-[var(--foreground)]/5 transition-all">
                   <Bell className="w-5 h-5 text-[var(--foreground)]" />
                   <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-danger border-2 border-bg-primary rounded-full" />
-                </button>
+                </Link>
                 <div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-xs font-black text-primary">
                   {user?.name?.[0] || 'A'}
                 </div>
