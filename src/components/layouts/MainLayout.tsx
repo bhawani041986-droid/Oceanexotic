@@ -117,7 +117,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <div className={cn(
-      "min-h-screen flex flex-col bg-[var(--c-bg)] text-[var(--c-text-primary)] font-sans selection:bg-[var(--c-primary)]/30 pb-[120px] lg:pb-0 overflow-x-hidden transition-all duration-500"
+      "min-h-screen flex flex-col bg-[var(--c-bg)] text-[var(--c-text-primary)] font-sans selection:bg-[var(--c-primary)]/30 pb-[120px] lg:pb-0 transition-all duration-500"
     )}>
       
       {/* FIXED TOP NAVIGATION STACK */}
