@@ -28,7 +28,9 @@ import {
   ChevronDown,
   ShoppingBag,
   Package,
-  ArrowLeft
+  ArrowLeft,
+  Ticket,
+  XCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -54,29 +56,30 @@ export default function CheckoutPage() {
   const [isPreOrder, setIsPreOrder] = useState(false);
   const [isClosed, setIsClosed] = useState(false);
 
-  const total = getTotal();
+  // Coupon State
+  const [couponCodeInput, setCouponCodeInput] = useState("");
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
+  const [couponError, setCouponError] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<{code: string, discountAmount: number, type: string, value: number} | null>(null);
+
+  const cartTotal = getTotal();
+  const finalTotal = appliedCoupon ? Math.max(0, cartTotal - appliedCoupon.discountAmount) : cartTotal;
 
   useEffect(() => {
     const loadProfileData = async () => {
-      // Use profile ID or fallback to demo ID
       const userId = user?.id || "USR-TOWG2LBPP"; 
       setIsFetchingData(true);
       try {
         const res = await fetch(`/api/user/addresses?userId=${userId}`);
         const data = await res.json();
         
-        // Even if data is empty, check if we have mock data for "Advancevovo"
         if (Array.isArray(data) && data.length > 0) {
           setSavedAddresses(data);
-          
-          // Try to recover selected address from localStorage, or fallback to default
           const savedId = localStorage.getItem('oceanexotic_checkout_address_id');
           const primary = data.find((a: any) => a.id.toString() === savedId) || data.find((a: any) => a.is_default) || data[0];
-          
           setSelectedAddress(primary);
-          setActiveStep(2); // Start at Payment if address is found
+          setActiveStep(2); 
         } else if (user?.name?.includes("Advancevovo")) {
-           // Provide fallback data for the user's specific test case
            const mockAddr = {
               id: 'mock-1',
               type: 'HOTEL',
@@ -127,12 +130,57 @@ export default function CheckoutPage() {
 
       if (!ordersEnabled || outside) {
         setIsClosed(true);
-        setIsPreOrder(true); // Closed or disabled forces pre-order
+        setIsPreOrder(true);
       } else {
         setIsClosed(false);
       }
     }
   }, [ordersEnabled, ordersOpenTime, ordersCloseTime]);
+
+  // Recalculate discount if cart total changes (e.g. items change)
+  useEffect(() => {
+     if (appliedCoupon) {
+        handleApplyCoupon(appliedCoupon.code);
+     }
+  }, [cartTotal]);
+
+  const handleApplyCoupon = async (codeToApply = couponCodeInput) => {
+    if (!codeToApply.trim()) return;
+    setIsApplyingCoupon(true);
+    setCouponError("");
+
+    try {
+      const res = await fetch("/api/marketplace/coupon/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: codeToApply, cartTotal })
+      });
+      const data = await res.json();
+
+      if (data.status === "success") {
+        setAppliedCoupon({
+           code: codeToApply.toUpperCase(),
+           discountAmount: data.discountAmount,
+           type: data.couponType,
+           value: data.couponValue
+        });
+        toast("Incentive Protocol Authorized.", "success");
+      } else {
+        setAppliedCoupon(null);
+        setCouponError(data.message || "Invalid or expired code.");
+      }
+    } catch (err) {
+      setCouponError("Verification server unreachable.");
+    } finally {
+      setIsApplyingCoupon(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+     setAppliedCoupon(null);
+     setCouponCodeInput("");
+     setCouponError("");
+  };
 
   const handlePlaceOrder = async () => {
     if (!selectedAddress) {
@@ -148,11 +196,13 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           userId: user?.id || "USR-DEMO",
           items: items,
-          total: total,
+          total: finalTotal,
           address: `${selectedAddress.hotel_name}${selectedAddress.room_no ? ` (${selectedAddress.room_no})` : ''}, ${selectedAddress.address}, Jetty: ${selectedAddress.jetty}`,
           phone: selectedAddress.phone,
           paymentMethod: "COD",
-          isPreOrder: isPreOrder ? 1 : 0
+          isPreOrder: isPreOrder ? 1 : 0,
+          couponCode: appliedCoupon ? appliedCoupon.code : null,
+          discountAmount: appliedCoupon ? appliedCoupon.discountAmount : 0
         })
       });
 
@@ -184,8 +234,6 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-[var(--c-bg)] text-[var(--c-text-primary)] font-sans pb-32">
-
-
       <main className="container mx-auto max-w-5xl px-4 pt-8 md:pt-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           
@@ -376,20 +424,70 @@ export default function CheckoutPage() {
                   <p className="text-[10px] text-center text-slate-400 italic">By placing your order, you agree to OceanExotic's Trade Handshake Privacy Policy and Conditions of Use.</p>
                </div>
 
+               {/* Promo Code System */}
+               <div className="border-t border-[var(--foreground)]/10 pt-6 space-y-4">
+                  <div className="flex items-center gap-2 mb-2">
+                     <Ticket className="w-4 h-4 text-primary" />
+                     <h3 className="font-bold text-sm">Promo Code</h3>
+                  </div>
+                  
+                  {appliedCoupon ? (
+                     <div className="flex items-center justify-between bg-primary/10 border border-primary/20 p-3 rounded-lg animate-fade-in">
+                        <div className="flex flex-col">
+                           <span className="text-xs font-black text-primary uppercase tracking-widest">{appliedCoupon.code}</span>
+                           <span className="text-[10px] font-bold text-primary/70 uppercase">Incentive Applied Successfully</span>
+                        </div>
+                        <button onClick={handleRemoveCoupon} className="text-[var(--c-text-secondary)] hover:text-danger transition-colors p-1">
+                           <XCircle className="w-5 h-5" />
+                        </button>
+                     </div>
+                  ) : (
+                     <div className="space-y-2 relative">
+                        <div className="flex gap-2">
+                           <input 
+                              type="text" 
+                              value={couponCodeInput}
+                              onChange={(e) => setCouponCodeInput(e.target.value.toUpperCase())}
+                              placeholder="ENTER CODE..."
+                              disabled={isApplyingCoupon}
+                              className="flex-1 bg-[var(--c-bg)] border border-[var(--foreground)]/10 rounded-lg px-4 text-xs font-bold uppercase tracking-widest outline-none focus:border-primary transition-all disabled:opacity-50"
+                           />
+                           <Button 
+                              onClick={() => handleApplyCoupon()} 
+                              disabled={isApplyingCoupon || !couponCodeInput.trim()}
+                              className="bg-[var(--foreground)]/5 text-[var(--c-text-primary)] hover:bg-primary hover:text-black font-black text-xs px-4 rounded-lg transition-all"
+                           >
+                              {isApplyingCoupon ? <Loader2 className="w-4 h-4 animate-spin" /> : "APPLY"}
+                           </Button>
+                        </div>
+                        {couponError && <p className="text-[10px] font-bold text-danger uppercase absolute -bottom-5 left-1">{couponError}</p>}
+                     </div>
+                  )}
+               </div>
+
                <div className="border-t border-[var(--foreground)]/10 pt-6 space-y-4">
                   <h3 className="font-bold text-sm">Order Summary</h3>
-                  <div className="space-y-2 text-xs">
-                     <div className="flex justify-between text-[var(--c-text-secondary)]">
-                        <span>Items:</span>
-                        <span>₹{total.toLocaleString()}</span>
+                  <div className="space-y-3 text-xs">
+                     <div className="flex justify-between text-[var(--c-text-secondary)] font-medium">
+                        <span>Subtotal:</span>
+                        <span>₹{cartTotal.toLocaleString()}</span>
                      </div>
-                     <div className="flex justify-between text-[var(--c-text-secondary)]">
+                     <div className="flex justify-between text-[var(--c-text-secondary)] font-medium">
                         <span>Shipping & Handling:</span>
                         <span>₹0</span>
                      </div>
-                     <div className="border-t border-[var(--foreground)]/10 pt-2 flex justify-between font-bold text-lg text-rose-500">
-                        <span>Order Total:</span>
-                        <span>₹{total.toLocaleString()}</span>
+                     
+                     {/* Applied Discount Row */}
+                     {appliedCoupon && (
+                        <div className="flex justify-between text-primary font-black animate-fade-in bg-primary/5 p-2 -mx-2 rounded-md">
+                           <span>Discount ({appliedCoupon.code}):</span>
+                           <span>-₹{appliedCoupon.discountAmount.toLocaleString()}</span>
+                        </div>
+                     )}
+
+                     <div className="border-t border-[var(--foreground)]/10 pt-3 flex justify-between font-black text-xl text-[var(--c-text-primary)]">
+                        <span>Final Total:</span>
+                        <span>₹{finalTotal.toLocaleString()}</span>
                      </div>
                   </div>
                </div>

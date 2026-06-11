@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { userId, items, total, address, phone, paymentMethod, isPreOrder } = body;
+    const { userId, items, total, address, phone, paymentMethod, isPreOrder, couponCode, discountAmount } = body;
 
     if (!userId || !items || !items.length) {
       return NextResponse.json({ status: "error", message: "Missing Order Integrity Components" }, { status: 400 });
@@ -22,7 +22,9 @@ export async function POST(request: Request) {
       status: 'PENDING',
       delivery_address: address,
       payment_method: paymentMethod || 'COD',
-      is_pre_order: isPreOrder ? 1 : 0
+      is_pre_order: isPreOrder ? 1 : 0,
+      coupon_code: couponCode || null,
+      discount_amount: discountAmount || 0
     }]).select().single();
 
     if (orderError) throw orderError;
@@ -48,6 +50,14 @@ export async function POST(request: Request) {
       // rollback order if items fail
       await supabase.from('orders').delete().eq('id', orderId);
       throw itemsError;
+    }
+
+    // If coupon was successfully applied, increment its usage count in the registry
+    if (couponCode) {
+       const { data: cData } = await supabase.from('coupons').select('usage_count').eq('code', couponCode.toUpperCase()).single();
+       if (cData) {
+         await supabase.from('coupons').update({ usage_count: (cData.usage_count || 0) + 1 }).eq('code', couponCode.toUpperCase());
+       }
     }
 
     return NextResponse.json({ status: "success", orderId });
