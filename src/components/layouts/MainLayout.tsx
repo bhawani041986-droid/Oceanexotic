@@ -369,7 +369,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         )}
       </AnimatePresence>
 
-      <main className="flex-1 pt-20 md:pt-24">
+      <main className="flex-1">
         {children}
       </main>
 

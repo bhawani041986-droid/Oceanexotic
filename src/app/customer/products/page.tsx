@@ -471,7 +471,7 @@ function ProductListingContent() {
 
       {/* 2. PROMOTIONAL HERO BANNER */}
       {activeCoupons.length > 0 && (
-         <section className="pt-[48px] md:pt-[56px]">
+         <section className="pt-6 md:pt-10">
             <div className="container mx-auto px-2 md:px-10">
                <div className="relative w-full overflow-hidden rounded-[calc(var(--c-radius-card)*1.2)] bg-gradient-to-r from-primary/20 via-primary/5 to-transparent border border-primary/20 p-6 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-glow-primary group">
                   <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-gradient-to-l from-primary/10 to-transparent pointer-events-none" />

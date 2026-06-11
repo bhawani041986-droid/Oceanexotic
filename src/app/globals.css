@@ -355,3 +355,11 @@ body {
 .customer-dark .glass-customer {
   background: rgba(0, 0, 0, calc(var(--c-glass-opacity) * 1));
 }
+
+/* User Requested Fixes */
+.pt-20 {
+    padding-top: calc(var(--spacing) * 0) !important;
+}
+.pt-6 {
+    padding-top: calc(var(--spacing) * 2) !important;
+}
