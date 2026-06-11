@@ -94,7 +94,7 @@ export async function GET() {
 
         logs.push({
            status: "success",
-           original_name: file,
+           original_name: file.name,
            optimized_url: publicUrl,
            file_size_kb: Math.round(optimizedBuffer.length / 1024),
            processing_time_sec: ((Date.now() - startTime) / 1000).toFixed(2),
