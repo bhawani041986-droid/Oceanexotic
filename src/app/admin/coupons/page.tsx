@@ -7,6 +7,7 @@ import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
+import { cn } from "@/lib/utils";
 import { 
   Ticket, Plus, Search, Calendar, Percent, BarChart3,
   Edit3, Trash2, Zap, Save, Clock, Eye, X
