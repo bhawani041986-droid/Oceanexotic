@@ -35,17 +35,13 @@ interface NotificationSignal {
   date: string;
 }
 
-const INITIAL_NOTIFICATIONS: NotificationSignal[] = [
-  { id: "SIG-001", title: "Global Maintenance Handshake", content: "Platform downtime scheduled for database optimization.", type: "SYSTEM", channel: "GLOBAL", status: "SENT", date: "10 mins ago" },
-  { id: "SIG-002", title: "New Commission Protocol Active", content: "Updated commission rates for sustainable fisheries.", type: "FINANCE", channel: "MERCHANTS", status: "SCHEDULED", date: "In 2 hours" },
-  { id: "SIG-003", title: "Cold-Chain Integrity Alert", content: "Unusual temperature variance detected in SEC-04.", type: "CRITICAL", channel: "LOGISTICS", status: "FAILED", date: "1 hour ago" },
-  { id: "SIG-004", title: "Welcome to OceanExotic Global v2.4", content: "New biometric handshake features now active.", type: "UPDATE", channel: "ALL", status: "SENT", date: "5 hours ago" },
-];
+const INITIAL_NOTIFICATIONS: NotificationSignal[] = [];
 
 export default function AdminNotificationsPage() {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState<"history" | "broadcast">("history");
-  const [notifications, setNotifications] = useState<NotificationSignal[]>(INITIAL_NOTIFICATIONS);
+  const [notifications, setNotifications] = useState<NotificationSignal[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [editingNotification, setEditingNotification] = useState<NotificationSignal | null>(null);
   
   // Search and Filter States
@@ -59,6 +55,31 @@ export default function AdminNotificationsPage() {
   const [channel, setChannel] = useState("GLOBAL");
   const [content, setContent] = useState("");
 
+  const fetchBroadcasts = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch('/api/system/broadcasts');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.status === 'success' && data.content) {
+          const formatted = data.content.map((n: any) => ({
+             ...n,
+             date: new Date(n.created_at).toLocaleString()
+          }));
+          setNotifications(formatted);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to load signals", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchBroadcasts();
+  }, []);
+
   const handleCancel = () => {
     setTitle("");
     setType("SYSTEM");
@@ -68,44 +89,44 @@ export default function AdminNotificationsPage() {
     setActiveTab("history");
   };
 
-  const handleBroadcast = (e: React.FormEvent) => {
+  const handleBroadcast = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !content.trim()) {
       toast("Title and content are required to broadcast a signal.", "error");
       return;
     }
 
-    if (editingNotification) {
-      setNotifications(prev => prev.map(n => n.id === editingNotification.id ? {
-        ...n,
-        title: title.trim(),
-        content: content.trim(),
-        type,
-        channel,
-      } : n));
-      toast("Signal successfully updated in platform registry.", "success");
+    try {
+      if (editingNotification) {
+        const res = await fetch('/api/system/broadcasts', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: editingNotification.id, title: title.trim(), content: content.trim(), type, channel })
+        });
+        if (!res.ok) throw new Error("Update failed");
+        toast("Signal successfully updated in platform registry.", "success");
+      } else {
+        const res = await fetch('/api/system/broadcasts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: title.trim(), content: content.trim(), type, channel })
+        });
+        if (!res.ok) throw new Error("Broadcast failed");
+        toast("Signal successfully broadcast across all authorized nodes.", "success");
+      }
+      
+      await fetchBroadcasts();
+      
+      // Clear form
+      setTitle("");
+      setType("SYSTEM");
+      setChannel("GLOBAL");
+      setContent("");
       setEditingNotification(null);
-    } else {
-      const newNotification: NotificationSignal = {
-        id: `SIG-${Math.floor(100 + Math.random() * 900)}`,
-        title: title.trim(),
-        content: content.trim(),
-        type,
-        channel,
-        status: "SENT",
-        date: "Just now"
-      };
-
-      setNotifications(prev => [newNotification, ...prev]);
-      toast("Signal successfully broadcast across all authorized nodes.", "success");
+      setActiveTab("history");
+    } catch (err) {
+       toast("Failed to process signal.", "error");
     }
-    
-    // Clear form
-    setTitle("");
-    setType("SYSTEM");
-    setChannel("GLOBAL");
-    setContent("");
-    setActiveTab("history");
   };
 
   const handleEdit = (notif: NotificationSignal) => {
@@ -117,9 +138,15 @@ export default function AdminNotificationsPage() {
     setActiveTab("broadcast");
   };
 
-  const handleDelete = (id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
-    toast("Notification signal purged from registry.", "success");
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await fetch(`/api/system/broadcasts?id=${id}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error("Delete failed");
+      toast("Notification signal purged from registry.", "success");
+      fetchBroadcasts();
+    } catch (err) {
+      toast("Failed to purge signal.", "error");
+    }
   };
 
   // Filtered Notifications
@@ -340,7 +367,11 @@ export default function AdminNotificationsPage() {
 
            {/* Signals feed */}
            <div className="grid grid-cols-1 gap-6">
-              {filteredNotifications.length === 0 ? (
+              {isLoading ? (
+                 <Card className="p-12 text-center text-xs font-black uppercase text-text-secondary italic border border-[var(--foreground)]/5 rounded-[24px]">
+                   Loading active radar registry...
+                 </Card>
+              ) : filteredNotifications.length === 0 ? (
                 <Card className="p-12 text-center text-xs font-black uppercase text-text-secondary italic border border-[var(--foreground)]/5 rounded-[24px]">
                   No matching signal logs found in active radar registry.
                 </Card>
