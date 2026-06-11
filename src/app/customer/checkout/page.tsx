@@ -61,11 +61,28 @@ export default function CheckoutPage() {
   const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
   const [couponError, setCouponError] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState<{code: string, discountAmount: number, type: string, value: number} | null>(null);
+  const [activeCoupons, setActiveCoupons] = useState<any[]>([]);
 
   const cartTotal = getTotal();
   const finalTotal = appliedCoupon ? Math.max(0, cartTotal - appliedCoupon.discountAmount) : cartTotal;
 
   useEffect(() => {
+    // Fetch active coupons for Quick-Apply badges
+    fetch('/api/system/coupons')
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'success' && data.content) {
+          const valid = data.content.filter((c: any) => {
+            if (c.status !== 'ACTIVE') return false;
+            if (c.usage_limit && c.usage_count >= c.usage_limit) return false;
+            if (c.expiry_date && new Date(c.expiry_date) < new Date()) return false;
+            return true;
+          });
+          setActiveCoupons(valid);
+        }
+      })
+      .catch(console.error);
+
     const loadProfileData = async () => {
       const userId = user?.id || "USR-TOWG2LBPP"; 
       setIsFetchingData(true);
@@ -461,6 +478,25 @@ export default function CheckoutPage() {
                            </Button>
                         </div>
                         {couponError && <p className="text-[10px] font-bold text-danger uppercase absolute -bottom-5 left-1">{couponError}</p>}
+                        
+                        {/* Quick-Apply Badges */}
+                        {activeCoupons.length > 0 && (
+                           <div className="pt-2 flex flex-wrap gap-2">
+                              {activeCoupons.map((coupon) => (
+                                 <button 
+                                    key={coupon.id} 
+                                    onClick={() => {
+                                       setCouponCodeInput(coupon.code);
+                                       handleApplyCoupon(coupon.code);
+                                    }}
+                                    disabled={isApplyingCoupon}
+                                    className="px-2 py-1 bg-primary/10 border border-primary/20 rounded text-[9px] font-black uppercase tracking-widest text-primary hover:bg-primary hover:text-black transition-all"
+                                 >
+                                    {coupon.code}
+                                 </button>
+                              ))}
+                           </div>
+                        )}
                      </div>
                   )}
                </div>

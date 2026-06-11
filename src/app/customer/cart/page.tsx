@@ -31,6 +31,7 @@ export default function CartPage() {
   const [mounted, setMounted] = React.useState(false);
   const [addons, setAddons] = React.useState<any[]>([]);
   const [loadingAddons, setLoadingAddons] = React.useState(true);
+  const [activeCoupons, setActiveCoupons] = React.useState<any[]>([]);
 
   const subtotal = getTotal();
   const platformFee = (subtotal * settings.commissionRate) / 100;
@@ -68,6 +69,25 @@ export default function CartPage() {
         console.error("Error fetching dynamic addons:", err);
       } finally {
         setLoadingAddons(false);
+      }
+
+      // Fetch coupons
+      try {
+        const cRes = await fetch('/api/system/coupons');
+        if (cRes.ok) {
+           const cData = await cRes.json();
+           if (cData.status === 'success' && cData.content) {
+             const valid = cData.content.filter((c: any) => {
+               if (c.status !== 'ACTIVE') return false;
+               if (c.usage_limit && c.usage_count >= c.usage_limit) return false;
+               if (c.expiry_date && new Date(c.expiry_date) < new Date()) return false;
+               return true;
+             });
+             setActiveCoupons(valid);
+           }
+        }
+      } catch (err) {
+        console.error(err);
       }
     };
 
@@ -225,6 +245,30 @@ export default function CartPage() {
 
           {/* Summary Sidebar */}
           <aside className="w-full lg:w-[400px] space-y-[10px] md:space-y-8 lg:sticky lg:top-32">
+            
+            {/* UPSELL OFFERS WIDGET */}
+            {activeCoupons.length > 0 && (
+               <Card className="p-4 bg-primary/10 border border-primary/20 rounded-2xl md:rounded-3xl relative overflow-hidden animate-fade-in shadow-glow-primary">
+                  <div className="absolute -right-4 -top-4 w-16 h-16 bg-primary/20 rounded-full blur-xl" />
+                  <h3 className="text-sm font-black uppercase text-primary italic tracking-widest mb-3 flex items-center gap-2">
+                     <span className="text-base">🎁</span> Available Offers
+                  </h3>
+                  <div className="space-y-2">
+                     {activeCoupons.map(coupon => (
+                        <div key={coupon.id} className="bg-[var(--c-bg)]/80 backdrop-blur-sm p-3 rounded-xl border border-[var(--foreground)]/5 flex justify-between items-center">
+                           <div>
+                              <p className="text-xs font-black uppercase text-[var(--c-text-primary)]">{coupon.code}</p>
+                              <p className="text-[9px] font-bold text-[var(--c-text-secondary)] uppercase mt-0.5">
+                                 {coupon.type === 'PERCENTAGE' ? `${coupon.value}% OFF` : `₹${coupon.value} OFF`}
+                                 {coupon.min_purchase > 0 && ` on orders above ₹${coupon.min_purchase}`}
+                              </p>
+                           </div>
+                        </div>
+                     ))}
+                  </div>
+               </Card>
+            )}
+
             <Card className="p-4 md:p-10 bg-[var(--c-card)] border-[var(--border)] rounded-[32px] md:rounded-[48px] shadow-2xl relative overflow-hidden group">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[var(--c-primary)] to-blue-500" />
               <h2 className="text-sm md:text-2xl font-black uppercase italic mb-4 md:mb-8 text-[var(--c-text-primary)]">Trade Summary</h2>

@@ -267,6 +267,7 @@ function ProductListingContent() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [subscriberEmail, setSubscriberEmail] = React.useState("");
   const [isSubscribing, setIsSubscribing] = React.useState(false);
+  const [activeCoupons, setActiveCoupons] = React.useState<any[]>([]);
 
   // Hero Carousel Logic
   const [currentHeroSlide, setCurrentHeroSlide] = React.useState(0);
@@ -375,6 +376,25 @@ function ProductListingContent() {
         console.error("Addons sync failed", addonErr);
       }
 
+      // Fetch active coupons for Hero Banner
+      try {
+        const cRes = await fetch('/api/system/coupons');
+        if (cRes.ok) {
+           const cData = await cRes.json();
+           if (cData.status === 'success' && cData.content) {
+             const valid = cData.content.filter((c: any) => {
+               if (c.status !== 'ACTIVE') return false;
+               if (c.usage_limit && c.usage_count >= c.usage_limit) return false;
+               if (c.expiry_date && new Date(c.expiry_date) < new Date()) return false;
+               return true;
+             });
+             setActiveCoupons(valid);
+           }
+        }
+      } catch (err) {
+        console.error("Coupons sync failed", err);
+      }
+
     } catch (err) {
       toast("Failed to load catalog. Using cached fallback.", "error");
       setProducts(MASTER_PRODUCT_REGISTRY);
@@ -448,6 +468,36 @@ function ProductListingContent() {
             ))}
          </div>
       </div>
+
+      {/* 2. PROMOTIONAL HERO BANNER */}
+      {activeCoupons.length > 0 && (
+         <section className="pt-6 md:pt-10">
+            <div className="container mx-auto px-2 md:px-10">
+               <div className="relative w-full overflow-hidden rounded-[calc(var(--c-radius-card)*1.2)] bg-gradient-to-r from-primary/20 via-primary/5 to-transparent border border-primary/20 p-6 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-glow-primary group">
+                  <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-gradient-to-l from-primary/10 to-transparent pointer-events-none" />
+                  <div className="absolute -left-10 -top-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl pointer-events-none group-hover:bg-primary/30 transition-all duration-700" />
+                  
+                  <div className="relative z-10 space-y-2 text-center md:text-left">
+                     <Badge className="bg-primary text-black text-[8px] md:text-[10px] font-black uppercase tracking-widest italic border-none">Exclusive Offer</Badge>
+                     <h2 className="text-2xl md:text-4xl font-black uppercase italic text-[var(--c-text-primary)]">
+                        Save <span className="text-primary">{activeCoupons[0].type === 'PERCENTAGE' ? `${activeCoupons[0].value}%` : `₹${activeCoupons[0].value}`}</span> Today
+                     </h2>
+                     <p className="text-[10px] md:text-sm font-medium text-[var(--c-text-secondary)] max-w-md">
+                        Apply this code at checkout to instantly upgrade your seafood experience.
+                        {activeCoupons[0].min_purchase > 0 && ` Minimum order: ₹${activeCoupons[0].min_purchase}.`}
+                     </p>
+                  </div>
+
+                  <div className="relative z-10 flex flex-col items-center gap-2 bg-[var(--c-bg)] p-4 md:p-6 rounded-2xl md:rounded-3xl border border-[var(--foreground)]/10 shadow-xl">
+                     <span className="text-[8px] font-black uppercase tracking-widest text-[var(--c-text-secondary)] italic">Your Promo Code</span>
+                     <div className="px-6 py-3 bg-primary/10 border-2 border-primary/30 rounded-xl">
+                        <span className="text-lg md:text-2xl font-black text-primary tracking-[0.2em]">{activeCoupons[0].code}</span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </section>
+      )}
 
       {/* 3. SEARCH & FILTER HERO - RECTIFIED WATERLINE */}
       <section className="pt-[26px] md:pt-[34px] pb-2 md:pb-8">

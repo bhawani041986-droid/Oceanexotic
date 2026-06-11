@@ -61,11 +61,29 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const [scrolled, setScrolled] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [activeCoupons, setActiveCoupons] = useState<any[]>([]);
 
   useEffect(() => {
     setMounted(true);
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
+
+    // Fetch active coupons
+    fetch('/api/system/coupons')
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'success' && data.content) {
+          const valid = data.content.filter((c: any) => {
+            if (c.status !== 'ACTIVE') return false;
+            if (c.usage_limit && c.usage_count >= c.usage_limit) return false;
+            if (c.expiry_date && new Date(c.expiry_date) < new Date()) return false;
+            return true;
+          });
+          setActiveCoupons(valid);
+        }
+      })
+      .catch(console.error);
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -102,12 +120,26 @@ export default function MainLayout({ children }: MainLayoutProps) {
       "min-h-screen flex flex-col bg-[var(--c-bg)] text-[var(--c-text-primary)] font-sans selection:bg-[var(--c-primary)]/30 pb-[120px] lg:pb-0 overflow-x-hidden transition-all duration-500"
     )}>
       
+      {/* 0. GLOBAL ANNOUNCEMENT BAR */}
+      {activeCoupons.length > 0 && (
+        <div className="bg-primary text-black py-1.5 px-4 text-center z-[200] relative overflow-hidden flex items-center justify-center">
+          <div className="flex gap-8 whitespace-nowrap animate-marquee md:animate-none">
+            {activeCoupons.slice(0, 2).map((coupon) => (
+              <p key={coupon.id} className="text-[10px] md:text-xs font-black uppercase tracking-widest italic flex items-center gap-2">
+                🔥 Use Code <span className="bg-black/10 px-2 py-0.5 rounded text-black border border-black/20">{coupon.code}</span> for {coupon.type === 'PERCENTAGE' ? `${coupon.value}% OFF` : `₹${coupon.value} OFF`}
+                {coupon.min_purchase > 0 && ` (Min ₹${coupon.min_purchase})`}
+              </p>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* 1. UNIVERSAL RESPONSIVE NAVBAR - THEME AWARE */}
       <header className={cn(
-        "fixed top-0 left-0 right-0 z-[100] transition-all duration-500 border-b",
+        "sticky top-0 left-0 right-0 z-[100] transition-all duration-500 border-b",
         scrolled 
           ? "h-16 md:h-20 bg-[var(--c-bg)]/90 backdrop-blur-3xl border-[var(--foreground)]/10" 
-  : "h-20 md:h-24 bg-[var(--c-bg)]/60 backdrop-blur-xl border-[var(--foreground)]/5"
+          : "h-20 md:h-24 bg-[var(--c-bg)]/60 backdrop-blur-xl border-[var(--foreground)]/5"
       )}>
         <div className="container mx-auto px-0 h-full flex items-center justify-between">
           <div className="flex items-center gap-3 lg:gap-10">
