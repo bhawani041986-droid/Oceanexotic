@@ -51,8 +51,8 @@ export default function MediaOptimizationCenter() {
 
   const [vault, setVault] = React.useState<any[]>([]
   );
-  const [activeTab, setActiveTab] = React.useState<'feed' | 'vault'>('feed'
-  );
+  const [activeTab, setActiveTab] = React.useState<'feed' | 'vault'>('feed');
+  const [selectedImage, setSelectedImage] = React.useState<any | null>(null);
 
   const fetchLogs = async () => {
     setIsSyncing(true
@@ -256,7 +256,8 @@ export default function MediaOptimizationCenter() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, scale: 0.95 }}
-                    className="bg-bg-secondary/40 border border-[var(--foreground)]/5 p-4 rounded-xl flex items-center justify-between group hover:border-primary/20 transition-all"
+                    className="bg-bg-secondary/40 border border-[var(--foreground)]/5 p-4 rounded-xl flex items-center justify-between group hover:border-primary/20 transition-all cursor-pointer"
+                    onClick={() => setSelectedImage(log)}
                   >
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-lg bg-black flex items-center justify-center border border-[var(--foreground)]/5 overflow-hidden">
@@ -295,7 +296,8 @@ export default function MediaOptimizationCenter() {
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ delay: i * 0.01 }}
-                            className="bg-slate-900/40 border border-[var(--foreground)]/5 rounded-xl overflow-hidden group hover:border-primary/50 transition-all"
+                            className="bg-slate-900/40 border border-[var(--foreground)]/5 rounded-xl overflow-hidden group hover:border-primary/50 transition-all cursor-pointer"
+                            onClick={() => setSelectedImage(asset)}
                         >
                             <div className="aspect-[4/5] bg-black relative">
                                 <img src={asset.url} alt="" className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
@@ -483,6 +485,52 @@ export default function MediaOptimizationCenter() {
                 <Button className="bg-primary text-black font-black" onClick={() => setIsHelpOpen(false)}>
                     ACKNOWLEDGE & CLOSE
                 </Button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* 6. LIGHTBOX / VIEW IMAGE MODAL */}
+      <AnimatePresence>
+        {selectedImage && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-12">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedImage(null)}
+              className="absolute inset-0 bg-black/95 backdrop-blur-md cursor-zoom-out"
+            />
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative w-full h-full max-w-5xl flex flex-col items-center justify-center pointer-events-none"
+            >
+              <div className="absolute top-4 right-4 md:top-0 md:right-0 md:p-4 pointer-events-auto z-10">
+                <button 
+                    onClick={() => setSelectedImage(null)} 
+                    className="p-3 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-all"
+                >
+                    <X className="w-6 h-6" />
+                </button>
+              </div>
+              <img 
+                  src={selectedImage.optimized_url || selectedImage.url} 
+                  alt={selectedImage.original_name || selectedImage.name} 
+                  className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl pointer-events-auto" 
+              />
+              <div className="mt-6 flex flex-col items-center text-center pointer-events-auto bg-black/50 p-4 rounded-xl backdrop-blur-md border border-white/10">
+                 <h3 className="text-white font-black text-lg tracking-wider">
+                    {selectedImage.original_name || selectedImage.name}
+                 </h3>
+                 <div className="flex gap-4 mt-2">
+                    <Badge className="bg-primary/20 text-primary border-primary/30">WEBP</Badge>
+                    <span className="text-sm font-mono text-slate-400">
+                        {selectedImage.file_size_kb || selectedImage.size_kb} KB
+                    </span>
+                 </div>
               </div>
             </motion.div>
           </div>
