@@ -23,6 +23,9 @@ interface SettingsState {
   // Customer Theme Engine
   customerTheme: string;
   androidAppUrl?: string;
+  agentAppUrl?: string;
+  sellerAppUrl?: string;
+  adminAppUrl?: string;
   atmosphericGlow: number;
   flashDealActive: boolean;
   flashDealEnd: string;
@@ -76,6 +79,9 @@ export const useSettingsStore = create<SettingsState>()(
       font: "font-inter",
       customerTheme: "theme-ocean-neon",
       androidAppUrl: "https://expo.dev/artifacts/eas/V0UcN4l7sd_aNIkvVPpv-Px38kc6axrdHBsyeO0AsCc.apk",
+      agentAppUrl: "",
+      sellerAppUrl: "",
+      adminAppUrl: "",
       atmosphericGlow: 15,
       flashDealActive: true,
       flashDealEnd: new Date(Date.now() + 1000 * 60 * 60 * 3).toISOString(), // 3 hours from now
@@ -140,6 +146,9 @@ export const useSettingsStore = create<SettingsState>()(
             currency: state.currency,
             customerTheme: state.customerTheme,
             androidAppUrl: state.androidAppUrl,
+            agentAppUrl: state.agentAppUrl,
+            sellerAppUrl: state.sellerAppUrl,
+            adminAppUrl: state.adminAppUrl,
             atmosphericGlow: state.atmosphericGlow,
             flashDealActive: state.flashDealActive,
             flashDealEnd: state.flashDealEnd,

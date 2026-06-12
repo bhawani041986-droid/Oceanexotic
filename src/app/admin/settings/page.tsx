@@ -143,6 +143,10 @@ export default function AdminSettingsPage() {
     ordersOpenTime, 
     ordersCloseTime, 
     ordersNextOpenText, 
+    androidAppUrl,
+    agentAppUrl,
+    sellerAppUrl,
+    adminAppUrl,
     setSettings, 
     fetchSettings, 
     pushSettings 
@@ -475,9 +479,75 @@ export default function AdminSettingsPage() {
                        <p className="text-[7px] font-black text-text-secondary uppercase tracking-widest mt-1">This text is displayed dynamically on the storefront during closed hours to guide pre-orders.</p>
                     </div>
                  </Card>
-              </div>
-           </div>
-        </div>
+               </div>
+
+               {/* Fleet App Distribution Module */}
+               <div className="pt-10 space-y-8">
+                  <div className="flex items-center justify-between px-1">
+                     <div className="space-y-[2px] md:space-y-1">
+                        <h3 className="text-[10px] md:text-lg font-black text-[var(--foreground)] uppercase tracking-tight flex items-center gap-2 md:gap-3">
+                           <Globe className="w-3.5 h-3.5 md:w-5 md:h-5 text-primary" /> Fleet App Distribution
+                        </h3>
+                        <p className="text-[7px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest leading-relaxed">Manage dynamic APK download links for the fleet applications.</p>
+                     </div>
+                  </div>
+
+                  <Card className="p-6 md:p-10 space-y-8 rounded-[32px] border-[var(--foreground)]/5 bg-bg-secondary/40">
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div className="space-y-2">
+                           <label className="text-[9px] font-black uppercase tracking-widest ml-1 text-text-secondary flex items-center gap-2">
+                              <Globe className="w-3 h-3 text-primary" /> Customer App APK URL
+                           </label>
+                           <input 
+                              type="text" 
+                              value={androidAppUrl || ""}
+                              onChange={(e) => setSettings({ androidAppUrl: e.target.value })}
+                              placeholder="https://expo.dev/..."
+                              className="w-full h-14 bg-bg-primary/50 border border-[var(--foreground)]/5 rounded-2xl px-6 text-sm font-black text-[var(--foreground)] outline-none focus:border-primary/40 transition-all"
+                           />
+                           <p className="text-[7px] font-black text-text-secondary uppercase tracking-widest mt-1">Updates "Google Play" button on Customer Web</p>
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[9px] font-black uppercase tracking-widest ml-1 text-text-secondary flex items-center gap-2">
+                              <Globe className="w-3 h-3 text-primary" /> Agent App APK URL
+                           </label>
+                           <input 
+                              type="text" 
+                              value={agentAppUrl || ""}
+                              onChange={(e) => setSettings({ agentAppUrl: e.target.value })}
+                              placeholder="https://expo.dev/..."
+                              className="w-full h-14 bg-bg-primary/50 border border-[var(--foreground)]/5 rounded-2xl px-6 text-sm font-black text-[var(--foreground)] outline-none focus:border-primary/40 transition-all"
+                           />
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[9px] font-black uppercase tracking-widest ml-1 text-text-secondary flex items-center gap-2">
+                              <Globe className="w-3 h-3 text-primary" /> Seller App APK URL
+                           </label>
+                           <input 
+                              type="text" 
+                              value={sellerAppUrl || ""}
+                              onChange={(e) => setSettings({ sellerAppUrl: e.target.value })}
+                              placeholder="https://expo.dev/..."
+                              className="w-full h-14 bg-bg-primary/50 border border-[var(--foreground)]/5 rounded-2xl px-6 text-sm font-black text-[var(--foreground)] outline-none focus:border-primary/40 transition-all"
+                           />
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[9px] font-black uppercase tracking-widest ml-1 text-text-secondary flex items-center gap-2">
+                              <Globe className="w-3 h-3 text-primary" /> Admin App APK URL
+                           </label>
+                           <input 
+                              type="text" 
+                              value={adminAppUrl || ""}
+                              onChange={(e) => setSettings({ adminAppUrl: e.target.value })}
+                              placeholder="https://expo.dev/..."
+                              className="w-full h-14 bg-bg-primary/50 border border-[var(--foreground)]/5 rounded-2xl px-6 text-sm font-black text-[var(--foreground)] outline-none focus:border-primary/40 transition-all"
+                           />
+                        </div>
+                     </div>
+                  </Card>
+               </div>
+            </div>
+         </div>
 
         <div className="space-y-[10px] md:space-y-10">
            {/* Visual Fidelity Controls */}
