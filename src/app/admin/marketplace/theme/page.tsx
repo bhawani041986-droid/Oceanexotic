@@ -65,10 +65,8 @@ export default function MarketplaceThemeControl() {
   );
 
   const handleThemeSelect = (themeId: string) => {
-    setSelectedThemeId(themeId
-  );
-    toast(`Previewing ${CUSTOMER_THEMES.find(t => t.id === themeId)?.name} protocol.`, "info"
-  );
+    setSelectedThemeId(themeId);
+    toast(`Selected ${CUSTOMER_THEMES.find(t => t.id === themeId)?.name}. Click SYNCHRONIZE to apply.`, "info");
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
