@@ -23,7 +23,9 @@ import {
   CreditCard,
   Key,
   Clock,
-  Calendar
+  Calendar,
+  Eye,
+  EyeOff
 } from "lucide-react";
 import { useTheme, ThemeType } from "@/context/ThemeContext";
 import { useSettingsStore } from "@/store/settingsStore";
@@ -136,6 +138,7 @@ const THEMES: { id: ThemeType; name: string; description: string; colors: string
 export default function AdminSettingsPage() {
   const { theme, setTheme, font, setFont, blurIntensity, setBlurIntensity, glowIntensity, setGlowIntensity } = useTheme();
   const { 
+    payu,
     ordersEnabled, 
     ordersOpenTime, 
     ordersCloseTime, 
@@ -147,6 +150,7 @@ export default function AdminSettingsPage() {
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [showMerchantSalt, setShowMerchantSalt] = useState(false);
 
   React.useEffect(() => {
     fetchSettings();
@@ -155,6 +159,9 @@ export default function AdminSettingsPage() {
   const handleSave = async () => {
     setIsSaving(true);
     try {
+      // Sync local theme states to store before pushing
+      setSettings({ theme, font, atmosphericGlow: glowIntensity });
+      
       const success = await pushSettings();
       if (success) {
         setSaveSuccess(true);
@@ -348,6 +355,8 @@ export default function AdminSettingsPage() {
                        </label>
                        <input 
                           type="text" 
+                          value={payu?.merchantKey || ""}
+                          onChange={(e) => setSettings({ payu: { ...payu, merchantKey: e.target.value } })}
                           className="w-full h-14 bg-bg-primary/50 border border-[var(--foreground)]/5 rounded-2xl px-6 text-sm font-black text-[var(--foreground)] outline-none focus:border-primary/40 transition-all"
                           placeholder="Enter Merchant Key"
                        />
@@ -356,27 +365,41 @@ export default function AdminSettingsPage() {
                        <label className="text-[9px] font-black uppercase tracking-widest ml-1 text-text-secondary flex items-center gap-2">
                           <ShieldCheck className="w-3 h-3 text-primary" /> Merchant Salt
                        </label>
-                       <input 
-                          type="password" 
-                          className="w-full h-14 bg-bg-primary/50 border border-[var(--foreground)]/5 rounded-2xl px-6 text-sm font-black text-[var(--foreground)] outline-none focus:border-primary/40 transition-all"
-                          placeholder="Enter Merchant Salt"
-                       />
+                       <div className="relative">
+                          <input 
+                             type={showMerchantSalt ? "text" : "password"} 
+                             value={payu?.merchantSalt || ""}
+                             onChange={(e) => setSettings({ payu: { ...payu, merchantSalt: e.target.value } })}
+                             className="w-full h-14 bg-bg-primary/50 border border-[var(--foreground)]/5 rounded-2xl pl-6 pr-12 text-sm font-black text-[var(--foreground)] outline-none focus:border-primary/40 transition-all"
+                             placeholder="Enter Merchant Salt"
+                          />
+                          <button 
+                             onClick={() => setShowMerchantSalt(!showMerchantSalt)}
+                             className="absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary hover:text-[var(--foreground)] transition-all"
+                          >
+                             {showMerchantSalt ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </button>
+                       </div>
                     </div>
                  </div>
                  <div className="flex items-center gap-6">
                     <p className="text-[9px] font-black uppercase tracking-widest text-text-secondary">Environment Mode:</p>
                     <div className="flex bg-bg-primary/50 p-1.5 rounded-xl border border-[var(--foreground)]/5">
-                       {['test', 'live'].map((mode) => (
-                          <button 
-                            key={mode}
-                            className={cn(
-                              "px-6 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
-                              "text-text-secondary/40"
-                            )}
-                          >
-                            {mode}
-                          </button>
-                       ))}
+                       {['test', 'live'].map((mode) => {
+                          const isActive = payu?.mode === mode;
+                          return (
+                             <button 
+                               key={mode}
+                               onClick={() => setSettings({ payu: { ...payu, mode: mode as 'test' | 'live' } })}
+                               className={cn(
+                                 "px-6 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all",
+                                 isActive ? "bg-primary text-[var(--foreground)] shadow-glow-purple" : "text-text-secondary hover:text-[var(--foreground)]"
+                               )}
+                             >
+                               {mode}
+                             </button>
+                          );
+                       })}
                     </div>
                  </div>
               </Card>
