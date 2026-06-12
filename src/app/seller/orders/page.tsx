@@ -201,7 +201,7 @@ export default function SellerOrdersPage() {
           <h2 className="text-xl md:text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic shadow-glow-purple/5 flex items-center justify-center lg:justify-start gap-2">
             <Package className="w-5 h-5 md:w-7 md:h-7 text-primary shadow-glow-purple/20 animate-pulse" /> Fleet Commissions
           </h2>
-          <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest leading-relaxed italic opacity-60">Governing {filteredOrders.length} Active Fulfillment Lines in Sovereignty</p>
+          <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest leading-relaxed italic opacity-60">Governing {filteredOrders.length} Active Fulfillment Lines in Systemty</p>
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-[10px] lg:gap-6 w-full lg:w-auto">
           {/* Probe Search */}

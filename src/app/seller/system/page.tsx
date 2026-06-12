@@ -136,7 +136,7 @@ export default function SellerSystemPage() {
             <Card className="p-8 bg-gradient-to-br from-primary/10 to-transparent border-primary/20 space-y-4">
                <div className="flex items-center gap-4">
                   <Cpu className="w-5 h-5 text-primary shadow-glow-purple" />
-                  <p className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest">Encryption Sovereignty</p>
+                  <p className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest">Encryption Systemty</p>
                </div>
                <p className="text-[9px] text-text-secondary font-medium leading-relaxed italic">
                  Your merchant node is commissioning technical handshakes via Level-3 Maritime Security Protocols. System health is optimal.

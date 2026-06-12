@@ -34,7 +34,7 @@ export default function AdminSubscriptionsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-[10px] md:gap-6 md:border-b md:border-[var(--foreground)]/5 md:pb-10">
         <div className="space-y-1 text-center md:text-left">
-          <h2 className="text-xl md:text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic shadow-glow-purple/5">Tier Sovereignty</h2>
+          <h2 className="text-xl md:text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic shadow-glow-purple/5">Tier Systemty</h2>
           <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Governing Global Merchant SaaS Tiers & Billing Cycles</p>
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-2 md:gap-4">

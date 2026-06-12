@@ -207,7 +207,7 @@ export default function SellerFleetControl() {
     <div className="space-y-4 lg:space-y-10 pb-12 lg:pb-24 text-[var(--foreground)]">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 lg:gap-0 lg:border-b lg:border-[var(--foreground)]/5 lg:pb-10">
          <div className="space-y-1 text-center sm:text-left">
-            <h1 className="text-2xl lg:text-[32px] font-black text-[var(--foreground)] uppercase italic tracking-tighter leading-none shadow-glow-purple/5">Fleet Sovereignty</h1>
+            <h1 className="text-2xl lg:text-[32px] font-black text-[var(--foreground)] uppercase italic tracking-tighter leading-none shadow-glow-purple/5">Fleet Systemty</h1>
             <p className="text-[8px] lg:text-[10px] font-black text-text-secondary uppercase tracking-[0.3em] italic opacity-60">Processing Node • Andaman Sector Logistics</p>
          </div>
          <Button onClick={() => setIsDispatchModalOpen(true)} className="h-10 lg:h-12 px-4 lg:px-8 gap-2 lg:gap-3 text-[8px] lg:text-[10px] font-black uppercase tracking-widest shadow-glow-purple bg-primary w-full sm:w-auto italic rounded-lg">

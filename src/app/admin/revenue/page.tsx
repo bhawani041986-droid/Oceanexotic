@@ -35,7 +35,7 @@ export default function AdminRevenuePage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-[10px] md:gap-6 md:border-b md:border-[var(--foreground)]/5 md:pb-10">
         <div className="space-y-1 text-center md:text-left">
-          <h2 className="text-xl md:text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic text-primary shadow-glow-purple/5">Financial Sovereign Ledger</h2>
+          <h2 className="text-xl md:text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic text-primary shadow-glow-purple/5">Financial System Ledger</h2>
           <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Analyzing the Global Economic Yield of the OceanExotic Global Network</p>
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-2 md:gap-4">
@@ -116,7 +116,7 @@ export default function AdminRevenuePage() {
               ))}
            </div>
            <div className="p-4 md:p-6 rounded-[20px] md:rounded-[24px] bg-primary/10 border border-primary/20 space-y-1.5 md:space-y-2">
-              <p className="text-[8px] md:text-[10px] font-black text-primary uppercase tracking-[0.2em] italic">Sovereign Yield Alert</p>
+              <p className="text-[8px] md:text-[10px] font-black text-primary uppercase tracking-[0.2em] italic">System Yield Alert</p>
               <p className="text-[8px] md:text-[10px] text-[var(--foreground)] font-black leading-relaxed italic opacity-80">Revenue growth is tracking 4.2% above fiscal projections for Q2.</p>
            </div>
         </Card>

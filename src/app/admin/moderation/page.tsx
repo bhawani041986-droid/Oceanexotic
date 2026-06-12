@@ -35,7 +35,7 @@ import { cn } from "@/lib/utils";
 import { reviewService } from "@/services/reviewService";
 import { Loader2 } from "lucide-react";
 
-// The local registry will now be hydrated dynamically from the Sovereign Spine.
+// The local registry will now be hydrated dynamically from the System Spine.
 
 export default function AdminModerationPage() {
   const { toast } = useToast(

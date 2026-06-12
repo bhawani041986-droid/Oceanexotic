@@ -150,7 +150,7 @@ export default function AdminRolesPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-[10px] md:gap-6 md:border-b md:border-[var(--foreground)]/5 md:pb-10">
         <div className="space-y-1 text-center md:text-left">
-          <h2 className="text-xl md:text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic shadow-glow-purple/5">Authority Sovereignty</h2>
+          <h2 className="text-xl md:text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic shadow-glow-purple/5">Authority Systemty</h2>
           <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Governing Administrative Roles & Global Platform Permissions</p>
         </div>
         <Button onClick={openAddModal} variant="primary" className="h-10 md:h-12 px-6 md:px-8 text-[9px] md:text-[10px] font-black tracking-widest uppercase shadow-glow-purple flex items-center gap-2 md:gap-3 rounded-lg md:rounded-xl italic">
@@ -198,7 +198,7 @@ export default function AdminRolesPage() {
            <div className="p-[10px] md:p-6 border-b border-[var(--foreground)]/5 flex flex-col md:flex-row md:items-center justify-between gap-[10px] md:gap-6">
               <div className="space-y-0.5 md:space-y-1 text-center md:text-left">
                  <h3 className="text-base md:text-lg font-black text-[var(--foreground)] tracking-tighter uppercase italic">Access Registry</h3>
-                 <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Live Identity Sovereignty Logs</p>
+                 <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Live Identity Systemty Logs</p>
               </div>
               <div className="relative group w-full md:w-64">
                  <Input 
@@ -215,7 +215,7 @@ export default function AdminRolesPage() {
                   <TableHeader>
                      <TableRow>
                         <TableHead>Role Identity</TableHead>
-                        <TableHead>Sovereignty Level</TableHead>
+                        <TableHead>Systemty Level</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead className="text-right">Governance</TableHead>
                      </TableRow>
@@ -278,7 +278,7 @@ export default function AdminRolesPage() {
                      </div>
                      <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5">
                         <div className="space-y-0">
-                           <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Sovereignty Level</p>
+                           <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Systemty Level</p>
                            <Badge variant="glass" className="bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5 uppercase text-[7px] tracking-widest px-1 py-0.5">
                               {role.level}
                            </Badge>
@@ -328,7 +328,7 @@ export default function AdminRolesPage() {
                  </div>
                  
                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">Sovereignty Level</label>
+                    <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">Systemty Level</label>
                     <select 
                       value={formData.level || ""} 
                       onChange={(e) => setFormData({...formData, level: e.target.value})}

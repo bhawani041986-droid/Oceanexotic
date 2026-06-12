@@ -80,7 +80,7 @@ export const CustomerThemeApplier = () => {
       root.style.setProperty('--radius-card', theme.visuals.radiusCard);
       root.style.setProperty('--shadow-glow', theme.visuals.shadowGlow);
 
-      // Force Dark/Light Sovereignty based on theme preference
+      // Force Dark/Light Systemty based on theme preference
       if (isLight) {
         root.classList.add('customer-light', 'light');
         root.classList.remove('customer-dark', 'dark');

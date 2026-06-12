@@ -151,10 +151,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
               <Menu className="w-6 h-6" />
             </button>
             <Link href="/customer" className="flex items-center gap-2 group">
-              <Logo size="lg" className="!w-[180px] !h-[48px] sm:!w-[200px] sm:!h-[53px] md:!w-[220px] md:!h-[58px] lg:!w-[240px] lg:!h-[64px]" />
+              <Logo size="lg" className="!w-[180px] !h-[48px] sm:!w-[200px] sm:!h-[53px] md:!w-[220px] md:!h-[58px] xl:!w-[240px] xl:!h-[64px]" />
             </Link>
 
-            <nav className="hidden lg:flex items-center gap-8 ml-6">
+            <nav className="hidden lg:flex items-center gap-4 xl:gap-8 ml-2 xl:ml-6">
               <div className="relative">
                 <button 
                   onMouseEnter={() => setIsCategoryDropdownOpen(true)}
@@ -203,7 +203,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
             </nav>
           </div>
 
-          <div className="flex-1 max-w-md relative hidden lg:block mx-10">
+          <div className="flex-1 max-w-[200px] xl:max-w-md relative hidden lg:block mx-4 xl:mx-10">
              <input 
                 type="text" 
                 value={searchQuery}
@@ -249,14 +249,14 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
       {/* 2. STICKY BOTTOM NAVIGATION (MOBILE) */}
       <nav 
-        className="fixed left-4 right-4 z-[100] h-[48px] bg-[var(--c-card)]/90 backdrop-blur-3xl border border-[var(--foreground)]/10 shadow-2xl lg:hidden"
+        className="fixed left-4 right-4 z-[100] h-[52px] bg-[var(--c-card)]/90 backdrop-blur-3xl border border-[var(--foreground)]/10 shadow-2xl lg:hidden"
         style={{ 
           clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)',
-          bottom: 'max(1rem, env(safe-area-inset-bottom))'
+          bottom: 'max(1.5rem, env(safe-area-inset-bottom))'
         }}
       >
         <div className="flex items-center justify-around h-full px-2">
-          {navItems.map((item, i) => {
+          {navItems.filter(item => ["Home", "Market", "Chat", "Profile"].includes(item.label)).map((item, i) => {
             const isActive = pathname === item.href;
             return (
               <button 

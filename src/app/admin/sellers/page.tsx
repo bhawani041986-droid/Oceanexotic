@@ -194,7 +194,7 @@ export default function AdminSellersPage() {
           <div className="space-y-1 text-center md:text-left">
             <h2 className="text-xl md:text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic">Merchant Fleet Command</h2>
             <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest leading-relaxed italic opacity-60">
-              Governing {sellers.length} Sovereign Merchant Nodes
+              Governing {sellers.length} System Merchant Nodes
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
@@ -238,7 +238,7 @@ export default function AdminSellersPage() {
         <Card className="p-1 rounded-[24px] md:rounded-[40px] overflow-hidden bg-bg-secondary/20 shadow-premium border-[var(--foreground)]/5">
           <div className="p-[10px] md:p-8 border-b border-[var(--foreground)]/5 flex flex-col md:flex-row md:items-center justify-between gap-[10px] md:gap-6">
              <div className="space-y-0.5 md:space-y-1">
-                <h3 className="text-base md:text-lg font-black text-[var(--foreground)] tracking-tighter uppercase italic">Sovereign Merchant Registry</h3>
+                <h3 className="text-base md:text-lg font-black text-[var(--foreground)] tracking-tighter uppercase italic">System Merchant Registry</h3>
                 <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Authorized Trade Nodes</p>
              </div>
              <div className="flex items-center gap-2 md:gap-4">

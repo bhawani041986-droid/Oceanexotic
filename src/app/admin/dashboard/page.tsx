@@ -66,7 +66,7 @@ export default function AdminDashboardPage() {
       const transformedStats = [
         { label: "Global Liquidity", value: `₹${(revenueVal * 5).toLocaleString()}`, growth: "+24.5%", icon: <Globe className="w-5 h-5" />, trend: "up" },
         { label: "Platform Nodes", value: "1,248", growth: "+12", icon: <Server className="w-5 h-5" />, trend: "up" },
-        { label: "Sovereign Users", value: "48,250", growth: "+8.2%", icon: <ShieldCheck className="w-5 h-5" />, trend: "up" },
+        { label: "System Users", value: "48,250", growth: "+8.2%", icon: <ShieldCheck className="w-5 h-5" />, trend: "up" },
         { label: "System Latency", value: "12ms", growth: "-2ms", icon: <Zap className="w-5 h-5" />, trend: "up" },
       ];
 
@@ -79,7 +79,7 @@ export default function AdminDashboardPage() {
       setStats([
         { label: "Global Liquidity", value: "₹1.2Cr", growth: "+24.5%", icon: <Globe className="w-5 h-5" />, trend: "up" },
         { label: "Platform Nodes", value: "1,248", growth: "+12", icon: <Server className="w-5 h-5" />, trend: "up" },
-        { label: "Sovereign Users", value: "48,250", growth: "+8.2%", icon: <ShieldCheck className="w-5 h-5" />, trend: "up" },
+        { label: "System Users", value: "48,250", growth: "+8.2%", icon: <ShieldCheck className="w-5 h-5" />, trend: "up" },
         { label: "System Latency", value: "12ms", growth: "-2ms", icon: <Zap className="w-5 h-5" />, trend: "up" },
       ]);
       setHealth({ status: "Operational", uptime: "99.99%", database: "Connected" });

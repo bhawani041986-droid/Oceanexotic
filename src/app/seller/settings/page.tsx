@@ -27,7 +27,7 @@ export default function SellerSettingsPage() {
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-[10px] lg:gap-6 lg:border-b lg:border-[var(--foreground)]/5 lg:pb-10">
         <div className="space-y-1 text-center lg:text-left">
-          <h2 className="text-xl lg:text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic shadow-glow-purple/5">Sovereign Directives</h2>
+          <h2 className="text-xl lg:text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic shadow-glow-purple/5">System Directives</h2>
           <p className="text-[8px] lg:text-[10px] font-black text-text-secondary uppercase tracking-widest leading-relaxed italic opacity-60">Governing Your Merchant Hub Preferences & Node Calibration</p>
         </div>
         <Button className="hidden lg:flex h-10 lg:h-12 lg:px-10 text-[9px] lg:text-[10px] font-black tracking-widest uppercase shadow-glow-purple items-center gap-3 rounded-lg italic">

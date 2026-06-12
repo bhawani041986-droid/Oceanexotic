@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     }]);
     if (error) throw error;
 
-    return NextResponse.json({ success: true, message: "Trade Order Commissioned in Sovereign Spine" });
+    return NextResponse.json({ success: true, message: "Trade Order Commissioned in System Spine" });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

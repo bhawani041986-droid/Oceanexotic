@@ -151,7 +151,7 @@ export default function AdminProductsPage() {
 
       <div className="h-[60vh] flex flex-col items-center justify-center space-y-4">
         <RefreshCw className="w-10 h-10 text-primary animate-spin" />
-        <p className="text-[10px] font-black uppercase tracking-widest text-primary italic">Syncing Sovereign Registry...</p>
+        <p className="text-[10px] font-black uppercase tracking-widest text-primary italic">Syncing System Registry...</p>
       </div>
     
   );

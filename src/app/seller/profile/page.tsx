@@ -52,7 +52,7 @@ export default function SellerProfilePage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-[10px] md:gap-6 md:border-b md:border-[var(--foreground)]/5 md:pb-10">
         <div className="space-y-1 text-center md:text-left">
           <h2 className="text-xl md:text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic shadow-glow-purple/5">Merchant Registry</h2>
-          <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest leading-relaxed italic opacity-60">Governing Your Global Maritime Brand & Business Sovereignty</p>
+          <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest leading-relaxed italic opacity-60">Governing Your Global Maritime Brand & Business Systemty</p>
         </div>
         <Button className="h-10 md:h-12 px-6 md:px-10 text-[9px] md:text-[10px] font-black tracking-widest uppercase shadow-glow-purple flex items-center justify-center gap-2 md:gap-3 rounded-lg italic">
           <Save className="w-3.5 h-3.5 md:w-4 md:h-4" /> COMMIT ALL CHANGES
@@ -143,7 +143,7 @@ export default function SellerProfilePage() {
            <Card className="p-[10px] md:p-6 space-y-6 md:space-y-8 bg-bg-secondary/10 border-[var(--foreground)]/5 rounded-[24px] md:rounded-[40px] shadow-premium">
               <div className="flex items-center gap-3 border-b border-[var(--foreground)]/5 pb-4 md:pb-6">
                  <DollarSign className="w-4 h-4 text-primary opacity-40" />
-                 <h3 className="text-base md:text-lg font-black text-[var(--foreground)] tracking-tighter uppercase italic shadow-glow-purple/5">Settlement Sovereignty</h3>
+                 <h3 className="text-base md:text-lg font-black text-[var(--foreground)] tracking-tighter uppercase italic shadow-glow-purple/5">Settlement Systemty</h3>
               </div>
               <div className="space-y-4 md:space-y-6">
                  <div className="space-y-1.5">

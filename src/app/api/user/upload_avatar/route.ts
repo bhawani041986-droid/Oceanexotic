@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     // Update User Database
     const { error: dbError } = await supabase
       .from("users")
-      .update({ avatar: publicUrl })
+      .update({ avatar_url: publicUrl })
       .eq("id", userId);
 
     if (dbError) {

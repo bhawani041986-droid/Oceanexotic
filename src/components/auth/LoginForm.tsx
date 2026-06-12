@@ -40,12 +40,12 @@ export default function LoginForm() {
       // Simulate Abyssal Network Latency
       await new Promise((resolve) => setTimeout(resolve, 1200));
 
-      // Sovereign Role Detection (Mock Logic for Enterprise Demo)
+      // System Role Detection (Mock Logic for Enterprise Demo)
       let role: "admin" | "seller" | "customer" = "customer";
       if (data.email.toLowerCase().includes("admin")) role = "admin";
       else if (data.email.toLowerCase().includes("seller")) role = "seller";
 
-      // Execute Sovereign State Handshake
+      // Execute System State Handshake
       login({
         id: "USR-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
         name: data.email.split("@")[0].charAt(0).toUpperCase() + data.email.split("@")[0].slice(1),

@@ -112,7 +112,7 @@ export default function AdminAddUserPage() {
            </Link>
            <div className="space-y-1">
               <h2 className="text-3xl font-black text-[var(--foreground)] tracking-tight uppercase italic">Commission Citizen</h2>
-              <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Integrating a New Global Identity Node into the Sovereign Registry</p>
+              <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Integrating a New Global Identity Node into the System Registry</p>
            </div>
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
@@ -132,7 +132,7 @@ export default function AdminAddUserPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         {/* Main Configuration */}
         <div className="lg:col-span-2 space-y-10">
-           {/* Sovereign Credentials */}
+           {/* System Credentials */}
            <Card className="p-10 space-y-8 bg-bg-secondary/40 border border-primary/20 shadow-glow-purple">
               <div className="flex items-center justify-between border-b border-[var(--foreground)]/5 pb-6">
                  <div className="flex items-center gap-4">
@@ -207,7 +207,7 @@ export default function AdminAddUserPage() {
                     </div>
                  </div>
                   <div className="space-y-2">
-                     <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">Sovereign Role</label>
+                     <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">System Role</label>
                      <select 
                        value={formData.role} 
                        onChange={(e) => handleChange("role", e.target.value)}
@@ -241,7 +241,7 @@ export default function AdminAddUserPage() {
                     <Input placeholder="e.g. South Andaman" className="h-14 bg-bg-secondary border-[var(--foreground)]/10 font-bold" />
                  </div>
                  <div className="md:col-span-2 space-y-2">
-                    <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">Sovereign Residence (Full Address)</label>
+                    <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">System Residence (Full Address)</label>
                     <textarea 
                       placeholder="Enter complete shipping coordinates..." 
                       className="w-full h-32 bg-bg-secondary border border-[var(--foreground)]/10 rounded-[24px] p-6 text-sm font-medium text-[var(--foreground)] outline-none focus:border-primary/50 transition-all resize-none"
@@ -308,7 +308,7 @@ export default function AdminAddUserPage() {
               </div>
            </Card>
 
-           {/* Sovereign Notice */}
+           {/* System Notice */}
            <div className="p-6 rounded-[24px] bg-primary/5 border border-primary/10 space-y-4 text-center">
               <div className="flex items-center justify-center gap-3 text-primary">
                  <Info className="w-4 h-4" />

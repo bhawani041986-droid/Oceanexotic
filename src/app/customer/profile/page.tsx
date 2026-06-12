@@ -101,8 +101,8 @@ export default function CustomerProfilePage() {
     }
   };
   
-  const displayName = userProfile?.name || user?.name || "Sovereign Citizen";
-  const displayGrade = userProfile?.grade || "Maritime Citizen";
+  const displayName = userProfile?.name || user?.name || "System Citizen";
+  const displayGrade = userProfile?.grade || "Customer";
   const loyaltyPoints = Number(userProfile?.loyalty_points) || 0;
 
   const fetchRegistry = async () => {
@@ -240,7 +240,7 @@ export default function CustomerProfilePage() {
       <MainLayout>
         <div className="bg-[#0B1120] min-h-screen flex flex-col items-center justify-center space-y-4">
           <Loader2 className="w-12 h-12 text-primary animate-spin" />
-          <p className="text-[10px] font-black uppercase tracking-widest text-primary animate-pulse italic">Connecting to Sovereign Registry...</p>
+          <p className="text-[10px] font-black uppercase tracking-widest text-primary animate-pulse italic">Connecting to System Registry...</p>
         </div>
       </MainLayout>
     );

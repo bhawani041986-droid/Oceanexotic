@@ -70,7 +70,7 @@ function CheckoutSuccessContent() {
 
              <div className="space-y-3">
                 <h1 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-[var(--c-text-primary)]">Harvest Confirmed</h1>
-                <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-[var(--c-primary)] italic">Order Synchronized with Sovereign Fleet</p>
+                <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-[var(--c-primary)] italic">Order Synchronized with System Fleet</p>
              </div>
 
              <div className="grid grid-cols-2 gap-4 py-8 border-y border-[var(--border)]">
@@ -128,7 +128,7 @@ function CheckoutSuccessContent() {
              </div>
              <div className="flex items-center gap-2">
                 <Home className="w-4 h-4" />
-                <span className="text-[9px] font-black uppercase tracking-widest italic">OceanExotic Global Sovereign Registry</span>
+                <span className="text-[9px] font-black uppercase tracking-widest italic">OceanExotic Global System Registry</span>
              </div>
           </div>
 

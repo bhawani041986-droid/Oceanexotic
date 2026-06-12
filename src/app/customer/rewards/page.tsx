@@ -51,7 +51,7 @@ export default function LoyaltyRewardsPage() {
                    Your Fleet <span className="text-primary italic">Legacy.</span>
                 </h1>
                 <p className="text-xs md:text-sm font-medium text-text-secondary leading-tight md:leading-relaxed max-w-xl mx-auto lg:mx-0 italic">
-                   You are currently in the top 2% of the Global Oceanic Network. Accumulate 1,240 more Shells to reach Diamond Sovereignty.
+                   You are currently in the top 2% of the Global Oceanic Network. Accumulate 1,240 more Shells to reach Diamond Systemty.
                 </p>
              </div>
              <div className="flex flex-wrap justify-center lg:justify-start gap-4 md:gap-8">

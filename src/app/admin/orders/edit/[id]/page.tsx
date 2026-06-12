@@ -134,7 +134,7 @@ export default function AdminEditOrderPage() {
            </Link>
            <div className="space-y-1">
               <h2 className="text-3xl font-black tracking-tight uppercase italic flex items-center gap-4"><Activity className="w-8 h-8 text-primary" /> Track Order <span className="text-primary/60">{orderId}</span></h2>
-              <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Modifying Sovereign Dispatch Parameters</p>
+              <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Modifying System Dispatch Parameters</p>
            </div>
         </div>
         <Button onClick={handleSave} disabled={isSubmitting} className="h-12 px-10 text-[10px] font-black tracking-widest uppercase shadow-glow-purple flex items-center gap-3 text-[var(--foreground)]" style={{ backgroundColor: 'var(--agent-primary)', boxShadow: `0 0 15px var(--agent-glow)` }}>

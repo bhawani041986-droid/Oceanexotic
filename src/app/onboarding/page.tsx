@@ -31,7 +31,7 @@ const ROLES = [
     desc: "Global maritime trade and harvest distribution.",
     icon: <Ship className="w-8 h-8" />,
     color: "success",
-    benefit: "Fleet Sovereignty",
+    benefit: "Fleet Systemty",
     href: "/seller/onboarding"
   },
   {

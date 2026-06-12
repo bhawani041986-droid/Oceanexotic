@@ -190,7 +190,7 @@ export default function AdminEditUserPage() {
               <h2 className="text-3xl font-black text-[var(--foreground)] tracking-tight uppercase italic flex items-center gap-4">
                  <Edit3 className="w-8 h-8 text-primary" /> Edit Citizen <span className="text-primary/60">{params?.id || "USR-001"}</span>
               </h2>
-              <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Modifying Sovereign Identity Parameters within the Global Registry</p>
+              <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Modifying System Identity Parameters within the Global Registry</p>
            </div>
         </div>
         <div className="flex gap-4">
@@ -210,12 +210,12 @@ export default function AdminEditUserPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
         {/* Main Configuration */}
         <div className="lg:col-span-2 space-y-10">
-           {/* Sovereign Credentials */}
+           {/* System Credentials */}
            <Card className="p-10 space-y-8 bg-bg-secondary/40 border border-primary/20 shadow-glow-purple">
               <div className="flex items-center justify-between border-b border-[var(--foreground)]/5 pb-6">
                  <div className="flex items-center gap-4">
                     <Key className="w-5 h-5 text-primary" />
-                    <h3 className="text-lg font-bold text-[var(--foreground)] tracking-tight uppercase italic">Sovereign Credential Ledger</h3>
+                    <h3 className="text-lg font-bold text-[var(--foreground)] tracking-tight uppercase italic">System Credential Ledger</h3>
                  </div>
                  <BadgeCheck className="w-5 h-5 text-success animate-pulse" />
               </div>
@@ -283,7 +283,7 @@ export default function AdminEditUserPage() {
                     </div>
                  </div>
                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">Sovereign Role</label>
+                    <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">System Role</label>
                     <select 
                       value={formData.role} 
                       onChange={(e) => setFormData({...formData, role: e.target.value})}
@@ -317,7 +317,7 @@ export default function AdminEditUserPage() {
                     <Input defaultValue="South Andaman" className="h-14 bg-bg-secondary border-[var(--foreground)]/10 font-bold" />
                  </div>
                  <div className="md:col-span-2 space-y-2">
-                    <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">Sovereign Residence (Full Address)</label>
+                    <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">System Residence (Full Address)</label>
                     <textarea 
                       defaultValue="Plot 42, Marine Drive Sector 4, Port Blair, Andaman and Nicobar Islands, PIN: 744101"
                       className="w-full h-32 bg-bg-secondary border border-[var(--foreground)]/10 rounded-[24px] p-6 text-sm font-medium text-[var(--foreground)] outline-none focus:border-primary/50 transition-all resize-none"

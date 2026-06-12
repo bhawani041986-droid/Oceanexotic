@@ -51,7 +51,7 @@ export default function AdminMonitoringPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-[10px] md:gap-6 md:border-b md:border-[var(--foreground)]/5 md:pb-10">
         <div className="space-y-1 text-center md:text-left">
           <h2 className="text-xl md:text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic text-primary shadow-glow-purple/5">Macro-Activity Monitor</h2>
-          <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Real-Time Sovereign Surveillance of Every Operational Node</p>
+          <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Real-Time System Surveillance of Every Operational Node</p>
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-2 md:gap-4">
            <div className="w-full sm:w-auto flex items-center justify-center md:justify-start gap-3 px-6 py-3 rounded-lg md:rounded-full bg-success/10 border border-success/20 text-success text-[8px] md:text-[9px] font-black uppercase tracking-widest italic">
@@ -69,7 +69,7 @@ export default function AdminMonitoringPage() {
          {[
            { label: "Server Response", value: "42ms", icon: <Server />, health: 98 },
            { label: "CPU Load (Admiral Node)", value: "14%", icon: <Cpu />, health: 14 },
-           { label: "Database Sovereignty", value: "8.4 TB", icon: <HardDrive />, health: 62 },
+           { label: "Database Systemty", value: "8.4 TB", icon: <HardDrive />, health: 62 },
          ].map((stat) => (
            <Card key={stat.label} className="p-[10px] md:p-8 space-y-4 md:space-y-6 bg-bg-secondary/20 border-[var(--foreground)]/5 group rounded-[24px] md:rounded-[40px] shadow-premium">
               <div className="flex items-center justify-between">
@@ -121,7 +121,7 @@ export default function AdminMonitoringPage() {
                   <TableRow className="border-[var(--foreground)]/5">
                      <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Operation Identity</TableHead>
                      <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Administrative Role</TableHead>
-                     <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Sovereign Action</TableHead>
+                     <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">System Action</TableHead>
                      <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Signal Status</TableHead>
                      <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Telemetry (Time/IP)</TableHead>
                      <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary pr-4 md:pr-6">Governance</TableHead>

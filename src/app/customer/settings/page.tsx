@@ -38,7 +38,7 @@ export default function CustomerSettingsPage() {
           {[
             { label: "Notification Radar", icon: <Bell className="w-4 h-4" />, active: true },
             { label: "Interface & Region", icon: <Globe className="w-4 h-4" />, active: false },
-            { label: "Sovereignty & Privacy", icon: <Eye className="w-4 h-4" />, active: false },
+            { label: "Systemty & Privacy", icon: <Eye className="w-4 h-4" />, active: false },
             { label: "Operational Alerts", icon: <Zap className="w-4 h-4" />, active: false },
           ].map((item) => (
             <button 
@@ -109,7 +109,7 @@ export default function CustomerSettingsPage() {
                  <ShieldCheck className="w-12 h-12 text-success" />
               </div>
               <div className="space-y-4 relative z-10">
-                 <h4 className="text-sm font-bold text-[var(--foreground)] uppercase tracking-tight">Data Sovereignty Protocol</h4>
+                 <h4 className="text-sm font-bold text-[var(--foreground)] uppercase tracking-tight">Data Systemty Protocol</h4>
                  <p className="text-[10px] text-text-secondary font-medium leading-relaxed italic max-w-sm">
                     Your operational preferences are stored using end-to-end maritime encryption. No data is shared with third-party logistics nodes without explicit authorization.
                  </p>

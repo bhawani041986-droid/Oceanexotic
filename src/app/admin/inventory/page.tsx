@@ -74,7 +74,7 @@ export default function AdminInventoryPage() {
       <Card className="lg:col-span-2 p-1 rounded-[16px] md:rounded-[24px] bg-bg-secondary/20 border-[var(--foreground)]/5 shadow-premium overflow-hidden">
         <div className="p-2 md:p-4 border-b border-[var(--foreground)]/5 flex flex-col md:flex-row md:items-center justify-between gap-[5px] md:gap-5">
            <div className="space-y-0.5 text-center md:text-left">
-              <h3 className="text-sm md:text-base font-black text-[var(--foreground)] tracking-tighter uppercase italic">Sovereign Logistics Registry</h3>
+              <h3 className="text-sm md:text-base font-black text-[var(--foreground)] tracking-tighter uppercase italic">System Logistics Registry</h3>
               <p className="text-[7px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Live Monitoring of All Distribution Handshake Nodes</p>
            </div>
            <div className="flex items-center gap-2 md:gap-4">

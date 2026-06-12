@@ -80,7 +80,7 @@ export default function AdminOTPPage() {
         router.push("/admin/dashboard"
   );
       } else {
-        toast("Sovereign signal mismatch. Identity rejected.", "error"
+        toast("System signal mismatch. Identity rejected.", "error"
   );
       }
     }, 2000

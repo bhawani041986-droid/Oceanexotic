@@ -111,7 +111,7 @@ export default function AdminLogisticsPage() {
           <Card className="lg:col-span-2 p-1 rounded-[24px] md:rounded-[40px] bg-bg-secondary/20 border-[var(--foreground)]/5 shadow-premium overflow-hidden">
              <div className="p-[10px] md:p-6 border-b border-[var(--foreground)]/5 flex flex-col md:flex-row md:items-center justify-between gap-[10px] md:gap-6">
                 <div className="space-y-0.5 md:space-y-1 text-center md:text-left">
-                   <h3 className="text-base md:text-lg font-black text-[var(--foreground)] tracking-tighter uppercase italic">Sovereign Logistics Registry</h3>
+                   <h3 className="text-base md:text-lg font-black text-[var(--foreground)] tracking-tighter uppercase italic">System Logistics Registry</h3>
                    <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Live Monitoring of All Distribution Handshake Nodes</p>
                 </div>
                 <div className="relative group w-full md:w-48">

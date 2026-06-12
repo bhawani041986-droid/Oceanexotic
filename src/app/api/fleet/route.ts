@@ -37,7 +37,7 @@ export async function POST(request: Request) {
       if (logError) throw logError;
     }
 
-    return NextResponse.json({ success: true, message: "Signal Registered in Sovereign Spine" });
+    return NextResponse.json({ success: true, message: "Signal Registered in System Spine" });
   } catch (error: any) {
     console.error("❌ Fleet Signal Error:", error);
     return NextResponse.json({ error: "Signal Drift: " + error.message }, { status: 500 });

@@ -77,7 +77,7 @@ export default function MerchantOnboardingPage() {
           {step === 2 && (
             <div className="space-y-10 relative z-10 animate-fade-in">
                <div className="space-y-2">
-                  <h2 className="text-3xl font-black text-[var(--foreground)] uppercase tracking-tight">Legal Sovereignty</h2>
+                  <h2 className="text-3xl font-black text-[var(--foreground)] uppercase tracking-tight">Legal Systemty</h2>
                   <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Verify your business credentials for platform commissioning</p>
                </div>
                <div className="space-y-8">

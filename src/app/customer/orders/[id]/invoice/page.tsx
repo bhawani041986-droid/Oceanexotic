@@ -207,7 +207,7 @@ export default function InvoicePage() {
                  <div className="p-6 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-[32px] space-y-4 print:bg-black/5 print:border-black/10">
                     <div className="flex items-center gap-3 text-success">
                        <ShieldCheck className="w-5 h-5" />
-                       <span className="text-[10px] font-black uppercase tracking-widest">Sovereignty Verified</span>
+                       <span className="text-[10px] font-black uppercase tracking-widest">Systemty Verified</span>
                     </div>
                     <p className="text-[10px] text-text-secondary italic leading-relaxed print:text-black/60">This digital registry serves as an official transaction record within the OceanFresh Maritime Node.</p>
                  </div>

@@ -281,7 +281,7 @@ export default function AgentMissionControl() {
          <FleetCommandMap missions={missions} activeOrder={activeOrder} />
          <div className="absolute top-3 md:top-6 right-3 md:right-6 z-20 flex flex-col gap-2">
             <div className="p-2 md:p-3 rounded-lg md:rounded-xl bg-black/60 backdrop-blur-xl border border-[var(--foreground)]/10 space-y-1 md:space-y-2">
-               <div className="flex items-center gap-2 md:gap-3"><div className="w-1.5 md:w-2 h-1.5 md:h-2 rounded-full bg-success animate-pulse shadow-glow" /><span className="text-[7px] md:text-[9px] font-black text-[var(--foreground)] uppercase tracking-widest italic">Sovereign Link: Active</span></div>
+               <div className="flex items-center gap-2 md:gap-3"><div className="w-1.5 md:w-2 h-1.5 md:h-2 rounded-full bg-success animate-pulse shadow-glow" /><span className="text-[7px] md:text-[9px] font-black text-[var(--foreground)] uppercase tracking-widest italic">System Link: Active</span></div>
                <div className="flex items-center gap-2 md:gap-3"><div className="w-1.5 md:w-2 h-1.5 md:h-2 rounded-full bg-primary shadow-glow" /><span className="text-[7px] md:text-[9px] font-black text-[var(--foreground)] uppercase tracking-widest italic">Registry: {missions.length} Vessels</span></div>
             </div>
          </div>

@@ -90,7 +90,7 @@ const THEMES: { id: ThemeType; name: string; description: string; colors: string
   },
   { 
     id: "theme-light-sovereign", 
-    name: "Sovereign", 
+    name: "System", 
     description: "High-precision light mode with soft elevation.", 
     colors: ["#7C3AED", "#2563EB", "#F8FAFC"],
     style: "bg-white",

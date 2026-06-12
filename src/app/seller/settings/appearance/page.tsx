@@ -85,7 +85,7 @@ const THEMES: { id: ThemeType; name: string; description: string; colors: string
   },
   { 
     id: "theme-light-sovereign", 
-    name: "Sovereign", 
+    name: "System", 
     description: "High-precision light mode with soft elevation.", 
     colors: ["#7C3AED", "#2563EB", "#F8FAFC"],
     style: "bg-white",
@@ -455,7 +455,7 @@ export default function AppearanceSettingsPage() {
                     <ShieldCheck className="w-4 h-4 md:w-6 md:h-6" />
                  </div>
                  <div className="space-y-[1px] md:space-y-0.5">
-                    <p className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest">Sovereign Vault</p>
+                    <p className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest">System Vault</p>
                     <p className="text-[6px] md:text-[8px] font-black text-success uppercase tracking-widest">Biometric Encrypted</p>
                  </div>
               </div>

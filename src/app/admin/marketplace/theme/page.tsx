@@ -113,7 +113,7 @@ export default function MarketplaceThemeControl() {
     setIsCommitting(false
   );
     if (success) {
-      toast("Marketplace protocols synchronized to Sovereign Registry.", "success"
+      toast("Marketplace protocols synchronized to System Registry.", "success"
   );
     } else {
       toast("Database synchronization failed.", "error"
@@ -150,7 +150,7 @@ export default function MarketplaceThemeControl() {
                <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-glow-purple" />
             </div>
             <h1 className="text-2xl md:text-5xl font-black text-[var(--foreground)] tracking-tighter uppercase italic leading-none">
-               Visual <span className="text-primary underline decoration-primary/20 underline-offset-8">Sovereignty</span>
+               Visual <span className="text-primary underline decoration-primary/20 underline-offset-8">Systemty</span>
             </h1>
             <div className="space-y-1">
                <p className="text-[8px] md:text-xs font-black text-text-secondary uppercase tracking-[0.3em] opacity-80 italic">Global Aesthetic Registry Active | Operational Status: Prime</p>

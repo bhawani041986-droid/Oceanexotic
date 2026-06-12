@@ -44,7 +44,7 @@ export function SellerHeader() {
   };
 
   const handleNotificationPress = () => {
-    toast("Sovereign Registry Node: All channels synchronized.", "success");
+    toast("System: All channels synchronized.", "success");
   };
 
   const navigateTo = (href: string) => {

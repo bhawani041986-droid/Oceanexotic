@@ -225,7 +225,7 @@ export default function SellerEditProductPage() {
         body: JSON.stringify(formData)
       });
       if (res.ok) {
-        toast("Sovereign Registry Synchronized.", "success");
+        toast("System Registry Synchronized.", "success");
         router.push("/seller/products");
       } else {
         throw new Error("Sync Failure");

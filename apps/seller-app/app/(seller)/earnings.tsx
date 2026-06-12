@@ -86,7 +86,7 @@ export default function SellerEarningsScreen() {
               Financial Command
             </Text>
             <Text className="text-[7px] font-bold text-slate-500 uppercase tracking-widest">
-              Capital Sovereignty telemetry
+              Capital Systemty telemetry
             </Text>
           </View>
         </View>
@@ -105,7 +105,7 @@ export default function SellerEarningsScreen() {
           <View className="space-y-4">
             <View>
               <Text className="text-[7.5px] font-black text-slate-400 uppercase tracking-[0.25em] italic">
-                Capital Sovereignty
+                Capital Systemty
               </Text>
               <Text className="text-3xl font-black text-white italic tracking-tighter mt-1">
                 ₹8,64,250.50

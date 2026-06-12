@@ -35,6 +35,7 @@ export default function ProfileScreen() {
   const [email, setEmail] = useState("");
   const [saving, setSaving] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [avatarTimestamp, setAvatarTimestamp] = useState(Date.now());
 
   // Security Credentials States
   const [currentPassword, setCurrentPassword] = useState("");
@@ -124,6 +125,7 @@ export default function ProfileScreen() {
           const res = await userService.uploadAvatar(user.id, selectedUri);
           if (res.success) {
             toast("Profile picture synchronized", "success");
+            setAvatarTimestamp(Date.now());
             await loadData();
           } else {
             toast("Upload failed", "error");
@@ -239,12 +241,12 @@ export default function ProfileScreen() {
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       {ToastHost}
       <ScrollView contentContainerClassName="px-4 pb-28 pt-16">
-        <Text className="text-2xl font-black uppercase italic" style={{ color: colors.text }}>Citizen Profile</Text>
+        <Text className="text-2xl font-black uppercase italic" style={{ color: colors.text }}>My Profile</Text>
         <Text 
           className="mt-1 text-[10px] font-black uppercase tracking-widest" 
           style={{ color: colors.textMuted }}
         >
-          {profile?.grade || "Maritime Citizen"}
+          {profile?.grade || "Customer"}
         </Text>
 
         {/* Identity Head & Avatar */}
@@ -262,7 +264,7 @@ export default function ProfileScreen() {
               <ActivityIndicator color={primaryColor} size="small" />
             ) : profile?.avatar_url ? (
               <Image
-                source={{ uri: assetUrl(profile.avatar_url) }}
+                source={{ uri: `${assetUrl(profile.avatar_url)}?t=${avatarTimestamp}` }}
                 className="w-full h-full"
                 contentFit="cover"
               />
@@ -276,9 +278,9 @@ export default function ProfileScreen() {
             </View>
           </Pressable>
           <View className="flex-1">
-            <Text className="text-lg font-black uppercase" style={{ color: colors.text }}>{name || "Maritime Citizen"}</Text>
+            <Text className="text-lg font-black uppercase" style={{ color: colors.text }}>{name || "Customer"}</Text>
             <Text className="text-[8px] font-black uppercase tracking-widest mt-0.5" style={{ color: primaryColor }}>
-              🚢 {profile?.grade || "Maritime Citizen"}
+              🚢 {profile?.grade || "Customer"}
             </Text>
           </View>
         </View>

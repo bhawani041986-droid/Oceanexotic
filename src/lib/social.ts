@@ -24,7 +24,7 @@ Explore the catch: https://oceanexotic.com/customer/products/${product.id}`;
 
   const endpoints = [
     // Webhook Bridge (Zapier/Make.com)
-    { name: 'Sovereign Webhook', url: process.env.NEXT_PUBLIC_SOCIAL_WEBHOOK },
+    { name: 'System Webhook', url: process.env.NEXT_PUBLIC_SOCIAL_WEBHOOK },
     // Direct Telegram Dispatch
     { name: 'Telegram Fleet Bot', url: `https://api.telegram.org/bot${process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN}/sendMessage`, method: 'POST', body: { chat_id: process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID, text: message } }
   ];

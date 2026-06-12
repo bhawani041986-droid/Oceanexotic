@@ -43,7 +43,7 @@ export default function WelcomeOnboardingScreen() {
   const handleGuestAccess = async () => {
     if (isGuestAuthenticating) return;
     setIsGuestAuthenticating(true);
-    toast("Securing direct harbor clearance as Guest...", "success");
+    toast("Logging in as Guest...", "success");
     try {
       const result = await loginMutation.mutateAsync({
         email: "john@gmail.com",
@@ -54,7 +54,7 @@ export default function WelcomeOnboardingScreen() {
         const authUser = toAuthUser(result.user);
         login(authUser);
         const destination = getPostLoginRoute(authUser.role);
-        toast(`Direct clearance granted! Welcome, Guest Cadet.`, "success");
+        toast(`Welcome, Guest!`, "success");
         setTimeout(() => {
           router.replace(destination as never);
         }, 100);

@@ -12,7 +12,7 @@ export const userService = {
     }
   },
 
-  // Sovereign registration: Save new coordinates
+  // System registration: Save new coordinates
   saveAddress: async (addressData: any) => {
     const response = await api.post('/user/save_address', addressData);
     return response.data;

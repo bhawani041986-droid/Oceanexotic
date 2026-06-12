@@ -73,13 +73,13 @@ export default function AdminRoleCreatePage() {
            </Card>
         </div>
 
-        {/* Sovereignty Matrix Area */}
+        {/* Systemty Matrix Area */}
         <div className="lg:col-span-2 space-y-10">
            <Card className="p-10 space-y-10">
               <div className="flex items-center justify-between border-b border-[var(--foreground)]/5 pb-6">
                  <div className="flex items-center gap-4">
                     <Database className="w-5 h-5 text-primary" />
-                    <h3 className="text-lg font-bold text-[var(--foreground)] tracking-tight uppercase">Sovereignty Matrix</h3>
+                    <h3 className="text-lg font-bold text-[var(--foreground)] tracking-tight uppercase">Systemty Matrix</h3>
                  </div>
                  <Badge variant="glass" className="bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5 uppercase text-[9px] tracking-widest">GRANULAR ACCESS</Badge>
               </div>

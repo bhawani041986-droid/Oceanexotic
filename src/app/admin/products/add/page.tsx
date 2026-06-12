@@ -271,7 +271,7 @@ export default function AdminAddProductPage() {
             <h2 className="text-lg lg:text-2xl font-bold tracking-tight uppercase italic flex items-center gap-3">
               <Rocket className="w-5 h-5 lg:w-7 lg:h-7 text-[var(--agent-primary)]" /> COMMISSION NEW HARVEST
             </h2>
-            <p className="text-[8px] lg:text-[10px] font-black uppercase tracking-widest leading-relaxed opacity-60">Sovereign Registry Initialization • Global Command Center</p>
+            <p className="text-[8px] lg:text-[10px] font-black uppercase tracking-widest leading-relaxed opacity-60">System Registry Initialization • Global Command Center</p>
           </div>
         </div>
         

@@ -270,7 +270,7 @@ export default function DispatchVoucherPage() {
                  </div>
               </div>
               <div className="space-y-0.5">
-                <p className="text-[9px] font-black text-slate-900 uppercase tracking-[0.1em]">Sovereign Certification</p>
+                <p className="text-[9px] font-black text-slate-900 uppercase tracking-[0.1em]">System Certification</p>
                 <p className="text-[8px] font-medium text-slate-400 italic">OceanExotic Global Integrated Supply Chain</p>
                 <div className="flex gap-2 mt-1">
                    <Globe className="w-2.5 h-2.5 text-slate-300" />

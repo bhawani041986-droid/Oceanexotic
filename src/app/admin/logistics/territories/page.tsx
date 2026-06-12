@@ -339,7 +339,7 @@ export default function TerritoryManagementPage() {
             <div className="p-6 rounded-[24px] bg-primary/5 border border-primary/20 relative overflow-hidden group">
               <Compass className="absolute -bottom-4 -right-4 w-20 h-20 text-primary opacity-5 group-hover:rotate-45 transition-transform duration-1000" />
               <div className="space-y-4 relative z-10">
-                <h3 className="text-[10px] font-black text-[var(--foreground)] uppercase italic tracking-widest">Sovereign Mapping</h3>
+                <h3 className="text-[10px] font-black text-[var(--foreground)] uppercase italic tracking-widest">System Mapping</h3>
                 <p className="text-[10px] text-[var(--foreground)]/40 font-medium leading-tight">Define custom delivery zones and seller harvest ports across the archipelago.</p>
               </div>
             </div>

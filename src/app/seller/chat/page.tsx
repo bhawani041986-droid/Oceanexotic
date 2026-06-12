@@ -228,7 +228,7 @@ export default function SellerChatPage() {
                       "text-[8px] lg:text-[9px] font-black uppercase tracking-widest",
                       currentChat?.online ? "text-success" : "text-text-secondary"
                     )}>
-                      {currentChat?.online ? "Sovereign Link Active" : "Link Terminated"}
+                      {currentChat?.online ? "System Link Active" : "Link Terminated"}
                     </p>
                  </div>
               </div>

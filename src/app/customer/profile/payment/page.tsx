@@ -103,7 +103,7 @@ export default function CustomerPaymentPage() {
             <Lock className="w-7 h-7" />
          </div>
          <div className="space-y-1">
-            <h4 className="text-sm font-bold text-[var(--foreground)] uppercase tracking-tight">Bank-Grade Sovereignty Protocol</h4>
+            <h4 className="text-sm font-bold text-[var(--foreground)] uppercase tracking-tight">Bank-Grade Systemty Protocol</h4>
             <p className="text-xs text-text-secondary font-medium leading-relaxed italic">
                Your settlement assets are encrypted using the Global Maritime Security Standard. OceanExotic Global does not store raw CVC or PIN data.
             </p>

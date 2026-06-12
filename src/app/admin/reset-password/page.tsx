@@ -51,7 +51,7 @@ export default function AdminResetPasswordPage() {
     setTimeout(() => {
       setIsResetting(false
   );
-      toast("Sovereign credentials successfully restored.", "success"
+      toast("System credentials successfully restored.", "success"
   );
       router.push("/admin/login"
   );
@@ -87,7 +87,7 @@ export default function AdminResetPasswordPage() {
            <div className="space-y-8">
               <div className="space-y-6">
                  <div className="space-y-2 relative">
-                    <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">New Sovereign Password</label>
+                    <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">New System Password</label>
                     <div className="relative">
                        <Input 
                          type={showPassword ? "text" : "password"}
@@ -107,7 +107,7 @@ export default function AdminResetPasswordPage() {
                  </div>
 
                  <div className="space-y-2 relative">
-                    <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">Confirm Sovereign Parity</label>
+                    <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1">Confirm System Parity</label>
                     <div className="relative">
                        <Input 
                          type={showPassword ? "text" : "password"}

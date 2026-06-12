@@ -239,7 +239,7 @@ export default function AgentConfirmPage() {
 
       {/* FOOTER METADATA */}
       <div className="mt-12 flex flex-col items-center gap-2 relative z-10 opacity-40">
-        <p className="text-[9px] font-black uppercase tracking-[0.5em]">Sovereign Node Verification</p>
+        <p className="text-[9px] font-black uppercase tracking-[0.5em]">System Node Verification</p>
         <div className="flex gap-4">
           <Zap size={12} />
           <Activity size={12} />

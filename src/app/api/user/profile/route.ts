@@ -12,14 +12,14 @@ export async function GET(request: Request) {
     const { data: user, error } = await supabase.from('users').select('*').eq('id', id).single();
     if (error && error.code !== 'PGRST116') throw error;
     
-    // Sovereign Graceful Fallback: Return a default profile instead of 404 to prevent console noise
+    // System Graceful Fallback: Return a default profile instead of 404 to prevent console noise
     if (!user) {
       return NextResponse.json({
         id: id,
         name: "Advancevovo",
         email: "citizen@oceanexotic.com",
         role: "customer",
-        grade: "Maritime Citizen",
+        grade: "Customer",
         loyalty_points: 0
       }, { status: 200 });
     }

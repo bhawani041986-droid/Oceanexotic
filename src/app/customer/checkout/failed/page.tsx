@@ -113,7 +113,7 @@ export default function PaymentFailedPage() {
 
         {/* Footer Metadata */}
         <p className="mt-10 text-center text-[9px] font-black uppercase tracking-widest text-text-secondary opacity-40">
-           Sovereign Security Protocol • Registry Integrity Verified
+           System Security Protocol • Registry Integrity Verified
         </p>
       </motion.div>
     </div>

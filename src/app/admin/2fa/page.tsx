@@ -35,7 +35,7 @@ export default function Admin2FAPage() {
     setTimeout(() => {
       setIsVerifying(false
   );
-      toast("Identity Handshake Successful. Sovereign Authority Granted.", "success"
+      toast("Identity Handshake Successful. System Authority Granted.", "success"
   );
       router.push("/admin/dashboard"
   );
@@ -65,7 +65,7 @@ export default function Admin2FAPage() {
                  <h2 className="text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic">Multi-Factor Protocol</h2>
                  <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.2em] max-w-xs mx-auto leading-relaxed">
                     Identity validation required for <br />
-                    <span className="text-[var(--foreground)] italic">Administrator Node: Sovereign Access</span>
+                    <span className="text-[var(--foreground)] italic">Administrator Node: System Access</span>
                  </p>
               </div>
            </div>
@@ -146,7 +146,7 @@ export default function Admin2FAPage() {
            </div>
            <div className="flex items-center gap-2">
               <ShieldCheck className="w-3.5 h-3.5" />
-              <span className="text-[9px] font-black uppercase tracking-widest">Sovereign Authority v2.4</span>
+              <span className="text-[9px] font-black uppercase tracking-widest">System Authority v2.4</span>
            </div>
         </div>
       </Card>

@@ -45,6 +45,7 @@ export default function CustomerLayout() {
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="home" />
           <Stack.Screen name="products" />
+          <Stack.Screen name="chat" />
           <Stack.Screen name="orders" />
           <Stack.Screen name="profile" />
           <Stack.Screen name="cart" />

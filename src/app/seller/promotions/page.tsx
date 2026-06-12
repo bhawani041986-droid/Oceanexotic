@@ -36,7 +36,7 @@ export default function SellerPromotionsPage() {
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-[10px] lg:gap-6 lg:border-b lg:border-[var(--foreground)]/5 lg:pb-10">
         <div className="space-y-1 text-center lg:text-left">
           <h2 className="text-xl lg:text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic shadow-glow-purple/5">Incentive Command</h2>
-          <p className="text-[8px] lg:text-[10px] font-black text-text-secondary uppercase tracking-widest leading-relaxed italic opacity-60">Commissioning Global Trade Discounts & Fleet Rewards Sovereignty</p>
+          <p className="text-[8px] lg:text-[10px] font-black text-text-secondary uppercase tracking-widest leading-relaxed italic opacity-60">Commissioning Global Trade Discounts & Fleet Rewards Systemty</p>
         </div>
         <Button className="w-full lg:w-auto h-10 lg:h-12 lg:px-10 text-[9px] lg:text-[10px] font-black tracking-widest uppercase shadow-glow-purple flex items-center justify-center gap-3 rounded-lg italic">
           <Plus className="w-3.5 h-3.5 md:w-4 md:h-4" /> COMMISSION INCENTIVE

@@ -30,7 +30,7 @@ export default function CustomerSecurityPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-[var(--foreground)]/5 pb-10">
         <div className="space-y-1">
-          <h2 className="text-3xl font-black text-[var(--foreground)] tracking-tight uppercase">Security Sovereignty</h2>
+          <h2 className="text-3xl font-black text-[var(--foreground)] tracking-tight uppercase">Security Systemty</h2>
           <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Governing Your Global Maritime Identity & Access Keys</p>
         </div>
         <Badge variant="success" className="h-10 px-6 text-[10px] font-black tracking-widest uppercase bg-success/10 text-success border-success/20">
@@ -68,7 +68,7 @@ export default function CustomerSecurityPage() {
            <Card className="p-10 space-y-10">
               <div className="flex items-center gap-4 border-b border-[var(--foreground)]/5 pb-6">
                  <Smartphone className="w-5 h-5 text-primary" />
-                 <h3 className="text-lg font-bold text-[var(--foreground)] tracking-tight uppercase">Multi-Factor Sovereignty</h3>
+                 <h3 className="text-lg font-bold text-[var(--foreground)] tracking-tight uppercase">Multi-Factor Systemty</h3>
               </div>
               <div className="flex items-center justify-between p-6 rounded-[20px] bg-[var(--foreground)]/5 border border-[var(--foreground)]/10">
                  <div className="space-y-2">

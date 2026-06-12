@@ -34,7 +34,7 @@ export default function SellerEarningsPage() {
           <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-[20px] md:gap-8">
             <div className="space-y-4 md:space-y-6">
               <div className="space-y-0.5 md:space-y-1.5">
-                <p className="text-[7px] md:text-[9px] font-black text-text-secondary uppercase tracking-[0.3em] italic opacity-60">Capital Sovereignty</p>
+                <p className="text-[7px] md:text-[9px] font-black text-text-secondary uppercase tracking-[0.3em] italic opacity-60">Capital Systemty</p>
                 <h2 className="text-2xl md:text-5xl lg:text-[48px] font-black text-[var(--foreground)] leading-none tracking-tighter italic shadow-glow-purple/5">₹8,64,250.50</h2>
               </div>
               <div className="flex flex-col sm:flex-row gap-2 md:gap-3">

@@ -55,7 +55,7 @@ export default function SellerProductsPage() {
       setIsHydrating(false
   );
     } catch (e) {
-      toast("Failed to sync with Sovereign Spine", "error"
+      toast("Failed to sync with System Spine", "error"
   );
       setIsHydrating(false
   );
@@ -117,7 +117,7 @@ export default function SellerProductsPage() {
 
       <div className="h-screen flex flex-col items-center justify-center space-y-4">
         <Loader2 className="w-10 h-10 text-[var(--agent-primary)] animate-spin" />
-        <p className="text-[10px] font-black uppercase tracking-widest text-[var(--agent-primary)] italic">Syncing Sovereign Registry...</p>
+        <p className="text-[10px] font-black uppercase tracking-widest text-[var(--agent-primary)] italic">Syncing System Registry...</p>
       </div>
     
   );
@@ -133,7 +133,7 @@ export default function SellerProductsPage() {
           <h2 className="text-xl md:text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic shadow-glow-purple/5 flex items-center justify-center md:justify-start gap-2 md:gap-3">
              <Anchor className="w-5 h-5 md:w-7 md:h-7 text-primary shadow-glow-purple/20 animate-pulse" /> Live Harbor Registry
           </h2>
-          <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest leading-relaxed italic opacity-60">Managing {filteredProducts.length} Real-Time Harvest Nodes in Sovereign Spine</p>
+          <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest leading-relaxed italic opacity-60">Managing {filteredProducts.length} Real-Time Harvest Nodes in System Spine</p>
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-[10px] md:gap-6">
           <div className="relative w-full sm:w-80 group">

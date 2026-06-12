@@ -45,7 +45,7 @@ export default function RegisterForm() {
       // Simulate Abyssal Network Latency
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      // Execute Sovereign State Handshake
+      // Execute System State Handshake
       login({
         id: "USR-" + Math.random().toString(36).substr(2, 9).toUpperCase(),
         name: data.name,

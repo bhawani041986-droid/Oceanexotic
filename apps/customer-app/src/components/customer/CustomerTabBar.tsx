@@ -9,6 +9,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 const NAV: { label: string; href: Href }[] = [
   { label: "Home", href: "/home" },
   { label: "Market", href: "/products" },
+  { label: "Chat", href: "/chat" },
   { label: "Orders", href: "/orders" },
   { label: "Profile", href: "/profile" },
 ];
@@ -55,6 +56,21 @@ function TabIcon({ label, color }: { label: string; color: string }) {
         />
         <Path 
           d="M9 5.5C9 3.567 10.3431 2 12 2C13.6569 2 15 3.567 15 5.5" 
+          fill="none" 
+          stroke={color} 
+          strokeWidth="1.8" 
+          strokeLinecap="round" 
+          strokeLinejoin="round" 
+        />
+      </Svg>
+    );
+  }
+
+  if (label.toLowerCase() === "chat") {
+    return (
+      <Svg width="20" height="20" viewBox="0 0 24 24">
+        <Path 
+          d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
           fill="none" 
           stroke={color} 
           strokeWidth="1.8" 

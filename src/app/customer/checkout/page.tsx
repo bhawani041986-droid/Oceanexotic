@@ -531,7 +531,7 @@ export default function CheckoutPage() {
                <div className="bg-[var(--c-bg)]/40 border border-[var(--foreground)]/5 p-4 rounded-xl space-y-2">
                   <div className="flex items-center gap-2 text-[var(--c-primary)]">
                     <ShieldCheck className="w-4 h-4" />
-                    <p className="text-[10px] font-black uppercase tracking-widest">Sovereign Protection</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest">System Protection</p>
                   </div>
                   <p className="text-[9px] text-[var(--c-text-secondary)] italic leading-relaxed">Your trade is protected by the Andaman Maritime Protocol. Secure handshake guaranteed upon delivery.</p>
                </div>

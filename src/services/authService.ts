@@ -29,7 +29,7 @@ export const authService = {
     localStorage.removeItem("auth_user");
   },
 
-  // Sovereign Retrieval: Get current node user
+  // System Retrieval: Get current node user
   getCurrentUser: () => {
     const user = localStorage.getItem("auth_user");
     return user ? JSON.parse(user) : null;

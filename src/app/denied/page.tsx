@@ -47,7 +47,7 @@ export default function AccessDeniedPage() {
                </div>
                <div className="space-y-2">
                   <h3 className="text-sm font-bold text-[var(--foreground)] uppercase tracking-tight">Authority Login</h3>
-                  <p className="text-[10px] text-text-secondary leading-relaxed font-medium italic">Commission your administrative keys at the Sovereign Gateway.</p>
+                  <p className="text-[10px] text-text-secondary leading-relaxed font-medium italic">Commission your administrative keys at the System Gateway.</p>
                </div>
                <Link href="/admin/login">
                   <Button variant="ghost" className="w-full h-12 text-[10px] font-black tracking-widest uppercase flex items-center justify-between group-hover:text-warning">

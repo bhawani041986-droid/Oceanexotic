@@ -202,7 +202,7 @@ export const CUSTOMER_THEMES: CustomerTheme[] = [
   },
   {
     id: 'theme-sovereign-light',
-    name: 'Sovereign Light',
+    name: 'System Light',
     desc: 'Elite high-precision light mode protocol',
     fontFamily: 'var(--font-inter)',
     colors: {

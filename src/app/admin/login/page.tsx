@@ -38,7 +38,7 @@ export default function AdminLoginPage() {
                <Fingerprint className="w-10 h-10" />
             </div>
             <div className="space-y-1">
-               <h2 className="text-3xl font-black text-[var(--foreground)] tracking-tight uppercase">Sovereign Entry</h2>
+               <h2 className="text-3xl font-black text-[var(--foreground)] tracking-tight uppercase">System Entry</h2>
                <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Global Maritime Authority Authorization Node</p>
             </div>
           </div>

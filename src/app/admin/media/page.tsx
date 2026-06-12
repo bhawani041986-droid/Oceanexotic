@@ -183,7 +183,7 @@ export default function MediaOptimizationCenter() {
             <Zap className={cn("w-4 h-4 mr-2", isOptimizing && "animate-bounce")} />
             {isOptimizing ? "Optimizing..." : "Run Optimization"}
           </Button>
-          <Button className="bg-[var(--foreground)]/5 border-[var(--foreground)]/10 hover:bg-[var(--foreground)]/10" onClick={() => alert("Pipeline configuration is locked to 'Sovereign-High' profile.")}>
+          <Button className="bg-[var(--foreground)]/5 border-[var(--foreground)]/10 hover:bg-[var(--foreground)]/10" onClick={() => alert("Pipeline configuration is locked to 'System-High' profile.")}>
             <Settings className="w-4 h-4 mr-2" />
             Pipeline Settings
           </Button>

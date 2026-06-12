@@ -22,15 +22,15 @@ function SendIcon({ color }: { color: string }) {
   );
 }
 
-export default function SellerChatScreen() {
+export default function CustomerChatScreen() {
   const router = useRouter();
   const { user } = useAuthStore();
 
-  const primaryColor = "#7C3AED";
-  const borderColor = "rgba(124, 58, 237, 0.25)";
+  const primaryColor = '#00D1FF';
+  const borderColor = 'rgba(0, 209, 255, 0.25)';
   const bgCard = "rgba(15, 23, 42, 0.6)";
 
-  const sellerId = user?.id ? (user.id.startsWith("SEL-") ? user.id : `SEL-${user.id}`) : 'SEL-001';
+  const customerId = user?.id || 'USR-001';
 
   const [loadingConv, setLoadingConv] = useState(true);
   const [conversations, setConversations] = useState<any[]>([]);
@@ -47,7 +47,7 @@ export default function SellerChatScreen() {
   const fetchConversations = async () => {
     try {
       const res = await api.get(`/chat/get_conversations`, {
-        params: { user_id: sellerId, t: Date.now() }
+        params: { user_id: customerId, t: Date.now() }
       });
       if (Array.isArray(res.data)) {
         setConversations(res.data);
@@ -77,7 +77,7 @@ export default function SellerChatScreen() {
 
   useEffect(() => {
     fetchConversations();
-  }, [sellerId]);
+  }, [customerId]);
 
   // Real-time polling every 3 seconds when viewing active chat stream
   useEffect(() => {
@@ -109,7 +109,7 @@ export default function SellerChatScreen() {
     try {
       const res = await api.post(`/chat/send_message`, {
         conversation_id: activeConv.id,
-        sender_id: sellerId,
+        sender_id: customerId,
         message_text: toSend
       });
 
@@ -225,7 +225,7 @@ export default function SellerChatScreen() {
               <ActivityIndicator color={primaryColor} className="py-12" />
             ) : (
               messages.map((m) => {
-                const isMe = m.sender_id === sellerId;
+                const isMe = m.sender_id === customerId;
                 return (
                   <View 
                     key={m.id}

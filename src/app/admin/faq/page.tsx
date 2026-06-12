@@ -126,7 +126,7 @@ export default function AdminFAQPage() {
                <BookOpen className="w-6 h-6 md:w-8 md:h-8" />
             </div>
             <div className="space-y-1 md:space-y-2 text-left">
-               <h4 className="text-sm md:text-lg font-black text-[var(--foreground)] tracking-tighter uppercase italic">Knowledge Sovereignty</h4>
+               <h4 className="text-sm md:text-lg font-black text-[var(--foreground)] tracking-tighter uppercase italic">Knowledge Systemty</h4>
                <p className="text-[8px] md:text-xs text-text-secondary font-black tracking-widest uppercase italic opacity-40 leading-relaxed">
                   Total of <span className="text-[var(--foreground)] font-black">124</span> platform directives active. Average document health: <span className="text-success font-black">98%</span>.
                </p>

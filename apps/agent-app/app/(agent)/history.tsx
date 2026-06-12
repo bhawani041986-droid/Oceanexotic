@@ -131,7 +131,7 @@ export default function AgentHistoryScreen() {
           Mission Log Ledger
         </Text>
         <Text className="text-[8px] font-black uppercase tracking-[0.25em] text-slate-500">
-          Sovereign Operations History Archive
+          System Operations History Archive
         </Text>
       </View>
 

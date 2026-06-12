@@ -11,7 +11,7 @@ export const orderService = {
     return response.data;
   },
 
-  // Sovereign Ledger: Fetch customer's trade history
+  // System Ledger: Fetch customer's trade history
   getCustomerOrders: async (userId?: string) => {
     const id = userId || authService.getCurrentUser()?.id || "1";
     const response = await api.get(`/user/orders?userId=${id}`);
@@ -24,7 +24,7 @@ export const orderService = {
     return response.data;
   },
 
-  // Sovereign Ledger Detail: Fetch specific order with items
+  // System Ledger Detail: Fetch specific order with items
   getUserOrderDetails: async (id: string) => {
     const response = await api.get(`/user/orders/details?id=${id}`);
     return response.data;

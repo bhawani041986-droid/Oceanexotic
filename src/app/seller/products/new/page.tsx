@@ -212,7 +212,7 @@ export default function SellerNewProductPage() {
             <h2 className="text-lg lg:text-2xl font-bold tracking-tight uppercase italic flex items-center gap-3">
               <Rocket className="w-5 h-5 lg:w-7 lg:h-7 text-[var(--agent-primary)]" /> Commission New Harvest
             </h2>
-            <p className="text-[8px] lg:text-[10px] font-black uppercase tracking-widest opacity-60">Sovereign Registry Initialization • Real-Time Inventory Node</p>
+            <p className="text-[8px] lg:text-[10px] font-black uppercase tracking-widest opacity-60">System Registry Initialization • Real-Time Inventory Node</p>
           </div>
         </div>
         

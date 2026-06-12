@@ -65,7 +65,7 @@ export async function POST(request: Request) {
 
     if (error) throw error;
 
-    return NextResponse.json({ success: true, message: "Harvest commissioned in Sovereign Registry" });
+    return NextResponse.json({ success: true, message: "Harvest commissioned in System Registry" });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

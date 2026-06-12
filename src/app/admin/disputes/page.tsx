@@ -51,7 +51,7 @@ export default function AdminDisputesPage() {
             { label: "Active Disputes", value: "14", icon: <AlertCircle className="text-warning" /> },
             { label: "Resolved (24h)", value: "8", icon: <ShieldAlert className="text-success" /> },
             { label: "Avg. Resolution", value: "4.2h", icon: <MessageSquare className="text-primary" /> },
-            { label: "Sovereign Escalate", value: "2", icon: <Gavel className="text-danger" /> },
+            { label: "System Escalate", value: "2", icon: <Gavel className="text-danger" /> },
           ].map((stat) => (
             <Card key={stat.label} className="p-[10px] md:p-6 space-y-3 md:space-y-4 bg-bg-secondary/20 border-[var(--foreground)]/5 group hover:border-primary/20 transition-all rounded-[24px] md:rounded-[40px] shadow-premium">
               <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-[12px] bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 flex items-center justify-center shadow-glow-purple/5">

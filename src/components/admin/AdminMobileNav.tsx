@@ -36,7 +36,7 @@ import { useAuthStore } from "@/store/authStore";
 import { motion, AnimatePresence } from "framer-motion";
 import { Logo } from "@/components/ui/Logo";
 
-const SovereignNodeIcon = () => (
+const SystemNodeIcon = () => (
   <div className="relative w-10 h-10 flex items-center justify-center overflow-hidden">
     {/* Pulsing Core */}
     <div className="absolute w-2 h-2 bg-primary rounded-full animate-pulse shadow-glow-purple z-20" />

@@ -310,7 +310,7 @@ export default function AdminProfilePage() {
                     <Fingerprint className="w-6 h-6" />
                  </div>
                  <div className="space-y-1">
-                    <h4 className="text-[11px] font-black text-[var(--foreground)] uppercase tracking-widest italic">Multi-Factor Sovereignty Active</h4>
+                    <h4 className="text-[11px] font-black text-[var(--foreground)] uppercase tracking-widest italic">Multi-Factor Systemty Active</h4>
                     <p className="text-[9px] text-text-secondary font-medium italic">Your node is protected via global biometric handshakes.</p>
                  </div>
               </div>
