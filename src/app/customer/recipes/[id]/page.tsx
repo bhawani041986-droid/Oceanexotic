@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/Button";
 import { RECIPES_DB } from "@/constants/recipes";
 import { FULL_API_URL as API_BASE_URL } from "@/config/api";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
 
 export default function CustomerRecipeDetailsPage() {
   const params = useParams();
@@ -36,13 +37,47 @@ export default function CustomerRecipeDetailsPage() {
   
   // Interactive States
   const [isLiked, setIsLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [newComment, setNewComment] = useState("");
-  const [comments, setComments] = useState([
-    { id: 1, user: "Alex M.", avatar: "https://i.pravatar.cc/150?u=1", text: "Absolutely stunning recipe! The flavors are perfectly balanced.", time: "2 hours ago", rating: 5 },
-    { id: 2, user: "Sarah K.", avatar: "https://i.pravatar.cc/150?u=2", text: "Tried this last night. The family loved it. Searing it on cast iron makes a huge difference.", time: "1 day ago", rating: 4 }
-  ]);
+  const [comments, setComments] = useState<any[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Fetch interactions from Supabase
+  useEffect(() => {
+    const fetchInteractions = async () => {
+      if (!id) return;
+      try {
+        const { data, error } = await supabase
+          .from('recipe_interactions')
+          .select('*')
+          .eq('recipe_id', id)
+          .order('created_at', { ascending: false });
+          
+        if (error) throw error;
+        
+        if (data) {
+          const fetchedComments = data.filter(d => d.interaction_type === 'COMMENT').map(c => ({
+            id: c.id,
+            user: c.user_name,
+            avatar: c.user_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.user_name)}&background=random`,
+            text: c.comment_text,
+            time: new Date(c.created_at).toLocaleDateString(),
+            rating: c.rating_value || 5
+          }));
+          
+          setComments(fetchedComments);
+          
+          const likes = data.filter(d => d.interaction_type === 'LIKE').length;
+          setLikesCount(likes);
+        }
+      } catch (e) {
+        console.error("Failed to load interactions:", e);
+      }
+    };
+    fetchInteractions();
+  }, [id]);
 
   useEffect(() => {
     const fetchCms = async () => {
@@ -154,21 +189,56 @@ export default function CustomerRecipeDetailsPage() {
     }
   };
 
-  const handlePostComment = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newComment.trim()) return;
+  const handleLike = async () => {
+    if (isLiked) return; // Prevent spamming
+    setIsLiked(true);
+    setLikesCount(prev => prev + 1);
     
+    try {
+      await supabase.from('recipe_interactions').insert([{
+        recipe_id: id,
+        user_name: 'Guest User',
+        interaction_type: 'LIKE'
+      }]);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handlePostComment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newComment.trim() || isSubmitting) return;
+    
+    setIsSubmitting(true);
+    const tempId = Date.now().toString();
     const newEntry = {
-      id: Date.now(),
-      user: "You",
-      avatar: "https://i.pravatar.cc/150?u=you",
+      id: tempId,
+      user: "Guest Chef",
+      avatar: "https://ui-avatars.com/api/?name=Guest+Chef&background=random",
       text: newComment,
       time: "Just now",
       rating: rating || 5
     };
     
+    // Optimistic UI update
     setComments([newEntry, ...comments]);
     setNewComment("");
+    setRating(0);
+
+    try {
+      await supabase.from('recipe_interactions').insert([{
+        recipe_id: id,
+        user_name: 'Guest Chef',
+        user_avatar: newEntry.avatar,
+        interaction_type: 'COMMENT',
+        rating_value: newEntry.rating,
+        comment_text: newEntry.text
+      }]);
+    } catch (e) {
+      console.error("Failed to post comment", e);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -255,14 +325,14 @@ export default function CustomerRecipeDetailsPage() {
           {/* Social Actions */}
           <div className="flex items-center gap-3 bg-[var(--c-card)] p-1.5 rounded-full border border-[var(--foreground)]/5 shadow-inner">
             <button 
-              onClick={() => setIsLiked(!isLiked)}
+              onClick={handleLike}
               className={cn(
                 "flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider transition-all",
                 isLiked ? "bg-red-500/10 text-red-500 shadow-glow-red" : "hover:bg-white/5 text-slate-400"
               )}
             >
               <Heart className={cn("w-4 h-4 transition-transform", isLiked ? "fill-current scale-110" : "")} /> 
-              {isLiked ? "Saved" : "Save"}
+              {isLiked ? `${likesCount} Saved` : `Save (${likesCount})`}
             </button>
             <button 
               onClick={handleShare}
@@ -375,10 +445,10 @@ export default function CustomerRecipeDetailsPage() {
                   <div className="flex justify-end">
                     <Button 
                       type="submit"
-                      disabled={!newComment.trim()}
+                      disabled={!newComment.trim() || isSubmitting}
                       className="bg-[var(--c-primary)] text-black hover:bg-[var(--c-primary-light)] px-8 py-6 rounded-2xl font-black uppercase tracking-widest text-xs flex items-center gap-3 transition-all active:scale-95 disabled:opacity-50"
                     >
-                      Post Review <Send className="w-4 h-4" />
+                      {isSubmitting ? "Posting..." : "Post Review"} <Send className="w-4 h-4" />
                     </Button>
                   </div>
                 </form>
