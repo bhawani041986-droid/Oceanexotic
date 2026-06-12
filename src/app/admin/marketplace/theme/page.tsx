@@ -66,7 +66,7 @@ export default function MarketplaceThemeControl() {
 
   const handleThemeSelect = (themeId: string) => {
     setSelectedThemeId(themeId);
-    toast(`Selected ${CUSTOMER_THEMES.find(t => t.id === themeId)?.name}. Click SYNCHRONIZE to apply.`, "info");
+    toast(`Selected ${CUSTOMER_THEMES.find(t => t.id === themeId)?.name} for the PUBLIC STOREFRONT. Click SYNCHRONIZE to publish.`, "info");
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,7 +152,10 @@ export default function MarketplaceThemeControl() {
             <h1 className="text-2xl md:text-5xl font-black text-[var(--foreground)] tracking-tighter uppercase italic leading-none">
                Visual <span className="text-primary underline decoration-primary/20 underline-offset-8">Sovereignty</span>
             </h1>
-            <p className="text-[8px] md:text-xs font-black text-text-secondary uppercase tracking-[0.3em] opacity-80 italic">Global Aesthetic Registry Active | Operational Status: Prime</p>
+            <div className="space-y-1">
+               <p className="text-[8px] md:text-xs font-black text-text-secondary uppercase tracking-[0.3em] opacity-80 italic">Global Aesthetic Registry Active | Operational Status: Prime</p>
+               <p className="text-[10px] md:text-sm font-black text-warning uppercase tracking-widest bg-warning/10 border border-warning/20 px-3 py-1.5 rounded-lg inline-block">⚠️ THESE SETTINGS CONTROL THE PUBLIC STOREFRONT</p>
+            </div>
           </div>
           <div className="flex items-center gap-4">
              <Button 
@@ -173,9 +176,9 @@ export default function MarketplaceThemeControl() {
            <div className="flex items-center justify-between px-1">
               <div className="space-y-[2px] md:space-y-1">
                  <h3 className="text-[10px] md:text-lg font-black text-[var(--foreground)] uppercase tracking-tight flex items-center gap-2 md:gap-3">
-                    <Palette className="w-3.5 h-3.5 md:w-5 md:h-5 text-primary" /> Sensory Modules
+                    <Palette className="w-3.5 h-3.5 md:w-5 md:h-5 text-primary" /> Storefront Aesthetic Protocol
                  </h3>
-                 <p className="text-[7px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest leading-relaxed">Select a high-fidelity aesthetic protocol.</p>
+                 <p className="text-[7px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest leading-relaxed">Select a high-fidelity theme for your public marketplace. (Admin settings are located in the main settings tab).</p>
               </div>
               <Badge variant="glass" className="text-[8px] md:text-[9px] font-black">{CUSTOMER_THEMES.length} Themes</Badge>
            </div>
