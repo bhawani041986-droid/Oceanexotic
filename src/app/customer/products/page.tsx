@@ -459,10 +459,7 @@ function ProductListingContent() {
   return (
     <>
       {/* 1.1 LIVE HARVEST TICKER (SCARCITY & URGENCY) */}
-      <div className={cn(
-        "fixed left-0 right-0 z-[90] bg-[var(--c-primary)] h-8 md:h-10 flex items-center overflow-hidden border-y border-[var(--foreground)]/10 transition-all duration-500",
-        activeCoupons.length > 0 ? "top-[92px] md:top-[108px]" : "top-16 md:top-20"
-      )}>
+      <div className="sticky top-16 md:top-20 left-0 right-0 z-[90] bg-[var(--c-primary)] h-8 md:h-10 flex items-center overflow-hidden border-y border-[var(--foreground)]/10">
          <div className="flex animate-marquee whitespace-nowrap gap-10 md:gap-20">
             {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
                <span key={i} className="text-[7px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-[0.2em] italic flex items-center gap-2">
@@ -474,7 +471,7 @@ function ProductListingContent() {
 
       {/* 2. PROMOTIONAL HERO BANNER */}
       {activeCoupons.length > 0 && (
-         <section className="pt-[140px] md:pt-[160px] pb-6 md:pb-10">
+         <section className="pt-6 md:pt-10 pb-6 md:pb-10">
             <div className="container mx-auto px-2 md:px-10">
                <div className="relative w-full overflow-hidden rounded-2xl md:rounded-[calc(var(--c-radius-card)*1.2)] bg-gradient-to-r from-primary/20 via-primary/5 to-transparent border border-primary/20 p-4 md:p-10 flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6 shadow-glow-primary group">
                   <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-gradient-to-l from-primary/10 to-transparent pointer-events-none" />
