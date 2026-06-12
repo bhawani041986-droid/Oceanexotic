@@ -123,11 +123,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
       
       {/* 0. GLOBAL ANNOUNCEMENT BAR */}
       {activeCoupons.length > 0 && (
-        <div className="bg-primary text-black py-1.5 px-4 text-center relative overflow-hidden flex items-center justify-center">
+        <div className="bg-[var(--c-primary)] text-white py-1.5 px-4 text-center relative overflow-hidden flex items-center justify-center">
           <div className="flex gap-8 whitespace-nowrap animate-marquee md:animate-none">
             {activeCoupons.slice(0, 2).map((coupon) => (
               <p key={coupon.id} className="text-[10px] md:text-xs font-black uppercase tracking-widest italic flex items-center gap-2">
-                🔥 Use Code <span className="bg-black/10 px-2 py-0.5 rounded text-black border border-black/20">{coupon.code}</span> for {coupon.type === 'PERCENTAGE' ? `${coupon.value}% OFF` : `₹${coupon.value} OFF`}
+                🔥 Use Code <span className="bg-white/20 px-2 py-0.5 rounded text-white border border-white/30">{coupon.code}</span> for {coupon.type === 'PERCENTAGE' ? `${coupon.value}% OFF` : `₹${coupon.value} OFF`}
                 {coupon.min_purchase > 0 && ` (Min ₹${coupon.min_purchase})`}
               </p>
             ))}
