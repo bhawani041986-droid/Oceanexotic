@@ -27,7 +27,8 @@ export async function GET(req: NextRequest) {
 
     const mapped = cuts.map((c: any) => ({
       ...c,
-      final_price: Number(basePrice) + Number(c.price_modifier)
+      label: c.cut_type,
+      final_price: Number(basePrice) + Number(c.price_flat_add || 0)
     }));
 
     return NextResponse.json({ status: "success", cut_options: mapped });

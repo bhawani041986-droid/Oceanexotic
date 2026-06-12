@@ -142,7 +142,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
           ? "h-16 md:h-20 bg-[var(--c-bg)]/90 backdrop-blur-3xl border-[var(--foreground)]/10" 
           : "h-20 md:h-24 bg-[var(--c-bg)]/60 backdrop-blur-xl border-[var(--foreground)]/5"
       )}>
-        <div className="container mx-auto px-0 h-full flex items-center justify-between">
+        <div className="container mx-auto px-4 lg:px-8 max-w-[1440px] h-full flex items-center justify-between">
           <div className="flex items-center gap-3 lg:gap-10">
             <button 
               onClick={() => setIsMobileMenuOpen(true)}
