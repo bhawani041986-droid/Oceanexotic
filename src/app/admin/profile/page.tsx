@@ -32,7 +32,7 @@ const ACTIVITY_LOGS = [
 ];
 
 export default function AdminProfilePage() {
-  const { user } = useAuthStore();
+  const { user, updateUser } = useAuthStore();
   const { toast } = useToast();
   
   const [profile, setProfile] = useState({
@@ -48,7 +48,9 @@ export default function AdminProfilePage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPasswords, setShowPasswords] = useState(false);
+  const [showStaticPassword, setShowStaticPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmittingProfile, setIsSubmittingProfile] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -74,6 +76,39 @@ export default function AdminProfilePage() {
       } catch (err) {
         toast("Failed to process biometric signature.", "error");
       }
+    }
+  };
+
+  const handleProfileUpdate = async () => {
+    if (!profile.name || !profile.email) {
+      toast("Identity parameters cannot be empty.", "error");
+      return;
+    }
+    if (!user?.id) return;
+
+    setIsSubmittingProfile(true);
+    try {
+      const res = await fetch("/api/admin/profile/update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user.id,
+          name: profile.name,
+          email: profile.email
+        })
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        toast(data.message, "success");
+        updateUser({ name: profile.name, email: profile.email, avatar: profile.avatar_url });
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (err: any) {
+      toast(err.message || "Failed to synchronize profile.", "error");
+    } finally {
+      setIsSubmittingProfile(false);
     }
   };
 
@@ -132,8 +167,9 @@ export default function AdminProfilePage() {
           <h2 className="text-3xl font-black text-[var(--foreground)] tracking-tight uppercase italic shadow-glow-purple/5">Authority Node</h2>
           <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest italic">Governing Your Personal Administrative Identity & Clearances</p>
         </div>
-        <Button className="h-14 px-10 text-[11px] font-black tracking-widest uppercase shadow-glow-purple flex items-center gap-3">
-          <Save className="w-4 h-4" /> COMMIT UPDATES
+        <Button onClick={handleProfileUpdate} disabled={isSubmittingProfile} className="h-14 px-10 text-[11px] font-black tracking-widest uppercase shadow-glow-purple flex items-center gap-3">
+          {isSubmittingProfile ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} 
+          {isSubmittingProfile ? "COMMITTING..." : "COMMIT UPDATES"}
         </Button>
       </div>
 
@@ -205,11 +241,24 @@ export default function AdminProfilePage() {
                  <div className="space-y-2 md:col-span-2">
                     <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic">Access Directive (Password)</label>
                     <div className="flex flex-col sm:flex-row gap-4">
-                       <Input type="password" value="••••••••••••••••••••••••" readOnly className="h-14 bg-bg-secondary border-[var(--foreground)]/10 opacity-60 font-black tracking-[0.2em]" />
+                       <div className="relative flex-1">
+                          <Input 
+                             type={showStaticPassword ? "text" : "password"} 
+                             value={showStaticPassword ? "Encrypted Directive Key" : "••••••••••••••••••••••••"} 
+                             readOnly 
+                             className="w-full h-14 pr-12 bg-bg-secondary border-[var(--foreground)]/10 opacity-60 font-black tracking-[0.2em] focus-visible:ring-0" 
+                          />
+                          <button 
+                             onClick={() => setShowStaticPassword(!showStaticPassword)}
+                             className="absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary hover:text-[var(--foreground)] transition-all"
+                          >
+                             {showStaticPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </button>
+                       </div>
                        <Button 
                           onClick={() => setIsPasswordModalOpen(true)}
                           variant="outline" 
-                          className="h-14 px-8 text-[9px] font-black uppercase tracking-widest border-primary/20 text-primary hover:bg-primary hover:text-black italic"
+                          className="h-14 px-8 text-[9px] font-black uppercase tracking-widest border-primary/20 text-primary hover:bg-primary hover:text-black italic shrink-0"
                         >
                           ROTATE KEY
                         </Button>
