@@ -110,6 +110,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
     { label: "Market", href: "/customer/products", icon: <ShoppingBag className="w-5 h-5" /> },
     { label: "Recipes", href: "/customer/recipes", icon: <ChefHat className="w-5 h-5" /> },
     { label: "Orders", href: "/customer/orders", icon: <Receipt className="w-5 h-5" /> },
+    { label: "Chat", href: "/customer/chat", icon: <MessageCircle className="w-5 h-5" /> },
     { label: "Profile", href: "/customer/profile", icon: <UserIcon className="w-5 h-5" /> },
   ];
 

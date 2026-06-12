@@ -1,0 +1,45 @@
+{
+    "expo":  {
+                 "name":  "OceanExotic Customer",
+                 "slug":  "oceanexotic-customer",
+                 "version":  "1.0.0",
+                 "orientation":  "portrait",
+                 "scheme":  "oceanexotic",
+                 "userInterfaceStyle":  "dark",
+                 "newArchEnabled":  true,
+                 "assetBundlePatterns":  [
+                                             "assets/**"
+                                         ],
+                 "android":  {
+                                 "package":  "com.oceanexotic.customer",
+                                 "usesCleartextTraffic":  true
+                             },
+                 "ios":  {
+                             "infoPlist":  {
+                                               "NSAppTransportSecurity":  {
+                                                                              "NSAllowsArbitraryLoads":  true,
+                                                                              "NSAllowsLocalNetworking":  true
+                                                                          }
+                                           }
+                         },
+                 "web":  {
+                             "bundler":  "metro",
+                             "output":  "static"
+                         },
+                 "plugins":  [
+                                 "expo-router"
+                             ],
+                 "experiments":  {
+                                     "typedRoutes":  true
+                                 },
+                 "extra":  {
+                               "router":  {
+
+                                          },
+                               "eas":  {
+
+                                       }
+                           },
+                 "owner":  "bhawani-ocean"
+             }
+}
