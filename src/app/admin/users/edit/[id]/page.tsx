@@ -46,6 +46,7 @@ export default function AdminEditUserPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [systemRoles, setSystemRoles] = useState<any[]>([]);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,6 +93,13 @@ export default function AdminEditUserPage() {
             avatar_url: data.avatar_url || "",
             rank: data.rank || "BRONZE"
           });
+        }
+        
+        // Also fetch roles registry
+        const rolesRes = await fetch('/api/admin/roles');
+        const rolesData = await rolesRes.json();
+        if (Array.isArray(rolesData)) {
+           setSystemRoles(rolesData);
         }
       } catch (err) {
         console.error("Registry Fetch Failure:", err);
@@ -281,10 +289,10 @@ export default function AdminEditUserPage() {
                       onChange={(e) => setFormData({...formData, role: e.target.value})}
                       className="w-full h-14 bg-bg-secondary border border-[var(--foreground)]/10 rounded-[16px] px-4 text-[10px] font-black uppercase tracking-widest text-[var(--foreground)] outline-none focus:border-primary/50 transition-all"
                     >
-                       <option value="CUSTOMER">GLOBAL CITIZEN (CUSTOMER)</option>
-                       <option value="SELLER">FLEET MERCHANT (SELLER)</option>
-                       <option value="AGENT">DELIVERY AGENT (LOGISTICS)</option>
-                       <option value="ADMIN">ADMIRAL (ADMIN)</option>
+                       <option value="">-- SELECT ROLE --</option>
+                       {systemRoles.map((role) => (
+                          <option key={role.id} value={role.id}>{role.name} ({role.id})</option>
+                       ))}
                     </select>
                  </div>
               </div>

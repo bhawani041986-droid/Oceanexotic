@@ -38,6 +38,25 @@ export default function AdminAddUserPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [systemRoles, setSystemRoles] = useState<any[]>([]);
+
+  React.useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const res = await fetch('/api/admin/roles');
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          setSystemRoles(data);
+          if (data.length > 0) {
+             setFormData(prev => ({ ...prev, role: data[0].id }));
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load roles:", err);
+      }
+    };
+    fetchRoles();
+  }, []);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -194,10 +213,10 @@ export default function AdminAddUserPage() {
                        onChange={(e) => handleChange("role", e.target.value)}
                        className="w-full h-14 bg-bg-secondary border border-[var(--foreground)]/10 rounded-[16px] px-4 text-[10px] font-black uppercase tracking-widest text-[var(--foreground)] outline-none focus:border-primary/50 transition-all"
                      >
-                        <option value="CUSTOMER">GLOBAL CITIZEN (CUSTOMER)</option>
-                        <option value="SELLER">FLEET MERCHANT (SELLER)</option>
-                        <option value="ADMIN">ADMIRAL (ADMIN)</option>
-                        <option value="AGENT">SEA SCOUT (AGENT)</option>
+                        {systemRoles.length === 0 && <option value="CUSTOMER">GLOBAL CITIZEN (CUSTOMER)</option>}
+                        {systemRoles.map((role) => (
+                           <option key={role.id} value={role.id}>{role.name} ({role.id})</option>
+                        ))}
                      </select>
                   </div>
               </div>
