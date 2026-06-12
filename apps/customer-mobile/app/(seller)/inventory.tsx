@@ -110,8 +110,8 @@ export default function SellerInventoryScreen() {
           onPress: async () => {
             setIsLoading(true);
             try {
-              // Call DELETE on api/seller/products.php?id=...
-              await api.delete(`/seller/products.php`, { params: { id } });
+              // Call DELETE on api/seller/products?id=...
+              await api.delete(`/seller/products`, { params: { id } });
               Alert.alert("Success", "Product deleted successfully.");
               fetchInventory();
             } catch (err) {

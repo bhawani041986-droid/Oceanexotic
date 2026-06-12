@@ -32,7 +32,7 @@ export const orderService = {
 
   // Fleet Performance: Fetch high-fidelity merchant stats
   getSellerStats: async () => {
-    const response = await api.get("/admin/orders/pipeline");
+    const response = await api.get("/seller/stats");
     return response.data;
   },
 

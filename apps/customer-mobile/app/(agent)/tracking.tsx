@@ -404,7 +404,7 @@ export default function AgentTrackingScreen() {
     try {
       setIsLoading(true);
       // 1. Fetch current order items/details from orders list
-      const listUrl = `${FULL_API_URL}/agent/orders.php?agent_id=${encodeURIComponent(user.name)}`;
+      const listUrl = `${FULL_API_URL}/agent/orders?agent_id=${encodeURIComponent(user.name)}`;
       const listRes = await axios.get(listUrl);
       let matchOrder = null;
       if (Array.isArray(listRes.data)) {
@@ -436,7 +436,7 @@ export default function AgentTrackingScreen() {
       }
 
       // 2. Fetch fleet tracking telemetry to see if already in transit
-      const fleetUrl = `${FULL_API_URL}/fleet.php?order_id=${encodeURIComponent(orderId)}`;
+      const fleetUrl = `${FULL_API_URL}/fleet?order_id=${encodeURIComponent(orderId)}`;
       const fleetRes = await axios.get(fleetUrl);
       if (fleetRes.data && fleetRes.data.status) {
         const dbStatus = fleetRes.data.status;
@@ -511,7 +511,7 @@ export default function AgentTrackingScreen() {
   const broadcastTelemetry = async (stateToBroadcast: string, updatedCoords = coords, updatedTemp = temp) => {
     setIsSyncing(true);
     try {
-      await axios.post(`${FULL_API_URL}/fleet.php`, {
+      await axios.post(`${FULL_API_URL}/fleet`, {
         order_id: orderId,
         lat: updatedCoords.lat,
         lng: updatedCoords.lng,
@@ -556,7 +556,7 @@ export default function AgentTrackingScreen() {
       
       try {
         // 1. Update database orders table status to DELIVERED
-        await axios.post(`${FULL_API_URL}/seller/orders.php`, {
+        await axios.post(`${FULL_API_URL}/seller/orders`, {
           order_id: orderId,
           status: "DELIVERED",
           delivery_agent_name: user?.name || "INS-AGENT"

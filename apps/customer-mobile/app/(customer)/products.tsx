@@ -185,7 +185,7 @@ export default function ProductsScreen() {
 
   const [addons, setAddons] = useState<any[]>([]);
   useEffect(() => {
-    api.get("/addons/list.php")
+    api.get("/addons/list")
       .then(res => setAddons(Array.isArray(res.data) ? res.data : []))
       .catch(err => console.error(err));
   }, []);

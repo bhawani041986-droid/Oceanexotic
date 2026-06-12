@@ -35,12 +35,12 @@ export interface SearchProduct {
 
 export const productService = {
   fetchAll: async (): Promise<Product[]> => {
-    const { data } = await api.get<Product[]>("/seller/products.php");
+    const { data } = await api.get<Product[]>("/seller/products");
     return Array.isArray(data) ? data : [];
   },
 
   fetchById: async (id: string, area = "") => {
-    const { data } = await api.get(`/products/detail.php`, { params: { id, area } });
+    const { data } = await api.get(`/products/detail`, { params: { id, area } });
     return data;
   },
 
@@ -48,7 +48,7 @@ export const productService = {
     const { data } = await api.get<{
       status: string;
       results: SearchProduct[];
-    }>("/products/search.php", {
+    }>("/products/search", {
       params: { q, category },
     });
     if (data.status === "success") return data.results;

@@ -79,7 +79,7 @@ export default function SellerFleetScreen() {
 
   const fetchTelemetry = async () => {
     try {
-      const res = await api.get(`/fleet.php`, { params: { t: Date.now() } });
+      const res = await api.get(`/fleet`, { params: { t: Date.now() } });
       if (Array.isArray(res.data)) {
         setMissions(res.data);
         if (res.data.length > 0 && !activeOrderId) {
@@ -95,7 +95,7 @@ export default function SellerFleetScreen() {
 
   const fetchOrders = async () => {
     try {
-      const res = await api.get(`/seller/orders.php`, { params: { seller_id: sellerId, t: Date.now() } });
+      const res = await api.get(`/seller/orders`, { params: { seller_id: sellerId, t: Date.now() } });
       if (Array.isArray(res.data)) {
         // Filter orders that need dispatching (PLACED or PROCESSING)
         const pending = res.data.filter((o: any) => o.status === "PLACED" || o.status === "PROCESSING" || o.status === "PREPARING");
@@ -108,7 +108,7 @@ export default function SellerFleetScreen() {
 
   const fetchMissionDetails = async (orderId: string) => {
     try {
-      const res = await api.get(`/fleet.php`, { params: { order_id: orderId, t: Date.now() } });
+      const res = await api.get(`/fleet`, { params: { order_id: orderId, t: Date.now() } });
       if (res.data) {
         setActiveMissionDetails(res.data);
       }
@@ -143,7 +143,7 @@ export default function SellerFleetScreen() {
     setDispatching(true);
     try {
       // 1. Update order status to SHIPPED and assign agent name
-      await api.post(`/seller/orders.php`, {
+      await api.post(`/seller/orders`, {
         order_id: selectedOrderId,
         status: "SHIPPED",
         delivery_agent_name: agentName,
@@ -153,7 +153,7 @@ export default function SellerFleetScreen() {
 
       // 2. Initialize tracking coordinates (e.g. Dollygunj Terminal node)
       const targetNode = MARITIME_NODES[Math.floor(Math.random() * MARITIME_NODES.length)];
-      await api.post(`/fleet.php`, {
+      await api.post(`/fleet`, {
         order_id: selectedOrderId,
         agent_name: agentName,
         lat: targetNode.lat,

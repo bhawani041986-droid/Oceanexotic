@@ -100,7 +100,7 @@ export default function AgentProfilePage() {
 
   return (
 
-    <div className="min-h-screen p-6 md:p-10 space-y-10 pb-32 animate-fade-in" style={{ color: 'var(--agent-text)' }}>
+    <div className="min-h-screen p-4 md:p-10 space-y-8 md:space-y-10 pb-28 md:pb-32 animate-fade-in" style={{ color: 'var(--agent-text)' }}>
       
       {/* Header - Profile Identity */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
@@ -164,16 +164,16 @@ export default function AgentProfilePage() {
           </div>
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto mt-4 md:mt-0">
            <Button 
             onClick={toggleTacticalMood}
-            className="h-14 px-8 text-[10px] font-black uppercase tracking-widest gap-3 rounded-[20px] text-[var(--foreground)]"
+            className="h-14 w-full sm:w-auto px-8 text-[10px] font-black uppercase tracking-widest gap-3 rounded-[20px] text-[var(--foreground)]"
             style={{ backgroundColor: 'var(--agent-primary)', boxShadow: `0 0 15px var(--agent-glow)` }}
            >
-              <Zap className="w-4 h-4" /> MOOD: {mood.toUpperCase()}
+              <Zap className="w-4 h-4 shrink-0" /> MOOD: {mood.toUpperCase()}
            </Button>
-           <Button className="h-14 px-8 bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 text-[10px] font-black uppercase tracking-widest gap-3 rounded-[20px]" style={{ borderColor: 'var(--agent-border)' }}>
-              <Settings className="w-4 h-4" /> SETTINGS
+           <Button className="h-14 w-full sm:w-auto px-8 bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 text-[10px] font-black uppercase tracking-widest gap-3 rounded-[20px]" style={{ borderColor: 'var(--agent-border)' }}>
+              <Settings className="w-4 h-4 shrink-0" /> SETTINGS
            </Button>
         </div>
       </div>
@@ -238,18 +238,18 @@ export default function AgentProfilePage() {
                       { id: "ORD-9950", date: "Yesterday", status: "DELIVERED", payout: "₹450", client: "Arctic Fresh" },
                       { id: "ORD-9942", date: "2 days ago", status: "DELIVERED", payout: "₹380", client: "Captain Morgan" },
                     ].map((job, i) => (
-                      <div key={i} className="flex items-center justify-between p-6 hover:bg-[var(--foreground)]/5 transition-all rounded-[24px]">
-                         <div className="flex items-center gap-6">
+                      <div key={i} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 sm:p-6 hover:bg-[var(--foreground)]/5 transition-all rounded-[24px]">
+                         <div className="flex items-center gap-4 sm:gap-6">
                             <div className="w-12 h-12 rounded-2xl bg-black/20 flex items-center justify-center shrink-0" style={{ color: 'var(--agent-primary)' }}>
                                <Truck className="w-6 h-6" />
                             </div>
                             <div className="space-y-1">
                                <p className="text-sm font-black uppercase italic">{job.id}</p>
-                               <p className="text-[9px] font-bold uppercase tracking-widest opacity-60">{job.client} • {job.date}</p>
+                               <p className="text-[9px] font-bold uppercase tracking-widest opacity-60 break-all">{job.client} • {job.date}</p>
                             </div>
                          </div>
-                         <div className="text-right space-y-2">
-                            <Badge variant="glass" className="text-[8px] font-black uppercase tracking-widest px-3">COMPLETED</Badge>
+                         <div className="text-left sm:text-right space-y-2 pl-16 sm:pl-0">
+                            <Badge variant="glass" className="text-[8px] font-black uppercase tracking-widest px-3 w-fit">COMPLETED</Badge>
                             <p className="text-xs font-black font-mono leading-none">{job.payout}</p>
                          </div>
                       </div>

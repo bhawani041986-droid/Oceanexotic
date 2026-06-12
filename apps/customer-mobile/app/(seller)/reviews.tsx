@@ -43,7 +43,7 @@ export default function SellerReviewsScreen() {
 
   const fetchReviews = async () => {
     try {
-      const res = await api.get(`/reviews/seller.php`, {
+      const res = await api.get(`/reviews/seller`, {
         params: { seller_id: sellerId, t: Date.now() }
       });
       if (Array.isArray(res.data)) {
@@ -69,7 +69,7 @@ export default function SellerReviewsScreen() {
 
     setSubmitting(true);
     try {
-      const res = await api.post(`/reviews/respond.php`, {
+      const res = await api.post(`/reviews/respond`, {
         id: targetReview.id,
         response: replyText
       });

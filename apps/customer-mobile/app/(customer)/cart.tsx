@@ -42,7 +42,7 @@ export default function CartScreen() {
             console.error("Error fetching addresses for addons:", addrErr);
           }
         }
-        const { data } = await api.get(`/addons/list.php?area=${encodeURIComponent(area)}`);
+        const { data } = await api.get(`/addons/list?area=${encodeURIComponent(area)}`);
         if (active) {
           if (Array.isArray(data) && data.length > 0) {
             setAddons(data);

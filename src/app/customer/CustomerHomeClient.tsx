@@ -1723,8 +1723,11 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                            <p className="text-[10px] font-black text-[var(--foreground)] italic">APP STORE</p>
                         </div>
                      </Button>
-                     <Button 
-                        className="flex-1 h-14 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 gap-3 flex items-center justify-center hover:bg-[var(--c-primary)]/20 transition-all group/btn"
+                     <a 
+                        href="https://expo.dev/artifacts/eas/Dn-3OR2UVwRKi1M163N1qvyXn5EHtFbIaxhP1vMCuZ8.apk" 
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 h-14 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 gap-3 flex items-center justify-center hover:bg-[var(--c-primary)]/20 transition-all group/btn rounded-[--radius-button]"
                         style={{ clipPath: 'polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)' }}
                      >
                         <Play className="w-5 h-5 text-[var(--c-primary)]" />
@@ -1732,7 +1735,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                            <p className="text-[7px] font-black text-[var(--foreground)]/40 uppercase">Registry</p>
                            <p className="text-[10px] font-black text-[var(--foreground)] italic">GOOGLE PLAY</p>
                         </div>
-                     </Button>
+                     </a>
                   </div>
                </div>
                

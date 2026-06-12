@@ -12,17 +12,17 @@ export interface UserProfile {
 
 export const userService = {
   getProfile: async (userId: string): Promise<UserProfile> => {
-    const { data } = await api.get<UserProfile>(`/user/profile.php?id=${encodeURIComponent(userId)}`);
+    const { data } = await api.get<UserProfile>(`/user/profile?id=${encodeURIComponent(userId)}`);
     return data;
   },
 
   updateProfile: async (payload: { id: string; name: string; email: string }) => {
-    const { data } = await api.put("/user/profile.php", payload);
+    const { data } = await api.put("/user/profile", payload);
     return data;
   },
 
   changePassword: async (payload: { userId: string; currentPassword: string; newPassword: string }) => {
-    const { data } = await api.post("/user/change_password.php", payload);
+    const { data } = await api.post("/user/change_password", payload);
     return data;
   },
 
@@ -41,7 +41,7 @@ export const userService = {
       type: type,
     } as any);
 
-    const { data } = await api.post("/user/upload_avatar.php", formData, {
+    const { data } = await api.post("/user/upload_avatar", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

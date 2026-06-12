@@ -57,7 +57,7 @@ export default function AgentSupportHub() {
   const [selectedMessages, setSelectedMessages] = useState<number[]>([]);
   const processedInvites = React.useRef<Set<string>>(new Set());
   const scrollRef = useRef<HTMLDivElement>(null);
-  const currentUserId = "FLEET-8"; 
+  const currentUserId = "AGENT-7"; 
 
   const quickReplies = [
     "Arriving in 5 minutes.",
@@ -323,8 +323,9 @@ export default function AgentSupportHub() {
           onClose={() => setActiveVideoRoom(null)}
         />
       )}
-      <div className="h-[calc(100vh-12rem)] bg-bg-secondary/20 rounded-[32px] border border-[var(--foreground)]/5 overflow-hidden flex flex-col relative">
-        <div className="flex-1 flex flex-col lg:flex-row h-full overflow-hidden">
+      <div className="p-4 md:p-10 pb-28 md:pb-10 h-[100dvh]">
+        <div className="h-full bg-bg-secondary/20 rounded-[20px] md:rounded-[32px] border border-[var(--foreground)]/5 overflow-hidden flex flex-col relative">
+          <div className="flex-1 flex flex-col lg:flex-row h-full overflow-hidden">
           
           {/* LIST VIEW */}
           <div 
@@ -681,8 +682,8 @@ export default function AgentSupportHub() {
               </>
             )}
           </div>
-
         </div>
+      </div>
       </div>
 
       <AnimatePresence>

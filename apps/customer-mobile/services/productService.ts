@@ -4,10 +4,10 @@ export const productService = {
   // Taxonomy Retrieval: Fetch global categories
   getCategories: async () => {
     try {
-      // The web app expects /categories/list.php
+      // The web app expects /categories/list
       // If it fails, we'll extract categories from the products list as a fallback
       try {
-        const response = await api.get('/categories/list.php');
+        const response = await api.get('/categories/list');
         return response.data;
       } catch (e) {
         const products = await productService.getAllProducts();
@@ -23,7 +23,7 @@ export const productService = {
   // Live Harbor Inventory: Today's Catch
   getTodaysCatch: async () => {
     try {
-      const response = await api.get('/products/todays_catch.php');
+      const response = await api.get('/products/todays_catch');
       // The API returns { status: 'success', items: [...] }
       return response.data.items || [];
     } catch (error) {
@@ -34,7 +34,7 @@ export const productService = {
 
   getAllProducts: async () => {
     try {
-      const response = await api.get('/seller/products.php');
+      const response = await api.get('/seller/products');
       // This returns an array directly
       return Array.isArray(response.data) ? response.data : [];
     } catch (error) {
@@ -46,7 +46,7 @@ export const productService = {
   // Cut Selection Registry: Fetch available cuts for a harvest
   getCutOptions: async (productId: string) => {
     try {
-      const response = await api.get(`/products/cut_options.php?product_id=${productId}`);
+      const response = await api.get(`/products/cut_options?product_id=${productId}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching cut options:', error);
@@ -56,7 +56,7 @@ export const productService = {
 
   // Precision Retrieval: Fetch a specific harvest node
   getProductById: async (id: string) => {
-    const response = await api.get(`/products/detail.php?id=${id}`);
+    const response = await api.get(`/products/detail?id=${id}`);
     return response.data;
   },
 };

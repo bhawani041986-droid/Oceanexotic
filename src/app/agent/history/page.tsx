@@ -33,8 +33,8 @@ export default function AgentHistoryPage() {
 
   const fetchHistory = async () => {
     try {
-      const res = await fetch("/api/agent/orders?agent_id=AGENT-742"
-  );
+      // Simulate historical payload fetch
+      const res = await fetch("/api/agent/orders?agent_id=7");
       if (res.ok) {
         const data = await res.json(
   );
@@ -69,16 +69,16 @@ export default function AgentHistoryPage() {
       
       {/* Header & Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="space-y-1">
+        <div className="space-y-1 text-center md:text-left">
           <h1 className="text-3xl font-black italic uppercase tracking-tighter text-[var(--foreground)]">MISSION ARCHIVE</h1>
           <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.3em]">Historical Yield Governance • {filteredHistory.length} Missions Recorded</p>
         </div>
-        <div className="flex items-center gap-3">
-           <Button variant="outline" className="h-12 px-6 border-[var(--foreground)]/5 text-[10px] font-black uppercase tracking-widest gap-2 rounded-xl">
-              <Download className="w-4 h-4 text-primary" /> EXPORT
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center w-full md:w-auto gap-3">
+           <Button variant="outline" className="h-12 w-full sm:w-auto px-6 border-[var(--foreground)]/5 text-[10px] font-black uppercase tracking-widest gap-2 rounded-xl shrink-0">
+              <Download className="w-4 h-4 text-primary shrink-0" /> EXPORT
            </Button>
-           <Button variant="outline" className="h-12 px-6 border-[var(--foreground)]/5 text-[10px] font-black uppercase tracking-widest gap-2 rounded-xl">
-              <Filter className="w-4 h-4 text-primary" /> FILTER
+           <Button variant="outline" className="h-12 w-full sm:w-auto px-6 border-[var(--foreground)]/5 text-[10px] font-black uppercase tracking-widest gap-2 rounded-xl shrink-0">
+              <Filter className="w-4 h-4 text-primary shrink-0" /> FILTER
            </Button>
         </div>
       </div>
@@ -144,17 +144,17 @@ export default function AgentHistoryPage() {
                          </p>
                          <p className="text-xs font-bold text-primary uppercase">{job.agent_details.tracking}</p>
                       </div>
-                      <div className="space-y-1 text-right">
-                         <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest flex items-center justify-end gap-2 opacity-50">
-                            <DollarSign className="w-3 h-3 text-success" /> YIELD
+                      <div className="space-y-1 text-left md:text-right">
+                         <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest flex items-center justify-start md:justify-end gap-2 opacity-50">
+                            <DollarSign className="w-3 h-3 text-success shrink-0" /> YIELD
                          </p>
                          <p className="text-lg font-black text-success italic leading-none">₹{Math.floor(Math.random() * 500) + 200}</p>
                       </div>
                    </div>
 
-                   <div className="flex items-center gap-4">
-                      <Button variant="ghost" className="h-14 px-6 flex items-center justify-center bg-white/5 rounded-2xl hover:bg-primary hover:text-white transition-all group/btn text-[10px] font-black uppercase tracking-widest italic gap-2">
-                         LOGS <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mt-6 xl:mt-0">
+                      <Button variant="ghost" className="h-14 w-full sm:w-auto px-6 flex items-center justify-center bg-white/5 rounded-2xl hover:bg-primary hover:text-white transition-all group/btn text-[10px] font-black uppercase tracking-widest italic gap-2 shrink-0">
+                         LOGS <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform shrink-0" />
                       </Button>
                    </div>
                 </div>
@@ -169,7 +169,7 @@ export default function AgentHistoryPage() {
       </div>
 
       {/* Historical Summary */}
-      <Card className="p-10 bg-primary/5 border border-dashed border-primary/20 rounded-[32px] flex flex-col md:flex-row items-center gap-10">
+      <Card className="p-6 md:p-10 bg-primary/5 border border-dashed border-primary/20 rounded-[32px] flex flex-col md:flex-row items-center gap-6 md:gap-10">
          <div className="w-20 h-20 rounded-[28px] bg-primary/10 flex items-center justify-center text-primary shrink-0 shadow-glow-purple/20 relative">
             <TrendingUp className="w-10 h-10" />
             <ArrowUpRight className="absolute top-2 right-2 w-5 h-5" />
@@ -180,7 +180,7 @@ export default function AgentHistoryPage() {
                You have successfully orchestrated missions with peak saku freshness guarantees. Your efficiency ranking is currently in the top 2% of the Port Blair sector.
             </p>
          </div>
-         <div className="text-right">
+         <div className="text-center md:text-right w-full md:w-auto mt-4 md:mt-0">
             <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Calculated Yield</p>
             <p className="text-4xl font-black text-[var(--foreground)] italic tracking-tighter">₹5,42,850</p>
          </div>

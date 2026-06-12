@@ -81,8 +81,8 @@ export default function SellerWithdrawalsScreen() {
   const fetchData = async () => {
     try {
       const [wRes, sRes] = await Promise.all([
-        api.get(`/seller/get_withdrawals.php`, { params: { seller_id: sellerId, t: Date.now() } }),
-        api.get(`/seller/get_stats.php`, { params: { seller_id: sellerId, t: Date.now() } })
+        api.get(`/seller/get_withdrawals`, { params: { seller_id: sellerId, t: Date.now() } }),
+        api.get(`/seller/get_stats`, { params: { seller_id: sellerId, t: Date.now() } })
       ]);
       if (Array.isArray(wRes.data)) setWithdrawals(wRes.data);
       if (Array.isArray(sRes.data)) setStats(sRes.data);
@@ -101,7 +101,7 @@ export default function SellerWithdrawalsScreen() {
 
     setSubmitting(true);
     try {
-      const res = await api.post(`/seller/create_withdrawal.php`, {
+      const res = await api.post(`/seller/create_withdrawal`, {
         seller_id: sellerId,
         amount: Number(amount),
         bank_node: bankNode

@@ -1,8 +1,8 @@
 import Constants from "expo-constants";
 import { Platform } from "react-native";
 
-const API_PATH = "/FISH_MARKET/api";
-const DEFAULT_API_PORT = process.env.EXPO_PUBLIC_API_PORT ?? "8081";
+const API_PATH = "/api";
+const DEFAULT_API_PORT = process.env.EXPO_PUBLIC_API_PORT ?? "3000";
 
 /** Expo Go / dev client reports your PC LAN IP here (e.g. 192.168.1.5:8082). */
 function getExpoDevMachineHost(): string | null {
@@ -43,7 +43,7 @@ export function resolveApiBaseUrl(): string {
       ? window.location.hostname 
       : "localhost";
     const resolvedHost = browserHost === "localhost" ? "127.0.0.1" : browserHost;
-    return `http://${resolvedHost}:8081/FISH_MARKET/api`;
+    return `http://${resolvedHost}:3000/api`;
   }
 
   if (envUrl && !envUrl.includes("localhost") && !envUrl.includes("127.0.0.1")) {

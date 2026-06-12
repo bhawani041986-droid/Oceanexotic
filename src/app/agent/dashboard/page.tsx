@@ -33,8 +33,7 @@ export default function AgentDashboardPage() {
 
   const fetchMissions = async () => {
     try {
-      const res = await fetch("/api/agent/orders?agent_id=AGENT-742"
-  );
+      const res = await fetch("/api/agent/orders?agent_id=7");
       if (res.ok) {
         const data = await res.json(
   );
@@ -67,19 +66,21 @@ export default function AgentDashboardPage() {
 
   return (
 
-    <div className="bg-bg-primary min-h-screen p-6 md:p-10 space-y-10">
+    <div className="bg-bg-primary min-h-screen p-4 md:p-10 space-y-8 md:space-y-10 pb-24 md:pb-10">
       
       {/* Header - Agent Identity */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-           <div className="space-y-1">
+           <div className="space-y-1 text-center md:text-left">
               <h1 className="text-3xl font-black italic uppercase tracking-tighter text-[var(--foreground)]">FLEET AGENT HUB</h1>
               <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.3em]">Operator: AGENT-742 • SEA-COMMAND ACTIVE</p>
            </div>
-           <div className="flex items-center gap-4 p-4 rounded-[20px] bg-[var(--foreground)]/5 border border-[var(--foreground)]/10">
-              <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center text-success animate-pulse">
-                 <div className="w-2 h-2 rounded-full bg-success" />
+           <div className="flex items-center justify-between md:justify-start w-full md:w-auto gap-4 p-4 rounded-[20px] bg-[var(--foreground)]/5 border border-[var(--foreground)]/10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center text-success animate-pulse shrink-0">
+                   <div className="w-2 h-2 rounded-full bg-success" />
+                </div>
               </div>
-              <div className="text-right">
+              <div className="text-left md:text-right">
                  <p className="text-[10px] font-black text-[var(--foreground)] uppercase">SIGNAL STATUS</p>
                  <p className="text-[9px] font-bold text-success uppercase">Active & Broadcasting</p>
               </div>
@@ -101,12 +102,12 @@ export default function AgentDashboardPage() {
 
         {/* ACTIVE MISSIONS QUEUE */}
         <div className="space-y-6">
-           <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
+           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3 justify-center sm:justify-start">
                  <Truck className="w-5 h-5 text-primary" />
-                 <h2 className="text-xl font-black text-[var(--foreground)] uppercase italic tracking-tight">Active Mission Queue</h2>
+                 <h2 className="text-xl font-black text-[var(--foreground)] uppercase italic tracking-tight text-center sm:text-left">Active Mission Queue</h2>
               </div>
-              <Badge variant="glass" className="uppercase tracking-widest text-[9px] font-black px-4">{missions.length} ASSIGNMENTS</Badge>
+              <Badge variant="glass" className="uppercase tracking-widest text-[9px] font-black px-4 mx-auto sm:mx-0 w-fit">{missions.length} ASSIGNMENTS</Badge>
            </div>
 
            {isLoading ? (
@@ -122,9 +123,9 @@ export default function AgentDashboardPage() {
                   <Card key={mission.id} className="p-8 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 rounded-[32px] space-y-8 relative overflow-hidden group">
                      <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-[40px] rounded-full pointer-events-none" />
                      
-                     <div className="flex items-start justify-between relative z-10">
+                     <div className="flex flex-col sm:flex-row sm:items-start justify-between relative z-10 gap-2 sm:gap-4">
                         <div className="space-y-2">
-                           <div className="flex items-center gap-3">
+                           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                               <h3 className="text-2xl font-black text-[var(--foreground)] italic tracking-tighter uppercase">{mission.id}</h3>
                               {mission.is_pre_order === 1 && (
                                  <span className="px-1.5 py-0.5 rounded-[4px] bg-amber-500/20 text-amber-500 text-[8px] font-black uppercase tracking-wider border border-amber-500/30">PRE-ORDER</span>
@@ -133,7 +134,7 @@ export default function AgentDashboardPage() {
                                  <Badge variant="danger" className="animate-pulse text-[8px] font-black uppercase tracking-widest">URGENT</Badge>
                               )}
                            </div>
-                           <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.2em]">CONSIGNEE: {mission.customer}</p>
+                           <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.2em] break-all">CONSIGNEE: {mission.customer}</p>
                         </div>
                         <p className="text-[10px] font-black text-primary uppercase tracking-widest italic">{mission.time}</p>
                      </div>
@@ -148,12 +149,12 @@ export default function AgentDashboardPage() {
                         </div>
                      </div>
 
-                     <div className="flex gap-3 relative z-10">
+                     <div className="flex flex-col md:flex-row gap-3 relative z-10">
                         <Button 
                           onClick={() => router.push(`/agent/tracking?order_id=${mission.id}&auto=true`)}
-                          className="flex-1 h-14 bg-primary hover:bg-primary-light shadow-glow-purple text-[10px] font-black uppercase tracking-widest gap-2"
+                          className="w-full md:flex-1 h-14 bg-primary hover:bg-primary-light shadow-glow-purple text-[10px] font-black uppercase tracking-widest gap-2 shrink-0"
                         >
-                           <Zap className="w-4 h-4" /> START TRACKING
+                           <Zap className="w-4 h-4 shrink-0" /> START TRACKING
                         </Button>
                         <Button 
                           onClick={() => {
@@ -161,14 +162,14 @@ export default function AgentDashboardPage() {
   );
                           }}
                           variant="outline"
-                          className="flex-1 h-14 border-[var(--foreground)]/10 hover:bg-[var(--foreground)]/5 text-[10px] font-black uppercase tracking-widest gap-2"
+                          className="w-full md:flex-1 h-14 border-[var(--foreground)]/10 hover:bg-[var(--foreground)]/5 text-[10px] font-black uppercase tracking-widest gap-2 shrink-0"
                         >
-                           <MapIcon className="w-4 h-4 text-primary" /> NAVIGATE
+                           <MapIcon className="w-4 h-4 text-primary shrink-0" /> NAVIGATE
                         </Button>
                         <Button 
                            onClick={() => router.push(`/customer/orders/${mission.id}/tracking`)}
                            variant="outline" 
-                           className="h-14 px-6 border-[var(--foreground)]/10 hover:bg-[var(--foreground)]/5 text-[10px] font-black uppercase tracking-widest"
+                           className="w-full md:w-auto md:flex-1 h-14 px-6 border-[var(--foreground)]/10 hover:bg-[var(--foreground)]/5 text-[10px] font-black uppercase tracking-widest shrink-0"
                         >
                            VIEW LIVE
                         </Button>

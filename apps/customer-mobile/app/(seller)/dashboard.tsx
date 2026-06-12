@@ -88,8 +88,8 @@ export default function SellerDashboardScreen() {
       setError(null);
       
       // Try to fetch stats and dynamic orders
-      const statsUrl = `${FULL_API_URL}/orders/seller_stats.php`;
-      const ordersUrl = `${FULL_API_URL}/seller/orders.php?seller_id=${encodeURIComponent(sellerId)}`;
+      const statsUrl = `${FULL_API_URL}/orders/seller_stats`;
+      const ordersUrl = `${FULL_API_URL}/seller/orders?seller_id=${encodeURIComponent(sellerId)}`;
       
       const [statsRes, ordersRes] = await Promise.all([
         axios.get(statsUrl).catch(() => null),

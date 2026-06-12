@@ -148,8 +148,8 @@ export default function SellerNewProductScreen() {
         type,
       } as any);
 
-      // POST to upload.php
-      const res = await axios.post(`${FULL_API_URL}/upload.php`, uploadData, {
+      // POST to upload
+      const res = await axios.post(`${FULL_API_URL}/upload`, uploadData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -194,13 +194,13 @@ export default function SellerNewProductScreen() {
 
     setIsSaving(true);
     try {
-      // POST to api/seller/products.php
+      // POST to api/seller/products
       const payload = {
         ...formData,
         seller_id: sellerId
       };
       
-      const res = await api.post("/seller/products.php", payload);
+      const res = await api.post("/seller/products", payload);
       
       if (res.data?.status === "success") {
         Alert.alert("Success", "Harvest successfully commissioned in registry.");

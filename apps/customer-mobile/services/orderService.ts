@@ -4,7 +4,7 @@ export const orderService = {
   // Ledger Retrieval: Fetch customer missions
   getCustomerOrders: async (userId: string) => {
     try {
-      const response = await api.get(`/orders/customer_orders.php?userId=${userId}`);
+      const response = await api.get(`/orders/customer_orders?userId=${userId}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching customer orders:', error);
@@ -14,13 +14,13 @@ export const orderService = {
 
   // Directive Details: Fetch specific mission status
   getOrderDetails: async (orderId: string) => {
-    const response = await api.get(`/orders/detail.php?orderId=${orderId}`);
+    const response = await api.get(`/orders/detail?orderId=${orderId}`);
     return response.data;
   },
 
   // Realtime Tracking: Fetch telemetry for a mission
   getOrderTracking: async (orderId: string) => {
-    const response = await api.get(`/orders/tracking.php?orderId=${orderId}`);
+    const response = await api.get(`/orders/tracking?orderId=${orderId}`);
     return response.data;
   }
 };

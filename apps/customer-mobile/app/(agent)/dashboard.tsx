@@ -88,7 +88,7 @@ export default function AgentDashboardScreen() {
     try {
       setSyncError(null);
       // Pass the agent's name to fetch assignments
-      const url = `${FULL_API_URL}/agent/orders.php?agent_id=${encodeURIComponent(user.name)}`;
+      const url = `${FULL_API_URL}/agent/orders?agent_id=${encodeURIComponent(user.name)}`;
       const res = await axios.get(url);
       
       if (Array.isArray(res.data)) {

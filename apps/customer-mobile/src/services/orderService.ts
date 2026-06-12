@@ -12,7 +12,7 @@ export interface CustomerOrder {
 export const orderService = {
   getCustomerOrders: async (userId: string): Promise<CustomerOrder[]> => {
     const { data } = await api.get<CustomerOrder[]>(
-      `/orders/customer_history.php?userId=${encodeURIComponent(userId)}`
+      `/orders/customer_history?userId=${encodeURIComponent(userId)}`
     );
     return Array.isArray(data) ? data : [];
   },

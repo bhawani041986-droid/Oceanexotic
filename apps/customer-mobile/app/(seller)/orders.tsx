@@ -83,7 +83,7 @@ export default function SellerOrdersScreen() {
 
   const fetchOrders = async () => {
     try {
-      const res = await api.get(`/seller/orders.php`, { params: { seller_id: sellerId } });
+      const res = await api.get(`/seller/orders`, { params: { seller_id: sellerId } });
       if (Array.isArray(res.data)) {
         setOrders(res.data);
       } else {
@@ -127,7 +127,7 @@ export default function SellerOrdersScreen() {
     // Fetch delivery agents
     setIsLoadingAgents(true);
     try {
-      const res = await api.get("/agent/list.php");
+      const res = await api.get("/agent/list");
       if (Array.isArray(res.data)) {
         setAgents(res.data);
         if (res.data.length > 0) {
@@ -172,7 +172,7 @@ export default function SellerOrdersScreen() {
         estimated_delivery: estDeliveryDate
       };
 
-      const res = await api.post("/seller/orders.php", payload);
+      const res = await api.post("/seller/orders", payload);
       if (res.data?.status === "success") {
         Alert.alert("Logistics Cleared", `Vessel Dispatch successfully initialized for ${selectedOrder.id}`);
         setIsDispatchModalVisible(false);

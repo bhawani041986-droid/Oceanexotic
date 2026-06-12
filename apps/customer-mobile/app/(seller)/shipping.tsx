@@ -47,7 +47,7 @@ export default function SellerShippingScreen() {
 
   const fetchShipments = async () => {
     try {
-      const res = await api.get(`/seller/orders.php`, {
+      const res = await api.get(`/seller/orders`, {
         params: { seller_id: sellerId, t: Date.now() }
       });
       if (Array.isArray(res.data)) {

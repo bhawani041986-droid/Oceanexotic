@@ -65,7 +65,7 @@ export default function SellerVerificationScreen() {
 
   const fetchVerificationData = async () => {
     try {
-      const res = await api.get(`/seller/get_verification.php`, {
+      const res = await api.get(`/seller/get_verification`, {
         params: { seller_id: sellerId, t: Date.now() }
       });
       if (res.data) {
@@ -129,7 +129,7 @@ export default function SellerVerificationScreen() {
         type,
       } as any);
 
-      const res = await axios.post(`${FULL_API_URL}/seller/upload_doc.php`, uploadData, {
+      const res = await axios.post(`${FULL_API_URL}/seller/upload_doc`, uploadData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

@@ -310,10 +310,10 @@ function AgentTrackingContent() {
 
   return (
 
-    <div className="min-h-screen pb-20 lg:pb-32 overflow-x-hidden selection:bg-[var(--agent-primary)]/30" style={{ backgroundColor: 'var(--agent-bg)', color: 'var(--agent-text)' }}>
+    <div className="min-h-screen pb-32 lg:pb-32 overflow-x-hidden selection:bg-[var(--agent-primary)]/30" style={{ backgroundColor: 'var(--agent-bg)', color: 'var(--agent-text)' }}>
        {/* 1. TACTICAL MAP ENVIRONMENT */}
        <div className="p-2 lg:p-4">
-          <Card className="h-[50vh] lg:h-[60vh] relative overflow-hidden border-2 rounded-[12px] lg:rounded-[20px] transition-all duration-500 shadow-lg" style={{ backgroundColor: 'var(--agent-card-bg)', borderColor: 'var(--agent-border)' }}>
+          <Card className="h-[40vh] lg:h-[60vh] relative overflow-hidden border-2 rounded-[12px] lg:rounded-[20px] transition-all duration-500 shadow-lg" style={{ backgroundColor: 'var(--agent-card-bg)', borderColor: 'var(--agent-border)' }}>
              {/* THE MAP NODE */}
              <div id="agent-tactical-map" className="w-full h-full" style={{ 
                 opacity: 1,
@@ -405,15 +405,15 @@ function AgentTrackingContent() {
                 </div>
 
                 {/* DROP-OFF TELEMETRY */}
-                <div className="border p-3 space-y-2 relative" style={{ backgroundColor: 'var(--agent-text)08', borderColor: 'var(--agent-border)' }}>
-                   <div className="flex items-center justify-between">
+                <div className="border p-3 space-y-3 sm:space-y-2 relative" style={{ backgroundColor: 'var(--agent-text)08', borderColor: 'var(--agent-border)' }}>
+                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div className="flex items-center gap-2">
-                         <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--agent-primary)1A' }}>
+                         <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: 'var(--agent-primary)1A' }}>
                             <User className="w-3 h-3" style={{ color: 'var(--agent-primary)' }} />
                          </div>
-                         <p className="text-[11px] font-black uppercase tracking-tight" style={{ color: 'var(--agent-text)' }}>{orderInfo?.customer || "Syncing..."}</p>
+                         <p className="text-[11px] font-black uppercase tracking-tight truncate" style={{ color: 'var(--agent-text)' }}>{orderInfo?.customer || "Syncing..."}</p>
                       </div>
-                      <Button variant="ghost" className="h-7 px-3 text-emerald-400 hover:bg-emerald-500 hover:text-white -skew-x-12 text-[8px] font-black uppercase" style={{ backgroundColor: '#10B9811A' }}>
+                      <Button variant="ghost" className="w-full sm:w-auto h-7 px-3 text-emerald-400 hover:bg-emerald-500 hover:text-white -skew-x-12 text-[8px] font-black uppercase shrink-0" style={{ backgroundColor: '#10B9811A' }}>
                          <Phone className="w-3 h-3 skew-x-12 mr-1" /> Call Peer
                       </Button>
                    </div>
@@ -471,8 +471,8 @@ function AgentTrackingContent() {
                                 placeholder="ENTER 6-DIGIT OTP" 
                                 className="w-full bg-slate-900 border border-slate-800 text-white rounded-lg h-10 px-4 text-center font-bold tracking-[0.2em] focus:outline-none focus:border-[var(--agent-primary)] transition-colors placeholder:text-slate-700 placeholder:tracking-normal placeholder:font-medium placeholder:text-[10px]"
                              />
-                             {verificationError && (
-                                <p className="text-red-500 text-[8px] font-bold text-center mt-1 uppercase tracking-widest animate-pulse">
+                              {verificationError && (
+                                <p className="text-red-500 text-[8px] font-bold text-center mt-1 uppercase tracking-widest animate-pulse break-words px-2">
                                    ⚠️ {verificationError}
                                 </p>
                              )}

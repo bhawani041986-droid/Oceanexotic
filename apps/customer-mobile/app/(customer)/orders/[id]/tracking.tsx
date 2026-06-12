@@ -14,7 +14,7 @@ export default function OrderTrackingScreen() {
 
   const fetchTelemetry = async () => {
     try {
-      const { data } = await api.get(`/fleet.php?order_id=${id}`);
+      const { data } = await api.get(`/fleet?order_id=${id}`);
       setTrackingData(data);
     } catch (error) {
       console.error("Telemetry Drift:", error);

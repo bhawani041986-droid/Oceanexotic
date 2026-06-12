@@ -87,8 +87,8 @@ export default function SellerProfileScreen() {
   const fetchSellerStats = async () => {
     try {
       const [prodRes, orderRes] = await Promise.all([
-        api.get("/seller/products.php"),
-        api.get(`/seller/orders.php`, { params: { seller_id: sellerId } })
+        api.get("/seller/products"),
+        api.get(`/seller/orders`, { params: { seller_id: sellerId } })
       ]);
 
       if (Array.isArray(prodRes.data)) {

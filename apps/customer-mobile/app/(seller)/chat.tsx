@@ -46,7 +46,7 @@ export default function SellerChatScreen() {
 
   const fetchConversations = async () => {
     try {
-      const res = await api.get(`/chat/get_conversations.php`, {
+      const res = await api.get(`/chat/get_conversations`, {
         params: { user_id: sellerId, t: Date.now() }
       });
       if (Array.isArray(res.data)) {
@@ -62,7 +62,7 @@ export default function SellerChatScreen() {
   const fetchMessages = async (convId: string, showLoader = false) => {
     if (showLoader) setLoadingMsgs(true);
     try {
-      const res = await api.get(`/chat/get_messages.php`, {
+      const res = await api.get(`/chat/get_messages`, {
         params: { conversation_id: convId, t: Date.now() }
       });
       if (Array.isArray(res.data)) {
@@ -107,7 +107,7 @@ export default function SellerChatScreen() {
     setMsgText("");
 
     try {
-      const res = await api.post(`/chat/send_message.php`, {
+      const res = await api.post(`/chat/send_message`, {
         conversation_id: activeConv.id,
         sender_id: sellerId,
         message_text: toSend

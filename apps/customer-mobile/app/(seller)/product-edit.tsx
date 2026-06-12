@@ -119,7 +119,7 @@ export default function SellerEditProductScreen() {
     const fetchProductDetails = async () => {
       if (!id) return;
       try {
-        const res = await api.get("/seller/products.php", { params: { id } });
+        const res = await api.get("/seller/products", { params: { id } });
         if (res.data) {
           const p = res.data;
 
@@ -213,8 +213,8 @@ export default function SellerEditProductScreen() {
         type,
       } as any);
 
-      // POST to upload.php
-      const res = await axios.post(`${FULL_API_URL}/upload.php`, uploadData, {
+      // POST to upload
+      const res = await axios.post(`${FULL_API_URL}/upload`, uploadData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -259,13 +259,13 @@ export default function SellerEditProductScreen() {
 
     setIsSaving(true);
     try {
-      // PUT request to api/seller/products.php
+      // PUT request to api/seller/products
       const payload = {
         ...formData,
         seller_id: sellerId
       };
       
-      const res = await api.put("/seller/products.php", payload);
+      const res = await api.put("/seller/products", payload);
       
       if (res.data?.status === "success") {
         Alert.alert("Success", "Harvest specifications updated in registry.");

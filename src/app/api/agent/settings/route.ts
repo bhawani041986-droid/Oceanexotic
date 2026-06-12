@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase';
 // --- FETCH AGENT SETTINGS ---
 export async function GET() {
   try {
-    const agentId = "AGENT-007"; // In production, get from session
+    const agentId = 7; // In production, get from session (Matches frontend userId=7)
     const { data: settings, error } = await supabase
       .from('agent_settings')
       .select('current_mood')
@@ -27,7 +27,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const { mood } = await request.json();
-    const agentId = "AGENT-007";
+    const agentId = 7;
 
     if (!mood) return NextResponse.json({ error: "Missing Mood Node" }, { status: 400 });
 
