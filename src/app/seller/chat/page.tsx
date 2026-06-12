@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FULL_API_URL as API_BASE_URL } from "@/config/api";
+import { supabase } from "@/lib/supabase";
 
 export default function SellerChatPage() {
   const [mounted, setMounted] = useState(false
@@ -78,58 +79,76 @@ export default function SellerChatPage() {
   const handleSendMessage = async () => {
     if (!message.trim() || activeChat === null) return;
     
-    const packet = {
+    const textToSend = message;
+    
+    // Optimistically add message
+    const tempMsg = {
+      id: Date.now(),
       conversation_id: activeChat,
       sender_id: currentUserId,
-      message_text: message
+      message_text: textToSend,
+      is_read: 0,
+      created_at: new Date().toISOString()
     };
+    setMessages((prev: any) => [...prev, tempMsg]);
+    setMessage("");
 
     try {
-      const res = await fetch(`${API_BASE_URL}/chat/send_message`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(packet)
-      }
-  );
-      if (res.ok) {
-        setMessage(""
-  );
-        fetchMessages(activeChat
-  );
-        fetchConversations(
-  );
-      }
+      const { error: msgError } = await supabase
+        .from('chat_messages')
+        .insert([{
+          conversation_id: activeChat,
+          sender_id: currentUserId,
+          message_text: textToSend,
+          is_read: 0
+        }]);
+        
+      if (msgError) throw msgError;
+
+      await supabase
+        .from('chat_conversations')
+        .update({
+          last_message_text: textToSend,
+          last_message_time: new Date().toISOString()
+        })
+        .eq('id', activeChat);
+
     } catch (err) {
-      console.error("Signal lost:", err
-  );
+      console.error("Signal lost:", err);
     }
   };
 
   useEffect(() => {
-    setMounted(true
-  );
-    fetchConversations(
-  );
-  }, []
-  );
+    setMounted(true);
+    fetchConversations();
+    // Keep a slow poll for conversation list updates
+    const interval = setInterval(fetchConversations, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (activeChat !== null) {
-      fetchMessages(activeChat
-  );
-      const interval = setInterval(() => {
-        fetchMessages(activeChat
-  );
-        fetchConversations(
-  );
-      }, 3000
-  );
-      return (
-) => clearInterval(interval
-  );
+      fetchMessages(activeChat);
+      
+      const channel = supabase
+        .channel(`seller_messages_${activeChat}`)
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: `conversation_id=eq.${activeChat}` },
+          (payload) => {
+            if (payload.new.sender_id !== currentUserId) {
+              setMessages((prev: any) => [...prev, payload.new]);
+              fetchConversations();
+            }
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     }
-  }, [activeChat]
-  );
+  }, [activeChat]);
 
   const currentChat = conversations.find(c => c.id === activeChat
   );

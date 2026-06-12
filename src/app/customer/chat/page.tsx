@@ -31,13 +31,8 @@ import { cn } from "@/lib/utils";
 import { FULL_API_URL as API_BASE_URL } from "@/config/api";
 import { useAuthStore } from "@/store/authStore";
 import { useToast } from "@/components/ui/Toast";
-import dynamic from "next/dynamic";
-import { IncomingCallOverlay } from "@/components/video/IncomingCallOverlay";
+import { supabase } from "@/lib/supabase";
 
-const NativeVideoCall = dynamic(
-  () => import("@/components/video/NativeVideoCall").then(mod => mod.NativeVideoCall),
-  { ssr: false }
-);
 
 export default function ChatPage() {
   const router = useRouter();
@@ -112,12 +107,6 @@ export default function ChatPage() {
     const textToSend = customMsg || message;
     if (!textToSend.trim() || activeChat === null) return;
     
-    const packet = {
-      conversation_id: activeChat,
-      sender_id: currentUserId,
-      message_text: textToSend
-    };
-
     // Optimistically add message
     const tempMsg = {
       id: Date.now(),
@@ -131,14 +120,27 @@ export default function ChatPage() {
     if (!customMsg) setMessage("");
 
     try {
-      const res = await fetch(`${API_BASE_URL}/chat/send_message`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(packet)
-      });
-      if (res.ok) {
-        fetchConversations();
-      }
+      // 1. Insert into chat_messages
+      const { error: msgError } = await supabase
+        .from('chat_messages')
+        .insert([{
+          conversation_id: activeChat,
+          sender_id: currentUserId,
+          message_text: textToSend,
+          is_read: 0
+        }]);
+        
+      if (msgError) throw msgError;
+
+      // 2. Update conversation last message timestamp
+      await supabase
+        .from('chat_conversations')
+        .update({
+          last_message_text: textToSend,
+          last_message_time: new Date().toISOString()
+        })
+        .eq('id', activeChat);
+
     } catch (err) {
       console.error("Signal lost:", err);
       toast("Failed to transmit signal", "error");
@@ -198,31 +200,35 @@ export default function ChatPage() {
   };
 
   React.useEffect(() => {
-    setMounted(true
-  );
-    fetchConversations(
-  );
-  }, []
-  );
+    setMounted(true);
+    fetchConversations();
+  }, []);
 
-  // Polling for new messages
+  // Set up Supabase Realtime Listener
   React.useEffect(() => {
     if (activeChat !== null) {
-      fetchMessages(activeChat
-  );
-      const interval = setInterval(() => {
-        fetchMessages(activeChat
-  );
-        fetchConversations(
-  );
-      }, 3000
-  );
-      return (
-) => clearInterval(interval
-  );
+      fetchMessages(activeChat);
+      
+      const channel = supabase
+        .channel(`chat_messages:conversation_id=eq.${activeChat}`)
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: `conversation_id=eq.${activeChat}` },
+          (payload) => {
+            // Check if we didn't just optimistically add this ourselves (based on time proximity or sender_id)
+            if (payload.new.sender_id !== currentUserId) {
+              setMessages((prev) => [...prev, payload.new]);
+              // Mark as read or trigger notification logic here if needed
+            }
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     }
-  }, [activeChat]
-  );
+  }, [activeChat]);
 
   if (!mounted) return null;
 
@@ -232,18 +238,6 @@ export default function ChatPage() {
   return (
 
     <div className="bg-[#0B1120] h-screen text-white font-inter flex flex-col selection:bg-primary/30 overflow-hidden">
-      
-      <IncomingCallOverlay 
-        roomID={incomingCall?.roomID || null}
-        callerName={incomingCall?.callerName || ""}
-        onAccept={() => {
-          if (incomingCall) {
-            setActiveVideoRoom(incomingCall.roomID);
-            setIncomingCall(null);
-          }
-        }}
-        onDecline={() => setIncomingCall(null)}
-      />
       
       {/* 1. UNIVERSAL COMMUNICATION HEADER */}
       <header className="h-20 bg-[#0B1120]/80 backdrop-blur-2xl border-b border-[var(--foreground)]/5 px-6 flex items-center justify-between shrink-0 z-50">
@@ -355,19 +349,6 @@ export default function ChatPage() {
                   </div>
                </div>
                <div className="flex items-center gap-2 md:gap-4">
-                  <button className="p-3 bg-white/5 rounded-xl hover:bg-primary transition-colors"><Phone className="w-5 h-5" /></button>
-                  
-                  {/* Restrict Video Call: Only allow calling Admins or Delivery Agents */}
-                  {(currentChat?.other_party_role === 'Admin' || currentChat?.other_party_role === 'Agent') ? (
-                    <button onClick={handleInitiateVideoCall} className="p-3 bg-white/5 rounded-xl hover:bg-primary transition-colors" title="Initiate Secure Video Link">
-                      <Video className="w-5 h-5 text-success animate-pulse" />
-                    </button>
-                  ) : (
-                    <button className="p-3 bg-white/5 rounded-xl opacity-20 cursor-not-allowed" title="Video Link Unavailable for this Node">
-                      <Video className="w-5 h-5" />
-                    </button>
-                  )}
-
                   <button className="p-3 bg-[var(--foreground)]/5 rounded-xl hover:bg-[var(--foreground)]/10 transition-colors"><MoreVertical className="w-5 h-5" /></button>
                </div>
                  </>
@@ -378,9 +359,6 @@ export default function ChatPage() {
             <div className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-8">
                <AnimatePresence initial={false}>
                  {messages.map((msg: any) => {
-                   const isVideoInvite = msg.message_text.includes("[VIDEO_CALL_INVITE]:");
-                   const roomID = isVideoInvite ? msg.message_text.replace("[VIDEO_CALL_INVITE]:", "").trim() : null;
-
                    return (
                    <motion.div 
                      key={msg.id}
@@ -419,20 +397,7 @@ export default function ChatPage() {
                          )}>
                             <div className={cn("absolute top-0 w-4 h-4", msg.sender_id === currentUserId ? "right-0 bg-primary -mr-2" : "left-0 bg-white/5 border-l border-t border-white/10 -ml-2")} style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }} />
                             
-                            {isVideoInvite ? (
-                              <div className="flex flex-col items-center gap-3 p-2">
-                                <Video className="w-8 h-8 opacity-80" />
-                                <p className="text-[10px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
-                                <button 
-                                  onClick={(e) => { e.stopPropagation(); setActiveVideoRoom(roomID!); }}
-                                  className="w-full py-2 rounded-xl bg-[var(--foreground)] text-bg-primary font-black text-[9px] uppercase tracking-widest hover:scale-95 transition-all"
-                                >
-                                  Join Connection
-                                </button>
-                              </div>
-                            ) : (
-                              <p className="leading-relaxed font-medium">{msg.message_text}</p>
-                            )}
+                            <p className="leading-relaxed font-medium">{msg.message_text}</p>
 
                             <div className={cn("mt-4 flex items-center gap-2 text-[9px] font-black opacity-40 uppercase", msg.sender_id === currentUserId ? "justify-end" : "justify-start")}>
                                {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

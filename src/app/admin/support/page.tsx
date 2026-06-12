@@ -31,6 +31,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useToast } from "@/components/ui/Toast";
 import dynamic from "next/dynamic";
 import { IncomingCallOverlay } from "@/components/video/IncomingCallOverlay";
+import { supabase } from "@/lib/supabase";
 
 const NativeVideoCall = dynamic(
   () => import("@/components/video/NativeVideoCall").then(mod => mod.NativeVideoCall),
@@ -108,12 +109,6 @@ export default function AdminSupportHub() {
     const textToSend = customMsg || message;
     if (!textToSend.trim() || activeChat === null) return;
     
-    const packet = {
-      conversation_id: activeChat,
-      sender_id: currentUserId,
-      message_text: textToSend
-    };
-
     // Optimistically add message
     const tempMsg = {
       id: Date.now(),
@@ -127,18 +122,25 @@ export default function AdminSupportHub() {
     if (!customMsg) setMessage("");
 
     try {
-      const res = await fetch(`${API_BASE_URL}/chat/send_message`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(packet)
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        toast(data.error ? String(data.error) : "Failed to transmit signal.", "error");
-      } else {
-        fetchConversations();
-        fetchMessages(activeChat);
-      }
+      const { error: msgError } = await supabase
+        .from('chat_messages')
+        .insert([{
+          conversation_id: activeChat,
+          sender_id: currentUserId,
+          message_text: textToSend,
+          is_read: 0
+        }]);
+        
+      if (msgError) throw msgError;
+
+      await supabase
+        .from('chat_conversations')
+        .update({
+          last_message_text: textToSend,
+          last_message_time: new Date().toISOString()
+        })
+        .eq('id', activeChat);
+
     } catch (err) {
       console.error("Signal lost:", err);
       toast("Failed to transmit signal", "error");
@@ -253,15 +255,33 @@ export default function AdminSupportHub() {
   useEffect(() => {
     setMounted(true);
     fetchConversations();
-    const interval = setInterval(fetchConversations, 3000);
+    // Keep a slow poll for conversation list updates (status changes, etc)
+    const interval = setInterval(fetchConversations, 10000);
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
     if (activeChat !== null) {
       fetchMessages(activeChat);
-      const interval = setInterval(() => fetchMessages(activeChat), 3000);
-      return () => clearInterval(interval);
+      
+      const channel = supabase
+        .channel(`admin_messages_${activeChat}`)
+        .on(
+          'postgres_changes',
+          { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: `conversation_id=eq.${activeChat}` },
+          (payload) => {
+            if (payload.new.sender_id !== currentUserId) {
+              setMessages(prev => [...prev, payload.new]);
+              // Refresh conversations to update the sidebar unread counts
+              fetchConversations();
+            }
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     }
   }, [activeChat]);
 

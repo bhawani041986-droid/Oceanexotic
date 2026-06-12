@@ -280,7 +280,7 @@ export default function CustomerRecipeDetailsPage() {
               </Badge>
             </div>
 
-            <h1 className="text-4xl md:text-7xl font-black uppercase italic tracking-tight text-white leading-[1.1] drop-shadow-2xl max-w-4xl">
+            <h1 className="text-3xl sm:text-4xl md:text-7xl font-black uppercase italic tracking-tight text-white leading-[1.1] drop-shadow-2xl max-w-4xl">
               {recipe.title}
             </h1>
 
@@ -292,59 +292,59 @@ export default function CustomerRecipeDetailsPage() {
       </div>
 
       {/* 2. INTERACTIVE FLOATING ACTION BAR */}
-      <div className="sticky top-[76px] z-40 bg-[var(--c-bg)]/80 backdrop-blur-2xl border-b border-[var(--foreground)]/5 shadow-sm">
-        <div className="container mx-auto px-4 md:px-12 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="sticky top-[76px] z-40 bg-[var(--c-bg)]/90 backdrop-blur-3xl border-b border-[var(--foreground)]/5 shadow-sm">
+        <div className="container mx-auto px-4 md:px-12 py-3 md:py-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
           
-          {/* Scientific Telemetry */}
-          <div className="flex items-center gap-6 md:gap-12 text-center md:text-left">
-            <div className="flex items-center gap-2.5">
-              <Flame className="w-5 h-5 text-[var(--c-primary)]" />
+          {/* Scientific Telemetry - Scrollable on mobile to prevent squishing */}
+          <div className="flex items-center justify-between xl:justify-start gap-4 md:gap-12 w-full xl:w-auto overflow-x-auto no-scrollbar pb-1 xl:pb-0">
+            <div className="flex items-center gap-2.5 shrink-0">
+              <Flame className="w-4 h-4 md:w-5 md:h-5 text-[var(--c-primary)]" />
               <div>
-                <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest block leading-none">Difficulty</span>
-                <span className="text-sm text-white font-black italic uppercase">{difficulty}</span>
+                <span className="text-[7px] md:text-[8px] font-black text-slate-500 uppercase tracking-widest block leading-none">Difficulty</span>
+                <span className="text-xs md:text-sm text-white font-black italic uppercase">{difficulty}</span>
               </div>
             </div>
-            <div className="w-[1px] h-8 bg-white/10 hidden md:block" />
-            <div className="flex items-center gap-2.5">
-              <Clock className="w-5 h-5 text-cyan-400" />
+            <div className="w-[1px] h-6 md:h-8 bg-white/10 shrink-0" />
+            <div className="flex items-center gap-2.5 shrink-0">
+              <Clock className="w-4 h-4 md:w-5 md:h-5 text-cyan-400" />
               <div>
-                <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest block leading-none">Cook Time</span>
-                <span className="text-sm text-white font-black italic uppercase">{time}</span>
+                <span className="text-[7px] md:text-[8px] font-black text-slate-500 uppercase tracking-widest block leading-none">Cook Time</span>
+                <span className="text-xs md:text-sm text-white font-black italic uppercase">{time}</span>
               </div>
             </div>
-            <div className="w-[1px] h-8 bg-white/10 hidden md:block" />
-            <div className="flex items-center gap-2.5">
-              <ShieldCheck className="w-5 h-5 text-emerald-400" />
+            <div className="w-[1px] h-6 md:h-8 bg-white/10 shrink-0 hidden sm:block" />
+            <div className="flex items-center gap-2.5 shrink-0">
+              <ShieldCheck className="w-4 h-4 md:w-5 md:h-5 text-emerald-400" />
               <div>
-                <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest block leading-none">Omega-3</span>
-                <span className="text-sm text-white font-black italic uppercase">Optimal</span>
+                <span className="text-[7px] md:text-[8px] font-black text-slate-500 uppercase tracking-widest block leading-none">Omega-3</span>
+                <span className="text-xs md:text-sm text-white font-black italic uppercase">Optimal</span>
               </div>
             </div>
           </div>
 
-          {/* Social Actions */}
-          <div className="flex items-center gap-3 bg-[var(--c-card)] p-1.5 rounded-full border border-[var(--foreground)]/5 shadow-inner">
+          {/* Social Actions - Wrap on mobile if needed */}
+          <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 bg-transparent xl:bg-[var(--c-card)] p-0 xl:p-1.5 rounded-full xl:border border-[var(--foreground)]/5 xl:shadow-inner w-full xl:w-auto">
             <button 
               onClick={handleLike}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider transition-all",
-                isLiked ? "bg-red-500/10 text-red-500 shadow-glow-red" : "hover:bg-white/5 text-slate-400"
+                "flex-1 xl:flex-none flex items-center justify-center gap-2 px-3 md:px-4 py-2.5 md:py-2 rounded-full text-[10px] md:text-xs font-black uppercase tracking-wider transition-all",
+                isLiked ? "bg-red-500/10 text-red-500 shadow-glow-red" : "bg-[var(--c-card)] xl:bg-transparent hover:bg-white/5 text-slate-400 border border-[var(--foreground)]/5 xl:border-transparent"
               )}
             >
-              <Heart className={cn("w-4 h-4 transition-transform", isLiked ? "fill-current scale-110" : "")} /> 
-              {isLiked ? `${likesCount} Saved` : `Save (${likesCount})`}
+              <Heart className={cn("w-3.5 h-3.5 md:w-4 md:h-4 transition-transform", isLiked ? "fill-current scale-110" : "")} /> 
+              <span className="whitespace-nowrap">{isLiked ? `${likesCount} Saved` : `Save (${likesCount})`}</span>
             </button>
             <button 
               onClick={handleShare}
-              className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+              className="flex-1 xl:flex-none flex items-center justify-center gap-2 px-3 md:px-4 py-2.5 md:py-2 rounded-full text-[10px] md:text-xs font-black uppercase tracking-wider text-slate-400 bg-[var(--c-card)] xl:bg-transparent hover:bg-white/5 hover:text-white transition-all border border-[var(--foreground)]/5 xl:border-transparent"
             >
-              <Share2 className="w-4 h-4" /> Share
+              <Share2 className="w-3.5 h-3.5 md:w-4 md:h-4" /> <span className="whitespace-nowrap">Share</span>
             </button>
             <button 
               onClick={() => document.getElementById('comments-section')?.scrollIntoView({ behavior: 'smooth' })}
-              className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+              className="flex-1 xl:flex-none flex items-center justify-center gap-2 px-3 md:px-4 py-2.5 md:py-2 rounded-full text-[10px] md:text-xs font-black uppercase tracking-wider text-slate-400 bg-[var(--c-card)] xl:bg-transparent hover:bg-white/5 hover:text-white transition-all border border-[var(--foreground)]/5 xl:border-transparent"
             >
-              <MessageSquare className="w-4 h-4" /> {comments.length} Comments
+              <MessageSquare className="w-3.5 h-3.5 md:w-4 md:h-4" /> <span className="whitespace-nowrap">{comments.length} <span className="hidden sm:inline">Comments</span></span>
             </button>
           </div>
 
@@ -372,7 +372,7 @@ export default function CustomerRecipeDetailsPage() {
                     <div className="w-8 h-8 rounded-full bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/20 flex items-center justify-center text-[var(--c-primary)] shrink-0">
                       <CheckCircle className="w-4 h-4" />
                     </div>
-                    <span className="text-sm font-medium text-slate-200 leading-relaxed">
+                    <span className="text-sm font-medium text-slate-200 leading-relaxed flex-1 break-words">
                       {ing}
                     </span>
                   </div>
@@ -390,10 +390,10 @@ export default function CustomerRecipeDetailsPage() {
                 {recipe.steps.map((step: string, i: number) => (
                   <div 
                     key={i}
-                    className="flex gap-6 p-6 md:p-8 bg-[var(--c-card)] border border-[var(--foreground)]/5 rounded-3xl relative overflow-hidden group hover:border-[var(--c-primary)]/30 transition-all duration-500"
+                    className="flex flex-col sm:flex-row gap-4 md:gap-6 p-5 md:p-8 bg-[var(--c-card)] border border-[var(--foreground)]/5 rounded-3xl relative overflow-hidden group hover:border-[var(--c-primary)]/30 transition-all duration-500"
                   >
                     <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-[var(--foreground)]/10 group-hover:bg-[var(--c-primary)] transition-colors" />
-                    <div className="w-12 h-12 rounded-2xl bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/20 flex items-center justify-center text-[var(--c-primary)] font-black text-xl shrink-0 shadow-lg group-hover:scale-110 group-hover:bg-[var(--c-primary)] group-hover:text-black transition-all duration-500">
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/20 flex items-center justify-center text-[var(--c-primary)] font-black text-lg md:text-xl shrink-0 shadow-lg group-hover:scale-110 group-hover:bg-[var(--c-primary)] group-hover:text-black transition-all duration-500">
                       {i + 1}
                     </div>
                     <p className="text-base md:text-lg font-medium text-slate-300 leading-relaxed pt-2">
