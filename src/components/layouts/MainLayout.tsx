@@ -154,7 +154,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
               <Logo size="lg" className="!w-[180px] !h-[48px] sm:!w-[200px] sm:!h-[53px] md:!w-[220px] md:!h-[58px] xl:!w-[240px] xl:!h-[64px]" />
             </Link>
 
-            <nav className="hidden lg:flex items-center gap-4 xl:gap-8 ml-2 xl:ml-6">
+            <nav className="hidden xl:flex items-center gap-6 ml-6">
               <div className="relative">
                 <button 
                   onMouseEnter={() => setIsCategoryDropdownOpen(true)}
@@ -197,7 +197,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 </Link>
               ))}
 
-              <button className="hidden lg:flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] transition-all ml-4">
+              <button className="hidden xl:flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] transition-all ml-4">
                 <MapPin className="w-3 h-3 text-[var(--c-primary)]" /> Port Blair
               </button>
             </nav>
@@ -216,8 +216,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--c-text-secondary)]" />
           </div>
 
-          <div className="flex items-center gap-2 md:gap-4 lg:gap-6">
-            <div className="hidden lg:flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3 lg:gap-4">
+            <div className="hidden lg:flex items-center gap-2">
               <button onClick={() => router.push('/customer/wishlist')} className="p-3 text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)]"><Heart className="w-5 h-5" /></button>
             </div>
             <button onClick={() => router.push('/customer/notifications')} className="p-2 md:p-3 text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] relative">
@@ -226,13 +226,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 <span className="absolute top-2 right-2 md:top-3 md:right-3 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[var(--c-bg)] animate-pulse" />
               )}
             </button>
-            <Link href="/customer/cart" className="p-2 md:px-4 md:py-2.5 bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/20 rounded-full flex items-center gap-3 relative transition-all">
+            <Link href="/customer/cart" className="p-2 md:px-3 md:py-2 bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/20 rounded-full flex items-center gap-2 relative transition-all">
                <ShoppingCart className="w-6 h-6 md:w-5 md:h-5 text-[var(--c-primary)]" />
                <span className="absolute top-1 right-1 md:relative md:top-0 md:right-0 bg-[var(--c-primary)] md:bg-transparent rounded-full text-[8px] md:text-xs font-black text-[var(--foreground)] md:text-[var(--c-primary)] px-1">
                  {mounted ? items.length : 0}
                </span>
             </Link>
-            <button onClick={() => router.push('/customer/profile')} className="h-9 w-9 md:h-11 md:w-11 rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 flex items-center justify-center hover:border-[var(--c-primary)] transition-all overflow-hidden relative group">
+            <button onClick={() => router.push('/customer/profile')} className="h-9 w-9 md:h-10 md:w-10 rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 flex items-center justify-center hover:border-[var(--c-primary)] transition-all overflow-hidden relative group">
               {isAuthenticated ? (
                 <img 
                   src={(user?.avatar && user.avatar !== 'null' && user.avatar !== 'undefined') ? user.avatar : "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80"} 
