@@ -26,7 +26,9 @@ import {
   Palette,
   Navigation as NavigationIcon,
   Image as ImageIcon,
-  Sliders
+  Sliders,
+  Link2,
+  Target
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/authStore";
@@ -55,6 +57,8 @@ const ADMIN_NAV = [
   { label: "Staff Roles", icon: <Lock className="w-5 h-5" />, href: "/admin/roles", color: "#475569" },
   { label: "General Settings", icon: <Settings className="w-5 h-5" />, href: "/admin/settings", color: "#94A3B8" },
   { label: "Design & Themes", icon: <Palette className="w-5 h-5" />, href: "/admin/marketplace/theme", color: "#FF00FF" },
+  { label: "SEO Internal Links", icon: <Link2 className="w-5 h-5" />, href: "/admin/seo/links", color: "#22D3EE" },
+  { label: "SEO Backlinks CRM", icon: <Target className="w-5 h-5" />, href: "/admin/seo/backlinks", color: "#4ADE80" },
   { label: "Emergency Stop", icon: <AlertCircle className="w-5 h-5" />, href: "/admin/emergency", danger: true, color: "#FF0000" },
 ];
 
