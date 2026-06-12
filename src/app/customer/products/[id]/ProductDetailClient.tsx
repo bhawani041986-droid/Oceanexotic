@@ -36,6 +36,7 @@ import {
 
 import Link from "next/link";
 import CutOptionsSelector from "@/components/marketplace/CutOptionsSelector";
+import { SocialShare } from "@/components/ui/SocialShare";
 
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -449,8 +450,11 @@ export default function ProductDetailPage({
                 </Link>
  
                <div className="absolute bottom-[4px] md:bottom-[10px] right-[4px] md:right-[10px] flex gap-[2px] md:gap-[4px] z-20">
-                  <button className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-[var(--foreground)]/10 backdrop-blur-md border border-[var(--foreground)]/10 flex items-center justify-center text-[var(--foreground)] hover:bg-[var(--c-primary)] transition-all shadow-xl"><Share2 className="w-3.5 h-3.5 md:w-4 md:h-4" /></button>
-                  <button className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-danger transition-all shadow-xl"><Heart className="w-3.5 h-3.5 md:w-4 md:h-4" /></button>
+                  <SocialShare 
+                    url={typeof window !== 'undefined' ? window.location.href : `https://oceanexotic.com/customer/products/${product.id}`}
+                    title={product.name}
+                  />
+                  <button className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/10 flex items-center justify-center text-white hover:bg-danger transition-all shadow-xl ml-2"><Heart className="w-3.5 h-3.5 md:w-4 md:h-4" /></button>
                </div>
 
                {/* Amazon Lens Overlay (Yellow tinted square box) */}

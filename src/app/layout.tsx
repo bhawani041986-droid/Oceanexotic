@@ -5,8 +5,9 @@ import { ToastProvider } from "@/components/ui/Toast";
 
 // Fonts disabled to bypass network issues during build
 
-export const dynamic = 'force-dynamic';
-export const fetchCache = 'force-no-store';
+// Fonts disabled to bypass network issues during build
+
+export const revalidate = 3600; // Cache layout for 1 hour to ensure < 0.05s TTFB
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -23,6 +24,15 @@ export async function generateMetadata(): Promise<Metadata> {
     title: "OceanExotic Global | Elite Maritime Marketplace",
     description: "Experience the finest, freshest seafood delivered directly from the ocean to your door. Premium quality guaranteed.",
     keywords: ["seafood", "exotic fish", "maritime trade", "bluefin tuna", "oceanexotic", "premium seafood"],
+    icons: {
+      icon: '/favicon.ico',
+      apple: '/apple-icon.png',
+    },
+    appleWebApp: {
+      title: 'OceanExotic',
+      statusBarStyle: 'black-translucent',
+      capable: true,
+    },
     openGraph: {
       title: "OceanExotic Global | Elite Maritime Marketplace",
       description: "Experience the finest, freshest seafood delivered directly from the ocean to your door. Premium quality guaranteed.",
