@@ -15,28 +15,80 @@ export const viewport: Viewport = {
   themeColor: '#0F172A',
 };
 
-export const metadata: Metadata = {
-  metadataBase: new URL('https://oceanexotic.com'),
-  title: "OceanExotic Global | Elite Maritime Marketplace",
-  description: "Experience the finest, freshest seafood delivered directly from the ocean to your door. Premium quality guaranteed.",
-  keywords: ["seafood", "exotic fish", "maritime trade", "bluefin tuna", "oceanexotic", "premium seafood"],
-  openGraph: {
+import { createClient } from "@supabase/supabase-js";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const defaultMeta: Metadata = {
+    metadataBase: new URL('https://oceanexotic.com'),
     title: "OceanExotic Global | Elite Maritime Marketplace",
     description: "Experience the finest, freshest seafood delivered directly from the ocean to your door. Premium quality guaranteed.",
-    url: "https://oceanexotic.com",
-    siteName: "OceanExotic Global",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "OceanExotic Global Platform Integrity",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
-};
+    keywords: ["seafood", "exotic fish", "maritime trade", "bluefin tuna", "oceanexotic", "premium seafood"],
+    openGraph: {
+      title: "OceanExotic Global | Elite Maritime Marketplace",
+      description: "Experience the finest, freshest seafood delivered directly from the ocean to your door. Premium quality guaranteed.",
+      url: "https://oceanexotic.com",
+      siteName: "OceanExotic Global",
+      images: [
+        {
+          url: "/og-image.jpg",
+          width: 1200,
+          height: 630,
+          alt: "OceanExotic Global Platform Integrity",
+        },
+      ],
+      locale: "en_US",
+      type: "website",
+    },
+  };
+
+  try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    
+    if (supabaseUrl && supabaseKey) {
+      const supabase = createClient(supabaseUrl, supabaseKey);
+      const { data } = await supabase
+        .from('marketplace_settings')
+        .select('setting_value')
+        .eq('setting_key', 'customerAssets')
+        .single();
+      
+      if (data && data.setting_value) {
+        let assets = data.setting_value;
+        if (typeof assets === 'string') assets = JSON.parse(assets);
+        
+        const title1 = assets.heroTitle1 || 'Seafood';
+        const title2 = assets.heroTitle2 || 'Redefined.';
+        const dynamicTitle = `${title1} ${title2} | OceanExotic Global`;
+        const dynamicDesc = assets.heroSubtitle || defaultMeta.description;
+        const dynamicImg = assets.hero || "/og-image.jpg";
+
+        return {
+          ...defaultMeta,
+          title: dynamicTitle,
+          description: dynamicDesc as string,
+          openGraph: {
+            ...defaultMeta.openGraph,
+            title: dynamicTitle,
+            description: dynamicDesc as string,
+            images: [
+              {
+                url: dynamicImg,
+                width: 1200,
+                height: 630,
+                alt: dynamicTitle,
+              }
+            ]
+          }
+        };
+      }
+    }
+  } catch (e) {
+    console.error("SEO Metadata Generation Error:", e);
+  }
+
+  return defaultMeta;
+}
 
 import { ThemeApplier } from "@/components/ThemeApplier";
 import { CustomerThemeApplier } from "@/components/customer/CustomerThemeApplier";
