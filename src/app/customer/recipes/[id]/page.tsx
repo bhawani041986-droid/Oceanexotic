@@ -7,19 +7,24 @@ import {
   ArrowLeft, 
   Clock, 
   Flame, 
-  Globe, 
   Heart,
   ChevronLeft,
   ChevronRight,
   ShieldCheck,
   CheckCircle,
-  FileText
+  Share2,
+  MessageSquare,
+  Star,
+  Send,
+  Leaf,
+  Dumbbell
 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { RECIPES_DB } from "@/constants/recipes";
 import { FULL_API_URL as API_BASE_URL } from "@/config/api";
+import { cn } from "@/lib/utils";
 
 export default function CustomerRecipeDetailsPage() {
   const params = useParams();
@@ -28,6 +33,16 @@ export default function CustomerRecipeDetailsPage() {
 
   const [cmsContent, setCmsContent] = useState<any[]>([]);
   const [activeImg, setActiveImg] = useState(0);
+  
+  // Interactive States
+  const [isLiked, setIsLiked] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [newComment, setNewComment] = useState("");
+  const [comments, setComments] = useState([
+    { id: 1, user: "Alex M.", avatar: "https://i.pravatar.cc/150?u=1", text: "Absolutely stunning recipe! The flavors are perfectly balanced.", time: "2 hours ago", rating: 5 },
+    { id: 2, user: "Sarah K.", avatar: "https://i.pravatar.cc/150?u=2", text: "Tried this last night. The family loved it. Searing it on cast iron makes a huge difference.", time: "1 day ago", rating: 4 }
+  ]);
 
   useEffect(() => {
     const fetchCms = async () => {
@@ -45,7 +60,6 @@ export default function CustomerRecipeDetailsPage() {
   }, []);
 
   const recipe = useMemo(() => {
-    // Find static local recipes database
     const foundLocal = RECIPES_DB.find(r => r.id === id);
     if (foundLocal) {
       return {
@@ -62,10 +76,8 @@ export default function CustomerRecipeDetailsPage() {
       } as any;
     }
 
-    // Dynamic CMS recipes
     let found = cmsContent.find(c => String(c.id) === id);
     if (!found) {
-      // Fallback
       return {
         id: id || '1',
         title: 'Pan-Seared King Salmon',
@@ -125,171 +137,172 @@ export default function CustomerRecipeDetailsPage() {
   const time = recipe.metadata?.time || "25m";
   const gallery = recipe.gallery || [recipe.image_url];
 
-  const handleNextImg = () => {
-    setActiveImg((prev) => (prev + 1) % gallery.length);
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: recipe.title,
+          text: `Check out this amazing ${recipe.title} recipe on OceanExotic!`,
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.log('Share error', err);
+      }
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      alert("Recipe link copied to clipboard!");
+    }
   };
 
-  const handlePrevImg = () => {
-    setActiveImg((prev) => (prev - 1 + gallery.length) % gallery.length);
+  const handlePostComment = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newComment.trim()) return;
+    
+    const newEntry = {
+      id: Date.now(),
+      user: "You",
+      avatar: "https://i.pravatar.cc/150?u=you",
+      text: newComment,
+      time: "Just now",
+      rating: rating || 5
+    };
+    
+    setComments([newEntry, ...comments]);
+    setNewComment("");
   };
 
   return (
     <div className="min-h-screen bg-[var(--c-bg)] text-[var(--c-text-primary)] font-sans relative pb-32">
-      {/* Background ambience */}
-      <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-b from-[var(--c-primary)]/5 via-transparent to-transparent pointer-events-none" />
+      
+      {/* 1. STUNNING HERO IMAGE HEADER */}
+      <div className="relative h-[50vh] md:h-[65vh] w-full bg-black">
+        <img 
+          src={gallery[activeImg]} 
+          alt={recipe.title} 
+          className="absolute inset-0 w-full h-full object-cover opacity-80" 
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--c-bg)] via-[var(--c-bg)]/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-transparent pointer-events-none" />
 
-      <div className="container mx-auto px-4 md:px-10 pt-8 relative z-10">
-        
-        {/* Navigation bar */}
-        <div className="flex items-center justify-between mb-8">
-          <button 
-            onClick={() => router.push('/customer/recipes')} 
-            className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[var(--c-text-secondary)] hover:text-white transition-all py-2 px-4 rounded-xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/5"
-          >
-            <ArrowLeft className="w-4 h-4" /> BACK TO CHEF'S RECIPES
-          </button>
-          
-          <div className="bg-black/40 border border-[var(--foreground)]/10 px-4 py-2 rounded-xl flex items-center gap-2">
-            <ChefHat className="w-4 h-4 text-[var(--c-primary)]" />
-            <span className="text-[10px] font-black uppercase tracking-widest">Recipe Active</span>
-          </div>
-        </div>
+        {/* Back Button */}
+        <button 
+          onClick={() => router.push('/customer/recipes')} 
+          className="absolute top-8 left-4 md:left-10 z-20 flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white/80 hover:text-white transition-all py-2.5 px-5 rounded-full bg-black/40 backdrop-blur-md border border-white/10 hover:border-white/30"
+        >
+          <ArrowLeft className="w-4 h-4" /> CHEF'S RECIPES
+        </button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-          
-          {/* Left Column: Visual assets / Gallery */}
-          <div className="lg:col-span-6 space-y-6">
-            <Card 
-              className="relative aspect-video lg:aspect-[4/3] rounded-[var(--c-radius-card)] overflow-hidden border border-[var(--foreground)]/5 bg-black"
-              style={{ clipPath: 'polygon(30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0 30px)' }}
-            >
-              <img 
-                src={gallery[activeImg]} 
-                alt={recipe.title} 
-                className="w-full h-full object-cover transition-all duration-700" 
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-
-              {/* Gallery Controls */}
-              {gallery.length > 1 && (
-                <>
-                  <button 
-                    onClick={handlePrevImg}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 p-3 bg-black/60 hover:bg-black/95 rounded-full border border-white/10 text-white transition-all active:scale-95"
-                  >
-                    <ChevronLeft className="w-5 h-5" />
-                  </button>
-                  <button 
-                    onClick={handleNextImg}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 p-3 bg-black/60 hover:bg-black/95 rounded-full border border-white/10 text-white transition-all active:scale-95"
-                  >
-                    <ChevronRight className="w-5 h-5" />
-                  </button>
-
-                  {/* Indicators */}
-                  <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-1.5 z-10">
-                    {gallery.map((_: any, idx: number) => (
-                      <span 
-                        key={idx}
-                        onClick={() => setActiveImg(idx)}
-                        className={`w-2.5 h-2.5 rounded-full cursor-pointer transition-all ${idx === activeImg ? 'bg-[var(--c-primary)] scale-110 shadow-glow-purple' : 'bg-white/40'}`}
-                      />
-                    ))}
-                  </div>
-                </>
-              )}
-            </Card>
-
-            {/* Thumbnail grid */}
-            {gallery.length > 1 && (
-              <div className="grid grid-cols-4 gap-4">
-                {gallery.map((img: string, idx: number) => (
-                  <div 
-                    key={idx}
-                    onClick={() => setActiveImg(idx)}
-                    className={`aspect-video rounded-xl overflow-hidden border cursor-pointer transition-all ${idx === activeImg ? 'border-[var(--c-primary)] scale-[1.03] shadow-lg' : 'border-[var(--foreground)]/10 opacity-70 hover:opacity-100'}`}
-                  >
-                    <img src={img} className="w-full h-full object-cover" />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Right Column: Recipe Information */}
-          <div className="lg:col-span-6 space-y-8">
-            <div className="space-y-4">
-              <div className="flex flex-wrap gap-2.5">
-                <Badge variant="glass" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[10px] font-black uppercase tracking-widest px-3 py-1">
-                  {recipe.region}
-                </Badge>
-                <Badge variant="glass" className="bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[10px] font-black uppercase tracking-widest px-3 py-1">
-                  {recipe.prepType}
-                </Badge>
-                {recipe.isDynamic && (
-                  <Badge variant="glass" className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] border-[var(--c-primary)]/20 text-[10px] font-black uppercase tracking-widest px-3 py-1">
-                    DYNAMIC SYNC
-                  </Badge>
-                )}
-              </div>
-
-              <h1 className="text-3xl md:text-5xl font-black uppercase italic tracking-tight text-white leading-none">
-                {recipe.title}
-              </h1>
-
-              <p className="text-xs text-slate-400 font-bold uppercase tracking-wider">
-                Target Seafood: <span className="text-[var(--c-primary)] font-black">{recipe.fishType}</span>
-              </p>
+        {/* Title & Badges Superimposed */}
+        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12 z-20">
+          <div className="container mx-auto">
+            <div className="flex flex-wrap gap-2.5 mb-6">
+              <Badge variant="glass" className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30 text-[10px] font-black uppercase tracking-widest px-4 py-1.5 backdrop-blur-md">
+                {recipe.region}
+              </Badge>
+              <Badge variant="glass" className="bg-cyan-500/20 text-cyan-300 border-cyan-500/30 text-[10px] font-black uppercase tracking-widest px-4 py-1.5 backdrop-blur-md">
+                {recipe.prepType}
+              </Badge>
+              <Badge variant="glass" className="bg-orange-500/20 text-orange-300 border-orange-500/30 text-[10px] font-black uppercase tracking-widest px-4 py-1.5 backdrop-blur-md flex items-center gap-1.5">
+                <Flame className="w-3.5 h-3.5" /> High Protein
+              </Badge>
+              <Badge variant="glass" className="bg-purple-500/20 text-purple-300 border-purple-500/30 text-[10px] font-black uppercase tracking-widest px-4 py-1.5 backdrop-blur-md flex items-center gap-1.5">
+                <Leaf className="w-3.5 h-3.5" /> Keto-Friendly
+              </Badge>
             </div>
 
-            {/* Scientific Telemetry / Prep Specs */}
-            <Card 
-              className="p-6 bg-slate-900/40 border border-white/5 relative overflow-hidden"
-              style={{ clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)' }}
-            >
-              <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-cyan-500 via-[var(--c-primary)] to-transparent" />
-              
-              <div className="grid grid-cols-3 gap-6 text-center">
-                <div className="space-y-1">
-                  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest block">DIFFICULTY LEVEL</span>
-                  <div className="flex items-center justify-center gap-1.5 text-white font-black italic uppercase text-sm md:text-base">
-                    <Flame className="w-4 h-4 text-[var(--c-primary)]" />
-                    {difficulty}
-                  </div>
-                </div>
-                <div className="space-y-1 border-x border-white/5">
-                  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest block">PREPARATION TIME</span>
-                  <div className="flex items-center justify-center gap-1.5 text-white font-black italic uppercase text-sm md:text-base">
-                    <Clock className="w-4 h-4 text-cyan-400" />
-                    {time}
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest block">OMEGA-3 LEVEL</span>
-                  <div className="flex items-center justify-center gap-1.5 text-white font-black italic uppercase text-sm md:text-base">
-                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                    OPTIMAL
-                  </div>
-                </div>
-              </div>
-            </Card>
+            <h1 className="text-4xl md:text-7xl font-black uppercase italic tracking-tight text-white leading-[1.1] drop-shadow-2xl max-w-4xl">
+              {recipe.title}
+            </h1>
 
+            <p className="text-sm md:text-base text-slate-300 font-bold uppercase tracking-widest mt-6 flex items-center gap-3">
+              Target Seafood: <span className="text-[var(--c-primary)] font-black text-lg">{recipe.fishType}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. INTERACTIVE FLOATING ACTION BAR */}
+      <div className="sticky top-[76px] z-40 bg-[var(--c-bg)]/80 backdrop-blur-2xl border-b border-[var(--foreground)]/5 shadow-sm">
+        <div className="container mx-auto px-4 md:px-12 py-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          
+          {/* Scientific Telemetry */}
+          <div className="flex items-center gap-6 md:gap-12 text-center md:text-left">
+            <div className="flex items-center gap-2.5">
+              <Flame className="w-5 h-5 text-[var(--c-primary)]" />
+              <div>
+                <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest block leading-none">Difficulty</span>
+                <span className="text-sm text-white font-black italic uppercase">{difficulty}</span>
+              </div>
+            </div>
+            <div className="w-[1px] h-8 bg-white/10 hidden md:block" />
+            <div className="flex items-center gap-2.5">
+              <Clock className="w-5 h-5 text-cyan-400" />
+              <div>
+                <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest block leading-none">Cook Time</span>
+                <span className="text-sm text-white font-black italic uppercase">{time}</span>
+              </div>
+            </div>
+            <div className="w-[1px] h-8 bg-white/10 hidden md:block" />
+            <div className="flex items-center gap-2.5">
+              <ShieldCheck className="w-5 h-5 text-emerald-400" />
+              <div>
+                <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest block leading-none">Omega-3</span>
+                <span className="text-sm text-white font-black italic uppercase">Optimal</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Social Actions */}
+          <div className="flex items-center gap-3 bg-[var(--c-card)] p-1.5 rounded-full border border-[var(--foreground)]/5 shadow-inner">
+            <button 
+              onClick={() => setIsLiked(!isLiked)}
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider transition-all",
+                isLiked ? "bg-red-500/10 text-red-500 shadow-glow-red" : "hover:bg-white/5 text-slate-400"
+              )}
+            >
+              <Heart className={cn("w-4 h-4 transition-transform", isLiked ? "fill-current scale-110" : "")} /> 
+              {isLiked ? "Saved" : "Save"}
+            </button>
+            <button 
+              onClick={handleShare}
+              className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+            >
+              <Share2 className="w-4 h-4" /> Share
+            </button>
+            <button 
+              onClick={() => document.getElementById('comments-section')?.scrollIntoView({ behavior: 'smooth' })}
+              className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider text-slate-400 hover:bg-white/5 hover:text-white transition-all"
+            >
+              <MessageSquare className="w-4 h-4" /> {comments.length} Comments
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 md:px-12 pt-12 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+          
+          {/* Left Column: Recipe Steps & Ingredients */}
+          <div className="lg:col-span-8 space-y-16">
+            
             {/* Ingredients Board */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-black uppercase italic tracking-widest text-white flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[var(--c-primary)]" /> Required Ingredients
+            <div className="space-y-6">
+              <h3 className="text-2xl font-black uppercase italic tracking-widest text-white flex items-center gap-3">
+                <span className="w-2 h-8 rounded-full bg-[var(--c-primary)]" /> Required Ingredients
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {recipe.ingredients.map((ing: string, i: number) => (
                   <div 
                     key={i} 
-                    className="flex items-center gap-3 p-4 bg-[var(--c-card)] border border-[var(--foreground)]/5 rounded-xl"
+                    className="flex items-center gap-4 p-5 bg-[var(--c-card)] border border-[var(--foreground)]/5 rounded-2xl hover:border-[var(--c-primary)]/30 hover:bg-[var(--foreground)]/5 transition-colors cursor-default"
                   >
-                    <div className="w-6 h-6 rounded-md bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400">
-                      <CheckCircle className="w-3.5 h-3.5" />
+                    <div className="w-8 h-8 rounded-full bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/20 flex items-center justify-center text-[var(--c-primary)] shrink-0">
+                      <CheckCircle className="w-4 h-4" />
                     </div>
-                    <span className="text-xs md:text-sm font-medium text-slate-300 leading-relaxed">
+                    <span className="text-sm font-medium text-slate-200 leading-relaxed">
                       {ing}
                     </span>
                   </div>
@@ -297,23 +310,23 @@ export default function CustomerRecipeDetailsPage() {
               </div>
             </div>
 
-            {/* Steps / Cooking Steps */}
-            <div className="space-y-4 pt-4">
-              <h3 className="text-lg font-black uppercase italic tracking-widest text-white flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[var(--c-primary)]" /> Cooking Steps
+            {/* Cooking Steps */}
+            <div className="space-y-6">
+              <h3 className="text-2xl font-black uppercase italic tracking-widest text-white flex items-center gap-3">
+                <span className="w-2 h-8 rounded-full bg-[var(--c-primary)]" /> Cooking Sequence
               </h3>
 
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {recipe.steps.map((step: string, i: number) => (
                   <div 
                     key={i}
-                    className="flex items-start gap-4 p-5 bg-[var(--c-card)] border border-[var(--foreground)]/5 rounded-2xl relative overflow-hidden"
+                    className="flex gap-6 p-6 md:p-8 bg-[var(--c-card)] border border-[var(--foreground)]/5 rounded-3xl relative overflow-hidden group hover:border-[var(--c-primary)]/30 transition-all duration-500"
                   >
-                    <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-[var(--c-primary)]" />
-                    <div className="w-7 h-7 rounded-full bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/30 flex items-center justify-center text-[var(--c-primary)] font-black text-xs shrink-0 shadow-md">
+                    <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-[var(--foreground)]/10 group-hover:bg-[var(--c-primary)] transition-colors" />
+                    <div className="w-12 h-12 rounded-2xl bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/20 flex items-center justify-center text-[var(--c-primary)] font-black text-xl shrink-0 shadow-lg group-hover:scale-110 group-hover:bg-[var(--c-primary)] group-hover:text-black transition-all duration-500">
                       {i + 1}
                     </div>
-                    <p className="text-sm font-medium text-slate-300 leading-relaxed pt-0.5">
+                    <p className="text-base md:text-lg font-medium text-slate-300 leading-relaxed pt-2">
                       {step}
                     </p>
                   </div>
@@ -321,10 +334,133 @@ export default function CustomerRecipeDetailsPage() {
               </div>
             </div>
 
+            {/* Discussion & Comments Section */}
+            <div id="comments-section" className="space-y-8 pt-12 border-t border-white/5">
+              <h3 className="text-2xl font-black uppercase italic tracking-widest text-white flex items-center gap-3">
+                <span className="w-2 h-8 rounded-full bg-[var(--c-primary)]" /> Chef's Discussion ({comments.length})
+              </h3>
+              
+              {/* Add Comment / Rate Component */}
+              <Card className="p-6 md:p-8 bg-[var(--c-card)] border border-white/5 rounded-[var(--c-radius-card)] shadow-2xl">
+                <form onSubmit={handlePostComment} className="space-y-6">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <span className="text-xs font-black uppercase tracking-widest text-slate-400">Rate this recipe</span>
+                    <div className="flex items-center gap-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star 
+                          key={star}
+                          onClick={() => setRating(star)}
+                          onMouseEnter={() => setHoverRating(star)}
+                          onMouseLeave={() => setHoverRating(0)}
+                          className={cn(
+                            "w-8 h-8 cursor-pointer transition-all",
+                            (hoverRating || rating) >= star 
+                              ? "text-yellow-400 fill-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)] scale-110" 
+                              : "text-slate-600 hover:text-slate-500"
+                          )}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="relative">
+                    <textarea 
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                      placeholder="Share your experience or modifications..."
+                      className="w-full h-32 bg-black/40 border border-white/10 rounded-2xl p-5 text-sm text-white resize-none focus:outline-none focus:border-[var(--c-primary)] transition-colors placeholder:text-slate-600"
+                    />
+                  </div>
+                  
+                  <div className="flex justify-end">
+                    <Button 
+                      type="submit"
+                      disabled={!newComment.trim()}
+                      className="bg-[var(--c-primary)] text-black hover:bg-[var(--c-primary-light)] px-8 py-6 rounded-2xl font-black uppercase tracking-widest text-xs flex items-center gap-3 transition-all active:scale-95 disabled:opacity-50"
+                    >
+                      Post Review <Send className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </form>
+              </Card>
+
+              {/* Comments Feed */}
+              <div className="space-y-6 mt-8">
+                {comments.map((comment) => (
+                  <div key={comment.id} className="flex gap-4 md:gap-6 p-6 bg-[var(--c-card)]/40 border border-white/5 rounded-3xl backdrop-blur-sm">
+                    <img src={comment.avatar} alt={comment.user} className="w-12 h-12 rounded-full border-2 border-white/10" />
+                    <div className="flex-1 space-y-2">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
+                        <div className="flex items-center gap-3">
+                          <span className="font-bold text-white">{comment.user}</span>
+                          <span className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">{comment.time}</span>
+                        </div>
+                        <div className="flex gap-1 text-yellow-400">
+                          {Array.from({ length: comment.rating }).map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-current" />)}
+                        </div>
+                      </div>
+                      <p className="text-sm text-slate-300 leading-relaxed">{comment.text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+
+          {/* Right Column: Nutrition & Context Sidebar */}
+          <div className="lg:col-span-4 space-y-8">
+            <Card className="p-8 bg-[var(--c-card)] border border-[var(--c-primary)]/20 rounded-[var(--c-radius-card)] shadow-[0_0_40px_-10px_rgba(0,209,255,0.1)] relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--c-primary)]/10 blur-3xl rounded-full pointer-events-none" />
+              
+              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--c-primary)] mb-6 flex items-center gap-2">
+                <Dumbbell className="w-4 h-4" /> Nutritional Profile
+              </h4>
+              
+              <div className="space-y-4">
+                <div className="flex justify-between items-center pb-4 border-b border-white/5">
+                  <span className="text-sm text-slate-400">Calories</span>
+                  <span className="font-black text-white">420 kcal</span>
+                </div>
+                <div className="flex justify-between items-center pb-4 border-b border-white/5">
+                  <span className="text-sm text-slate-400">Protein</span>
+                  <span className="font-black text-emerald-400">45g</span>
+                </div>
+                <div className="flex justify-between items-center pb-4 border-b border-white/5">
+                  <span className="text-sm text-slate-400">Omega-3</span>
+                  <span className="font-black text-cyan-400">2.1g</span>
+                </div>
+                <div className="flex justify-between items-center pb-4 border-b border-white/5">
+                  <span className="text-sm text-slate-400">Carbs</span>
+                  <span className="font-black text-white">12g</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-slate-400">Fats</span>
+                  <span className="font-black text-white">18g</span>
+                </div>
+              </div>
+              
+              <div className="mt-8 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                <p className="text-[10px] text-emerald-400 font-bold uppercase tracking-wider leading-relaxed text-center">
+                  This recipe is certified healthy by OceanExotic's culinary team.
+                </p>
+              </div>
+            </Card>
+
+            {/* Required Equipment */}
+            <Card className="p-8 bg-[var(--c-card)]/50 border border-white/5 rounded-[var(--c-radius-card)]">
+              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-6">
+                Recommended Equipment
+              </h4>
+              <ul className="space-y-3">
+                <li className="flex items-center gap-3 text-sm text-slate-300"><div className="w-1.5 h-1.5 bg-slate-500 rounded-full" /> Cast Iron Skillet</li>
+                <li className="flex items-center gap-3 text-sm text-slate-300"><div className="w-1.5 h-1.5 bg-slate-500 rounded-full" /> Fish Spatula</li>
+                <li className="flex items-center gap-3 text-sm text-slate-300"><div className="w-1.5 h-1.5 bg-slate-500 rounded-full" /> Meat Thermometer</li>
+              </ul>
+            </Card>
           </div>
 
         </div>
-
       </div>
     </div>
   );

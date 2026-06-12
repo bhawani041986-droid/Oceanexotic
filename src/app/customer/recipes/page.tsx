@@ -228,59 +228,56 @@ export default function CustomerRecipesPage() {
           </div>
         ) : filteredRecipes.length > 0 ? (
           <div className="space-y-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {paginatedRecipes.map((recipe) => (
                 <Card 
                   key={recipe.id}
                   onClick={() => router.push(`/customer/recipes/${recipe.id}`)}
-                  className="group relative h-96 overflow-hidden rounded-[var(--c-radius-card)] border border-[var(--foreground)]/5 shadow-premium flex flex-col justify-end p-6 cursor-pointer hover:border-[var(--c-primary)]/40 transition-all duration-500"
-                  style={{ clipPath: 'polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px)' }}
+                  className="group relative h-36 md:h-40 overflow-hidden rounded-2xl border border-[var(--foreground)]/5 shadow-premium flex items-center p-0 cursor-pointer hover:border-[var(--c-primary)]/40 transition-all duration-500 bg-[var(--c-card)]/40 hover:bg-[var(--foreground)]/5"
+                  style={{ clipPath: 'polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px)' }}
                 >
-                  <img 
-                    src={recipe.image} 
-                    alt={recipe.title} 
-                    className="absolute inset-0 w-full h-full object-cover opacity-100 group-hover:scale-110 transition-transform duration-[1200ms] ease-out" 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-transparent pointer-events-none" />
+                  <div className="w-1/3 h-full relative overflow-hidden shrink-0">
+                    <img 
+                      src={recipe.image} 
+                      alt={recipe.title} 
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-110 transition-transform duration-[1200ms] ease-out" 
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-[var(--c-card)]" />
+                  </div>
 
-                  <div className="absolute top-0 left-0 w-full h-[1.5px] bg-[var(--c-primary)] opacity-0 group-hover:opacity-60 transition-opacity animate-scan pointer-events-none" />
-
-                  {recipe.isDynamic && (
-                    <div className="absolute top-4 right-4 bg-[var(--c-primary)]/20 border border-[var(--c-primary)]/40 px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-wider text-[var(--c-primary)]">
-                      DYNAMIC SYNC
-                    </div>
-                  )}
-
-                  <div className="relative z-10 space-y-3.5">
-                    <div className="flex flex-wrap gap-2">
-                      <Badge variant="glass" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[9px] font-black uppercase tracking-widest px-2 py-0.5">
+                  <div className="flex-1 p-4 md:p-6 flex flex-col justify-center h-full relative z-10">
+                    <div className="flex flex-wrap gap-1.5 mb-2">
+                      <Badge variant="glass" className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5">
                         {recipe.region}
                       </Badge>
-                      <Badge variant="glass" className="bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[9px] font-black uppercase tracking-widest px-2 py-0.5">
+                      <Badge variant="glass" className="bg-cyan-500/10 text-cyan-400 border-cyan-500/20 text-[8px] font-black uppercase tracking-widest px-1.5 py-0.5">
                         {recipe.prepType}
-                      </Badge>
-                      <Badge variant="glass" className="bg-[var(--foreground)]/5 border-[var(--foreground)]/10 text-[9px] font-black uppercase tracking-widest px-2 py-0.5 text-slate-400">
-                        {recipe.time}
                       </Badge>
                     </div>
 
-                    <h3 className="text-xl font-black uppercase italic leading-tight text-white group-hover:text-[var(--c-primary)] transition-colors duration-300">
+                    <h3 className="text-sm md:text-lg font-black uppercase italic leading-tight text-[var(--c-text-primary)] group-hover:text-[var(--c-primary)] transition-colors duration-300 line-clamp-2">
                       {recipe.title}
                     </h3>
 
-                    <div className="flex justify-between items-center pt-2 border-t border-[var(--foreground)]/5">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                        Seafood: <span className="text-[var(--c-primary)] font-black">{recipe.fishType}</span>
+                    <div className="flex justify-between items-center pt-3 mt-3 border-t border-[var(--foreground)]/5 w-full">
+                      <p className="text-[9px] font-bold text-[var(--c-text-secondary)] uppercase tracking-wider truncate mr-2">
+                        SEAFOOD: <span className="text-[var(--c-primary)] font-black">{recipe.fishType}</span>
                       </p>
-                      <span className="text-[10px] font-black uppercase tracking-widest text-[var(--c-primary)] flex items-center gap-1 group-hover:translate-x-1 transition-transform duration-300">
-                        VIEW RECIPE <ChevronRight className="w-3.5 h-3.5" />
+                      <span className="text-[9px] font-black uppercase tracking-widest text-[var(--c-primary)] flex items-center gap-1 group-hover:translate-x-1 transition-transform duration-300 shrink-0">
+                        {recipe.time} <ChevronRight className="w-3 h-3" />
                       </span>
                     </div>
                   </div>
 
+                  {recipe.isDynamic && (
+                    <div className="absolute top-2 left-2 bg-[var(--c-primary)]/90 px-1.5 py-0.5 rounded text-[7px] font-black uppercase tracking-wider text-[var(--c-bg)]">
+                      DYNAMIC
+                    </div>
+                  )}
+
                   {/* Cyber Corner Elements */}
-                  <div className="absolute top-2 right-2 w-3 h-3 border-t border-r border-white/20 pointer-events-none group-hover:border-[var(--c-primary)]/40 transition-colors" />
-                  <div className="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-white/20 pointer-events-none group-hover:border-[var(--c-primary)]/40 transition-colors" />
+                  <div className="absolute top-2 right-2 w-3 h-3 border-t border-r border-[var(--foreground)]/20 pointer-events-none group-hover:border-[var(--c-primary)]/40 transition-colors" />
+                  <div className="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-[var(--foreground)]/20 pointer-events-none group-hover:border-[var(--c-primary)]/40 transition-colors" />
                 </Card>
               ))}
             </div>
