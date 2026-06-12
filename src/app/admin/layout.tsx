@@ -191,8 +191,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <Bell className="w-5 h-5 text-[var(--foreground)]" />
                   <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-danger border-2 border-bg-primary rounded-full" />
                 </Link>
-                <Link href="/admin/profile" className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-xs font-black text-primary hover:bg-primary/20 transition-all cursor-pointer">
-                  {user?.name?.[0] || 'A'}
+                <Link href="/admin/profile" className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-xs font-black text-primary hover:bg-primary/20 transition-all cursor-pointer overflow-hidden">
+                  {user?.avatar ? (
+                     <img src={user.avatar} alt="Admin" className="w-full h-full object-cover" />
+                  ) : (
+                     user?.name?.[0] || 'A'
+                  )}
                 </Link>
               </div>
             </header>

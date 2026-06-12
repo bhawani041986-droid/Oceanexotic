@@ -51,6 +51,7 @@ export default function AdminProfilePage() {
   const [showStaticPassword, setShowStaticPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmittingProfile, setIsSubmittingProfile] = useState(false);
+  const [imageFit, setImageFit] = useState<"cover" | "contain">("cover");
 
   useEffect(() => {
     if (user) {
@@ -180,14 +181,25 @@ export default function AdminProfilePage() {
               <div className="absolute top-0 right-0 p-8 opacity-5">
                  <ShieldCheck className="w-24 h-24 text-primary" />
               </div>
-              <div className="relative inline-block mx-auto cursor-pointer" onClick={() => fileInputRef.current?.click()}>
-                 <div className="w-32 h-32 rounded-[30px] bg-[var(--foreground)]/5 border border-primary/20 flex items-center justify-center text-primary shadow-glow-purple relative z-10 overflow-hidden">
-                    {profile.avatar_url ? <img src={profile.avatar_url} className="w-full h-full object-cover" /> : <User className="w-12 h-12" />}
+              <div className="relative inline-block mx-auto">
+                 <div 
+                   className="w-32 h-32 rounded-[30px] bg-[var(--foreground)]/5 border border-primary/20 flex items-center justify-center text-primary shadow-glow-purple relative z-10 overflow-hidden cursor-pointer"
+                   onClick={() => fileInputRef.current?.click()}
+                 >
+                    {profile.avatar_url ? <img src={profile.avatar_url} className={`w-full h-full object-${imageFit}`} /> : <User className="w-12 h-12" />}
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all">
                        <Fingerprint className="w-8 h-8 text-[var(--foreground)]" />
                     </div>
                  </div>
-                 <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-full bg-success border-4 border-bg-primary flex items-center justify-center text-[var(--foreground)] shadow-lg z-20">
+                 {profile.avatar_url && (
+                    <button 
+                       onClick={(e) => { e.stopPropagation(); setImageFit(prev => prev === "cover" ? "contain" : "cover"); }}
+                       className="absolute -top-2 -right-2 bg-bg-primary border border-primary/20 text-text-secondary hover:text-primary text-[8px] font-black uppercase px-2 py-1 rounded-full z-30 transition-all shadow-glow-purple"
+                    >
+                       FIT: {imageFit}
+                    </button>
+                 )}
+                 <div className="absolute -bottom-2 -right-2 w-10 h-10 rounded-full bg-success border-4 border-bg-primary flex items-center justify-center text-[var(--foreground)] shadow-lg z-20 pointer-events-none">
                     <ShieldCheck className="w-5 h-5" />
                  </div>
               </div>
