@@ -91,9 +91,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       font,
       setFont
     }}>
-      <div className={`${theme} ${font}`}>
-        {children}
-      </div>
+      <>{children}</>
     </ThemeContext.Provider>
   );
 }
