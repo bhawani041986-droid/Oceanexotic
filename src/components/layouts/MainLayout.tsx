@@ -370,12 +370,12 @@ export default function MainLayout({ children }: MainLayoutProps) {
         )}
       </AnimatePresence>
 
-      <main className="flex-1">
+      <main className="flex-1 w-full">
         {children}
       </main>
 
       {/* 13. ENTERPRISE FOOTER - GLOBAL SYNC */}
-      <footer className="bg-[var(--c-bg-alt)] border-t border-[var(--foreground)]/5 py-8 md:py-32 px-4 md:px-6 mt-20">
+      <footer className="mt-auto w-full bg-[var(--c-bg-alt)] border-t border-[var(--foreground)]/5 py-8 md:py-16 px-4 md:px-6">
         <div className="container mx-auto">
            <div className="grid grid-cols-2 lg:grid-cols-5 border border-[var(--foreground)]/5">
               {/* BOX 1: BRAND IDENTITY */}
