@@ -41,6 +41,7 @@ export const metadata: Metadata = {
 import { ThemeApplier } from "@/components/ThemeApplier";
 import { CustomerThemeApplier } from "@/components/customer/CustomerThemeApplier";
 import { AppSplashScreen } from "@/components/ui/AppSplashScreen";
+import { CUSTOMER_THEMES } from "@/config/customerThemes";
 
 export default function RootLayout({
   children,
@@ -95,6 +96,64 @@ export default function RootLayout({
                 var glow = localStorage.getItem('oceanexotic-glow');
                 if (blur) document.documentElement.style.setProperty('--glass-blur-factor', (parseInt(blur) / 100).toString());
                 if (glow) document.documentElement.style.setProperty('--glow-opacity-factor', (parseInt(glow) / 100).toString());
+                
+                var isCustomer = !window.location.pathname.startsWith('/admin') && !window.location.pathname.startsWith('/seller');
+                if (isCustomer) {
+                  var customerThemeId = 'theme-ocean-neon';
+                  var storeStr = localStorage.getItem('oceanexotic-governance-settings');
+                  if (storeStr) {
+                    var s = JSON.parse(storeStr).state;
+                    if (s && s.customerTheme) customerThemeId = s.customerTheme;
+                  }
+                  
+                  var ALL_THEMES = ${JSON.stringify(CUSTOMER_THEMES)};
+                  var cTheme = ALL_THEMES.find(function(t) { return t.id === customerThemeId; }) || ALL_THEMES[0];
+                  
+                  if (cTheme) {
+                    var root = document.documentElement;
+                    root.style.setProperty('--c-primary', cTheme.colors.primary);
+                    root.style.setProperty('--c-primary-light', cTheme.colors.primaryLight);
+                    root.style.setProperty('--c-secondary', cTheme.colors.secondary);
+                    root.style.setProperty('--c-accent', cTheme.colors.accent);
+                    root.style.setProperty('--c-bg', cTheme.colors.bg);
+                    root.style.setProperty('--c-bg-alt', cTheme.colors.bgAlt);
+                    root.style.setProperty('--c-card', cTheme.colors.card);
+                    root.style.setProperty('--c-text-primary', cTheme.colors.textPrimary);
+                    root.style.setProperty('--c-text-secondary', cTheme.colors.textSecondary);
+                    
+                    var isLight = cTheme.id.includes('light') || cTheme.id.includes('burst') || cTheme.id.includes('passion') || cTheme.colors.bg === '#F8FAFC' || cTheme.colors.bg === '#FFFFFF';
+                    
+                    root.style.setProperty('--primary', cTheme.colors.primary);
+                    root.style.setProperty('--primary-light', cTheme.colors.primaryLight);
+                    root.style.setProperty('--secondary', cTheme.colors.bgAlt);
+                    root.style.setProperty('--background', cTheme.colors.bg);
+                    root.style.setProperty('--card', cTheme.colors.card);
+                    root.style.setProperty('--foreground', cTheme.colors.textPrimary);
+                    root.style.setProperty('--muted-foreground', cTheme.colors.textSecondary);
+                    root.style.setProperty('--border', isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.08)');
+                    
+                    root.style.setProperty('--c-radius-btn', cTheme.visuals.radiusBtn);
+                    root.style.setProperty('--c-radius-card', cTheme.visuals.radiusCard);
+                    root.style.setProperty('--c-shadow-glow', cTheme.visuals.shadowGlow);
+                    root.style.setProperty('--c-gradient-hero', cTheme.visuals.gradientHero);
+                    root.style.setProperty('--c-glass-opacity', cTheme.visuals.glassOpacity);
+                    root.style.setProperty('--c-glass-blur', cTheme.visuals.glassBlur);
+                    root.style.setProperty('--c-font-family', cTheme.fontFamily);
+                    
+                    root.style.setProperty('--font-sans', cTheme.fontFamily);
+                    root.style.setProperty('--radius-button', cTheme.visuals.radiusBtn);
+                    root.style.setProperty('--radius-card', cTheme.visuals.radiusCard);
+                    root.style.setProperty('--shadow-glow', cTheme.visuals.shadowGlow);
+                    
+                    if (isLight) {
+                      root.classList.add('customer-light', 'light');
+                      root.classList.remove('customer-dark', 'dark');
+                    } else {
+                      root.classList.add('customer-dark', 'dark');
+                      root.classList.remove('customer-light', 'light');
+                    }
+                  }
+                }
               } catch (e) {}
             `,
           }}
