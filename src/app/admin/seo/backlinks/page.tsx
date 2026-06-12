@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Link2, Plus, Search, Trash2, ExternalLink, Activity, Target } from "lucide-react";
+import { Link2, Plus, Search, Trash2, ExternalLink, Activity, Target, Send } from "lucide-react";
 import { createClient } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -12,6 +12,7 @@ export default function SeoBacklinksManager() {
   const [campaigns, setCampaigns] = useState<any[]>([]);
   const [domain, setDomain] = useState("");
   const [email, setEmail] = useState("");
+  const [isSending, setIsSending] = useState<string | null>(null);
   const { toast } = useToast();
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -48,6 +49,37 @@ export default function SeoBacklinksManager() {
     await supabase.from('seo_backlinks').delete().eq('id', id);
     fetchCampaigns();
     toast("Campaign deleted", "info");
+  };
+
+  const handleSendPitch = async (camp: any) => {
+    if (!camp.contact_email) {
+      return toast("No contact email found for this prospect", "error");
+    }
+    
+    setIsSending(camp.id);
+    try {
+      const res = await fetch('/api/seo/send-pitch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: camp.id,
+          domain: camp.target_domain,
+          email: camp.contact_email,
+          anchorText: camp.target_anchor_text || "premium seafood online"
+        })
+      });
+      
+      if (res.ok) {
+        toast("Automated Pitch Dispatched!", "success");
+        fetchCampaigns(); // Will refresh and show status as 'contacted'
+      } else {
+        toast("Failed to send pitch", "error");
+      }
+    } catch (e) {
+      toast("Error sending pitch", "error");
+    } finally {
+      setIsSending(null);
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -128,7 +160,18 @@ export default function SeoBacklinksManager() {
                   </span>
                 </td>
                 <td className="p-4 font-black italic">{camp.domain_authority || 0}/100</td>
-                <td className="p-4 text-right">
+                <td className="p-4 text-right flex justify-end gap-2">
+                  {camp.status === 'prospect' && (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => handleSendPitch(camp)} 
+                      disabled={isSending === camp.id}
+                      className="border-[var(--c-primary)]/30 text-[var(--c-primary)] hover:bg-[var(--c-primary)]/10"
+                    >
+                      <Send className={`w-4 h-4 ${isSending === camp.id ? 'animate-pulse' : ''}`} />
+                    </Button>
+                  )}
                   <Button variant="outline" size="sm" onClick={() => handleDelete(camp.id)} className="border-danger/30 text-danger hover:bg-danger/10">
                     <Trash2 className="w-4 h-4" />
                   </Button>
