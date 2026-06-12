@@ -35,6 +35,10 @@ function buildApiUrl(host: string, port: string = DEFAULT_API_PORT): string {
  * - Override anytime with EXPO_PUBLIC_API_URL in mobile/.env
  */
 export function resolveApiBaseUrl(): string {
+  if (!__DEV__) {
+    return "https://oceanexotic.com/api";
+  }
+
   const envUrl = process.env.EXPO_PUBLIC_API_URL?.trim();
   const extraUrl = Constants.expoConfig?.extra?.apiUrl as string | undefined;
 
@@ -66,6 +70,10 @@ export function resolveApiBaseUrl(): string {
 export const FULL_API_URL = resolveApiBaseUrl();
 
 export function resolveWebAdminUrl(): string {
+  if (!__DEV__) {
+    return "https://oceanexotic.com";
+  }
+
   const envUrl = process.env.EXPO_PUBLIC_WEB_ADMIN_URL?.trim();
 
   if (Platform.OS === "web") {

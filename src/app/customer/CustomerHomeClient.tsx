@@ -1724,7 +1724,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                         </div>
                      </Button>
                      <a 
-                        href="https://expo.dev/artifacts/eas/Dn-3OR2UVwRKi1M163N1qvyXn5EHtFbIaxhP1vMCuZ8.apk" 
+                        href="https://expo.dev/artifacts/eas/V0UcN4l7sd_aNIkvVPpv-Px38kc6axrdHBsyeO0AsCc.apk" 
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex-1 h-14 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 gap-3 flex items-center justify-center hover:bg-[var(--c-primary)]/20 transition-all group/btn rounded-[--radius-button]"
