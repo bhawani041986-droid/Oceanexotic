@@ -36,11 +36,15 @@
 
 /* HIDDEN GOOGLE TRANSLATE WIDGET */
 .goog-te-banner-frame.skiptranslate { display: none !important; }
-body { top: 0px !important; }
+body { top: 0px !important; margin-top: 0px !important; }
 #google_translate_element { display: none !important; }
 .goog-tooltip { display: none !important; }
 .goog-tooltip:hover { display: none !important; }
 .goog-text-highlight { background-color: transparent !important; border: none !important; box-shadow: none !important; }
+.VIpgJd-ZVi9od-ORHb-OEVmcd { display: none !important; }
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf { display: none !important; }
+.skiptranslate iframe { display: none !important; }
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf-ti6hGc { display: none !important; }
 
 :root {
   --foreground: #F8FAFC;
