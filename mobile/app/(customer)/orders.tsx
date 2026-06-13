@@ -108,7 +108,7 @@ export default function OrdersScreen() {
                     className="flex-1 h-10 rounded-xl"
                     style={{ borderColor: colors.border, borderWidth: 1 }}
                   />
-                  {order.status === "IN TRANSIT" && (
+                  {order.status !== "DELIVERED" && (
                     <Button
                       label="TRACK"
                       onPress={() =>
