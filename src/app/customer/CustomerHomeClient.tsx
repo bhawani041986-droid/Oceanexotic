@@ -1295,7 +1295,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                   .filter(c => activeBatch === 'ALL' || c.batch_label === activeBatch)
                   .map((catchItem) => (
                   <motion.div 
-                     key={catchItem.catch_id} 
+                     key={catchItem.id} 
                      initial={{ opacity: 0, scale: 0.95 }}
                      whileInView={{ opacity: 1, scale: 1 }}
                      viewport={{ once: true }}
@@ -1316,7 +1316,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                               {/* Live Status Overlay */}
                               <div className="absolute top-2 left-2 z-20 flex flex-col gap-1">
                                  <Badge variant="glass" className="bg-emerald-500/90 text-[7px] font-black uppercase text-white border-none px-2 py-0.5 animate-pulse shadow-md">
-                                    {catchItem.freshness_label}
+                                    {catchItem.status}
                                  </Badge>
                                  <Badge variant="glass" className="bg-black/70 backdrop-blur-md text-[7px] font-black uppercase text-white border-white/10 px-2 py-0.5">
                                     {catchItem.batch_label} BATCH
