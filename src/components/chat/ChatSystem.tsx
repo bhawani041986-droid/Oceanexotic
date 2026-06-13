@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { MessageBubble } from '@/components/chat/MessageBubble';
 import { useVideoCall } from '@/components/video/VideoCallProvider';
+import { NewChatModal } from '@/components/chat/NewChatModal';
 
 interface ChatSystemProps {
   currentUserId: string;
@@ -33,6 +34,7 @@ export function ChatSystem({ currentUserId, role, backUrl }: ChatSystemProps) {
   const [message, setMessage] = React.useState('');
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
   const [selectedMessages, setSelectedMessages] = React.useState<number[]>([]);
+  const [isNewChatModalOpen, setIsNewChatModalOpen] = React.useState(false);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -98,14 +100,7 @@ export function ChatSystem({ currentUserId, role, backUrl }: ChatSystemProps) {
                  </div>
                  {isAdvancedLayout && (
                    <button 
-                     onClick={() => {
-                       const userId = window.prompt("Enter the User ID (e.g. USR-001 or SEL-001) to start a chat:");
-                       if (userId) {
-                         // A simple hack to trigger the API to create a message, which creates a conversation if needed, 
-                         // or we can just send a temp message locally and let them type.
-                         alert("To start a chat, please select an existing conversation or use the API seeding tool.");
-                       }
-                     }}
+                     onClick={() => setIsNewChatModalOpen(true)}
                      className="w-10 h-10 shrink-0 bg-[#0077B6] text-white rounded-xl flex items-center justify-center hover:bg-[#0077B6]/80 transition-colors"
                      title="Start New Chat"
                    >
@@ -139,6 +134,14 @@ export function ChatSystem({ currentUserId, role, backUrl }: ChatSystemProps) {
                     </button>
                   ))}
                </div>
+               <NewChatModal 
+                 isOpen={isNewChatModalOpen} 
+                 onClose={() => setIsNewChatModalOpen(false)} 
+                 currentUserId={currentUserId} 
+                 onChatCreated={(convId) => {
+                   setActiveChat(convId);
+                 }}
+               />
             </div>
          </aside>
 
