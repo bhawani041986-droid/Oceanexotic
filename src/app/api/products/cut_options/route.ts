@@ -1,39 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 
 export async function GET(req: NextRequest) {
   try {
     const productId = req.nextUrl.searchParams.get('product_id');
+    const area = req.nextUrl.searchParams.get('area');
+    
     if (!productId) {
       return NextResponse.json({ status: "error", message: "Missing product_id" }, { status: 400 });
     }
 
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
-    const { data: cuts, error } = await supabase
-      .from('product_cut_options')
-      .select('*')
-      .eq('product_id', productId)
-      .eq('is_available', 1);
-
-    if (error) {
-      return NextResponse.json({ status: "error", message: error.message }, { status: 500 });
+    const phpServerUrl = process.env.NEXT_PUBLIC_API_BASE ?? 'http://127.0.0.1:8081/FISH_MARKET/api';
+    let url = `${phpServerUrl}/products/cut_options.php?product_id=${encodeURIComponent(productId)}`;
+    if (area) {
+      url += `&area=${encodeURIComponent(area)}`;
     }
 
-    const { data: product } = await supabase.from('products').select('price').eq('id', productId).single();
-    const basePrice = product?.price || 0;
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error(`PHP Server returned ${res.status}`);
+    }
 
-    const mapped = cuts.map((c: any) => ({
-      ...c,
-      label: c.cut_type,
-      final_price: Number(basePrice) + Number(c.price_flat_add || 0)
-    }));
-
-    return NextResponse.json({ status: "success", cut_options: mapped });
+    const data = await res.json();
+    return NextResponse.json(data);
   } catch (error: any) {
-    console.error("Cut Options API Error:", error);
+    console.error("Cut Options API Proxy Error:", error);
     return NextResponse.json({ status: "error", message: error.message }, { status: 500 });
   }
 }
