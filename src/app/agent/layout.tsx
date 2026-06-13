@@ -407,7 +407,7 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
            <div className="flex items-center gap-4">
               <button onClick={toggleMobileMenu} className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors" style={{ backgroundColor: mood.text + '10', color: mood.text }}><Menu className="w-6 h-6" /></button>
               <Link href="/agent/dashboard" className="flex items-center gap-2">
-                 <Logo size="lg" />
+                 <Logo size="sm" className="!w-[140px] !h-[35px]" />
               </Link>
            </div>
            <div className="flex items-center gap-3">

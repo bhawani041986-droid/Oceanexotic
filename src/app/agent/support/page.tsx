@@ -346,7 +346,7 @@ export default function AgentSupportHub() {
           onClose={() => setActiveVideoRoom(null)}
         />
       )}
-      <div className="p-4 md:p-10 pb-28 md:pb-10 h-[100dvh]">
+      <div className="p-4 md:p-10 pb-28 md:pb-10 h-[calc(100dvh-64px)] md:h-[100dvh]">
         <div className="h-full bg-bg-secondary/20 rounded-[20px] md:rounded-[32px] border border-[var(--foreground)]/5 overflow-hidden flex flex-col relative">
           <div className="flex-1 flex flex-col lg:flex-row h-full overflow-hidden">
           
