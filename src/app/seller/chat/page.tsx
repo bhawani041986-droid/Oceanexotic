@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { ChatSystem } from '@/components/chat/ChatSystem';
-import { useAuth } from '@/store/authStore';
+import { useAuthStore } from '@/store/authStore';
 import { VideoCallProvider } from '@/components/video/VideoCallProvider';
 
 export default function SellerChatPage() {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading } = useAuthStore();
   
   if (isLoading) return null;
   
