@@ -13,6 +13,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Link, useRouter } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import i18n from "@/lib/i18n";
+import { useSettingsStore } from "@/store/settingsStore";
 import { loginSchema, type LoginFormValues } from "@/lib/validation/loginSchema";
 import { useAuthStore } from "@/store/authStore";
 import { useLogin } from "@/hooks/useLogin";
@@ -30,6 +32,7 @@ const BG_IMAGE =
 export default function LoginScreen() {
   const router = useRouter();
   const { login } = useAuthStore();
+  const { language } = useSettingsStore();
   const loginMutation = useLogin();
   const { toast, ToastHost } = useToast();
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -113,10 +116,10 @@ export default function LoginScreen() {
               </Link>
               <View className="items-center gap-1">
                 <Text className="text-2xl font-bold tracking-tight text-foreground">
-                  Admiral Login
+                  {i18n.t("login_title") || "Admiral Login"}
                 </Text>
                 <Text className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-                  Access the Global Seafood Network
+                  {i18n.t("login_subtitle") || "Access the Global Seafood Network"}
                 </Text>
                 {__DEV__ && Platform.OS !== "web" ? (
                   <Text className="mt-2 max-w-xs text-center text-[9px] text-muted-foreground/80">

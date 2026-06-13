@@ -89,13 +89,11 @@ export default function OrderDetailsScreen() {
             Sovereign Settlement Manifest • {MOCK_ORDER.date}
           </Text>
 
-          {MOCK_ORDER.status !== "DELIVERED" && (
-            <Button
-              label="TRACK LIVE STATUS"
-              onPress={() => router.push({ pathname: "/orders/[id]/tracking", params: { id } } as never)}
-              className="mt-4 h-10 w-full rounded-xl"
-            />
-          )}
+          <Button
+            label="TRACK LIVE STATUS"
+            onPress={() => router.push({ pathname: "/orders/[id]/tracking", params: { id } } as never)}
+            className="mt-4 h-10 w-full rounded-xl"
+          />
         </View>
 
         {/* 🔐 SECURE HANDOFF PROTOCOL */}

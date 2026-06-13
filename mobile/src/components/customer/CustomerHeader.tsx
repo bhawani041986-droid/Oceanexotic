@@ -14,6 +14,8 @@ import { cn } from "@/lib/utils";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { LanguageSelector } from "@/components/LanguageSelector";
 
+import i18n from "@/lib/i18n";
+
 interface CustomerHeaderProps {
   showSearch?: boolean;
 }
@@ -52,7 +54,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
   const pathname = usePathname();
   const { user, logout } = useAuthStore();
   const cartCount = useCartStore((s) => s.itemCount());
-  const theme = useSettingsStore((s) => s.theme);
+  const { theme, language } = useSettingsStore();
   const { toast, ToastHost } = useToast();
   const [search, setSearch] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -181,7 +183,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               value={search}
               onChangeText={setSearch}
               onSubmitEditing={onSearch}
-              placeholder="Search harvests..."
+              placeholder={i18n.t("search_placeholder") || "Search harvests..."}
               placeholderTextColor={colors.textMuted}
               returnKeyType="search"
               className="h-10 rounded-xl border px-4 text-xs"
@@ -195,7 +197,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               className="mt-1 text-[8px] font-black uppercase tracking-widest"
               style={{ color: colors.textMuted }}
             >
-              Port Blair • Live Delivery Hub
+              {i18n.t("live_delivery_hub") || "Port Blair • Live Delivery Hub"}
             </Text>
           </View>
         ) : null}
@@ -246,8 +248,8 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               >
                 <View className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
                 <View className="flex-1">
-                  <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>Local Delivery Hub</Text>
-                  <Text className="text-[10px] font-bold" style={{ color: colors.text }} numberOfLines={1}>{user?.email ?? "Guest Mode"}</Text>
+                  <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>{i18n.t("local_delivery_hub") || "Local Delivery Hub"}</Text>
+                  <Text className="text-[10px] font-bold" style={{ color: colors.text }} numberOfLines={1}>{user?.email ?? i18n.t("guest_mode") ?? "Guest Mode"}</Text>
                 </View>
               </View>
 
@@ -295,7 +297,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                 }}
                 className="w-full py-4 rounded-xl border border-red-500/20 bg-red-500/10 items-center active:bg-red-500/20"
               >
-                <Text className="text-xs font-black uppercase tracking-widest text-red-500">Sign Out</Text>
+                <Text className="text-xs font-black uppercase tracking-widest text-red-500">{i18n.t("logout") || "Sign Out"}</Text>
               </Pressable>
               <Text className="text-[7px] font-black text-center uppercase tracking-widest" style={{ color: colors.textMuted }}>OceanExotic Mobile App v1.4</Text>
             </View>
