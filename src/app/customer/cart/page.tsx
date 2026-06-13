@@ -169,19 +169,19 @@ export default function CartPage() {
 
                           {item.sellerId !== 'ADDON' && (
                             <div className="mt-2 flex flex-col gap-2">
-                              <label className="inline-flex items-center cursor-pointer select-none">
-                                <input 
-                                  type="checkbox" 
-                                  checked={!!item.isMarinated} 
-                                  onChange={() => toggleMarination(item.id)}
-                                  className="sr-only peer"
-                                />
-                                <div className="relative w-8 h-4 bg-[var(--foreground)]/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-[var(--c-primary)]"></div>
-                                <span className="ms-2 text-[9px] md:text-[10px] font-black uppercase text-rose-500 tracking-wider">🌶️ Pre-Marinate (+₹150)</span>
-                              </label>
-                              {item.isMarinated && (
-                                <Badge className="bg-rose-500/10 text-rose-500 border border-rose-500/20 text-[8px] font-black uppercase w-fit">
-                                  {item.selectedMarinade || 'Tandoori Island Rub'}
+                              {/* Integrated Add-ons from Product Details */}
+                              {item.metadata && item.metadata.prep_option && (
+                                <Badge className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] border border-[var(--c-primary)]/20 text-[8px] font-black uppercase w-fit tracking-widest flex items-center gap-1.5">
+                                  <span className="text-[10px]">{item.metadata.prep_option.prep_type === 'MARINATED' ? '🧂' : item.metadata.prep_option.prep_type === 'GRILLED' ? '🔥' : '🍽️'}</span>
+                                  {item.metadata.prep_option.name}
+                                  {item.metadata.prep_option.price_flat_add > 0 && ` (+₹${item.metadata.prep_option.price_flat_add})`}
+                                </Badge>
+                              )}
+                              
+                              {/* Legacy Cart Add-ons */}
+                              {item.isMarinated && !item.metadata?.prep_option && (
+                                <Badge className="bg-rose-500/10 text-rose-500 border border-rose-500/20 text-[8px] font-black uppercase w-fit tracking-widest flex items-center gap-1.5">
+                                  <span>🌶️</span> {item.selectedMarinade || 'Pre-Marinated (+₹150)'}
                                 </Badge>
                               )}
                             </div>

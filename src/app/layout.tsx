@@ -234,7 +234,7 @@ export default function RootLayout({
         }} />
         <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async defer></script>
       </head>
-      <body className="font-sans antialiased min-h-screen selection:bg-primary/30 selection:text-white">
+      <body className="font-sans antialiased min-h-screen selection:bg-primary/30 selection:text-white" suppressHydrationWarning>
         <div id="google_translate_element" style={{ display: 'none' }}></div>
         <ThemeApplier />
         <CustomerThemeApplier />
