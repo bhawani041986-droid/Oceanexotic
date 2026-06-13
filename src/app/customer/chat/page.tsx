@@ -359,99 +359,100 @@ export default function ChatPage() {
                )}
             </header>
 
-            {/* Message Stream */}
-            <div className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-8">
-               <AnimatePresence initial={false}>
-                 {messages.map((msg: any) => {
-                   return (
-                   <motion.div 
-                     key={msg.id}
-                     layout
-                     initial={{ opacity: 0, x: msg.sender_id === currentUserId ? 20 : -20 }}
-                     animate={{ opacity: 1, x: 0 }}
-                     exit={{ opacity: 0, scale: 0.8, height: 0, marginTop: 0, marginBottom: 0, overflow: 'hidden' }}
-                     transition={{ duration: 0.2, type: 'spring', stiffness: 300, damping: 25 }}
-                     className={cn(
-                       "flex items-center gap-3",
-                       msg.sender_id === currentUserId ? "justify-end" : "justify-start"
-                     )}
-                   >
-                      {msg.sender_id === currentUserId && (
-                        <button 
-                          onClick={() => toggleSelection(msg.id)}
+            <div className="flex-1 flex flex-col items-center w-full">
+              <div className="flex-1 w-full max-w-5xl overflow-y-auto no-scrollbar p-6 space-y-8">
+                 <AnimatePresence initial={false}>
+                   {messages.map((msg: any) => {
+                     return (
+                     <motion.div 
+                       key={msg.id}
+                       layout
+                       initial={{ opacity: 0, x: msg.sender_id === currentUserId ? 20 : -20 }}
+                       animate={{ opacity: 1, x: 0 }}
+                       exit={{ opacity: 0, scale: 0.8, height: 0, marginTop: 0, marginBottom: 0, overflow: 'hidden' }}
+                       transition={{ duration: 0.2, type: 'spring', stiffness: 300, damping: 25 }}
+                       className={cn(
+                         "flex items-center gap-3",
+                         msg.sender_id === currentUserId ? "justify-end" : "justify-start"
+                       )}
+                     >
+                        {msg.sender_id === currentUserId && (
+                          <button 
+                            onClick={() => toggleSelection(msg.id)}
+                            className={cn(
+                              "p-1 rounded-full transition-colors",
+                              selectedMessages.includes(msg.id) ? "text-primary" : "text-white/20 hover:text-white/40"
+                            )}
+                          >
+                            {selectedMessages.includes(msg.id) ? <CheckCircle className="w-5 h-5" /> : <Circle className="w-5 h-5" />}
+                          </button>
+                        )}
+
+                        <div 
+                          onClick={() => selectedMessages.length > 0 && msg.sender_id === currentUserId ? toggleSelection(msg.id) : undefined}
                           className={cn(
-                            "p-1 rounded-full transition-colors",
-                            selectedMessages.includes(msg.id) ? "text-primary" : "text-white/20 hover:text-white/40"
+                            "max-w-[85%] md:max-w-[60%] space-y-2 cursor-pointer",
+                            selectedMessages.length > 0 && msg.sender_id === currentUserId ? "hover:brightness-110" : ""
                           )}
                         >
-                          {selectedMessages.includes(msg.id) ? <CheckCircle className="w-5 h-5" /> : <Circle className="w-5 h-5" />}
-                        </button>
-                      )}
+                           <div className={cn(
+                             "px-4 py-3 rounded-2xl text-sm italic relative group transition-all",
+                             msg.sender_id === currentUserId ? "bg-primary text-white rounded-tr-none shadow-glow-purple" : "bg-white/5 border border-white/10 text-white rounded-tl-none"
+                           )}>
+                              <div className={cn("absolute top-0 w-3 h-3", msg.sender_id === currentUserId ? "right-0 bg-primary -mr-[11px]" : "left-0 bg-white/5 border-l border-t border-white/10 -ml-[11px]")} style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }} />
+                              
+                              <p className="leading-relaxed font-medium">{msg.message_text}</p>
 
-                      <div 
-                        onClick={() => selectedMessages.length > 0 && msg.sender_id === currentUserId ? toggleSelection(msg.id) : undefined}
-                        className={cn(
-                          "max-w-[85%] md:max-w-[60%] space-y-2 cursor-pointer",
-                          selectedMessages.length > 0 && msg.sender_id === currentUserId ? "hover:brightness-110" : ""
-                        )}
-                      >
-                         <div className={cn(
-                           "p-6 rounded-[32px] text-sm italic relative group transition-all",
-                           msg.sender_id === currentUserId ? "bg-primary text-white rounded-tr-none shadow-glow-purple" : "bg-white/5 border border-white/10 text-white rounded-tl-none"
-                         )}>
-                            <div className={cn("absolute top-0 w-4 h-4", msg.sender_id === currentUserId ? "right-0 bg-primary -mr-2" : "left-0 bg-white/5 border-l border-t border-white/10 -ml-2")} style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }} />
-                            
-                            <p className="leading-relaxed font-medium">{msg.message_text}</p>
+                              <div className={cn("mt-4 flex items-center gap-2 text-[9px] font-black opacity-40 uppercase", msg.sender_id === currentUserId ? "justify-end" : "justify-start")}>
+                                 {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                 {msg.sender_id === currentUserId && (
+                                   <div className="flex items-center gap-2 ml-1">
+                                      <CheckCheck className="w-3 h-3 text-[var(--foreground)]" />
+                                      {selectedMessages.length === 0 && (
+                                        <button 
+                                          onClick={(e) => { e.stopPropagation(); handleDeleteMessage(msg.id); }}
+                                          className="text-white/40 hover:text-white transition-colors"
+                                          title="Delete Message"
+                                        >
+                                          <Trash2 className="w-3 h-3" />
+                                        </button>
+                                      )}
+                                   </div>
+                                 )}
+                              </div>
+                           </div>
+                        </div>
+                     </motion.div>
+                     );
+                   })}
+                 </AnimatePresence>
+              </div>
 
-                            <div className={cn("mt-4 flex items-center gap-2 text-[9px] font-black opacity-40 uppercase", msg.sender_id === currentUserId ? "justify-end" : "justify-start")}>
-                               {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                               {msg.sender_id === currentUserId && (
-                                 <div className="flex items-center gap-2 ml-1">
-                                    <CheckCheck className="w-3 h-3 text-[var(--foreground)]" />
-                                    {selectedMessages.length === 0 && (
-                                      <button 
-                                        onClick={(e) => { e.stopPropagation(); handleDeleteMessage(msg.id); }}
-                                        className="text-white/40 hover:text-white transition-colors"
-                                        title="Delete Message"
-                                      >
-                                        <Trash2 className="w-3 h-3" />
-                                      </button>
-                                    )}
-                                 </div>
-                               )}
-                            </div>
-                         </div>
-                      </div>
-                   </motion.div>
-                   );
-                 })}
-               </AnimatePresence>
+              {/* Input Hub */}
+              <footer className="w-full max-w-5xl p-4 md:p-6 bg-[#0B1120] relative z-10 shrink-0">
+                 <div className="flex items-end gap-2 md:gap-4">
+                    <div className="flex gap-1 md:gap-2">
+                       <button className="p-3 md:p-4 bg-[var(--foreground)]/5 rounded-2xl hover:bg-[var(--foreground)]/10 transition-colors text-text-secondary"><Paperclip className="w-5 h-5" /></button>
+                       <button className="p-3 md:p-4 bg-[var(--foreground)]/5 rounded-2xl hover:bg-[var(--foreground)]/10 transition-colors text-text-secondary"><ImageIcon className="w-5 h-5" /></button>
+                    </div>
+                    <div className="flex-1 relative">
+                       <textarea 
+                         value={message}
+                         onChange={(e) => setMessage(e.target.value)}
+                         placeholder="Type a message..."
+                         rows={1}
+                         className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-2xl p-4 md:px-6 text-sm italic focus:border-primary outline-none transition-all no-scrollbar resize-none max-h-32"
+                       />
+                    </div>
+                    <Button 
+                      onClick={handleSendMessage}
+                      className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-primary text-white shadow-glow-purple flex items-center justify-center p-0 shrink-0 hover:scale-105 active:scale-95 transition-all mb-0.5"
+                    >
+                       <Send className="w-5 h-5 md:w-6 md:h-6" />
+                    </Button>
+                 </div>
+              </footer>
             </div>
-
-            {/* Input Hub */}
-            <footer className="p-6 bg-[#0B1120] border-t border-[var(--foreground)]/5 relative z-10">
-               <div className="max-w-5xl mx-auto flex items-end gap-4">
-                  <div className="flex gap-2">
-                     <button className="p-4 bg-[var(--foreground)]/5 rounded-2xl hover:bg-[var(--foreground)]/10 transition-colors text-text-secondary"><Paperclip className="w-5 h-5" /></button>
-                     <button className="p-4 bg-[var(--foreground)]/5 rounded-2xl hover:bg-[var(--foreground)]/10 transition-colors text-text-secondary"><ImageIcon className="w-5 h-5" /></button>
-                  </div>
-                  <div className="flex-1 relative">
-                     <textarea 
-                       value={message}
-                       onChange={(e) => setMessage(e.target.value)}
-                       placeholder="Authorize a message node..."
-                       rows={1}
-                       className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-[32px] p-4 px-8 text-sm italic focus:border-primary outline-none transition-all no-scrollbar resize-none max-h-32"
-                     />
-                  </div>
-                  <Button 
-                    onClick={handleSendMessage}
-                    className="w-14 h-14 rounded-2xl bg-primary text-white shadow-glow-purple flex items-center justify-center p-0 shrink-0 hover:scale-105 active:scale-95 transition-all"
-                  >
-                     <Send className="w-6 h-6" />
-                  </Button>
-               </div>
-            </footer>
 
          </main>
 

@@ -50,6 +50,8 @@ export default function CustomerLayout() {
           <Stack.Screen name="cart" />
           <Stack.Screen name="product/[id]" />
           <Stack.Screen name="orders/[id]" />
+          <Stack.Screen name="chat/index" />
+          <Stack.Screen name="chat/[id]" />
           <Stack.Screen name="checkout" />
         </Stack>
       </View>

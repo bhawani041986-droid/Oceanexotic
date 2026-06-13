@@ -41,6 +41,12 @@ const NotificationIcon = ({ color = "#F8FAFC" }: { color?: string }) => (
   </Svg>
 );
 
+const ChatIcon = ({ color = "#F8FAFC" }: { color?: string }) => (
+  <Svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+    <Path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+  </Svg>
+);
+
 export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -99,6 +105,19 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
           </View>
           <View className="flex-row items-center gap-2">
             <LanguageSelector />
+            
+            <Pressable
+              onPress={() => router.push("/chat")}
+              className="relative h-9 w-9 items-center justify-center rounded-full border active:opacity-70"
+              style={{
+                borderColor: colors.border,
+                backgroundColor: colors.card
+              }}
+            >
+              <ChatIcon color={colors.text} />
+              {/* Optional beacon if unread messages exist */}
+            </Pressable>
+
             <Pressable
               onPress={handleNotificationPress}
               className="relative h-9 w-9 items-center justify-center rounded-full border active:opacity-70"
