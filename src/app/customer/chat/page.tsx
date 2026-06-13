@@ -137,7 +137,6 @@ export default function ChatPage() {
           conversation_id: activeChat,
           sender_id: currentUserId,
           message_text: textToSend,
-          message_type: 'TEXT',
           is_read: 0
         }]);
         
