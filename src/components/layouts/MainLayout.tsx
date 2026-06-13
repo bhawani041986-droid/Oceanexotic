@@ -258,7 +258,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         }}
       >
         <div className="flex items-center justify-around h-full px-2">
-          {navItems.filter(item => ["Home", "Market", "Chat", "Profile"].includes(item.label)).map((item, i) => {
+          {navItems.filter(item => ["Home", "Marketplace", "Recipes", "Orders", "Profile"].includes(item.label)).slice(0, 5).map((item, i) => {
             const isActive = pathname === item.href;
             return (
               <button 
