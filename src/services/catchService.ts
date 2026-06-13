@@ -14,9 +14,9 @@ const LIVE_FETCH: RequestInit = {
   next: { revalidate: 0 },
 };
 
-// ISR 5min for SEO pages
+// ISR 5min for SEO pages - temporarily set to no-store to flush broken cache
 const SEO_FETCH: RequestInit = {
-  next: { revalidate: 300 },
+  cache: 'no-store',
 };
 
 /**

@@ -31,7 +31,6 @@ export async function GET(req: NextRequest) {
       .from('product_cut_options')
       .select('*')
       .eq('product_id', productId)
-      .eq('is_available', 1)
       .order('sort_order', { ascending: true });
 
     if (error) {
@@ -52,13 +51,15 @@ export async function GET(req: NextRequest) {
         'SKIN_OFF':   { label: 'Skin Off',      desc: 'Skin removed for easy cooking', icon: '⚪' },
     };
 
-    const enriched = (cuts || []).map((c: any) => {
+    const enriched = (cuts || [])
+      .filter((c: any) => c.is_available === 1 || c.is_available === true)
+      .map((c: any) => {
       const meta = labels[c.cut_type] || { label: c.cut_type, desc: '', icon: '🐟' };
       const finalPrice = Math.round(Number(basePrice) * (1 + Number(c.price_modifier_percent || 0) / 100) + Number(c.price_flat_add || 0));
       return {
         ...c,
         ...meta,
-        is_available: Boolean(c.is_available),
+        is_available: true,
         final_price: finalPrice,
         price_modifier_percent: Number(c.price_modifier_percent),
         price_flat_add: Number(c.price_flat_add),

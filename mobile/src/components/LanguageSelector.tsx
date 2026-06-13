@@ -40,7 +40,7 @@ export function LanguageSelector() {
   const activeLang = LANGUAGES.find(l => l.code === currentLang) || LANGUAGES[0];
 
   return (
-    <>
+    <View>
       <Pressable 
         onPress={() => setModalVisible(true)}
         className="h-9 items-center justify-center rounded-xl border flex-row px-2 gap-1 active:opacity-70"
@@ -91,7 +91,7 @@ export function LanguageSelector() {
           </View>
         </View>
       </Modal>
-    </>
+    </View>
   );
 }
 

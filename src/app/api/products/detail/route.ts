@@ -59,6 +59,34 @@ export async function GET(request: Request) {
       }
     }
 
+    // 5. Fetch Addons
+    const { data: allAddons } = await supabase
+      .from('addons')
+      .select('*')
+      .eq('is_active', 1)
+      .order('id', { ascending: true });
+    
+    let filteredAddons = [];
+    if (allAddons) {
+      // Simplified time-filtering (we'll just pass all active addons to client for simplicity, 
+      // or we can filter by area)
+      filteredAddons = allAddons.filter((addon: any) => {
+        if (area && addon.allowed_areas && addon.allowed_areas.trim() !== '') {
+            const allowed = addon.allowed_areas.split(',').map((a: string) => a.trim());
+            if (!allowed.includes(area)) {
+                return false;
+            }
+        }
+        return true;
+      });
+    }
+    
+    product.addons = filteredAddons.map((a: any) => ({
+      ...a,
+      is_active: 1,
+      price: Number(a.price)
+    }));
+
     return NextResponse.json(product);
   } catch (error: any) {
     console.error("Product Detail API Error:", error);
