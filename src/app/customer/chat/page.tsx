@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { ChatSystem } from '@/components/chat/ChatSystem';
-import { useAuth } from '@/lib/hooks/useAuth';
+import { useAuth } from '@/store/authStore';
 import { VideoCallProvider } from '@/components/video/VideoCallProvider';
 
 export default function CustomerChatPage() {
