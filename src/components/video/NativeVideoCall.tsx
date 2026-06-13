@@ -45,10 +45,24 @@ export function NativeVideoCall({ roomID, userName, userID, onClose }: NativeVid
 
   const localStream = useRef<MediaStream | null>(null);
   const peerConnection = useRef<RTCPeerConnection | null>(null);
-  const channel = useRef<any>(null);
+  const pollingInterval = useRef<any>(null);
+  const lastCheckedAt = useRef<string>(new Date(Date.now() - 10000).toISOString());
 
   // Use a queue for early ICE candidates
   const earlyCandidates = useRef<RTCIceCandidateInit[]>([]);
+
+  const sendSignal = async (type: string, payloadObj: any = {}) => {
+    try {
+      await supabase.from('webrtc_signals').insert({
+        room_id: roomID,
+        sender_id: userID,
+        signal_type: type,
+        payload: payloadObj
+      });
+    } catch (e) {
+      console.error("Signal send failed", e);
+    }
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -84,113 +98,94 @@ export function NativeVideoCall({ roomID, userName, userID, onClose }: NativeVid
           }
         };
 
-        // 3. Initialize Supabase Signaling Channel
-        const chan = supabase.channel(`video-${roomID}`, {
-          config: {
-            broadcast: { ack: false }
-          }
-        });
-        channel.current = chan;
-
         // Handle ICE Candidates generated locally
         pc.onicecandidate = (event) => {
           if (event.candidate) {
-            chan.send({
-              type: 'broadcast',
-              event: 'webrtc',
-              payload: { type: 'ice-candidate', candidate: event.candidate, sender: userID }
-            });
+            sendSignal('ice-candidate', { candidate: event.candidate });
           }
         };
 
-        // Listen for WebRTC signals from remote
-        chan.on('broadcast', { event: 'webrtc' }, async ({ payload }) => {
-          if (payload.sender === userID) return; // Ignore own messages
+        // 3. Database Polling Logic (Replaces WebSockets)
+        await sendSignal('peer-joined');
 
+        pollingInterval.current = setInterval(async () => {
+          if (!mounted) return;
           try {
-            if (payload.type === 'peer-joined') {
-              // Acknowledge so the late joiner knows the early joiner is already here
-              chan.send({
-                type: 'broadcast',
-                event: 'webrtc',
-                payload: { type: 'peer-joined-ack', sender: userID }
-              });
+            const { data, error } = await supabase
+              .from('webrtc_signals')
+              .select('*')
+              .eq('room_id', roomID)
+              .neq('sender_id', userID)
+              .gt('created_at', lastCheckedAt.current)
+              .order('created_at', { ascending: true });
 
-              if (userID < payload.sender && pc.signalingState === 'stable') {
-                const offer = await pc.createOffer();
-                await pc.setLocalDescription(offer);
-                chan.send({
-                  type: 'broadcast',
-                  event: 'webrtc',
-                  payload: { type: 'offer', offer, sender: userID }
-                });
-              }
-            }
-            else if (payload.type === 'peer-joined-ack') {
-              if (userID < payload.sender && pc.signalingState === 'stable') {
-                const offer = await pc.createOffer();
-                await pc.setLocalDescription(offer);
-                chan.send({
-                  type: 'broadcast',
-                  event: 'webrtc',
-                  payload: { type: 'offer', offer, sender: userID }
-                });
-              }
-            }
-            else if (payload.type === 'offer') {
-              await pc.setRemoteDescription(new RTCSessionDescription(payload.offer));
+            if (error) throw error;
+
+            if (data && data.length > 0) {
+              lastCheckedAt.current = data[data.length - 1].created_at;
               
-              // Process any ICE candidates we received before the offer
-              for (const candidate of earlyCandidates.current) {
-                await pc.addIceCandidate(new RTCIceCandidate(candidate));
-              }
-              earlyCandidates.current = [];
+              for (const sig of data) {
+                const type = sig.signal_type;
+                const payload = sig.payload;
+                const sender = sig.sender_id;
 
-              const answer = await pc.createAnswer();
-              await pc.setLocalDescription(answer);
-              chan.send({
-                type: 'broadcast',
-                event: 'webrtc',
-                payload: { type: 'answer', answer, sender: userID }
-              });
-            } 
-            else if (payload.type === 'answer') {
-              await pc.setRemoteDescription(new RTCSessionDescription(payload.answer));
-            } 
-            else if (payload.type === 'ice-candidate') {
-              if (pc.remoteDescription) {
-                await pc.addIceCandidate(new RTCIceCandidate(payload.candidate));
-              } else {
-                earlyCandidates.current.push(payload.candidate);
+                try {
+                  if (type === 'peer-joined') {
+                    await sendSignal('peer-joined-ack');
+                    if (userID < sender && pc.signalingState === 'stable') {
+                      const offer = await pc.createOffer();
+                      await pc.setLocalDescription(offer);
+                      await sendSignal('offer', { offer });
+                    }
+                  }
+                  else if (type === 'peer-joined-ack') {
+                    if (userID < sender && pc.signalingState === 'stable') {
+                      const offer = await pc.createOffer();
+                      await pc.setLocalDescription(offer);
+                      await sendSignal('offer', { offer });
+                    }
+                  }
+                  else if (type === 'offer') {
+                    await pc.setRemoteDescription(new RTCSessionDescription(payload.offer));
+                    
+                    // Process any ICE candidates we received before the offer
+                    for (const candidate of earlyCandidates.current) {
+                      await pc.addIceCandidate(new RTCIceCandidate(candidate));
+                    }
+                    earlyCandidates.current = [];
+
+                    const answer = await pc.createAnswer();
+                    await pc.setLocalDescription(answer);
+                    await sendSignal('answer', { answer });
+                  } 
+                  else if (type === 'answer') {
+                    await pc.setRemoteDescription(new RTCSessionDescription(payload.answer));
+                  } 
+                  else if (type === 'ice-candidate') {
+                    if (pc.remoteDescription) {
+                      await pc.addIceCandidate(new RTCIceCandidate(payload.candidate));
+                    } else {
+                      earlyCandidates.current.push(payload.candidate);
+                    }
+                  }
+                  else if (type === 'peer-left') {
+                    toast("The other party left the call.", "info");
+                    cleanup();
+                  }
+                } catch (err) {
+                  console.error("Error processing signal:", type, err);
+                }
               }
-            }
-            else if (payload.type === 'peer-left') {
-              toast("The other party left the call.", "info");
-              cleanup();
             }
           } catch (err) {
-            console.error("WebRTC Error:", err);
+            console.error("Polling error", err);
           }
-        });
-
-        // Join channel
-        chan.subscribe((status: string, err?: Error) => {
-          if (status === 'SUBSCRIBED') {
-            chan.send({
-              type: 'broadcast',
-              event: 'webrtc',
-              payload: { type: 'peer-joined', sender: userID }
-            });
-          } else if (status === 'CHANNEL_ERROR') {
-            console.error("Realtime channel error:", err);
-            toast("Connection interrupted due to network instability.", "error");
-          }
-        });
+        }, 1500);
 
         // Set a 30-second timeout for the connection
         setTimeout(() => {
           if (mounted && !isConnected) {
-            toast("Connection timed out. The other party might be unavailable or network is blocked.", "warning");
+            toast("Connection timed out. The other party might be unavailable or network is blocked.", "error");
           }
         }, 30000);
 
@@ -212,15 +207,12 @@ export function NativeVideoCall({ roomID, userName, userID, onClose }: NativeVid
   }, [roomID, userID]);
 
   const cleanup = () => {
-    if (channel.current) {
-      channel.current.send({
-        type: 'broadcast',
-        event: 'webrtc',
-        payload: { type: 'peer-left', sender: userID }
-      }).catch(() => {});
-      channel.current.unsubscribe();
-      channel.current = null;
+    if (pollingInterval.current) {
+      clearInterval(pollingInterval.current);
+      pollingInterval.current = null;
     }
+    sendSignal('peer-left').catch(() => {});
+    
     if (peerConnection.current) {
       peerConnection.current.close();
       peerConnection.current = null;
