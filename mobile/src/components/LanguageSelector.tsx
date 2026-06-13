@@ -40,10 +40,10 @@ export function LanguageSelector() {
   const activeLang = LANGUAGES.find(l => l.code === currentLang) || LANGUAGES[0];
 
   return (
-    <View>
+    <View className="shrink-0 relative z-50">
       <Pressable 
         onPress={() => setModalVisible(true)}
-        className="h-9 items-center justify-center rounded-xl border flex-row px-2 gap-1 active:opacity-70"
+        className="h-9 min-w-[48px] items-center justify-center rounded-xl border flex-row px-2 gap-1 active:opacity-70"
         style={{ borderColor: colors.border, backgroundColor: colors.card }}
       >
         <Globe size={14} color={colors.text} />

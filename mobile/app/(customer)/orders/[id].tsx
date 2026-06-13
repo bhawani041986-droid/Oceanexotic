@@ -9,7 +9,7 @@ import { useToast } from "@/components/ui/Toast";
 // Mock Order Metadata (1:1 with Web)
 const MOCK_ORDER = {
   date: "May 09, 2026",
-  status: "DELIVERED",
+  status: "OUT_FOR_DELIVERY",
   total: 12800,
   shipping: 500,
   tax: 640,
