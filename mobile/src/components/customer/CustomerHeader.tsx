@@ -88,10 +88,10 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
     <SafeAreaView edges={["top"]} className="border-b" style={{ backgroundColor: colors.bg, borderBottomColor: colors.border }}>
       <View className="px-3 pb-2 pt-1">
         <View className="flex-row items-center justify-between h-11">
-          <View className="flex-row items-center gap-2.5">
+          <View className="flex-row items-center gap-1.5 flex-shrink">
             <Pressable 
               onPress={() => setIsMenuOpen(true)} 
-              className="h-9 w-9 items-center justify-center rounded-xl border active:opacity-70"
+              className="h-8 w-8 items-center justify-center rounded-xl border active:opacity-70 shrink-0"
               style={{
                 borderColor: colors.border,
                 backgroundColor: colors.card
@@ -99,16 +99,16 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
             >
               <MenuIcon color={primaryColor} />
             </Pressable>
-            <Pressable onPress={() => router.push("/home")} className="justify-center">
-              <Logo size="sm" style={{ width: 128, height: 32 }} />
+            <Pressable onPress={() => router.push("/home")} className="justify-center shrink">
+              <Logo size="sm" style={{ width: 100, height: 26 }} />
             </Pressable>
           </View>
-          <View className="flex-row items-center gap-2">
+          <View className="flex-row items-center gap-1.5 shrink-0">
             <LanguageSelector />
             
             <Pressable
               onPress={() => router.push("/chat")}
-              className="relative h-9 w-9 items-center justify-center rounded-full border active:opacity-70"
+              className="relative h-8 w-8 items-center justify-center rounded-full border active:opacity-70"
               style={{
                 borderColor: colors.border,
                 backgroundColor: colors.card
@@ -119,27 +119,29 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
             </Pressable>
 
             <Pressable
-              onPress={handleNotificationPress}
-              className="relative h-9 w-9 items-center justify-center rounded-full border active:opacity-70"
+              onPress={() => router.push("/notifications")}
+              className="relative h-8 w-8 items-center justify-center rounded-full border active:opacity-70"
               style={{
                 borderColor: colors.border,
                 backgroundColor: colors.card
               }}
             >
               <NotificationIcon color={colors.text} />
-              {/* Subtle active notification beacon */}
-              <View 
-                className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full border" 
-                style={{ 
-                  backgroundColor: primaryColor,
-                  borderColor: colors.card
-                }} 
-              />
+              {/* Only show beacon if there are unread notifications. Defaulting to 0 for now. */}
+              {false && (
+                <View 
+                  className="absolute right-2 top-2 h-2 w-2 rounded-full border" 
+                  style={{ 
+                    backgroundColor: primaryColor,
+                    borderColor: colors.card
+                  }} 
+                />
+              )}
             </Pressable>
 
             <Pressable
               onPress={() => router.push("/cart")}
-              className="relative h-9 w-9 items-center justify-center rounded-full border active:opacity-70"
+              className="relative h-8 w-8 items-center justify-center rounded-full border active:opacity-70"
               style={{
                 borderColor: getRgba(primaryColor, 0.3),
                 backgroundColor: getRgba(primaryColor, 0.1)
