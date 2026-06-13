@@ -55,7 +55,7 @@ export function MessageBubble({ message, isOwnMessage, onJoinVideoCall }: Messag
         return (
           <div className="space-y-2">
             <a 
-              href={message.attachment_url} 
+              href={message.attachment_url || undefined} 
               target="_blank" 
               rel="noopener noreferrer"
               className={cn(
