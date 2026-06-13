@@ -41,7 +41,7 @@ export function ChatSystem({ currentUserId, role, backUrl }: ChatSystemProps) {
 
   React.useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages.length]);
 
   const toggleSelection = (id: number) => {
     setSelectedMessages(prev => 
