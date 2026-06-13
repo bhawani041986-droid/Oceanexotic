@@ -156,11 +156,11 @@ export default function AdminVideosPage() {
               <select 
                 value={productId}
                 onChange={(e) => setProductId(e.target.value)}
-                className="w-full h-12 bg-card border border-border rounded-xl px-4 text-sm focus:border-primary outline-none text-foreground"
+                className="w-full h-12 bg-bg-card border border-[var(--border)] rounded-xl px-4 text-sm focus:border-primary outline-none text-text-primary"
               >
-                <option value="" className="bg-card text-foreground">-- Choose Product --</option>
+                <option value="" className="bg-bg-card text-text-primary">-- Choose Product --</option>
                 {products.map(p => (
-                  <option key={p.id} value={p.id} className="bg-card text-foreground">{p.name} ({p.id})</option>
+                  <option key={p.id} value={p.id} className="bg-bg-card text-text-primary">{p.name} ({p.id})</option>
                 ))}
               </select>
             </div>

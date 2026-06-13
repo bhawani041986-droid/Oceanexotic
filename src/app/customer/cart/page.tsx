@@ -9,6 +9,12 @@ import { useSettingsStore } from "@/store/settingsStore";
 import { useAuthStore } from "@/store/authStore";
 import { cn } from "@/lib/utils";
 import MainLayout from "@/components/layouts/MainLayout";
+import dynamic from 'next/dynamic';
+
+const OceanReelsFeed = dynamic(
+  () => import('@/components/video/OceanReelsFeed').then((mod) => mod.OceanReelsFeed),
+  { ssr: false }
+);
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { 
@@ -316,6 +322,10 @@ export default function CartPage() {
           </aside>
 
         </div>
+      </div>
+
+      <div className="mt-8">
+         <OceanReelsFeed />
       </div>
     </MainLayout>
   );

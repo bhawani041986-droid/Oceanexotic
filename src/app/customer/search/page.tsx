@@ -21,6 +21,12 @@ import { useCartStore } from "@/store/cartStore";
 import { useToast } from "@/components/ui/Toast";
 import { API_BASE_URL } from "@/config/api";
 import { motion, AnimatePresence } from "framer-motion";
+import dynamic from 'next/dynamic';
+
+const OceanReelsFeed = dynamic(
+  () => import('@/components/video/OceanReelsFeed').then((mod) => mod.OceanReelsFeed),
+  { ssr: false }
+);
 
 const MOCK_RESULTS = [
   { id: "1", name: "Andaman Mud Crab", category: "Premium Crustacean", price: 3800, rating: 4.9, reviews: 124, seller: "Phoenix Bay Harvest", fresh: true, tag: "FRESH CATCH" },
@@ -253,6 +259,10 @@ export default function SearchResultsPage() {
           <div className="h-4 w-px bg-[var(--foreground)]/10 mx-1 md:mx-2" />
           <Button variant="ghost" size="sm" className="h-8 md:h-9 px-3 md:px-4 text-[8px] md:text-[9px] font-black uppercase opacity-40 hover:opacity-100 italic">NEXT SIGNAL</Button>
         </div>
+      </div>
+
+      <div className="py-8">
+         <OceanReelsFeed />
       </div>
 
       {/* CUT SELECTION MODAL */}

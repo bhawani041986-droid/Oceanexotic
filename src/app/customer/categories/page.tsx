@@ -12,6 +12,12 @@ import {
   Filter,
   ArrowRight
 } from "lucide-react";
+import dynamic from 'next/dynamic';
+
+const OceanReelsFeed = dynamic(
+  () => import('@/components/video/OceanReelsFeed').then((mod) => mod.OceanReelsFeed),
+  { ssr: false }
+);
 import Link from "next/link";
 
 import { PRODUCT_CATEGORIES } from "@/constants/categories";
@@ -92,6 +98,11 @@ export default function CustomerCategoriesPage() {
             </Card>
           </Link>
         ))}
+      </div>
+      </div>
+
+      <div className="py-8">
+         <OceanReelsFeed />
       </div>
 
       {/* Discovery Hub Cta */}
