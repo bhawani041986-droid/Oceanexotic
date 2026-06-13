@@ -7,10 +7,10 @@ export interface ChatMessage {
   id: number;
   message_text: string;
   message_type?: 'TEXT' | 'IMAGE' | 'PDF' | 'PRODUCT_CARD' | 'ORDER_CARD' | 'QUOTATION_CARD' | 'VOICE';
-  attachment_url?: string;
+  attachment_url?: string | null;
   metadata?: any;
   created_at: string;
-  is_read: boolean;
+  is_read: boolean | number;
   sender_id: string;
 }
 
@@ -175,12 +175,12 @@ export function MessageBubble({ message, isOwnMessage, onJoinVideoCall }: Messag
           return (
             <div className="flex flex-col items-center gap-2 md:gap-3 p-2 min-w-[200px]">
               <Video className="w-6 h-6 md:w-8 md:h-8 opacity-80" />
-              <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
+              <p className="text-[12px] md:text-[14px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
               <button 
                 onClick={(e) => { e.stopPropagation(); if (onJoinVideoCall) onJoinVideoCall(roomID); }}
                 className={cn(
-                  "w-full py-2 rounded-lg md:rounded-xl font-black text-[8px] md:text-[9px] uppercase tracking-widest hover:scale-95 transition-all",
-                  isOwnMessage ? "bg-white text-primary" : "bg-primary text-white"
+                  "w-full py-2 rounded-lg md:rounded-xl font-black text-[12px] uppercase tracking-widest hover:scale-95 transition-all",
+                  isOwnMessage ? "bg-white text-[#0077B6]" : "bg-[#0077B6] text-white"
                 )}
               >
                 Join Connection
@@ -188,7 +188,7 @@ export function MessageBubble({ message, isOwnMessage, onJoinVideoCall }: Messag
             </div>
           );
         }
-        return <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.message_text}</p>;
+        return <p className="text-[14px] whitespace-pre-wrap leading-relaxed font-inter">{message.message_text}</p>;
     }
   };
 
@@ -196,24 +196,24 @@ export function MessageBubble({ message, isOwnMessage, onJoinVideoCall }: Messag
     <div className={cn("flex w-full", isOwnMessage ? "justify-end" : "justify-start")}>
       <div 
         className={cn(
-          "relative group max-w-[85%] md:max-w-[650px] min-w-[60px] p-[10px] md:p-[12px] md:px-[16px] rounded-[16px] md:rounded-[18px] shadow-sm",
+          "relative group max-w-[80%] min-w-[80px] px-[16px] py-[12px] rounded-[20px] shadow-sm",
           isOwnMessage 
-            ? "bg-primary text-white rounded-br-sm" 
-            : "bg-[var(--foreground)]/10 border border-[var(--foreground)]/5 rounded-bl-sm"
+            ? "bg-[#0077B6] text-white rounded-br-sm" 
+            : "bg-[#1E293B] text-white border border-[#1E293B] rounded-bl-sm"
         )}
       >
         {renderContent()}
         
         <div className={cn(
           "flex items-center gap-1 mt-1 justify-end",
-          isOwnMessage ? "text-primary-foreground/70" : "text-text-secondary"
+          isOwnMessage ? "text-white/70" : "text-white/50"
         )}>
-          <span className="text-[9px] font-medium">{timeString}</span>
+          <span className="text-[12px] font-medium">{timeString}</span>
           {isOwnMessage && (
             message.is_read ? (
-              <CheckCheck className="w-3 h-3 text-[#34A853]" />
+              <CheckCheck className="w-3.5 h-3.5 text-[#2ECC71]" />
             ) : (
-              <Check className="w-3 h-3 opacity-70" />
+              <Check className="w-3.5 h-3.5 opacity-70" />
             )
           )}
         </div>
