@@ -272,16 +272,25 @@ export default function AdminSupportHub() {
           { event: 'INSERT', schema: 'public', table: 'chat_messages', filter: `conversation_id=eq.${activeChat}` },
           (payload) => {
             if (payload.new.sender_id !== currentUserId) {
-              setMessages(prev => [...prev, payload.new]);
-              // Refresh conversations to update the sidebar unread counts
+              setMessages((prev) => {
+                if (prev.find(m => m.id === payload.new.id)) return prev;
+                return [...prev, payload.new as any];
+              });
               fetchConversations();
             }
           }
         )
         .subscribe();
 
+      // Robust Polling Fallback (every 5 seconds)
+      const interval = setInterval(() => {
+        fetchConversations();
+        fetchMessages(activeChat);
+      }, 5000);
+
       return () => {
         supabase.removeChannel(channel);
+        clearInterval(interval);
       };
     }
   }, [activeChat]);

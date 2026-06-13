@@ -174,15 +174,25 @@ export function NativeVideoCall({ roomID, userName, userID, onClose }: NativeVid
         });
 
         // Join channel
-        chan.subscribe((status: string) => {
+        chan.subscribe((status: string, err?: Error) => {
           if (status === 'SUBSCRIBED') {
             chan.send({
               type: 'broadcast',
               event: 'webrtc',
               payload: { type: 'peer-joined', sender: userID }
             });
+          } else if (status === 'CHANNEL_ERROR') {
+            console.error("Realtime channel error:", err);
+            toast("Connection interrupted due to network instability.", "error");
           }
         });
+
+        // Set a 30-second timeout for the connection
+        setTimeout(() => {
+          if (mounted && !isConnected) {
+            toast("Connection timed out. The other party might be unavailable or network is blocked.", "warning");
+          }
+        }, 30000);
 
       } catch (err) {
         console.error("Failed to access media devices:", err);
