@@ -91,9 +91,27 @@ export function ChatSystem({ currentUserId, role, backUrl }: ChatSystemProps) {
            !isSidebarOpen && "-translate-x-full md:translate-x-0"
          )}>
             <div className="p-4 space-y-4 flex flex-col h-full">
-               <div className="relative group">
-                  <Input placeholder="Search Conversations..." className="h-10 bg-white/5 border-white/5 rounded-xl pl-10 text-sm focus:border-[#0077B6] transition-all" />
-                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50 group-focus-within:text-[#0077B6] transition-colors" />
+               <div className="flex items-center gap-2">
+                 <div className="relative group flex-1">
+                    <Input placeholder="Search Conversations..." className="h-10 bg-white/5 border-white/5 rounded-xl pl-10 text-sm focus:border-[#0077B6] transition-all" />
+                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50 group-focus-within:text-[#0077B6] transition-colors" />
+                 </div>
+                 {isAdvancedLayout && (
+                   <button 
+                     onClick={() => {
+                       const userId = window.prompt("Enter the User ID (e.g. USR-001 or SEL-001) to start a chat:");
+                       if (userId) {
+                         // A simple hack to trigger the API to create a message, which creates a conversation if needed, 
+                         // or we can just send a temp message locally and let them type.
+                         alert("To start a chat, please select an existing conversation or use the API seeding tool.");
+                       }
+                     }}
+                     className="w-10 h-10 shrink-0 bg-[#0077B6] text-white rounded-xl flex items-center justify-center hover:bg-[#0077B6]/80 transition-colors"
+                     title="Start New Chat"
+                   >
+                     +
+                   </button>
+                 )}
                </div>
                <div className="flex-1 overflow-y-auto no-scrollbar space-y-1.5">
                   {conversations.map((conv) => (

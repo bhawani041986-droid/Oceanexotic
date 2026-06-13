@@ -54,8 +54,8 @@ export function useChatEngine(currentUserId: string | undefined | null) {
         if (mounted.current) setConversations(data);
         
         // Auto-select first chat if none selected
-        if (data.length > 0 && activeChat === null && mounted.current) {
-          setActiveChat(data[0].id);
+        if (data.length > 0 && mounted.current) {
+          setActiveChat(prev => prev === null ? data[0].id : prev);
         }
         
         // Detect incoming calls globally
