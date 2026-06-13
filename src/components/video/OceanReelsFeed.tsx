@@ -35,7 +35,7 @@ export function OceanReelsFeed() {
       
       const pIds = [...new Set(vids.map(v => v.product_id))];
       const { data: prods } = await supabase
-        .from('marketplace_products')
+        .from('products')
         .select('*')
         .in('id', pIds);
         

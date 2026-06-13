@@ -26,7 +26,7 @@ export default function AdminVideosPage() {
   const fetchData = async () => {
     try {
       // Get all products to link videos to
-      const { data: prodData } = await supabase.from('marketplace_products').select('id, name');
+      const { data: prodData } = await supabase.from('products').select('id, name');
       if (prodData) setProducts(prodData);
 
       // Get all uploaded videos
