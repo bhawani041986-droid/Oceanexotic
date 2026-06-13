@@ -371,3 +371,14 @@ body {
 .pt-6 {
     padding-top: calc(var(--spacing) * 2) !important;
 }
+
+ / *   H i d e   G o o g l e   T r a n s l a t e   p o p u p   b a r   * / 
+ . s k i p t r a n s l a t e   i f r a m e   { 
+     d i s p l a y :   n o n e   ! i m p o r t a n t ; 
+     v i s i b i l i t y :   h i d d e n   ! i m p o r t a n t ; 
+ } 
+ b o d y   { 
+     t o p :   0   ! i m p o r t a n t ; 
+ } 
+  
+ 

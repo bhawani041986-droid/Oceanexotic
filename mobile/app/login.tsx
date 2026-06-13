@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
 import { FULL_API_URL } from "@/config/api";
 import { Logo } from "@/components/ui/Logo";
+import { LanguageSelector } from "@/components/LanguageSelector";
 
 const BG_IMAGE =
   "https://images.unsplash.com/photo-1551244072-5d12893278ab?auto=format&fit=crop&q=80&w=2000";
@@ -100,6 +101,9 @@ export default function LoginScreen() {
           contentContainerClassName="flex-grow justify-center px-6 py-12"
           keyboardShouldPersistTaps="handled"
         >
+          <View className="absolute top-2 right-0 z-50">
+             <LanguageSelector />
+          </View>
           <View className="mx-auto w-full max-w-[480px]">
             <View className="mb-12 items-center space-y-4">
               <Link href="/" asChild>

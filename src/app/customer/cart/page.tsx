@@ -104,17 +104,17 @@ export default function CartPage() {
 
   if (!mounted) {
     return (
-      <MainLayout>
+      <>
         <div className="bg-[var(--c-bg)] min-h-screen flex items-center justify-center">
           <div className="w-12 h-12 border-4 border-[var(--c-primary)]/20 border-t-[var(--c-primary)] rounded-full animate-spin" />
         </div>
-      </MainLayout>
+      </>
     );
   }
 
   if (items.length === 0) {
     return (
-      <MainLayout>
+      <>
         <div className="min-h-[70vh] flex flex-col items-center justify-center space-y-10 text-center px-6 pb-20">
           <div className="w-32 h-32 bg-[var(--foreground)]/5 rounded-full flex items-center justify-center text-5xl opacity-20 border border-[var(--foreground)]/5 shadow-inner">🛒</div>
           <div className="space-y-4 max-w-sm">
@@ -125,12 +125,12 @@ export default function CartPage() {
             <Button size="lg" className="h-16 px-12 text-sm font-black tracking-widest shadow-[var(--c-shadow-glow)] rounded-full bg-[var(--c-primary)] text-[var(--foreground)]">EXPLORE MARKETPLACE</Button>
           </Link>
         </div>
-      </MainLayout>
+      </>
     );
   }
 
   return (
-    <MainLayout>
+    <>
       <div className="container mx-auto px-4 md:px-10 pb-10 md:pb-32">
         <div className="flex flex-col lg:flex-row gap-[10px] md:gap-16 items-start">
           
@@ -274,7 +274,7 @@ export default function CartPage() {
                   </h3>
                   <div className="space-y-2">
                      {activeCoupons.map(coupon => (
-                        <div key={coupon.id} className="bg-[var(--c-bg)]/80 backdrop-blur-sm p-3 rounded-xl border border-[var(--foreground)]/5 flex justify-between items-center">
+                        <div key={coupon.id} className="bg-[var(--c-bg)]/80 backdrop-blur-sm p-3 rounded-xl border border-[var(--foreground)]/5 flex justify-between items-center group/coupon">
                            <div>
                               <p className="text-xs font-black uppercase text-[var(--c-text-primary)]">{coupon.code}</p>
                               <p className="text-[9px] font-bold text-[var(--c-text-secondary)] uppercase mt-0.5">
@@ -282,6 +282,15 @@ export default function CartPage() {
                                  {coupon.min_purchase > 0 && ` on orders above ₹${coupon.min_purchase}`}
                               </p>
                            </div>
+                           <button 
+                             onClick={(e) => {
+                               e.preventDefault();
+                               navigator.clipboard.writeText(coupon.code);
+                             }}
+                             className="text-[8px] font-black uppercase tracking-widest bg-primary/20 text-primary px-3 py-1.5 rounded-lg active:scale-95 transition-all opacity-80 hover:opacity-100"
+                           >
+                             COPY
+                           </button>
                         </div>
                      ))}
                   </div>
@@ -340,6 +349,6 @@ export default function CartPage() {
       <div className="mt-8">
          <OceanReelsFeed />
       </div>
-    </MainLayout>
+    </>
   );
 }
