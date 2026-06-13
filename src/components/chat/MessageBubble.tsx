@@ -22,7 +22,13 @@ interface MessageBubbleProps {
 }
 
 export function MessageBubble({ message, isOwnMessage, onJoinVideoCall }: MessageBubbleProps) {
-  const timeString = new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const [timeString, setTimeString] = React.useState("");
+
+  React.useEffect(() => {
+    if (message?.created_at) {
+      setTimeString(new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+    }
+  }, [message?.created_at]);
 
   const renderContent = () => {
     switch (message.message_type) {
