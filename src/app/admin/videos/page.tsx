@@ -77,6 +77,9 @@ export default function AdminVideosPage() {
 
       if (dbError) throw dbError;
 
+      // 4. Sync with the products table so it shows in the OceanReelsFeed
+      await supabase.from('products').update({ video_url: urlData.publicUrl }).eq('id', productId);
+
       toast("Video uploaded and published successfully!", "success");
       setVideoFile(null);
       setTitle("");
@@ -90,10 +93,39 @@ export default function AdminVideosPage() {
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleToggleActive = async (vid: any) => {
+    try {
+      const newStatus = vid.is_active === 1 ? 0 : 1;
+      
+      // Update product_videos table
+      const { error } = await supabase
+        .from('product_videos')
+        .update({ is_active: newStatus })
+        .eq('id', vid.id);
+        
+      if (error) throw error;
+      
+      // Sync with products table (nullify if turned off, restore if turned on)
+      await supabase
+        .from('products')
+        .update({ video_url: newStatus === 1 ? vid.video_url : null })
+        .eq('id', vid.product_id);
+        
+      toast(newStatus === 1 ? "Video turned ON" : "Video turned OFF", "success");
+      fetchData();
+    } catch (e) {
+      toast("Failed to toggle video status.", "error");
+    }
+  };
+
+  const handleDelete = async (vid: any) => {
     if (!confirm("Are you sure you want to delete this video showcase?")) return;
     try {
-      await supabase.from('product_videos').delete().eq('id', id);
+      await supabase.from('product_videos').delete().eq('id', vid.id);
+      
+      // Also remove it from the products table so it disappears from the feed
+      await supabase.from('products').update({ video_url: null }).eq('id', vid.product_id);
+      
       toast("Video deleted.", "success");
       fetchData();
     } catch (e) {
@@ -124,11 +156,11 @@ export default function AdminVideosPage() {
               <select 
                 value={productId}
                 onChange={(e) => setProductId(e.target.value)}
-                className="w-full h-12 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl px-4 text-sm focus:border-primary outline-none"
+                className="w-full h-12 bg-card border border-border rounded-xl px-4 text-sm focus:border-primary outline-none text-foreground"
               >
-                <option value="">-- Choose Product --</option>
+                <option value="" className="bg-card text-foreground">-- Choose Product --</option>
                 {products.map(p => (
-                  <option key={p.id} value={p.id}>{p.name} ({p.id})</option>
+                  <option key={p.id} value={p.id} className="bg-card text-foreground">{p.name} ({p.id})</option>
                 ))}
               </select>
             </div>
@@ -176,11 +208,15 @@ export default function AdminVideosPage() {
               </div>
             ) : (
               videos.map((vid) => (
-                <div key={vid.id} className="bg-bg-card border border-[var(--foreground)]/10 rounded-2xl overflow-hidden group">
+                <div key={vid.id} className={`bg-bg-card border ${vid.is_active === 1 ? 'border-[var(--foreground)]/10' : 'border-danger/30 opacity-70'} rounded-2xl overflow-hidden group transition-all`}>
                   <div className="aspect-[9/16] bg-black relative">
                     <video src={vid.video_url} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" controls />
                     <div className="absolute top-2 right-2 flex gap-2">
-                      <span className="bg-green-500/80 text-white text-[10px] font-bold px-2 py-1 rounded">ACTIVE</span>
+                      {vid.is_active === 1 ? (
+                        <span className="bg-green-500/80 text-white text-[10px] font-bold px-2 py-1 rounded">ACTIVE</span>
+                      ) : (
+                        <span className="bg-danger/80 text-white text-[10px] font-bold px-2 py-1 rounded">OFF</span>
+                      )}
                     </div>
                   </div>
                   <div className="p-4 flex items-center justify-between">
@@ -190,9 +226,17 @@ export default function AdminVideosPage() {
                         <LinkIcon className="w-3 h-3" /> {products.find(p => p.id === vid.product_id)?.name || vid.product_id}
                       </p>
                     </div>
-                    <button onClick={() => handleDelete(vid.id)} className="p-2 text-danger/70 hover:text-danger bg-danger/10 hover:bg-danger/20 rounded-lg transition-colors">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button 
+                        onClick={() => handleToggleActive(vid)} 
+                        className={`p-2 rounded-lg transition-colors text-xs font-bold ${vid.is_active === 1 ? 'text-warning/80 bg-warning/10 hover:bg-warning/20' : 'text-success bg-success/10 hover:bg-success/20'}`}
+                      >
+                        {vid.is_active === 1 ? 'TURN OFF' : 'TURN ON'}
+                      </button>
+                      <button onClick={() => handleDelete(vid)} className="p-2 text-danger/70 hover:text-danger bg-danger/10 hover:bg-danger/20 rounded-lg transition-colors">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))

@@ -55,7 +55,7 @@ export function LanguageSelector() {
     <div className="relative">
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 p-2 md:p-3 text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] transition-colors"
+        className="flex items-center gap-2 p-2 md:p-3 text-muted-foreground hover:text-foreground transition-colors"
         title="Change Language"
       >
         <Globe className="w-5 h-5" />
@@ -69,14 +69,14 @@ export function LanguageSelector() {
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute top-full right-0 mt-2 w-48 py-2 bg-[var(--c-card)]/95 backdrop-blur-3xl border border-[var(--foreground)]/5 rounded-xl shadow-2xl z-[200] flex flex-col max-h-[300px] overflow-y-auto hide-scrollbar"
+            className="absolute top-full right-0 mt-2 w-48 py-2 bg-card backdrop-blur-3xl border border-border rounded-xl shadow-2xl z-[200] flex flex-col max-h-[300px] overflow-y-auto hide-scrollbar"
           >
             {LANGUAGES.map((language) => (
               <button
                 key={language.code}
                 onClick={() => changeLanguage(language.code)}
-                className={`text-left px-4 py-2.5 text-xs font-bold transition-colors hover:bg-[var(--foreground)]/5 ${
-                  lang === language.code ? 'text-[var(--c-primary)]' : 'text-[var(--c-text-primary)]'
+                className={`text-left px-4 py-2.5 text-xs font-bold transition-colors hover:bg-white/10 ${
+                  lang === language.code ? 'text-primary' : 'text-foreground'
                 }`}
               >
                 {language.name}

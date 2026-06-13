@@ -27,6 +27,7 @@ import { MaritimeWaveDivider } from "@/components/customer/MaritimeWaveDivider";
 import { AndamanMaritimeTelemetry } from "@/components/customer/AndamanMaritimeTelemetry";
 import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
+import OceanReelsFeed from "@/components/OceanReelsFeed";
 import { homeService, type CutOption, type TodaysCatchItem } from "@/services/homeService";
 import { cn } from "@/lib/utils";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
@@ -856,8 +857,12 @@ export default function CustomerHomeScreen() {
           ))}
         </View>
 
+        {/* Ocean Reels Video Feed */}
+        <SectionTitle title="OCEAN REELS" subtitle="Watch & Shop Daily Catches" className="mt-4 mx-4" />
+        <OceanReelsFeed />
+
         {/* Cart shortcut */}
-        <View className="mx-4 mb-4">
+        <View className="mx-4 mb-4 mt-8">
           <Button
             label={`VIEW CART (${cart.itemCount()})`}
             variant="ghost"
