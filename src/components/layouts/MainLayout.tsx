@@ -34,6 +34,8 @@ import {
   ChefHat
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
+import { useTranslation } from "@/lib/i18n";
+import { LanguageSelector } from "@/components/layout/LanguageSelector";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -60,6 +62,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+  const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
   const [activeCoupons, setActiveCoupons] = useState<any[]>([]);
 
@@ -106,10 +109,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
   };
 
   const navItems = [
-    { label: "Home", href: "/customer", icon: <Home className="w-5 h-5" /> },
-    { label: "Market", href: "/customer/products", icon: <ShoppingBag className="w-5 h-5" /> },
+    { label: t("nav.home"), href: "/customer", icon: <Home className="w-5 h-5" /> },
+    { label: t("nav.products"), href: "/customer/products", icon: <ShoppingBag className="w-5 h-5" /> },
     { label: "Recipes", href: "/customer/recipes", icon: <ChefHat className="w-5 h-5" /> },
-    { label: "Orders", href: "/customer/orders", icon: <Receipt className="w-5 h-5" /> },
+    { label: t("nav.orders"), href: "/customer/orders", icon: <Receipt className="w-5 h-5" /> },
     { label: "Chat", href: "/customer/chat", icon: <MessageCircle className="w-5 h-5" /> },
     { label: "Profile", href: "/customer/profile", icon: <UserIcon className="w-5 h-5" /> },
   ];
@@ -217,6 +220,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
           </div>
 
           <div className="flex items-center gap-2 md:gap-3 lg:gap-4">
+            <LanguageSelector />
             <div className="hidden lg:flex items-center gap-2">
               <button onClick={() => router.push('/customer/wishlist')} className="p-3 text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)]"><Heart className="w-5 h-5" /></button>
             </div>

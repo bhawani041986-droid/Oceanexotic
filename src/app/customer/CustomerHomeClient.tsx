@@ -61,6 +61,7 @@ import { useSettingsStore } from "@/store/settingsStore";
 import { useCartStore } from "@/store/cartStore";
 import { useToast } from "@/components/ui/Toast";
 import { Logo } from "@/components/ui/Logo";
+import { OceanReelsFeed } from "@/components/video/OceanReelsFeed";
 import { FULL_API_URL as API_BASE_URL } from "@/config/api";
 
 // --- Components ---
@@ -1196,6 +1197,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
 
       {/* MARITIME WAVE DIVIDER - MOBILE SPACED */}
       <div>
+         <OceanReelsFeed />
          <MaritimeWaveDivider />
       </div>
 

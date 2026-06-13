@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ToastProvider } from "@/components/ui/Toast";
+import { AuthHydration } from "@/components/auth/AuthHydration";
+import { I18nProvider } from "@/lib/i18n";
 
 // Fonts disabled to bypass network issues during build
 
@@ -149,7 +151,7 @@ export default function RootLayout({
                      else if (lower === 'kanit') fontClass = 'font-kanit';
                      else if (lower === 'cinzel') fontClass = 'font-cinzel';
                      else if (lower === 'roboto') fontClass = 'font-roboto';
-                     else fontClass = 'font-' + lower.replace(/\\s+/g, '-');
+                     else fontClass = 'font-' + lower.replace(/\s+/g, '-');
                    }
                    document.documentElement.classList.add(fontClass);
                 }
@@ -225,8 +227,11 @@ export default function RootLayout({
         <ThemeApplier />
         <CustomerThemeApplier />
         <AppSplashScreen />
+        <AuthHydration />
         <ToastProvider>
-          {children}
+          <I18nProvider>
+            {children}
+          </I18nProvider>
         </ToastProvider>
       </body>
     </html>

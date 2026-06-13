@@ -40,6 +40,7 @@ const ADMIN_NAV = [
   { label: "Customer Accounts", icon: <Users className="w-5 h-5" />, href: "/admin/users", color: "#3B82F6" },
   { label: "Sellers & Shops", icon: <Store className="w-5 h-5" />, href: "/admin/sellers", color: "#F59E0B" },
   { label: "Products Manager", icon: <ShieldCheck className="w-5 h-5" />, href: "/admin/products", color: "#10B981" },
+  { label: "Ocean Reels Videos", icon: <ImageIcon className="w-5 h-5" />, href: "/admin/videos", color: "#14B8A6" },
   { label: "Orders Panel", icon: <ShoppingCart className="w-5 h-5" />, href: "/admin/orders", color: "#F97316" },
   { label: "Add-ons & Extras", icon: <Sliders className="w-5 h-5" />, href: "/admin/addons", color: "#F43F5E" },
   { label: "Support Chats", icon: <MessageSquare className="w-5 h-5" />, href: "/admin/support", color: "#A855F7" },
