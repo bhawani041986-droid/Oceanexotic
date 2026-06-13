@@ -840,7 +840,7 @@ function ProductListingContent() {
 
       {/* 5. TRUST */}
       <section className="py-2 md:py-10 container mx-auto px-2 md:px-10 space-y-2 md:space-y-6">
-         <div className="grid grid-cols-4 gap-2 md:gap-12 border-b border-[var(--foreground)]/5 pb-2 md:pb-12">
+         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-12 border-b border-[var(--foreground)]/5 pb-2 md:pb-12">
             {[ 
               { 
                 icon: <ShieldCheck />, 

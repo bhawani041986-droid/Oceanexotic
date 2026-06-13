@@ -1202,9 +1202,9 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
 
       {/* 4. CATEGORY VAULT (RIBBON TYPE) */}
       <section className="py-2 container mx-auto px-0 md:px-10">
-         <div className="grid grid-cols-8 gap-0 border-y border-[var(--foreground)]/5 overflow-hidden">
+         <div className="flex lg:grid lg:grid-cols-8 gap-1 md:gap-0 border-y border-[var(--foreground)]/5 overflow-x-auto no-scrollbar snap-x snap-mandatory px-2 md:px-0">
             {CATEGORIES.map((cat) => (
-              <Link key={cat.name} href={`/customer/products?category=${cat.slug}`} className="w-full">
+              <Link key={cat.name} href={`/customer/products?category=${cat.slug}`} className="w-[80px] md:w-full shrink-0 snap-start">
                 <div 
                    className="aspect-[1/1.5] md:aspect-square flex flex-col bg-[var(--c-bg-alt)]/20 relative overflow-hidden group hover:bg-[var(--c-bg-alt)]/40 transition-all border-r border-[var(--foreground)]/5"
                    style={{ 
@@ -1933,7 +1933,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
 
       {/* 12. TRUST & NEWSLETTER - VIBRANT & POLYGONAL */}
       <section className="py-1 container mx-auto px-[2px] md:px-10 space-y-4">
-         <div className="grid grid-cols-4 gap-1 border-b border-[var(--foreground)]/5 pb-4">
+         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-1 border-b border-[var(--foreground)]/5 pb-4">
             {[ 
                { icon: <ShieldCheck className="w-full h-full" />, title: "Authorized", color: "text-[#00ff88] bg-[#00ff88]/5" }, 
                { icon: <Zap className="w-full h-full" />, title: "Instant", color: "text-warning bg-warning/5" }, 
