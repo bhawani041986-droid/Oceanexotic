@@ -34,7 +34,6 @@ import {
   ChefHat
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
-import { useTranslation } from "@/lib/i18n";
 import { LanguageSelector } from "@/components/layout/LanguageSelector";
 
 interface MainLayoutProps {
@@ -62,7 +61,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
-  const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
   const [activeCoupons, setActiveCoupons] = useState<any[]>([]);
 
@@ -109,10 +107,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
   };
 
   const navItems = [
-    { label: t("nav.home"), href: "/customer", icon: <Home className="w-5 h-5" /> },
-    { label: t("nav.products"), href: "/customer/products", icon: <ShoppingBag className="w-5 h-5" /> },
+    { label: "Home", href: "/customer", icon: <Home className="w-5 h-5" /> },
+    { label: "Marketplace", href: "/customer/products", icon: <ShoppingBag className="w-5 h-5" /> },
     { label: "Recipes", href: "/customer/recipes", icon: <ChefHat className="w-5 h-5" /> },
-    { label: t("nav.orders"), href: "/customer/orders", icon: <Receipt className="w-5 h-5" /> },
+    { label: "Orders", href: "/customer/orders", icon: <Receipt className="w-5 h-5" /> },
     { label: "Chat", href: "/customer/chat", icon: <MessageCircle className="w-5 h-5" /> },
     { label: "Profile", href: "/customer/profile", icon: <UserIcon className="w-5 h-5" /> },
   ];
