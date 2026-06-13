@@ -155,24 +155,17 @@ export function useChatEngine(currentUserId: string | undefined | null) {
     setMessages((prev) => [...prev, tempMsg]);
 
     try {
-      const { error: msgError } = await supabase
-        .from('chat_messages')
-        .insert([{
+      const res = await fetch(`${API_BASE_URL}/chat/send_message`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           conversation_id: activeChat,
           sender_id: currentUserId,
-          message_text: textToSend,
-          is_read: 0
-        }]);
-        
-      if (msgError) throw msgError;
-
-      await supabase
-        .from('chat_conversations')
-        .update({
-          last_message_text: textToSend,
-          last_message_time: new Date().toISOString()
+          message_text: textToSend
         })
-        .eq('id', activeChat);
+      });
+
+      if (!res.ok) throw new Error("Failed to send message via API");
 
     } catch (err) {
       console.error("Signal lost:", err);
