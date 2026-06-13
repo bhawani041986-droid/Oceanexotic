@@ -103,8 +103,12 @@ export default function ChatPage() {
   };
 
   // --- SEND MESSAGE ---
-  const handleSendMessage = async (customMsg?: string) => {
-    const textToSend = customMsg || message;
+  const handleSendMessage = async (e?: React.FormEvent | string, customMsg?: string) => {
+    if (e && typeof e !== 'string' && 'preventDefault' in e) e.preventDefault();
+    
+    // Safely extract the message text, avoiding React SyntheticEvent objects
+    const textToSend = typeof customMsg === 'string' ? customMsg : (typeof e === 'string' ? e : message);
+    
     if (!textToSend.trim() || activeChat === null) return;
     
     // Optimistically add message

@@ -27,7 +27,8 @@
       "output": "static"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "./withSplitApks.js"
     ],
     "experiments": {
       "typedRoutes": true
