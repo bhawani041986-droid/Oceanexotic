@@ -35,7 +35,7 @@ import { useToast } from "@/components/ui/Toast";
 import dynamic from "next/dynamic";
 import { IncomingCallOverlay } from "@/components/video/IncomingCallOverlay";
 import { supabase } from "@/lib/supabase";
-
+import { MessageBubble } from "@/components/chat/MessageBubble";
 const NativeVideoCall = dynamic(
   () => import("@/components/video/NativeVideoCall").then(mod => mod.NativeVideoCall),
   { ssr: false }
@@ -579,22 +579,17 @@ export default function AgentSupportHub() {
                      <p className="text-[7px] md:text-[8px] font-black uppercase tracking-[0.2em] text-center">ENCRYPTED CHANNEL <br/> SIGNAL STABILITY: 99.8%</p>
                   </div>
 
-                  <AnimatePresence initial={false}>
+                  <div className="flex flex-col w-full space-y-4">
                     {messages.map((msg) => {
                       const isVideoInvite = msg.message_text.includes("[VIDEO_CALL_INVITE]:");
                       const roomID = isVideoInvite ? msg.message_text.replace("[VIDEO_CALL_INVITE]:", "").trim() : null;
 
                       return (
-                        <motion.div 
+                        <div 
                           key={msg.id}
-                          layout
-                          initial={{ opacity: 0, scale: 0.9, y: 10 }}
-                          animate={{ opacity: 1, scale: 1, y: 0 }}
-                          exit={{ opacity: 0, scale: 0.8, height: 0, marginTop: 0, marginBottom: 0, overflow: 'hidden' }}
-                          transition={{ duration: 0.2, type: 'spring', stiffness: 300, damping: 25 }}
                           className={cn(
-                            "flex items-center gap-2 md:gap-3",
-                            msg.sender_id === currentUserId ? "justify-end" : "justify-start"
+                            "flex items-center gap-2 md:gap-3 w-full",
+                            msg.sender_id === currentUserId ? "flex-row-reverse" : "flex-row"
                           )}
                         >
                           {msg.sender_id === currentUserId && (
@@ -611,51 +606,34 @@ export default function AgentSupportHub() {
 
                           <div 
                             onClick={() => selectedMessages.length > 0 && msg.sender_id === currentUserId ? toggleSelection(msg.id) : undefined}
-                            className={cn(
-                              "max-w-[90%] md:max-w-[85%] p-3 md:p-4 rounded-2xl md:rounded-3xl relative shadow-2xl transition-all",
-                              msg.sender_id === currentUserId 
-                                ? "bg-primary text-[var(--foreground)] rounded-tr-none shadow-glow-purple" 
-                                : "bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] rounded-tl-none",
-                              selectedMessages.length > 0 && msg.sender_id === currentUserId ? "cursor-pointer hover:brightness-110" : ""
-                            )}>
-                            
+                            className={cn("w-full transition-all", selectedMessages.includes(msg.id) && "opacity-50")}
+                          >
                             {isVideoInvite ? (
-                              <div className="flex flex-col items-center gap-2 md:gap-3 p-2">
-                                <Video className="w-6 h-6 md:w-8 md:h-8 opacity-80" />
-                                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
-                                <button 
-                                  onClick={(e) => { e.stopPropagation(); setActiveVideoRoom(roomID); }}
-                                  className="w-full py-2 rounded-lg md:rounded-xl bg-[var(--foreground)] text-bg-primary font-black text-[8px] md:text-[9px] uppercase tracking-widest hover:scale-95 transition-all"
-                                >
-                                  Join Connection
-                                </button>
+                              <div className={cn(
+                                "max-w-[90%] md:max-w-[85%] p-3 md:p-4 rounded-2xl md:rounded-3xl relative shadow-2xl transition-all",
+                                msg.sender_id === currentUserId 
+                                  ? "bg-primary text-[var(--foreground)] rounded-tr-none shadow-glow-purple ml-auto" 
+                                  : "bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] rounded-tl-none"
+                              )}>
+                                <div className="flex flex-col items-center gap-2 md:gap-3 p-2">
+                                  <Video className="w-6 h-6 md:w-8 md:h-8 opacity-80" />
+                                  <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
+                                  <button 
+                                    onClick={(e) => { e.stopPropagation(); setActiveVideoRoom(roomID); }}
+                                    className="w-full py-2 rounded-lg md:rounded-xl bg-[var(--foreground)] text-bg-primary font-black text-[8px] md:text-[9px] uppercase tracking-widest hover:scale-95 transition-all"
+                                  >
+                                    Join Connection
+                                  </button>
+                                </div>
                               </div>
                             ) : (
-                              <p className="text-[11px] md:text-xs leading-relaxed font-medium break-words">{msg.message_text}</p>
+                              <MessageBubble message={msg as any} isOwnMessage={msg.sender_id === currentUserId} currentUserId={currentUserId} />
                             )}
-
-                            <div className={cn(
-                              "flex items-center gap-2 mt-1.5 md:mt-2",
-                              msg.sender_id === currentUserId ? "justify-end" : "justify-start"
-                            )}>
-                              <span className="text-[7px] md:text-[8px] opacity-40 font-black shrink-0">
-                                {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                              </span>
-                              {msg.sender_id === currentUserId && selectedMessages.length === 0 && (
-                                <button 
-                                  onClick={(e) => { e.stopPropagation(); handleDeleteMessage(msg.id); }}
-                                  className="text-[var(--foreground)]/20 hover:text-danger transition-colors shrink-0"
-                                  title="Delete Message"
-                                >
-                                  <Trash2 className="w-3 h-3" />
-                                </button>
-                              )}
-                            </div>
                           </div>
-                        </motion.div>
+                        </div>
                       );
                   })}
-                </AnimatePresence>
+                  </div>
                 </div>
 
                 <div className="p-3 pb-24 md:p-4 md:pb-4 bg-bg-secondary/80 backdrop-blur-xl border-t border-[var(--foreground)]/5 shrink-0 z-10">

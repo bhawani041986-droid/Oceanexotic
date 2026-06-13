@@ -55,8 +55,14 @@ export function NativeVideoCall({ roomID, userName, userID, onClose }: NativeVid
 
     const initCall = async () => {
       try {
-        // 1. Get local media
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        let stream;
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        } catch (videoErr) {
+          console.warn("Failed to get video, falling back to audio only:", videoErr);
+          stream = await navigator.mediaDevices.getUserMedia({ video: false, audio: true });
+          setIsCameraOn(false);
+        }
         localStream.current = stream;
         
         if (localVideoRef.current && mounted) {
@@ -159,7 +165,7 @@ export function NativeVideoCall({ roomID, userName, userID, onClose }: NativeVid
               }
             }
             else if (payload.type === 'peer-left') {
-              toast("The other party left the call.", "default");
+              toast("The other party left the call.", "info");
               cleanup();
             }
           } catch (err) {
@@ -181,7 +187,7 @@ export function NativeVideoCall({ roomID, userName, userID, onClose }: NativeVid
       } catch (err) {
         console.error("Failed to access media devices:", err);
         if (mounted) {
-          toast("Camera/Microphone access required", "error");
+          toast("Microphone access required. Please check permissions.", "error");
           onClose();
         }
       }
