@@ -15,6 +15,7 @@ export interface CustomerAssets {
 }
 
 interface SettingsState {
+  language: string;
   marketplaceName: string;
   flashDealActive: boolean;
   flashDealEnd: string;
@@ -38,6 +39,7 @@ const defaultAssets: CustomerAssets = {
 export const useSettingsStore = create<SettingsState>()(
   persist(
     (set, get) => ({
+      language: "en",
       marketplaceName: "OceanExotic Global",
       flashDealActive: true,
       flashDealEnd: new Date(Date.now() + 1000 * 60 * 60 * 3).toISOString(),

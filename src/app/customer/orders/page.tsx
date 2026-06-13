@@ -103,13 +103,11 @@ export default function OrdersPage() {
                             VIEW DETAILS
                           </Button>
                         </Link>
-                        {order.status !== "DELIVERED" && (
-                          <Link href={`/customer/orders/${order.id}/tracking`} className="flex-1 lg:flex-none">
-                            <Button className="w-full lg:w-auto h-10 md:h-12 px-6 md:px-8 text-[9px] md:text-[10px] font-black tracking-widest uppercase shadow-glow-purple rounded-lg md:rounded-xl">
-                              TRACK
-                            </Button>
-                          </Link>
-                        )}
+                        <Link href={`/customer/orders/${order.id}/tracking`} className="flex-1 lg:flex-none">
+                          <Button className="w-full lg:w-auto h-10 md:h-12 px-6 md:px-8 text-[9px] md:text-[10px] font-black tracking-widest uppercase shadow-glow-purple rounded-lg md:rounded-xl">
+                            TRACK
+                          </Button>
+                        </Link>
                         {order.status === "DELIVERED" && (
                           <Link href={`/customer/orders/${order.id}`}>
                             <Button className="w-full lg:w-auto h-10 md:h-12 px-6 md:px-8 text-[9px] md:text-[10px] font-black tracking-widest uppercase shadow-glow-purple rounded-lg md:rounded-xl">

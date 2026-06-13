@@ -5,13 +5,7 @@ import { cn } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useThemeColors } from "@/hooks/useThemeColors";
-
-const NAV: { label: string; href: Href }[] = [
-  { label: "Home", href: "/home" },
-  { label: "Market", href: "/products" },
-  { label: "Orders", href: "/orders" },
-  { label: "Profile", href: "/profile" },
-];
+import i18n from "@/lib/i18n";
 
 function pathActive(pathname: string, href: string): boolean {
   if (href === "/home") return pathname === "/home" || pathname === "/";
@@ -115,6 +109,14 @@ export function CustomerTabBar() {
   const router = useRouter();
   const count = useCartStore((s) => s.itemCount());
   const colors = useThemeColors();
+  const { language } = useSettingsStore();
+
+  const NAV: { label: string; href: Href }[] = [
+    { label: i18n.t("home") || "Home", href: "/home" },
+    { label: i18n.t("catalog") || "Market", href: "/products" },
+    { label: i18n.t("orders") || "Orders", href: "/orders" },
+    { label: i18n.t("profile") || "Profile", href: "/profile" },
+  ];
 
   return (
     <View 

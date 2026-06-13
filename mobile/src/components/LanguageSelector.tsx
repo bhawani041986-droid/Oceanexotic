@@ -3,6 +3,7 @@ import { View, Text, Pressable, Modal, FlatList, StyleSheet } from 'react-native
 import { Globe, ChevronDown, X } from 'lucide-react-native';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import i18n, { setLanguage, loadSavedLanguage } from '@/lib/i18n';
+import { useSettingsStore } from "@/store/settingsStore";
 
 const LANGUAGES = [
   { code: 'en', name: 'English' },
@@ -22,22 +23,22 @@ const LANGUAGES = [
 
 export function LanguageSelector() {
   const colors = useThemeColors();
+  const { language, setSettings } = useSettingsStore();
   const [modalVisible, setModalVisible] = useState(false);
-  const [currentLang, setCurrentLang] = useState(i18n.locale);
 
   useEffect(() => {
     loadSavedLanguage().then(() => {
-      setCurrentLang(i18n.locale);
+      setSettings({ language: i18n.locale });
     });
   }, []);
 
   const handleSelect = async (code: string) => {
     await setLanguage(code);
-    setCurrentLang(code);
+    setSettings({ language: code });
     setModalVisible(false);
   };
 
-  const activeLang = LANGUAGES.find(l => l.code === currentLang) || LANGUAGES[0];
+  const activeLang = LANGUAGES.find(l => l.code === language) || LANGUAGES[0];
 
   return (
     <View className="shrink-0 relative z-50">
