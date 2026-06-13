@@ -99,7 +99,6 @@ export default function CustomerCategoriesPage() {
           </Link>
         ))}
       </div>
-      </div>
 
       <div className="py-8">
          <OceanReelsFeed />
