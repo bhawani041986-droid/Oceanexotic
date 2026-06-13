@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Package, Receipt, FileText, Check, CheckCheck, Play } from 'lucide-react';
+import { Package, Receipt, FileText, Check, CheckCheck, Play, Video } from 'lucide-react';
 import Image from 'next/image';
 
 export interface ChatMessage {
@@ -18,9 +18,10 @@ interface MessageBubbleProps {
   message: ChatMessage;
   isOwnMessage: boolean;
   currentUserId: string;
+  onJoinVideoCall?: (roomID: string) => void;
 }
 
-export function MessageBubble({ message, isOwnMessage }: MessageBubbleProps) {
+export function MessageBubble({ message, isOwnMessage, onJoinVideoCall }: MessageBubbleProps) {
   const timeString = new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
   const renderContent = () => {
@@ -163,6 +164,24 @@ export function MessageBubble({ message, isOwnMessage }: MessageBubbleProps) {
 
       case 'TEXT':
       default:
+        if (message.message_text.includes("[VIDEO_CALL_INVITE]:")) {
+          const roomID = message.message_text.replace("[VIDEO_CALL_INVITE]:", "").trim();
+          return (
+            <div className="flex flex-col items-center gap-2 md:gap-3 p-2 min-w-[200px]">
+              <Video className="w-6 h-6 md:w-8 md:h-8 opacity-80" />
+              <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
+              <button 
+                onClick={(e) => { e.stopPropagation(); if (onJoinVideoCall) onJoinVideoCall(roomID); }}
+                className={cn(
+                  "w-full py-2 rounded-lg md:rounded-xl font-black text-[8px] md:text-[9px] uppercase tracking-widest hover:scale-95 transition-all",
+                  isOwnMessage ? "bg-white text-primary" : "bg-primary text-white"
+                )}
+              >
+                Join Connection
+              </button>
+            </div>
+          );
+        }
         return <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.message_text}</p>;
     }
   };

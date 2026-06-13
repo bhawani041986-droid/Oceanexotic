@@ -26,6 +26,13 @@ import { FULL_API_URL as API_BASE_URL } from "@/config/api";
 import { supabase } from "@/lib/supabase";
 import { MessageBubble, ChatMessage } from "@/components/chat/MessageBubble";
 import { motion, AnimatePresence } from "framer-motion";
+import dynamic from "next/dynamic";
+import { IncomingCallOverlay } from "@/components/video/IncomingCallOverlay";
+
+const NativeVideoCall = dynamic(
+  () => import("@/components/video/NativeVideoCall").then(mod => mod.NativeVideoCall),
+  { ssr: false }
+);
 
 export default function SellerChatPage() {
   const [mounted, setMounted] = useState(false);
@@ -35,6 +42,9 @@ export default function SellerChatPage() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [activeVideoRoom, setActiveVideoRoom] = useState<string | null>(null);
+  const [incomingCall, setIncomingCall] = useState<{roomID: string, callerName: string} | null>(null);
+  const processedInvites = useRef<Set<string>>(new Set());
   const currentUserId = "SEL-001"; // Seller ID
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -56,6 +66,22 @@ export default function SellerChatPage() {
       if (data.length > 0 && activeChat === null) {
         setActiveChat(data[0].id);
       }
+      
+      const recentCall = data.find((c: any) => {
+        if (c.unread_count > 0 && c.last_message && c.last_message_sender_id !== currentUserId && c.last_message.includes('[VIDEO_CALL_INVITE]:')) {
+          const roomID = c.last_message.replace('[VIDEO_CALL_INVITE]:', '').trim();
+          if (!processedInvites.current.has(roomID) && (Date.now() - c.timestamp < 60000)) {
+            return true;
+          }
+        }
+        return false;
+      });
+
+      if (recentCall) {
+        const roomID = recentCall.last_message.replace('[VIDEO_CALL_INVITE]:', '').trim();
+        setIncomingCall({ roomID, callerName: recentCall.other_party_name });
+        processedInvites.current.add(roomID);
+      }
     } catch (err) {
       console.error("Signal failure:", err);
     } finally {
@@ -75,10 +101,9 @@ export default function SellerChatPage() {
   };
 
   // --- SEND MESSAGE ---
-  const handleSendMessage = async () => {
-    if (!message.trim() || activeChat === null) return;
-    
-    const textToSend = message;
+  const handleSendMessage = async (customMsg?: string) => {
+    const textToSend = customMsg || message;
+    if (!textToSend.trim() || activeChat === null) return;
     
     // Optimistically add message
     const tempMsg: ChatMessage = {
@@ -118,6 +143,13 @@ export default function SellerChatPage() {
     } catch (err) {
       console.error("Signal lost:", err);
     }
+  };
+
+  const handleInitiateVideoCall = () => {
+    if (!activeChat) return;
+    const roomID = `ROOM_${activeChat}_${Date.now()}`;
+    setActiveVideoRoom(roomID);
+    handleSendMessage(`[VIDEO_CALL_INVITE]:${roomID}`);
   };
 
   useEffect(() => {
@@ -161,7 +193,34 @@ export default function SellerChatPage() {
   if (!mounted) return null;
 
   return (
-    <div className="h-[calc(100vh-180px)] lg:h-[calc(100vh-200px)] flex gap-4 lg:gap-6 animate-fade-in relative overflow-hidden pb-32 lg:pb-0">
+    <>
+      <IncomingCallOverlay 
+        roomID={incomingCall?.roomID || null}
+        callerName={incomingCall?.callerName || ""}
+        onAccept={() => {
+          if (incomingCall) {
+            setActiveVideoRoom(incomingCall.roomID);
+            setIncomingCall(null);
+          }
+        }}
+        onDecline={() => {
+          setIncomingCall(null);
+          if (incomingCall && activeChat) {
+            handleSendMessage(`[CALL_DECLINED]:${incomingCall.roomID}`);
+          }
+        }}
+      />
+      <AnimatePresence>
+        {activeVideoRoom && (
+          <NativeVideoCall 
+            roomID={activeVideoRoom} 
+            userName="Seller" 
+            userID={currentUserId}
+            onClose={() => setActiveVideoRoom(null)}
+          />
+        )}
+      </AnimatePresence>
+      <div className="h-[calc(100vh-180px)] lg:h-[calc(100vh-200px)] flex gap-4 lg:gap-6 animate-fade-in relative overflow-hidden pb-32 lg:pb-0">
       
       {/* 1. Signals Sidebar (280px) */}
       <Card className={cn(
@@ -244,7 +303,7 @@ export default function SellerChatPage() {
                   <button className="hidden sm:flex p-2.5 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all">
                      <Phone className="w-4 h-4" />
                   </button>
-                  <button className="hidden sm:flex p-2.5 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all">
+                  <button onClick={handleInitiateVideoCall} className="hidden sm:flex p-2.5 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all">
                      <Video className="w-4 h-4" />
                   </button>
                   <button className="p-2.5 rounded-full hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all">
@@ -265,6 +324,7 @@ export default function SellerChatPage() {
                        message={msg} 
                        isOwnMessage={msg.sender_id === currentUserId} 
                        currentUserId={currentUserId} 
+                       onJoinVideoCall={(roomID) => setActiveVideoRoom(roomID)}
                      />
                    </div>
                  ))}
@@ -360,5 +420,6 @@ export default function SellerChatPage() {
       )}
 
     </div>
+    </>
   );
 }

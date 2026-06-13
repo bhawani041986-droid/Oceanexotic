@@ -27,6 +27,13 @@ import { useAuthStore } from "@/store/authStore";
 import { useToast } from "@/components/ui/Toast";
 import { supabase } from "@/lib/supabase";
 import { MessageBubble, ChatMessage } from "@/components/chat/MessageBubble";
+import dynamic from "next/dynamic";
+import { IncomingCallOverlay } from "@/components/video/IncomingCallOverlay";
+
+const NativeVideoCall = dynamic(
+  () => import("@/components/video/NativeVideoCall").then(mod => mod.NativeVideoCall),
+  { ssr: false }
+);
 
 export default function ChatPage() {
   const router = useRouter();
@@ -41,6 +48,9 @@ export default function ChatPage() {
   const [messages, setMessages] = React.useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [selectedMessages, setSelectedMessages] = React.useState<number[]>([]);
+  const [activeVideoRoom, setActiveVideoRoom] = React.useState<string | null>(null);
+  const [incomingCall, setIncomingCall] = React.useState<{roomID: string, callerName: string} | null>(null);
+  const processedInvites = React.useRef<Set<string>>(new Set());
   
   const currentUserId = user?.id || "USR-001";
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
@@ -62,6 +72,22 @@ export default function ChatPage() {
         setConversations(data);
         if (data.length > 0 && activeChat === null) {
           setActiveChat(data[0].id);
+        }
+        
+        const recentCall = data.find((c: any) => {
+          if (c.unread_count > 0 && c.last_message && c.last_message_sender_id !== currentUserId && c.last_message.includes('[VIDEO_CALL_INVITE]:')) {
+            const roomID = c.last_message.replace('[VIDEO_CALL_INVITE]:', '').trim();
+            if (!processedInvites.current.has(roomID) && (Date.now() - c.timestamp < 60000)) {
+              return true;
+            }
+          }
+          return false;
+        });
+
+        if (recentCall) {
+          const roomID = recentCall.last_message.replace('[VIDEO_CALL_INVITE]:', '').trim();
+          setIncomingCall({ roomID, callerName: recentCall.other_party_name });
+          processedInvites.current.add(roomID);
         }
       }
     } catch (err) {
@@ -193,7 +219,34 @@ export default function ChatPage() {
   const currentChat = conversations.find(c => c.id === activeChat);
 
   return (
-    <div className="bg-[#0B1120] h-screen text-white font-inter flex flex-col selection:bg-primary/30 overflow-hidden">
+    <>
+      <IncomingCallOverlay 
+        roomID={incomingCall?.roomID || null}
+        callerName={incomingCall?.callerName || ""}
+        onAccept={() => {
+          if (incomingCall) {
+            setActiveVideoRoom(incomingCall.roomID);
+            setIncomingCall(null);
+          }
+        }}
+        onDecline={() => {
+          setIncomingCall(null);
+          if (incomingCall && activeChat) {
+            handleSendMessage(`[CALL_DECLINED]:${incomingCall.roomID}`);
+          }
+        }}
+      />
+      <AnimatePresence>
+        {activeVideoRoom && (
+          <NativeVideoCall 
+            roomID={activeVideoRoom} 
+            userName="Customer" 
+            userID={currentUserId}
+            onClose={() => setActiveVideoRoom(null)}
+          />
+        )}
+      </AnimatePresence>
+      <div className="bg-[#0B1120] h-screen text-white font-inter flex flex-col selection:bg-primary/30 overflow-hidden">
       
       {/* HEADER */}
       <header className="h-16 md:h-20 bg-[#0B1120]/80 backdrop-blur-2xl border-b border-[var(--foreground)]/5 px-4 md:px-6 flex items-center justify-between shrink-0 z-50">
@@ -320,6 +373,7 @@ export default function ChatPage() {
                            message={msg} 
                            isOwnMessage={isOwnMessage} 
                            currentUserId={currentUserId} 
+                           onJoinVideoCall={(roomID) => setActiveVideoRoom(roomID)}
                          />
                        </div>
                      </div>
@@ -366,5 +420,6 @@ export default function ChatPage() {
          </main>
       </div>
     </div>
+    </>
   );
 }

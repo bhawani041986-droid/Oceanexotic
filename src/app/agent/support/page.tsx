@@ -608,27 +608,7 @@ export default function AgentSupportHub() {
                             onClick={() => selectedMessages.length > 0 && msg.sender_id === currentUserId ? toggleSelection(msg.id) : undefined}
                             className={cn("w-full transition-all", selectedMessages.includes(msg.id) && "opacity-50")}
                           >
-                            {isVideoInvite ? (
-                              <div className={cn(
-                                "max-w-[90%] md:max-w-[85%] p-3 md:p-4 rounded-2xl md:rounded-3xl relative shadow-2xl transition-all",
-                                msg.sender_id === currentUserId 
-                                  ? "bg-primary text-[var(--foreground)] rounded-tr-none shadow-glow-purple ml-auto" 
-                                  : "bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] rounded-tl-none"
-                              )}>
-                                <div className="flex flex-col items-center gap-2 md:gap-3 p-2">
-                                  <Video className="w-6 h-6 md:w-8 md:h-8 opacity-80" />
-                                  <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
-                                  <button 
-                                    onClick={(e) => { e.stopPropagation(); setActiveVideoRoom(roomID); }}
-                                    className="w-full py-2 rounded-lg md:rounded-xl bg-[var(--foreground)] text-bg-primary font-black text-[8px] md:text-[9px] uppercase tracking-widest hover:scale-95 transition-all"
-                                  >
-                                    Join Connection
-                                  </button>
-                                </div>
-                              </div>
-                            ) : (
-                              <MessageBubble message={msg as any} isOwnMessage={msg.sender_id === currentUserId} currentUserId={currentUserId} />
-                            )}
+                            <MessageBubble message={msg as any} isOwnMessage={msg.sender_id === currentUserId} currentUserId={currentUserId} onJoinVideoCall={(roomID) => setActiveVideoRoom(roomID)} />
                           </div>
                         </div>
                       );
@@ -685,17 +665,6 @@ export default function AgentSupportHub() {
         </div>
       </div>
       </div>
-
-      <AnimatePresence>
-        {activeVideoRoom && (
-          <NativeVideoCall
-            roomID={activeVideoRoom}
-            userID={currentUserId}
-            userName="Fleet Agent Node"
-            onClose={() => setActiveVideoRoom(null)}
-          />
-        )}
-      </AnimatePresence>
 
     </>
   );

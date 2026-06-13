@@ -593,25 +593,7 @@ export default function AdminSupportHub() {
                             onClick={() => selectedMessages.length > 0 && msg.sender_id === currentUserId ? toggleSelection(msg.id) : undefined}
                             className={cn("w-full transition-all", selectedMessages.includes(msg.id) && "opacity-50")}
                           >
-                            {isVideoInvite ? (
-                              <div className={cn(
-                                "max-w-[85%] p-4 rounded-3xl relative shadow-2xl transition-all",
-                                msg.sender_id === currentUserId ? "bg-primary text-[var(--foreground)] rounded-tr-none ml-auto" : "bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] rounded-tl-none"
-                              )}>
-                                <div className="flex flex-col items-center gap-3 p-2">
-                                  <Video className="w-8 h-8 opacity-80" />
-                                  <p className="text-[10px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
-                                  <button 
-                                    onClick={(e) => { e.stopPropagation(); setActiveVideoRoom(roomID); }}
-                                    className="w-full py-2 rounded-xl bg-[var(--foreground)] text-bg-primary font-black text-[9px] uppercase tracking-widest hover:scale-95 transition-all"
-                                  >
-                                    Join Connection
-                                  </button>
-                                </div>
-                              </div>
-                            ) : (
-                              <MessageBubble message={msg as any} isOwnMessage={msg.sender_id === currentUserId} currentUserId={currentUserId} />
-                            )}
+                            <MessageBubble message={msg as any} isOwnMessage={msg.sender_id === currentUserId} currentUserId={currentUserId} onJoinVideoCall={(roomID) => setActiveVideoRoom(roomID)} />
                           </div>
                         </div>
                       );
