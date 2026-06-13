@@ -70,7 +70,7 @@ export default function AgentHistoryPage() {
       {/* Header & Controls */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-1 text-center md:text-left">
-          <h1 className="text-3xl font-black italic uppercase tracking-tighter text-[var(--foreground)]">MISSION ARCHIVE</h1>
+          <h1 className="text-2xl md:text-3xl font-black italic uppercase tracking-tighter text-[var(--foreground)]">MISSION ARCHIVE</h1>
           <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.3em]">Historical Yield Governance • {filteredHistory.length} Missions Recorded</p>
         </div>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center w-full md:w-auto gap-3">

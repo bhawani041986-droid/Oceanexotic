@@ -71,7 +71,7 @@ export default function AgentDashboardPage() {
       {/* Header - Agent Identity */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
            <div className="space-y-1 text-center md:text-left">
-              <h1 className="text-3xl font-black italic uppercase tracking-tighter text-[var(--foreground)]">FLEET AGENT HUB</h1>
+              <h1 className="text-2xl md:text-3xl font-black italic uppercase tracking-tighter text-[var(--foreground)]">FLEET AGENT HUB</h1>
               <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.3em]">Operator: AGENT-742 • SEA-COMMAND ACTIVE</p>
            </div>
            <div className="flex items-center justify-between md:justify-start w-full md:w-auto gap-4 p-4 rounded-[20px] bg-[var(--foreground)]/5 border border-[var(--foreground)]/10">
@@ -94,7 +94,7 @@ export default function AgentDashboardPage() {
                 <div className={stat.color}>{stat.icon}</div>
                 <div className="space-y-1">
                    <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">{stat.label}</p>
-                   <h3 className="text-3xl font-black text-[var(--foreground)] leading-none tracking-tighter italic">{stat.value}</h3>
+                   <h3 className="text-2xl md:text-3xl font-black text-[var(--foreground)] leading-none tracking-tighter italic">{stat.value}</h3>
                 </div>
              </Card>
            ))}
@@ -105,7 +105,7 @@ export default function AgentDashboardPage() {
            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3 justify-center sm:justify-start">
                  <Truck className="w-5 h-5 text-primary" />
-                 <h2 className="text-xl font-black text-[var(--foreground)] uppercase italic tracking-tight text-center sm:text-left">Active Mission Queue</h2>
+                 <h2 className="text-lg md:text-xl font-black text-[var(--foreground)] uppercase italic tracking-tight text-center sm:text-left">Active Mission Queue</h2>
               </div>
               <Badge variant="glass" className="uppercase tracking-widest text-[9px] font-black px-4 mx-auto sm:mx-0 w-fit">{missions.length} ASSIGNMENTS</Badge>
            </div>

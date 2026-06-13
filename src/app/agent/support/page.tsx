@@ -346,8 +346,8 @@ export default function AgentSupportHub() {
           onClose={() => setActiveVideoRoom(null)}
         />
       )}
-      <div className="p-4 md:p-10 pb-28 md:pb-10 h-[calc(100dvh-64px)] md:h-[100dvh]">
-        <div className="h-full bg-bg-secondary/20 rounded-[20px] md:rounded-[32px] border border-[var(--foreground)]/5 overflow-hidden flex flex-col relative">
+      <div className="p-0 md:p-10 h-[calc(100dvh-64px)] md:h-[100dvh]">
+        <div className="h-full bg-bg-secondary/20 md:rounded-[32px] border-y md:border border-[var(--foreground)]/5 overflow-hidden flex flex-col relative">
           <div className="flex-1 flex flex-col lg:flex-row h-full overflow-hidden">
           
           {/* LIST VIEW */}
@@ -360,18 +360,18 @@ export default function AgentSupportHub() {
             <div className="p-4 space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-primary/20 border border-primary/30 flex items-center justify-center text-primary shadow-glow-purple">
-                    <Radar className="w-6 h-6 animate-pulse" />
+                  <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-primary/20 border border-primary/30 flex items-center justify-center text-primary shadow-glow-purple shrink-0">
+                    <Radar className="w-5 h-5 md:w-6 md:h-6 animate-pulse" />
                   </div>
                   <div>
-                    <h1 className="text-xl font-black text-[var(--foreground)] tracking-tight uppercase">Agent Comms Link</h1>
-                    <p className="text-xs font-black text-slate-500 uppercase tracking-widest italic opacity-60">Fleet Ops System</p>
+                    <h1 className="text-lg md:text-xl font-black text-[var(--foreground)] tracking-tight uppercase leading-tight">Agent Comms Link</h1>
+                    <p className="text-[10px] md:text-xs font-black text-slate-500 uppercase tracking-widest italic opacity-60">Fleet Ops System</p>
                   </div>
                 </div>
                 <button 
                   onClick={() => setIsCreatingContact(!isCreatingContact)}
                   className={cn(
-                    "w-10 h-10 rounded-full flex items-center justify-center border transition-all active:scale-90",
+                    "w-10 h-10 rounded-full flex items-center justify-center border transition-all active:scale-90 shrink-0",
                     isCreatingContact 
                       ? "bg-danger/10 text-danger border-danger/20" 
                       : "bg-primary/10 text-primary border-primary/20 shadow-glow-purple/20"
@@ -407,14 +407,14 @@ export default function AgentSupportHub() {
                             onClick={() => handleCreateContactDirect(user.id)}
                             className="w-full text-left px-3 py-2 rounded-xl hover:bg-primary/20 flex items-center justify-between group transition-all border border-transparent hover:border-primary/30"
                           >
-                            <div>
-                              <p className="text-xs font-black uppercase truncate leading-tight">{user.name}</p>
+                            <div className="min-w-0 pr-2">
+                              <p className="text-[10px] md:text-xs font-black uppercase truncate leading-tight">{user.name}</p>
                               <div className="flex items-center gap-1.5 mt-0.5">
-                                <span className="text-[8px] font-bold text-slate-500 uppercase">{user.id}</span>
-                                <span className="text-[8px] px-1 py-0.5 rounded bg-[var(--foreground)]/5 text-[var(--foreground)] font-bold uppercase">{user.role}</span>
+                                <span className="text-[8px] font-bold text-slate-500 uppercase truncate">{user.id}</span>
+                                <span className="text-[8px] px-1 py-0.5 rounded bg-[var(--foreground)]/5 text-[var(--foreground)] font-bold uppercase shrink-0">{user.role}</span>
                               </div>
                             </div>
-                            <span className="text-[8px] font-black uppercase tracking-widest text-primary opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1"><Plus className="w-3 h-3" /> LINK</span>
+                            <span className="text-[8px] font-black uppercase tracking-widest text-primary opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 shrink-0"><Plus className="w-3 h-3" /> LINK</span>
                           </button>
                         ))}
                         {availableUsers.length > 0 && availableUsers.filter(u => 
@@ -440,12 +440,12 @@ export default function AgentSupportHub() {
                   placeholder="Search Protocols..." 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full h-12 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-2xl pl-10 pr-4 text-xs font-black uppercase text-[var(--foreground)] outline-none focus:border-primary/50 transition-all italic"
+                  className="w-full h-12 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-2xl pl-10 pr-4 text-[10px] md:text-xs font-black uppercase text-[var(--foreground)] outline-none focus:border-primary/50 transition-all italic"
                 />
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-4 pb-20 space-y-3 no-scrollbar">
+            <div className="flex-1 overflow-y-auto px-4 pb-24 md:pb-4 space-y-3 no-scrollbar">
               {filteredConversations.length === 0 ? (
                 <div className="text-center py-20 opacity-40 italic text-xs font-black uppercase tracking-widest text-slate-500">No active signals found.</div>
               ) : (
@@ -454,25 +454,25 @@ export default function AgentSupportHub() {
                     key={conv.id}
                     onClick={() => setActiveChat(conv.id)}
                     className={cn(
-                      "w-full p-4 rounded-3xl border flex items-start gap-4 transition-all relative overflow-hidden",
+                      "w-full p-3 md:p-4 rounded-2xl md:rounded-3xl border flex items-start gap-3 md:gap-4 transition-all relative overflow-hidden",
                       activeChat === conv.id 
                         ? "bg-[var(--foreground)]/10 border-primary/30 shadow-glow-purple/10" 
                         : "bg-[var(--foreground)]/5 border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10"
                     )}
                   >
                     <div className="relative shrink-0">
-                      <div className="w-12 h-12 rounded-2xl bg-primary/20 border border-primary/20 flex items-center justify-center text-primary font-black text-sm">
+                      <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-primary/20 border border-primary/20 flex items-center justify-center text-primary font-black text-xs md:text-sm">
                         {(conv.other_party_name || "??").substring(0, 2).toUpperCase()}
                       </div>
-                      {conv.online && <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-[#0B1120] bg-success shadow-lg" />}
+                      {conv.online && <div className="absolute -bottom-1 -right-1 w-3 h-3 md:w-4 md:h-4 rounded-full border-2 border-[#0B1120] bg-success shadow-lg" />}
                     </div>
                     
                     <div className="flex-1 text-left min-w-0 pt-0.5">
                       <div className="flex items-center justify-between mb-1.5">
-                        <p className="text-xs font-black text-[var(--foreground)] uppercase italic truncate pr-2">{conv.other_party_name}</p>
-                        <span className="text-[8px] font-black text-slate-500 uppercase">{conv.time}</span>
+                        <p className="text-[10px] md:text-xs font-black text-[var(--foreground)] uppercase italic truncate pr-2">{conv.other_party_name}</p>
+                        <span className="text-[7px] md:text-[8px] font-black text-slate-500 uppercase shrink-0">{conv.time}</span>
                       </div>
-                      <p className="text-[10px] font-medium text-slate-400 truncate opacity-80 mb-2">{conv.last_message}</p>
+                      <p className="text-[9px] md:text-[10px] font-medium text-slate-400 truncate opacity-80 mb-2">{conv.last_message}</p>
                       <div className="flex items-center gap-2">
                         <Badge variant={conv.status === 'RESOLVED' ? 'success' : 'warning'} className="text-[6px] px-1 py-0 border-none">
                           {conv.status || 'OPEN'}
@@ -497,87 +497,86 @@ export default function AgentSupportHub() {
           >
             {activeChat === null ? (
               <div className="flex-1 flex flex-col items-center justify-center opacity-20">
-                <MessageSquare className="w-16 h-16 mb-4" />
-                <h3 className="text-lg font-black uppercase tracking-widest italic">Intercepting Signals</h3>
-                <p className="text-xs font-bold">Select a node from the registry</p>
+                <MessageSquare className="w-12 h-12 md:w-16 md:h-16 mb-4" />
+                <h3 className="text-base md:text-lg font-black uppercase tracking-widest italic text-center">Intercepting Signals</h3>
+                <p className="text-[10px] md:text-xs font-bold text-center">Select a node from the registry</p>
               </div>
             ) : (
               <>
                 <header className={cn(
-                  "h-16 px-4 border-b flex items-center justify-between shrink-0 transition-colors",
+                  "h-14 md:h-16 px-2 md:px-4 border-b flex items-center justify-between shrink-0 transition-colors",
                   selectedMessages.length > 0 ? "bg-primary/20 border-primary/30" : "bg-[var(--foreground)]/5 border-[var(--foreground)]/5"
                 )}>
                   {selectedMessages.length > 0 ? (
                     <>
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2 md:gap-3">
                         <button onClick={() => setSelectedMessages([])} className="p-2 hover:bg-white/10 rounded-full transition-colors">
-                          <X className="w-5 h-5 text-primary" />
+                          <X className="w-4 h-4 md:w-5 md:h-5 text-primary" />
                         </button>
-                        <span className="font-black text-primary uppercase tracking-widest text-sm">{selectedMessages.length} Selected</span>
+                        <span className="font-black text-primary uppercase tracking-widest text-xs md:text-sm">{selectedMessages.length} Selected</span>
                       </div>
                       <button onClick={handleBulkDelete} className="p-2 text-danger hover:bg-danger/10 rounded-full transition-colors" title="Delete Selected Messages">
-                        <Trash2 className="w-5 h-5" />
+                        <Trash2 className="w-4 h-4 md:w-5 md:h-5" />
                       </button>
                     </>
                   ) : (
                     <>
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1 md:gap-3">
                         <button onClick={() => setActiveChat(null)} className="p-2 text-slate-400 hover:text-[var(--foreground)] transition-colors lg:hidden">
-                          <ChevronLeft className="w-6 h-6" />
+                          <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
                         </button>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 md:gap-3">
                           <div className="relative hidden sm:block">
-                            <div className="w-10 h-10 rounded-xl bg-primary/20 border border-primary/20 flex items-center justify-center text-primary font-black text-xs">
+                            <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl bg-primary/20 border border-primary/20 flex items-center justify-center text-primary font-black text-xs">
                               {(currentChat?.other_party_name || "??").substring(0, 2).toUpperCase()}
                             </div>
-                            {currentChat?.online && <div className="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full border-2 border-[#0B1120]" />}
+                            {currentChat?.online && <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-success rounded-full border-2 border-[#0B1120]" />}
                           </div>
-                          <div>
-                            <div className="flex items-center gap-2">
-                              <h3 className="text-xs font-black text-[var(--foreground)] uppercase italic leading-tight">{currentChat?.other_party_name}</h3>
+                          <div className="min-w-0 pr-2">
+                            <div className="flex items-center gap-1 md:gap-2">
+                              <h3 className="text-[10px] md:text-xs font-black text-[var(--foreground)] uppercase italic leading-tight truncate max-w-[100px] sm:max-w-[150px]">{currentChat?.other_party_name}</h3>
                               {currentChat?.order_id && (
-                                <span className="text-[8px] px-1.5 py-0.5 rounded bg-primary/10 text-primary font-black border border-primary/20">
+                                <span className="text-[7px] md:text-[8px] px-1 md:px-1.5 py-0.5 rounded bg-primary/10 text-primary font-black border border-primary/20 shrink-0">
                                   {currentChat.order_id}
                                 </span>
                               )}
                             </div>
-                            <p className="text-[8px] font-black text-success uppercase tracking-widest italic opacity-60">{currentChat?.other_party_role} NODE</p>
+                            <p className="text-[7px] md:text-[8px] font-black text-success uppercase tracking-widest italic opacity-60">{currentChat?.other_party_role} NODE</p>
                           </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1 md:gap-2">
                         {currentChat?.status !== 'RESOLVED' ? (
                           <button 
                             onClick={() => handleUpdateStatus(activeChat, 'RESOLVED')}
-                            className="h-8 px-3 rounded-lg bg-success/10 text-success border border-success/20 hover:bg-success/20 flex items-center gap-1.5 text-[8px] font-black uppercase tracking-widest transition-all"
+                            className="h-7 md:h-8 px-2 md:px-3 rounded-lg bg-success/10 text-success border border-success/20 hover:bg-success/20 flex items-center gap-1 text-[7px] md:text-[8px] font-black uppercase tracking-widest transition-all"
                           >
-                            <CheckCircle2 className="w-3.5 h-3.5" /> Resolve
+                            <CheckCircle2 className="w-3 h-3 md:w-3.5 md:h-3.5" /> <span className="hidden sm:inline">Resolve</span>
                           </button>
                         ) : (
                           <button 
                             onClick={() => handleUpdateStatus(activeChat, 'OPEN')}
-                            className="h-8 px-3 rounded-lg bg-warning/10 text-warning border border-warning/20 hover:bg-warning/20 flex items-center gap-1.5 text-[8px] font-black uppercase tracking-widest transition-all"
+                            className="h-7 md:h-8 px-2 md:px-3 rounded-lg bg-warning/10 text-warning border border-warning/20 hover:bg-warning/20 flex items-center gap-1 text-[7px] md:text-[8px] font-black uppercase tracking-widest transition-all"
                           >
-                            <AlertCircle className="w-3.5 h-3.5" /> Reopen
+                            <AlertCircle className="w-3 h-3 md:w-3.5 md:h-3.5" /> <span className="hidden sm:inline">Reopen</span>
                           </button>
                         )}
-                        <button className="p-2 text-slate-400 hover:text-primary transition-colors hidden sm:block"><Phone className="w-5 h-5" /></button>
                         <button 
                           onClick={handleInitiateVideoCall}
-                          className="p-2 text-slate-400 hover:text-primary transition-colors hidden sm:block"
+                          className="p-1.5 md:p-2 text-slate-400 hover:text-primary transition-colors"
                           title="Initiate Secure Video Link"
                         >
-                          <Video className="w-5 h-5" />
+                          <Video className="w-4 h-4 md:w-5 md:h-5" />
                         </button>
                       </div>
                     </>
                   )}
                 </header>
 
-                <div ref={scrollRef} className="flex-1 overflow-y-auto no-scrollbar p-6 space-y-6">
-                  <div className="flex flex-col items-center gap-2 mb-8 opacity-20">
+                <div ref={scrollRef} className="flex-1 overflow-y-auto no-scrollbar p-3 md:p-6 space-y-4 md:space-y-6">
+                  <div className="flex flex-col items-center gap-1 md:gap-2 mb-6 md:mb-8 opacity-20">
                      <Lock className="w-3 h-3" />
-                     <p className="text-[8px] font-black uppercase tracking-[0.2em] text-center">ENCRYPTED CHANNEL <br/> SIGNAL STABILITY: 99.8%</p>
+                     <p className="text-[7px] md:text-[8px] font-black uppercase tracking-[0.2em] text-center">ENCRYPTED CHANNEL <br/> SIGNAL STABILITY: 99.8%</p>
                   </div>
 
                   <AnimatePresence initial={false}>
@@ -594,7 +593,7 @@ export default function AgentSupportHub() {
                           exit={{ opacity: 0, scale: 0.8, height: 0, marginTop: 0, marginBottom: 0, overflow: 'hidden' }}
                           transition={{ duration: 0.2, type: 'spring', stiffness: 300, damping: 25 }}
                           className={cn(
-                            "flex items-center gap-3",
+                            "flex items-center gap-2 md:gap-3",
                             msg.sender_id === currentUserId ? "justify-end" : "justify-start"
                           )}
                         >
@@ -606,14 +605,14 @@ export default function AgentSupportHub() {
                                 selectedMessages.includes(msg.id) ? "text-primary" : "text-white/20 hover:text-white/40"
                               )}
                             >
-                              {selectedMessages.includes(msg.id) ? <CheckCircle2 className="w-5 h-5" /> : <Circle className="w-5 h-5" />}
+                              {selectedMessages.includes(msg.id) ? <CheckCircle2 className="w-4 h-4 md:w-5 md:h-5" /> : <Circle className="w-4 h-4 md:w-5 md:h-5" />}
                             </button>
                           )}
 
                           <div 
                             onClick={() => selectedMessages.length > 0 && msg.sender_id === currentUserId ? toggleSelection(msg.id) : undefined}
                             className={cn(
-                              "max-w-[85%] p-4 rounded-3xl relative shadow-2xl transition-all",
+                              "max-w-[90%] md:max-w-[85%] p-3 md:p-4 rounded-2xl md:rounded-3xl relative shadow-2xl transition-all",
                               msg.sender_id === currentUserId 
                                 ? "bg-primary text-[var(--foreground)] rounded-tr-none shadow-glow-purple" 
                                 : "bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)] rounded-tl-none",
@@ -621,31 +620,31 @@ export default function AgentSupportHub() {
                             )}>
                             
                             {isVideoInvite ? (
-                              <div className="flex flex-col items-center gap-3 p-2">
-                                <Video className="w-8 h-8 opacity-80" />
-                                <p className="text-[10px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
+                              <div className="flex flex-col items-center gap-2 md:gap-3 p-2">
+                                <Video className="w-6 h-6 md:w-8 md:h-8 opacity-80" />
+                                <p className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-center">Secure Video Link Established</p>
                                 <button 
                                   onClick={(e) => { e.stopPropagation(); setActiveVideoRoom(roomID); }}
-                                  className="w-full py-2 rounded-xl bg-[var(--foreground)] text-bg-primary font-black text-[9px] uppercase tracking-widest hover:scale-95 transition-all"
+                                  className="w-full py-2 rounded-lg md:rounded-xl bg-[var(--foreground)] text-bg-primary font-black text-[8px] md:text-[9px] uppercase tracking-widest hover:scale-95 transition-all"
                                 >
                                   Join Connection
                                 </button>
                               </div>
                             ) : (
-                              <p className="text-xs leading-relaxed font-medium">{msg.message_text}</p>
+                              <p className="text-[11px] md:text-xs leading-relaxed font-medium break-words">{msg.message_text}</p>
                             )}
 
                             <div className={cn(
-                              "flex items-center gap-2 mt-2",
+                              "flex items-center gap-2 mt-1.5 md:mt-2",
                               msg.sender_id === currentUserId ? "justify-end" : "justify-start"
                             )}>
-                              <span className="text-[8px] opacity-40 font-black">
+                              <span className="text-[7px] md:text-[8px] opacity-40 font-black shrink-0">
                                 {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                               </span>
                               {msg.sender_id === currentUserId && selectedMessages.length === 0 && (
                                 <button 
                                   onClick={(e) => { e.stopPropagation(); handleDeleteMessage(msg.id); }}
-                                  className="text-[var(--foreground)]/20 hover:text-danger transition-colors"
+                                  className="text-[var(--foreground)]/20 hover:text-danger transition-colors shrink-0"
                                   title="Delete Message"
                                 >
                                   <Trash2 className="w-3 h-3" />
@@ -659,11 +658,11 @@ export default function AgentSupportHub() {
                 </AnimatePresence>
                 </div>
 
-                <div className="p-4 bg-bg-secondary/40 backdrop-blur-xl border-t border-[var(--foreground)]/5 shrink-0">
+                <div className="p-3 pb-24 md:p-4 md:pb-4 bg-bg-secondary/80 backdrop-blur-xl border-t border-[var(--foreground)]/5 shrink-0 z-10">
                   
                   {/* Quick Replies */}
                   {currentChat?.status !== 'RESOLVED' && (
-                    <div className="flex gap-2 overflow-x-auto no-scrollbar mb-3 pb-1 max-w-3xl mx-auto">
+                    <div className="flex gap-2 overflow-x-auto no-scrollbar mb-2 pb-1 max-w-3xl mx-auto">
                       {[
                         "I am checking with the logistics fleet.",
                         "Your payment has been fully verified.",
@@ -672,7 +671,7 @@ export default function AgentSupportHub() {
                         <button
                           key={idx}
                           onClick={() => handleSendMessage(undefined, qr)}
-                          className="px-3 py-1.5 rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 hover:border-primary/50 text-[9px] font-black uppercase tracking-widest whitespace-nowrap flex items-center gap-1.5 transition-all text-text-secondary hover:text-primary"
+                          className="px-2.5 py-1 md:px-3 md:py-1.5 rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 hover:border-primary/50 text-[8px] md:text-[9px] font-black uppercase tracking-widest whitespace-nowrap flex items-center gap-1 md:gap-1.5 transition-all text-text-secondary hover:text-primary shrink-0"
                         >
                           <Zap className="w-3 h-3" /> {qr.substring(0, 20)}...
                         </button>
@@ -680,25 +679,25 @@ export default function AgentSupportHub() {
                     </div>
                   )}
 
-                  <form onSubmit={handleSendMessage} className="flex items-center gap-2 max-w-3xl mx-auto">
-                    <div className="flex-1 flex items-center gap-2 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-full px-4 py-2 focus-within:border-primary/50 transition-colors">
-                      <button type="button" className="p-1.5 text-slate-500 hover:text-primary transition-colors"><Smile className="w-5 h-5" /></button>
+                  <form onSubmit={handleSendMessage} className="flex items-end gap-2 max-w-3xl mx-auto">
+                    <div className="flex-1 flex items-center gap-1 md:gap-2 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-2xl md:rounded-full px-3 py-1.5 md:px-4 md:py-2 focus-within:border-primary/50 transition-colors relative">
+                      <button type="button" className="p-1 md:p-1.5 text-slate-500 hover:text-primary transition-colors shrink-0"><Smile className="w-4 h-4 md:w-5 md:h-5" /></button>
                       <textarea 
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         placeholder={currentChat?.status === 'RESOLVED' ? "TICKET CLOSED" : "SIGNAL TRANSMISSION..."}
                         disabled={currentChat?.status === 'RESOLVED'}
                         rows={1}
-                        className="flex-1 bg-transparent border-none outline-none text-xs text-[var(--foreground)] placeholder:text-slate-600 font-medium py-1.5 resize-none max-h-32 no-scrollbar disabled:opacity-50"
+                        className="flex-1 bg-transparent border-none outline-none text-[11px] md:text-xs text-[var(--foreground)] placeholder:text-slate-600 font-medium py-1 md:py-1.5 resize-none max-h-24 md:max-h-32 min-h-[32px] no-scrollbar disabled:opacity-50"
                       />
-                      <button type="button" className="p-1.5 text-slate-500 hover:text-primary transition-colors"><Paperclip className="w-5 h-5" /></button>
+                      <button type="button" className="p-1 md:p-1.5 text-slate-500 hover:text-primary transition-colors shrink-0"><Paperclip className="w-4 h-4 md:w-5 md:h-5" /></button>
                     </div>
                     <button 
                       type="submit" 
                       disabled={!message.trim() || currentChat?.status === 'RESOLVED'}
-                      className="w-12 h-12 rounded-full bg-primary text-[var(--foreground)] flex items-center justify-center shadow-glow-purple active:scale-90 transition-all shrink-0 disabled:opacity-50 disabled:shadow-none"
+                      className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary text-[var(--foreground)] flex items-center justify-center shadow-glow-purple active:scale-90 transition-all shrink-0 disabled:opacity-50 disabled:shadow-none self-end mb-0.5"
                     >
-                      <Send className="w-5 h-5 ml-0.5 text-black" />
+                      <Send className="w-4 h-4 md:w-5 md:h-5 ml-0.5 text-black" />
                     </button>
                   </form>
                 </div>
