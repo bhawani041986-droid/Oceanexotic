@@ -246,7 +246,7 @@ export default function ChatPage() {
           />
         )}
       </AnimatePresence>
-      <div className="bg-[#0B1120] h-screen text-white font-inter flex flex-col selection:bg-primary/30 overflow-hidden">
+      <div className="bg-[#0B1120] h-[100dvh] text-white font-inter flex flex-col selection:bg-primary/30 overflow-hidden">
       
       {/* HEADER */}
       <header className="h-16 md:h-20 bg-[#0B1120]/80 backdrop-blur-2xl border-b border-[var(--foreground)]/5 px-4 md:px-6 flex items-center justify-between shrink-0 z-50">
