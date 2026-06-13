@@ -61,7 +61,11 @@ import { useSettingsStore } from "@/store/settingsStore";
 import { useCartStore } from "@/store/cartStore";
 import { useToast } from "@/components/ui/Toast";
 import { Logo } from "@/components/ui/Logo";
-import { OceanReelsFeed } from "@/components/video/OceanReelsFeed";
+import dynamic from 'next/dynamic';
+const OceanReelsFeed = dynamic(
+  () => import('@/components/video/OceanReelsFeed').then((mod) => mod.OceanReelsFeed),
+  { ssr: false, loading: () => <div className="w-full h-[250px] bg-[var(--c-bg)] animate-pulse my-4 border-y border-[var(--foreground)]/5" /> }
+);
 import { FULL_API_URL as API_BASE_URL } from "@/config/api";
 
 // --- Components ---

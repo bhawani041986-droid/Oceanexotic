@@ -25,9 +25,10 @@ export default function AdminVideosPage() {
 
   const fetchData = async () => {
     try {
-      // Get all products to link videos to
-      const { data: prodData } = await supabase.from('products').select('id, name');
-      if (prodData) setProducts(prodData);
+      // Get all products to link videos to via the secure server API (Bypasses RLS)
+      const res = await fetch('/api/seller/products');
+      const data = await res.json();
+      if (Array.isArray(data)) setProducts(data);
 
       // Get all uploaded videos
       const { data: vidData } = await supabase.from('product_videos').select('*').order('created_at', { ascending: false });

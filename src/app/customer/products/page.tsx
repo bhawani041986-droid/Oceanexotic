@@ -58,6 +58,12 @@ import { useCartStore } from "@/store/cartStore";
 import { MASTER_PRODUCT_REGISTRY } from "@/constants/products";
 import { PRODUCT_CATEGORIES } from "@/constants/categories";
 import { authService } from "@/services/authService";
+import dynamic from 'next/dynamic';
+
+const OceanReelsFeed = dynamic(
+  () => import('@/components/video/OceanReelsFeed').then((mod) => mod.OceanReelsFeed),
+  { ssr: false, loading: () => <div className="w-full h-[250px] bg-[var(--c-bg)] animate-pulse my-4 border-y border-[var(--foreground)]/5" /> }
+);
 
 // --- BUSINESS INTELLIGENCE DATA ---
 const TICKER_ITEMS = [
@@ -582,6 +588,9 @@ function ProductListingContent() {
             </div>
          </div>
       </section>
+
+      {/* 3.2 OCEAN REELS VIDEO SHOWCASE */}
+      <OceanReelsFeed />
 
       {/* 4. MAIN EXPLORER REGISTRY */}
       <section className="pb-8 md:pb-16">

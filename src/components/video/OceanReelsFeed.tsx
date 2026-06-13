@@ -34,14 +34,16 @@ export function OceanReelsFeed() {
       setVideos(vids);
       
       const pIds = [...new Set(vids.map(v => v.product_id))];
-      const { data: prods } = await supabase
-        .from('products')
-        .select('*')
-        .in('id', pIds);
-        
-      if (prods) {
+      const res = await fetch('/api/seller/products');
+      const allProds = await res.json();
+      
+      if (Array.isArray(allProds)) {
         const prodMap: Record<string, any> = {};
-        prods.forEach(p => prodMap[p.id] = p);
+        allProds.forEach(p => {
+          if (pIds.includes(p.id)) {
+            prodMap[p.id] = p;
+          }
+        });
         setProducts(prodMap);
       }
     }

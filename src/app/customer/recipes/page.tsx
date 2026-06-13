@@ -21,6 +21,12 @@ import { Button } from "@/components/ui/Button";
 import { RECIPES_DB } from "@/constants/recipes";
 import { FULL_API_URL as API_BASE_URL } from "@/config/api";
 import { cn } from "@/lib/utils";
+import dynamic from 'next/dynamic';
+
+const OceanReelsFeed = dynamic(
+  () => import('@/components/video/OceanReelsFeed').then((mod) => mod.OceanReelsFeed),
+  { ssr: false, loading: () => <div className="w-full h-[250px] bg-[var(--c-bg)] animate-pulse my-4 border-y border-[var(--foreground)]/5" /> }
+);
 
 const PREPS = ["ALL", "CURRY", "GRILL", "FRY"];
 const REGIONS = ["ALL", "SOUTH INDIAN", "BENGALI", "TELUGU", "ANDAMAN LOCAL"];
@@ -334,6 +340,7 @@ export default function CustomerRecipesPage() {
           </div>
         )}
 
+        <OceanReelsFeed />
       </div>
     </div>
   );

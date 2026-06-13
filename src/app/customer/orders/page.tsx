@@ -10,6 +10,12 @@ import Link from "next/link";
 
 import { orderService } from "@/services/orderService";
 import { useAuthStore } from "@/store/authStore";
+import dynamic from 'next/dynamic';
+
+const OceanReelsFeed = dynamic(
+  () => import('@/components/video/OceanReelsFeed').then((mod) => mod.OceanReelsFeed),
+  { ssr: false, loading: () => <div className="w-full h-[250px] bg-[var(--c-bg)] animate-pulse my-4 border-y border-[var(--foreground)]/5" /> }
+);
 
 export default function OrdersPage() {
   const [orders, setOrders] = React.useState<any[]>([]);
@@ -162,6 +168,7 @@ export default function OrdersPage() {
 
         </div>
       </div>
+      <OceanReelsFeed />
     </div>
   );
 }
