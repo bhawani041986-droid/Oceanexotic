@@ -29,8 +29,8 @@ try {
             tc.freshness_timestamp,
             tc.status as catch_status
         FROM products p
-        LEFT JOIN sellers s ON p.seller_id = s.id COLLATE utf8mb4_unicode_ci
-        LEFT JOIN todays_catch tc ON p.id = tc.product_id COLLATE utf8mb4_unicode_ci
+        LEFT JOIN sellers s ON p.seller_id = s.id
+        LEFT JOIN todays_catch tc ON p.id = tc.product_id
             AND tc.catch_date = CURDATE()
             AND tc.status != 'ARCHIVED'
         WHERE p.id = ?

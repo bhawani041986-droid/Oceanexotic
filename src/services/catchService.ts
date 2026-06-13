@@ -82,7 +82,7 @@ export async function getLimitedCatch(): Promise<TodaysCatchResponse> {
  * Uses ISR 5min since cut options don't change frequently.
  */
 export async function getCutOptions(productId: string): Promise<CutOptionsResponse> {
-  const url = `${API_BASE}/products/cut_options?product_id=${encodeURIComponent(productId)}`;
+  const url = `${API_BASE}/products/cut_options.php?product_id=${encodeURIComponent(productId)}`;
   try {
     const res = await fetch(url, SEO_FETCH);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -100,7 +100,7 @@ export async function getCutOptions(productId: string): Promise<CutOptionsRespon
  * Fetch detailed live information for a specific product.
  */
 export async function getProductLiveDetail(productId: string): Promise<any> {
-  const url = `${API_BASE}/seller/products?id=${encodeURIComponent(productId)}`;
+  const url = `${API_BASE}/seller/products.php?id=${encodeURIComponent(productId)}`;
   try {
     const res = await fetch(url, LIVE_FETCH);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);

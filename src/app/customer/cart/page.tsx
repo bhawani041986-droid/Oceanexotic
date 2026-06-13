@@ -156,8 +156,11 @@ export default function CartPage() {
                           <h3 className="text-sm md:text-xl font-black uppercase italic text-[var(--c-text-primary)] group-hover:text-[var(--c-primary)] transition-colors">{item.name}</h3>
                           
                           {/* Render Cut Options if present */}
-                          {item.metadata && (item.metadata.primary || item.metadata.cleaning) && (
+                          {item.metadata && (item.metadata.primary || item.metadata.cleaning || item.metadata.cut_type) && (
                             <div className="flex flex-wrap gap-2 mt-1">
+                               {item.metadata.cut_type && (
+                                  <span className="text-[8px] md:text-[9px] font-black bg-[var(--foreground)]/10 px-2 py-0.5 rounded-sm uppercase tracking-widest text-[var(--c-text-secondary)]">Cut: {String(item.metadata.cut_type).replace('_', ' ')}</span>
+                               )}
                                {item.metadata.primary && (
                                   <span className="text-[8px] md:text-[9px] font-black bg-[var(--foreground)]/10 px-2 py-0.5 rounded-sm uppercase tracking-widest text-[var(--c-text-secondary)]">Cut: {String(item.metadata.primary).replace('_', ' ')}</span>
                                )}
