@@ -55,7 +55,7 @@ function CheckoutSuccessContent() {
   }, []);
 
   return (
-    <MainLayout>
+    <>
       <div className="min-h-screen bg-[var(--c-bg)] text-[var(--c-text-primary)] flex items-center justify-center p-4 py-32">
         <div className="max-w-2xl w-full space-y-8 animate-fade-in">
           
@@ -134,7 +134,7 @@ function CheckoutSuccessContent() {
 
         </div>
       </div>
-    </MainLayout>
+    </>
   );
 }
 

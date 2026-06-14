@@ -237,12 +237,10 @@ export default function CustomerProfilePage() {
 
   if (!mounted || isHydrating) {
     return (
-      <MainLayout>
-        <div className="bg-[#0B1120] min-h-screen flex flex-col items-center justify-center space-y-4">
-          <Loader2 className="w-12 h-12 text-primary animate-spin" />
-          <p className="text-[10px] font-black uppercase tracking-widest text-primary animate-pulse italic">Connecting...</p>
-        </div>
-      </MainLayout>
+      <div className="bg-[#0B1120] min-h-screen flex flex-col items-center justify-center space-y-4">
+        <Loader2 className="w-12 h-12 text-primary animate-spin" />
+        <p className="text-[10px] font-black uppercase tracking-widest text-primary animate-pulse italic">Connecting...</p>
+      </div>
     );
   }
 
@@ -256,7 +254,7 @@ export default function CustomerProfilePage() {
 
 
   return (
-    <MainLayout>
+    <>
       <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleAvatarUpload} />
       <div className="px-4 md:px-10 pb-20">
         <AnimatePresence>
@@ -704,6 +702,6 @@ export default function CustomerProfilePage() {
           </section>
         </div>
       </div>
-    </MainLayout>
+    </>
   );
 }
