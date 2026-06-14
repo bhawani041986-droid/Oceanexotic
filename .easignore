@@ -1,0 +1,37 @@
+# Ignore all node_modules (EAS runs npm/pnpm/yarn install on the remote server)
+node_modules
+**/node_modules
+
+# Ignore system/environment folders
+venv
+**/venv
+.env*
+**/.env*
+
+# Ignore Next.js build output
+.next
+**/.next
+.vercel
+**/.vercel
+
+# Ignore database backups and migrations
+database
+*.sql
+
+# Ignore other large files and archives
+*.zip
+*.tgz
+*.tar.gz
+*.mp4
+*.mov
+
+# Ignore screenshots/design assets
+screen
+**/screen
+logo
+**/logo
+
+# Ignore agent artifacts and logs
+artifacts
+**/artifacts
+*.log
