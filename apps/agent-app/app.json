@@ -11,8 +11,7 @@
       "assets/**"
     ],
     "android": {
-      "package": "com.oceanexotic.agent",
-      "usesCleartextTraffic": true
+      "package": "com.oceanexotic.agent"
     },
     "ios": {
       "infoPlist": {
@@ -27,7 +26,15 @@
       "output": "static"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
