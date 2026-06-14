@@ -6,7 +6,7 @@ import { orderService, type CustomerOrder } from "@/services/orderService";
 import { Button } from "@/components/ui/Button";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { cn } from "@/lib/utils";
-import i18n from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 
 export default function OrdersScreen() {
@@ -57,7 +57,7 @@ export default function OrdersScreen() {
           />
         }
       >
-        <Text className="text-2xl font-black uppercase italic" style={{ color: colors.text }}>{i18n.t('order_history')}</Text>
+        <Text className="text-2xl font-black uppercase italic" style={{ color: colors.text }}>{t('order_history')}</Text>
         <Text 
           className="mt-1 text-[10px] font-black uppercase tracking-widest" 
           style={{ color: colors.textMuted }}
@@ -138,3 +138,4 @@ export default function OrdersScreen() {
     </View>
   );
 }
+

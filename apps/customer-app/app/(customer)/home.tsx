@@ -31,7 +31,7 @@ import { homeService, type CutOption, type TodaysCatchItem } from "@/services/ho
 import { cn } from "@/lib/utils";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { useImageAspectRatio } from "@/hooks/useImageAspectRatio";
-import i18n from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
 
@@ -113,7 +113,7 @@ function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
         </View>
         <View className="absolute bottom-2 right-2">
           <Text className="text-[7px] font-black text-foreground/60 uppercase">
-            {i18n.t('stock')}
+            {t('stock')}
           </Text>
           <Text className="text-[10px] font-black" style={{ color: colors.primary }}>
             {item.remaining_kg}kg
@@ -122,7 +122,7 @@ function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
       </View>
       <View className="gap-2 p-3">
         <Text className="text-[8px] font-black uppercase text-emerald-500">
-          {i18n.t('fresh_catch_of_the_day')}
+          {t('fresh_catch_of_the_day')}
         </Text>
         <Text
           className="text-sm font-black uppercase italic text-foreground"
@@ -132,7 +132,7 @@ function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
           {item.name}
         </Text>
         <Text className="text-[8px] uppercase italic text-muted-foreground" style={{ color: colors.textMuted }}>
-          {i18n.t('handled_by')} {item.seller_name}
+          {t('handled_by')} {item.seller_name}
         </Text>
         <View className="flex-row items-center justify-between">
           <Text className="text-xl font-black italic text-foreground" style={{ color: colors.text }}>
@@ -373,7 +373,7 @@ export default function CustomerHomeScreen() {
         <View className="px-4 py-8">
           <View className="mb-6 flex-col gap-4">
             <SectionTitle 
-              title={i18n.t('todays_catch')}
+              title={t('todays_catch')}
               subtitle="Live Harbor Arrival • Freshness Guaranteed"
             />
              <View className="flex-row flex-wrap rounded-2xl border border-white/5 bg-secondary/40 p-1">
@@ -929,4 +929,5 @@ export default function CustomerHomeScreen() {
     </View>
   );
 }
+
 

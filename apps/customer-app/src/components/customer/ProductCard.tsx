@@ -6,7 +6,7 @@ import Svg, { Path } from "react-native-svg";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import type { Product } from "@/services/productService";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import i18n from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 
 import { useImageAspectRatio } from "@/hooks/useImageAspectRatio";
@@ -31,14 +31,23 @@ export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCar
   const router = useRouter();
   const uri = imageUri(product);
   const outOfStock = (product.stock ?? 1) <= 0 || product.status === "OUT OF STOCK";
-  const { settings } = useSettingsStore();
-  const currentLanguage = settings.language; // force re-render
+  // Subscribe to language — triggers re-render when user switches language
+  const language = useSettingsStore((s) => s.language);
   const { aspectRatio, onLoad } = useImageAspectRatio(uri);
   const [layout, setLayout] = useState({ width: 0, height: 0 });
   const w = layout.width;
   const h = layout.height;
 
   const colors = useThemeColors();
+
+  // Dynamic badge: only show when discount_percent > 0
+  const discount = Number(product.discount_percent ?? 0);
+  const hasDiscount = !outOfStock && discount > 0;
+  const originalPrice = product.original_price
+    ? Number(product.original_price)
+    : discount > 0
+    ? Math.round((Number(product.price) * 100) / (100 - discount))
+    : null;
 
   return (
     <Pressable
@@ -72,13 +81,13 @@ export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCar
         )}
         {outOfStock ? (
           <View className="absolute inset-0 items-center justify-center bg-black/50">
-            <Text className="text-[9px] font-black uppercase text-white">{i18n.t('out_of_stock')}</Text>
+            <Text className="text-[9px] font-black uppercase text-white">{t('out_of_stock')}</Text>
           </View>
-        ) : (
+        ) : hasDiscount ? (
           <View className="absolute right-2 top-2 rounded bg-red-500/90 px-2 py-0.5 z-20">
-            <Text className="text-[7px] font-black uppercase text-white">15% OFF</Text>
+            <Text className="text-[7px] font-black uppercase text-white">{discount}% OFF</Text>
           </View>
-        )}
+        ) : null}
       </View>
       <View className="gap-1 p-3">
         <Text 
@@ -86,7 +95,7 @@ export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCar
           style={{ color: colors.textMuted }}
           numberOfLines={1}
         >
-          {product.seller_name ? `${i18n.t('handled_by')} ${product.seller_name}` : i18n.t('special_offer')}
+          {product.seller_name ? `${t('handled_by')} ${product.seller_name}` : t('special_offer')}
         </Text>
         <Text 
           className="text-sm font-black uppercase italic" 
@@ -96,7 +105,14 @@ export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCar
           {product.name}
         </Text>
         <View className="flex-row items-center justify-between pt-1">
-          <Text className="text-lg font-black italic" style={{ color: colors.text }}>₹{Number(product.price).toLocaleString()}</Text>
+          <View className="gap-0.5">
+            <Text className="text-lg font-black italic" style={{ color: colors.text }}>₹{Number(product.price).toLocaleString()}</Text>
+            {hasDiscount && originalPrice ? (
+              <Text className="text-[9px] font-medium line-through" style={{ color: colors.textMuted }}>
+                ₹{originalPrice.toLocaleString()}
+              </Text>
+            ) : null}
+          </View>
           {onSelectCut ? (
             <Pressable onPress={onSelectCut} className="rounded-xl px-3 py-2 overflow-hidden relative" style={{ backgroundColor: colors.primary }}>
               <Text className="text-[9px] font-black uppercase text-white relative z-10">+ CUT</Text>

@@ -42,7 +42,13 @@ try {
             echo json_encode($product);
         } else {
             $area = $_GET['area'] ?? '';
-            $stmt = $pdo->query("SELECT * FROM products ORDER BY created_at DESC");
+            // Join sellers to get seller_name for badge display
+            $stmt = $pdo->query("
+                SELECT p.*, s.name as seller_name
+                FROM products p
+                LEFT JOIN sellers s ON p.seller_id = s.id
+                ORDER BY p.created_at DESC
+            ");
             $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
             if ($area) {
@@ -74,6 +80,21 @@ try {
                 }
                 $products = $filteredProducts;
             }
+
+            // Normalize output fields for the frontend
+            $products = array_map(function($p) {
+                $discount = (int)($p['discount_percent'] ?? 0);
+                $price = (float)($p['price'] ?? 0);
+                $origPrice = ($p['original_price'] && (float)$p['original_price'] > 0)
+                    ? (float)$p['original_price']
+                    : ($discount > 0 ? round($price * 100 / (100 - $discount), 2) : null);
+                $p['discount_percent'] = $discount;
+                $p['original_price'] = $origPrice;
+                $p['price'] = $price;
+                $p['stock'] = (float)($p['stock'] ?? 0);
+                return $p;
+            }, $products);
+
             echo json_encode($products);
         }
     } 

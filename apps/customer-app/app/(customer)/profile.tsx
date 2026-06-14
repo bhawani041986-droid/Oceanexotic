@@ -7,7 +7,7 @@ import { orderService } from "@/services/orderService";
 import { useCartStore } from "@/store/cartStore";
 import { useSettingsStore } from "@/store/settingsStore";
 import { authService } from "@/services/authService";
-import i18n from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
@@ -452,7 +452,7 @@ export default function ProfileScreen() {
           </Pressable>
         </View>
 
-        <Button label={i18n.t('logout').toUpperCase()} variant="ghost" onPress={handleLogout} className="mt-8 border border-danger/30" />
+        <Button label={t('logout').toUpperCase()} variant="ghost" onPress={handleLogout} className="mt-8 border border-danger/30" />
       </ScrollView>
 
       {/* Address Addition Modal */}
@@ -601,3 +601,4 @@ export default function ProfileScreen() {
     </View>
   );
 }
+

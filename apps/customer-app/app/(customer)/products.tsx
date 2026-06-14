@@ -21,7 +21,7 @@ import { useToast } from "@/components/ui/Toast";
 import { homeService, type CutOption, type TodaysCatchItem } from "@/services/homeService";
 import type { Product } from "@/services/productService";
 import { cn } from "@/lib/utils";
-import i18n from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 
 const TABS = [
@@ -259,7 +259,7 @@ export default function ProductsScreen() {
         <TextInput
           value={searchQuery}
           onChangeText={setSearchQuery}
-          placeholder={i18n.t('search_seafood')}
+          placeholder={t('search_seafood')}
           placeholderTextColor={colors.isDark ? "#94A3B8" : "#6B7280"}
           className="mt-4 h-12 rounded-xl border px-4 text-sm"
           style={{ 
@@ -420,3 +420,4 @@ export default function ProductsScreen() {
     </View>
   );
 }
+

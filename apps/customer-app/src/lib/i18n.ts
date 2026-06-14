@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSettingsStore } from '@/store/settingsStore';
 
 const LANGUAGE_KEY = '@app_language';
 
@@ -140,7 +141,7 @@ const translations: Record<string, Record<string, string>> = {
     handled_by: "வழங்குபவர்",
     login_title: "ஓஷன்எக்ஸோடிக் வாடிக்கையாளர்",
     login_subtitle: "நேரடி துறைமுக பிடிப்புகள்",
-    phone_placeholder: "தொலைபேসি எண்",
+    phone_placeholder: "தொலைபேசி எண்",
     password_placeholder: "கடவுச்சொல்",
     sign_in: "உள்நுழைக",
     empty_cart: "வண்டி காலியாக உள்ளது",
@@ -165,45 +166,47 @@ const translations: Record<string, Record<string, string>> = {
   }
 };
 
-class I18n {
-  locale: string = 'en';
-  listeners: Set<() => void> = new Set();
-
-  t(key: string): string {
-    return translations[this.locale]?.[key] || translations['en']?.[key] || key;
-  }
-
-  setLocale(code: string) {
-    this.locale = code;
-    this.listeners.forEach(listener => listener());
-  }
-
-  subscribe(listener: () => void) {
-    this.listeners.add(listener);
-    return () => this.listeners.delete(listener);
-  }
+/**
+ * Translate a key using the current language from Zustand settingsStore.
+ * This function is called inside components that already subscribe to `language`
+ * from the store, so re-renders happen automatically when language changes.
+ */
+export function t(key: string, lang?: string): string {
+  // If lang is explicitly provided, use it
+  // Otherwise read from the store's current state (not React hooks – this is a utility)
+  const locale = lang || useSettingsStore.getState().language || 'en';
+  return translations[locale]?.[key] || translations['en']?.[key] || key;
 }
 
-const i18n = new I18n();
-
+/**
+ * Save the selected language to AsyncStorage and update the Zustand store.
+ * This is the SINGLE source of truth for language changes.
+ */
 export const setLanguage = async (code: string) => {
   try {
-    i18n.setLocale(code);
     await AsyncStorage.setItem(LANGUAGE_KEY, code);
+    // Update Zustand store (which triggers all component re-renders)
+    useSettingsStore.getState().setSettings({ language: code });
   } catch (error) {
     console.error('Error saving language:', error);
   }
 };
 
-export const loadSavedLanguage = async () => {
+/**
+ * Load the saved language from AsyncStorage on app startup.
+ * Call this once in AppProviders or root layout.
+ */
+export const loadSavedLanguage = async (): Promise<string> => {
   try {
     const saved = await AsyncStorage.getItem(LANGUAGE_KEY);
-    if (saved) {
-      i18n.setLocale(saved);
-    }
+    const lang = saved || 'en';
+    // Update Zustand store (which triggers all component re-renders)
+    useSettingsStore.getState().setSettings({ language: lang });
+    return lang;
   } catch (error) {
     console.error('Error loading language:', error);
+    return 'en';
   }
 };
 
-export default i18n;
+export default { t, translations };

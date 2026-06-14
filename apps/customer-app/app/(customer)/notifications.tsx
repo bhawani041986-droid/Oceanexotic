@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, ScrollView } from "react-native";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { Ionicons } from "@expo/vector-icons";
-import i18n from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 
 export default function NotificationsScreen() {
@@ -47,7 +47,7 @@ export default function NotificationsScreen() {
         className="text-2xl font-black uppercase mb-6"
         style={{ color: colors.text }}
       >
-        {i18n.t('notifications')}
+        {t('notifications')}
       </Text>
 
       <View className="gap-4">
@@ -101,3 +101,4 @@ export default function NotificationsScreen() {
     </ScrollView>
   );
 }
+

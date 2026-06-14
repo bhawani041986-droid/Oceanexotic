@@ -24,7 +24,7 @@ import { useToast } from "@/components/ui/Toast";
 import { FULL_API_URL } from "@/config/api";
 import { Logo } from "@/components/ui/Logo";
 import Svg, { Path } from "react-native-svg";
-import i18n from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 import { LanguageSelector } from "@/components/LanguageSelector";
 
@@ -115,10 +115,10 @@ export default function LoginScreen() {
               </Link>
               <View className="items-center gap-1 mt-4">
                 <Text className="text-2xl font-black tracking-tight text-white text-center">
-                  {i18n.t('login_title')}
+                  {t('login_title')}
                 </Text>
                 <Text className="text-[11px] font-medium text-slate-400 text-center mt-1 px-4 leading-relaxed">
-                  {i18n.t('login_subtitle')}
+                  {t('login_subtitle')}
                 </Text>
               </View>
             </View>
@@ -155,7 +155,7 @@ export default function LoginScreen() {
                       value={value}
                       onChangeText={onChange}
                       onBlur={onBlur}
-                      placeholder={i18n.t('phone_placeholder')}
+                      placeholder={t('phone_placeholder')}
                       keyboardType="email-address"
                       autoCapitalize="none"
                       autoComplete="email"
@@ -172,7 +172,7 @@ export default function LoginScreen() {
                         value={value}
                         onChangeText={onChange}
                         onBlur={onBlur}
-                        placeholder={i18n.t('password_placeholder')}
+                        placeholder={t('password_placeholder')}
                         secureTextEntry
                         autoComplete="password"
                         error={errors.password?.message}
@@ -191,7 +191,7 @@ export default function LoginScreen() {
                 ) : null}
 
                 <Button
-                  label={loginMutation.isPending ? "AUTHENTICATING..." : i18n.t('sign_in').toUpperCase()}
+                  label={loginMutation.isPending ? "AUTHENTICATING..." : t('sign_in').toUpperCase()}
                   loading={loginMutation.isPending}
                   onPress={() => void handleSubmit(onSubmit)()}
                   className="mt-2"
@@ -213,3 +213,4 @@ export default function LoginScreen() {
     </View>
   );
 }
+

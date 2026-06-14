@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { PropsWithChildren, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
+import { loadSavedLanguage } from "@/lib/i18n";
 
 export function AppProviders({ children }: PropsWithChildren) {
   const [queryClient] = useState(
@@ -11,6 +12,11 @@ export function AppProviders({ children }: PropsWithChildren) {
         },
       })
   );
+
+  // Load saved language on app startup — once at root level
+  useEffect(() => {
+    loadSavedLanguage();
+  }, []);
 
   return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
 }

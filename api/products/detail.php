@@ -138,8 +138,17 @@ try {
         "name" => $product['name'],
         "tagline" => $product['category'] . " - " . ($product['live_harbor'] ?? $product['harbor_node']),
         "price" => $price,
-        "originalPrice" => round($price * (100/85), 2), // 15% discount mock
-        "discount_percent" => 15,
+        "discount_percent" => (int)($product['discount_percent'] ?? 0),
+        "original_price" => (int)($product['discount_percent'] ?? 0) > 0
+            ? ((float)($product['original_price'] ?? 0) > 0
+                ? (float)$product['original_price']
+                : round($price * 100 / (100 - (int)$product['discount_percent']), 2))
+            : null,
+        "originalPrice" => (int)($product['discount_percent'] ?? 0) > 0
+            ? ((float)($product['original_price'] ?? 0) > 0
+                ? (float)$product['original_price']
+                : round($price * 100 / (100 - (int)$product['discount_percent']), 2))
+            : null,
         "unit" => $product['unit'] ?? 'kg',
         "description" => $product['description'],
         "sellerName" => $product['seller_name'] ?? 'OceanExotic Seller',

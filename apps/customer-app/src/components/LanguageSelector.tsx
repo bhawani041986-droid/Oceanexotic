@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, Pressable, Modal, FlatList, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useThemeColors } from '@/hooks/useThemeColors';
-import i18n, { setLanguage, loadSavedLanguage } from '@/lib/i18n';
+import { setLanguage } from '@/lib/i18n';
 import { useSettingsStore } from "@/store/settingsStore";
 
 const LANGUAGES = [
@@ -23,19 +23,14 @@ const LANGUAGES = [
 
 export function LanguageSelector() {
   const colors = useThemeColors();
-  const { language, setSettings } = useSettingsStore();
+  // Subscribe directly to the `language` field — re-renders on every change
+  const language = useSettingsStore((s) => s.language);
   const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    loadSavedLanguage().then(() => {
-      setSettings({ language: i18n.locale });
-    });
-  }, []);
-
   const handleSelect = async (code: string) => {
-    await setLanguage(code);
-    setSettings({ language: code });
     setModalVisible(false);
+    // setLanguage saves to AsyncStorage AND updates Zustand store
+    await setLanguage(code);
   };
 
   const activeLang = LANGUAGES.find(l => l.code === language) || LANGUAGES[0];

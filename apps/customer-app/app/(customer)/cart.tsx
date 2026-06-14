@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 import { useAuthStore } from "@/store/authStore";
 import { checkoutService } from "@/services/checkoutService";
 import api from "@/services/api";
-import i18n from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 
 const staticFallback = [
@@ -85,7 +85,7 @@ export default function CartScreen() {
 
         {items.length === 0 ? (
           <View className="my-16 items-center">
-            <Text className="text-xs font-black uppercase" style={{ color: colors.textMuted }}>{i18n.t('empty_cart')}</Text>
+            <Text className="text-xs font-black uppercase" style={{ color: colors.textMuted }}>{t('empty_cart')}</Text>
             <Button label="SHOP HARVEST" onPress={() => router.push("/products")} className="mt-6" />
           </View>
         ) : (
@@ -236,7 +236,7 @@ export default function CartScreen() {
                     <Text className="text-[11px] font-bold" style={{ color: colors.primary }}>₹{tax.toLocaleString()}</Text>
                   </View>
                   <View className="flex-row justify-between pt-1">
-                    <Text className="text-[11px] font-black uppercase" style={{ color: colors.text }}>{i18n.t('total')}</Text>
+                    <Text className="text-[11px] font-black uppercase" style={{ color: colors.text }}>{t('total')}</Text>
                     <Text className="text-2xl font-black italic" style={{ color: colors.text }}>₹{grandTotal.toLocaleString()}</Text>
                   </View>
                 </View>
@@ -244,7 +244,7 @@ export default function CartScreen() {
             })()}
 
             <Button
-              label={i18n.t('checkout').toUpperCase()}
+              label={t('checkout').toUpperCase()}
               onPress={() => router.push("/checkout" as never)}
               className="mt-4"
             />
@@ -255,3 +255,4 @@ export default function CartScreen() {
     </View>
   );
 }
+

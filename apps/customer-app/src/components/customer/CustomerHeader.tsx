@@ -13,7 +13,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import { cn } from "@/lib/utils";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { LanguageSelector } from "@/components/LanguageSelector";
-import i18n from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 
 interface CustomerHeaderProps {
   showSearch?: boolean;
@@ -234,12 +234,12 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
 
               <View className="gap-2">
                 {[
-                  { label: i18n.t('home'), href: "/home" },
-                  { label: i18n.t('fresh_catch_market'), href: "/products" },
-                  { label: i18n.t('recipes'), href: "/recipe" },
-                  { label: i18n.t('my_orders'), href: "/orders" },
-                  { label: i18n.t('my_profile'), href: "/profile" },
-                  { label: i18n.t('active_cart'), href: "/cart" }
+                  { label: t('home'), href: "/home" },
+                  { label: t('fresh_catch_market'), href: "/products" },
+                  { label: t('recipes'), href: "/recipe" },
+                  { label: t('my_orders'), href: "/orders" },
+                  { label: t('my_profile'), href: "/profile" },
+                  { label: t('active_cart'), href: "/cart" }
                 ].map((item) => {
                   const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
                   return (
@@ -276,7 +276,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                 }}
                 className="w-full py-4 rounded-xl border border-red-500/20 bg-red-500/10 items-center active:bg-red-500/20"
               >
-                <Text className="text-xs font-black uppercase tracking-widest text-red-500">{i18n.t('sign_out')}</Text>
+                <Text className="text-xs font-black uppercase tracking-widest text-red-500">{t('sign_out')}</Text>
               </Pressable>
               <Text className="text-[7px] font-black text-center uppercase tracking-widest" style={{ color: colors.textMuted }}>OceanExotic Mobile App v1.4</Text>
             </View>
