@@ -3,8 +3,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ToastProvider } from "@/components/ui/Toast";
 import { AuthHydration } from "@/components/auth/AuthHydration";
-
-// Fonts disabled to bypass network issues during build
+import Script from "next/script";
 
 // Fonts disabled to bypass network issues during build
 
@@ -232,7 +231,7 @@ export default function RootLayout({
             }
           `
         }} />
-        <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async defer></script>
+        <Script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" strategy="afterInteractive" />
       </head>
       <body className="font-sans antialiased min-h-screen selection:bg-primary/30 selection:text-white" suppressHydrationWarning>
         <div id="google_translate_element" style={{ display: 'none' }}></div>

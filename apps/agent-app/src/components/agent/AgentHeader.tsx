@@ -204,7 +204,8 @@ export function AgentHeader() {
                   { label: "Missions Dashboard", href: "/(agent)/dashboard" },
                   { label: "Live Trace Map", href: "/(agent)/tracking" },
                   { label: "Mission History", href: "/(agent)/history" },
-                  { label: "Operator Profile", href: "/(agent)/profile" }
+                  { label: "Operator Profile", href: "/(agent)/profile" },
+                  { label: "Secure Chat", href: "/(agent)/chat" }
                 ].map((item) => {
                   const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
                   return (

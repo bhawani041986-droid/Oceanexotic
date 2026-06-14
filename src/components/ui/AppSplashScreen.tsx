@@ -134,7 +134,7 @@ export const AppSplashScreen: React.FC = () => {
 
         .text-brand {
           animation: textExpand 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-          transform-origin: center;
+          transform-origin: 400px 160px;
         }
 
         .text-sub {
@@ -205,9 +205,11 @@ export const AppSplashScreen: React.FC = () => {
           </g>
 
           {/* 2. Text Brand "OceanExotic" */}
-          <g className="text-brand" transform="translate(400, 160)">
+          <g className="text-brand">
             <text
               fill="#FFFFFF"
+              x="400"
+              y="160"
               style={{
                 fontFamily: "Inter, sans-serif",
                 fontWeight: 900,

@@ -371,11 +371,10 @@ export default function CustomerHomeScreen() {
         {/* Today's Catch */}
         <View className="px-4 py-8">
           <View className="mb-6 flex-col gap-4">
-            <SectionTitle
-              title="Today's Catch"
-              subtitle="Live Harbor Arrival • Freshness Guaranteed"
-            />
-             <View className="flex-row flex-wrap rounded-2xl border border-white/5 bg-secondary/40 p-1">
+            <SectionHeader 
+              title={i18n.t("flash_deals") || "Flash Deals"} 
+              subtitle={i18n.t("grab_before_gone") || "Grab them before they're gone!"} 
+            /> <View className="flex-row flex-wrap rounded-2xl border border-white/5 bg-secondary/40 p-1">
               {(["ALL", "MORNING", "AFTERNOON", "EVENING"] as BatchFilter[]).map((batch) => (
                 <Pressable
                   key={batch}

@@ -109,7 +109,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
             <LanguageSelector />
             
             <Pressable
-              onPress={() => router.push("/chat")}
+              onPress={() => router.push("/chat" as any)}
               className="relative h-8 w-8 items-center justify-center rounded-full border active:opacity-70"
               style={{
                 borderColor: colors.border,
@@ -121,7 +121,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
             </Pressable>
 
             <Pressable
-              onPress={() => router.push("/notifications")}
+              onPress={() => router.push("/notifications" as any)}
               className="relative h-8 w-8 items-center justify-center rounded-full border active:opacity-70"
               style={{
                 borderColor: colors.border,
@@ -142,7 +142,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
             </Pressable>
 
             <Pressable
-              onPress={() => router.push("/cart")}
+              onPress={() => router.push("/cart" as any)}
               className="relative h-8 w-8 items-center justify-center rounded-full border active:opacity-70"
               style={{
                 borderColor: getRgba(primaryColor, 0.3),
@@ -161,7 +161,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
             </Pressable>
 
             <Pressable
-              onPress={() => router.push("/profile")}
+              onPress={() => router.push("/profile" as any)}
               className="h-9 w-9 rounded-full border overflow-hidden items-center justify-center active:opacity-70"
               style={{
                 borderColor: colors.border,

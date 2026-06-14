@@ -31,6 +31,7 @@ import { homeService, type CutOption, type TodaysCatchItem } from "@/services/ho
 import { cn } from "@/lib/utils";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { useImageAspectRatio } from "@/hooks/useImageAspectRatio";
+import i18n from "@/lib/i18n";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
 
@@ -115,7 +116,7 @@ function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
       </View>
       <View className="gap-2 p-3">
         <Text className="text-[8px] font-black uppercase text-emerald-500">
-          Fresh Catch of the Day
+          {i18n.t('fresh_catch_of_the_day')}
         </Text>
         <Text
           className="text-sm font-black uppercase italic text-foreground"
@@ -170,6 +171,7 @@ export default function CustomerHomeScreen() {
   const { width } = Dimensions.get("window");
   const router = useRouter();
   const settings = useSettingsStore();
+  const currentLanguage = settings.language; // Force re-render on language change
   const cart = useCartStore();
   const { toast, ToastHost } = useToast();
   const { cms, territories, todaysCatch } = useHomeData();
@@ -364,8 +366,8 @@ export default function CustomerHomeScreen() {
         {/* Today's Catch */}
         <View className="px-4 py-8">
           <View className="mb-6 flex-col gap-4">
-            <SectionTitle
-              title="Today's Catch"
+            <SectionTitle 
+              title={i18n.t('todays_catch')}
               subtitle="Live Harbor Arrival • Freshness Guaranteed"
             />
              <View className="flex-row flex-wrap rounded-2xl border border-white/5 bg-secondary/40 p-1">

@@ -12,6 +12,7 @@ import { useToast } from "@/components/ui/Toast";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { cn } from "@/lib/utils";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
+import { LanguageSelector } from "@/components/LanguageSelector";
 
 interface CustomerHeaderProps {
   showSearch?: boolean;
@@ -74,7 +75,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
   };
 
   const handleNotificationPress = () => {
-    toast("Live Delivery Alerts: 0 Notifications Pending", "success");
+    router.push("/notifications");
   };
 
   return (
@@ -97,6 +98,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
             </Pressable>
           </View>
           <View className="flex-row items-center gap-2">
+            <LanguageSelector />
             <Pressable
               onPress={handleNotificationPress}
               className="relative h-9 w-9 items-center justify-center rounded-full border active:opacity-70"

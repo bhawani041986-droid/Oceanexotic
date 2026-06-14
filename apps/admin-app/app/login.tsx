@@ -1,13 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import {
-  View,
-  Text,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  Pressable,
-} from "react-native";
+import { View, Text, KeyboardAvoidingView, Platform, ScrollView, Pressable } from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { Link, useRouter } from "expo-router";
@@ -23,21 +16,16 @@ import { useToast } from "@/components/ui/Toast";
 import { FULL_API_URL } from "@/config/api";
 import { Logo } from "@/components/ui/Logo";
 
-const BG_IMAGE =
-  "https://images.unsplash.com/photo-1551244072-5d12893278ab?auto=format&fit=crop&q=80&w=2000";
+const BG_IMAGE = "https://images.unsplash.com/photo-1551244072-5d12893278ab?auto=format&fit=crop&q=80&w=2000";
 
-export default function LoginScreen() {
+export default function AdminLoginScreen() {
   const router = useRouter();
   const { login } = useAuthStore();
   const loginMutation = useLogin();
   const { toast, ToastHost } = useToast();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormValues>({
+  const { control, handleSubmit, formState: { errors } } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: "", password: "" },
   });
@@ -49,35 +37,26 @@ export default function LoginScreen() {
 
       if (result.success && result.user && result.token) {
         const user = toAuthUser(result.user);
-        if (user.role !== "customer" && user.role !== "agent" && user.role !== "seller" && user.role !== "admin") {
-          const message = "Access Denied: Only customers, agents, sellers, and admins can log in to this mobile app.";
+        if (user.role !== "admin") {
+          const message = "Access Denied: Only Administrators can access this portal.";
           toast(message, "error");
           setSubmitError(message);
           return;
         }
         login(user);
         const destination = getPostLoginRoute(user.role);
-        toast(`Welcome back, ${user.name}! Transitioning to your dashboard...`, "success");
-        setTimeout(() => {
-          router.replace(destination as never);
-        }, 100);
+        toast(`Welcome back, Commander ${user.name}!`, "success");
+        setTimeout(() => { router.replace(destination as never); }, 100);
         return;
       }
-      const message =
-        result.message || "Authentication failed. Check your credentials.";
+      const message = result.message || "Authentication failed. Check your credentials.";
       toast(message, "error");
       setSubmitError(message);
     } catch (err) {
       let message = "Connection failed with maritime registry.";
       if (axios.isAxiosError(err)) {
-        if (err.response?.data?.message) {
-          message = String(err.response.data.message);
-        } else if (err.code === "ERR_NETWORK") {
-          message =
-            Platform.OS === "web"
-              ? "Cannot reach API. Start XAMPP on port 8081."
-              : `Cannot reach API at ${FULL_API_URL}. Phone and PC must be on same Wi‑Fi; set EXPO_PUBLIC_API_URL to your PC IP in mobile/.env`;
-        }
+        if (err.response?.data?.message) message = String(err.response.data.message);
+        else if (err.code === "ERR_NETWORK") message = "Network Error: Cannot reach API.";
       }
       toast(message, "error");
       setSubmitError(message);
@@ -87,123 +66,77 @@ export default function LoginScreen() {
   return (
     <View className="relative flex-1 bg-background">
       <Image source={{ uri: BG_IMAGE }} className="absolute inset-0 h-full w-full opacity-20" contentFit="cover" />
-      <LinearGradient
-        colors={["rgba(2,6,23,0.2)", "#020617", "#020617"]}
-        className="absolute inset-0"
-      />
+      <LinearGradient colors={["rgba(2,6,23,0.5)", "#020617", "#020617"]} className="absolute inset-0" />
 
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        className="flex-1"
-      >
-        <ScrollView
-          contentContainerClassName="flex-grow justify-center px-6 py-12"
-          keyboardShouldPersistTaps="handled"
-        >
-          <View className="mx-auto w-full max-w-[480px]">
-            <View className="mb-12 items-center space-y-4">
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} className="flex-1">
+        <ScrollView contentContainerClassName="flex-grow px-6 py-12 justify-center" keyboardShouldPersistTaps="handled" bounces={false}>
+          <View className="mx-auto w-full max-w-[400px]">
+            <View className="mb-10 items-center space-y-4">
               <Link href="/" asChild>
-                <Pressable className="items-center">
-                  <Logo size="md" />
-                </Pressable>
+                <Pressable className="items-center"><Logo size="md" /></Pressable>
               </Link>
-              <View className="items-center gap-1">
-                <Text className="text-2xl font-bold tracking-tight text-foreground">
-                  Admiral Login
+              <View className="items-center gap-1 mt-4">
+                <Text className="text-2xl font-black tracking-widest text-red-500 uppercase text-center">
+                  Admin Command
                 </Text>
-                <Text className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-                  Access the Global Seafood Network
+                <Text className="text-[10px] font-bold tracking-widest text-slate-500 uppercase text-center mt-1">
+                  Restricted Staff Portal
                 </Text>
-                {__DEV__ && Platform.OS !== "web" ? (
-                  <Text className="mt-2 max-w-xs text-center text-[9px] text-muted-foreground/80">
-                    API: {FULL_API_URL}
-                  </Text>
-                ) : null}
               </View>
             </View>
 
-            <View className="rounded-[28px] border border-white/10 bg-white/5 p-1">
-              <View className="rounded-[26px] bg-card p-8 md:p-10">
-                <View className="gap-6">
-                  <View className="gap-2">
-                    <Text className="ml-1 text-[10px] font-black uppercase tracking-widest text-foreground">
-                      Fleet Identity (Email)
-                    </Text>
-                    <Controller
-                      control={control}
-                      name="email"
-                      render={({ field: { onChange, onBlur, value } }) => (
-                        <Input
-                          value={value}
-                          onChangeText={onChange}
-                          onBlur={onBlur}
-                          placeholder="name@oceanexotic.com"
-                          keyboardType="email-address"
-                          autoCapitalize="none"
-                          autoComplete="email"
-                          error={errors.email?.message}
-                        />
-                      )}
+            <View className="gap-4 w-full">
+              <View className="rounded-3xl bg-white/5 border border-red-500/20 p-6 space-y-4">
+                <Controller
+                  control={control}
+                  name="email"
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Input
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      placeholder="Admin Fleet Identity (Email)"
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      autoComplete="email"
+                      error={errors.email?.message}
                     />
-                  </View>
-
-                  <View className="gap-2">
-                    <View className="ml-1 flex-row items-center justify-between">
-                      <Text className="text-[10px] font-black uppercase tracking-widest text-foreground">
-                        Secret Key
-                      </Text>
-                      <Link href={"/forgot-password" as never} asChild>
-                        <Pressable>
-                          <Text className="text-[10px] font-bold text-primary">RECOVER KEY</Text>
-                        </Pressable>
-                      </Link>
-                    </View>
-                    <Controller
-                      control={control}
-                      name="password"
-                      render={({ field: { onChange, onBlur, value } }) => (
-                        <Input
-                          value={value}
-                          onChangeText={onChange}
-                          onBlur={onBlur}
-                          placeholder="••••••••"
-                          secureTextEntry
-                          autoComplete="password"
-                          error={errors.password?.message}
-                        />
-                      )}
-                    />
-                  </View>
+                  )}
+                />
+                <View>
+                  <Controller
+                    control={control}
+                    name="password"
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <Input
+                        value={value}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        placeholder="Security Key"
+                        secureTextEntry
+                        autoComplete="password"
+                        error={errors.password?.message}
+                      />
+                    )}
+                  />
                 </View>
 
                 {submitError ? (
-                  <Text className="mt-4 text-center text-[10px] font-bold text-danger">
-                    {submitError}
-                  </Text>
+                  <Text className="text-center text-[10px] font-bold text-red-400">{submitError}</Text>
                 ) : null}
 
-                <View className="mt-8 gap-8">
-                  <Button
-                    label={loginMutation.isPending ? "AUTHENTICATING..." : "INITIATE SESSION"}
-                    loading={loginMutation.isPending}
-                    onPress={() => void handleSubmit(onSubmit)()}
-                  />
-
-                  <Text className="text-center text-[11px] font-medium text-muted-foreground">
-                    New to the fleet?{" "}
-                    <Link href={"/register" as never} asChild>
-                      <Pressable>
-                        <Text className="font-bold text-foreground">REGISTER ACCOUNT</Text>
-                      </Pressable>
-                    </Link>
-                  </Text>
-                </View>
+                <Button
+                  label={loginMutation.isPending ? "AUTHENTICATING..." : "AUTHORIZE ACCESS"}
+                  loading={loginMutation.isPending}
+                  onPress={() => void handleSubmit(onSubmit)()}
+                  className="mt-2"
+                  style={{ backgroundColor: "#ef4444" }}
+                />
               </View>
             </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-
       {ToastHost}
     </View>
   );

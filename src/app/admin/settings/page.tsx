@@ -544,6 +544,60 @@ export default function AdminSettingsPage() {
                            />
                         </div>
                      </div>
+
+                     {/* EAS Build Production Analysis Section */}
+                     <div className="mt-8 p-6 rounded-3xl bg-bg-primary/30 border border-[var(--foreground)]/5 space-y-6">
+                        <div>
+                           <h4 className="text-xs md:text-sm font-black text-primary uppercase tracking-wider flex items-center gap-2">
+                              <Sparkles className="w-4 h-4" /> Production App Size Analysis
+                           </h4>
+                           <p className="text-[10px] text-text-secondary mt-2 leading-relaxed">
+                              Because all four apps share the exact same modern tech stack (Expo Router, NativeWind, Zustand) and rely on cloud-hosted media rather than local assets, their final compiled EAS (Expo Application Services) build sizes will be virtually identical.
+                           </p>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                           <div className="space-y-3">
+                              <h5 className="text-[11px] font-black text-[var(--foreground)] flex items-center gap-2">
+                                 🤖 Android (Google Play Store)
+                              </h5>
+                              <ul className="space-y-1.5 text-[10px] text-text-secondary">
+                                 <li><strong className="text-[var(--foreground)]">AAB File Size:</strong> ~25 MB - 35 MB</li>
+                                 <li><strong className="text-[var(--foreground)]">Download Size:</strong> ~12 MB - 18 MB</li>
+                                 <li><strong className="text-[var(--foreground)]">Installed Size:</strong> ~35 MB - 45 MB</li>
+                              </ul>
+                              <div className="bg-primary/10 border border-primary/20 rounded-xl p-3 mt-2">
+                                 <p className="text-[9px] text-primary leading-relaxed font-medium">
+                                    <strong>TIP (Universal APKs):</strong> If you choose to build a direct .apk file for sideloading, the file will be much larger (~50 MB - 60 MB). This is normal, as a Universal APK contains binaries for all 4 possible architectures (arm64, arm32, x86, x86_64) packed into one.
+                                 </p>
+                              </div>
+                           </div>
+
+                           <div className="space-y-3">
+                              <h5 className="text-[11px] font-black text-[var(--foreground)] flex items-center gap-2">
+                                 🍎 iOS (Apple App Store)
+                              </h5>
+                              <ul className="space-y-1.5 text-[10px] text-text-secondary">
+                                 <li><strong className="text-[var(--foreground)]">IPA File Size:</strong> ~30 MB - 45 MB</li>
+                                 <li><strong className="text-[var(--foreground)]">Download Size:</strong> ~20 MB - 30 MB</li>
+                                 <li><strong className="text-[var(--foreground)]">Installed Size:</strong> ~40 MB - 55 MB</li>
+                              </ul>
+                              <p className="text-[9px] text-text-secondary italic mt-3 leading-relaxed">
+                                 *Apple's binaries are generally slightly larger than Android's due to how they compile Swift/Objective-C frameworks.
+                              </p>
+                           </div>
+                        </div>
+
+                        <div className="pt-4 border-t border-[var(--foreground)]/5 space-y-3">
+                           <h5 className="text-[10px] font-black uppercase tracking-widest text-primary">Why are the apps so lightweight?</h5>
+                           <ul className="space-y-2 text-[10px] text-text-secondary leading-relaxed">
+                              <li><strong className="text-[var(--foreground)]">Hermes JavaScript Engine:</strong> Expo automatically compiles React Native code into highly optimized bytecode, drastically shrinking the bundle size.</li>
+                              <li><strong className="text-[var(--foreground)]">Zero Heavy Local Assets:</strong> We use only a few KB of SVG logos. All heavy images are fetched remotely from the cloud at runtime.</li>
+                              <li><strong className="text-[var(--foreground)]">Vector Iconography:</strong> Using scalable vector SVGs (@expo/vector-icons) which weigh almost nothing compared to bundled PNGs.</li>
+                              <li><strong className="text-[var(--foreground)]">Tailwind/NativeWind Pruning:</strong> Automatically strips out unused CSS classes during the build, keeping styling microscopically small.</li>
+                           </ul>
+                        </div>
+                     </div>
                   </Card>
                </div>
             </div>

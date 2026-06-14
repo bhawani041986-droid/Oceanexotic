@@ -181,7 +181,8 @@ export function SellerHeader() {
                   { label: "Fleet Dashboard", href: "/(seller)/dashboard" },
                   { label: "Harbor Registry", href: "/(seller)/inventory" },
                   { label: "Commission Line", href: "/(seller)/orders" },
-                  { label: "Merchant Settings", href: "/(seller)/profile" }
+                  { label: "Merchant Settings", href: "/(seller)/profile" },
+                  { label: "Merchant Comms", href: "/(seller)/chat" }
                 ].map((item) => {
                   const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
                   return (

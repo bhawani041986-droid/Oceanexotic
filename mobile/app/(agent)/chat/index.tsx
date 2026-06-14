@@ -38,7 +38,7 @@ export default function ChatInboxScreen() {
 
   const renderItem = ({ item }: { item: any }) => (
     <Pressable
-      onPress={() => router.push({ pathname: "/(customer)/chat/[id]", params: { id: item.id, name: item.other_party_name, role: item.other_party_role } } as never)}
+      onPress={() => router.push({ pathname: "/(agent)/chat/[id]", params: { id: item.id, name: item.other_party_name, role: item.other_party_role } } as never)}
       className="flex-row items-center p-4 border-b active:opacity-70"
       style={{ borderBottomColor: colors.border }}
     >
@@ -121,7 +121,7 @@ export default function ChatInboxScreen() {
         currentUserId={user?.id || "USR-001"}
         onChatCreated={(convId) => {
           // Immediately navigate to the new chat
-          router.push({ pathname: "/(customer)/chat/[id]", params: { id: convId.toString(), name: "New Chat", role: "customer" } } as never);
+          router.push({ pathname: "/(agent)/chat/[id]", params: { id: convId.toString(), name: "New Chat", role: "agent" } } as never);
         }}
       />
     </View>
