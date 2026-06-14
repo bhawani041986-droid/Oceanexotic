@@ -54,7 +54,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
 
   const colors = useThemeColors();
   const primaryColor = colors.primary;
-  const currentLanguage = useSettingsStore((s) => s.settings.language); // trigger re-render on language change
+  const currentLanguage = useSettingsStore((s) => s.language); // trigger re-render on language change
 
   const getRgba = (hex: string, alpha: number) => {
     const cleanHex = hex.replace("#", "");

@@ -5,10 +5,10 @@ import { cn } from "@/lib/utils";
 import { useAgentStore, MOODS } from "@/store/agentStore";
 
 const NAV: { label: string; href: Href }[] = [
-  { label: "Missions", href: "/(agent)/dashboard" },
-  { label: "Live Trace", href: "/(agent)/tracking" },
-  { label: "History", href: "/(agent)/history" },
-  { label: "Profile", href: "/(agent)/profile" },
+  { label: "Missions", href: "/(agent)/dashboard" as any },
+  { label: "Live Trace", href: "/(agent)/tracking" as any },
+  { label: "History", href: "/(agent)/history" as any },
+  { label: "Profile", href: "/(agent)/profile" as any },
 ];
 
 function pathActive(pathname: string, href: string): boolean {

@@ -125,7 +125,7 @@ export function SellerHeader() {
         </Pressable>
 
         <Pressable
-          onPress={() => router.push("/(seller)/profile")}
+          onPress={() => router.push("/(seller)/profile" as any)}
           className="h-9 w-9 rounded-full border overflow-hidden items-center justify-center active:opacity-70"
           style={{ borderColor: borderColor }}
         >

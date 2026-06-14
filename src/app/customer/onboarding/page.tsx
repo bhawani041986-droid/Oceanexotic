@@ -53,20 +53,20 @@ export default function CustomerOnboardingPage() {
                      <Anchor className="w-12 h-12" />
                   </div>
                   <div className="space-y-4">
-                     <h2 className="text-4xl lg:text-5xl font-black text-[var(--foreground)] uppercase tracking-tighter leading-none">Admiral <span className="text-primary">Commissioned.</span></h2>
+                     <h2 className="text-4xl lg:text-5xl font-black text-[var(--foreground)] uppercase tracking-tighter leading-none">Account <span className="text-primary">Created.</span></h2>
                      <p className="text-lg font-medium text-text-secondary italic max-w-md mx-auto">
-                        Welcome to the global maritime registry. Your node is now authorized for marketplace engagement.
+                        Welcome to OceanExotic! Your account is now active and ready for shopping.
                      </p>
                   </div>
                </div>
                <div className="p-8 rounded-[24px] bg-bg-secondary/40 border border-[var(--foreground)]/5 flex items-center justify-center gap-8">
                   <div className="text-center">
-                     <p className="text-[9px] font-black text-text-secondary uppercase tracking-widest">Fleet Rank</p>
-                     <p className="text-xl font-black text-[var(--foreground)]">RECRUIT</p>
+                     <p className="text-[9px] font-black text-text-secondary uppercase tracking-widest">Membership Tier</p>
+                     <p className="text-xl font-black text-[var(--foreground)]">NEW CUSTOMER</p>
                   </div>
                   <div className="h-10 w-px bg-[var(--foreground)]/10" />
                   <div className="text-center">
-                     <p className="text-[9px] font-black text-text-secondary uppercase tracking-widest">Commission</p>
+                     <p className="text-[9px] font-black text-text-secondary uppercase tracking-widest">Account Status</p>
                      <p className="text-xl font-black text-[var(--foreground)]">ACTIVE</p>
                   </div>
                </div>
@@ -76,8 +76,8 @@ export default function CustomerOnboardingPage() {
           {step === 2 && (
             <div className="space-y-10 relative z-10 animate-fade-in">
                <div className="space-y-2">
-                  <h2 className="text-3xl font-black text-[var(--foreground)] uppercase tracking-tight">Species Directive</h2>
-                  <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Select the species classifications you intend to source</p>
+                  <h2 className="text-3xl font-black text-[var(--foreground)] uppercase tracking-tight">Your Preferences</h2>
+                  <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Select the seafood types you are interested in</p>
                </div>
                <div className="grid grid-cols-2 gap-4">
                   {["Premium Saku", "Wild Crustaceans", "Arctic Whitefish", "Shellfish Reserve", "Roe & Caviar", "Cephalopod Hub"].map((spec) => (
@@ -100,9 +100,9 @@ export default function CustomerOnboardingPage() {
                      <Compass className="w-12 h-12" />
                   </div>
                   <div className="space-y-4">
-                     <h2 className="text-4xl font-black text-[var(--foreground)] uppercase tracking-tight">Global Clearance</h2>
+                     <h2 className="text-4xl font-black text-[var(--foreground)] uppercase tracking-tight">Setup Complete</h2>
                      <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.4em] px-10 leading-relaxed">
-                        Your profile is now calibrated for global maritime trade.
+                        Your profile is now configured and ready for shopping.
                      </p>
                   </div>
                </div>
@@ -110,10 +110,10 @@ export default function CustomerOnboardingPage() {
                   <Card className="p-8 bg-bg-secondary/40 space-y-4">
                      <div className="flex items-center gap-4">
                         <Globe className="w-5 h-5 text-primary" />
-                        <p className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest">Primary Sourcing Sector</p>
+                        <p className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest">Market Sourcing</p>
                      </div>
                      <p className="text-xs text-text-secondary font-medium leading-relaxed italic">
-                        Access the North Atlantic and Pacific registries with prioritized cold-chain logistics.
+                        Access fresh local catches and imported seafood with temperature-controlled shipping.
                      </p>
                   </Card>
                </div>
@@ -122,7 +122,7 @@ export default function CustomerOnboardingPage() {
 
           <div className="flex gap-4 relative z-10 pt-10 border-t border-[var(--foreground)]/5">
              <Button onClick={() => step < 3 ? setStep(step + 1) : null} className="flex-1 h-16 text-[11px] font-black tracking-widest uppercase shadow-glow-purple flex items-center justify-center gap-4 group">
-                {step === 3 ? "LAUNCH DASHBOARD" : "NEXT DIRECTIVE"} <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                {step === 3 ? "START SHOPPING" : "NEXT"} <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
              </Button>
           </div>
         </Card>

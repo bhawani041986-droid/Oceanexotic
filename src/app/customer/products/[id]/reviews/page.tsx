@@ -41,8 +41,8 @@ export default function AllReviewsPage() {
       if (!p) {
         setProduct({
           id: productId,
-          name: "Unknown Maritime Asset",
-          tagline: "Synchronizing Registry Data...",
+          name: "Unknown Seafood Product",
+          tagline: "Loading details...",
           category: "Marketplace",
           rating: 0,
           reviews: 0,
@@ -72,7 +72,7 @@ export default function AllReviewsPage() {
         <div className="min-h-[60vh] flex items-center justify-center">
           <div className="flex flex-col items-center gap-4">
              <div className="w-12 h-12 border-4 border-[var(--c-primary)]/20 border-t-[var(--c-primary)] rounded-full animate-spin" />
-             <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40">Syncing Feedback Registry...</p>
+             <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40">Syncing Reviews...</p>
           </div>
         </div>
   
@@ -149,7 +149,7 @@ export default function AllReviewsPage() {
 
             <Card className="p-6 bg-[var(--c-primary)]/5 border-[var(--c-primary)]/10 space-y-4">
               <h4 className="text-[11px] font-black uppercase tracking-widest italic">Review this product</h4>
-              <p className="text-xs text-[var(--c-text-secondary)] leading-relaxed">Share your maritime expertise with other fleet commanders.</p>
+              <p className="text-xs text-[var(--c-text-secondary)] leading-relaxed">Share your experience with other customers.</p>
               <Button 
                 onClick={() => router.push(`/customer/reviews/write?productId=${product.id}&productName=${encodeURIComponent(product.name)}&sellerId=${product.seller_id || product.sellerId || 'SEL-000'}`)}
                 className="w-full h-12 text-[10px] font-black uppercase tracking-widest gap-2 shadow-glow-purple"
@@ -164,7 +164,7 @@ export default function AllReviewsPage() {
             {/* Filter Header */}
             <div className="flex items-center justify-between border-b border-[var(--foreground)]/5 pb-4">
               <h3 className="text-lg font-black italic uppercase tracking-tight">
-                {filter ? `${filter} Star Reviews` : "Top Reviews from the Fleet"}
+                {filter ? `${filter} Star Reviews` : "Top Customer Reviews"}
               </h3>
               <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-60">
                 <Filter className="w-3 h-3" /> Sort by: Newest
@@ -181,7 +181,7 @@ export default function AllReviewsPage() {
               {filteredReviews.length === 0 && (
                 <div className="py-20 text-center">
                   <MessageSquare className="w-12 h-12 text-[var(--foreground)]/5 mx-auto mb-4" />
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--c-text-secondary)]">No matching reports in the ledger</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--c-text-secondary)]">No reviews matching this rating</p>
                 </div>
               )}
             </div>
@@ -217,7 +217,7 @@ function ReviewCard({ review }: { review: any }) {
               </div>
               <span className="w-1 h-1 bg-[var(--foreground)]/20 rounded-full" />
               <p className="text-[10px] font-black uppercase text-[var(--c-primary)] flex items-center gap-1">
-                <CheckCircle2 className="w-3 h-3" /> Verified Commander
+                <CheckCircle2 className="w-3 h-3" /> Verified Customer
               </p>
             </div>
           </div>
@@ -230,7 +230,7 @@ function ReviewCard({ review }: { review: any }) {
           "text-sm text-[var(--c-text-secondary)] leading-relaxed italic transition-all duration-300",
           !isExpanded && needsExpansion && "line-clamp-3"
         )}>
-          {review?.comment || "No commentary provided for this assessment."}
+          {review?.comment || "No comment provided for this review."}
         </p>
         
         {needsExpansion && (
@@ -238,7 +238,7 @@ function ReviewCard({ review }: { review: any }) {
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-[10px] font-black uppercase tracking-widest text-[var(--c-primary)] hover:underline flex items-center gap-1"
           >
-            {isExpanded ? "Collapse Report" : "Read Full Report"} <ArrowRight className={cn("w-3 h-3 transition-transform", isExpanded && "rotate-90")} />
+            {isExpanded ? "Collapse Review" : "Read Full Review"} <ArrowRight className={cn("w-3 h-3 transition-transform", isExpanded && "rotate-90")} />
           </button>
         )}
 
@@ -280,7 +280,7 @@ function ReviewCard({ review }: { review: any }) {
           <ThumbsUp className="w-4 h-4" /> Helpful
         </button>
         <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[var(--c-text-secondary)] hover:text-[var(--foreground)] transition-colors">
-          Report Breach
+          Report Abuse
         </button>
       </div>
     </motion.div>

@@ -149,7 +149,7 @@ export default function OrderDetailsPage() {
 
   const handleReviewSubmit = async () => {
     if (!comment.trim()) {
-      toast("Please provide some feedback on your harvest.", "error");
+      toast("Please provide some feedback on your purchase.", "error");
       return;
     }
 
@@ -177,7 +177,7 @@ export default function OrderDetailsPage() {
           product_id: reviewingItem.id,
           product_name: reviewingItem.name,
           seller_id: reviewingItem.sellerId,
-          user_id: "USR-123", // Mock Citizen ID
+          user_id: "USR-123", // Mock User ID
           user_name: "Bhawani Singh",
           rating: rating,
           comment: comment,
@@ -188,16 +188,16 @@ export default function OrderDetailsPage() {
 
       const data = await response.json();
       if (data.status === "success") {
-        toast("Review submitted for moderation registry.", "success");
+        toast("Review submitted for moderation.", "success");
         setReviewingItem(null);
         setComment("");
         setRating(5);
         setEvidence([]);
       } else {
-        toast(data.message || "Registry synchronization failed.", "error");
+        toast(data.message || "Review synchronization failed.", "error");
       }
     } catch (err) {
-      toast("Connection failed with maritime registry.", "error");
+      toast("Connection failed with server.", "error");
     } finally {
       setIsSubmitting(false);
     }
@@ -340,7 +340,7 @@ export default function OrderDetailsPage() {
             </Card>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-[10px] md:gap-12">
-               {/* Order Items Registry */}
+               {/* Order Items List */}
                <div className="lg:col-span-2 space-y-[4px] md:space-y-8">
                   <h2 className="text-[10px] md:text-sm font-black text-[var(--foreground)] tracking-[0.2em] uppercase italic flex items-center gap-2 md:gap-3">
                      <Package className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" /> Order Items
@@ -374,7 +374,7 @@ export default function OrderDetailsPage() {
                                        )}
                                        {existingReview && (
                                           <Badge variant="glass" className="bg-success/10 text-success border-success/20 uppercase text-[8px] tracking-[0.2em] px-3 py-1.5 italic font-black">
-                                             <ShieldCheck className="w-3 h-3 mr-2" /> VERIFIED AUDIT
+                                             <ShieldCheck className="w-3 h-3 mr-2" /> VERIFIED REVIEW
                                           </Badge>
                                        )}
                                     </div>
@@ -422,17 +422,17 @@ export default function OrderDetailsPage() {
                        <div className="flex items-center gap-4">
                          <span className="text-2xl">🐟</span>
                          <div>
-                           <p className="text-xs font-bold text-[var(--foreground)] uppercase">Re-commission your last catch?</p>
+                           <p className="text-xs font-bold text-[var(--foreground)] uppercase">Reorder your last purchase?</p>
                            <p className="text-[9px] font-medium text-text-secondary">Instant one-click checkout for Premium Bluefin Tuna & Hokkaido Scallops.</p>
                          </div>
                        </div>
                        <Button 
                          onClick={() => {
-                           toast("Re-commissioning previous order items to cart...", "success");
+                           toast("Adding previous order items to cart...", "success");
                          }}
                          className="w-full md:w-auto h-10 px-6 text-[9px] font-black tracking-widest uppercase shadow-glow-purple rounded-xl"
                        >
-                         CATCH AGAIN
+                         REORDER ITEMS
                        </Button>
                      </Card>
                   </div>
@@ -515,7 +515,7 @@ export default function OrderDetailsPage() {
                      </div>
                   </Card>
 
-                  {/* ⚓ FLEET IMPACT & SUSTAINABILITY LEDGER */}
+                  {/* ⚓ SOURCING & SUSTAINABILITY DETAILS */}
                   <Card className="p-6 bg-[var(--c-bg-alt)]/40 border border-[var(--foreground)]/5 space-y-4 rounded-[20px] md:rounded-[30px]">
                      <h2 className="text-[9px] md:text-[10px] font-black text-[var(--foreground)] tracking-widest uppercase italic flex items-center gap-2">
                         <Anchor className="w-3.5 h-3.5 text-primary" /> Sourcing Details
@@ -526,7 +526,7 @@ export default function OrderDetailsPage() {
                            <span className="text-[var(--foreground)] font-black uppercase text-[9px] italic">100% Line-Caught</span>
                         </div>
                         <div className="flex justify-between text-[10px] font-medium text-text-secondary">
-                           <span>Vessel Impact</span>
+                           <span>Sourcing Support</span>
                            <span className="text-[var(--foreground)] font-black">₹340 Crew Support</span>
                         </div>
                         <p className="text-[9px] text-text-secondary leading-normal font-medium italic pt-2 border-t border-[var(--foreground)]/5">
@@ -642,20 +642,20 @@ export default function OrderDetailsPage() {
                 <span>Subtotal</span><span>₹{order.subtotal.toLocaleString()}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', fontSize: '12px', color: '#64748b', borderBottomWidth: '1px', borderBottomStyle: 'solid', borderBottomColor: '#f1f5f9' }}>
-                <span>Maritime Transit</span><span style={{ color: '#16a34a', fontWeight: 700 }}>COMPLIMENTARY</span>
+                <span>Delivery</span><span style={{ color: '#16a34a', fontWeight: 700 }}>COMPLIMENTARY</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', fontSize: '12px', color: '#64748b', borderBottomWidth: '1px', borderBottomStyle: 'solid', borderBottomColor: '#f1f5f9' }}>
-                <span>Settlement Tax</span><span>₹{order.tax.toLocaleString()}</span>
+                <span>Estimated Tax</span><span>₹{order.tax.toLocaleString()}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', padding: '12px 14px', marginTop: '6px', background: '#0f172a', borderRadius: '8px', color: '#fff' }}>
-                <span style={{ fontSize: '11px', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '2px' }}>Total Settlement</span>
+                <span style={{ fontSize: '11px', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '2px' }}>Grand Total</span>
                 <span style={{ fontSize: '18px', fontWeight: 900, color: '#38bdf8' }}>₹{order.total.toLocaleString()}</span>
               </div>
             </div>
 
             {/* Footer */}
             <div style={{ marginTop: '40px', paddingTop: '16px', borderTopWidth: '1px', borderTopStyle: 'dashed', borderTopColor: '#cbd5e1', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div style={{ fontSize: '10px', color: '#94a3b8' }}>Thank you for your maritime commission. Cold-chain integrity guaranteed.</div>
+              <div style={{ fontSize: '10px', color: '#94a3b8' }}>Thank you for your purchase. Cold-chain integrity guaranteed.</div>
               <div style={{ fontSize: '10px', color: '#94a3b8' }}>Printed: {new Date().toLocaleDateString('en-IN', { day:'2-digit', month: 'short', year: 'numeric' })}</div>
             </div>
 
@@ -677,15 +677,11 @@ export default function OrderDetailsPage() {
                    <div className="space-y-3 md:space-y-4">
                       <div className="flex items-center gap-2 text-primary">
                          <ShieldCheck className="w-4 h-4" />
-                         <span className="text-[10px] font-black uppercase tracking-widest text-primary/90">Verified Maritime Review</span>
+                         <span className="text-[10px] font-black uppercase tracking-widest text-primary/90">Verified Review</span>
                       </div>
-                      <h2 className="text-xl md:text-3xl font-black text-[var(--foreground)] uppercase italic tracking-tighter leading-tight">Rate Your Harvest</h2>
+                      <h2 className="text-xl md:text-3xl font-black text-[var(--foreground)] uppercase italic tracking-tighter leading-tight">Rate Your Purchase</h2>
                       <div className="flex flex-wrap gap-2 md:gap-3">
-                         <p className="text-[10px] md:text-xs text-[var(--foreground)]/70 font-medium flex-1 leading-tight">Your feedback helps the OceanExotic Global community maintain the highest standards of maritime excellence.</p>
-                         <div className="px-2 md:px-3 py-1 md:py-1.5 rounded-lg bg-success/10 border border-success/30 flex items-center gap-1.5 md:gap-2">
-                            <Droplets className="w-2.5 h-2.5 md:w-3 md:h-3 text-success animate-pulse" />
-                            <span className="text-[6px] md:text-[7px] font-black text-success uppercase tracking-widest leading-none">Cold Chain<br/>Verified</span>
-                         </div>
+                         <p className="text-[10px] md:text-xs text-[var(--foreground)]/70 font-medium flex-1 leading-tight">Your feedback helps the OceanExotic community maintain the highest standards of quality.</p>
                       </div>
                    </div>
 
@@ -699,7 +695,7 @@ export default function OrderDetailsPage() {
 
                    <div className="space-y-5 md:space-y-6">
                       <div className="space-y-2 md:space-y-3">
-                         <p className="text-[9px] md:text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-widest text-center">Quality Rating</p>
+                         <p className="text-[9px] md:text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-widest">Quality Rating</p>
                          <div className="flex justify-center gap-1 md:gap-2">
                             {[1, 2, 3, 4, 5].map((s) => (
                                <button 
@@ -760,9 +756,9 @@ export default function OrderDetailsPage() {
                       </div>
 
                       <div className="space-y-2 md:space-y-3">
-                         <p className="text-[9px] md:text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-widest">Harvest Notes</p>
+                         <p className="text-[9px] md:text-[10px] font-black text-[var(--foreground)]/80 uppercase tracking-widest">Review Notes</p>
                          <textarea 
-                           placeholder="Share your experience with this edible product (taste, freshness, texture)..."
+                           placeholder="Share your experience with this product (taste, freshness, texture)..."
                            value={comment}
                            onChange={(e) => setComment(e.target.value)}
                            className="w-full h-24 md:h-24 bg-[var(--foreground)]/10 border border-[var(--foreground)]/20 rounded-xl md:rounded-2xl p-3 md:p-4 text-xs md:text-sm text-[var(--foreground)] placeholder:text-[var(--foreground)]/40 outline-none focus:border-primary/50 transition-all resize-none shadow-inner"

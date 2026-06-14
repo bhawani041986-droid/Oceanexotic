@@ -63,25 +63,25 @@ export default function PaymentFailedPage() {
           </div>
 
           <div className="space-y-4">
-             <Badge className="bg-danger/20 text-danger border-danger/20 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] italic">Handshake Denied</Badge>
+             <Badge className="bg-danger/20 text-danger border-danger/20 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] italic">Payment Failed</Badge>
              <h1 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter leading-none">Authorization <br /><span className="text-danger">Failed</span></h1>
-             <p className="text-text-secondary font-medium italic text-lg max-w-md mx-auto">The technical handshake with your financial registry has failed. No assets have been decommissioned from your account.</p>
+             <p className="text-text-secondary font-medium italic text-lg max-w-md mx-auto">Your payment transaction failed. No money has been deducted from your account.</p>
           </div>
 
-          {/* Diagnostic Telemetry */}
+          {/* Diagnostic Info */}
           <div className="p-8 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-[40px] text-left space-y-6">
              <div className="flex items-center justify-between">
-                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary italic">Diagnostic Logs</h4>
+                <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-text-secondary italic">Error Details</h4>
                 <Badge variant="outline" className="text-[8px] border-[var(--foreground)]/10 text-text-secondary uppercase">ERR_AUTH_EXPIRED</Badge>
              </div>
              <div className="space-y-4">
                 <div className="flex items-start gap-4">
                    <div className="w-8 h-8 rounded-lg bg-danger/10 flex items-center justify-center text-danger shrink-0 mt-1"><ShieldAlert className="w-4 h-4" /></div>
-                   <p className="text-xs text-text-secondary italic leading-relaxed">The payment authorization window has timed out or the secondary registry node rejected the signature.</p>
+                   <p className="text-xs text-text-secondary italic leading-relaxed">The payment request timed out or was declined by your card provider.</p>
                 </div>
                 <div className="flex items-start gap-4">
                    <div className="w-8 h-8 rounded-lg bg-warning/10 flex items-center justify-center text-warning shrink-0 mt-1"><RefreshCw className="w-4 h-4" /></div>
-                   <p className="text-xs text-text-secondary italic leading-relaxed">Please verify your credentials and ensure your maritime credit registry has sufficient liquidity.</p>
+                   <p className="text-xs text-text-secondary italic leading-relaxed">Please verify your details and ensure your account has sufficient funds.</p>
                 </div>
              </div>
           </div>
@@ -92,14 +92,14 @@ export default function PaymentFailedPage() {
                onClick={() => router.push("/customer/checkout")}
                className="flex-1 h-16 rounded-2xl bg-primary text-white font-black uppercase text-xs tracking-widest gap-3 shadow-glow-purple group"
              >
-                <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-700" /> RETRY HANDSHAKE
+                <RefreshCw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-700" /> RETRY PAYMENT
              </Button>
              <Button 
                onClick={() => router.push("/customer/support")}
                variant="outline"
                className="flex-1 h-16 rounded-2xl border-[var(--foreground)]/10 text-[var(--foreground)] font-black uppercase text-xs tracking-widest gap-3 hover:bg-[var(--foreground)]/5"
              >
-                <MessageCircle className="w-4 h-4" /> SIGNAL SUPPORT
+                <MessageCircle className="w-4 h-4" /> CONTACT SUPPORT
              </Button>
           </div>
 
@@ -107,13 +107,13 @@ export default function PaymentFailedPage() {
             onClick={() => router.push("/customer/cart")}
             className="flex items-center justify-center gap-2 mx-auto text-[10px] font-black uppercase tracking-[0.3em] text-text-secondary hover:text-[var(--foreground)] transition-colors group"
           >
-             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> RETURN TO CART VAULT
+             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> RETURN TO CART
           </button>
         </Card>
 
         {/* Footer Metadata */}
         <p className="mt-10 text-center text-[9px] font-black uppercase tracking-widest text-text-secondary opacity-40">
-           System Security Protocol • Registry Integrity Verified
+           Secured Payment System
         </p>
       </motion.div>
     </div>

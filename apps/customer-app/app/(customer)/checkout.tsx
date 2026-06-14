@@ -28,8 +28,7 @@ export default function CheckoutScreen() {
   const { user } = useAuthStore();
   const { toast, ToastHost } = useToast();
   const colors = useThemeColors();
-  const { settings } = useSettingsStore();
-  const currentLanguage = settings.language; // force re-render on language change
+  const currentLanguage = useSettingsStore((s) => s.language); // force re-render on language change
 
   const primaryColor = colors.primary;
 
@@ -335,7 +334,7 @@ export default function CheckoutScreen() {
                 Cash on Delivery
               </Text>
               <Text className="text-xs text-muted-foreground mt-1">
-                Handshake at the jetty upon trade fulfillment
+                Pay with cash upon delivery of your items
               </Text>
             </View>
             <View className="w-5 h-5 rounded-full items-center justify-center" style={{ backgroundColor: primaryColor }}>

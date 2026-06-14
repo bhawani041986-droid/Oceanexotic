@@ -70,10 +70,10 @@ export default function WelcomeOnboardingScreen() {
           router.replace(destination as never);
         }, 100);
       } else {
-        toast(result.message || "Failed to secure guest clearance.", "error");
+        toast(result.message || "Failed to sign in as guest.", "error");
       }
     } catch (err) {
-      toast("Connection to live harbor registry disrupted.", "error");
+      toast("Unable to connect. Please check your internet connection.", "error");
     } finally {
       setIsGuestAuthenticating(false);
     }

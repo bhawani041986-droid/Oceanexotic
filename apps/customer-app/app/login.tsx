@@ -44,8 +44,7 @@ export default function LoginScreen() {
   const { login } = useAuthStore();
   const loginMutation = useLogin();
   const { toast, ToastHost } = useToast();
-  const { settings } = useSettingsStore();
-  const currentLanguage = settings.language; // re-render on language change
+  const currentLanguage = useSettingsStore((s) => s.language); // re-render on language change
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
@@ -82,7 +81,7 @@ export default function LoginScreen() {
       toast(message, "error");
       setSubmitError(message);
     } catch (err) {
-      let message = "Connection failed with maritime registry.";
+      let message = "Connection failed. Please check your internet connection.";
       if (axios.isAxiosError(err)) {
         if (err.response?.data?.message) {
           message = String(err.response.data.message);

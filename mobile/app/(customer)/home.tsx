@@ -171,6 +171,7 @@ export default function CustomerHomeScreen() {
   const { width } = Dimensions.get("window");
   const router = useRouter();
   const settings = useSettingsStore();
+  const currentLanguage = useSettingsStore((s) => s.language); // Force re-render on language change
   const cart = useCartStore();
   const { toast, ToastHost } = useToast();
   const { cms, territories, todaysCatch } = useHomeData();

@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useThemeColors } from "@/hooks/useThemeColors";
+import { t } from "@/lib/i18n";
 
 const NAV: { label: string; href: Href }[] = [
   { label: "Home", href: "/home" },
@@ -131,6 +132,7 @@ export function CustomerTabBar() {
   const router = useRouter();
   const count = useCartStore((s) => s.itemCount());
   const colors = useThemeColors();
+  const language = useSettingsStore((s) => s.language);
 
   return (
     <View 
@@ -190,7 +192,7 @@ export function CustomerTabBar() {
               )}
               style={{ color: active ? activeColor : inactiveColor }}
             >
-              {item.label}
+              {t(item.label.toLowerCase())}
             </Text>
           </Pressable>
         );

@@ -891,7 +891,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
         if (data.status === 'success') {
           setTodaysCatch(data.items || []);
         }
-      } catch (err) { console.warn("Live Registry Handshake Failure (Silenced)"); }
+      } catch (err) { console.warn("Live Catch Fetch Failure (Silenced)"); }
       finally { setIsLoadingCatch(false); }
     };
 
@@ -968,7 +968,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
         }
       }
     } catch (err) {
-      toast("Cut Registry Handshake Failure", "error");
+      toast("Failed to load options", "error");
     } finally {
       setIsLoadingCuts(false);
     }
@@ -1094,7 +1094,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
               )}
             </div>
 
-            {/* Time slot registry details */}
+            {/* Available Delivery Slots */}
             <div className="p-2 rounded-xl bg-white/[0.04] border border-white/[0.06] space-y-1.5">
               <div className="flex justify-between items-center text-[10px] font-bold text-white/70 uppercase gap-4">
                 <span>Hours</span>
@@ -1738,7 +1738,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                      >
                         <Play className="w-5 h-5 text-[var(--c-primary)]" />
                         <div className="text-left">
-                           <p className="text-[7px] font-black text-[var(--foreground)]/40 uppercase">Registry</p>
+                           <p className="text-[7px] font-black text-[var(--foreground)]/40 uppercase">Download</p>
                            <p className="text-[10px] font-black text-[var(--foreground)] italic">GOOGLE PLAY</p>
                         </div>
                      </a>
@@ -2023,7 +2023,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                 {isLoadingCuts ? (
                   <div className="space-y-4 py-12 flex flex-col items-center">
                     <div className="w-12 h-12 border-4 border-[var(--c-primary)]/20 border-t-[var(--c-primary)] rounded-full animate-spin" />
-                    <p className="text-[10px] font-black text-[var(--c-primary)] uppercase tracking-widest animate-pulse">Accessing Cut Registry...</p>
+                    <p className="text-[10px] font-black text-[var(--c-primary)] uppercase tracking-widest animate-pulse">Loading Options...</p>
                   </div>
                 ) : (
                   <>

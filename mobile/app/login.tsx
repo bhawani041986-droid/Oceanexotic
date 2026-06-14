@@ -40,7 +40,7 @@ const GoogleIcon = () => (
 export default function LoginScreen() {
   const router = useRouter();
   const { login } = useAuthStore();
-  const { language } = useSettingsStore();
+  const currentLanguage = useSettingsStore((s) => s.language); // re-render on language change
   const loginMutation = useLogin();
   const { toast, ToastHost } = useToast();
   const [submitError, setSubmitError] = useState<string | null>(null);

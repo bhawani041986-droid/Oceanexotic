@@ -42,8 +42,7 @@ export default function ProductsScreen() {
   const { toast, ToastHost } = useToast();
   const cart = useCartStore();
   const colors = useThemeColors();
-  const { settings } = useSettingsStore();
-  const currentLanguage = settings.language; // force re-render
+  const currentLanguage = useSettingsStore((s) => s.language); // force re-render
 
   const [searchQuery, setSearchQuery] = useState(params.search ?? "");
   const [activeTab, setActiveTab] = useState(() => {
@@ -224,7 +223,7 @@ export default function ProductsScreen() {
       setCutOptions(options);
       setSelectedCut(options.find((c) => c.is_available !== false) ?? options[0] ?? null);
     } catch {
-      toast("Cut Registry Handshake Failure", "error");
+      toast("Failed to load options", "error");
     } finally {
       setCutLoading(false);
     }
@@ -254,7 +253,7 @@ export default function ProductsScreen() {
           <RefreshControl refreshing={registry.isRefetching} onRefresh={() => registry.refetch()} tintColor={colors.primary} />
         }
       >
-        <SectionTitle title="Harvest Registry" subtitle="Premium Seafood Discovery • Live Fleet Sync" />
+        <SectionTitle title="Product Catalog" subtitle="Premium Seafood Discovery • Fast Delivery" />
 
         <TextInput
           value={searchQuery}
@@ -300,7 +299,7 @@ export default function ProductsScreen() {
           className="mt-4 text-[10px] font-black uppercase tracking-widest"
           style={{ color: colors.textMuted }}
         >
-          {displayList.length} assets in registry
+          {displayList.length} items in catalog
         </Text>
 
         {isLoading ? (

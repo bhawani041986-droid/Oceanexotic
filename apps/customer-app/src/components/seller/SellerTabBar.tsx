@@ -4,10 +4,10 @@ import Svg, { Path, Circle, Rect } from "react-native-svg";
 import { cn } from "@/lib/utils";
 
 const NAV: { label: string; href: Href }[] = [
-  { label: "Dashboard", href: "/(seller)/dashboard" },
-  { label: "Inventory", href: "/(seller)/inventory" },
-  { label: "Orders", href: "/(seller)/orders" },
-  { label: "Profile", href: "/(seller)/profile" },
+  { label: "Dashboard", href: "/(seller)/dashboard" as any },
+  { label: "Inventory", href: "/(seller)/inventory" as any },
+  { label: "Orders", href: "/(seller)/orders" as any },
+  { label: "Profile", href: "/(seller)/profile" as any },
 ];
 
 function pathActive(pathname: string, href: string): boolean {

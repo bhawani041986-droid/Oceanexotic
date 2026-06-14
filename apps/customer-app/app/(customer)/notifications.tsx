@@ -7,8 +7,7 @@ import { useSettingsStore } from "@/store/settingsStore";
 
 export default function NotificationsScreen() {
   const colors = useThemeColors();
-  const { settings } = useSettingsStore();
-  const currentLanguage = settings.language; // force re-render
+  const currentLanguage = useSettingsStore((s) => s.language); // force re-render
 
   const mockNotifications = [
     {

@@ -12,8 +12,7 @@ import { useSettingsStore } from "@/store/settingsStore";
 export default function OrdersScreen() {
   const router = useRouter();
   const { user, isHydrated } = useAuthStore();
-  const { settings } = useSettingsStore();
-  const currentLanguage = settings.language; // force re-render
+  const currentLanguage = useSettingsStore((s) => s.language); // force re-render
   const [orders, setOrders] = useState<CustomerOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);

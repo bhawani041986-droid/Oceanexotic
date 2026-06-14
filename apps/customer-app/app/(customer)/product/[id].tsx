@@ -39,8 +39,7 @@ export default function ProductDetailScreen() {
   const cart = useCartStore();
   const { toast, ToastHost } = useToast();
   const { user } = useAuthStore();
-  const { settings } = useSettingsStore();
-  const currentLanguage = settings.language; // force re-render
+  const currentLanguage = useSettingsStore((s) => s.language); // force re-render
 
   const [product, setProduct] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);

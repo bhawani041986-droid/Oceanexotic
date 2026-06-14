@@ -188,7 +188,7 @@ export default function CustomerProfilePage() {
         body: JSON.stringify(formData)
       });
       if (res.ok) {
-        toast("Registry Synchronized", "success");
+        toast("Profile Updated", "success");
         fetchRegistry();
         setIsModalOpen(false);
       }
@@ -204,11 +204,11 @@ export default function CustomerProfilePage() {
       const endpoint = type === 'address' ? '/api/user/addresses' : '/api/user/payments';
       const res = await fetch(`${endpoint}?id=${id}`, { method: 'DELETE' });
       if (res.ok) {
-        toast("Node Decommissioned", "success");
+        toast("Removed successfully", "success");
         fetchRegistry();
       }
     } catch (err) {
-      toast("Purge Failed", "error");
+      toast("Failed to remove", "error");
     }
   };
 
@@ -226,7 +226,7 @@ export default function CustomerProfilePage() {
         setFormData((prev: any) => ({ ...prev, address: topResult.display_name, locality: "Live Node" }));
         toast("Location Found & Synced", "success");
       } else {
-        toast("Location not found in registry.", "error");
+        toast("Location not found.", "error");
       }
     } catch (err) {
       toast("Search query failed.", "error");
@@ -240,18 +240,18 @@ export default function CustomerProfilePage() {
       <MainLayout>
         <div className="bg-[#0B1120] min-h-screen flex flex-col items-center justify-center space-y-4">
           <Loader2 className="w-12 h-12 text-primary animate-spin" />
-          <p className="text-[10px] font-black uppercase tracking-widest text-primary animate-pulse italic">Connecting to System Registry...</p>
+          <p className="text-[10px] font-black uppercase tracking-widest text-primary animate-pulse italic">Connecting...</p>
         </div>
       </MainLayout>
     );
   }
 
   const menuItems = [
-    { id: "overview", label: "Registry Overview", icon: <User className="w-4 h-4" />, color: "#00D1FF" },
-    { id: "addresses", label: "Address Vault", icon: <MapPin className="w-4 h-4" />, color: "#10B981" },
-    { id: "payments", label: "Payment Protocols", icon: <CreditCard className="w-4 h-4" />, color: "#FACC15" },
-    { id: "security", label: "Security Command", icon: <ShieldCheck className="w-4 h-4" />, color: "#A855F7" },
-    { id: "notifications", label: "Notification Registry", icon: <Bell className="w-4 h-4" />, color: "#F97316" },
+    { id: "overview", label: "Profile Overview", icon: <User className="w-4 h-4" />, color: "#00D1FF" },
+    { id: "addresses", label: "Saved Addresses", icon: <MapPin className="w-4 h-4" />, color: "#10B981" },
+    { id: "payments", label: "Payment Methods", icon: <CreditCard className="w-4 h-4" />, color: "#FACC15" },
+    { id: "security", label: "Account Security", icon: <ShieldCheck className="w-4 h-4" />, color: "#A855F7" },
+    { id: "notifications", label: "Notification Preferences", icon: <Bell className="w-4 h-4" />, color: "#F97316" },
   ];
 
 
@@ -266,7 +266,7 @@ export default function CustomerProfilePage() {
                <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} className="relative w-full max-w-lg bg-bg-card border border-[var(--foreground)]/10 rounded-[32px] md:rounded-[40px] p-5 md:p-10 shadow-2xl space-y-4 md:space-y-8 overflow-hidden text-[var(--foreground)]">
                   <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary to-blue-500" />
                   <div className="flex items-center justify-between">
-                     <h3 className="text-xl md:text-2xl font-black uppercase italic leading-tight">{modalType === 'profile' ? 'Profile Registry' : (editingItem ? 'Update Protocol' : `Add ${modalType}`)}</h3>
+                     <h3 className="text-xl md:text-2xl font-black uppercase italic leading-tight">{modalType === 'profile' ? 'Profile Details' : (editingItem ? 'Update Details' : `Add ${modalType}`)}</h3>
                      <button onClick={() => setIsModalOpen(false)} className="p-1.5 bg-[var(--foreground)]/5 rounded-xl hover:bg-[var(--foreground)]/10 transition-colors"><X className="w-5 h-5 md:w-6 md:h-6" /></button>
                   </div>
                   
@@ -306,15 +306,15 @@ export default function CustomerProfilePage() {
                         <>
                            <div className="grid grid-cols-2 gap-3 md:gap-4">
                               <div className="space-y-1.5">
-                                 <label className="text-[9px] font-black uppercase tracking-widest text-text-secondary italic">REGISTRY TYPE</label>
+                                 <label className="text-[9px] font-black uppercase tracking-widest text-text-secondary italic">ADDRESS TYPE</label>
                                  <select value={formData.type || "HOME"} onChange={(e) => setFormData({...formData, type: e.target.value})} className="w-full h-12 md:h-14 bg-[#1A1F2C] border border-[var(--foreground)]/5 rounded-xl md:rounded-2xl px-4 text-[var(--foreground)] italic appearance-none">
-                                    <option value="HOME" className="bg-[#1A1F2C]">RESIDENCE</option>
+                                    <option value="HOME" className="bg-[#1A1F2C]">HOME</option>
                                     <option value="HOTEL" className="bg-[#1A1F2C]">HOTEL / RESORT</option>
-                                    <option value="WORK" className="bg-[#1A1F2C]">OFFICE / FLEET</option>
+                                    <option value="WORK" className="bg-[#1A1F2C]">OFFICE</option>
                                  </select>
                               </div>
                               <div className="space-y-1.5">
-                                 <label className="text-[9px] font-black uppercase tracking-widest text-text-secondary italic">HUB JETTY</label>
+                                 <label className="text-[9px] font-black uppercase tracking-widest text-text-secondary italic">DELIVERY JETTY</label>
                                  <select value={formData.jetty || ""} onChange={(e) => setFormData({...formData, jetty: e.target.value})} className="w-full h-12 md:h-14 bg-[#1A1F2C] border border-[var(--foreground)]/5 rounded-xl md:rounded-2xl px-4 text-[var(--foreground)] italic appearance-none">
                                     <option value="" className="bg-[#1A1F2C]">SELECT JETTY</option>
                                     <option value="Havelock No.1" className="bg-[#1A1F2C]">HAVELOCK NO.1</option>
@@ -489,7 +489,7 @@ export default function CustomerProfilePage() {
                    </h3>
                    <p className="text-[9px] md:text-[10px] font-black text-primary uppercase tracking-widest italic">{displayGrade}</p>
                 </div>
-                <Button onClick={() => handleOpenModal("profile")} variant="ghost" className="w-full h-8 md:h-10 text-[8px] md:text-[9px] font-black uppercase text-primary gap-2 italic">EDIT REGISTRY <Edit3 className="w-3 h-3" /></Button>
+                <Button onClick={() => handleOpenModal("profile")} variant="ghost" className="w-full h-8 md:h-10 text-[8px] md:text-[9px] font-black uppercase text-primary gap-2 italic">EDIT PROFILE <Edit3 className="w-3 h-3" /></Button>
              </Card>
 
              <nav className="space-y-[4px] md:space-y-2">
@@ -548,7 +548,7 @@ export default function CustomerProfilePage() {
                 <div className="flex items-center gap-0">
                    {menuItems.map((item, idx) => {
                      const isActive = activeTab === item.id;
-                     const shortLabels: Record<string, string> = { overview: "Registry", addresses: "Vault", payments: "Pay", security: "Secure", notifications: "Signal" };
+                     const shortLabels: Record<string, string> = { overview: "Profile", addresses: "Address", payments: "Payment", security: "Security", notifications: "Alerts" };
                      return (
                        <button 
                          key={item.id} 
@@ -580,7 +580,7 @@ export default function CustomerProfilePage() {
                    <div className="grid grid-cols-1 md:grid-cols-3 gap-[10px] md:gap-6">
                       <Card className="p-[10px] md:p-10 bg-bg-card/40 border-[var(--foreground)]/5 rounded-[24px] md:rounded-[48px] space-y-[4px] md:space-y-6 md:col-span-2 relative overflow-hidden group">
                          <div className="flex items-center justify-between">
-                            <h4 className="text-sm md:text-xl font-black uppercase italic text-[var(--foreground)] shadow-glow-purple/5">Loyalty Telemetry</h4>
+                            <h4 className="text-sm md:text-xl font-black uppercase italic text-[var(--foreground)] shadow-glow-purple/5">Loyalty Points</h4>
                             <Star className="w-4 h-4 md:w-6 md:h-6 text-warning fill-warning opacity-40" />
                          </div>
                           <div className="space-y-[4px] md:space-y-4">
@@ -590,13 +590,13 @@ export default function CustomerProfilePage() {
                       </Card>
                       <Card className="p-[10px] md:p-10 bg-bg-card/40 border-[var(--foreground)]/5 rounded-[24px] md:rounded-[48px] flex flex-col items-center justify-center text-center space-y-[4px] md:space-y-4">
                          <div className="w-10 h-10 md:w-16 md:h-16 bg-green-500/10 rounded-2xl md:rounded-3xl flex items-center justify-center text-green-500 shadow-glow-purple/5"><ShieldCheck className="w-5 h-5 md:w-8 md:h-8" /></div>
-                         <p className="text-xs md:text-xl font-black uppercase italic text-[var(--foreground)] shadow-glow-purple/5 leading-tight">Registry Secure</p>
+                         <p className="text-xs md:text-xl font-black uppercase italic text-[var(--foreground)] shadow-glow-purple/5 leading-tight">Account Secure</p>
                       </Card>
                    </div>
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <Card className="p-8 bg-bg-card/40 border-[var(--foreground)]/5 rounded-[40px] space-y-6 group text-[var(--foreground)]">
-                         <h4 className="text-xl font-black uppercase italic shadow-glow-purple/5">Default Coordinate</h4>
-                          <div className="flex items-start gap-4 p-5 rounded-2xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 shadow-glow-purple/5"><MapPin className="w-5 h-5 text-primary mt-1" /><p className="text-xs text-[var(--foreground)]/60 italic">{Array.isArray(addresses) ? (addresses.find(a => a.is_default)?.address || "No primary node set") : "Initializing..."}</p></div>
+                         <h4 className="text-xl font-black uppercase italic shadow-glow-purple/5">Default Address</h4>
+                          <div className="flex items-start gap-4 p-5 rounded-2xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 shadow-glow-purple/5"><MapPin className="w-5 h-5 text-primary mt-1" /><p className="text-xs text-[var(--foreground)]/60 italic">{Array.isArray(addresses) ? (addresses.find(a => a.is_default)?.address || "No primary address set") : "Initializing..."}</p></div>
                       </Card>
                    </div>
                 </div>
@@ -630,8 +630,8 @@ export default function CustomerProfilePage() {
              {activeTab === "payments" && (
                 <div className="space-y-6 animate-fade-in">
                    <div className="flex items-center justify-between px-2">
-                      <h4 className="text-xl font-black uppercase italic text-[var(--foreground)] shadow-glow-purple/5">Payment Registry</h4>
-                      <Button onClick={() => handleOpenModal("card")} variant="outline" className="h-10 border-primary/20 text-primary rounded-full text-[9px] font-black uppercase gap-2 italic shadow-glow-purple/5">+ ADD PROTOCOL</Button>
+                      <h4 className="text-xl font-black uppercase italic text-[var(--foreground)] shadow-glow-purple/5">Payment Methods</h4>
+                      <Button onClick={() => handleOpenModal("card")} variant="outline" className="h-10 border-primary/20 text-primary rounded-full text-[9px] font-black uppercase gap-2 italic shadow-glow-purple/5">+ ADD PAYMENT</Button>
                    </div>
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {Array.isArray(payments) && payments.map((card) => (
@@ -660,21 +660,21 @@ export default function CustomerProfilePage() {
 
               {activeTab === "security" && (
                 <div className="space-y-6 animate-fade-in">
-                   <h4 className="text-xl font-black uppercase italic text-[var(--foreground)] px-2 shadow-glow-purple/5">Security Command</h4>
+                   <h4 className="text-xl font-black uppercase italic text-[var(--foreground)] px-2 shadow-glow-purple/5">Account Security</h4>
                    <Card className="p-8 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 rounded-[32px] space-y-8 shadow-glow-purple/5">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                          <div className="space-y-4">
-                            <h5 className="text-[10px] font-black uppercase italic text-primary tracking-widest">PASSWORD DIRECTIVE</h5>
+                            <h5 className="text-[10px] font-black uppercase italic text-primary tracking-widest">CHANGE PASSWORD</h5>
                             <Input type="password" placeholder="Current Password" className="bg-bg-primary italic border-white/5" />
                             <Input type="password" placeholder="New Password" className="bg-bg-primary italic border-white/5" />
-                            <Button className="w-full h-12 text-[10px] font-black uppercase shadow-glow-purple rounded-xl italic">RECALIBRATE PASSWORD</Button>
+                            <Button className="w-full h-12 text-[10px] font-black uppercase shadow-glow-purple rounded-xl italic">UPDATE PASSWORD</Button>
                          </div>
                          <div className="space-y-4">
-                            <h5 className="text-[10px] font-black uppercase italic text-primary tracking-widest">TWO-FACTOR PULSE</h5>
+                            <h5 className="text-[10px] font-black uppercase italic text-primary tracking-widest">TWO-FACTOR AUTHENTICATION</h5>
                             <div className="p-6 rounded-2xl bg-primary/5 border border-primary/20 flex items-center justify-between shadow-glow-purple/5">
                                <div className="space-y-1">
-                                  <p className="text-[10px] font-black text-[var(--foreground)] uppercase italic">MFA ENCRYPTION</p>
-                                  <p className="text-[8px] font-bold text-text-secondary uppercase">PROTECT YOUR HUB</p>
+                                  <p className="text-[10px] font-black text-[var(--foreground)] uppercase italic">MFA ENABLED</p>
+                                  <p className="text-[8px] font-bold text-text-secondary uppercase">SECURE YOUR ACCOUNT</p>
                                 </div>
                                <div className="w-12 h-6 bg-primary/20 rounded-full p-1 cursor-pointer"><div className="w-4 h-4 bg-primary rounded-full shadow-glow-purple translate-x-6" /></div>
                             </div>
@@ -686,12 +686,12 @@ export default function CustomerProfilePage() {
 
               {activeTab === "notifications" && (
                 <div className="space-y-6 animate-fade-in">
-                   <h4 className="text-xl font-black uppercase italic text-[var(--foreground)] px-2 shadow-glow-purple/5">Notification Registry</h4>
+                   <h4 className="text-xl font-black uppercase italic text-[var(--foreground)] px-2 shadow-glow-purple/5">Notification Preferences</h4>
                    <Card className="p-8 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 rounded-[32px] space-y-6 shadow-glow-purple/5">
                       {[
-                        { label: "Order Logistics", desc: "Real-time fleet tracking signals" },
-                        { label: "Market Alerts", desc: "Fresh harvest & price recalibrations" },
-                        { label: "Security Pulses", desc: "Registry access & session signals" }
+                        { label: "Order Delivery Updates", desc: "Real-time package tracking alerts" },
+                        { label: "Market Offers", desc: "Fresh arrivals & price updates" },
+                        { label: "Security Alerts", desc: "Login & session alerts" }
                       ].map((pref) => (
                         <div key={pref.label} className="flex items-center justify-between p-4 rounded-2xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 shadow-glow-purple/5">
                            <div className="space-y-1"><p className="text-xs font-black text-[var(--foreground)] uppercase italic">{pref.label}</p><p className="text-[8px] font-bold text-text-secondary uppercase">{pref.desc}</p></div>

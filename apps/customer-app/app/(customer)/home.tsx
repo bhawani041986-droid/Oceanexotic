@@ -177,7 +177,7 @@ export default function CustomerHomeScreen() {
   const { width } = Dimensions.get("window");
   const router = useRouter();
   const settings = useSettingsStore();
-  const currentLanguage = settings.language; // Force re-render on language change
+  const currentLanguage = useSettingsStore((s) => s.language); // Force re-render on language change
   const cart = useCartStore();
   const { toast, ToastHost } = useToast();
   const { cms, territories, todaysCatch } = useHomeData();
@@ -243,7 +243,7 @@ export default function CustomerHomeScreen() {
       const first = options.find((c) => c.is_available !== false) ?? options[0] ?? null;
       setSelectedCut(first);
     } catch {
-      toast("Cut Registry Handshake Failure", "error");
+      toast("Failed to load options", "error");
     } finally {
       setCutLoading(false);
     }
@@ -429,12 +429,12 @@ export default function CustomerHomeScreen() {
 
           {todaysCatch.isError ? (
             <Text className="mt-4 text-center text-[10px] font-bold text-danger">
-              Harbor registry sync failed. Pull to refresh.
+              Failed to sync products. Pull to refresh.
             </Text>
           ) : null}
         </View>
 
-        {/* Featured Harvests — live registry */}
+        {/* Featured Seafood */}
         <View className="border-y border-white/5 bg-secondary/20 px-4 py-8">
           <SectionTitle title="Featured Seafood" subtitle="Premium Fresh Quality" />
           {featured.length > 0 ? (
@@ -856,11 +856,11 @@ export default function CustomerHomeScreen() {
                 </Svg>
               ) : null}
               <Text className="text-xs italic tracking-wider relative z-10" style={{ color: colors.textMuted }}>
-                Registry Email: auth-fleet@sea.gov
+                Support Email: support@oceanexotic.com
               </Text>
             </View>
             <Pressable
-              onPress={() => toast("Subscribed to Fleet Registry!", "success")}
+              onPress={() => toast("Subscribed to newsletter!", "success")}
               onLayout={(e) => setSubBtnLayout(e.nativeEvent.layout)}
               className="py-3.5 items-center justify-center relative overflow-hidden"
               style={{ height: 50 }}

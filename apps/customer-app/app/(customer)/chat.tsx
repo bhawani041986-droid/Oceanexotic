@@ -202,7 +202,7 @@ export default function CustomerChatScreen() {
                     </Text>
                   </View>
                   <Text className="text-[9.5px] font-medium text-slate-400" numberOfLines={1}>
-                    {conv.last_message || "Initialize protocol handshake..."}
+                    {conv.last_message || "Start chatting..."}
                   </Text>
                 </View>
 
@@ -255,7 +255,7 @@ export default function CustomerChatScreen() {
             <TextInput
               value={msgText}
               onChangeText={setMsgText}
-              placeholder="Transmit signal code..."
+              placeholder="Type a message..."
               placeholderTextColor="rgba(255,255,255,0.2)"
               onSubmitEditing={handleSendMessage}
               className="flex-1 h-10 border rounded-xl bg-slate-900/50 px-3 text-xs font-bold text-white uppercase tracking-wider"

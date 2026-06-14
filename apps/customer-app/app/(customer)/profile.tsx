@@ -26,8 +26,7 @@ export default function ProfileScreen() {
   const cart = useCartStore();
   const { toast, ToastHost } = useToast();
   const colors = useThemeColors();
-  const { settings } = useSettingsStore();
-  const currentLanguage = settings.language; // force re-render
+  const currentLanguage = useSettingsStore((s) => s.language); // force re-render
 
   const primaryColor = colors.primary;
 

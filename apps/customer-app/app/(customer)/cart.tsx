@@ -24,8 +24,7 @@ export default function CartScreen() {
   const { items, updateQuantity, removeItem, getTotal, clearCart, toggleMarination } = useCartStore();
   const colors = useThemeColors();
   const { user } = useAuthStore();
-  const { settings } = useSettingsStore();
-  const currentLanguage = settings.language; // force re-render
+  const currentLanguage = useSettingsStore((s) => s.language); // force re-render
   const [addons, setAddons] = useState<any[]>([]);
   const [loadingAddons, setLoadingAddons] = useState(true);
 
@@ -75,7 +74,7 @@ export default function CartScreen() {
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       <ScrollView contentContainerClassName="px-4 pb-28 pt-2">
-        <Text className="text-2xl font-black uppercase italic" style={{ color: colors.text }}>Mission Registry</Text>
+        <Text className="text-2xl font-black uppercase italic" style={{ color: colors.text }}>{t('active_cart') || "Active Cart"}</Text>
         <Text 
           className="mt-1 text-[10px] font-black uppercase tracking-widest" 
           style={{ color: colors.textMuted }}

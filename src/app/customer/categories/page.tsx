@@ -50,17 +50,17 @@ export default function CustomerCategoriesPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-[10px] md:gap-8 border-b border-[var(--foreground)]/5 pb-[10px] md:pb-10">
         <div className="space-y-2 md:space-y-4 max-w-2xl">
-          <Badge variant="glass" className="bg-primary/10 text-primary border-primary/20 text-[8px] md:text-[10px]">GLOBAL TAXONOMY</Badge>
+          <Badge variant="glass" className="bg-primary/10 text-primary border-primary/20 text-[8px] md:text-[10px]">HARBOR CATEGORIES</Badge>
           <h1 className="text-3xl md:text-5xl font-black text-[var(--foreground)] tracking-tighter uppercase leading-none italic">
-            Explore the <span className="text-primary italic">Fleet.</span>
+            Explore the <span className="text-primary italic">Harvest.</span>
           </h1>
           <p className="text-[10px] md:text-sm font-medium text-text-secondary leading-tight md:leading-relaxed italic">
-            Navigate the global maritime registry by species classification and sourcing sector.
+            Browse our fresh seafood catalog by category and species.
           </p>
         </div>
         <div className="relative group w-full md:w-80">
           <input 
-            placeholder="Search taxonomy..." 
+            placeholder="Search categories..." 
             className="w-full h-12 md:h-14 pl-12 md:pl-14 pr-6 bg-bg-secondary border border-[var(--foreground)]/5 rounded-lg md:rounded-[20px] text-xs md:text-sm font-bold text-[var(--foreground)] focus:border-primary/50 transition-all outline-none italic"
           />
           <Search className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 w-4 h-4 md:w-5 md:h-5 text-text-secondary opacity-40 group-focus-within:opacity-100 transition-opacity" />

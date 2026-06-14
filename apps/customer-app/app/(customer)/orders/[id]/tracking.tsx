@@ -36,7 +36,7 @@ export default function OrderTrackingScreen() {
     current_lat: 13.160704,
     current_lng: 92.946892,
     agent_name: "ASSIGNING...",
-    logs: [{ time: "Now", status: "Registry Live", location: "Andaman Sector", active: true }],
+    logs: [{ time: "Now", status: "Order Processed", location: "Andaman Sector", active: true }],
   };
 
   if (loading && !trackingData) {
@@ -44,7 +44,7 @@ export default function OrderTrackingScreen() {
       <View className="flex-1 items-center justify-center bg-background">
         <ActivityIndicator color="#7C3AED" size="large" />
         <Text className="mt-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-          Registry Sync...
+          Loading Tracking...
         </Text>
       </View>
     );
@@ -139,9 +139,9 @@ export default function OrderTrackingScreen() {
           </View>
         </View>
 
-        {/* Mission Registry Logs */}
+        {/* Delivery Timeline Logs */}
         <Text className="mb-4 text-base font-black uppercase italic tracking-tighter text-foreground">
-          Mission Registry
+          Delivery Timeline
         </Text>
         <View className="pl-2">
           {displayData.logs.map((event: any, i: number) => (

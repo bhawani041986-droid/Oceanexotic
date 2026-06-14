@@ -50,17 +50,16 @@ import { MASTER_PRODUCT_REGISTRY, MASTER_ADDONS_REGISTRY } from "@/constants/pro
 import { reviewService } from "@/services/reviewService";
 import { Schema, generateProductSchema } from "@/components/seo/Schema";
 import { authService } from "@/services/authService";
-// Generic fallback for unknown IDs not yet in the registry
 const UNKNOWN_PRODUCT_FALLBACK = (id: string) => ({
-  id, name: `Seafood Product ${id}`, tagline: "Premium Maritime Catch",
+  id, name: `Seafood Product ${id}`, tagline: "Premium Seafood",
   price: 999, originalPrice: 1200, rating: 4.5, reviews: 0,
   sellerName: "OceanExotic Global Seller", sellerId: "SEL-000", delivery: "45-60 min",
   availability: "In Stock", stock: 10, badge: "FRESH CATCH",
-  description: "A premium seafood product from the OceanExotic Global Maritime Registry.",
+  description: "A premium seafood product from OceanExotic.",
   images: ["https://images.unsplash.com/photo-1534422298391-e4f8c170db06?q=80&w=2000"],
   variants: [
-    { id: "v1", label: "1/2 KG HARVEST", price: 999, status: "Available" },
-    { id: "v2", label: "1 KG HARVEST", price: 1800, status: "Available" }
+    { id: "v1", label: "1/2 KG PACK", price: 999, status: "Available" },
+    { id: "v2", label: "1 KG PACK", price: 1800, status: "Available" }
   ],
   nutrition: { protein: "20g", omega3: "300mg", calories: "100 kcal", fat: "2g" },
   trustBadges: ["Fresh Catch", "Hygienic"],
@@ -330,10 +329,10 @@ export default function ProductDetailPage({
       </motion.div>
 
       <div className="container mx-auto px-4 md:px-10 pt-4 md:pt-16 pb-10">
-        {/* --- LAYER 1: COMMAND LAYER (HERO) --- */}
+        {/* --- LAYER 1: HERO LAYER --- */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-[4px] md:gap-[10px]">
           
-          {/* Visual Registry */}
+          {/* Visual Gallery */}
           <div className="lg:col-span-7 flex flex-row gap-[4px] md:gap-[10px] relative">
             
             {/* THUMBNAIL CONTAINER - ALIGNED LEFT ON ALL DEVICES */}
@@ -782,7 +781,7 @@ export default function ProductDetailPage({
                           <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
                        </div>
                        <p className="text-[9px] text-[var(--foreground)]/60 italic leading-tight truncate">
-                          Registry #SPL-998 • <span className="text-success font-bold">100% Clean Harvest</span>
+                          Batch #SPL-998 • <span className="text-success font-bold">100% Clean Pack</span>
                        </p>
                     </div>
                  </div>
@@ -790,7 +789,7 @@ export default function ProductDetailPage({
                  <div className="absolute top-0 -left-[100%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[45deg] group-hover:left-[150%] transition-all duration-700" />
               </motion.div>
 
-              {/* Cold-Chain Telemetry Guard */}
+              {/* Cold-Chain Temperature Guard */}
               <div className="p-3 bg-[var(--c-bg-alt)]/60 border border-[var(--foreground)]/5 rounded-[16px] space-y-2">
                  <p className="text-[8px] font-black uppercase text-[var(--c-primary)] tracking-widest">❄️ Temperature Tracking</p>
                  <div className="flex justify-between items-center">
@@ -825,7 +824,7 @@ export default function ProductDetailPage({
                  ))}
                  <div className="p-4 rounded-[16px] border border-dashed border-[var(--foreground)]/10 flex flex-col items-center justify-center gap-2 opacity-40">
                     <MessageCircle className="w-4 h-4" />
-                    <p className="text-[8px] font-black uppercase tracking-widest">Request New Protocol</p>
+                    <p className="text-[8px] font-black uppercase tracking-widest">Request Cooking Guide</p>
                  </div>
               </div>
            </div>
@@ -839,13 +838,13 @@ export default function ProductDetailPage({
                        <div className="w-12 h-12 rounded-full bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/20 flex items-center justify-center text-xl rotate-12">⚓</div>
                        <div>
                           <h4 className="text-sm font-black text-[var(--foreground)] uppercase italic tracking-tighter flex items-center gap-1">{product.seller} <Verified className="w-3 h-3 text-blue-500" /></h4>
-                          <p className="text-[8px] font-black text-success uppercase tracking-widest italic">Fleet Certified Agent</p>
+                          <p className="text-[8px] font-black text-success uppercase tracking-widest italic">Certified Seller</p>
                        </div>
                     </div>
                     <div className="space-y-2 pt-2 border-t border-[var(--foreground)]/5">
                        <div className="flex items-center justify-between text-[9px] font-black uppercase text-[var(--c-text-secondary)]">
                           <span>Seller ID</span>
-                          <span className="text-[var(--foreground)]">REG-{product.sellerId}</span>
+                          <span className="text-[var(--foreground)]">SEL-{product.sellerId}</span>
                        </div>
                        <div className="flex items-center justify-between text-[9px] font-black uppercase text-[var(--c-text-secondary)]">
                           <span>Location</span>
@@ -858,7 +857,7 @@ export default function ProductDetailPage({
                        <p className="text-[8px] font-black uppercase text-[var(--c-primary)] tracking-widest">🚢 Sourcing Details</p>
                        <div className="space-y-1 text-[8px] font-black uppercase text-[var(--c-text-secondary)]">
                           <div className="flex justify-between">
-                             <span>Vessel ID</span>
+                             <span>Sourcing Boat</span>
                              <span className="text-[var(--foreground)]">M.V. Samudra-III</span>
                           </div>
                           <div className="flex justify-between">
@@ -872,7 +871,7 @@ export default function ProductDetailPage({
                        </div>
                     </div>
 
-                    <Button className="w-full h-10 rounded-xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[9px] font-black uppercase text-[var(--foreground)] hover:bg-[var(--foreground)]/10 flex items-center justify-center gap-2 mt-2"><MessageCircle className="w-3 h-3" /> DISPATCH CHAT</Button>
+                    <Button className="w-full h-10 rounded-xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[9px] font-black uppercase text-[var(--foreground)] hover:bg-[var(--foreground)]/10 flex items-center justify-center gap-2 mt-2"><MessageCircle className="w-3 h-3" /> CONTACT SELLER</Button>
                  </Card>
               </div>
               <div className="flex flex-wrap gap-[4px]">
@@ -896,7 +895,7 @@ export default function ProductDetailPage({
                     href={`/customer/products/${product.id}/reviews`}
                     className="text-[10px] font-black uppercase tracking-widest text-[var(--c-primary)] hover:underline flex items-center gap-1"
                   >
-                    See All Reports <ArrowRight className="w-3 h-3" />
+                    See All Reviews <ArrowRight className="w-3 h-3" />
                   </Link>
                 </div>
               </div>
@@ -914,7 +913,7 @@ export default function ProductDetailPage({
                       <div className="flex items-center gap-3">
                          <div className="w-10 h-10 rounded-full bg-[var(--c-primary)]/10 flex items-center justify-center font-black text-[var(--c-primary)]">{review.user_name?.charAt(0) || "U"}</div>
                          <div>
-                            <p className="text-xs font-black text-[var(--foreground)] uppercase">{review.user_name || "Citizen"}</p>
+                            <p className="text-xs font-black text-[var(--foreground)] uppercase">{review.user_name || "Customer"}</p>
                             <p className="text-[8px] font-bold text-[var(--foreground)]/30 uppercase">{new Date(review.created_at).toLocaleDateString()}</p>
                          </div>
                       </div>

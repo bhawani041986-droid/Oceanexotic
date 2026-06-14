@@ -66,7 +66,7 @@ export default function OrderTrackingPage() {
       attribution: '&copy; Google Maps'
     }).addTo(mapRef.current);
 
-    // --- NEON MODERN MARITIME SENTINEL ICON (AGENT) ---
+    // --- NEON MODERN AGENT ICON ---
     const agentIcon = L.divIcon({
       className: 'sentinel-marker',
       html: `
@@ -98,7 +98,7 @@ export default function OrderTrackingPage() {
       iconAnchor: [20, 20]
     });
 
-    // --- SAFE HARBOR ICON (CUSTOMER) ---
+    // --- CUSTOMER DELIVERY LOCATION ICON ---
     const customerIcon = L.divIcon({
       className: 'harbor-marker',
       html: `
@@ -141,7 +141,7 @@ export default function OrderTrackingPage() {
           routeWhileDragging: false, show: false, addWaypoints: false, draggableWaypoints: false, fitSelectedRoutes: false,
           lineOptions: { styles: [{ color: '#00D1FF', weight: 4, opacity: 0.8, dashArray: '10, 15' }] }
         }).addTo(mapRef.current);
-        routingRef.current.on('routingerror', () => console.warn("OSRM Handshake Delayed"));
+        routingRef.current.on('routingerror', () => console.warn("Map Routing Delayed"));
       }
     }
   }, [displayData.current_lat, displayData.current_lng]);
@@ -185,7 +185,7 @@ export default function OrderTrackingPage() {
                    <h1 className="text-2xl lg:text-[40px] font-black tracking-tight text-[var(--foreground)] leading-tight uppercase italic">LIVE TRACKING</h1>
                    <Badge variant="success" className="px-2 py-0.5 lg:px-4 lg:py-1.5 text-[8px] lg:text-[10px] shadow-glow-purple">{displayData.status}</Badge>
                 </div>
-                <p className="text-text-secondary font-medium uppercase tracking-[0.2em] text-[8px] lg:text-[11px]">ID: {id} • VESSEL: {displayData.agent_name || "ASSIGNING..."}</p>
+                <p className="text-text-secondary font-medium uppercase tracking-[0.2em] text-[8px] lg:text-[11px]">ID: {id} • DELIVERY AGENT: {displayData.agent_name || "ASSIGNING..."}</p>
               </div>
               <div className="p-3 lg:p-6 rounded-2xl lg:rounded-[24px] bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 flex items-center gap-3 lg:gap-6">
                  <div className="w-8 h-8 lg:w-12 lg:h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary">
@@ -218,7 +218,7 @@ export default function OrderTrackingPage() {
                          </div>
                       </div>
                       <div className="flex flex-col items-end space-y-0">
-                         <p className="text-[6px] lg:text-[7px] font-black text-text-secondary uppercase tracking-widest leading-none">Telemetry</p>
+                         <p className="text-[6px] lg:text-[7px] font-black text-text-secondary uppercase tracking-widest leading-none">Coordinates</p>
                          <p className="text-[8px] lg:text-[10px] font-black text-bg-primary font-mono opacity-80 leading-tight">
                             {displayData.current_lat?.toFixed(3)}, {displayData.current_lng?.toFixed(3)}
                          </p>

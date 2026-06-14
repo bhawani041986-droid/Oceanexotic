@@ -121,16 +121,16 @@ function CheckoutSuccessContent() {
           </Card>
 
           {/* Footer Info */}
-          <div className="flex items-center justify-center gap-8 opacity-40">
-             <div className="flex items-center gap-2">
-                <Waves className="w-4 h-4" />
-                <span className="text-[9px] font-black uppercase tracking-widest italic">Maritime Protocol v2.4</span>
-             </div>
-             <div className="flex items-center gap-2">
-                <Home className="w-4 h-4" />
-                <span className="text-[9px] font-black uppercase tracking-widest italic">OceanExotic Global System Registry</span>
-             </div>
-          </div>
+           <div className="flex items-center justify-center gap-8 opacity-40">
+              <div className="flex items-center gap-2">
+                 <Waves className="w-4 h-4" />
+                 <span className="text-[9px] font-black uppercase tracking-widest italic">OceanExotic Secure v2.4</span>
+              </div>
+              <div className="flex items-center gap-2">
+                 <Home className="w-4 h-4" />
+                 <span className="text-[9px] font-black uppercase tracking-widest italic">OceanExotic Checkout System</span>
+              </div>
+           </div>
 
         </div>
       </div>
