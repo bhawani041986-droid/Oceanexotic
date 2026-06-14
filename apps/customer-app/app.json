@@ -7,11 +7,21 @@
     "scheme": "oceanexotic",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#050B18"
+    },
     "assetBundlePatterns": [
       "assets/**"
     ],
     "android": {
-      "package": "com.oceanexotic.customer"
+      "package": "com.oceanexotic.customer",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#050B18"
+      }
     },
     "ios": {
       "infoPlist": {
