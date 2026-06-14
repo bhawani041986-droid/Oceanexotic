@@ -13,6 +13,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import { cn } from "@/lib/utils";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import i18n from "@/lib/i18n";
 
 interface CustomerHeaderProps {
   showSearch?: boolean;
@@ -53,6 +54,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
 
   const colors = useThemeColors();
   const primaryColor = colors.primary;
+  const currentLanguage = useSettingsStore((s) => s.settings.language); // trigger re-render on language change
 
   const getRgba = (hex: string, alpha: number) => {
     const cleanHex = hex.replace("#", "");
@@ -232,12 +234,12 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
 
               <View className="gap-2">
                 {[
-                  { label: "Home", href: "/home" },
-                  { label: "Fresh Catch Market", href: "/products" },
-                  { label: "Recipes", href: "/recipe" },
-                  { label: "My Orders", href: "/orders" },
-                  { label: "My Profile", href: "/profile" },
-                  { label: "Active Cart", href: "/cart" }
+                  { label: i18n.t('home'), href: "/home" },
+                  { label: i18n.t('fresh_catch_market'), href: "/products" },
+                  { label: i18n.t('recipes'), href: "/recipe" },
+                  { label: i18n.t('my_orders'), href: "/orders" },
+                  { label: i18n.t('my_profile'), href: "/profile" },
+                  { label: i18n.t('active_cart'), href: "/cart" }
                 ].map((item) => {
                   const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
                   return (
@@ -274,7 +276,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                 }}
                 className="w-full py-4 rounded-xl border border-red-500/20 bg-red-500/10 items-center active:bg-red-500/20"
               >
-                <Text className="text-xs font-black uppercase tracking-widest text-red-500">Sign Out</Text>
+                <Text className="text-xs font-black uppercase tracking-widest text-red-500">{i18n.t('sign_out')}</Text>
               </Pressable>
               <Text className="text-[7px] font-black text-center uppercase tracking-widest" style={{ color: colors.textMuted }}>OceanExotic Mobile App v1.4</Text>
             </View>

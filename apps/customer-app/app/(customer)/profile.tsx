@@ -7,6 +7,7 @@ import { orderService } from "@/services/orderService";
 import { useCartStore } from "@/store/cartStore";
 import { useSettingsStore } from "@/store/settingsStore";
 import { authService } from "@/services/authService";
+import i18n from "@/lib/i18n";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
@@ -25,6 +26,8 @@ export default function ProfileScreen() {
   const cart = useCartStore();
   const { toast, ToastHost } = useToast();
   const colors = useThemeColors();
+  const { settings } = useSettingsStore();
+  const currentLanguage = settings.language; // force re-render
 
   const primaryColor = colors.primary;
 
@@ -449,7 +452,7 @@ export default function ProfileScreen() {
           </Pressable>
         </View>
 
-        <Button label="LOG OUT" variant="ghost" onPress={handleLogout} className="mt-8 border border-danger/30" />
+        <Button label={i18n.t('logout').toUpperCase()} variant="ghost" onPress={handleLogout} className="mt-8 border border-danger/30" />
       </ScrollView>
 
       {/* Address Addition Modal */}

@@ -2,9 +2,13 @@ import React from "react";
 import { View, Text, ScrollView } from "react-native";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { Ionicons } from "@expo/vector-icons";
+import i18n from "@/lib/i18n";
+import { useSettingsStore } from "@/store/settingsStore";
 
 export default function NotificationsScreen() {
   const colors = useThemeColors();
+  const { settings } = useSettingsStore();
+  const currentLanguage = settings.language; // force re-render
 
   const mockNotifications = [
     {
@@ -43,7 +47,7 @@ export default function NotificationsScreen() {
         className="text-2xl font-black uppercase mb-6"
         style={{ color: colors.text }}
       >
-        Delivery Alerts
+        {i18n.t('notifications')}
       </Text>
 
       <View className="gap-4">

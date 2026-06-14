@@ -18,6 +18,7 @@ import { checkoutService, type SavedAddress } from "@/services/checkoutService";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { cn } from "@/lib/utils";
 import { useThemeColors } from "@/hooks/useThemeColors";
+import i18n from "@/lib/i18n";
 
 type Step = 1 | 2 | 3;
 
@@ -27,6 +28,8 @@ export default function CheckoutScreen() {
   const { user } = useAuthStore();
   const { toast, ToastHost } = useToast();
   const colors = useThemeColors();
+  const { settings } = useSettingsStore();
+  const currentLanguage = settings.language; // force re-render on language change
 
   const primaryColor = colors.primary;
 

@@ -9,6 +9,8 @@ import { useState, useEffect } from "react";
 import { useAuthStore } from "@/store/authStore";
 import { checkoutService } from "@/services/checkoutService";
 import api from "@/services/api";
+import i18n from "@/lib/i18n";
+import { useSettingsStore } from "@/store/settingsStore";
 
 const staticFallback = [
   { id: 'ADD-001', name: 'Fish Fry Masala', price: 60, image_url: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=200&q=80', description: 'Traditional island spice mix for crispy fish fry.' },
@@ -22,6 +24,8 @@ export default function CartScreen() {
   const { items, updateQuantity, removeItem, getTotal, clearCart, toggleMarination } = useCartStore();
   const colors = useThemeColors();
   const { user } = useAuthStore();
+  const { settings } = useSettingsStore();
+  const currentLanguage = settings.language; // force re-render
   const [addons, setAddons] = useState<any[]>([]);
   const [loadingAddons, setLoadingAddons] = useState(true);
 
@@ -81,7 +85,7 @@ export default function CartScreen() {
 
         {items.length === 0 ? (
           <View className="my-16 items-center">
-            <Text className="text-xs font-black uppercase" style={{ color: colors.textMuted }}>Cart is empty</Text>
+            <Text className="text-xs font-black uppercase" style={{ color: colors.textMuted }}>{i18n.t('empty_cart')}</Text>
             <Button label="SHOP HARVEST" onPress={() => router.push("/products")} className="mt-6" />
           </View>
         ) : (
@@ -232,7 +236,7 @@ export default function CartScreen() {
                     <Text className="text-[11px] font-bold" style={{ color: colors.primary }}>₹{tax.toLocaleString()}</Text>
                   </View>
                   <View className="flex-row justify-between pt-1">
-                    <Text className="text-[11px] font-black uppercase" style={{ color: colors.text }}>Total Settlement</Text>
+                    <Text className="text-[11px] font-black uppercase" style={{ color: colors.text }}>{i18n.t('total')}</Text>
                     <Text className="text-2xl font-black italic" style={{ color: colors.text }}>₹{grandTotal.toLocaleString()}</Text>
                   </View>
                 </View>
@@ -240,7 +244,7 @@ export default function CartScreen() {
             })()}
 
             <Button
-              label="PROCEED TO CHECKOUT"
+              label={i18n.t('checkout').toUpperCase()}
               onPress={() => router.push("/checkout" as never)}
               className="mt-4"
             />

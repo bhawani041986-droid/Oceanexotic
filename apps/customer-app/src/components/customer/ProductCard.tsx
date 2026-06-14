@@ -6,6 +6,8 @@ import Svg, { Path } from "react-native-svg";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import type { Product } from "@/services/productService";
 import { useThemeColors } from "@/hooks/useThemeColors";
+import i18n from "@/lib/i18n";
+import { useSettingsStore } from "@/store/settingsStore";
 
 import { useImageAspectRatio } from "@/hooks/useImageAspectRatio";
 
@@ -29,6 +31,8 @@ export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCar
   const router = useRouter();
   const uri = imageUri(product);
   const outOfStock = (product.stock ?? 1) <= 0 || product.status === "OUT OF STOCK";
+  const { settings } = useSettingsStore();
+  const currentLanguage = settings.language; // force re-render
   const { aspectRatio, onLoad } = useImageAspectRatio(uri);
   const [layout, setLayout] = useState({ width: 0, height: 0 });
   const w = layout.width;
@@ -68,9 +72,13 @@ export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCar
         )}
         {outOfStock ? (
           <View className="absolute inset-0 items-center justify-center bg-black/50">
-            <Text className="text-[9px] font-black uppercase text-white">Out of stock</Text>
+            <Text className="text-[9px] font-black uppercase text-white">{i18n.t('out_of_stock')}</Text>
           </View>
-        ) : null}
+        ) : (
+          <View className="absolute right-2 top-2 rounded bg-red-500/90 px-2 py-0.5 z-20">
+            <Text className="text-[7px] font-black uppercase text-white">15% OFF</Text>
+          </View>
+        )}
       </View>
       <View className="gap-1 p-3">
         <Text 
@@ -78,7 +86,7 @@ export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCar
           style={{ color: colors.textMuted }}
           numberOfLines={1}
         >
-          {product.seller_name || product.seller_id || "Verified Fleet"}
+          {product.seller_name ? `${i18n.t('handled_by')} ${product.seller_name}` : i18n.t('special_offer')}
         </Text>
         <Text 
           className="text-sm font-black uppercase italic" 

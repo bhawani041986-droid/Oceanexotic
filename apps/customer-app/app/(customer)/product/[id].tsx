@@ -20,6 +20,8 @@ import { useProducts } from "@/hooks/useProducts";
 import { ProductCard } from "@/components/customer/ProductCard";
 import { useAuthStore } from "@/store/authStore";
 import { checkoutService } from "@/services/checkoutService";
+import i18n from "@/lib/i18n";
+import { useSettingsStore } from "@/store/settingsStore";
 
 const MOCK_RECIPES = [
   { title: "Simple Steam", time: "15 min", difficulty: "Easy" },
@@ -37,6 +39,8 @@ export default function ProductDetailScreen() {
   const cart = useCartStore();
   const { toast, ToastHost } = useToast();
   const { user } = useAuthStore();
+  const { settings } = useSettingsStore();
+  const currentLanguage = settings.language; // force re-render
 
   const [product, setProduct] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
@@ -362,10 +366,22 @@ export default function ProductDetailScreen() {
           {product.description ? (
             <Text className="mt-3 text-sm text-muted-foreground">{String(product.description)}</Text>
           ) : null}
-          <Text className="mt-4 text-3xl font-black italic text-primary">
-            ₹{currentPrice.toLocaleString()}
-            <Text className="text-sm opacity-60">/{String(product.unit ?? "kg")}</Text>
-          </Text>
+          <View className="flex-row items-baseline gap-2 mt-4">
+            <Text className="text-3xl font-black italic text-primary">
+              ₹{currentPrice.toLocaleString()}
+              <Text className="text-sm opacity-60 font-normal">/{String(product.unit ?? "kg")}</Text>
+            </Text>
+            {p.discount_percent > 0 ? (
+              <>
+                <Text className="text-sm line-through text-muted-foreground ml-1 font-mono">
+                  ₹{Math.round(Number(p.originalPrice ?? currentPrice * (100/(100-p.discount_percent)))).toLocaleString()}
+                </Text>
+                <View className="rounded bg-red-500/10 px-1.5 py-0.5 border border-red-500/20 ml-1">
+                  <Text className="text-[8px] font-black text-red-500 uppercase">{p.discount_percent}% OFF</Text>
+                </View>
+              </>
+            ) : null}
+          </View>
           {product.live_harbor ? (
             <Text className="mt-2 text-[10px] font-black uppercase text-emerald-500">
               Live @ {String(product.live_harbor)} • {String(product.remaining_kg ?? product.live_stock)}kg left

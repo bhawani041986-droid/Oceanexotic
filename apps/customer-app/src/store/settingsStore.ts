@@ -19,9 +19,13 @@ interface SettingsState {
   flashDealActive: boolean;
   flashDealEnd: string;
   theme: string;
+  /** Current UI language code (e.g. 'en', 'hi', 'bn', 'ta') */
+  language: string;
+  /** Convenience alias so components can read `settings.language` */
+  settings: { language: string };
   customerAssets: CustomerAssets;
   fetchSettings: () => Promise<void>;
-  setSettings: (partial: Partial<SettingsState>) => void;
+  setSettings: (partial: Partial<Omit<SettingsState, 'settings'>>) => void;
 }
 
 const defaultAssets: CustomerAssets = {
@@ -42,9 +46,17 @@ export const useSettingsStore = create<SettingsState>()(
       flashDealActive: true,
       flashDealEnd: new Date(Date.now() + 1000 * 60 * 60 * 3).toISOString(),
       theme: "theme-ocean-neon",
+      language: "en",
+      settings: { language: "en" },
       customerAssets: { ...defaultAssets },
 
-      setSettings: (partial) => set((s) => ({ ...s, ...partial })),
+      setSettings: (partial) =>
+        set((s) => {
+          const next = { ...s, ...partial };
+          // Keep `settings` object in sync with `language`
+          next.settings = { language: next.language ?? s.language };
+          return next;
+        }),
 
       fetchSettings: async () => {
         try {
@@ -78,6 +90,20 @@ export const useSettingsStore = create<SettingsState>()(
     {
       name: "oceanexotic-settings",
       storage: createJSONStorage(() => AsyncStorage),
+      // Exclude the computed `settings` object from persistence to avoid stale data
+      partialize: (state) => ({
+        marketplaceName: state.marketplaceName,
+        flashDealActive: state.flashDealActive,
+        flashDealEnd: state.flashDealEnd,
+        theme: state.theme,
+        language: state.language,
+        customerAssets: state.customerAssets,
+      }),
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state.settings = { language: state.language ?? "en" };
+        }
+      },
     }
   )
 );

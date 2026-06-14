@@ -100,6 +100,12 @@ function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
             {item.freshness_label}
           </Text>
         </View>
+        {/* Offer Badge (Amazon/Licious Style) */}
+        <View className="absolute right-2 top-2 rounded bg-red-500/90 px-2 py-0.5 z-20">
+          <Text className="text-[7px] font-black uppercase text-white">
+            15% OFF
+          </Text>
+        </View>
         <View className="absolute bottom-2 left-2 rounded-lg border border-white/10 bg-black/60 px-2 py-1">
           <Text className="text-[7px] font-black uppercase text-foreground">
             {item.harbor_node}
@@ -107,7 +113,7 @@ function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
         </View>
         <View className="absolute bottom-2 right-2">
           <Text className="text-[7px] font-black text-foreground/60 uppercase">
-            Stock
+            {i18n.t('stock')}
           </Text>
           <Text className="text-[10px] font-black" style={{ color: colors.primary }}>
             {item.remaining_kg}kg
@@ -126,7 +132,7 @@ function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
           {item.name}
         </Text>
         <Text className="text-[8px] uppercase italic text-muted-foreground" style={{ color: colors.textMuted }}>
-          Handled by {item.seller_name}
+          {i18n.t('handled_by')} {item.seller_name}
         </Text>
         <View className="flex-row items-center justify-between">
           <Text className="text-xl font-black italic text-foreground" style={{ color: colors.text }}>
