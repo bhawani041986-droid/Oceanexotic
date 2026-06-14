@@ -390,7 +390,7 @@ export default function CustomerHomeScreen() {
                       color: activeBatch === batch ? "#FFFFFF" : colors.textMuted
                     }}
                   >
-                    {batch}
+                    {t(batch.toLowerCase())}
                   </Text>
                 </Pressable>
               ))}

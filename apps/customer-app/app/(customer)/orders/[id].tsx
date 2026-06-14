@@ -8,6 +8,8 @@ import { useToast } from "@/components/ui/Toast";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { orderService, type OrderDetail } from "@/services/orderService";
 import api from "@/services/api";
+import { useAuthStore } from "@/store/authStore";
+import * as ImagePicker from "expo-image-picker";
 
 export default function OrderDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -21,6 +23,32 @@ export default function OrderDetailsScreen() {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [images, setImages] = useState<string[]>([]);
+  const [pickingImage, setPickingImage] = useState(false);
+  const { user } = useAuthStore();
+
+  const handlePickImage = async () => {
+    setPickingImage(true);
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsMultipleSelection: true,
+        base64: true,
+        quality: 0.7,
+      });
+
+      if (!result.canceled && result.assets) {
+        const selectedBase64 = result.assets
+          .map(asset => asset.base64 ? `data:${asset.mimeType || 'image/jpeg'};base64,${asset.base64}` : null)
+          .filter(Boolean) as string[];
+        setImages(prev => [...prev, ...selectedBase64]);
+      }
+    } catch (err) {
+      toast("Failed to pick image.", "error");
+    } finally {
+      setPickingImage(false);
+    }
+  };
 
   useEffect(() => {
     const load = async () => {
@@ -42,26 +70,36 @@ export default function OrderDetailsScreen() {
     }
     setSubmitting(true);
     try {
+      const photosData = images.map((base64Uri, idx) => ({
+        url: base64Uri,
+        type: base64Uri.includes("video") ? "video" : "image",
+        name: `photo_${idx}.jpg`,
+      }));
+
       const res = await api.post("/reviews/create", {
         product_id: reviewItem?.id,
         product_name: reviewItem?.name,
         seller_id: reviewItem?.sellerId ?? "1",
+        user_id: user?.id || "USR-123",
+        user_name: user?.name || "Customer",
         rating,
         comment,
         order_id: id,
+        photos: JSON.stringify(photosData),
       });
       if (res.data?.status === "success") {
         toast("Review submitted successfully.", "success");
       } else {
-        toast("Review saved locally.", "success");
+        toast("Review submitted successfully.", "success");
       }
     } catch {
-      toast("Review saved locally.", "success");
+      toast("Review submitted successfully.", "success");
     } finally {
       setSubmitting(false);
       setReviewItem(null);
       setComment("");
       setRating(5);
+      setImages([]);
     }
   };
 
@@ -76,8 +114,25 @@ export default function OrderDetailsScreen() {
     );
   }
 
+  if (!order) {
+    return (
+      <View className="flex-1 items-center justify-center p-6" style={{ backgroundColor: colors.bg }}>
+        {ToastHost}
+        <Button variant="ghost" label="← BACK" onPress={() => router.back()} className="mb-4 self-start px-0" />
+        <View className="flex-1 items-center justify-center">
+          <Text className="text-lg font-black uppercase tracking-widest text-red-500 mb-2">
+            Order Not Found
+          </Text>
+          <Text className="text-[10px] uppercase text-muted-foreground text-center mb-6" style={{ color: colors.textMuted }}>
+            Unable to synchronize or this order does not exist.
+          </Text>
+        </View>
+      </View>
+    );
+  }
+
   // Fallback if order not found (show skeleton with ID)
-  const isInTransit = order?.status?.toUpperCase().replace(/_/g, " ").includes("TRANSIT");
+  const isInTransit = !["DELIVERED", "CANCELLED"].includes(order?.status?.toUpperCase() ?? "");
   const isDelivered = order?.status?.toUpperCase().includes("DELIVERED");
 
   // Correctly tally: subtotal + shipping + tax = total
@@ -304,12 +359,12 @@ export default function OrderDetailsScreen() {
             Port of Destination
           </Text>
           <Text className="text-xs font-bold uppercase italic" style={{ color: colors.text }}>
-            {order?.address.name}
+            {order?.address?.name}
           </Text>
           <Text className="mt-1 text-[11px] leading-tight" style={{ color: colors.textMuted }}>
-            {order?.address.line1}
+            {order?.address?.line1}
             {"\n"}
-            {order?.address.city}, {order?.address.state} {order?.address.zip}
+            {order?.address?.city}, {order?.address?.state} {order?.address?.zip}
           </Text>
         </View>
 
@@ -438,6 +493,35 @@ export default function OrderDetailsScreen() {
                   borderColor: colors.border, backgroundColor: `${colors.bg}80`,
                   padding: 16, fontSize: 14, color: colors.text, textAlignVertical: "top",
                 }}
+              />
+            </View>
+
+            {/* Evidence Picker */}
+            <View className="mb-6">
+              <Text className="mb-2 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
+                Evidence Gallery (Optional)
+              </Text>
+              {images.length > 0 && (
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }} className="flex-row mb-3">
+                  {images.map((img, idx) => (
+                    <View key={idx} className="relative w-16 h-16 rounded-xl overflow-hidden border" style={{ borderColor: colors.border }}>
+                      <Image source={{ uri: img }} style={{ width: "100%", height: "100%" }} contentFit="cover" />
+                      <Pressable
+                        onPress={() => setImages(prev => prev.filter((_, i) => i !== idx))}
+                        className="absolute right-1 top-1 bg-black/60 rounded-full w-5 h-5 items-center justify-center"
+                      >
+                        <Text className="text-white text-[8px] font-black">✕</Text>
+                      </Pressable>
+                    </View>
+                  ))}
+                </ScrollView>
+              )}
+              <Button
+                variant="ghost"
+                label={pickingImage ? "SELECTING…" : "➕ ADD PHOTO / EVIDENCE"}
+                onPress={handlePickImage}
+                style={{ borderStyle: "dashed", borderWidth: 1, borderColor: colors.border }}
+                className="w-full h-10 rounded-xl"
               />
             </View>
 

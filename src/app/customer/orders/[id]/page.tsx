@@ -63,10 +63,10 @@ export default function OrderDetailsPage() {
             id: data.id,
             date: new Date(data.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
             status: data.status,
-            total: parseFloat(data.total_amount) || 0,
-            shipping: 0,
-            tax: 0, // Simplified tax calculation
-            subtotal: parseFloat(data.total_amount) || 0,
+            total: parseFloat(data.total) || parseFloat(data.total_amount) || 0,
+            shipping: parseFloat(data.shipping) || 0,
+            tax: parseFloat(data.tax) || 0,
+            subtotal: parseFloat(data.subtotal) || parseFloat(data.total_amount) || 0,
             address: {
               name: data.customer_name || "Customer",
               line1: data.delivery_address || "",
@@ -76,11 +76,11 @@ export default function OrderDetailsPage() {
             },
             items: (data.items || []).map((item: any) => ({
               id: item.product_id,
-              name: item.product_id, // Would need product join for real name
+              name: item.product_name || item.product_id,
               price: parseFloat(item.price) || 0,
               qty: parseFloat(item.quantity) || 1,
               sellerId: "1",
-              image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400"
+              image: item.image_url || "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400"
             }))
           });
         }

@@ -108,13 +108,15 @@ export default function OrdersScreen() {
                     className="flex-1 h-10 rounded-xl"
                     style={{ borderColor: colors.border, borderWidth: 1 }}
                   />
-                  <Button
-                    label="TRACK"
-                    onPress={() =>
-                      router.push({ pathname: "/orders/[id]/tracking", params: { id: order.id } } as never)
-                    }
-                    className="flex-1 h-10 rounded-xl"
-                  />
+                  {!["DELIVERED", "CANCELLED"].includes(order.status?.toUpperCase() ?? "") && (
+                    <Button
+                      label="TRACK"
+                      onPress={() =>
+                        router.push({ pathname: "/orders/[id]/tracking", params: { id: order.id } } as never)
+                      }
+                      className="flex-1 h-10 rounded-xl"
+                    />
+                  )}
                 </View>
               </View>
             ))}

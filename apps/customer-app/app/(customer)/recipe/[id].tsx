@@ -58,7 +58,7 @@ export default function RecipeDetailsScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const colors = useThemeColors();
-  const { data: cms } = useHomeData();
+  const { cms } = useHomeData();
   const [activeImg, setActiveImg] = React.useState(0);
 
   const recipe = useMemo(() => {
@@ -77,7 +77,7 @@ export default function RecipeDetailsScreen() {
     }
 
     // Fallback to CMS dynamic recipes
-    let found = cms?.data?.find(c => c.id?.toString() === id);
+    let found: any = cms?.data?.find((c: any) => c.id?.toString() === id);
     if (!found) {
       // Fallback dummy for design checking
       found = {
@@ -299,7 +299,7 @@ export default function RecipeDetailsScreen() {
           {/* Ingredients Section */}
           <View className="space-y-4">
             <View className="flex-row items-center gap-2">
-              <MaterialCommunityIcons name="sparkles" size={16} color={colors.primary} />
+              <MaterialCommunityIcons name={"sparkles" as any} size={16} color={colors.primary} />
               <Text className="text-sm font-black uppercase text-foreground tracking-widest">Required Elements</Text>
             </View>
             
@@ -310,7 +310,7 @@ export default function RecipeDetailsScreen() {
             >
               <View className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500 via-cyan-500 to-transparent" />
               
-              {ingredients.map((ing, i) => (
+              {(ingredients as string[]).map((ing: string, i: number) => (
                 <View key={i} className="flex-row items-center gap-3.5">
                   {/* Premium fish bullet icon */}
                   <View 
@@ -336,7 +336,7 @@ export default function RecipeDetailsScreen() {
             </View>
             
             <View className="space-y-4">
-              {steps.map((step, i) => (
+              {(steps as string[]).map((step: string, i: number) => (
                 <LinearGradient
                   key={i}
                   colors={['rgba(30, 41, 59, 0.3)', 'rgba(15, 23, 42, 0.5)']}

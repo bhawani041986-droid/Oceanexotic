@@ -50,7 +50,7 @@ export const orderService = {
   getUserOrderDetails: async (orderId: string): Promise<OrderDetail | null> => {
     try {
       const { data } = await api.get<any>(
-        `/orders/customer_history?orderId=${encodeURIComponent(orderId)}`
+        `/user/orders/details?id=${encodeURIComponent(orderId)}`
       );
       if (!data || data.status === "error") return null;
 

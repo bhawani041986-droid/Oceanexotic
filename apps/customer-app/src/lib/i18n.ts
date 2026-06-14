@@ -43,6 +43,12 @@ const translations: Record<string, Record<string, string>> = {
     subtotal: "Subtotal",
     delivery_fee: "Delivery Fee",
     notifications: "Delivery Alerts",
+    all: "All",
+    morning: "Morning",
+    afternoon: "Afternoon",
+    evening: "Evening",
+    promotions: "Promotions",
+    batch: "Batch",
   },
   hi: {
     todays_catch: "आज की पकड़",
@@ -83,6 +89,12 @@ const translations: Record<string, Record<string, string>> = {
     subtotal: "उप-कुल",
     delivery_fee: "डिलीवरी शुल्क",
     notifications: "डिलीवरी अलर्ट",
+    all: "सभी",
+    morning: "सुबह",
+    afternoon: "दोपहर",
+    evening: "शाम",
+    promotions: "प्रचार",
+    batch: "बैच",
   },
   bn: {
     todays_catch: "আজকের ধরা মাছ",
@@ -123,6 +135,12 @@ const translations: Record<string, Record<string, string>> = {
     subtotal: "উপমোট",
     delivery_fee: "ডেলিভারি চার্জ",
     notifications: "ডেলিভারি সতর্কতা",
+    all: "সব",
+    morning: "সকাল",
+    afternoon: "দুপুর",
+    evening: "সন্ধ্যা",
+    promotions: "প্রচারসমূহ",
+    batch: "ব্যাচ",
   },
   ta: {
     todays_catch: "இன்றைய பிடிப்பு",
@@ -163,6 +181,12 @@ const translations: Record<string, Record<string, string>> = {
     subtotal: "இடைத்தொகை",
     delivery_fee: "டெலிவரி கட்டணம்",
     notifications: "டெலிவரி விழிப்பூட்டல்கள்",
+    all: "அனைத்தும்",
+    morning: "காலை",
+    afternoon: "மதியம்",
+    evening: "மாலை",
+    promotions: "சலுகைகள்",
+    batch: "தொகுதி",
   }
 };
 

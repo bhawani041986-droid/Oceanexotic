@@ -134,7 +134,7 @@ export default function WelcomeOnboardingScreen() {
         <View className="gap-4 w-full max-w-[400px] mx-auto">
           {/* Google Auth Button */}
           <Pressable 
-            onPress={() => toast("Google Cloud Console integration pending...", "info")}
+            onPress={() => toast("Google Cloud Console integration pending...")}
             className="w-full h-14 bg-white rounded-2xl flex-row items-center justify-center gap-3 shadow-lg active:opacity-80"
           >
             <GoogleIcon />

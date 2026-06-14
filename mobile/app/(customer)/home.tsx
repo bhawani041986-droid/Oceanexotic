@@ -32,8 +32,8 @@ import { homeService, type CutOption, type TodaysCatchItem } from "@/services/ho
 import { cn } from "@/lib/utils";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { useImageAspectRatio } from "@/hooks/useImageAspectRatio";
-
 import { useThemeColors } from "@/hooks/useThemeColors";
+import i18n from "@/lib/i18n";
 
 type BatchFilter = "ALL" | "MORNING" | "AFTERNOON" | "EVENING";
 
@@ -371,10 +371,11 @@ export default function CustomerHomeScreen() {
         {/* Today's Catch */}
         <View className="px-4 py-8">
           <View className="mb-6 flex-col gap-4">
-            <SectionHeader 
-              title={i18n.t("flash_deals") || "Flash Deals"} 
-              subtitle={i18n.t("grab_before_gone") || "Grab them before they're gone!"} 
-            /> <View className="flex-row flex-wrap rounded-2xl border border-white/5 bg-secondary/40 p-1">
+            <SectionTitle 
+              title={i18n.t("todays_catch") || "Today's Catch"} 
+              subtitle={i18n.t("fresh_catch_of_the_day") || "Fresh Catch of the Day"} 
+            />
+            <View className="flex-row flex-wrap rounded-2xl border border-white/5 bg-secondary/40 p-1">
               {(["ALL", "MORNING", "AFTERNOON", "EVENING"] as BatchFilter[]).map((batch) => (
                 <Pressable
                   key={batch}
@@ -857,7 +858,9 @@ export default function CustomerHomeScreen() {
         </View>
 
         {/* Ocean Reels Video Feed */}
-        <SectionTitle title="OCEAN REELS" subtitle="Watch & Shop Daily Catches" className="mt-4 mx-4" />
+        <View className="mt-4 mx-4">
+          <SectionTitle title="OCEAN REELS" subtitle="Watch & Shop Daily Catches" />
+        </View>
         <OceanReelsFeed />
 
         {/* Cart shortcut */}

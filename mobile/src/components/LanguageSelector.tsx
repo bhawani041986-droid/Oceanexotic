@@ -77,12 +77,12 @@ export function LanguageSelector() {
                   style={[
                     styles.langItem,
                     { borderBottomColor: colors.border },
-                    currentLang === item.code && { backgroundColor: colors.primary + '20' }
+                    language === item.code && { backgroundColor: colors.primary + '20' }
                   ]}
                 >
                   <Text style={[
                     styles.langText,
-                    { color: currentLang === item.code ? colors.primary : colors.text }
+                    { color: language === item.code ? colors.primary : colors.text }
                   ]}>
                     {item.name}
                   </Text>

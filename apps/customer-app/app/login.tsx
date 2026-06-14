@@ -98,7 +98,7 @@ export default function LoginScreen() {
   };
 
   const handleGoogleSignIn = () => {
-    toast("Google Cloud Console integration pending...", "info");
+    toast("Google Cloud Console integration pending...");
   };
 
   return (
