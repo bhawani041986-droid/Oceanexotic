@@ -19,46 +19,14 @@ import {
 import { useToast } from "@/components/ui/Toast";
 import { cn } from "@/lib/utils";
 import { Modal } from "@/components/ui/Modal";
+import dynamic from "next/dynamic";
 
-// --- NEON MODERN MARITIME ICON DEFINITIONS ---
-const AGENT_SENTINEL_HTML = `
-  <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-    <div style="position: absolute; width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(45deg, #00D1FF, #6366F1
-  ); opacity: 0.3; animation: sentinel-pulse 2s infinite;"></div>
-    <div style="position: relative; color: white; display: flex; filter: drop-shadow(0 0 10px rgba(0, 209, 255, 0.6)) drop-shadow(0 0 5px rgba(99, 102, 241, 0.4)
-  ); z-index: 2;">
-       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <defs>
-            <linearGradient id="fish-neon-seller" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#00D1FF;stop-opacity:1" />
-              <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
-            </linearGradient>
-          </defs>
-          <path d="M23 12c-2.5 2.5-5 5-10 5s-8-3-11-5c3-2 6-5 11-5s7.5 2.5 10 5z" stroke="url(#fish-neon-seller)" />
-          <path d="M23 12l-3-3m0 6l3-3" stroke="url(#fish-neon-seller)" />
-          <path d="M13 8c-1 1-1 3 0 4" stroke="url(#fish-neon-seller)" opacity="0.6" />
-          <circle cx="6" cy="12" r="1" fill="#00D1FF" />
-       </svg>
-    </div>
-    <style>@keyframes sentinel-pulse { 0% { transform: scale(0.5
-  ); opacity: 0.8; } 100% { transform: scale(1.8
-  ); opacity: 0; } }</style>
-  </div>
-`;
+const PortBlairFleetMap = dynamic(
+  () => import("@/components/ui/PortBlairMap").then((m) => m.PortBlairFleetMap),
+  { ssr: false, loading: () => <div className="absolute inset-0 bg-black/40 flex items-center justify-center"><div className="w-8 h-8 border-2 border-primary/40 border-t-primary rounded-full animate-spin" /></div> }
+);
 
-const CUSTOMER_HARBOR_HTML = `
-  <div style="position: relative; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;">
-    <div style="position: absolute; width: 44px; height: 44px; border: 2px dashed rgba(99, 102, 241, 0.4
-  ); border-radius: 50%; animation: harbor-rotate 10s linear infinite;"></div>
-    <div style="width: 24px; height: 24px; background: #6366F1; border: 2px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(99, 102, 241, 0.5
-  ); z-index: 2;">
-      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: white;"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-    </div>
-    <style>@keyframes harbor-rotate { from { transform: rotate(0deg
-  ); } to { transform: rotate(360deg
-  ); } }</style>
-  </div>
-`;
+
 
 export default function SellerFleetControl() {
   const { toast } = useToast(
@@ -72,16 +40,8 @@ export default function SellerFleetControl() {
   const [isDispatchModalOpen, setIsDispatchModalOpen] = React.useState(false
   );
   
-  const mapRef = React.useRef<any>(null
-  );
-  const markersRef = React.useRef<{ [key: string]: any }>({}
-  );
-  const harborMarkerRef = React.useRef<any>(null
-  );
-  const routingRef = React.useRef<any>(null
-  );
 
-  const [dispatchForm, setDispatchForm] = React.useState({ order_id: "", agent_name: "", lat: 13.160704, lng: 92.946892 }
+  const [dispatchForm, setDispatchForm] = React.useState({ order_id: "", agent_name: "", lat: 11.6670, lng: 92.7359 }
   );
 
   const fetchFleetTelemetry = async () => {
@@ -98,80 +58,7 @@ export default function SellerFleetControl() {
   ); }
   };
 
-  const initMapInstance = () => {
-    const L = (window as any).L;
-    if (!L || !document.getElementById('seller-command-map') || mapRef.current) return;
-    mapRef.current = L.map('seller-command-map', { zoomControl: false }).setView([13.160704, 92.946892], 13
-  );
-    L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', { attribution: '&copy; Google Maps' }).addTo(mapRef.current
-  );
 
-    const customerIcon = L.divIcon({ className: 'harbor-marker', html: CUSTOMER_HARBOR_HTML, iconSize: [36, 36], iconAnchor: [18, 18] }
-  );
-    harborMarkerRef.current = L.marker([13.160704, 92.946892], { icon: customerIcon }).addTo(mapRef.current
-  );
-  };
-
-  const updateMapElements = React.useCallback(() => {
-    const L = (window as any).L;
-    if (!L || !mapRef.current) return;
-
-    missions.forEach(m => {
-      const pos: [number, number] = [m.current_lat || 13.160704, m.current_lng || 92.946892];
-      if (!markersRef.current[m.order_id]) {
-        const icon = L.divIcon({ className: 'sentinel-marker', html: AGENT_SENTINEL_HTML, iconSize: [40, 40], iconAnchor: [20, 20] }
-  );
-        markersRef.current[m.order_id] = L.marker(pos, { icon }).addTo(mapRef.current
-  );
-      } else { markersRef.current[m.order_id].setLatLng(pos
-  ); }
-
-      if (m.order_id === activeOrder && L.Routing) {
-        if (routingRef.current) {
-          try { routingRef.current.setWaypoints([L.latLng(pos[0], pos[1]), L.latLng(13.160704, 92.946892)]
-  ); } catch(e) {}
-        } else {
-          routingRef.current = L.Routing.control({
-            waypoints: [L.latLng(pos[0], pos[1]), L.latLng(13.160704, 92.946892)],
-            routeWhileDragging: false, show: false, addWaypoints: false, draggableWaypoints: false, fitSelectedRoutes: false,
-            lineOptions: { styles: [{ color: '#00D1FF', weight: 4, opacity: 0.8, dashArray: '10, 15' }] }
-          }).addTo(mapRef.current
-  );
-          routingRef.current.on('routingerror', () => console.warn("OSRM Handshake Delayed")
-  );
-        }
-      }
-    }
-  );
-  }, [missions, activeOrder]
-  );
-
-  React.useEffect(() => {
-    if (!(window as any).L) {
-      const link = document.createElement('link'
-  ); link.rel = 'stylesheet'; link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; document.head.appendChild(link
-  );
-      const rCss = document.createElement('link'
-  ); rCss.rel = 'stylesheet'; rCss.href = 'https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css'; document.head.appendChild(rCss
-  );
-      const script = document.createElement('script'
-  ); script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"; script.async = true;
-      script.onload = () => {
-        const rJs = document.createElement('script'
-  ); rJs.src = "https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"; rJs.async = true;
-        rJs.onload = initMapInstance; document.head.appendChild(rJs
-  );
-      };
-      document.head.appendChild(script
-  );
-    } else { initMapInstance(
-  ); }
-  }, []
-  );
-
-  React.useEffect(() => { updateMapElements(
-  ); }, [missions, activeOrder, updateMapElements]
-  );
 
   React.useEffect(() => {
     fetchFleetTelemetry(
@@ -303,7 +190,20 @@ export default function SellerFleetControl() {
                 ))}
               </div>
            </Card>
-           <Card className="h-[300px] lg:h-[500px] relative overflow-hidden bg-black/40 border-primary/20"><div id="seller-command-map" className="absolute inset-0 z-10" /></Card>
+            <Card className="h-[300px] lg:h-[500px] relative overflow-hidden bg-black/40 border-primary/20">
+              <PortBlairFleetMap
+                agents={missions.map((m: any) => ({
+                  id: m.order_id,
+                  lat: m.current_lat || 11.6670,
+                  lng: m.current_lng || 92.7359,
+                  label: `${m.order_id} — ${m.agent_name || 'Unassigned'}`,
+                  isActive: m.order_id === activeOrder,
+                }))}
+                activeAgentId={activeOrder}
+                className="absolute inset-0 z-10"
+              />
+            </Card>
+
         </div>
 
         <div className="xl:col-span-4 space-y-4 lg:space-y-8">
