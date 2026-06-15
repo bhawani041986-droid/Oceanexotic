@@ -27,6 +27,11 @@ import Svg, { Path } from "react-native-svg";
 import { t } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import * as WebBrowser from "expo-web-browser";
+import * as Linking from "expo-linking";
+import { setAuthToken, setAuthUser } from "@/lib/storage";
+
+WebBrowser.maybeCompleteAuthSession();
 
 const BG_IMAGE = "https://images.unsplash.com/photo-1551244072-5d12893278ab?auto=format&fit=crop&q=80&w=2000";
 
@@ -96,8 +101,32 @@ export default function LoginScreen() {
     }
   };
 
-  const handleGoogleSignIn = () => {
-    toast("Google Cloud Console integration pending...");
+  const handleGoogleSignIn = async () => {
+    try {
+      const redirectUrl = Linking.createURL("oauth-callback");
+      const authUrl = `https://kyqmhibffbwoqlpdplfu.supabase.co/auth/v1/authorize?provider=google&redirect_to=https://oceanexotic.com/api/auth/callback?platform=mobile&redirect_uri=${encodeURIComponent(redirectUrl)}`;
+      
+      const result = await WebBrowser.openAuthSessionAsync(authUrl, redirectUrl);
+      
+      if (result.type === "success" && result.url) {
+        const parsedUrl = Linking.parse(result.url);
+        const { token, user } = parsedUrl.queryParams || {};
+        
+        if (token && user) {
+          const parsedUser = JSON.parse(decodeURIComponent(user as string));
+          const authUser = toAuthUser(parsedUser);
+          
+          await setAuthToken(token as string);
+          await setAuthUser(authUser);
+          login(authUser);
+          router.replace("/home");
+          toast(`Welcome back, ${authUser.name}!`, "success");
+        }
+      }
+    } catch (err) {
+      console.error("Google login failed:", err);
+      toast("Google login failed. Try again.", "error");
+    }
   };
 
   return (

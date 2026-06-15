@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, Text, ScrollView, ActivityIndicator } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
-import Svg, { Circle, Line, Defs, RadialGradient, Stop } from "react-native-svg";
+import { WebView } from "react-native-webview";
 import api from "@/services/api";
 
 export default function OrderTrackingScreen() {
@@ -11,6 +11,7 @@ export default function OrderTrackingScreen() {
   const router = useRouter();
   const [trackingData, setTrackingData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const webViewRef = useRef<WebView>(null);
 
   const fetchTelemetry = async () => {
     try {
@@ -38,6 +39,127 @@ export default function OrderTrackingScreen() {
     agent_name: "ASSIGNING...",
     logs: [{ time: "Now", status: "Order Processed", location: "Andaman Sector", active: true }],
   };
+
+  const currentLat = displayData.current_lat || 13.160704;
+  const currentLng = displayData.current_lng || 92.946892;
+
+  // Sync telemetry updates back to WebView Leaflet instance
+  useEffect(() => {
+    if (webViewRef.current && trackingData) {
+      const lat = trackingData.current_lat || 13.160704;
+      const lng = trackingData.current_lng || 92.946892;
+      const js = `if (typeof updateTelemetry === 'function') { updateTelemetry(${lat}, ${lng}); } true;`;
+      webViewRef.current.injectJavaScript(js);
+    }
+  }, [currentLat, currentLng]);
+
+  // Leaflet HTML with Google Maps hybrid tiles and custom marker pulsing styles
+  const htmlTemplate = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+      <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+      <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+      <style>
+        body, html, #map { margin: 0; padding: 0; width: 100%; height: 100%; background-color: #020617; }
+        @keyframes sentinel-pulse {
+          0% { transform: scale(0.5); opacity: 0.8; }
+          100% { transform: scale(1.8); opacity: 0; }
+        }
+        @keyframes harbor-rotate {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      </style>
+    </head>
+    <body>
+      <div id="map"></div>
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+      <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+      <script>
+        var map, agentMarker, customerMarker, routingControl;
+        var customerLat = 13.160704, customerLng = 92.946892;
+
+        function initMap(initialLat, initialLng) {
+          map = L.map('map', { zoomControl: false }).setView([initialLat, initialLng], 13);
+          
+          L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            attribution: '&copy; Google Maps'
+          }).addTo(map);
+
+          // Neon Agent Blip
+          var agentIcon = L.divIcon({
+            className: 'sentinel-marker',
+            html: \`
+              <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                <div style="position: absolute; width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(45deg, #00D1FF, #6366F1); opacity: 0.3; animation: sentinel-pulse 2s infinite;"></div>
+                <div style="position: relative; color: white; display: flex; filter: drop-shadow(0 0 10px rgba(0, 209, 255, 0.6)) drop-shadow(0 0 5px rgba(99, 102, 241, 0.4)); z-index: 2;">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <defs>
+                        <linearGradient id="fish-neon-cust" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" style="stop-color:#00D1FF;stop-opacity:1" />
+                          <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M23 12c-2.5 2.5-5 5-10 5s-8-3-11-5c3-2 6-5 11-5s7.5 2.5 10 5z" stroke="url(#fish-neon-cust)" />
+                      <path d="M23 12l-3-3m0 6l3-3" stroke="url(#fish-neon-cust)" />
+                      <path d="M13 8c-1 1-1 3 0 4" stroke="url(#fish-neon-cust)" opacity="0.6" />
+                      <circle cx="6" cy="12" r="1" fill="#00D1FF" />
+                   </svg>
+                </div>
+              </div>
+            \`,
+            iconSize: [40, 40],
+            iconAnchor: [20, 20]
+          });
+
+          // Customer Harbor Node Home Icon
+          var customerIcon = L.divIcon({
+            className: 'harbor-marker',
+            html: \`
+              <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                <div style="position: absolute; width: 50px; height: 50px; border: 2px dashed rgba(99, 102, 241, 0.4); border-radius: 50%; animation: harbor-rotate 10s linear infinite;"></div>
+                <div style="width: 28px; height: 28px; background: #6366F1; border: 2px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(99, 102, 241, 0.5); z-index: 2;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: white;"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                </div>
+              </div>
+            \`,
+            iconSize: [40, 40],
+            iconAnchor: [20, 20]
+          });
+
+          agentMarker = L.marker([initialLat, initialLng], { icon: agentIcon }).addTo(map);
+          customerMarker = L.marker([customerLat, customerLng], { icon: customerIcon }).addTo(map);
+          
+          updateRoute(initialLat, initialLng);
+        }
+
+        function updateRoute(lat, lng) {
+          if (routingControl) {
+            try { routingControl.setWaypoints([L.latLng(lat, lng), L.latLng(customerLat, customerLng)]); } catch(e) {}
+          } else {
+            routingControl = L.Routing.control({
+              waypoints: [L.latLng(lat, lng), L.latLng(customerLat, customerLng)],
+              routeWhileDragging: false, show: false, addWaypoints: false, draggableWaypoints: false, fitSelectedRoutes: false,
+              lineOptions: { styles: [{ color: '#00D1FF', weight: 4, opacity: 0.8, dashArray: '10, 15' }] }
+            }).addTo(map);
+          }
+        }
+
+        function updateTelemetry(lat, lng) {
+          if (agentMarker) {
+            agentMarker.setLatLng([lat, lng]);
+          }
+          updateRoute(lat, lng);
+          map.panTo([lat, lng]);
+        }
+
+        initMap(${currentLat}, ${currentLng});
+      </script>
+    </body>
+    </html>
+  `;
 
   if (loading && !trackingData) {
     return (
@@ -87,39 +209,27 @@ export default function OrderTrackingScreen() {
           </Text>
         </View>
 
-        {/* Radar Map Simulation */}
+        {/* WebView Map Container */}
         <View className="mb-8 h-80 overflow-hidden rounded-[32px] border border-white/5 bg-secondary/30 relative">
-          <View className="absolute z-10 p-4">
-            <Text className="text-[8px] font-black uppercase tracking-widest text-primary bg-background/50 px-2 py-1 rounded">
-              Maritime Command Map
-            </Text>
+          <WebView
+            ref={webViewRef}
+            originWhitelist={["*"]}
+            source={{ html: htmlTemplate }}
+            style={{ flex: 1, backgroundColor: "#020617" }}
+            javaScriptEnabled={true}
+            domStorageEnabled={true}
+            scrollEnabled={false}
+          />
+          
+          <View className="absolute top-3 left-3 z-50 pointer-events-none">
+            <View className="rounded bg-black/60 px-2 py-0.5">
+              <Text className="text-[8px] font-black uppercase tracking-widest text-primary">
+                Live Delivery Map
+              </Text>
+            </View>
           </View>
 
-          <Svg height="100%" width="100%" style={{ position: "absolute" }}>
-            <Defs>
-              <RadialGradient id="radar" cx="50%" cy="50%" r="50%">
-                <Stop offset="0%" stopColor="#7C3AED" stopOpacity="0.3" />
-                <Stop offset="100%" stopColor="#7C3AED" stopOpacity="0" />
-              </RadialGradient>
-            </Defs>
-            {/* Radar circles */}
-            <Circle cx="50%" cy="50%" r="20%" stroke="#ffffff10" strokeWidth="1" fill="none" />
-            <Circle cx="50%" cy="50%" r="40%" stroke="#ffffff10" strokeWidth="1" fill="none" />
-            <Circle cx="50%" cy="50%" r="60%" stroke="#ffffff10" strokeWidth="1" fill="none" />
-            <Circle cx="50%" cy="50%" r="80%" stroke="#ffffff10" strokeWidth="1" fill="none" />
-            {/* Crosshairs */}
-            <Line x1="0" y1="50%" x2="100%" y2="50%" stroke="#ffffff10" strokeWidth="1" />
-            <Line x1="50%" y1="0" x2="50%" y2="100%" stroke="#ffffff10" strokeWidth="1" />
-            {/* Agent blip */}
-            <Circle cx="60%" cy="40%" r="8" fill="url(#radar)" />
-            <Circle cx="60%" cy="40%" r="3" fill="#00D1FF" />
-            <Line x1="50%" y1="50%" x2="60%" y2="40%" stroke="#00D1FF" strokeWidth="1.5" strokeDasharray="3,3" />
-            {/* Customer blip */}
-            <Circle cx="50%" cy="50%" r="4" fill="#7C3AED" />
-            <Circle cx="50%" cy="50%" r="10" stroke="#7C3AED" strokeWidth="1" strokeDasharray="2,2" fill="none" />
-          </Svg>
-
-          <View className="absolute bottom-3 left-3 right-3 flex-row items-center justify-between rounded-2xl border border-white/10 bg-background/95 p-3">
+          <View className="absolute bottom-3 left-3 right-3 flex-row items-center justify-between rounded-2xl border border-white/10 bg-background/95 p-3 pointer-events-none">
             <View>
               <Text className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">
                 Arrival
@@ -133,7 +243,7 @@ export default function OrderTrackingScreen() {
                 Telemetry
               </Text>
               <Text className="text-[10px] font-black text-primary opacity-80">
-                {displayData.current_lat?.toFixed(3)}, {displayData.current_lng?.toFixed(3)}
+                {currentLat.toFixed(3)}, {currentLng.toFixed(3)}
               </Text>
             </View>
           </View>
@@ -179,7 +289,6 @@ export default function OrderTrackingScreen() {
             </View>
           ))}
         </View>
-
       </ScrollView>
     </View>
   );

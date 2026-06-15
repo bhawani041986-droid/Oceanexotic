@@ -54,6 +54,7 @@ export default function RootLayout() {
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: "#020617" } }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="login" />
+        <Stack.Screen name="oauth-callback" />
         <Stack.Screen name="(customer)" options={{ headerShown: false }} />
       </Stack>
     </AppProviders>

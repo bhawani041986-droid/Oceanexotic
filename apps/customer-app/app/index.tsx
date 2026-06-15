@@ -12,6 +12,11 @@ import { useLogin } from "@/hooks/useLogin";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import Svg, { Path } from "react-native-svg";
+import * as WebBrowser from "expo-web-browser";
+import * as Linking from "expo-linking";
+import { setAuthToken, setAuthUser } from "@/lib/storage";
+
+WebBrowser.maybeCompleteAuthSession();
 
 const BG_IMAGE = "https://images.unsplash.com/photo-1551244072-5d12893278ab?auto=format&fit=crop&q=80&w=2000";
 
@@ -79,6 +84,34 @@ export default function WelcomeOnboardingScreen() {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    try {
+      const redirectUrl = Linking.createURL("oauth-callback");
+      const authUrl = `https://kyqmhibffbwoqlpdplfu.supabase.co/auth/v1/authorize?provider=google&redirect_to=https://oceanexotic.com/api/auth/callback?platform=mobile&redirect_uri=${encodeURIComponent(redirectUrl)}`;
+      
+      const result = await WebBrowser.openAuthSessionAsync(authUrl, redirectUrl);
+      
+      if (result.type === "success" && result.url) {
+        const parsedUrl = Linking.parse(result.url);
+        const { token, user } = parsedUrl.queryParams || {};
+        
+        if (token && user) {
+          const parsedUser = JSON.parse(decodeURIComponent(user as string));
+          const authUser = toAuthUser(parsedUser);
+          
+          await setAuthToken(token as string);
+          await setAuthUser(authUser);
+          login(authUser);
+          router.replace("/home");
+          toast(`Welcome back, ${authUser.name}!`, "success");
+        }
+      }
+    } catch (err) {
+      console.error("Google login failed:", err);
+      toast("Google login failed. Try again.", "error");
+    }
+  };
+
   if (!activeHydration) {
     return (
       <View className="flex-1 items-center justify-center bg-[#020617]">
@@ -134,7 +167,7 @@ export default function WelcomeOnboardingScreen() {
         <View className="gap-4 w-full max-w-[400px] mx-auto">
           {/* Google Auth Button */}
           <Pressable 
-            onPress={() => toast("Google Cloud Console integration pending...")}
+            onPress={handleGoogleSignIn}
             className="w-full h-14 bg-white rounded-2xl flex-row items-center justify-center gap-3 shadow-lg active:opacity-80"
           >
             <GoogleIcon />

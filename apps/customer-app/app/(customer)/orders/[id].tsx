@@ -10,6 +10,7 @@ import { orderService, type OrderDetail } from "@/services/orderService";
 import api from "@/services/api";
 import { useAuthStore } from "@/store/authStore";
 import * as ImagePicker from "expo-image-picker";
+import { t } from "@/lib/i18n";
 
 export default function OrderDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -44,7 +45,7 @@ export default function OrderDetailsScreen() {
         setImages(prev => [...prev, ...selectedBase64]);
       }
     } catch (err) {
-      toast("Failed to pick image.", "error");
+      toast(t('failed_pick_image'), "error");
     } finally {
       setPickingImage(false);
     }
@@ -65,7 +66,7 @@ export default function OrderDetailsScreen() {
 
   const handleSubmitReview = async () => {
     if (!comment.trim()) {
-      toast("Please provide feedback.", "error");
+      toast(t('please_provide_feedback'), "error");
       return;
     }
     setSubmitting(true);
@@ -88,12 +89,12 @@ export default function OrderDetailsScreen() {
         photos: JSON.stringify(photosData),
       });
       if (res.data?.status === "success") {
-        toast("Review submitted successfully.", "success");
+        toast(t('review_success'), "success");
       } else {
-        toast("Review submitted successfully.", "success");
+        toast(t('review_success'), "success");
       }
     } catch {
-      toast("Review submitted successfully.", "success");
+      toast(t('review_success'), "success");
     } finally {
       setSubmitting(false);
       setReviewItem(null);
@@ -108,7 +109,7 @@ export default function OrderDetailsScreen() {
       <View className="flex-1 items-center justify-center" style={{ backgroundColor: colors.bg }}>
         <ActivityIndicator color={colors.primary} size="large" />
         <Text className="mt-4 text-[10px] font-black uppercase" style={{ color: colors.textMuted }}>
-          Loading order…
+          {t('loading_order')}
         </Text>
       </View>
     );
@@ -118,13 +119,13 @@ export default function OrderDetailsScreen() {
     return (
       <View className="flex-1 items-center justify-center p-6" style={{ backgroundColor: colors.bg }}>
         {ToastHost}
-        <Button variant="ghost" label="← BACK" onPress={() => router.back()} className="mb-4 self-start px-0" />
+        <Button variant="ghost" label={"← " + t('all').toUpperCase()} onPress={() => router.back()} className="mb-4 self-start px-0" />
         <View className="flex-1 items-center justify-center">
           <Text className="text-lg font-black uppercase tracking-widest text-red-500 mb-2">
-            Order Not Found
+            {t('order_not_found')}
           </Text>
           <Text className="text-[10px] uppercase text-muted-foreground text-center mb-6" style={{ color: colors.textMuted }}>
-            Unable to synchronize or this order does not exist.
+            {t('order_sync_failed')}
           </Text>
         </View>
       </View>
@@ -148,10 +149,10 @@ export default function OrderDetailsScreen() {
 
         {/* Header */}
         <View className="mb-6 flex-row items-center justify-between">
-          <Button variant="ghost" label="← BACK" onPress={() => router.back()} className="px-0" />
+          <Button variant="ghost" label={"← " + t('all').toUpperCase()} onPress={() => router.back()} className="px-0" />
           {isInTransit && (
             <Button
-              label="🚚 TRACK ORDER"
+              label={"🚚 " + t('track_order')}
               onPress={() =>
                 router.push({ pathname: "/orders/[id]/tracking", params: { id } } as never)
               }
@@ -181,7 +182,7 @@ export default function OrderDetailsScreen() {
             </View>
           </View>
           <Text className="mt-2 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
-            Order Invoice • {order?.date ?? "—"}
+            {t('order_invoice')} • {order?.date ?? "—"}
           </Text>
         </View>
 
@@ -199,19 +200,19 @@ export default function OrderDetailsScreen() {
             </View>
             <View className="flex-1">
               <Text className="text-xs font-black uppercase italic" style={{ color: colors.text }}>
-                Cold-Chain Delivery Radar
+                {t('delivery_radar')}
               </Text>
               <Text className="mt-0.5 text-[9px]" style={{ color: colors.textMuted }}>
-                Current Node: Port Blair Phoenix Bay Hub
+                {t('current_node')}: Port Blair Phoenix Bay Hub
               </Text>
             </View>
           </View>
           <View className="mt-4 flex-row flex-wrap items-center justify-between gap-2 border-t pt-3" style={{ borderTopColor: colors.border }}>
             <View className="flex-row items-center gap-1.5 rounded-full px-2 py-1" style={{ backgroundColor: "rgba(59,130,246,0.1)", borderWidth: 1, borderColor: "rgba(59,130,246,0.3)" }}>
               <View className="h-1.5 w-1.5 rounded-full bg-blue-400" />
-              <Text className="text-[9px] font-black uppercase text-blue-400">1.2°C Chilled</Text>
+              <Text className="text-[9px] font-black uppercase text-blue-400">1.2°C {t('chilled')}</Text>
             </View>
-            <Text className="text-[10px] font-black" style={{ color: colors.text }}>32 mins remaining</Text>
+            <Text className="text-[10px] font-black" style={{ color: colors.text }}>32 {t('mins_remaining')}</Text>
           </View>
         </View>
 
@@ -229,10 +230,10 @@ export default function OrderDetailsScreen() {
             </View>
             <View className="flex-1">
               <Text className="text-xs font-black uppercase italic" style={{ color: colors.text }}>
-                Secure Handoff Protocol
+                {t('secure_handoff')}
               </Text>
               <Text className="mt-0.5 text-[9px]" style={{ color: colors.textMuted }}>
-                Show QR or provide OTP to delivery agent
+                {t('show_qr_otp')}
               </Text>
             </View>
           </View>
@@ -245,7 +246,7 @@ export default function OrderDetailsScreen() {
               contentFit="contain"
             />
             <Text className="mt-4 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
-              Verification OTP
+              {t('verification_otp')}
             </Text>
             <Text className="mt-1 text-2xl font-black tracking-widest italic" style={{ color: colors.primary }}>
               {otpNum}
@@ -255,7 +256,7 @@ export default function OrderDetailsScreen() {
 
         {/* Manifest Items */}
         <Text className="mb-4 text-xs font-black uppercase tracking-widest" style={{ color: colors.text }}>
-          Manifest Items
+          {t('manifest_items')}
         </Text>
         <View className="mb-8 gap-4">
           {(order?.items ?? []).map((item) => (
@@ -273,7 +274,7 @@ export default function OrderDetailsScreen() {
                 <View className="flex-1 justify-center">
                   <Text className="text-sm font-bold" style={{ color: colors.text }}>{item.name}</Text>
                   <Text className="mt-1 text-[9px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
-                    QTY: {item.qty} • SKU: OF-{item.product_id}
+                    {t('qty')}: {item.qty} • {t('sku')}: OF-{item.product_id}
                   </Text>
                   <Text className="mt-2 text-lg font-black" style={{ color: colors.text }}>
                     ₹{(item.price * (item.qty ?? 1)).toLocaleString()}
@@ -284,7 +285,7 @@ export default function OrderDetailsScreen() {
                 <View className="mt-4 flex-row border-t pt-4" style={{ borderTopColor: colors.border }}>
                   <Button
                     variant="ghost"
-                    label="RATE PRODUCT"
+                    label={t('rate_product')}
                     onPress={() => setReviewItem(item)}
                     className="flex-1"
                     style={{ borderWidth: 1, borderColor: colors.border }}
@@ -303,13 +304,13 @@ export default function OrderDetailsScreen() {
           <View className="flex-row items-center gap-3">
             <Text className="text-xl">🐟</Text>
             <View className="flex-1">
-              <Text className="text-xs font-bold" style={{ color: colors.text }}>Re-order these items?</Text>
-              <Text className="text-[9px]" style={{ color: colors.textMuted }}>Instant one-click checkout for previous items.</Text>
+              <Text className="text-xs font-bold" style={{ color: colors.text }}>{t('reorder_question')}</Text>
+              <Text className="text-[9px]" style={{ color: colors.textMuted }}>{t('reorder_desc')}</Text>
             </View>
           </View>
           <Button
-            label="CATCH AGAIN"
-            onPress={() => toast("Adding previous items to cart...", "success")}
+            label={t('catch_again')}
+            onPress={() => toast(t('adding_to_cart'), "success")}
             className="mt-4 w-full"
           />
         </View>
@@ -320,28 +321,28 @@ export default function OrderDetailsScreen() {
           style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
         >
           <Text className="mb-4 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
-            Manifest Summary
+            {t('manifest_summary')}
           </Text>
           <View className="gap-2">
             <View className="flex-row justify-between">
-              <Text className="text-xs" style={{ color: colors.textMuted }}>Subtotal</Text>
+              <Text className="text-xs" style={{ color: colors.textMuted }}>{t('subtotal')}</Text>
               <Text className="text-xs font-bold" style={{ color: colors.text }}>₹{displaySubtotal.toLocaleString()}</Text>
             </View>
             <View className="flex-row justify-between">
-              <Text className="text-xs" style={{ color: colors.textMuted }}>Maritime Transit</Text>
+              <Text className="text-xs" style={{ color: colors.textMuted }}>{t('delivery_fee')}</Text>
               {displayShipping > 0 ? (
                 <Text className="text-xs font-bold" style={{ color: colors.text }}>₹{displayShipping.toLocaleString()}</Text>
               ) : (
-                <Text className="text-[10px] font-black uppercase text-emerald-400">Complimentary</Text>
+                <Text className="text-[10px] font-black uppercase text-emerald-400">{t('complimentary')}</Text>
               )}
             </View>
             <View className="mb-2 flex-row justify-between">
-              <Text className="text-xs" style={{ color: colors.textMuted }}>Settlement Tax</Text>
+              <Text className="text-xs" style={{ color: colors.textMuted }}>{t('tax')}</Text>
               <Text className="text-xs font-bold" style={{ color: colors.text }}>₹{displayTax.toLocaleString()}</Text>
             </View>
             <View className="flex-row items-center justify-between border-t pt-3" style={{ borderTopColor: colors.border }}>
               <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
-                Total Settlement
+                {t('total_settlement')}
               </Text>
               <Text className="text-xl font-black italic" style={{ color: colors.primary }}>
                 ₹{displayTotal.toLocaleString()}
@@ -356,7 +357,7 @@ export default function OrderDetailsScreen() {
           style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
         >
           <Text className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
-            Port of Destination
+            {t('destination_port')}
           </Text>
           <Text className="text-xs font-bold uppercase italic" style={{ color: colors.text }}>
             {order?.address?.name}
@@ -374,22 +375,22 @@ export default function OrderDetailsScreen() {
           style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
         >
           <Text className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
-            🍳 Culinary Prep & Storage Ledger
+            🍳 {t('culinary_ledger')}
           </Text>
           <View className="mb-3 border-b pb-3" style={{ borderBottomColor: colors.border }}>
             <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>
-              ❄️ Thawing & Storage
+              ❄️ {t('thawing_protocol')}
             </Text>
             <Text className="mt-1 text-[10px] leading-normal" style={{ color: colors.textMuted }}>
-              Keep vacuum-sealed items chilled at 0-2°C (consume within 24h) or freeze at -18°C.
+              {t('thawing_desc')}
             </Text>
           </View>
           <View>
             <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>
-              👨‍🍳 Culinary Guide
+              👨‍🍳 {t('culinary_guide')}
             </Text>
             <Text className="mt-1 text-[10px] leading-normal" style={{ color: colors.textMuted }}>
-              Pan-sear scallops with garlic herb butter for 2 mins per side. Serve Bluefin Tuna lightly seasoned.
+              {t('culinary_desc')}
             </Text>
           </View>
         </View>
@@ -400,18 +401,18 @@ export default function OrderDetailsScreen() {
           style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
         >
           <Text className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
-            ⚓ Fleet Sustainability
+            ⚓ {t('fleet_sustainability')}
           </Text>
           <View className="flex-row justify-between mb-1">
-            <Text className="text-[10px]" style={{ color: colors.textMuted }}>Harvest Method</Text>
-            <Text className="text-[10px] font-black uppercase italic" style={{ color: colors.text }}>100% Line-Caught</Text>
+            <Text className="text-[10px]" style={{ color: colors.textMuted }}>{t('harvest_method')}</Text>
+            <Text className="text-[10px] font-black uppercase italic" style={{ color: colors.text }}>{t('line_caught')}</Text>
           </View>
           <View className="flex-row justify-between mb-2">
-            <Text className="text-[10px]" style={{ color: colors.textMuted }}>Vessel Impact</Text>
-            <Text className="text-[10px] font-black" style={{ color: colors.text }}>₹340 Crew Support</Text>
+            <Text className="text-[10px]" style={{ color: colors.textMuted }}>{t('vessel_impact')}</Text>
+            <Text className="text-[10px] font-black" style={{ color: colors.text }}>₹340 {t('crew_support')}</Text>
           </View>
           <Text className="mt-1 border-t pt-2 text-[9px] leading-normal italic" style={{ borderTopColor: colors.border, color: colors.textMuted }}>
-            Your purchase directly contributes to local artisanal fisherman groups at Junglighat & Phoenix Bay.
+            {t('sustainability_desc')}
           </Text>
         </View>
       </ScrollView>
@@ -433,7 +434,7 @@ export default function OrderDetailsScreen() {
           >
             <View className="mb-6 flex-row items-center justify-between">
               <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
-                Rate Harvest
+                {t('rate_harvest')}
               </Text>
               <Pressable
                 onPress={() => setReviewItem(null)}
@@ -465,7 +466,7 @@ export default function OrderDetailsScreen() {
 
             <View className="mb-6 items-center">
               <Text className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
-                Quality Rating
+                {t('quality_rating')}
               </Text>
               <View className="flex-row gap-2">
                 {[1, 2, 3, 4, 5].map((s) => (
@@ -480,10 +481,10 @@ export default function OrderDetailsScreen() {
 
             <View className="mb-6">
               <Text className="mb-2 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
-                Harvest Notes
+                {t('harvest_notes')}
               </Text>
               <TextInput
-                placeholder="Share your experience..."
+                placeholder={t('share_experience')}
                 placeholderTextColor={colors.textMuted}
                 value={comment}
                 onChangeText={setComment}
@@ -499,7 +500,7 @@ export default function OrderDetailsScreen() {
             {/* Evidence Picker */}
             <View className="mb-6">
               <Text className="mb-2 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
-                Evidence Gallery (Optional)
+                {t('evidence_gallery')}
               </Text>
               {images.length > 0 && (
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }} className="flex-row mb-3">
@@ -518,7 +519,7 @@ export default function OrderDetailsScreen() {
               )}
               <Button
                 variant="ghost"
-                label={pickingImage ? "SELECTING…" : "➕ ADD PHOTO / EVIDENCE"}
+                label={pickingImage ? t('selecting') : "➕ " + t('add_photo_evidence')}
                 onPress={handlePickImage}
                 style={{ borderStyle: "dashed", borderWidth: 1, borderColor: colors.border }}
                 className="w-full h-10 rounded-xl"
@@ -526,7 +527,7 @@ export default function OrderDetailsScreen() {
             </View>
 
             <Button
-              label={submitting ? "SUBMITTING…" : "SUBMIT REVIEW"}
+              label={submitting ? t('submitting') : t('submit_review')}
               onPress={handleSubmitReview}
               className="w-full"
             />

@@ -25,6 +25,7 @@ import { SectionTitle } from "@/components/customer/SectionTitle";
 import { CutSelectionModal } from "@/components/customer/CutSelectionModal";
 import { MaritimeWaveDivider } from "@/components/customer/MaritimeWaveDivider";
 import { AndamanMaritimeTelemetry } from "@/components/customer/AndamanMaritimeTelemetry";
+import { OceanReelsFeed } from "@/components/customer/OceanReelsFeed";
 import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
 import { homeService, type CutOption, type TodaysCatchItem } from "@/services/homeService";
@@ -328,6 +329,9 @@ export default function CustomerHomeScreen() {
             </View>
           </View>
         </View>
+
+        {/* Ocean Reels Video Feed */}
+        <OceanReelsFeed />
 
         {/* Maritime Wave Divider */}
         <MaritimeWaveDivider />

@@ -1,4 +1,5 @@
 import api from "./api";
+import { MASTER_PRODUCT_REGISTRY } from "../constants/products";
 
 export interface Product {
   id: string;
@@ -38,11 +39,47 @@ export interface SearchProduct {
 export const productService = {
   fetchAll: async (): Promise<Product[]> => {
     const { data } = await api.get<Product[]>("/seller/products");
-    return Array.isArray(data) ? data : [];
+    if (Array.isArray(data)) {
+      return data.map((apiProd) => {
+        const registryProd = MASTER_PRODUCT_REGISTRY.find(p => p.id === apiProd.id);
+        if (registryProd) {
+          return {
+            ...apiProd,
+            original_price: registryProd.originalPrice || apiProd.price,
+            discount_percent: registryProd.originalPrice 
+              ? Math.round(((registryProd.originalPrice - apiProd.price) / registryProd.originalPrice) * 100)
+              : undefined,
+            badge: registryProd.badge,
+            rating: registryProd.rating || apiProd.rating,
+            description: apiProd.description || registryProd.description,
+            unit: registryProd.weight || apiProd.unit || "1kg",
+          };
+        }
+        return apiProd;
+      });
+    }
+    return [];
   },
 
   fetchById: async (id: string, area = "") => {
     const { data } = await api.get(`/products/detail`, { params: { id, area } });
+    if (data) {
+      const registryProd = MASTER_PRODUCT_REGISTRY.find(p => p.id === id);
+      if (registryProd) {
+        return {
+          ...registryProd,
+          ...data,
+          original_price: registryProd.originalPrice || data.price,
+          discount_percent: registryProd.originalPrice 
+            ? Math.round(((registryProd.originalPrice - data.price) / registryProd.originalPrice) * 100)
+            : undefined,
+          nutrition: data.nutrition || registryProd.nutrition,
+          variants: data.variants || registryProd.variants,
+          addons: data.addons || registryProd.addons,
+          cutTypes: data.cutTypes || registryProd.cutTypes,
+        };
+      }
+    }
     return data;
   },
 

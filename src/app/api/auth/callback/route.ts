@@ -9,7 +9,7 @@ export async function GET(request: Request) {
   if (code) {
     // We need the ANON key here to exchange the code via OAuth
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://kyqmhibffbwoqlpdplfu.supabase.co';
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cW1oaWJmZmJ3b3FscGRwbGZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTY4NzQsImV4cCI6MjA5NjE3Mjg3NH0.oD2i0R2eJq6aD2i0R2eJq6aD2i0R2eJq6aD2i0R2eJq';
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cW1oaWJmZmJ3b3FscGRwbGZ1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MDU5Njg3NCwiZXhwIjoyMDk2MTcyODc0fQ.kEpSJdXULNm_9lzXE6UvqIXPc2L-UB38BFwVhR9OcPs';
     
     const supabaseAuth = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -63,6 +63,19 @@ export async function GET(request: Request) {
       const tokenArray = new Uint8Array(32);
       crypto.getRandomValues(tokenArray);
       const token = Array.from(tokenArray, dec => dec.toString(16).padStart(2, '0')).join('');
+
+      const platform = requestUrl.searchParams.get('platform');
+      if (platform === 'mobile') {
+        const redirectUri = requestUrl.searchParams.get('redirect_uri') || 'oceanexotic://oauth-callback';
+        const userObj = {
+          id: dbUser.id,
+          name: dbUser.name,
+          email: dbUser.email,
+          role: dbUser.role.toLowerCase()
+        };
+        const mobileRedirectUrl = `${redirectUri}?token=${token}&user=${encodeURIComponent(JSON.stringify(userObj))}`;
+        return NextResponse.redirect(mobileRedirectUrl);
+      }
 
       // Create a response that redirects
       let redirectUrl = `${requestUrl.origin}/customer/products`;
