@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { WebView } from "react-native-webview";
 import api from "@/services/api";
+import { t } from "@/lib/i18n";
 
 export default function OrderTrackingScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -166,7 +167,7 @@ export default function OrderTrackingScreen() {
       <View className="flex-1 items-center justify-center bg-background">
         <ActivityIndicator color="#7C3AED" size="large" />
         <Text className="mt-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-          Loading Tracking...
+          {t('loading_tracking') || "Loading Tracking..."}
         </Text>
       </View>
     );
@@ -177,7 +178,7 @@ export default function OrderTrackingScreen() {
       <ScrollView contentContainerClassName="px-4 pb-24 pt-16">
         <Button
           variant="ghost"
-          label="← BACK"
+          label={"← " + (t('back') || "BACK")}
           onPress={() => router.back()}
           className="mb-6 self-start px-0"
         />
@@ -187,16 +188,16 @@ export default function OrderTrackingScreen() {
           <View className="flex-1">
             <View className="flex-row items-center gap-3">
               <Text className="text-3xl font-black uppercase italic leading-tight text-foreground">
-                Live Tracking
+                {t('live_tracking') || "Live Tracking"}
               </Text>
             </View>
             <Text className="mt-1 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-              ID: {id} • VESSEL: {displayData.agent_name}
+              {t('id') || "ID"}: {id} • {t('vessel') || "VESSEL"}: {displayData.agent_name}
             </Text>
           </View>
           <View className="rounded-2xl border border-primary/20 bg-primary/10 p-3">
             <Text className="text-[8px] font-black uppercase tracking-widest text-foreground">
-              Cold-Chain
+              {t('cold_chain') || "Cold-Chain"}
             </Text>
             <Text className="mt-1 text-base font-black text-primary">
               {displayData.current_temp}°C
@@ -224,7 +225,7 @@ export default function OrderTrackingScreen() {
           <View className="absolute top-3 left-3 z-50 pointer-events-none">
             <View className="rounded bg-black/60 px-2 py-0.5">
               <Text className="text-[8px] font-black uppercase tracking-widest text-primary">
-                Live Delivery Map
+                {t('live_delivery_map') || "Live Delivery Map"}
               </Text>
             </View>
           </View>
@@ -232,7 +233,7 @@ export default function OrderTrackingScreen() {
           <View className="absolute bottom-3 left-3 right-3 flex-row items-center justify-between rounded-2xl border border-white/10 bg-background/95 p-3 pointer-events-none">
             <View>
               <Text className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">
-                Arrival
+                {t('arrival') || "Arrival"}
               </Text>
               <Text className="text-sm font-black uppercase text-foreground">
                 {displayData.estimated_arrival}
@@ -240,7 +241,7 @@ export default function OrderTrackingScreen() {
             </View>
             <View className="items-end">
               <Text className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">
-                Telemetry
+                {t('telemetry') || "Telemetry"}
               </Text>
               <Text className="text-[10px] font-black text-primary opacity-80">
                 {currentLat.toFixed(3)}, {currentLng.toFixed(3)}
@@ -251,7 +252,7 @@ export default function OrderTrackingScreen() {
 
         {/* Delivery Timeline Logs */}
         <Text className="mb-4 text-base font-black uppercase italic tracking-tighter text-foreground">
-          Delivery Timeline
+          {t('delivery_timeline') || "Delivery Timeline"}
         </Text>
         <View className="pl-2">
           {displayData.logs.map((event: any, i: number) => (

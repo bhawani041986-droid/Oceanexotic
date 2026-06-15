@@ -37,6 +37,68 @@ const TABS = [
   "Coastal Dry Fish",
 ];
 
+function matchesCategory(p: Product, activeTab: string): boolean {
+  if (activeTab === "All Seafood") return true;
+
+  const catLower = (p.category ?? "").toLowerCase();
+  const nameLower = p.name.toLowerCase();
+
+  if (activeTab === "Seawater Fish") {
+    return (
+      catLower.includes("sea") || catLower.includes("reef") || catLower.includes("coastal") ||
+      catLower.includes("marine") || catLower.includes("fin-fish") || catLower.includes("snapper") ||
+      catLower.includes("pomfret") || catLower.includes("grouper") || catLower.includes("cod")
+    );
+  }
+  if (activeTab === "Freshwater Fish") {
+    return (
+      catLower.includes("freshwater") || catLower.includes("river") || catLower.includes("lake") ||
+      catLower.includes("sweetwater") || catLower.includes("mackerel") || nameLower.includes("mackerel")
+    );
+  }
+  if (activeTab === "Prawns & Shrimps") {
+    return (
+      catLower.includes("prawn") || catLower.includes("shrimp") || catLower.includes("crustacean") ||
+      catLower.includes("shellfish") || nameLower.includes("prawn") || nameLower.includes("shrimp")
+    );
+  }
+  if (activeTab === "Crabs & Lobsters") {
+    return (
+      catLower.includes("crab") || catLower.includes("lobster") || catLower.includes("mangrove") ||
+      catLower.includes("crustacean") || catLower.includes("shellfish") || nameLower.includes("crab") ||
+      nameLower.includes("lobster")
+    );
+  }
+  if (activeTab === "Steaks & Fillets") {
+    return (
+      catLower.includes("fillet") || catLower.includes("steak") || catLower.includes("cut") ||
+      nameLower.includes("steak") || nameLower.includes("fillet") || nameLower.includes("surmai") ||
+      nameLower.includes("kingfish") || nameLower.includes("cut")
+    );
+  }
+  if (activeTab === "Exotic Catch") {
+    return (
+      catLower.includes("exotic") || catLower.includes("premium") || catLower.includes("deep sea") ||
+      nameLower.includes("tuna") || nameLower.includes("salmon") || nameLower.includes("lobster")
+    );
+  }
+  if (activeTab === "Ready to Cook") {
+    return (
+      catLower.includes("ready") || catLower.includes("marinated") || catLower.includes("cook") ||
+      nameLower.includes("marinated") || nameLower.includes("fry") || nameLower.includes("finger") ||
+      nameLower.includes("batter")
+    );
+  }
+  if (activeTab === "Coastal Dry Fish") {
+    return (
+      catLower.includes("dry") || catLower.includes("dried") || nameLower.includes("dry") ||
+      nameLower.includes("dried")
+    );
+  }
+
+  return catLower.includes(activeTab.toLowerCase().split(" ")[0]);
+}
+
 export default function ProductsScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{ category?: string; search?: string }>();
@@ -69,7 +131,7 @@ export default function ProductsScreen() {
   const [cutLoading, setCutLoading] = useState(false);
   const [cutOpen, setCutOpen] = useState(false);
 
-  const displayList = useMemo(() => {
+  const allProducts = useMemo(() => {
     const rawList: Product[] = searchQuery.trim()
       ? ((search.data?.map((p) => ({
           id: p.id,
@@ -83,107 +145,20 @@ export default function ProductsScreen() {
         })) as Product[]) ?? [])
       : (registry.data ?? []);
 
-    return rawList.filter((p) => {
-      // 1. Name search matching (only needed if using client-side registry list directly, 
-      // but harmless to enforce for consistency)
-      const matchSearch = !searchQuery.trim() || p.name.toLowerCase().includes(searchQuery.toLowerCase());
-      if (!matchSearch) return false;
+    if (!searchQuery.trim()) return rawList;
+    return rawList.filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
+  }, [searchQuery, registry.data, search.data]);
 
-      // 2. Active Tab Category Resolver (Smart Mapping)
-      if (activeTab === "All Seafood") return true;
+  const displayList = useMemo(() => {
+    return allProducts.filter((p) => matchesCategory(p, activeTab));
+  }, [allProducts, activeTab]);
 
-      const catLower = (p.category ?? "").toLowerCase();
-      const nameLower = p.name.toLowerCase();
-
-      if (activeTab === "Seawater Fish") {
-        return (
-          catLower.includes("sea") ||
-          catLower.includes("reef") ||
-          catLower.includes("coastal") ||
-          catLower.includes("marine") ||
-          catLower.includes("fin-fish") ||
-          catLower.includes("snapper") ||
-          catLower.includes("pomfret") ||
-          catLower.includes("grouper") ||
-          catLower.includes("cod")
-        );
-      }
-      if (activeTab === "Freshwater Fish") {
-        return (
-          catLower.includes("freshwater") ||
-          catLower.includes("river") ||
-          catLower.includes("lake") ||
-          catLower.includes("sweetwater") ||
-          catLower.includes("mackerel") ||
-          nameLower.includes("mackerel")
-        );
-      }
-      if (activeTab === "Prawns & Shrimps") {
-        return (
-          catLower.includes("prawn") ||
-          catLower.includes("shrimp") ||
-          catLower.includes("crustacean") ||
-          catLower.includes("shellfish") ||
-          nameLower.includes("prawn") ||
-          nameLower.includes("shrimp")
-        );
-      }
-      if (activeTab === "Crabs & Lobsters") {
-        return (
-          catLower.includes("crab") ||
-          catLower.includes("lobster") ||
-          catLower.includes("mangrove") ||
-          catLower.includes("crustacean") ||
-          catLower.includes("shellfish") ||
-          nameLower.includes("crab") ||
-          nameLower.includes("lobster")
-        );
-      }
-      if (activeTab === "Steaks & Fillets") {
-        return (
-          catLower.includes("fillet") ||
-          catLower.includes("steak") ||
-          catLower.includes("cut") ||
-          nameLower.includes("steak") ||
-          nameLower.includes("fillet") ||
-          nameLower.includes("surmai") ||
-          nameLower.includes("kingfish") ||
-          nameLower.includes("cut")
-        );
-      }
-      if (activeTab === "Exotic Catch") {
-        return (
-          catLower.includes("exotic") ||
-          catLower.includes("premium") ||
-          catLower.includes("deep sea") ||
-          nameLower.includes("tuna") ||
-          nameLower.includes("salmon") ||
-          nameLower.includes("lobster")
-        );
-      }
-      if (activeTab === "Ready to Cook") {
-        return (
-          catLower.includes("ready") ||
-          catLower.includes("marinated") ||
-          catLower.includes("cook") ||
-          nameLower.includes("marinated") ||
-          nameLower.includes("fry") ||
-          nameLower.includes("finger") ||
-          nameLower.includes("batter")
-        );
-      }
-      if (activeTab === "Coastal Dry Fish") {
-        return (
-          catLower.includes("dry") ||
-          catLower.includes("dried") ||
-          nameLower.includes("dry") ||
-          nameLower.includes("dried")
-        );
-      }
-
-      return catLower.includes(activeTab.toLowerCase().split(" ")[0]);
-    });
-  }, [searchQuery, activeTab, registry.data, search.data]);
+  const categorySections = useMemo(() => {
+    return TABS.filter((t) => t !== "All Seafood" && t !== "Ready to Cook").map((tab) => ({
+      title: tab,
+      data: allProducts.filter((p) => matchesCategory(p, tab)),
+    })).filter((section) => section.data.length > 0);
+  }, [allProducts]);
 
   const isLoading = registry.isLoading || (searchQuery.trim() ? search.isLoading : false);
 
@@ -286,7 +261,7 @@ export default function ProductsScreen() {
           <RefreshControl refreshing={registry.isRefetching} onRefresh={() => registry.refetch()} tintColor={colors.primary} />
         }
       >
-        <SectionTitle title="Product Catalog" subtitle="Premium Seafood Discovery • Fast Delivery" />
+        <SectionTitle title={t('product_catalog') || "Product Catalog"} subtitle={t('catalog_subtitle') || "Premium Seafood Discovery • Fast Delivery"} />
 
         <TextInput
           value={searchQuery}
@@ -347,7 +322,7 @@ export default function ProductsScreen() {
                   className="text-[9px] font-black uppercase"
                   style={{ color: active ? "#FFFFFF" : colors.textMuted }}
                 >
-                  {tab}
+                  {t(tab.toLowerCase().replace(/ & /g, '_').replace(/ /g, '_')) || tab}
                 </Text>
               </Pressable>
             );
@@ -358,7 +333,7 @@ export default function ProductsScreen() {
           className="mt-4 text-[10px] font-black uppercase tracking-widest"
           style={{ color: colors.textMuted }}
         >
-          {displayList.length} items in catalog
+          {displayList.length} {t('items_in_catalog') || "items in catalog"}
         </Text>
 
         {isLoading ? (
@@ -371,7 +346,7 @@ export default function ProductsScreen() {
                 <View className="space-y-3">
                   <View className="flex-row items-center justify-between">
                     <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
-                      Today's <Text style={{ color: colors.primary }}>Catch</Text>
+                      {t('todays') || "Today's"} <Text style={{ color: colors.primary }}>{t('catch') || "Catch"}</Text>
                     </Text>
                   </View>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
@@ -390,7 +365,7 @@ export default function ProductsScreen() {
                   <View className="space-y-3">
                     <View className="flex-row items-center justify-between">
                       <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
-                        Chef's <Text style={{ color: "#F59E0B" }}>Specials</Text>
+                        {t('ready_to_cook') || "Chef's Specials"}
                       </Text>
                     </View>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
@@ -410,7 +385,7 @@ export default function ProductsScreen() {
                   <View className="space-y-3">
                     <View className="flex-row items-center justify-between">
                       <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
-                        Culinary <Text style={{ color: "#10B981" }}>Add-ons</Text>
+                        {t('addons') || "Culinary Add-ons"}
                       </Text>
                     </View>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
@@ -427,7 +402,7 @@ export default function ProductsScreen() {
                             <View className="mt-2 flex-row items-center justify-between border-t pt-2" style={{ borderTopColor: colors.border }}>
                               <Text className="text-[10px] font-black text-emerald-400">₹{addon.price}</Text>
                               <Pressable onPress={() => handleAddAddon(addon)} className="rounded-md px-3 py-1.5" style={{ backgroundColor: colors.primary }}>
-                                <Text className="text-[8px] font-black uppercase text-white">+ ADD</Text>
+                                <Text className="text-[8px] font-black uppercase text-white">+ {t('add_to_cart') || "ADD"}</Text>
                               </Pressable>
                             </View>
                           </View>
@@ -439,26 +414,54 @@ export default function ProductsScreen() {
 
                 <View className="flex-row items-center gap-4 py-2">
                   <View className="h-px flex-1" style={{ backgroundColor: colors.border }} />
-                  <Text className="text-[10px] font-black uppercase tracking-widest italic" style={{ color: colors.textMuted }}>Full Catalog</Text>
+                  <Text className="text-[10px] font-black uppercase tracking-widest italic" style={{ color: colors.textMuted }}>{t('categories') || "Categories"}</Text>
                   <View className="h-px flex-1" style={{ backgroundColor: colors.border }} />
+                </View>
+
+                {/* LAYER 4: CATEGORY SECTIONS */}
+                <View className="space-y-8">
+                  {categorySections.map(section => (
+                    <View key={section.title} className="space-y-3">
+                      <View className="flex-row items-center justify-between">
+                        <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
+                          {t(section.title.toLowerCase().replace(/ & /g, '_').replace(/ /g, '_')) || section.title}
+                        </Text>
+                        <Pressable onPress={() => setActiveTab(section.title)}>
+                          <Text className="text-[10px] font-black uppercase" style={{ color: colors.primary }}>{t('view_all') || "View All"} {">"}</Text>
+                        </Pressable>
+                      </View>
+                      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
+                        <View className="flex-row gap-4 pr-8">
+                          {section.data.map(p => (
+                            <View key={p.id} className="w-[180px]">
+                              <ProductCard product={p} onSelectCut={() => openCut(p)} />
+                            </View>
+                          ))}
+                        </View>
+                      </ScrollView>
+                    </View>
+                  ))}
                 </View>
               </View>
             )}
 
-            <View className="flex-row flex-wrap justify-between gap-y-3">
-              {displayList.map((p) => (
-                <ProductCard key={p.id} product={p} compact onSelectCut={() => openCut(p)} />
-              ))}
-            </View>
+            {/* ONLY SHOW FLAT GRID IF NOT SHOWING LAYERS */}
+            {!showLayers && (
+              <View className="flex-row flex-wrap justify-between gap-y-3">
+                {displayList.map((p) => (
+                  <ProductCard key={p.id} product={p} compact onSelectCut={() => openCut(p)} />
+                ))}
+              </View>
+            )}
           </View>
         ) : (
           <View 
             className="my-12 items-center rounded-2xl border border-dashed p-8"
             style={{ borderColor: colors.border }}
           >
-            <Text className="text-xs font-black uppercase" style={{ color: colors.textMuted }}>No harvest in this sector</Text>
+            <Text className="text-xs font-black uppercase" style={{ color: colors.textMuted }}>{t('no_harvest') || "No harvest in this sector"}</Text>
             <Pressable onPress={() => router.replace("/home")} className="mt-4">
-              <Text className="text-[10px] font-bold" style={{ color: colors.primary }}>Return to Harbor Home</Text>
+              <Text className="text-[10px] font-bold" style={{ color: colors.primary }}>{t('return_home') || "Return to Harbor Home"}</Text>
             </Pressable>
           </View>
         )}

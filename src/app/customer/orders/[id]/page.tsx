@@ -30,6 +30,7 @@ import {
 import { useToast } from "@/components/ui/Toast";
 import { reviewService } from "@/services/reviewService";
 import { orderService } from "@/services/orderService";
+import DeliveryTrackingCard from "@/components/ui/DeliveryTrackingCard";
 
 export default function OrderDetailsPage() {
   const { toast } = useToast();
@@ -272,37 +273,8 @@ export default function OrderDetailsPage() {
                </div>
             </div>
 
-            {/* 🚚 LIVE DELIVERY TRACKING */}
-            <Card className="p-6 bg-gradient-to-r from-primary/10 to-transparent border border-primary/20 rounded-[24px]">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary border border-primary/30 shadow-[var(--c-shadow-glow)] animate-pulse">
-                     <Truck className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-black uppercase italic tracking-tighter text-[var(--foreground)]">Live Delivery Tracking</h3>
-                    <p className="text-[10px] font-medium text-text-secondary mt-1">
-                      Current Node: <span className="font-bold text-[var(--foreground)]">Port Blair Phoenix Bay Hub</span> • In-Transit
-                    </p>
-                  </div>
-                </div>
-                <div className="flex flex-wrap items-center gap-4 md:gap-6">
-                  <div className="bg-blue-500/10 px-3 py-1.5 border border-blue-500/35 rounded-xl flex items-center gap-2">
-                     <span className="w-2 h-2 rounded-full bg-blue-500 animate-ping" />
-                     <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">Stable 1.2°C Chilled</span>
-                  </div>
-                  <div className="flex gap-1">
-                    {[-18.0, -18.2, -18.1, -18.2].map((t, idx) => (
-                      <span key={idx} className="bg-blue-500/5 px-2 py-1 border border-blue-500/10 rounded-md text-[9px] font-black text-blue-400">{t}°C</span>
-                    ))}
-                  </div>
-                  <div className="text-right">
-                     <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest">Estimated Arrival</p>
-                     <p className="text-sm font-black text-[var(--foreground)] italic">32 mins remaining</p>
-                  </div>
-                </div>
-              </div>
-            </Card>
+            {/* 🚚 LIVE DELIVERY TRACKING — Dynamic ETA with Leaflet Map */}
+            <DeliveryTrackingCard orderId={id as string} />
 
             {/* 🔐 SECURE DELIVERY PROTOCOL */}
             <Card className="p-6 bg-gradient-to-r from-blue-500/10 to-transparent border border-blue-500/20 rounded-[24px] mt-4">
@@ -346,7 +318,7 @@ export default function OrderDetailsPage() {
                      <Package className="w-3.5 h-3.5 md:w-4 md:h-4 text-primary" /> Order Items
                   </h2>
                    <div className="space-y-[4px] md:space-y-4">
-                     {order.items.map((item) => {
+                     {order.items.map((item: any) => {
                         const existingReview = existingReviews.find(r => r.product_id === item.id);
                         return (
                         <Card key={item.id} className="p-[10px] md:p-6 bg-bg-secondary/40 border-[var(--foreground)]/5 group hover:border-primary/20 transition-all rounded-[15px] md:rounded-[24px]">
@@ -625,7 +597,7 @@ export default function OrderDetailsPage() {
                 </tr>
               </thead>
               <tbody>
-                {order.items.map((item, i) => (
+                {order.items.map((item: any, i: number) => (
                   <tr key={item.id} style={{ background: i % 2 === 0 ? '#f8fafc' : '#ffffff', borderBottomWidth: '1px', borderBottomStyle: 'solid', borderBottomColor: '#e2e8f0' }}>
                     <td style={{ padding: '12px 14px', fontSize: '13px', fontWeight: 600, color: '#0f172a' }}>{item.name}</td>
                     <td style={{ padding: '12px 14px', textAlign: 'center', fontSize: '11px', color: '#64748b', fontFamily: 'monospace' }}>OF-{item.id}</td>

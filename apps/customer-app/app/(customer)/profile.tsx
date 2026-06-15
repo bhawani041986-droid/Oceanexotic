@@ -96,9 +96,9 @@ export default function ProfileScreen() {
     try {
       await userService.updateProfile({ id: user.id, name, email });
       updateUser({ name, email });
-      toast("Profile synchronized", "success");
+      toast(t('profile_synchronized') || "Profile synchronized", "success");
     } catch {
-      toast("Profile sync failed", "error");
+      toast(t('profile_sync_failed') || "Profile sync failed", "error");
     } finally {
       setSaving(false);
     }
@@ -109,7 +109,7 @@ export default function ProfileScreen() {
     try {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== 'granted') {
-        toast("Permission to access gallery denied", "error");
+        toast(t('permission_denied') || "Permission to access gallery denied", "error");
         return;
       }
 
@@ -126,14 +126,14 @@ export default function ProfileScreen() {
         try {
           const res = await userService.uploadAvatar(user.id, selectedUri);
           if (res.success) {
-            toast("Profile picture synchronized", "success");
+            toast(t('avatar_synchronized') || "Profile picture synchronized", "success");
             setAvatarTimestamp(Date.now());
             await loadData();
           } else {
-            toast("Upload failed", "error");
+            toast(t('upload_failed') || "Upload failed", "error");
           }
         } catch (err: any) {
-          const errMsg = err?.response?.data?.error || "Avatar sync failure";
+          const errMsg = err?.response?.data?.error || t('avatar_sync_failure') || "Avatar sync failure";
           toast(errMsg, "error");
         } finally {
           setUploadingAvatar(false);
@@ -141,18 +141,18 @@ export default function ProfileScreen() {
       }
     } catch (err) {
       console.error("Image pick error:", err);
-      toast("Failed to pick image", "error");
+      toast(t('failed_to_pick_image') || "Failed to pick image", "error");
     }
   };
 
   const handleChangePassword = async () => {
     if (!user?.id) return;
     if (!currentPassword || !newPassword || !confirmPassword) {
-      toast("Please fill all security fields", "error");
+      toast(t('fill_all_security_fields') || "Please fill all security fields", "error");
       return;
     }
     if (newPassword !== confirmPassword) {
-      toast("New passwords do not match", "error");
+      toast(t('passwords_not_match') || "New passwords do not match", "error");
       return;
     }
     setChangingPassword(true);
@@ -162,12 +162,12 @@ export default function ProfileScreen() {
         currentPassword,
         newPassword,
       });
-      toast("Password updated securely", "success");
+      toast(t('password_updated_securely') || "Password updated securely", "success");
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
     } catch (err: any) {
-      const errMsg = err?.response?.data?.error || "Password synchronization failed";
+      const errMsg = err?.response?.data?.error || t('password_sync_failed') || "Password synchronization failed";
       toast(errMsg, "error");
     } finally {
       setChangingPassword(false);
@@ -183,7 +183,7 @@ export default function ProfileScreen() {
   const handleAddAddress = async () => {
     if (!user?.id) return;
     if (!addrLine || !addrPhone) {
-      toast("Address & Phone are required", "error");
+      toast(t('address_phone_required') || "Address & Phone are required", "error");
       return;
     }
 
@@ -243,7 +243,7 @@ export default function ProfileScreen() {
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       {ToastHost}
       <ScrollView contentContainerClassName="px-4 pb-28 pt-16">
-        <Text className="text-2xl font-black uppercase italic" style={{ color: colors.text }}>My Profile</Text>
+        <Text className="text-2xl font-black uppercase italic" style={{ color: colors.text }}>{t('my_profile') || "My Profile"}</Text>
         <Text 
           className="mt-1 text-[10px] font-black uppercase tracking-widest" 
           style={{ color: colors.textMuted }}
@@ -276,7 +276,7 @@ export default function ProfileScreen() {
               </Text>
             )}
             <View className="absolute bottom-0 left-0 right-0 bg-black/60 py-0.5 items-center justify-center">
-              <Text className="text-[7px] font-black text-white uppercase tracking-widest">EDIT</Text>
+              <Text className="text-[7px] font-black text-white uppercase tracking-widest">{t('edit') || "EDIT"}</Text>
             </View>
           </Pressable>
           <View className="flex-1">
@@ -294,7 +294,7 @@ export default function ProfileScreen() {
             style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
             <Text className="text-2xl font-black" style={{ color: primaryColor }}>{orderCount}</Text>
-            <Text className="text-[9px] font-black uppercase" style={{ color: colors.textMuted }}>Orders</Text>
+            <Text className="text-[9px] font-black uppercase" style={{ color: colors.textMuted }}>{t('orders') || "Orders"}</Text>
           </Pressable>
           <Pressable
             onPress={() => router.push("/cart")}
@@ -302,7 +302,7 @@ export default function ProfileScreen() {
             style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
             <Text className="text-2xl font-black" style={{ color: primaryColor }}>{cart.itemCount()}</Text>
-            <Text className="text-[9px] font-black uppercase" style={{ color: colors.textMuted }}>Cart items</Text>
+            <Text className="text-[9px] font-black uppercase" style={{ color: colors.textMuted }}>{t('cart_items') || "Cart items"}</Text>
           </Pressable>
         </View>
 
@@ -312,17 +312,17 @@ export default function ProfileScreen() {
           style={{ borderColor: colors.border, backgroundColor: colors.card }}
         >
           <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
-            Identity node
+            {t('identity_node') || "Identity node"}
           </Text>
           <View>
-            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Name</Text>
+            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>{t('name') || "Name"}</Text>
             <Input value={name} onChangeText={setName} />
           </View>
           <View>
-            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Email</Text>
+            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>{t('email') || "Email"}</Text>
             <Input value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
           </View>
-          <Button label={saving ? "SAVING…" : "SAVE PROFILE"} loading={saving} onPress={save} />
+          <Button label={saving ? (t('saving') || "SAVING…") : (t('save_profile') || "SAVE PROFILE")} loading={saving} onPress={save} />
         </View>
 
         {/* Change Password node */}
@@ -331,10 +331,10 @@ export default function ProfileScreen() {
           style={{ borderColor: colors.border, backgroundColor: colors.card }}
         >
           <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
-            Security credentials
+            {t('security_credentials') || "Security credentials"}
           </Text>
           <View>
-            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Current Password</Text>
+            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>{t('current_password') || "Current Password"}</Text>
             <Input
               value={currentPassword}
               onChangeText={setCurrentPassword}
@@ -343,7 +343,7 @@ export default function ProfileScreen() {
             />
           </View>
           <View>
-            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>New Password</Text>
+            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>{t('new_password') || "New Password"}</Text>
             <Input
               value={newPassword}
               onChangeText={setNewPassword}
@@ -352,7 +352,7 @@ export default function ProfileScreen() {
             />
           </View>
           <View>
-            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Confirm New Password</Text>
+            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>{t('confirm_new_password') || "Confirm New Password"}</Text>
             <Input
               value={confirmPassword}
               onChangeText={setConfirmPassword}
@@ -361,7 +361,7 @@ export default function ProfileScreen() {
             />
           </View>
           <Button
-            label={changingPassword ? "SYNCHRONIZING…" : "CHANGE PASSWORD"}
+            label={changingPassword ? (t('synchronizing') || "SYNCHRONIZING…") : (t('change_password') || "CHANGE PASSWORD")}
             loading={changingPassword}
             onPress={handleChangePassword}
           />
@@ -374,7 +374,7 @@ export default function ProfileScreen() {
         >
           <View className="flex-row items-center justify-between mb-4">
             <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
-              Address Vault
+              {t('address_vault') || "Address Vault"}
             </Text>
             <Pressable 
               onPress={() => setAddressModalVisible(true)} 
@@ -384,7 +384,7 @@ export default function ProfileScreen() {
                 borderColor: colors.primary + "33"
               }}
             >
-              <Text className="text-[9px] font-black uppercase" style={{ color: primaryColor }}>+ ADD NEW</Text>
+              <Text className="text-[9px] font-black uppercase" style={{ color: primaryColor }}>{t('add_new') || "+ ADD NEW"}</Text>
             </Pressable>
           </View>
 
@@ -393,7 +393,7 @@ export default function ProfileScreen() {
               className="items-center py-6 border border-dashed rounded-xl"
               style={{ borderColor: colors.border }}
             >
-              <Text className="text-xs font-bold uppercase" style={{ color: colors.textMuted }}>No addresses registered</Text>
+              <Text className="text-xs font-bold uppercase" style={{ color: colors.textMuted }}>{t('no_addresses_registered') || "No addresses registered"}</Text>
             </View>
           ) : (
             <View className="gap-3">
@@ -415,12 +415,12 @@ export default function ProfileScreen() {
                       </View>
                       {addr.is_default ? (
                         <Text className="text-[8px] font-black text-emerald-400 uppercase tracking-widest">
-                          Default
+                          {t('default') || "Default"}
                         </Text>
                       ) : null}
                     </View>
                     <Pressable onPress={() => handleDeleteAddress(addr.id)} className="opacity-60 active:opacity-100 p-1">
-                      <Text className="text-[9px] font-black text-rose-500 uppercase">Delete</Text>
+                      <Text className="text-[9px] font-black text-rose-500 uppercase">{t('delete') || "Delete"}</Text>
                     </Pressable>
                   </View>
                   <Text className="text-xs font-bold" style={{ color: colors.text }}>{addr.hotel_name || "Private Residence"}</Text>
@@ -440,14 +440,14 @@ export default function ProfileScreen() {
             className="rounded-xl border px-4 py-4"
             style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
-            <Text className="text-sm font-bold" style={{ color: colors.text }}>Browse Market</Text>
+            <Text className="text-sm font-bold" style={{ color: colors.text }}>{t('browse_market') || "Browse Market"}</Text>
           </Pressable>
           <Pressable 
             onPress={() => router.push("/home")} 
             className="rounded-xl border px-4 py-4"
             style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
-            <Text className="text-sm font-bold" style={{ color: colors.text }}>Harbor Home</Text>
+            <Text className="text-sm font-bold" style={{ color: colors.text }}>{t('harbor_home') || "Harbor Home"}</Text>
           </Pressable>
         </View>
 
@@ -468,7 +468,7 @@ export default function ProfileScreen() {
           >
             <View className="mb-6 flex-row items-center justify-between">
               <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
-                Register Node
+                {t('register_node') || "Register Node"}
               </Text>
               <Pressable
                 onPress={() => setAddressModalVisible(false)}
@@ -484,7 +484,7 @@ export default function ProfileScreen() {
                 className="mb-2 text-[10px] font-black uppercase tracking-widest" 
                 style={{ color: colors.text }}
               >
-                Type / Label
+                {t('type_label') || "Type / Label"}
               </Text>
               <View className="flex-row gap-2">
                 {["HOME", "WORK", "HOTEL", "OTHER"].map((t) => (
@@ -507,18 +507,18 @@ export default function ProfileScreen() {
             </View>
 
             <View className="mb-4">
-              <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Hotel / Resort Name</Text>
+              <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>{t('hotel_resort_name') || "Hotel / Resort Name"}</Text>
               <Input
-                placeholder="e.g. Symphony Palms Resort"
+                placeholder={t('placeholder_resort') || "e.g. Symphony Palms Resort"}
                 value={addrHotel}
                 onChangeText={setAddrHotel}
               />
             </View>
 
             <View className="mb-4">
-              <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Room / Villa No (Optional)</Text>
+              <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>{t('room_villa_no') || "Room / Villa No (Optional)"}</Text>
               <Input
-                placeholder="e.g. Room 204"
+                placeholder={t('placeholder_room') || "e.g. Room 204"}
                 value={addrRoom}
                 onChangeText={setAddrRoom}
               />
@@ -529,7 +529,7 @@ export default function ProfileScreen() {
                 className="mb-2 text-[10px] font-black uppercase tracking-widest" 
                 style={{ color: colors.text }}
               >
-                Delivery Jetty
+                {t('delivery_jetty') || "Delivery Jetty"}
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row gap-2">
                 {JETTIES.map((j) => (
@@ -552,18 +552,18 @@ export default function ProfileScreen() {
             </View>
 
             <View className="mb-4">
-              <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Delivery Address / Destination</Text>
+              <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>{t('delivery_address') || "Delivery Address / Destination"}</Text>
               <Input
-                placeholder="e.g. Govind Nagar Beach No 3, Havelock"
+                placeholder={t('placeholder_beach') || "e.g. Govind Nagar Beach No 3, Havelock"}
                 value={addrLine}
                 onChangeText={setAddrLine}
               />
             </View>
 
             <View className="mb-4">
-              <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Contact Phone</Text>
+              <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>{t('contact_phone') || "Contact Phone"}</Text>
               <Input
-                placeholder="e.g. +91 9999999999"
+                placeholder={t('placeholder_phone') || "e.g. +91 9999999999"}
                 value={addrPhone}
                 onChangeText={setAddrPhone}
                 keyboardType="phone-pad"
@@ -578,7 +578,7 @@ export default function ProfileScreen() {
                 className="text-[10px] font-black uppercase tracking-widest" 
                 style={{ color: colors.text }}
               >
-                Set as Default Address
+                {t('set_as_default_address') || "Set as Default Address"}
               </Text>
               <Switch
                 value={addrDefault}
@@ -589,7 +589,7 @@ export default function ProfileScreen() {
             </View>
 
             <Button
-              label={addressLoading ? "COMMISSIONING…" : "SAVE ADDRESS"}
+              label={addressLoading ? (t('commissioning') || "COMMISSIONING…") : (t('save_address') || "SAVE ADDRESS")}
               loading={addressLoading}
               onPress={handleAddAddress}
               className="w-full"

@@ -1,11 +1,13 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { translateObject, translateArray } from '@/lib/translate';
 
 // --- FETCH MERCHANT CATALOG OR SPECIFIC NODE ---
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
+    const targetLang = request.headers.get('Accept-Language');
 
     if (id) {
       const { data: productData, error } = await supabase
@@ -17,7 +19,10 @@ export async function GET(request: Request) {
       if (error && error.code !== 'PGRST116') throw error;
       if (!productData) return NextResponse.json({ error: "Asset Not Found" }, { status: 404 });
       
-      const product = { ...productData, seller_name: '' };
+      let product = { ...productData, seller_name: '' };
+      if (targetLang && !targetLang.toLowerCase().startsWith("en")) {
+        product = await translateObject(product, ['name', 'description', 'category', 'tagline'], targetLang);
+      }
       return NextResponse.json(product);
     }
 
@@ -28,10 +33,14 @@ export async function GET(request: Request) {
       
     if (error) throw error;
     
-    const products = (productsData || []).map((p: any) => ({
+    let products = (productsData || []).map((p: any) => ({
       ...p,
       seller_name: ''
     }));
+
+    if (targetLang && !targetLang.toLowerCase().startsWith("en")) {
+      products = await translateArray(products, ['name', 'description', 'category', 'tagline'], targetLang);
+    }
     return NextResponse.json(products);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

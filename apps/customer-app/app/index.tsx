@@ -15,6 +15,7 @@ import Svg, { Path } from "react-native-svg";
 import * as WebBrowser from "expo-web-browser";
 import * as Linking from "expo-linking";
 import { setAuthToken, setAuthUser } from "@/lib/storage";
+import { t } from "@/lib/i18n";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -151,13 +152,13 @@ export default function WelcomeOnboardingScreen() {
           <View className="rounded-[32px] border border-white/10 bg-white/5 p-1 max-w-[340px]">
             <View className="rounded-[30px] bg-[#020617]/90 px-6 py-8 items-center border border-white/5 shadow-2xl">
               <Text className="text-[36px] font-black italic text-center tracking-tight text-white leading-none">
-                HARBOR <Text style={{ color: colors.primary }}>SYNC</Text>
+                {t('harbor_sync') || "HARBOR SYNC"}
               </Text>
               <Text className="mt-3 text-[10px] font-black uppercase tracking-widest text-center" style={{ color: colors.primary }}>
-                Vibrant Port Blair Fish Exchange
+                {t('vibrant_port_blair_fish_exchange') || "Vibrant Port Blair Fish Exchange"}
               </Text>
               <Text className="mt-4 text-[11px] text-slate-400 font-medium text-center leading-relaxed">
-                Connect directly with the active fishing fleets of Andaman. Fresh catches delivered straight from source to table within hours of berthing.
+                {t('connect_directly_with_fleets') || "Connect directly with the active fishing fleets of Andaman. Fresh catches delivered straight from source to table within hours of berthing."}
               </Text>
             </View>
           </View>
@@ -172,13 +173,13 @@ export default function WelcomeOnboardingScreen() {
           >
             <GoogleIcon />
             <Text className="text-[#020617] font-black text-[12px] uppercase tracking-widest">
-              Continue with Google
+              {t('continue_with_google') || "Continue with Google"}
             </Text>
           </Pressable>
 
           {/* Email Login */}
           <Button
-            label="CONTINUE WITH EMAIL"
+            label={t('continue_with_email') || "CONTINUE WITH EMAIL"}
             onPress={() => router.push("/login")}
             style={{ backgroundColor: "rgba(255,255,255,0.1)", borderColor: "rgba(255,255,255,0.2)", borderWidth: 1 }}
           />
@@ -193,7 +194,7 @@ export default function WelcomeOnboardingScreen() {
               <ActivityIndicator color={colors.primary} size="small" />
             ) : (
               <Text className="text-[10px] font-bold uppercase tracking-widest text-slate-400 underline">
-                EXPLORE AS GUEST
+                {t('explore_as_guest') || "EXPLORE AS GUEST"}
               </Text>
             )}
           </Pressable>

@@ -1,11 +1,13 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { translateObject, translateArray } from '@/lib/translate';
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
     const area = searchParams.get('area');
+    const targetLang = request.headers.get('Accept-Language');
 
     if (!id) {
       return NextResponse.json({ error: "Missing product id" }, { status: 400 });
@@ -87,7 +89,22 @@ export async function GET(request: Request) {
       price: Number(a.price)
     }));
 
-    return NextResponse.json(product);
+    // Perform translation if target language is specified and not English
+    let translatedProduct = product;
+    if (targetLang && !targetLang.toLowerCase().startsWith("en")) {
+      translatedProduct = await translateObject(product, ['name', 'description', 'category', 'tagline'], targetLang);
+      if (translatedProduct.cut_options) {
+        translatedProduct.cut_options = await translateArray(translatedProduct.cut_options, ['label'], targetLang);
+      }
+      if (translatedProduct.prep_options) {
+        translatedProduct.prep_options = await translateArray(translatedProduct.prep_options, ['label'], targetLang);
+      }
+      if (translatedProduct.addons) {
+        translatedProduct.addons = await translateArray(translatedProduct.addons, ['name', 'type'], targetLang);
+      }
+    }
+
+    return NextResponse.json(translatedProduct);
   } catch (error: any) {
     console.error("Product Detail API Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });

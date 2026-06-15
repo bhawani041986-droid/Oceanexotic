@@ -162,7 +162,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               value={search}
               onChangeText={setSearch}
               onSubmitEditing={onSearch}
-              placeholder="Search harvests..."
+              placeholder={t('search_harvests') || "Search harvests..."}
               placeholderTextColor={colors.textMuted}
               returnKeyType="search"
               className="h-10 rounded-xl border px-4 text-xs"
@@ -176,7 +176,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               className="mt-1 text-[8px] font-black uppercase tracking-widest"
               style={{ color: colors.textMuted }}
             >
-              Port Blair • Live Delivery Hub
+              {t('port_blair_delivery_hub') || "Port Blair • Live Delivery Hub"}
             </Text>
           </View>
         ) : null}
@@ -227,8 +227,8 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               >
                 <View className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
                 <View className="flex-1">
-                  <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>Local Delivery Hub</Text>
-                  <Text className="text-[10px] font-bold" style={{ color: colors.text }} numberOfLines={1}>{user?.email ?? "Guest Mode"}</Text>
+                  <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>{t('local_delivery_hub') || "Local Delivery Hub"}</Text>
+                  <Text className="text-[10px] font-bold" style={{ color: colors.text }} numberOfLines={1}>{user?.email ?? (t('guest_mode') || "Guest Mode")}</Text>
                 </View>
               </View>
 
@@ -278,7 +278,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               >
                 <Text className="text-xs font-black uppercase tracking-widest text-red-500">{t('sign_out')}</Text>
               </Pressable>
-              <Text className="text-[7px] font-black text-center uppercase tracking-widest" style={{ color: colors.textMuted }}>OceanExotic Mobile App v1.4</Text>
+              <Text className="text-[7px] font-black text-center uppercase tracking-widest" style={{ color: colors.textMuted }}>{t('app_version_label') || "OceanExotic Mobile App v1.4"}</Text>
             </View>
           </View>
         </View>

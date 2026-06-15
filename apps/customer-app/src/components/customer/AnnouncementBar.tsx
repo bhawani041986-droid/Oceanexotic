@@ -26,23 +26,31 @@ export function AnnouncementBar() {
       .catch(console.error);
   }, []);
 
-  useEffect(() => {
-    if (coupons.length === 0) return;
-    
-    const runMarquee = () => {
-      animatedValue.setValue(screenWidth);
-      Animated.loop(
-        Animated.timing(animatedValue, {
-          toValue: -screenWidth - 200,
-          duration: 15000,
-          easing: Easing.linear,
-          useNativeDriver: true,
-        })
-      ).start();
-    };
+  const [contentWidth, setContentWidth] = useState(0);
 
-    runMarquee();
-  }, [coupons, screenWidth]);
+  useEffect(() => {
+    if (coupons.length === 0 || contentWidth === 0) return;
+    
+    const speed = 35; // pixels per second (slower, stable speed)
+    const distance = screenWidth + contentWidth;
+    const duration = (distance / speed) * 1000;
+
+    const loop = Animated.loop(
+      Animated.timing(animatedValue, {
+        toValue: -contentWidth,
+        duration: duration,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    );
+
+    animatedValue.setValue(screenWidth);
+    loop.start();
+
+    return () => {
+      loop.stop();
+    };
+  }, [coupons, screenWidth, contentWidth, animatedValue]);
 
   if (coupons.length === 0) return null;
 
@@ -52,6 +60,7 @@ export function AnnouncementBar() {
       style={{ borderColor: `${colors.primary}33`, height: 26 }}
     >
       <Animated.View
+        onLayout={(e) => setContentWidth(e.nativeEvent.layout.width)}
         style={{
           transform: [{ translateX: animatedValue }],
           flexDirection: "row",

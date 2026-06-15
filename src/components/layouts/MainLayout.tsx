@@ -108,10 +108,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
 
   const navItems = [
     { label: "Home", href: "/customer", icon: <Home className="w-5 h-5" /> },
-    { label: "Marketplace", href: "/customer/products", icon: <ShoppingBag className="w-5 h-5" /> },
+    { label: "Shop", href: "/customer/products", icon: <ShoppingBag className="w-5 h-5" /> },
     { label: "Recipes", href: "/customer/recipes", icon: <ChefHat className="w-5 h-5" /> },
-    { label: "Orders", href: "/customer/orders", icon: <Receipt className="w-5 h-5" /> },
-    { label: "Chat", href: "/customer/chat", icon: <MessageCircle className="w-5 h-5" /> },
+    { label: "My Orders", href: "/customer/orders", icon: <Receipt className="w-5 h-5" /> },
+    { label: "Support Chat", href: "/customer/chat", icon: <MessageCircle className="w-5 h-5" /> },
     { label: "Profile", href: "/customer/profile", icon: <UserIcon className="w-5 h-5" /> },
   ];
 
@@ -258,7 +258,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         }}
       >
         <div className="flex items-center justify-around h-full px-2">
-          {navItems.filter(item => ["Home", "Marketplace", "Recipes", "Orders", "Profile"].includes(item.label)).slice(0, 5).map((item, i) => {
+          {navItems.filter(item => ["Home", "Shop", "Recipes", "My Orders", "Profile"].includes(item.label)).slice(0, 5).map((item, i) => {
             const isActive = pathname === item.href;
             return (
               <button 
@@ -411,7 +411,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
               <p className="text-[9px] md:text-sm text-[var(--c-text-secondary)] italic uppercase tracking-widest">© 2026 OceanExotic Global. All Rights Reserved.</p>
               <div className="flex gap-6 text-[8px] md:text-xs text-[var(--c-text-secondary)] font-black uppercase tracking-widest">
                  <span className="cursor-pointer hover:text-[var(--c-primary)] transition-colors">How to Order</span>
-                 <span className="cursor-pointer hover:text-[var(--c-primary)] transition-colors">Store Locations</span>
+                 <span className="cursor-pointer hover:text-[var(--c-primary)] transition-colors">Delivery Areas</span>
                  <span className="cursor-pointer hover:text-[var(--c-primary)] transition-colors">Safe Checkout</span>
               </div>
            </div>

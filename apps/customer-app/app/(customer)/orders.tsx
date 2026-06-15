@@ -61,14 +61,14 @@ export default function OrdersScreen() {
           className="mt-1 text-[10px] font-black uppercase tracking-widest" 
           style={{ color: colors.textMuted }}
         >
-          Tracking {orders.length} active & past commissions
+          {t('tracking') || "Tracking"} {orders.length} {t('active_past_commissions') || "active & past commissions"}
         </Text>
 
         {loading ? (
           <View className="my-16 items-center">
             <ActivityIndicator color={colors.primary} size="large" />
             <Text className="mt-4 text-[10px] font-black uppercase" style={{ color: colors.textMuted }}>
-              Synchronizing ledger…
+              {t('synchronizing_ledger') || "Synchronizing ledger…"}
             </Text>
           </View>
         ) : orders.length > 0 ? (
@@ -103,7 +103,7 @@ export default function OrdersScreen() {
                 </View>
                 <View className="mt-4 flex-row gap-2">
                   <Button
-                    label="VIEW DETAILS"
+                    label={t('view_details') || "VIEW DETAILS"}
                     variant="ghost"
                     onPress={() =>
                       router.push({ pathname: "/orders/[id]", params: { id: order.id } } as never)
@@ -113,7 +113,7 @@ export default function OrdersScreen() {
                   />
                   {!["DELIVERED", "CANCELLED"].includes(order.status?.toUpperCase() ?? "") && (
                     <Button
-                      label="TRACK"
+                      label={t('track') || "TRACK"}
                       onPress={() =>
                         router.push({ pathname: "/orders/[id]/tracking", params: { id: order.id } } as never)
                       }
@@ -129,8 +129,8 @@ export default function OrdersScreen() {
             className="my-16 items-center rounded-2xl border border-dashed p-8"
             style={{ borderColor: colors.border }}
           >
-            <Text className="text-xs font-black uppercase" style={{ color: colors.textMuted }}>No commissions yet</Text>
-            <Button label="BROWSE HARVEST" onPress={() => router.push("/products")} className="mt-6" />
+            <Text className="text-xs font-black uppercase" style={{ color: colors.textMuted }}>{t('no_commissions_yet') || "No commissions yet"}</Text>
+            <Button label={t('browse_harvest') || "BROWSE HARVEST"} onPress={() => router.push("/products")} className="mt-6" />
           </View>
         )}
       </ScrollView>

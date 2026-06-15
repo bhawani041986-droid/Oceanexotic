@@ -9,6 +9,7 @@ import { Logo } from "@/components/ui/Logo";
 import { useToast } from "@/components/ui/Toast";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { cn } from "@/lib/utils";
+import { t } from "@/lib/i18n";
 
 const MenuIcon = ({ color }: { color: string }) => (
   <Svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
@@ -97,7 +98,7 @@ export function AgentHeader() {
               className="text-[8px] font-black uppercase tracking-[0.1em] leading-none"
               style={{ color: mood.primary }}
             >
-              Active
+              {t('active') || "Active"}
             </Text>
             <Text 
               className="text-[7px] font-bold opacity-60 uppercase tracking-[0.05em] mt-0.5 max-w-[60px]"
@@ -194,17 +195,17 @@ export function AgentHeader() {
               >
                 <View className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
                 <View className="flex-1">
-                  <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: mood.primary }}>Active Operator Node</Text>
-                  <Text className="text-[10px] font-bold" style={{ color: mood.text }} numberOfLines={1}>{user?.email ?? "Guest Operator"}</Text>
+                  <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: mood.primary }}>{t('active_operator_node') || "Active Operator Node"}</Text>
+                  <Text className="text-[10px] font-bold" style={{ color: mood.text }} numberOfLines={1}>{user?.email ?? (t('guest_operator') || "Guest Operator")}</Text>
                 </View>
               </View>
 
               <View className="gap-2">
                 {[
-                  { label: "Missions Dashboard", href: "/(agent)/dashboard" },
-                  { label: "Live Trace Map", href: "/(agent)/tracking" },
-                  { label: "Mission History", href: "/(agent)/history" },
-                  { label: "Operator Profile", href: "/(agent)/profile" }
+                  { label: t('missions_dashboard') || "Missions Dashboard", href: "/(agent)/dashboard" },
+                  { label: t('live_trace_map') || "Live Trace Map", href: "/(agent)/tracking" },
+                  { label: t('mission_history') || "Mission History", href: "/(agent)/history" },
+                  { label: t('operator_profile') || "Operator Profile", href: "/(agent)/profile" }
                 ].map((item) => {
                   const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
                   return (
@@ -241,9 +242,9 @@ export function AgentHeader() {
                 }}
                 className="w-full py-4 rounded-xl border border-red-500/20 bg-red-500/10 items-center active:bg-red-500/20"
               >
-                <Text className="text-xs font-black uppercase tracking-widest text-red-500">Terminate Session</Text>
+                <Text className="text-xs font-black uppercase tracking-widest text-red-500">{t('terminate_session') || "Terminate Session"}</Text>
               </Pressable>
-              <Text className="text-[7px] font-black text-center uppercase tracking-widest" style={{ color: mood.text, opacity: 0.4 }}>OceanExotic Operator Protocol v1.4</Text>
+              <Text className="text-[7px] font-black text-center uppercase tracking-widest" style={{ color: mood.text, opacity: 0.4 }}>{t('operator_protocol') || "OceanExotic Operator Protocol v1.4"}</Text>
             </View>
           </View>
         </View>

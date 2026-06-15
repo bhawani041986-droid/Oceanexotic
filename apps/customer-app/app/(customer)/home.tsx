@@ -105,7 +105,7 @@ function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
         {/* Offer Badge (Amazon/Licious Style) */}
         <View className="absolute right-2 top-2 rounded bg-red-500/90 px-2 py-0.5 z-20">
           <Text className="text-[7px] font-black uppercase text-white">
-            15% OFF
+            15% {t('off_text') || "OFF"}
           </Text>
         </View>
         <View className="absolute bottom-2 left-2 rounded-lg border border-white/10 bg-black/60 px-2 py-1">
@@ -139,7 +139,7 @@ function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
         <View className="flex-row items-center justify-between">
           <Text className="text-xl font-black italic text-foreground" style={{ color: colors.text }}>
             ₹{item.price_per_kg}
-            <Text className="text-[10px] opacity-40">/kg</Text>
+            <Text className="text-[10px] opacity-40">{t('per_kg') || "/kg"}</Text>
           </Text>
           <Pressable
             onPress={(e) => {
@@ -150,7 +150,7 @@ function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
             style={{ backgroundColor: colors.primary }}
           >
             <Text className="text-[9px] font-black uppercase text-white relative z-10">
-              + CUT
+              {t('plus_cut') || "+ CUT"}
             </Text>
             <Svg width="8" height="8" style={{ position: "absolute", top: -1, left: -1, zIndex: 20 }}>
               <Path d="M0,0 L8,0 L0,8 Z" fill={colors.card} />
@@ -304,7 +304,7 @@ export default function CustomerHomeScreen() {
                 }}
               >
                 <Text className="text-[8px] font-black uppercase tracking-[0.2em]" style={{ color: primaryColor }}>
-                  {banner?.sector || "Local"} Market Sync: Active
+                  {banner?.sector || t('local_sector') || "Local"} {t('market_sync_active') || "Store Open"}
                 </Text>
               </View>
               <Text className="mt-2 text-2xl font-black uppercase italic leading-tight" style={{ color: colors.text }}>
@@ -313,17 +313,17 @@ export default function CustomerHomeScreen() {
                 <Text style={{ color: primaryColor }}>{heroAccent}</Text>
               </Text>
               <Text className="mt-1.5 text-xs font-medium italic" style={{ color: colors.textMuted }}>
-                Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers.
+                {t('home_subtitle') || "Fresh Seafood Delivered Fast. Trusted by 50,000+ Customers."}
               </Text>
             </View>
             <View className="mt-auto pt-3 flex-row gap-2">
               <Button
-                label="SHOP FRESH"
+                label={t('shop_fresh') || "SHOP FRESH"}
                 onPress={() => router.push("/products")}
                 className="h-10 flex-1 shadow-[0_0_15px_rgba(0,0,0,0.8)]"
               />
               <Button
-                label="CATEGORIES"
+                label={t('categories') || "CATEGORIES"}
                 variant="ghost"
                 onPress={() => router.push("/products")}
                 className="h-10 flex-1 border border-white/10 bg-black/40"
@@ -380,7 +380,7 @@ export default function CustomerHomeScreen() {
           <View className="mb-6 flex-col gap-4">
             <SectionTitle 
               title={t('todays_catch')}
-              subtitle="Live Harbor Arrival • Freshness Guaranteed"
+              subtitle={t('todays_catch_subtitle') || "Fresh from the Harbor"}
             />
              <View className="flex-row flex-wrap rounded-2xl border border-white/5 bg-secondary/40 p-1">
               {(["ALL", "MORNING", "AFTERNOON", "EVENING"] as BatchFilter[]).map((batch) => (
@@ -428,21 +428,21 @@ export default function CustomerHomeScreen() {
           ) : (
             <View className="h-48 items-center justify-center rounded-3xl border-2 border-dashed border-white/10 opacity-50">
               <Text className="text-xs font-black uppercase tracking-widest text-muted-foreground">
-                No Live Harbor Stock in this sector
+                {t('no_live_harbor_stock') || "No fresh catch available in your area"}
               </Text>
             </View>
           )}
 
           {todaysCatch.isError ? (
             <Text className="mt-4 text-center text-[10px] font-bold text-danger">
-              Failed to sync products. Pull to refresh.
+              {t('failed_to_sync') || "Failed to sync products. Pull to refresh."}
             </Text>
           ) : null}
         </View>
 
         {/* Featured Seafood */}
         <View className="border-y border-white/5 bg-secondary/20 px-4 py-8">
-          <SectionTitle title="Featured Seafood" subtitle="Premium Fresh Quality" />
+          <SectionTitle title={t('featured_seafood') || "Featured Items"} subtitle={t('premium_fresh_quality') || "Top Quality Picks"} />
           {featured.length > 0 ? (
             <View className="mt-4 flex-row flex-wrap justify-between gap-y-3">
               {featured.map((p) => (
@@ -468,13 +468,13 @@ export default function CustomerHomeScreen() {
         {/* Chef's Recipes */}
         <View className="px-4 py-8">
           <View className="flex-row justify-between items-end mb-4">
-            <SectionTitle title="Chef's Recipes" subtitle="Chef Tested Recipes" />
+            <SectionTitle title={t('chefs_recipes') || "Cooking Ideas"} subtitle={t('chef_tested_recipes') || "Easy Seafood Recipes"} />
             <Pressable 
               onPress={() => router.push("/recipe")}
               className="px-3 py-1.5 rounded-lg border"
               style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderColor: colors.border }}
             >
-              <Text className="text-[9px] font-black uppercase tracking-widest text-primary">VIEW ALL ➜</Text>
+              <Text className="text-[9px] font-black uppercase tracking-widest text-primary">{t('view_all_arrow') || "VIEW ALL ➜"}</Text>
             </Pressable>
           </View>
           <View className="gap-4">
@@ -513,7 +513,7 @@ export default function CustomerHomeScreen() {
                     </View>
                   </View>
                   <Text className="text-xl font-black uppercase italic text-foreground">{recipe.title}</Text>
-                  <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>VIEW RECIPE ➜</Text>
+                  <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>{t('view_recipe') || "VIEW RECIPE ➜"}</Text>
                 </View>
 
                 {/* Beveled overlays for culinary recipe cards */}
@@ -542,7 +542,7 @@ export default function CustomerHomeScreen() {
             }}
           >
             <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>
-              {promo?.sector || "Flash Harvest"} Protocol
+              {promo?.sector || "Flash Deal"}
             </Text>
             <Text className="mt-2 text-3xl font-black uppercase italic" style={{ color: colors.text }}>
               {promo?.title || "Flash Deals."}
@@ -555,7 +555,7 @@ export default function CustomerHomeScreen() {
                   <View key={i} className="min-w-[56px] rounded-xl border px-3 py-2" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
                     <Text className="text-center text-xl font-black italic" style={{ color: colors.text }}>{val}</Text>
                     <Text className="text-center text-[7px] font-black uppercase" style={{ color: colors.textMuted }}>
-                      {i === 0 ? "HRS" : i === 1 ? "MIN" : "SEC"}
+                      {i === 0 ? t('hrs') || "HRS" : i === 1 ? t('min') || "MIN" : t('sec') || "SEC"}
                     </Text>
                   </View>
                 ))}
@@ -563,12 +563,12 @@ export default function CustomerHomeScreen() {
             ) : (
               <View className="mt-4 self-center rounded border border-emerald-500/20 bg-emerald-500/10 px-3 py-1">
                 <Text className="text-[9px] font-black uppercase text-emerald-500">
-                  PROMO ACTIVE • SECURE HARVEST
+                  {t('promo_active') || "PROMO ACTIVE"}
                 </Text>
               </View>
             )}
             
-            <Button label="CLAIM ACCESS NOW" onPress={() => router.push("/products")} className="mt-6" />
+            <Button label={t('claim_access_now') || "CLAIM ACCESS NOW"} onPress={() => router.push("/products")} className="mt-6" />
 
             {/* Beveled overlays for flash deals */}
             <Svg width="24" height="24" style={{ position: "absolute", top: -1, left: -1, zIndex: 40 }}>
@@ -640,18 +640,18 @@ export default function CustomerHomeScreen() {
             </View>
 
             <View className="flex-row items-center gap-1">
-              <Text className="text-[9px] font-black text-foreground uppercase tracking-widest">🔥 GRILL MASTER</Text>
+              <Text className="text-[9px] font-black text-foreground uppercase tracking-widest">🔥 {t('grill_master') || "GRILL MASTER"}</Text>
             </View>
             <Text className="mt-1 text-[15px] font-black uppercase italic leading-none text-foreground">
-              PREMIUM{"\n"}<Text className="text-amber-400">GRILL</Text>
+              {t('premium_text') || "PREMIUM"}{"\n"}<Text className="text-amber-400">{t('grill_text') || "GRILL"}</Text>
             </Text>
-            <Text className="mt-1.5 text-[8px] font-bold text-white/70 uppercase">Fresh Catches</Text>
+            <Text className="mt-1.5 text-[8px] font-bold text-white/70 uppercase">{t('fresh_catches') || "Fresh Catch"}</Text>
             <Pressable
               onPress={() => router.push("/products")}
               className="mt-3 self-start rounded-full bg-white px-3 py-1.5 active:bg-white/90"
               style={{ shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 3 }}
             >
-              <Text className="text-[7.5px] font-black uppercase text-black tracking-wider">EXPLORE</Text>
+              <Text className="text-[7.5px] font-black uppercase text-black tracking-wider">{t('explore_text') || "EXPLORE"}</Text>
             </Pressable>
           </View>
 
@@ -666,17 +666,17 @@ export default function CustomerHomeScreen() {
             </View>
 
             <View className="flex-row items-center gap-1">
-              <Text className="text-[9px] font-black text-[#00f3ff] uppercase tracking-widest">⚡ PREMIUM</Text>
+              <Text className="text-[9px] font-black text-[#00f3ff] uppercase tracking-widest">⚡ {t('premium_text') || "PREMIUM"}</Text>
             </View>
             <Text className="mt-1 text-[15px] font-black uppercase italic leading-none text-white text-right">
-              PREMIUM{"\n"}<Text className="text-[#00d4ff]">SEAFOOD</Text>
+              {t('premium_text') || "PREMIUM"}{"\n"}<Text className="text-[#00d4ff]">{t('seafood_text') || "SEAFOOD"}</Text>
             </Text>
-            <Text className="mt-1.5 text-[8px] font-bold text-white/70 uppercase text-right">Prime Seasteak</Text>
+            <Text className="mt-1.5 text-[8px] font-bold text-white/70 uppercase text-right">{t('prime_seasteak') || "Top Choices"}</Text>
             <Pressable
               onPress={() => router.push("/products")}
               className="mt-3 rounded-full border border-white/20 bg-black/40 px-3 py-1.5 active:bg-black/60"
             >
-              <Text className="text-[7.5px] font-black uppercase text-white tracking-wider">VIEW ALL</Text>
+              <Text className="text-[7.5px] font-black uppercase text-white tracking-wider">{t('view_all') || "VIEW ALL"}</Text>
             </Pressable>
           </View>
 
@@ -697,7 +697,7 @@ export default function CustomerHomeScreen() {
 
         {/* Premium Sellers ("The Fleet Elite") */}
         <View className="px-4 py-8">
-          <SectionTitle title="The Fleet Elite" subtitle="Verified Local Sellers" />
+          <SectionTitle title={t('the_fleet_elite') || "Top Sellers"} subtitle={t('verified_local_sellers') || "Verified Sellers"} />
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
             {PREMIUM_SELLERS.map((seller) => (
               <Pressable
@@ -710,7 +710,7 @@ export default function CustomerHomeScreen() {
                   <Text className="text-[8px] font-black uppercase" style={{ color: primaryColor }}>{seller.id}</Text>
                   <View className="flex-row items-center gap-1">
                     <View className="h-1.5 w-1.5 rounded-full bg-[#00ff88]" />
-                    <Text className="text-[6px] font-black uppercase" style={{ color: colors.textMuted }}>LIVE</Text>
+                    <Text className="text-[6px] font-black uppercase" style={{ color: colors.textMuted }}>{t('live_text') || "LIVE"}</Text>
                   </View>
                 </View>
                 
@@ -737,7 +737,7 @@ export default function CustomerHomeScreen() {
                       </View>
                     ))}
                   </View>
-                  <Text className="text-[8px] font-black uppercase" style={{ color: primaryColor }}>VIEW NODE ➜</Text>
+                  <Text className="text-[8px] font-black uppercase" style={{ color: primaryColor }}>{t('view_node_arrow') || "VIEW NODE ➜"}</Text>
                 </View>
 
                 {/* Beveled overlays for premium sellers */}
@@ -763,10 +763,10 @@ export default function CustomerHomeScreen() {
         <View className="px-4 py-4" style={{ borderBottomColor: colors.border, borderBottomWidth: 1 }}>
           <View className="flex-row justify-between gap-2">
             {[ 
-              { icon: "🛡️", title: "Authorized", subtitle: "Fleet Verified", color: "#00ff88" }, 
-              { icon: "⚡", title: "Instant", subtitle: "90 Min Dispatch", color: "#eab308" }, 
-              { icon: "❄️", title: "Cold-Chain", subtitle: "0°C Controlled", color: "#00d4ff" }, 
-              { icon: "📍", title: "Local Nodes", subtitle: "Port Blair Hub", color: "#ef4444" } 
+              { icon: "🛡️", title: "Authorized", subtitle: "Verified", color: "#00ff88" }, 
+              { icon: "⚡", title: "Instant", subtitle: "Fast Delivery", color: "#eab308" }, 
+              { icon: "❄️", title: "Cold-Chain", subtitle: "Kept Fresh", color: "#00d4ff" }, 
+              { icon: "📍", title: "Local", subtitle: "Local Stores", color: "#ef4444" } 
             ].map((item, i) => (
               <View 
                 key={i} 
@@ -798,11 +798,11 @@ export default function CustomerHomeScreen() {
 
         {/* Customer Reviews */}
         <View className="px-4 pb-8">
-          <SectionTitle title="Fleet Testimonials" subtitle="Verified Citizen Feedback" />
+          <SectionTitle title={t('fleet_testimonials') || "Fleet Testimonials"} subtitle={t('verified_citizen_feedback') || "Verified Citizen Feedback"} />
           {[
-            { user: "Vikram S.", text: "The Bluefin Tuna was absolutely pristine. Delivered in 40 minutes.", rating: 5 },
-            { user: "Ananya K.", text: "Best lobster I've had in years. The cold-chain delivery is real.", rating: 5 },
-            { user: "Rajesh M.", text: "Professional service and verifiable freshness.", rating: 5 },
+            { user: "Vikram S.", text: t('tuna_pristine') || "The Bluefin Tuna was absolutely pristine. Delivered in 40 minutes.", rating: 5 },
+            { user: "Ananya K.", text: t('best_lobster') || "Best lobster I've had in years. The cold-chain delivery is real.", rating: 5 },
+            { user: "Rajesh M.", text: t('professional_service') || "Professional service and verifiable freshness.", rating: 5 },
           ].map((r) => (
             <View key={r.user} className="mt-3 p-4 relative overflow-hidden" style={{ backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1 }}>
               <Text className="text-[10px] font-black uppercase" style={{ color: primaryColor }}>★ {r.rating}.0</Text>
@@ -836,13 +836,13 @@ export default function CustomerHomeScreen() {
           />
           <View className="space-y-2 items-center text-center">
             <Text className="text-[7.5px] font-black uppercase tracking-[0.4em]" style={{ color: primaryColor }}>
-              Global Dispatch Subscription
+              {t('global_dispatch_subscription') || "Global Dispatch Subscription"}
             </Text>
             <Text className="text-2xl font-black uppercase italic text-center" style={{ color: colors.text }}>
-              Join the Fleet.
+              {t('join_the_fleet') || "Join the Fleet."}
             </Text>
             <Text className="text-[9px] text-center italic max-w-[280px]" style={{ color: colors.textMuted }}>
-              Join our newsletter for the latest fresh catches and exclusive offers.
+              {t('join_newsletter_for_catches') || "Join our newsletter for the latest fresh catches and exclusive offers."}
             </Text>
           </View>
           <View className="mt-5 space-y-2">
@@ -862,7 +862,7 @@ export default function CustomerHomeScreen() {
                 </Svg>
               ) : null}
               <Text className="text-xs italic tracking-wider relative z-10" style={{ color: colors.textMuted }}>
-                Support Email: support@oceanexotic.com
+                {t('support_email') || "Support Email"}: support@oceanexotic.com
               </Text>
             </View>
             <Pressable
@@ -880,7 +880,7 @@ export default function CustomerHomeScreen() {
                 </Svg>
               ) : null}
               <Text className="text-[10px] font-black text-white uppercase tracking-[0.2em] relative z-10">
-                SUBSCRIBE NOW
+                {t('subscribe_now') || "SUBSCRIBE NOW"}
               </Text>
             </Pressable>
           </View>

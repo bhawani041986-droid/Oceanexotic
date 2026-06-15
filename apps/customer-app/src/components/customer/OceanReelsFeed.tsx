@@ -8,6 +8,7 @@ import { useProducts } from "@/hooks/useProducts";
 import { useToast } from "@/components/ui/Toast";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import api from "@/services/api";
+import { t } from "@/lib/i18n";
 
 interface VideoItem {
   id: number;
@@ -76,7 +77,7 @@ export function OceanReelsFeed() {
       image: product.image_url || product.image || "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400",
       sellerId: product.seller_id || "OCEAN",
     });
-    toast(`${product.name} added from Ocean Reels!`, "success");
+    toast(`${product.name} ${t('added_from_reels') || "added from Ocean Reels!"}`, "success");
   };
 
   if (loading) {
@@ -95,10 +96,10 @@ export function OceanReelsFeed() {
         <View className="flex-row items-center justify-between">
           <View>
             <Text className="text-lg font-black uppercase italic tracking-tighter" style={{ color: colors.text }}>
-              Ocean <Text style={{ color: colors.primary }}>Reels</Text>
+              {t('ocean') || "Ocean"} <Text style={{ color: colors.primary }}>{t('reels') || "Reels"}</Text>
             </Text>
             <Text className="text-[9px] uppercase tracking-widest font-black" style={{ color: colors.textMuted }}>
-              Watch & Shop
+              {t('watch_and_shop') || "Watch & Shop"}
             </Text>
           </View>
         </View>

@@ -18,7 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: `Today's Fresh Catch | Port Blair Seafood Market — ${today}`,
-    description: `Fresh fish and seafood available today in Port Blair, Andaman. Live harbor inventory from Aberdeen Bazaar, Phoenix Bay, Haddo Wharf and more. Order now for same-day delivery.`,
+    description: `Fresh fish and seafood available today in Port Blair, Andaman. Fresh catch inventory from Aberdeen Bazaar, Phoenix Bay, Haddo Wharf and more. Order now for same-day delivery.`,
     keywords: [
       "today's catch Port Blair", "fresh fish Andaman", "live seafood Port Blair",
       "harbor fish market", "Aberdeen Bazaar fish", "Phoenix Bay seafood",
@@ -56,7 +56,7 @@ function TodaysCatchJsonLd() {
     servesCuisine: 'Seafood',
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
-      name: `Today's Live Harbor Catch — ${today}`,
+      name: `Today's Fresh Catch — ${today}`,
     },
   };
 
@@ -92,7 +92,7 @@ export default async function TodaysCatchPage() {
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                 <p className="text-[9px] md:text-[10px] font-black text-emerald-400 uppercase tracking-[0.3em]">
-                  Live Harbor Inventory · Updated in Real-time
+                  Fresh Catch · Updated in Real-time
                 </p>
               </div>
               <h1 className="text-3xl md:text-6xl font-black text-[var(--foreground)] tracking-tight uppercase italic leading-none">

@@ -65,6 +65,47 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Order Not in Active Fleet" }, { status: 404 });
     }
 
+    // --- DYNAMIC ETA CALCULATION USING OSRM ---
+    let estimatedArrivalStr = trackingData.estimated_arrival || "ACQUIRING...";
+    let minutesRemaining = null;
+    
+    if (trackingData.current_lat && trackingData.current_lng && trackingData.status === 'IN_TRANSIT') {
+      try {
+        const customerLat = 13.160704;
+        const customerLng = 92.946892;
+        // OSRM requires longitude,latitude
+        const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${trackingData.current_lng},${trackingData.current_lat};${customerLng},${customerLat}?overview=false`;
+        const osrmRes = await fetch(osrmUrl);
+        if (osrmRes.ok) {
+          const osrmData = await osrmRes.json();
+          if (osrmData.routes && osrmData.routes.length > 0) {
+            const durationSeconds = osrmData.routes[0].duration;
+            minutesRemaining = Math.ceil(durationSeconds / 60);
+            
+            // Add a 5 minute buffer + minimum 1 minute
+            minutesRemaining = Math.max(1, minutesRemaining + 5);
+            
+            // Calculate actual arrival time
+            const arrivalTime = new Date(Date.now() + minutesRemaining * 60000);
+            estimatedArrivalStr = arrivalTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            // Optionally, update the estimated_delivery_at timestamp in orders
+            await supabase.from('orders').update({
+               estimated_delivery_at: arrivalTime.toISOString(),
+               eta_last_updated_at: new Date().toISOString()
+            }).eq('id', order_id);
+          }
+        }
+      } catch (err) {
+        console.error("OSRM Routing Error:", err);
+      }
+    } else if (trackingData.status !== 'IN_TRANSIT' && trackingData.status !== 'DELIVERED') {
+      // Hardcoded buffer for Prep/Pack phases
+      minutesRemaining = 35; // Example
+      const arrivalTime = new Date(Date.now() + minutesRemaining * 60000);
+      estimatedArrivalStr = arrivalTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
     // Fetch Logs for this order
     const { data: logsData, error: logsError } = await supabase.from('fleet_logs').select('status, location_name, timestamp').eq('order_id', order_id).order('timestamp', { ascending: false });
     if (logsError) throw logsError;
@@ -79,6 +120,8 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       ...trackingData,
+      estimated_arrival: estimatedArrivalStr,
+      minutes_remaining: minutesRemaining,
       logs: formattedLogs
     });
   } catch (error: any) {

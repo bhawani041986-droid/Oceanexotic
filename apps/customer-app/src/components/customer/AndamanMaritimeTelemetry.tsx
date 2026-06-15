@@ -13,6 +13,7 @@ import Animated, {
 import type { Territory } from "@/services/homeService";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useSettingsStore } from "@/store/settingsStore";
+import { t as translate } from "@/lib/i18n";
 
 interface TelemetryProps {
   territories: Territory[];
@@ -233,7 +234,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
                   <div class="absolute bottom-[10px] left-1/2 -translate-x-1/2 bg-black/95 border-b-2 px-2.5 py-1 flex flex-col items-center shadow-[0_0_20px_rgba(0,0,0,0.6)] rounded whitespace-nowrap" 
                        style="border-bottom-color: ${color}; transform: translateX(-50%); pointer-events: none; width: max-content;">
                        <div class="flex items-center gap-1">
-                         <span class="text-[5.5px] font-black text-white/40 uppercase tracking-tighter">NODE REG: 0${i + 1}</span>
+                         <span class="text-[5.5px] font-black text-white/40 uppercase tracking-tighter">${translate('node_reg') || "NODE REG"}: 0${i + 1}</span>
                          <div class="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
                        </div>
                        <span class="text-[9px] font-black text-white uppercase tracking-wider">${t.name}</span>
@@ -302,9 +303,9 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
     return (
       <View className="px-4 py-6 border-y border-white/5 bg-secondary/20">
         <View className="mb-4">
-          <Text className="text-xl font-black italic uppercase text-foreground">Live Delivery Map</Text>
+          <Text className="text-xl font-black italic uppercase text-foreground">{translate('live_delivery_map') || "Live Delivery Map"}</Text>
           <Text className="text-[9px] font-black uppercase tracking-[0.3em]" style={{ color: colors.primary }}>
-            Real-time delivery hub mapping
+            {translate('real_time_delivery_hub_mapping') || "Real-time delivery hub mapping"}
           </Text>
         </View>
 
@@ -315,8 +316,8 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
               <Text className="text-rose-500 text-sm">🛡️</Text>
             </View>
             <View className="flex-1">
-              <Text className="text-[8px] font-black text-rose-500 uppercase tracking-[0.1em]">DONE</Text>
-              <Text className="text-xs font-black text-foreground uppercase italic">Fleet Auth</Text>
+              <Text className="text-[8px] font-black text-rose-500 uppercase tracking-[0.1em]">{translate('done') || "DONE"}</Text>
+              <Text className="text-xs font-black text-foreground uppercase italic">{translate('fleet_auth') || "Fleet Auth"}</Text>
             </View>
           </View>
 
@@ -325,8 +326,8 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
               <Text className="text-rose-500 text-sm">🧭</Text>
             </View>
             <View className="flex-1">
-              <Text className="text-[8px] font-black text-rose-500 uppercase tracking-[0.1em]">ACTIVE</Text>
-              <Text className="text-xs font-black text-foreground uppercase italic">Routing</Text>
+              <Text className="text-[8px] font-black text-rose-500 uppercase tracking-[0.1em]">{translate('active') || "ACTIVE"}</Text>
+              <Text className="text-xs font-black text-foreground uppercase italic">{translate('routing') || "Routing"}</Text>
             </View>
           </View>
         </View>
@@ -393,28 +394,28 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
             className="absolute top-4 right-4 flex-row items-center gap-1.5 bg-black/60 border px-2 py-1 rounded-lg z-[1000] pointer-events-none"
           >
             <View className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <Text className="text-[7px] font-black text-white uppercase tracking-widest">Stable Connection</Text>
+            <Text className="text-[7px] font-black text-white uppercase tracking-widest">{translate('stable_connection') || "Stable Connection"}</Text>
           </View>
 
           <View 
             style={{ borderColor: colors.primary + "33" }}
             className="absolute top-4 left-4 bg-black/60 border px-2 py-1 rounded-lg z-[1000] pointer-events-none"
           >
-            <Text className="text-[7px] font-black uppercase" style={{ color: colors.primary }}>Sector: ALPHA-6</Text>
+            <Text className="text-[7px] font-black uppercase" style={{ color: colors.primary }}>{translate('sector') || "Sector"}: ALPHA-6</Text>
           </View>
           
           <View 
             style={{ borderColor: colors.primary + "33" }}
             className="absolute bottom-4 left-4 bg-black/60 border px-2 py-1 rounded-lg z-[1000] pointer-events-none"
           >
-            <Text className="text-[7px] font-mono text-muted-foreground uppercase">REF: MAR-PB-NODE</Text>
+            <Text className="text-[7px] font-mono text-muted-foreground uppercase">{translate('ref') || "REF"}: MAR-PB-NODE</Text>
           </View>
 
           <View 
             style={{ borderColor: colors.primary + "33" }}
             className="absolute bottom-4 right-4 bg-black/60 border px-2 py-1 rounded-lg z-[1000] pointer-events-none"
           >
-            <Text className="text-[7px] font-mono text-white uppercase">TELEMETRY 042.8° NE</Text>
+            <Text className="text-[7px] font-mono text-white uppercase">{translate('telemetry') || "TELEMETRY"} 042.8° NE</Text>
           </View>
         </View>
       </View>
@@ -425,9 +426,9 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
   return (
     <View className="px-4 py-6 border-y border-white/5 bg-secondary/20">
       <View className="mb-4">
-        <Text className="text-xl font-black italic uppercase text-foreground">Live Delivery Map</Text>
+        <Text className="text-xl font-black italic uppercase text-foreground">{translate('live_delivery_map') || "Live Delivery Map"}</Text>
         <Text className="text-[9px] font-black uppercase tracking-[0.3em]" style={{ color: colors.primary }}>
-          Real-time delivery hub mapping
+          {translate('real_time_delivery_hub_mapping') || "Real-time delivery hub mapping"}
         </Text>
       </View>
 
@@ -438,8 +439,8 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
             <Text className="text-rose-500 text-sm">🛡️</Text>
           </View>
           <View className="flex-1">
-            <Text className="text-[8px] font-black text-rose-500 uppercase tracking-[0.1em]">DONE</Text>
-            <Text className="text-xs font-black text-foreground uppercase italic">Fleet Auth</Text>
+            <Text className="text-[8px] font-black text-rose-500 uppercase tracking-[0.1em]">{translate('done') || "DONE"}</Text>
+            <Text className="text-xs font-black text-foreground uppercase italic">{translate('fleet_auth') || "Fleet Auth"}</Text>
           </View>
         </View>
 
@@ -448,8 +449,8 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
             <Text className="text-rose-500 text-sm">🧭</Text>
           </View>
           <View className="flex-1">
-            <Text className="text-[8px] font-black text-rose-500 uppercase tracking-[0.1em]">ACTIVE</Text>
-            <Text className="text-xs font-black text-foreground uppercase italic">Routing</Text>
+            <Text className="text-[8px] font-black text-rose-500 uppercase tracking-[0.1em]">{translate('active') || "ACTIVE"}</Text>
+            <Text className="text-xs font-black text-foreground uppercase italic">{translate('routing') || "Routing"}</Text>
           </View>
         </View>
       </View>
@@ -574,8 +575,8 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
               })
             ) : (
               <View className="absolute inset-0 items-center justify-center">
-                <Text style={{ color: colors.primary }} className="text-[18px] font-black tracking-widest animate-pulse">RADAR SECURE</Text>
-                <Text className="text-muted-foreground text-[8px] uppercase tracking-widest mt-1">Andaman Fresh Catch Market</Text>
+                <Text style={{ color: colors.primary }} className="text-[18px] font-black tracking-widest animate-pulse">{translate('radar_secure') || "RADAR SECURE"}</Text>
+                <Text className="text-muted-foreground text-[8px] uppercase tracking-widest mt-1">{translate('andaman_fresh_catch_market') || "Andaman Fresh Catch Market"}</Text>
               </View>
             )}
           </View>
@@ -617,28 +618,28 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
           className="absolute top-4 right-4 flex-row items-center gap-1.5 bg-black/60 border px-2 py-1 rounded-lg z-30 pointer-events-none"
         >
           <View className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <Text className="text-[7px] font-black text-white uppercase tracking-widest">Stable Connection</Text>
+          <Text className="text-[7px] font-black text-white uppercase tracking-widest">{translate('stable_connection') || "Stable Connection"}</Text>
         </View>
 
         <View 
           style={{ borderColor: colors.primary + "33" }}
           className="absolute top-4 left-4 bg-black/60 border px-2 py-1 rounded-lg z-30 pointer-events-none"
         >
-          <Text className="text-[7px] font-black uppercase" style={{ color: colors.primary }}>Sector: ALPHA-6</Text>
+          <Text className="text-[7px] font-black uppercase" style={{ color: colors.primary }}>{translate('sector') || "Sector"}: ALPHA-6</Text>
         </View>
         
         <View 
           style={{ borderColor: colors.primary + "33" }}
           className="absolute bottom-4 left-4 bg-black/60 border px-2 py-1 rounded-lg z-30 pointer-events-none"
         >
-          <Text className="text-[7px] font-mono text-muted-foreground uppercase">REF: MAR-PB-NODE</Text>
+          <Text className="text-[7px] font-mono text-muted-foreground uppercase">{translate('ref') || "REF"}: MAR-PB-NODE</Text>
         </View>
 
         <View 
           style={{ borderColor: colors.primary + "33" }}
           className="absolute bottom-4 right-4 bg-black/60 border px-2 py-1 rounded-lg z-30 pointer-events-none"
         >
-          <Text className="text-[7px] font-mono text-white uppercase">TELEMETRY 042.8° NE</Text>
+          <Text className="text-[7px] font-mono text-white uppercase">{translate('telemetry') || "TELEMETRY"} 042.8° NE</Text>
         </View>
       </View>
     </View>

@@ -9,6 +9,7 @@ import Svg, { Path, Circle } from 'react-native-svg';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useHomeData } from '@/hooks/useHomeData';
 import { RECIPES_DB } from '@/constants/recipes';
+import { t } from '@/lib/i18n';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const HEADER_HEIGHT = SCREEN_HEIGHT * 0.42;
@@ -213,7 +214,7 @@ export default function RecipeDetailsScreen() {
             </Pressable>
             <View className="bg-black/50 border border-white/10 px-3 py-1.5 rounded-full backdrop-blur-md flex-row items-center gap-1.5">
               <MaterialCommunityIcons name="chef-hat" size={12} color={colors.primary} />
-              <Text className="text-[9px] font-black text-white uppercase tracking-widest">Recipe Active</Text>
+              <Text className="text-[9px] font-black text-white uppercase tracking-widest">{t('recipe_active') || "Recipe Active"}</Text>
             </View>
           </View>
 
@@ -242,7 +243,7 @@ export default function RecipeDetailsScreen() {
           <View className="space-y-4">
             <View className="flex-row items-center gap-2">
               <MaterialCommunityIcons name="heart-pulse" size={16} color={colors.primary} />
-              <Text className="text-sm font-black uppercase text-foreground tracking-widest">Efficiency Telemetry</Text>
+              <Text className="text-sm font-black uppercase text-foreground tracking-widest">{t('efficiency_telemetry') || "Efficiency Telemetry"}</Text>
             </View>
             
             <LinearGradient
@@ -254,8 +255,8 @@ export default function RecipeDetailsScreen() {
               
               <View className="flex-row justify-between items-center mb-4">
                 <View>
-                  <Text className="text-[10px] font-black uppercase text-slate-400">Omega-3 Concentration</Text>
-                  <Text className="text-lg font-black text-white italic mt-0.5">High Density (94%)</Text>
+                  <Text className="text-[10px] font-black uppercase text-slate-400">{t('omega3_concentration') || "Omega-3 Concentration"}</Text>
+                  <Text className="text-lg font-black text-white italic mt-0.5">{t('high_density_94') || "High Density (94%)"}</Text>
                 </View>
                 <View className="w-10 h-10 rounded-xl items-center justify-center bg-cyan-500/10 border border-cyan-500/20">
                   <MaterialCommunityIcons name="water-percent" size={20} color="#00d4ff" />
@@ -265,8 +266,8 @@ export default function RecipeDetailsScreen() {
               {/* Efficiency Progress Bar */}
               <View className="space-y-2">
                 <View className="flex-row justify-between text-[9px] font-black uppercase tracking-wider text-slate-400">
-                  <Text>Bio-absorption Index</Text>
-                  <Text>98% Optimal</Text>
+                  <Text>{t('bio_absorption_index') || "Bio-absorption Index"}</Text>
+                  <Text>{t('optimal_98') || "98% Optimal"}</Text>
                 </View>
                 <View className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
                   <LinearGradient
@@ -281,16 +282,16 @@ export default function RecipeDetailsScreen() {
 
               <View className="flex-row justify-between mt-5 pt-4 border-t border-white/5">
                 <View className="items-center flex-1">
-                  <Text className="text-[9px] font-black text-slate-500 uppercase">Protein</Text>
-                  <Text className="text-sm font-black text-emerald-400 mt-0.5">34g</Text>
+                  <Text className="text-[9px] font-black text-slate-500 uppercase">{t('protein') || "Protein"}</Text>
+                  <Text className="text-sm font-black text-emerald-400 mt-0.5">{t('protein_34g') || "34g"}</Text>
                 </View>
                 <View className="items-center flex-1 border-x border-white/5">
-                  <Text className="text-[9px] font-black text-slate-500 uppercase">Calories</Text>
-                  <Text className="text-sm font-black text-cyan-400 mt-0.5">320 kcal</Text>
+                  <Text className="text-[9px] font-black text-slate-500 uppercase">{t('calories') || "Calories"}</Text>
+                  <Text className="text-sm font-black text-cyan-400 mt-0.5">{t('kcal_320') || "320 kcal"}</Text>
                 </View>
                 <View className="items-center flex-1">
-                  <Text className="text-[9px] font-black text-slate-500 uppercase">Prep Level</Text>
-                  <Text className="text-sm font-black text-amber-400 mt-0.5">Medium</Text>
+                  <Text className="text-[9px] font-black text-slate-500 uppercase">{t('prep_level') || "Prep Level"}</Text>
+                  <Text className="text-sm font-black text-amber-400 mt-0.5">{t('medium') || "Medium"}</Text>
                 </View>
               </View>
             </LinearGradient>
@@ -300,7 +301,7 @@ export default function RecipeDetailsScreen() {
           <View className="space-y-4">
             <View className="flex-row items-center gap-2">
               <MaterialCommunityIcons name={"sparkles" as any} size={16} color={colors.primary} />
-              <Text className="text-sm font-black uppercase text-foreground tracking-widest">Required Elements</Text>
+              <Text className="text-sm font-black uppercase text-foreground tracking-widest">{t('required_elements') || "Required Elements"}</Text>
             </View>
             
             <LinearGradient
@@ -332,7 +333,7 @@ export default function RecipeDetailsScreen() {
           <View className="space-y-4">
             <View className="flex-row items-center gap-2">
               <MaterialCommunityIcons name="silverware-clean" size={16} color={colors.primary} />
-              <Text className="text-sm font-black uppercase text-foreground tracking-widest">Cooking Steps</Text>
+              <Text className="text-sm font-black uppercase text-foreground tracking-widest">{t('cooking_steps') || "Cooking Steps"}</Text>
             </View>
             
             <View className="space-y-4">

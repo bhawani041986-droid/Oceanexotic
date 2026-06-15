@@ -23,6 +23,9 @@ export default function OrderDetailsScreen() {
   const [reviewItem, setReviewItem] = useState<any | null>(null);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
+  const [eta, setEta] = useState<string>("35");
+  const [currentTemp, setCurrentTemp] = useState<string>("1.2");
+  const [currentNode, setCurrentNode] = useState<string>("Port Blair Phoenix Bay Hub");
   const [submitting, setSubmitting] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [pickingImage, setPickingImage] = useState(false);
@@ -57,6 +60,17 @@ export default function OrderDetailsScreen() {
       const data = await orderService.getUserOrderDetails(id);
       setOrder(data);
       setLoading(false);
+      
+      try {
+        const { data: fleetData } = await api.get(`/fleet?order_id=${id}`);
+        if (fleetData) {
+          if (fleetData.minutes_remaining) setEta(String(fleetData.minutes_remaining));
+          if (fleetData.current_temp) setCurrentTemp(String(fleetData.current_temp));
+          if (fleetData.agent_name) setCurrentNode(`Driver: ${fleetData.agent_name}`);
+        }
+      } catch (e) {
+        console.log("Telemetry check failed:", e);
+      }
     };
     load();
   }, [id]);
@@ -203,16 +217,16 @@ export default function OrderDetailsScreen() {
                 {t('delivery_radar')}
               </Text>
               <Text className="mt-0.5 text-[9px]" style={{ color: colors.textMuted }}>
-                {t('current_node')}: Port Blair Phoenix Bay Hub
+                {t('current_node')}: {currentNode}
               </Text>
             </View>
           </View>
           <View className="mt-4 flex-row flex-wrap items-center justify-between gap-2 border-t pt-3" style={{ borderTopColor: colors.border }}>
             <View className="flex-row items-center gap-1.5 rounded-full px-2 py-1" style={{ backgroundColor: "rgba(59,130,246,0.1)", borderWidth: 1, borderColor: "rgba(59,130,246,0.3)" }}>
               <View className="h-1.5 w-1.5 rounded-full bg-blue-400" />
-              <Text className="text-[9px] font-black uppercase text-blue-400">1.2°C {t('chilled')}</Text>
+              <Text className="text-[9px] font-black uppercase text-blue-400">{currentTemp}°C {t('chilled')}</Text>
             </View>
-            <Text className="text-[10px] font-black" style={{ color: colors.text }}>32 {t('mins_remaining')}</Text>
+            <Text className="text-[10px] font-black" style={{ color: colors.text }}>{eta} {t('mins_remaining')}</Text>
           </View>
         </View>
 
@@ -458,7 +472,7 @@ export default function OrderDetailsScreen() {
                 <View className="flex-1">
                   <Text className="text-sm font-bold" style={{ color: colors.text }}>{reviewItem.name}</Text>
                   <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
-                    Order: {id}
+                    {t('order') || "Order"}: {id}
                   </Text>
                 </View>
               </View>

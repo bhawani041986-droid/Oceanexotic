@@ -1262,7 +1262,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
          <div className="flex flex-col md:flex-row md:items-end justify-between gap-1 mb-4">
             <SectionTitle 
               title="Today's Catch" 
-              subtitle="Live Harbor Arrival • Freshness Guaranteed" 
+              subtitle="Fresh from the Harbor" 
             />
             
             <div className="flex bg-[var(--c-bg-alt)]/40 p-1 border border-[var(--foreground)]/5 rounded-2xl">
@@ -1376,7 +1376,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
          ) : (
             <div className="h-64 flex flex-col items-center justify-center border-2 border-dashed border-[var(--foreground)]/5 rounded-3xl opacity-40">
                <Fish className="w-12 h-12 mb-4" />
-               <p className="text-xs font-black uppercase tracking-widest">No Live Harbor Stock in this sector</p>
+               <p className="text-xs font-black uppercase tracking-widest">No Fresh Catch in this sector</p>
             </div>
          )}
       </section>

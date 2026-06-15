@@ -1,10 +1,12 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { translateArray } from '@/lib/translate';
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const area = searchParams.get('area');
+    const targetLang = request.headers.get('Accept-Language');
 
     let query = supabase
       .from('addons')
@@ -22,7 +24,13 @@ export async function GET(request: Request) {
       throw error;
     }
 
-    return NextResponse.json(addons || []);
+    const translated = await translateArray(
+      addons || [],
+      ['name', 'type'],
+      targetLang
+    );
+
+    return NextResponse.json(translated);
   } catch (error: any) {
     console.error("Addons List API Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });

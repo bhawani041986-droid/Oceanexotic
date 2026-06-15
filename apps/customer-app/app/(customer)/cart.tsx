@@ -85,7 +85,7 @@ export default function CartScreen() {
         {items.length === 0 ? (
           <View className="my-16 items-center">
             <Text className="text-xs font-black uppercase" style={{ color: colors.textMuted }}>{t('empty_cart')}</Text>
-            <Button label="SHOP HARVEST" onPress={() => router.push("/products")} className="mt-6" />
+            <Button label={t('shop_harvest') || "SHOP HARVEST"} onPress={() => router.push("/products")} className="mt-6" />
           </View>
         ) : (
           <>
@@ -127,7 +127,7 @@ export default function CartScreen() {
                             }}
                           >
                             <Text className="text-[9px] font-black uppercase" style={{ color: item.isMarinated ? colors.primary : colors.textMuted }}>
-                              🌶️ {item.isMarinated ? 'Marinated' : 'Add Marinade (+₹150)'}
+                              🌶️ {item.isMarinated ? (t('marinated') || 'Marinated') : (t('add_marinade') || 'Add Marinade (+₹150)')}
                             </Text>
                           </Pressable>
                         </View>
@@ -156,7 +156,7 @@ export default function CartScreen() {
                       <Text className="font-bold" style={{ color: colors.text }}>+</Text>
                     </Pressable>
                     <Pressable onPress={() => removeItem(item.id)} className="ml-auto">
-                      <Text className="text-[10px] font-bold text-danger">Remove</Text>
+                      <Text className="text-[10px] font-bold text-danger">{t('remove') || "Remove"}</Text>
                     </Pressable>
                   </View>
                 </View>
@@ -166,7 +166,7 @@ export default function CartScreen() {
             {/* RECOMMENDED ADD-ONS HORIZONTAL SHELF */}
             {addons.length > 0 && (
               <View className="mt-8">
-                <Text className="text-sm font-black uppercase italic" style={{ color: colors.text }}>Complete Your BBQ</Text>
+                <Text className="text-sm font-black uppercase italic" style={{ color: colors.text }}>{t('complete_your_bbq') || "Complete Your BBQ"}</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-3 flex-row gap-3">
                   {addons.map((addon) => {
                     const alreadyInCart = items.some(i => i.id === addon.id);
@@ -203,7 +203,7 @@ export default function CartScreen() {
                             style={{ backgroundColor: alreadyInCart ? colors.border : colors.primary }}
                           >
                             <Text className="text-[8px] font-black uppercase" style={{ color: alreadyInCart ? colors.textMuted : colors.bg }}>
-                              {alreadyInCart ? 'ADDED' : 'ADD'}
+                              {alreadyInCart ? (t('added') || 'ADDED') : (t('add') || 'ADD')}
                             </Text>
                           </Pressable>
                         </View>
@@ -227,11 +227,11 @@ export default function CartScreen() {
                   }}
                 >
                   <View className="flex-row justify-between">
-                    <Text className="text-[10px] font-black uppercase" style={{ color: colors.textMuted }}>Subtotal</Text>
+                    <Text className="text-[10px] font-black uppercase" style={{ color: colors.textMuted }}>{t('subtotal') || "Subtotal"}</Text>
                     <Text className="text-[11px] font-bold" style={{ color: colors.text }}>₹{subtotal.toLocaleString()}</Text>
                   </View>
                   <View className="flex-row justify-between border-b pb-2" style={{ borderBottomColor: colors.border }}>
-                    <Text className="text-[10px] font-black uppercase" style={{ color: colors.textMuted }}>Regulatory Tax (5%)</Text>
+                    <Text className="text-[10px] font-black uppercase" style={{ color: colors.textMuted }}>{t('regulatory_tax') || "Regulatory Tax (5%)"}</Text>
                     <Text className="text-[11px] font-bold" style={{ color: colors.primary }}>₹{tax.toLocaleString()}</Text>
                   </View>
                   <View className="flex-row justify-between pt-1">
@@ -247,7 +247,7 @@ export default function CartScreen() {
               onPress={() => router.push("/checkout" as never)}
               className="mt-4"
             />
-            <Button label="CLEAR CART" variant="ghost" onPress={clearCart} className="mt-3" />
+            <Button label={t('clear_cart') || "CLEAR CART"} variant="ghost" onPress={clearCart} className="mt-3" />
           </>
         )}
       </ScrollView>

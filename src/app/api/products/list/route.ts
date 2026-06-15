@@ -1,11 +1,12 @@
-import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { NextRequest, NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
+import { translateArray } from '@/lib/translate';
 
-export async function GET() {
+export const dynamic = 'force-dynamic';
+
+export async function GET(request: NextRequest) {
   try {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const targetLang = request.headers.get('Accept-Language');
 
     const { data: products, error } = await supabase
       .from('products')
@@ -32,7 +33,13 @@ export async function GET() {
       delivery: "90 MIN"
     }));
 
-    return NextResponse.json({ status: "success", products: mapped });
+    const translated = await translateArray(
+      mapped,
+      ['name', 'description', 'category', 'tagline', 'sellerName'],
+      targetLang
+    );
+
+    return NextResponse.json({ status: "success", products: translated });
   } catch (error: any) {
     console.error("Products List API Error:", error);
     return NextResponse.json({ status: "error", message: error.message }, { status: 500 });

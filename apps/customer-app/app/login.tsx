@@ -104,7 +104,8 @@ export default function LoginScreen() {
   const handleGoogleSignIn = async () => {
     try {
       const redirectUrl = Linking.createURL("oauth-callback");
-      const authUrl = `https://kyqmhibffbwoqlpdplfu.supabase.co/auth/v1/authorize?provider=google&redirect_to=https://oceanexotic.com/api/auth/callback?platform=mobile&redirect_uri=${encodeURIComponent(redirectUrl)}`;
+      const redirectTo = encodeURIComponent(`https://oceanexotic.com/api/auth/callback?platform=mobile&redirect_uri=${encodeURIComponent(redirectUrl)}`);
+      const authUrl = `https://kyqmhibffbwoqlpdplfu.supabase.co/auth/v1/authorize?provider=google&redirect_to=${redirectTo}`;
       
       const result = await WebBrowser.openAuthSessionAsync(authUrl, redirectUrl);
       
@@ -163,13 +164,13 @@ export default function LoginScreen() {
               >
                 <GoogleIcon />
                 <Text className="text-[#020617] font-black text-[12px] uppercase tracking-widest">
-                  Continue with Google
+                  {t('continue_with_google') || "Continue with Google"}
                 </Text>
               </Pressable>
 
               <View className="flex-row items-center justify-between my-2">
                 <View className="flex-1 h-[1px] bg-white/10" />
-                <Text className="text-[9px] font-black uppercase text-slate-500 tracking-widest mx-4">or use email</Text>
+                <Text className="text-[9px] font-black uppercase text-slate-500 tracking-widest mx-4">{t('or_use_email') || "or use email"}</Text>
                 <View className="flex-1 h-[1px] bg-white/10" />
               </View>
 
@@ -209,7 +210,7 @@ export default function LoginScreen() {
                   />
                   <View className="flex-row justify-end mt-2">
                     <Link href={"/forgot-password" as never} asChild>
-                      <Pressable><Text className="text-[10px] font-bold text-primary">FORGOT PASSWORD?</Text></Pressable>
+                      <Pressable><Text className="text-[10px] font-bold text-primary">{t('forgot_password') || "FORGOT PASSWORD?"}</Text></Pressable>
                     </Link>
                   </View>
                 </View>
@@ -229,7 +230,7 @@ export default function LoginScreen() {
               <Text className="text-center text-[11px] font-medium text-slate-400 mt-4">
                 New to the fleet?{" "}
                 <Link href={"/register" as never} asChild>
-                  <Pressable><Text className="font-bold text-white underline">REGISTER ACCOUNT</Text></Pressable>
+                  <Pressable><Text className="font-bold text-white underline">{t('register_account') || "REGISTER ACCOUNT"}</Text></Pressable>
                 </Link>
               </Text>
             </View>

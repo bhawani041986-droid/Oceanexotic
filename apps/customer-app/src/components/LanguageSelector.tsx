@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Pressable, Modal, FlatList, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useThemeColors } from '@/hooks/useThemeColors';
-import { setLanguage } from '@/lib/i18n';
+import { setLanguage, t } from '@/lib/i18n';
 import { useSettingsStore } from "@/store/settingsStore";
 
 const LANGUAGES = [
@@ -57,7 +57,7 @@ export function LanguageSelector() {
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.card, borderColor: colors.border }]}>
             <View style={[styles.modalHeader, { borderBottomColor: colors.border }]}>
-              <Text style={[styles.modalTitle, { color: colors.text }]}>Select Language</Text>
+              <Text style={[styles.modalTitle, { color: colors.text }]}>{t('select_language') || "Select Language"}</Text>
               <Pressable onPress={() => setModalVisible(false)} className="p-2">
                 <Ionicons name="close-outline" size={20} color={colors.text} />
               </Pressable>

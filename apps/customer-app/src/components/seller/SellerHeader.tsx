@@ -8,6 +8,7 @@ import { Logo } from "@/components/ui/Logo";
 import { useToast } from "@/components/ui/Toast";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { cn } from "@/lib/utils";
+import { t } from "@/lib/i18n";
 
 const MenuIcon = ({ color }: { color: string }) => (
   <Svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
@@ -92,7 +93,7 @@ export function SellerHeader() {
               className="text-[8px] font-black uppercase tracking-[0.1em] leading-none"
               style={{ color: primaryColor }}
             >
-              Merchant
+              {t('merchant') || "Merchant"}
             </Text>
             <Text 
               className="text-[7px] font-bold opacity-60 uppercase tracking-[0.05em] mt-0.5 max-w-[60px]"
@@ -171,17 +172,17 @@ export function SellerHeader() {
               >
                 <View className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
                 <View className="flex-1">
-                  <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>Active Merchant Node</Text>
-                  <Text className="text-[10px] font-bold text-foreground" numberOfLines={1}>{user?.email ?? "Guest Merchant"}</Text>
+                  <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>{t('active_merchant_node') || "Active Merchant Node"}</Text>
+                  <Text className="text-[10px] font-bold text-foreground" numberOfLines={1}>{user?.email ?? (t('guest_merchant') || "Guest Merchant")}</Text>
                 </View>
               </View>
 
               <View className="gap-2">
                 {[
-                  { label: "Fleet Dashboard", href: "/(seller)/dashboard" },
-                  { label: "Harbor Registry", href: "/(seller)/inventory" },
-                  { label: "Commission Line", href: "/(seller)/orders" },
-                  { label: "Merchant Settings", href: "/(seller)/profile" }
+                  { label: t('fleet_dashboard') || "Fleet Dashboard", href: "/(seller)/dashboard" },
+                  { label: t('harbor_registry') || "Harbor Registry", href: "/(seller)/inventory" },
+                  { label: t('commission_line') || "Commission Line", href: "/(seller)/orders" },
+                  { label: t('merchant_settings') || "Merchant Settings", href: "/(seller)/profile" }
                 ].map((item) => {
                   const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
                   return (
@@ -217,9 +218,9 @@ export function SellerHeader() {
                 }}
                 className="w-full py-4 rounded-xl border border-red-500/20 bg-red-500/10 items-center active:bg-red-500/20"
               >
-                <Text className="text-xs font-black uppercase tracking-widest text-red-500">Deauthorize Node</Text>
+                <Text className="text-xs font-black uppercase tracking-widest text-red-500">{t('deauthorize_node') || "Deauthorize Node"}</Text>
               </Pressable>
-              <Text className="text-[7px] font-black text-center uppercase tracking-widest text-muted-foreground opacity-40">OceanExotic Seller Protocol v1.0</Text>
+              <Text className="text-[7px] font-black text-center uppercase tracking-widest text-muted-foreground opacity-40">{t('seller_protocol') || "OceanExotic Seller Protocol v1.0"}</Text>
             </View>
           </View>
         </View>

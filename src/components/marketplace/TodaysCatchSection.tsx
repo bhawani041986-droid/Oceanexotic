@@ -151,7 +151,7 @@ export default async function TodaysCatchSection() {
             <div className="flex items-center gap-2">
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <p className="text-[9px] md:text-[10px] font-black text-emerald-400 uppercase tracking-[0.3em]">
-                Live Harbor Inventory · {data.catch_date}
+                Fresh Catch · {data.catch_date}
               </p>
             </div>
             <h2 className="text-2xl md:text-4xl font-black text-[var(--foreground)] tracking-tight uppercase italic">

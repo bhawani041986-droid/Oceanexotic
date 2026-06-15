@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import Svg, { Path, Circle } from "react-native-svg";
 import api from "@/services/api";
 import { useAuthStore } from "@/store/authStore";
+import { t } from "@/lib/i18n";
 
 function BackIcon({ color }: { color: string }) {
   return (
@@ -172,7 +173,7 @@ export default function CustomerChatScreen() {
           contentContainerStyle={{ padding: 16, paddingBottom: 120 }}
         >
           <Text className="text-xs font-black text-white uppercase tracking-tight italic ml-1 mb-4">
-            Active Chats
+            {t('active_chats') || "Active Chats"}
           </Text>
 
           {loadingConv ? (
@@ -180,7 +181,7 @@ export default function CustomerChatScreen() {
           ) : conversations.length === 0 ? (
             <View className="py-16 items-center justify-center opacity-30 border border-white/5 rounded-2xl bg-slate-900/20">
               <Text className="text-[10px] font-bold text-white uppercase tracking-widest italic">
-                No active chats found
+                {t('no_active_chats_found') || "No active chats found"}
               </Text>
             </View>
           ) : (

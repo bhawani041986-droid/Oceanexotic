@@ -8,6 +8,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Svg, { Path, Circle } from 'react-native-svg';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { RECIPES_DB, Recipe } from '@/constants/recipes';
+import { t } from '@/lib/i18n';
 
 // Premium stylized outline fish SVG decorator
 const FishDecoratorSVG = ({ style, color }: { style?: any; color: string }) => (
@@ -91,10 +92,10 @@ export default function RecipesListScreen() {
         </Pressable>
         <View className="flex-1">
           <Text className="text-[10px] font-black uppercase tracking-[0.2em]" style={{ color: colors.primary }}>
-            OceanExotic Chef's Recipes
+            {t('oceanexotic_chefs_recipes') || "OceanExotic Chef's Recipes"}
           </Text>
           <Text className="text-xl font-black text-white uppercase italic">
-            Chef's Recipes
+            {t('chefs_recipes') || "Chef's Recipes"}
           </Text>
         </View>
         <View className="w-10 h-10 rounded-xl items-center justify-center bg-primary/10 border border-primary/20">
@@ -118,7 +119,7 @@ export default function RecipesListScreen() {
             <TextInput
               value={search}
               onChangeText={setSearch}
-              placeholder="Search fish, recipes or ingredients..."
+              placeholder={t('search_placeholder') || "Search fish, recipes or ingredients..."}
               placeholderTextColor={colors.isDark ? '#5A6E85' : '#94A3B8'}
               className="flex-1 text-sm font-medium text-white"
               autoCorrect={false}
@@ -132,7 +133,7 @@ export default function RecipesListScreen() {
 
           {/* Prep Type Filters */}
           <View className="space-y-2">
-            <Text className="text-[9px] font-black uppercase tracking-widest text-slate-400">Preparation Style</Text>
+            <Text className="text-[9px] font-black uppercase tracking-widest text-slate-400">{t('preparation_style') || "Preparation Style"}</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
               {preps.map((p) => {
                 const active = selectedPrep === p;
@@ -160,7 +161,7 @@ export default function RecipesListScreen() {
 
           {/* Regional Style Filters */}
           <View className="space-y-2">
-            <Text className="text-[9px] font-black uppercase tracking-widest text-slate-400">Cuisine / Region</Text>
+            <Text className="text-[9px] font-black uppercase tracking-widest text-slate-400">{t('cuisine_region') || "Cuisine / Region"}</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
               {regions.map((r) => {
                 const active = selectedRegion === r;
@@ -244,10 +245,10 @@ export default function RecipesListScreen() {
                   
                   <View className="flex-row justify-between items-center mt-1">
                     <Text className="text-[9px] font-black text-slate-400 uppercase">
-                      Seafood: <Text style={{ color: colors.primary }}>{recipe.fishType}</Text>
+                      {t('seafood') || "Seafood:"} <Text style={{ color: colors.primary }}>{recipe.fishType}</Text>
                     </Text>
                     <Text className="text-[9px] font-black uppercase tracking-widest text-primary">
-                      VIEW RECIPE ➜
+                      {t('view_recipe') || "VIEW RECIPE ➜"}
                     </Text>
                   </View>
                 </View>
@@ -267,7 +268,7 @@ export default function RecipesListScreen() {
             <View className="py-16 items-center justify-center border-2 border-dashed border-white/5 rounded-3xl opacity-50">
               <MaterialCommunityIcons name="fish-off" size={32} color={colors.textMuted} />
               <Text className="text-xs font-black uppercase tracking-widest text-muted-foreground mt-4">
-                No Matching Recipes Found
+                {t('no_matching_recipes_found') || "No Matching Recipes Found"}
               </Text>
             </View>
           )}

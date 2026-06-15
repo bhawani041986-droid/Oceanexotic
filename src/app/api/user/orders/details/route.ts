@@ -1,10 +1,12 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { translateObject, translateArray } from '@/lib/translate';
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
+    const targetLang = request.headers.get('Accept-Language');
 
     if (!id) return NextResponse.json({ error: "Missing Order ID" }, { status: 400 });
 
@@ -54,13 +56,21 @@ export async function GET(request: Request) {
     const shipping = 0; // Complimentary standard delivery
     const tax = Math.round(Math.max(0, total - subtotal - shipping) * 100) / 100;
 
+    let translatedItems = itemsWithDetails;
+    let translatedOrder = order;
+
+    if (targetLang && !targetLang.toLowerCase().startsWith("en")) {
+      translatedItems = await translateArray(itemsWithDetails, ['product_name'], targetLang);
+      translatedOrder = await translateObject(order, ['delivery_address', 'delivery_area'], targetLang);
+    }
+
     return NextResponse.json({
-      ...order,
+      ...translatedOrder,
       subtotal,
       shipping,
       tax,
       total,
-      items: itemsWithDetails
+      items: translatedItems
     });
   } catch (error: any) {
     console.error("User Order Details API Error:", error);

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, Text, Animated, Easing, Dimensions } from "react-native";
 import { useThemeColors } from "@/hooks/useThemeColors";
 
@@ -11,23 +11,31 @@ export function TickerMarquee({ items }: TickerMarqueeProps) {
   const screenWidth = Dimensions.get("window").width;
   const animatedValue = useRef(new Animated.Value(screenWidth)).current;
 
+  const [contentWidth, setContentWidth] = useState(0);
+
   useEffect(() => {
-    if (!items || items.length === 0) return;
+    if (!items || items.length === 0 || contentWidth === 0) return;
 
-    const runMarquee = () => {
-      animatedValue.setValue(screenWidth);
-      Animated.loop(
-        Animated.timing(animatedValue, {
-          toValue: -screenWidth - (items.length * 200),
-          duration: Math.max(12000, items.length * 3500),
-          easing: Easing.linear,
-          useNativeDriver: true,
-        })
-      ).start();
+    const speed = 40; // pixels per second
+    const distance = screenWidth + contentWidth;
+    const duration = (distance / speed) * 1000;
+
+    const loop = Animated.loop(
+      Animated.timing(animatedValue, {
+        toValue: -contentWidth,
+        duration: duration,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    );
+
+    animatedValue.setValue(screenWidth);
+    loop.start();
+
+    return () => {
+      loop.stop();
     };
-
-    runMarquee();
-  }, [items, screenWidth]);
+  }, [items, screenWidth, contentWidth, animatedValue]);
 
   if (!items || items.length === 0) return null;
 
@@ -37,6 +45,7 @@ export function TickerMarquee({ items }: TickerMarqueeProps) {
       style={{ backgroundColor: colors.primary, borderColor: "rgba(0,0,0,0.1)", height: 26 }}
     >
       <Animated.View
+        onLayout={(e) => setContentWidth(e.nativeEvent.layout.width)}
         style={{
           transform: [{ translateX: animatedValue }],
           flexDirection: "row",

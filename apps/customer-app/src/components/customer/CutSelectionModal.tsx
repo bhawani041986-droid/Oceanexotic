@@ -11,6 +11,7 @@ import { useState, useEffect } from "react";
 import type { CutOption, TodaysCatchItem } from "@/services/homeService";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
+import { t } from "@/lib/i18n";
 
 interface CutSelectionModalProps {
   visible: boolean;
@@ -48,10 +49,10 @@ export function CutSelectionModal({
       <View className="flex-1 justify-end bg-black/70">
         <View className="max-h-[80%] rounded-t-3xl border border-white/10 bg-card p-6">
           <Text className="text-lg font-black uppercase italic text-foreground">
-            Select Cut — {product?.name}
+            {t('select_cut') || "Select Cut"} — {product?.name}
           </Text>
           <Text className="mt-1 text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-            Whole • Curry • Steak • Fillet • Cleaned options
+            {t('cut_options_subtitle') || "Whole • Curry • Steak • Fillet • Cleaned options"}
           </Text>
 
           {loading ? (
@@ -75,7 +76,7 @@ export function CutSelectionModal({
               ))}
               {options.length === 0 ? (
                 <Text className="py-6 text-center text-xs text-muted-foreground">
-                  No cut options in registry for this harvest.
+                  {t('no_cut_options') || "No cut options in registry for this harvest."}
                 </Text>
               ) : null}
             </ScrollView>
@@ -84,7 +85,7 @@ export function CutSelectionModal({
           {/* Weight Selector UI */}
           {!loading && options.length > 0 && (
             <View className="mt-2 mb-4 flex-row items-center justify-between rounded-xl border border-white/10 bg-background/50 px-4 py-3">
-              <Text className="text-sm font-bold uppercase text-foreground">Weight</Text>
+              <Text className="text-sm font-bold uppercase text-foreground">{t('weight') || "Weight"}</Text>
               <View className="flex-row items-center gap-4">
                 <TouchableOpacity onPress={handleDecrease} className="h-8 w-8 items-center justify-center rounded-full bg-white/10">
                   <Text className="text-white text-lg">-</Text>
@@ -98,9 +99,9 @@ export function CutSelectionModal({
           )}
 
           <View className="flex-row gap-3">
-            <Button label="CANCEL" variant="ghost" onPress={onClose} className="flex-1" />
+            <Button label={t('cancel') || "CANCEL"} variant="ghost" onPress={onClose} className="flex-1" />
             <Button
-              label="ADD TO CART"
+              label={t('add_to_cart') || "ADD TO CART"}
               onPress={() => onConfirm(weight)}
               disabled={!selected || loading}
               className="flex-1"

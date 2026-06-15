@@ -118,13 +118,13 @@ export default function CheckoutScreen() {
       <View className="flex-1 bg-background items-center justify-center px-8">
         <Text className="text-6xl mb-6">🛍️</Text>
         <Text className="text-2xl font-black uppercase italic text-foreground text-center">
-          Your Cart is Empty
+          {t('your_cart_is_empty') || "Your Cart is Empty"}
         </Text>
         <Text className="text-sm text-muted-foreground text-center mt-3 mb-8">
-          Add fresh harbor catches before proceeding to checkout.
+          {t('add_fresh_harbor_catches') || "Add fresh harbor catches before proceeding to checkout."}
         </Text>
         <Button
-          label="GO TO MARKET"
+          label={t('go_to_market') || "GO TO MARKET"}
           onPress={() => router.replace("/products")}
           className="w-full"
         />
@@ -142,14 +142,14 @@ export default function CheckoutScreen() {
         className="px-4 pt-14 pb-4 border-b border-white/5"
       >
         <Text className="text-[9px] font-black uppercase tracking-[0.3em] mb-3" style={{ color: primaryColor }}>
-          Secure Checkout
+          {t('secure_checkout') || "Secure Checkout"}
         </Text>
         <View className="flex-row items-center gap-0">
           {(["1", "2", "3"] as const).map((s, idx) => {
             const stepNum = (idx + 1) as Step;
             const done = activeStep > stepNum;
             const active = activeStep === stepNum;
-            const labels = ["Shipping", "Payment", "Review"];
+            const labels = [t('shipping') || "Shipping", t('payment') || "Payment", t('review') || "Review"];
             return (
               <View key={s} className="flex-row items-center flex-1">
                 <Pressable
@@ -210,7 +210,7 @@ export default function CheckoutScreen() {
         {/* ══ STEP 1: Shipping Address ════════════════════════════════ */}
         <StepCard
           stepNum={1}
-          label="Shipping Address"
+          label={t('shipping_address') || "Shipping Address"}
           active={activeStep === 1}
           done={activeStep > 1}
           summary={
@@ -224,7 +224,7 @@ export default function CheckoutScreen() {
             <View className="py-10 items-center gap-3">
               <ActivityIndicator color={primaryColor} />
               <Text className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
-                Syncing Address Vault...
+                {t('syncing_address_vault') || "Syncing Address Vault..."}
               </Text>
             </View>
           ) : savedAddresses.length > 0 ? (
@@ -279,13 +279,13 @@ export default function CheckoutScreen() {
 
               <View className="flex-row justify-between mt-2 gap-3">
                 <Button
-                  label="+ ADD ADDRESS"
+                  label={t('add_address') || "+ ADD ADDRESS"}
                   variant="ghost"
                   onPress={() => router.push("/profile")}
                   className="flex-1 border border-white/10"
                 />
                 <Button
-                  label="USE THIS ADDRESS"
+                  label={t('use_this_address') || "USE THIS ADDRESS"}
                   onPress={() => {
                     if (!selectedAddress) { toast("Select an address.", "error"); return; }
                     setActiveStep(2);
@@ -299,10 +299,10 @@ export default function CheckoutScreen() {
             <View className="py-10 items-center gap-4 border-2 border-dashed border-white/10 rounded-xl">
               <Text className="text-4xl">📍</Text>
               <Text className="text-sm font-bold text-muted-foreground text-center">
-                No addresses found in your vault.
+                {t('no_addresses_found_in_vault') || "No addresses found in your vault."}
               </Text>
               <Button
-                label="+ ADD IN PROFILE"
+                label={t('add_in_profile') || "+ ADD IN PROFILE"}
                 variant="ghost"
                 onPress={() => router.push("/profile")}
                 className="border border-white/10"
@@ -314,10 +314,10 @@ export default function CheckoutScreen() {
         {/* ══ STEP 2: Payment Method ══════════════════════════════════ */}
         <StepCard
           stepNum={2}
-          label="Payment Method"
+          label={t('payment_method') || "Payment Method"}
           active={activeStep === 2}
           done={activeStep > 2}
-          summary="Cash on Delivery"
+          summary={t('cash_on_delivery') || "Cash on Delivery"}
           onEdit={() => activeStep > 2 ? setActiveStep(2) : undefined}
         >
           {/* COD is the only method (mirrors web) */}
@@ -331,10 +331,10 @@ export default function CheckoutScreen() {
             <Text className="text-3xl">🚚</Text>
             <View className="flex-1">
               <Text className="font-black uppercase italic text-foreground">
-                Cash on Delivery
+                {t('cash_on_delivery') || "Cash on Delivery"}
               </Text>
               <Text className="text-xs text-muted-foreground mt-1">
-                Pay with cash upon delivery of your items
+                {t('pay_with_cash_upon_delivery') || "Pay with cash upon delivery of your items"}
               </Text>
             </View>
             <View className="w-5 h-5 rounded-full items-center justify-center" style={{ backgroundColor: primaryColor }}>
@@ -343,7 +343,7 @@ export default function CheckoutScreen() {
           </View>
           <View className="flex-row justify-end mt-4">
             <Button
-              label="CONTINUE"
+              label={t('continue') || "CONTINUE"}
               onPress={() => setActiveStep(3)}
               className="min-w-[140px]"
             />
@@ -353,7 +353,7 @@ export default function CheckoutScreen() {
         {/* ══ STEP 3: Review & Place Order ═══════════════════════════ */}
         <StepCard
           stepNum={3}
-          label="Review Items & Shipping"
+          label={t('review_items_shipping') || "Review Items & Shipping"}
           active={activeStep === 3}
           done={false}
         >
@@ -401,19 +401,19 @@ export default function CheckoutScreen() {
           {/* Order Total */}
           <View className="bg-secondary/40 border border-white/10 rounded-xl p-4 mb-6 gap-2">
             <View className="flex-row justify-between">
-              <Text className="text-xs text-muted-foreground">Subtotal</Text>
+              <Text className="text-xs text-muted-foreground">{t('subtotal') || "Subtotal"}</Text>
               <Text className="text-xs font-bold text-foreground">₹{subtotal.toLocaleString()}</Text>
             </View>
             <View className="flex-row justify-between">
-              <Text className="text-xs text-muted-foreground">Regulatory Tax (5%)</Text>
+              <Text className="text-xs text-muted-foreground">{t('regulatory_tax') || "Regulatory Tax (5%)"}</Text>
               <Text className="text-xs font-bold" style={{ color: primaryColor }}>₹{tax.toLocaleString()}</Text>
             </View>
             <View className="flex-row justify-between">
-              <Text className="text-xs text-muted-foreground">Shipping &amp; Handling</Text>
-              <Text className="text-xs font-bold text-emerald-400">FREE</Text>
+              <Text className="text-xs text-muted-foreground">{t('shipping_and_handling') || "Shipping & Handling"}</Text>
+              <Text className="text-xs font-bold text-emerald-400">{t('free') || "FREE"}</Text>
             </View>
             <View className="border-t border-white/10 pt-2 flex-row justify-between">
-              <Text className="text-sm font-black uppercase text-foreground">Order Total</Text>
+              <Text className="text-sm font-black uppercase text-foreground">{t('order_total') || "Order Total"}</Text>
               <Text className="text-lg font-black italic" style={{ color: primaryColor }}>
                 ₹{grandTotal.toLocaleString()}
               </Text>
@@ -430,7 +430,7 @@ export default function CheckoutScreen() {
               }}
             >
               <Text className="text-[8px] font-black uppercase tracking-widest mb-1" style={{ color: primaryColor }}>
-                Delivering to
+                {t('delivering_to') || "Delivering to"}
               </Text>
               <Text className="text-sm font-black text-foreground">
                 {selectedAddress.hotel_name}
@@ -448,13 +448,13 @@ export default function CheckoutScreen() {
           <View className="bg-secondary/40 border border-white/10 rounded-2xl p-6 items-center gap-4">
             <Text className="text-3xl">🛡️</Text>
             <Text className="text-[10px] font-black uppercase tracking-widest text-foreground italic text-center">
-              Confirm Delivery Address
+              {t('confirm_delivery_address') || "Confirm Delivery Address"}
             </Text>
             <Text className="text-[10px] text-muted-foreground italic text-center leading-relaxed">
-              By finalizing, you authorize the secure delivery of fresh seafood to your address.
+              {t('by_finalizing_you_authorize_delivery') || "By finalizing, you authorize the secure delivery of fresh seafood to your address."}
             </Text>
             <Button
-              label={isPlacing ? "PROCESSING..." : "PLACE ORDER"}
+              label={isPlacing ? (t('processing') || "PROCESSING...") : (t('place_order') || "PLACE ORDER")}
               onPress={handlePlaceOrder}
               disabled={isPlacing}
               className="w-full"
@@ -476,7 +476,7 @@ export default function CheckoutScreen() {
         </View>
         {activeStep === 3 ? (
           <Button
-            label={isPlacing ? "PROCESSING..." : "PLACE YOUR ORDER"}
+            label={isPlacing ? (t('processing') || "PROCESSING...") : (t('place_your_order') || "PLACE YOUR ORDER")}
             onPress={handlePlaceOrder}
             disabled={isPlacing || !selectedAddress}
             className="w-full"
@@ -484,7 +484,7 @@ export default function CheckoutScreen() {
         ) : (
           <View className="w-full py-3 rounded-xl border border-white/10 bg-secondary/40 items-center">
             <Text className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
-              Complete steps above to place order
+              {t('complete_steps_above_to_place_order') || "Complete steps above to place order"}
             </Text>
           </View>
         )}
@@ -564,7 +564,7 @@ function StepCard({ stepNum, label, active, done, summary, onEdit, children }: S
         {done && onEdit && (
           <Pressable onPress={onEdit} className="px-2 py-1">
             <Text className="text-[9px] font-black uppercase" style={{ color: primaryColor }}>
-              Change
+              {t('change') || "Change"}
             </Text>
           </Pressable>
         )}
