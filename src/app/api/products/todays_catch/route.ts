@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
 import { translateArray } from '@/lib/translate';
 
 export const dynamic = 'force-dynamic';
@@ -7,9 +7,6 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   try {
     const targetLang = request.nextUrl.searchParams.get('lang') || request.headers.get('Accept-Language');
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
     
     // We do a manual join because there's no FK constraints guaranteeing products relation in Supabase schema
     const { data: catches, error } = await supabase
