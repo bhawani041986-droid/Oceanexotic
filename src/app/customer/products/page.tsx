@@ -451,6 +451,14 @@ function ProductListingContent() {
     setCurrentPage(1);
   }, [activeTab, searchQuery]);
 
+  const dynamicTickerItems = React.useMemo(() => {
+    const couponTickerItems = activeCoupons.map((coupon: any) => 
+      `🔥 USE CODE ${coupon.code} FOR ${coupon.type === 'PERCENTAGE' ? `${coupon.value}%` : `₹${coupon.value}`} OFF!${coupon.min_purchase > 0 ? ` (Min ₹${coupon.min_purchase})` : ''}`
+    );
+    const combined = [...couponTickerItems, ...TICKER_ITEMS];
+    return [...combined, ...combined];
+  }, [activeCoupons]);
+
   if (!mounted || isLoading) {
     return (
       <div className="bg-[var(--c-bg)] min-h-screen flex items-center justify-center">
@@ -467,7 +475,7 @@ function ProductListingContent() {
       {/* 1.1 LIVE HARVEST TICKER (SCARCITY & URGENCY) */}
       <div className="sticky top-16 md:top-20 left-0 right-0 z-[90] bg-[var(--c-primary)] h-8 md:h-10 flex items-center overflow-hidden border-y border-[var(--foreground)]/10">
          <div className="flex animate-marquee whitespace-nowrap gap-10 md:gap-20">
-            {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
+            {dynamicTickerItems.map((item, i) => (
                <span key={i} className="text-[7px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-[0.2em] italic flex items-center gap-2">
                   <div className="w-1 h-1 rounded-full bg-white animate-pulse" /> {item}
                </span>

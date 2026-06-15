@@ -5,22 +5,40 @@ function getSupabase() {
   return supabase;
 }
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const supabase = getSupabase();
-    if (!supabase) return NextResponse.json({ status: "success", content: [] });
+    if (!supabase) {
+      return new NextResponse(JSON.stringify({ status: "success", content: [] }), {
+        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store, max-age=0, must-revalidate' }
+      });
+    }
 
     const { data, error } = await supabase.from('coupons').select('*').order('created_at', { ascending: false });
 
     if (error) {
       // If table doesn't exist yet, just return empty array
-      if (error.code === '42P01') return NextResponse.json({ status: "success", content: [] });
-      return NextResponse.json({ status: "error", message: error.message }, { status: 500 });
+      if (error.code === '42P01') {
+        return new NextResponse(JSON.stringify({ status: "success", content: [] }), {
+          headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store, max-age=0, must-revalidate' }
+        });
+      }
+      return new NextResponse(JSON.stringify({ status: "error", message: error.message }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store, max-age=0, must-revalidate' }
+      });
     }
 
-    return NextResponse.json({ status: "success", content: data });
+    return new NextResponse(JSON.stringify({ status: "success", content: data }), {
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store, max-age=0, must-revalidate' }
+    });
   } catch (error: any) {
-    return NextResponse.json({ status: "error", message: error.message }, { status: 500 });
+    return new NextResponse(JSON.stringify({ status: "error", message: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store, max-age=0, must-revalidate' }
+    });
   }
 }
 

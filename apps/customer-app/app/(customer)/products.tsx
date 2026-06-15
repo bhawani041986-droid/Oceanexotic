@@ -15,6 +15,7 @@ import { useProductSearch, useProducts } from "@/hooks/useProducts";
 import { ProductCard } from "@/components/customer/ProductCard";
 import { SectionTitle } from "@/components/customer/SectionTitle";
 import { CutSelectionModal } from "@/components/customer/CutSelectionModal";
+import { TickerMarquee } from "@/components/customer/TickerMarquee";
 import { useCartStore } from "@/store/cartStore";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useToast } from "@/components/ui/Toast";
@@ -193,6 +194,37 @@ export default function ProductsScreen() {
       .catch(err => console.error(err));
   }, []);
 
+  const [activeCoupons, setActiveCoupons] = useState<any[]>([]);
+  useEffect(() => {
+    api.get("/system/coupons")
+      .then(({ data }) => {
+        if (data.status === "success" && data.content) {
+          const valid = data.content.filter((c: any) => {
+            if (c.status !== 'ACTIVE') return false;
+            if (c.usage_limit && c.usage_count >= c.usage_limit) return false;
+            if (c.expiry_date && new Date(c.expiry_date) < new Date()) return false;
+            return true;
+          });
+          setActiveCoupons(valid);
+        }
+      })
+      .catch(err => console.error(err));
+  }, []);
+
+  const dynamicTickerItems = useMemo(() => {
+    const couponTicker = activeCoupons.map((c: any) => 
+      `🔥 ${t('use_code')} ${c.code} ${t('for_text')} ${c.type === 'PERCENTAGE' ? `${c.value}% ${t('off_text')}` : `₹${c.value} ${t('off_text')}`}!${c.min_purchase > 0 ? ` (${t('min_text')} ₹${c.min_purchase})` : ''}`
+    );
+    const staticTicker = [
+      "⚡ FLASH DEAL: Tiger Prawns from Havelock just arrived",
+      "🚢 NEW ARRIVAL: Fresh catch from 'Andaman Queen' docking in 20m",
+      "🔥 TRENDING: Red Snapper demand is high today",
+      "🛡️ QUALITY: Freshness guaranteed for all seafood",
+      "⚓ STORE UPDATE: Port Blair hub is fully stocked"
+    ];
+    return [...couponTicker, ...staticTicker];
+  }, [activeCoupons]);
+
   const showLayers = activeTab === "All Seafood" && !searchQuery.trim();
   const bestsellers = useMemo(() => displayList.slice(0, 8), [displayList]);
   const readyToCook = useMemo(() => displayList.filter(p => 
@@ -246,6 +278,7 @@ export default function ProductsScreen() {
 
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
+      <TickerMarquee items={dynamicTickerItems} />
       <ScrollView
         className="flex-1"
         contentContainerClassName="pb-28 px-4 pt-2"
@@ -267,6 +300,32 @@ export default function ProductsScreen() {
             color: colors.text 
           }}
         />
+
+        {activeCoupons.length > 0 && (
+          <View 
+            className="mt-4 overflow-hidden rounded-2xl border p-4 relative" 
+            style={{ backgroundColor: `${colors.primary}0D`, borderColor: `${colors.primary}33` }}
+          >
+            <View className="flex-row items-center justify-between gap-3">
+              <View className="flex-1 gap-1">
+                <View className="self-start rounded-full px-2 py-0.5 bg-primary">
+                  <Text className="text-[7px] font-black uppercase tracking-widest text-black">{t('exclusive_offer')}</Text>
+                </View>
+                <Text className="text-sm font-black uppercase italic" style={{ color: colors.text }}>
+                  {t('save_text')} <Text style={{ color: colors.primary }}>{activeCoupons[0].type === 'PERCENTAGE' ? `${activeCoupons[0].value}%` : `₹${activeCoupons[0].value}`}</Text> {t('today_text')}
+                </Text>
+                <Text className="text-[8px] font-medium" style={{ color: colors.textMuted }}>
+                  {t('apply_code_at_checkout')}{activeCoupons[0].min_purchase > 0 && ` ${t('min_order')}: ₹${activeCoupons[0].min_purchase}.`}
+                </Text>
+              </View>
+              
+              <View className="items-center bg-slate-900 border border-white/10 rounded-xl p-2.5 min-w-[100px]">
+                <Text className="text-[6px] font-black uppercase tracking-widest text-slate-400 italic">{t('promo_code')}</Text>
+                <Text className="text-xs font-black tracking-[0.15em] mt-1 text-primary">{activeCoupons[0].code}</Text>
+              </View>
+            </View>
+          </View>
+        )}
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
           {TABS.map((tab) => {

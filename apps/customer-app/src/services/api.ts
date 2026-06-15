@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import { FULL_API_URL } from "@/config/api";
 import { clearAuthStorage, getAuthToken } from "@/lib/storage";
 import { useAuthStore } from "@/store/authStore";
+import { useSettingsStore } from "@/store/settingsStore";
 
 const api = axios.create({
   baseURL: FULL_API_URL,
@@ -16,6 +17,15 @@ api.interceptors.request.use(async (config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  
+  // Attach current selected language in headers for server-side translation
+  try {
+    const currentLang = useSettingsStore.getState().language || "en";
+    config.headers["Accept-Language"] = currentLang;
+  } catch (err) {
+    console.error("Failed to attach Accept-Language header:", err);
+  }
+
   // Strip leading slash if URL is relative to prevent Axios discarding the path of baseURL
   if (config.url && config.url.startsWith("/")) {
     config.url = config.url.substring(1);

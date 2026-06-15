@@ -1,10 +1,12 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { translateArray } from '@/lib/translate';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const targetLang = request.nextUrl.searchParams.get('lang') || request.headers.get('Accept-Language');
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     const supabase = createClient(supabaseUrl, supabaseKey);
@@ -41,7 +43,13 @@ export async function GET() {
       };
     });
 
-    return NextResponse.json({ status: "success", items: mapped });
+    const translated = await translateArray(
+      mapped,
+      ['name', 'seller_name', 'harbor_node', 'batch_label', 'freshness_label'],
+      targetLang
+    );
+
+    return NextResponse.json({ status: "success", items: translated });
   } catch (error: any) {
     console.error("Todays Catch API Error:", error);
     return NextResponse.json({ status: "error", message: error.message }, { status: 500 });

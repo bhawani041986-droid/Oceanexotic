@@ -26,6 +26,7 @@ import { CutSelectionModal } from "@/components/customer/CutSelectionModal";
 import { MaritimeWaveDivider } from "@/components/customer/MaritimeWaveDivider";
 import { AndamanMaritimeTelemetry } from "@/components/customer/AndamanMaritimeTelemetry";
 import { OceanReelsFeed } from "@/components/customer/OceanReelsFeed";
+import { AnnouncementBar } from "@/components/customer/AnnouncementBar";
 import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
 import { homeService, type CutOption, type TodaysCatchItem } from "@/services/homeService";
@@ -271,6 +272,7 @@ export default function CustomerHomeScreen() {
 
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
+      <AnnouncementBar />
       <ScrollView
         className="flex-1"
         contentContainerClassName="pb-28 pt-2"
