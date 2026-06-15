@@ -45,7 +45,6 @@ function AgentTrackingContent() {
   const [missionState, setMissionState] = React.useState<MissionState>(MissionState.NOT_STARTED);
   const [isSyncing, setIsSyncing] = React.useState(true);
   const [orderInfo, setOrderInfo] = React.useState<any>(null);
-  const [mapMode, setMapMode] = React.useState<'tactical' | 'satellite'>('tactical');
 
   // OTP Verification States
   const [otpInput, setOtpInput] = React.useState("");
@@ -148,125 +147,15 @@ function AgentTrackingContent() {
   ); }, [coords]
   );
 
-  const initMap = React.useCallback(() => {
-    const L = (window as any).L;
-    const mapContainer = document.getElementById('agent-tactical-map'
-  );
-    if (!L || !mapContainer || mapRef.current) return;
-    mapRef.current = L.map('agent-tactical-map', { zoomControl: false }).setView([coords.lat, coords.lng], 16
-  );
-    
-    // OpenStreetMap BY DEFAULT FOR CLEAR VISIBILITY
-    tileLayerRef.current = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
-      attribution: '&copy; OpenStreetMap contributors' 
-    }).addTo(mapRef.current);
-
-    const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--agent-primary').trim() || "#00D1FF";
-    const glow = getComputedStyle(document.documentElement).getPropertyValue('--agent-glow').trim() || "";
-    const agentIcon = L.divIcon({ className: 'sentinel-marker', html: AGENT_SENTINEL_HTML(primaryColor, glow), iconSize: [40, 40], iconAnchor: [20, 20] }
-  );
-    const harborIcon = L.divIcon({ className: 'harbor-marker', html: CUSTOMER_HARBOR_HTML(primaryColor), iconSize: [40, 40], iconAnchor: [20, 20] }
-  );
-
-    markerRef.current = L.marker([coords.lat, coords.lng], { icon: agentIcon }).addTo(mapRef.current
-  );
-    harborMarkerRef.current = L.marker([13.160704, 92.946892], { icon: harborIcon }).addTo(mapRef.current
-  );
-  }, []
-  );
-
-  const toggleMapMode = () => {
-    const L = (window as any).L;
-    if (!L || !mapRef.current || !tileLayerRef.current) return;
-    
-    const newMode = mapMode === 'tactical' ? 'satellite' : 'tactical';
-    setMapMode(newMode
-  );
-    
-    mapRef.current.removeLayer(tileLayerRef.current
-  );
-    
-    if (newMode === 'satellite') {
-      tileLayerRef.current = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri'
-      }).addTo(mapRef.current);
-      toast("Satellite Reconnaissance Active", "success");
-    } else {
-      tileLayerRef.current = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
-        attribution: '&copy; OpenStreetMap contributors' 
-      }).addTo(mapRef.current);
-      toast("Tactical Vector View Active", "success");
-    }
-  };
-
-  const recenterMap = () => {
-    if (mapRef.current) {
-      mapRef.current.setView([coords.lat, coords.lng], 16
-  );
-      toast("Recalibrating Navigation Node", "success"
-  );
-    }
-  };
-
-  const updateRouting = React.useCallback(() => {
-    const L = (window as any).L;
-    if (!L || !mapRef.current) return;
-    if (markerRef.current) markerRef.current.setLatLng([coords.lat, coords.lng]
-  );
-
-    const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--agent-primary').trim() || "#00D1FF";
-
-    if (missionState === MissionState.IN_TRANSIT && L.Routing) {
-      if (routingRef.current) {
-        try { routingRef.current.setWaypoints([L.latLng(coords.lat, coords.lng), L.latLng(13.160704, 92.946892)]
-  ); } catch(e) {}
-      } else {
-        routingRef.current = L.Routing.control({
-          waypoints: [L.latLng(coords.lat, coords.lng), L.latLng(13.160704, 92.946892)],
-          routeWhileDragging: false, show: false, addWaypoints: false, draggableWaypoints: false, fitSelectedRoutes: false,
-          lineOptions: { styles: [{ color: primaryColor, weight: 6, opacity: 0.9 }] }
-        }).addTo(mapRef.current
-  );
-      }
-    }
-  }, [coords, missionState]
-  );
-
-  React.useEffect(() => {
-    if (!(window as any).L) {
-      const link = document.createElement('link'
-  ); link.rel = 'stylesheet'; link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; document.head.appendChild(link
-  );
-      const rCss = document.createElement('link'
-  ); rCss.rel = 'stylesheet'; rCss.href = 'https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css'; document.head.appendChild(rCss
-  );
-      const script = document.createElement('script'
-  ); script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"; script.async = true;
-      script.onload = () => {
-        const rJs = document.createElement('script'
-  ); rJs.src = "https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"; rJs.async = true;
-        rJs.onload = initMap; document.head.appendChild(rJs
-  );
-      };
-      document.head.appendChild(script
-  );
-    } else { initMap(
-  ); }
-  }, [initMap]
-  );
-
-  React.useEffect(() => { updateRouting(
-  ); }, [coords, missionState, updateRouting]
-  );
-
   const handleStateTransition = async (nextState: MissionState) => {
-    setMissionState(nextState
-  ); await broadcastTelemetry(nextState
-  ); toast(`Update: ${nextState.replace('_', ' ')}`, "success"
-  );
-    if (nextState === MissionState.IN_TRANSIT && mapRef.current) mapRef.current.setView([coords.lat, coords.lng], 16
-  );
+    setMissionState(nextState);
+    await broadcastTelemetry(nextState);
+    toast(`Update: ${nextState.replace('_', ' ')}`, "success");
   };
+
+  const toggleMapMode = () => { toast("Map mode: OpenStreetMap only (no API key required)", "success"); };
+  const recenterMap = () => { toast("Recalibrating Navigation Node", "success"); };
+
 
   return (
 
