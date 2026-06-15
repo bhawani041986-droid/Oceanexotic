@@ -35,6 +35,13 @@ const PortBlairMap = dynamic(() => import("@/components/ui/PortBlairMap"), {
   loading: () => <div className="w-full h-full flex items-center justify-center bg-black/40"><div className="w-8 h-8 border-2 border-primary/40 border-t-primary rounded-full animate-spin" /></div>,
 });
 
+enum MissionState {
+  NOT_STARTED = "NOT_STARTED",
+  IN_TRANSIT = "IN_TRANSIT",
+  ARRIVED = "ARRIVED",
+  DELIVERED = "DELIVERED"
+}
+
 function AgentTrackingContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get('order_id') || "ORD-9982";
@@ -45,6 +52,7 @@ function AgentTrackingContent() {
   const [missionState, setMissionState] = React.useState<MissionState>(MissionState.NOT_STARTED);
   const [isSyncing, setIsSyncing] = React.useState(true);
   const [orderInfo, setOrderInfo] = React.useState<any>(null);
+  const [mapMode, setMapMode] = React.useState<'tactical' | 'satellite'>('tactical');
 
   // OTP Verification States
   const [otpInput, setOtpInput] = React.useState("");
