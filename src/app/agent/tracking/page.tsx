@@ -110,8 +110,8 @@ function AgentTrackingContent() {
           order_id: orderId, lat: coords.lat, lng: coords.lng, status: stateToBroadcast,
           log_entry: { time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), status: stateToBroadcast.replace('_', ' '), location: "Current Position", active: true }
         })
-      }
       });
+
       if (res.ok) setIsSyncing(false);
     } catch (err) {}
   };
