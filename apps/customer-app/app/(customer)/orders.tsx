@@ -61,7 +61,7 @@ export default function OrdersScreen() {
           className="mt-1 text-[10px] font-black uppercase tracking-widest" 
           style={{ color: colors.textMuted }}
         >
-          {t('tracking') || "Tracking"} {orders.length} {t('active_past_commissions') || "active & past commissions"}
+          {t('tracking') || "Tracking"} {orders.length} {t('active_past_orders') || "active & past orders"}
         </Text>
 
         {loading ? (
@@ -129,8 +129,8 @@ export default function OrdersScreen() {
             className="my-16 items-center rounded-2xl border border-dashed p-8"
             style={{ borderColor: colors.border }}
           >
-            <Text className="text-xs font-black uppercase" style={{ color: colors.textMuted }}>{t('no_commissions_yet') || "No commissions yet"}</Text>
-            <Button label={t('browse_harvest') || "BROWSE HARVEST"} onPress={() => router.push("/products")} className="mt-6" />
+            <Text className="text-xs font-black uppercase" style={{ color: colors.textMuted }}>{t('no_orders_yet') || "No orders yet"}</Text>
+            <Button label={t('start_shopping') || "START SHOPPING"} onPress={() => router.push("/products")} className="mt-6" />
           </View>
         )}
       </ScrollView>
