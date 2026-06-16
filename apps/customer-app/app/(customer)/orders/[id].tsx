@@ -162,15 +162,20 @@ export default function OrderDetailsScreen() {
       <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 56, paddingBottom: 120 }}>
 
         {/* Header */}
-        <View className="mb-6 flex-row items-center justify-between">
-          <Button variant="ghost" label={"← " + t('all').toUpperCase()} onPress={() => router.back()} className="px-0" />
+        <View className="mb-4 flex-row items-center justify-between gap-2">
+          <Button 
+            variant="ghost" 
+            label={"← " + t('all').toUpperCase()} 
+            onPress={() => router.back()} 
+            className="flex-1 h-12" 
+          />
           {isInTransit && (
             <Button
               label={"🚚 " + t('track_order')}
               onPress={() =>
                 router.push({ pathname: "/orders/[id]/tracking", params: { id } } as never)
               }
-              className="h-9 px-4 rounded-xl text-[9px]"
+              className="flex-1 h-12 rounded-xl text-[9px]"
             />
           )}
         </View>
