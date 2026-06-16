@@ -47,6 +47,9 @@ function AgentTrackingContent() {
   const orderId = searchParams.get('order_id') || "ORD-9982";
   const { toast } = useToast();
   const urlOtp = searchParams.get("otp");
+  const autoMode = searchParams.get("auto") === "true";
+  const [isVerifying, setIsVerifying] = React.useState(false);
+
   
   const [coords, setCoords] = React.useState({ lat: 11.6670, lng: 92.7359 }); // Port Blair Phoenix Bay Hub
   const [missionState, setMissionState] = React.useState<MissionState>(MissionState.NOT_STARTED);
@@ -90,6 +93,16 @@ function AgentTrackingContent() {
       verifyOtp(urlOtp);
     }
   }, [urlOtp, missionState]);
+
+  // Auto-advance to ARRIVED state when ?auto=true in URL
+  React.useEffect(() => {
+    if (autoMode && missionState === MissionState.NOT_STARTED) {
+      // Small delay so the page renders first
+      const t = setTimeout(() => handleStateTransition(MissionState.ARRIVED), 800);
+      return () => clearTimeout(t);
+    }
+  }, [autoMode]);
+
 
 
 
@@ -160,6 +173,27 @@ function AgentTrackingContent() {
     await broadcastTelemetry(nextState);
     toast(`Update: ${nextState.replace('_', ' ')}`, "success");
   };
+
+  // Compute the OTP for this order (same formula as customer side)
+  const getExpectedOtp = () => {
+    const cleanId = typeof orderId === 'string' ? orderId : String(orderId || "123");
+    const numericId = parseInt(cleanId.replace(/[^0-9]/g, "")) || 123;
+    return String((numericId * 997 + 12345) % 900000 + 100000);
+  };
+
+  // Simulate QR scan: compute OTP + immediately confirm delivery
+  const handleSimulateQR = async () => {
+    setIsVerifying(true);
+    const computed = getExpectedOtp();
+    setOtpInput(computed);
+    // Ensure state is ARRIVED before verifying
+    if (missionState !== MissionState.ARRIVED && missionState !== MissionState.DELIVERED) {
+      await handleStateTransition(MissionState.ARRIVED);
+    }
+    await verifyOtp(computed);
+    setIsVerifying(false);
+  };
+
 
   const toggleMapMode = () => { toast("Map mode: OpenStreetMap only (no API key required)", "success"); };
   const recenterMap = () => { toast("Recalibrating Navigation Node", "success"); };
@@ -349,17 +383,16 @@ function AgentTrackingContent() {
                              </button>
 
                              <button 
-                                onClick={() => {
-                                   const cleanId = typeof orderId === 'string' ? orderId : String(orderId || "123");
-                                   const numericId = parseInt(cleanId.replace(/[^0-9]/g, "")) || 123;
-                                   const computed = String((numericId * 997 + 12345) % 900000 + 100000);
-                                   setOtpInput(computed);
-                                   verifyOtp(computed);
-                                }}
-                                className="w-full h-9 bg-slate-900 hover:bg-slate-850 text-slate-400 hover:text-white font-bold uppercase tracking-[0.1em] text-[8px] flex items-center justify-center gap-1 border border-slate-800 transition-all"
-                             >
-                                Simulate QR Scanner Input
-                             </button>
+                                 onClick={handleSimulateQR}
+                                 disabled={isVerifying || missionState === MissionState.DELIVERED}
+                                 className="w-full h-9 bg-slate-900 hover:bg-emerald-900 text-slate-400 hover:text-emerald-400 font-bold uppercase tracking-[0.1em] text-[8px] flex items-center justify-center gap-1 border border-slate-800 hover:border-emerald-700 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                              >
+                                 {isVerifying ? (
+                                   <><span className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin" /> Verifying...</>
+                                 ) : (
+                                   <>📷 Simulate QR Scanner Input</>
+                                 )}
+                              </button>
                           </div>
                        </div>
                     )}
@@ -374,7 +407,26 @@ function AgentTrackingContent() {
                          </div>
                       </div>
                    )}
-                </div>
+
+                    {/* ALWAYS-VISIBLE: Quick QR confirm — works from any state */}
+                    {missionState !== MissionState.DELIVERED && (
+                      <div className="mt-3 pt-3 border-t" style={{ borderColor: 'var(--agent-border)' }}>
+                        <button
+                          onClick={handleSimulateQR}
+                          disabled={isVerifying}
+                          className="w-full h-10 bg-emerald-950/60 hover:bg-emerald-900 text-emerald-500 hover:text-emerald-300 font-bold uppercase tracking-[0.1em] text-[8px] flex items-center justify-center gap-2 border border-emerald-800/50 hover:border-emerald-600 transition-all rounded-lg disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                          {isVerifying ? (
+                            <><span className="w-3 h-3 border border-current border-t-transparent rounded-full animate-spin" /> Confirming Delivery...</>
+                          ) : (
+                            <>📷 Quick Confirm Delivery (Simulate QR)</>
+                          )}
+                        </button>
+                        <p className="text-center text-[7px] mt-1 opacity-40 uppercase tracking-widest" style={{ color: 'var(--agent-text)' }}>Auto-computes OTP • Confirms delivery instantly</p>
+                      </div>
+                    )}
+                 </div>
+
              </div>
           </Card>
        </div>
