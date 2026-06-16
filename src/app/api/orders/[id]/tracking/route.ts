@@ -1,161 +1,105 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
 import { getPhpServerUrl } from '@/config/api';
 
 // Stage-based ETA durations in minutes (Port Blair local delivery)
 const STAGE_DURATIONS: Record<string, number> = {
-  PENDING: 20,          // Seller acceptance window
-  CONFIRMED: 20,        // Seafood preparation
-  PREPARING: 15,        // Packing
-  PACKED: 6,            // Rider assignment
-  DISPATCHED: 44,       // Travel time (Port Blair avg)
-  OUT_FOR_DELIVERY: 30, // Final leg delivery
+  PENDING: 0,
+  ACCEPTED: 15,    // Seller processing
+  PREPARING: 30,   // Cleaning, gutting, ice-packing
+  PACKED: 5,       // Ready for pickup
+  ASSIGNED: 10,    // Rider en route to seller
+  IN_TRANSIT: 45,  // Actual delivery time across island
+  DELIVERED: 0,
 };
 
-// Total worst-case ETA from order placement (minutes)
-const TOTAL_ETA_FROM_ORDER = 105;
-
-function calculateDynamicETA(order: any, fleetTracking: any): {
-  minutesRemaining: number;
-  status: string;
-  estimatedDeliveryAt: string;
-  driverLocation: { latitude: number; longitude: number } | null;
-  lastUpdated: string;
-  stage: string;
-  stageLabel: string;
-} {
+function calculateDynamicETA(order: any, fleetTracking: any) {
   const now = new Date();
-  const orderCreatedAt = new Date(order.created_at);
-  const status = (order.status || 'PENDING').toUpperCase();
-
-  // If already delivered
-  if (status === 'DELIVERED' || status === 'COMPLETED') {
-    return {
-      minutesRemaining: 0,
-      status: 'delivered',
-      estimatedDeliveryAt: order.delivered_at || now.toISOString(),
-      driverLocation: null,
-      lastUpdated: now.toISOString(),
-      stage: 'DELIVERED',
-      stageLabel: 'Delivered',
-    };
-  }
-
-  // If cancelled
-  if (status === 'CANCELLED') {
-    return {
-      minutesRemaining: 0,
-      status: 'cancelled',
-      estimatedDeliveryAt: '',
-      driverLocation: null,
-      lastUpdated: now.toISOString(),
-      stage: 'CANCELLED',
-      stageLabel: 'Cancelled',
-    };
-  }
-
-  let minutesRemaining = TOTAL_ETA_FROM_ORDER;
-  let estimatedDeliveryAt: Date;
-
-  // Use fleet_tracking estimated_arrival if available
+  let baseEta = order.estimated_delivery ? new Date(order.estimated_delivery) : new Date(now.getTime() + 120 * 60000);
+  
   if (fleetTracking?.estimated_arrival) {
-    const fleetETA = new Date(fleetTracking.estimated_arrival);
-    if (!isNaN(fleetETA.getTime()) && fleetETA > now) {
-      minutesRemaining = Math.max(1, Math.round((fleetETA.getTime() - now.getTime()) / 60000));
-      estimatedDeliveryAt = fleetETA;
-    } else {
-      // Fleet ETA exists but may be stale — recalculate from stage
-      const stageMins = calculateRemainingFromStage(status, orderCreatedAt, now);
-      minutesRemaining = stageMins;
-      estimatedDeliveryAt = new Date(now.getTime() + stageMins * 60000);
+    baseEta = new Date(fleetTracking.estimated_arrival);
+  } else if (order.status) {
+    // Dynamically adjust ETA based on current stage remaining
+    const stages = Object.keys(STAGE_DURATIONS);
+    const currentIndex = stages.indexOf(order.status);
+    
+    if (currentIndex !== -1 && currentIndex < stages.length - 1) {
+      let remainingMinutes = 0;
+      for (let i = currentIndex; i < stages.length; i++) {
+        remainingMinutes += STAGE_DURATIONS[stages[i]];
+      }
+      baseEta = new Date(now.getTime() + remainingMinutes * 60000);
     }
-  } else {
-    // No fleet tracking — calculate from order stage + elapsed time
-    const stageMins = calculateRemainingFromStage(status, orderCreatedAt, now);
-    minutesRemaining = stageMins;
-    estimatedDeliveryAt = new Date(now.getTime() + stageMins * 60000);
   }
 
-  // Clamp to avoid negative or absurd values
-  minutesRemaining = Math.max(1, Math.min(minutesRemaining, 180));
-
-  const driverLocation = fleetTracking ? {
-    latitude: parseFloat(fleetTracking.current_lat) || 11.6234,
-    longitude: parseFloat(fleetTracking.current_lng) || 92.7265,
-  } : null;
-
-  const stageInfo = getStageInfo(status);
+  // Format as "01:45 PM IST"
+  const formattedEta = baseEta.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Asia/Kolkata', // Andaman matches IST
+  }) + ' IST';
 
   return {
-    minutesRemaining,
-    status: mapStatusToTrackingStatus(status),
-    estimatedDeliveryAt: estimatedDeliveryAt!.toISOString(),
-    driverLocation,
-    lastUpdated: fleetTracking?.last_updated || now.toISOString(),
-    stage: status,
-    stageLabel: stageInfo.label,
+    raw: baseEta.toISOString(),
+    formatted: formattedEta,
+    isDelayed: baseEta.getTime() < now.getTime(),
+    isLive: fleetTracking?.status === 'ACTIVE'
   };
-}
-
-function calculateRemainingFromStage(status: string, createdAt: Date, now: Date): number {
-  const elapsedMins = Math.floor((now.getTime() - createdAt.getTime()) / 60000);
-
-  // Build cumulative stage timeline
-  const stages = ['PENDING', 'CONFIRMED', 'PREPARING', 'PACKED', 'DISPATCHED', 'OUT_FOR_DELIVERY'];
-  let cumulativeMins = 0;
-
-  for (const stage of stages) {
-    const stageDuration = STAGE_DURATIONS[stage] || 10;
-    if (stage === status) {
-      // We're in this stage — remaining = rest of this stage + all future stages
-      const remainingInStage = Math.max(0, stageDuration - (elapsedMins - cumulativeMins));
-      const futureStages = stages.slice(stages.indexOf(stage) + 1);
-      const futureMins = futureStages.reduce((sum, s) => sum + (STAGE_DURATIONS[s] || 10), 0);
-      return remainingInStage + futureMins;
-    }
-    cumulativeMins += stageDuration;
-  }
-
-  // Fallback: order just placed, use full ETA
-  return Math.max(1, TOTAL_ETA_FROM_ORDER - elapsedMins);
-}
-
-function mapStatusToTrackingStatus(status: string): string {
-  const map: Record<string, string> = {
-    PENDING: 'pending',
-    CONFIRMED: 'confirmed',
-    PREPARING: 'preparing',
-    PACKED: 'packed',
-    DISPATCHED: 'out_for_delivery',
-    OUT_FOR_DELIVERY: 'out_for_delivery',
-    DELIVERED: 'delivered',
-    CANCELLED: 'cancelled',
-  };
-  return map[status] || 'pending';
-}
-
-function getStageInfo(status: string): { label: string; icon: string } {
-  const map: Record<string, { label: string; icon: string }> = {
-    PENDING: { label: 'Order Placed', icon: '📋' },
-    CONFIRMED: { label: 'Seller Accepted', icon: '✅' },
-    PREPARING: { label: 'Preparing Order', icon: '🔪' },
-    PACKED: { label: 'Packed & Ready', icon: '📦' },
-    DISPATCHED: { label: 'Rider Assigned', icon: '🏍️' },
-    OUT_FOR_DELIVERY: { label: 'Out for Delivery', icon: '🚚' },
-    DELIVERED: { label: 'Delivered', icon: '🎉' },
-    CANCELLED: { label: 'Cancelled', icon: '❌' },
-  };
-  return map[status] || { label: 'Processing', icon: '⏳' };
 }
 
 export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  req: NextRequest,
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id: orderId } = await params;
-
+    const orderId = params.id;
     if (!orderId) {
       return NextResponse.json({ error: 'Missing order ID' }, { status: 400 });
+    }
+
+    if (process.env.NODE_ENV === 'production') {
+      const { data: order, error: orderError } = await supabase
+        .from('orders')
+        .select('id, status, created_at, estimated_delivery, delivery_area, user_id, delivery_address')
+        .eq('id', orderId)
+        .single();
+
+      if (orderError || !order) {
+        return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+      }
+
+      const { data: fleetTracking } = await supabase
+        .from('fleet_tracking')
+        .select('current_lat, current_lng, estimated_arrival, status, last_updated, agent_name, current_temp')
+        .eq('order_id', orderId)
+        .maybeSingle();
+
+      const etaData = calculateDynamicETA(order, fleetTracking);
+
+      return NextResponse.json({
+        id: order.id,
+        status: order.status,
+        customerArea: order.delivery_area || 'Port Blair',
+        customerAddress: order.delivery_address || '',
+        eta: etaData,
+        fleet: fleetTracking ? {
+          lat: fleetTracking.current_lat,
+          lng: fleetTracking.current_lng,
+          temp: fleetTracking.current_temp || '-18.5',
+          agent: fleetTracking.agent_name || 'Assigned Rider',
+          lastUpdate: fleetTracking.last_updated
+        } : null,
+        timeline: [
+          { status: 'PENDING', label: 'Order Placed', completed: true },
+          { status: 'ACCEPTED', label: 'Seller Accepted', completed: ['ACCEPTED', 'PREPARING', 'PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(order.status) },
+          { status: 'PREPARING', label: 'Preparing', completed: ['PREPARING', 'PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(order.status) },
+          { status: 'PACKED', label: 'Packed', completed: ['PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(order.status) },
+          { status: 'ASSIGNED', label: 'Rider Assigned', completed: ['ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(order.status) },
+          { status: 'IN_TRANSIT', label: 'Out for Delivery', completed: ['IN_TRANSIT', 'DELIVERED'].includes(order.status) },
+          { status: 'DELIVERED', label: 'Delivered', completed: order.status === 'DELIVERED' }
+        ],
+      });
     }
 
     const phpServerUrl = getPhpServerUrl();
@@ -170,7 +114,7 @@ export async function GET(
     });
 
     if (!response.ok) {
-      return NextResponse.json({ error: 'Order not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Order not found' }, { status: response.status });
     }
 
     const data = await response.json();
@@ -185,26 +129,26 @@ export async function GET(
     const etaData = calculateDynamicETA(order, fleetTracking);
 
     return NextResponse.json({
-      order_id: orderId,
-      status: etaData.status,
-      stage: etaData.stage,
-      stage_label: etaData.stageLabel,
-      minutes_remaining: etaData.minutesRemaining,
-      estimated_delivery_at: etaData.estimatedDeliveryAt,
-      driver_location: etaData.driverLocation,
-      driver_name: fleetTracking?.agent_name || null,
-      current_temp: fleetTracking?.current_temp || -18.0,
-      delivery_area: order.delivery_area || 'Port Blair',
-      last_updated: etaData.lastUpdated,
-      // Stage progression for UI pipeline
-      stages: [
-        { key: 'PENDING', label: 'Order Placed', done: true },
-        { key: 'CONFIRMED', label: 'Seller Accepted', done: ['CONFIRMED','PREPARING','PACKED','DISPATCHED','OUT_FOR_DELIVERY','DELIVERED'].includes(order.status?.toUpperCase()) },
-        { key: 'PREPARING', label: 'Preparing', done: ['PREPARING','PACKED','DISPATCHED','OUT_FOR_DELIVERY','DELIVERED'].includes(order.status?.toUpperCase()) },
-        { key: 'PACKED', label: 'Packed', done: ['PACKED','DISPATCHED','OUT_FOR_DELIVERY','DELIVERED'].includes(order.status?.toUpperCase()) },
-        { key: 'DISPATCHED', label: 'Rider Assigned', done: ['DISPATCHED','OUT_FOR_DELIVERY','DELIVERED'].includes(order.status?.toUpperCase()) },
-        { key: 'OUT_FOR_DELIVERY', label: 'Out for Delivery', done: ['OUT_FOR_DELIVERY','DELIVERED'].includes(order.status?.toUpperCase()) },
-        { key: 'DELIVERED', label: 'Delivered', done: order.status?.toUpperCase() === 'DELIVERED' },
+      id: order.id,
+      status: order.status,
+      customerArea: order.delivery_area || 'Port Blair',
+      customerAddress: order.delivery_address || '',
+      eta: etaData,
+      fleet: fleetTracking ? {
+        lat: fleetTracking.current_lat,
+        lng: fleetTracking.current_lng,
+        temp: fleetTracking.current_temp || '-18.5',
+        agent: fleetTracking.agent_name || 'Assigned Rider',
+        lastUpdate: fleetTracking.last_updated
+      } : null,
+      timeline: [
+        { status: 'PENDING', label: 'Order Placed', completed: true },
+        { status: 'ACCEPTED', label: 'Seller Accepted', completed: ['ACCEPTED', 'PREPARING', 'PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(order.status) },
+        { status: 'PREPARING', label: 'Preparing', completed: ['PREPARING', 'PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(order.status) },
+        { status: 'PACKED', label: 'Packed', completed: ['PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(order.status) },
+        { status: 'ASSIGNED', label: 'Rider Assigned', completed: ['ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(order.status) },
+        { status: 'IN_TRANSIT', label: 'Out for Delivery', completed: ['IN_TRANSIT', 'DELIVERED'].includes(order.status) },
+        { status: 'DELIVERED', label: 'Delivered', completed: order.status === 'DELIVERED' }
       ],
     });
   } catch (err) {

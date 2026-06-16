@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
 import { getPhpServerUrl } from '@/config/api';
 
 export async function GET(request: Request) {
@@ -8,6 +9,45 @@ export async function GET(request: Request) {
 
     if (!userId) return NextResponse.json({ error: "Missing Citizen ID" }, { status: 400 });
 
+    // In production (Vercel), we must use Supabase because Vercel cannot reach local XAMPP.
+    if (process.env.NODE_ENV === 'production') {
+      const { data: orders, error: ordersError } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+
+      if (ordersError) throw ordersError;
+
+      let allOrderItems: any[] = [];
+      if (orders && orders.length > 0) {
+        const orderIds = orders.map((o: any) => o.id);
+        const { data: items, error: itemsError } = await supabase
+          .from('order_items')
+          .select('id, order_id')
+          .in('order_id', orderIds);
+          
+        if (!itemsError && items) {
+          allOrderItems = items;
+        }
+      }
+
+      const mappedOrders = (orders || []).map((order: any) => {
+        const orderItemsCount = allOrderItems.filter(item => item.order_id === order.id).length;
+        return {
+          id: order.id,
+          is_pre_order: order.is_pre_order,
+          status: order.status,
+          date: new Date(order.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          items: orderItemsCount,
+          total: order.total_amount
+        };
+      });
+
+      return NextResponse.json(mappedOrders);
+    }
+
+    // Local Development XAMPP Proxy
     const phpServerUrl = getPhpServerUrl();
     const phpApiUrl = `${phpServerUrl}/FISH_MARKET/api/orders/customer_history.php?userId=${userId}`;
     
@@ -16,7 +56,6 @@ export async function GET(request: Request) {
       headers: {
         'Content-Type': 'application/json',
       },
-      // Using no-store to ensure live data (similar to Supabase)
       cache: 'no-store'
     });
 

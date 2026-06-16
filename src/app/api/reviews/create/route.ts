@@ -1,9 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
 import { getPhpServerUrl } from '@/config/api';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+
+    if (process.env.NODE_ENV === 'production') {
+      const { data, error } = await supabase
+        .from('reviews')
+        .insert([body])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return NextResponse.json({ success: true, data });
+    }
 
     const phpServerUrl = getPhpServerUrl();
     const phpApiUrl = `${phpServerUrl}/FISH_MARKET/api/reviews/create.php`;
