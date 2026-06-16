@@ -10,9 +10,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 
 interface OceanReelsFeedProps {
   variant?: "feed" | "pip" | "grid-card";
+  videoId?: number;
 }
 
-export function OceanReelsFeed({ variant = "feed" }: OceanReelsFeedProps) {
+export function OceanReelsFeed({ variant = "feed", videoId }: OceanReelsFeedProps) {
   const [videos, setVideos] = useState<any[]>([]);
   const [products, setProducts] = useState<Record<string, any>>({});
   const [activeVideoId, setActiveVideoId] = useState<number | null>(null);
@@ -73,7 +74,7 @@ export function OceanReelsFeed({ variant = "feed" }: OceanReelsFeedProps) {
 
   // ── OPTION 1: INLINE GRID CARD (WEB) ───────────────────────────────────────
   if (variant === "grid-card") {
-    const vid = videos[0];
+    const vid = videoId ? videos.find(v => v.id === videoId) : videos[0];
     if (!vid) return null;
     const product = products[vid.product_id];
     const isActive = activeVideoId === vid.id;
@@ -157,7 +158,7 @@ export function OceanReelsFeed({ variant = "feed" }: OceanReelsFeedProps) {
 
   // ── OPTION 2: FLOATING CORNER BUBBLE (WEB) ──────────────────────────────────
   if (variant === "pip") {
-    const vid = videos[0];
+    const vid = videoId ? videos.find(v => v.id === videoId) : videos[0];
     if (!vid) return null;
     const product = products[vid.product_id];
 

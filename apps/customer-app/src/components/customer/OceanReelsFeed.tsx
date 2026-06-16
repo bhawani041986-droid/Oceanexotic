@@ -22,6 +22,7 @@ interface VideoItem {
 
 interface OceanReelsFeedProps {
   variant?: "feed" | "pip" | "grid-card";
+  videoId?: number;
 }
 
 function ActiveReelVideo({ videoUrl, isMuted }: { videoUrl: string; isMuted: boolean }) {
@@ -45,7 +46,7 @@ function ActiveReelVideo({ videoUrl, isMuted }: { videoUrl: string; isMuted: boo
   );
 }
 
-export function OceanReelsFeed({ variant = "feed" }: OceanReelsFeedProps) {
+export function OceanReelsFeed({ variant = "feed", videoId }: OceanReelsFeedProps) {
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeVideoId, setActiveVideoId] = useState<number | null>(null);
@@ -99,7 +100,7 @@ export function OceanReelsFeed({ variant = "feed" }: OceanReelsFeedProps) {
 
   // ── OPTION 1: INLINE GRID CARD ──────────────────────────────────────────────
   if (variant === "grid-card") {
-    const vid = videos[0];
+    const vid = videoId ? videos.find((v) => v.id === videoId) : videos[0];
     if (!vid) return null;
     const product = allProducts?.find((p) => p.id === vid.product_id);
     const isActive = activeVideoId === vid.id;
@@ -216,7 +217,7 @@ export function OceanReelsFeed({ variant = "feed" }: OceanReelsFeedProps) {
 
   // ── OPTION 2: FLOATING CORNER BUBBLE ────────────────────────────────────────
   if (variant === "pip") {
-    const vid = videos[0];
+    const vid = videoId ? videos.find((v) => v.id === videoId) : videos[0];
     if (!vid) return null;
     const product = allProducts?.find((p) => p.id === vid.product_id);
 

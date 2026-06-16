@@ -26,6 +26,7 @@ import { CutSelectionModal } from "@/components/customer/CutSelectionModal";
 import { MaritimeWaveDivider } from "@/components/customer/MaritimeWaveDivider";
 import { AndamanMaritimeTelemetry } from "@/components/customer/AndamanMaritimeTelemetry";
 import { OceanReelsFeed } from "@/components/customer/OceanReelsFeed";
+import api from "@/services/api";
 import { AnnouncementBar } from "@/components/customer/AnnouncementBar";
 import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
@@ -194,6 +195,7 @@ export default function CustomerHomeScreen() {
   const [selectedCut, setSelectedCut] = useState<CutOption | null>(null);
   const [cutLoading, setCutLoading] = useState(false);
   const [cutOpen, setCutOpen] = useState(false);
+  const [activeReels, setActiveReels] = useState<any[]>([]);
   const [subEmailLayout, setSubEmailLayout] = useState({ width: 0, height: 0 });
   const [subBtnLayout, setSubBtnLayout] = useState({ width: 0, height: 0 });
 
@@ -219,6 +221,20 @@ export default function CustomerHomeScreen() {
   useEffect(() => {
     settings.fetchSettings();
   }, [settings.fetchSettings]);
+
+  useEffect(() => {
+    const fetchReels = async () => {
+      try {
+        const { data } = await api.get<{ status: string; content: any[] }>("/marketplace/videos");
+        if (data.status === "success" && Array.isArray(data.content)) {
+          setActiveReels(data.content);
+        }
+      } catch (err) {
+        console.error("Failed to fetch reels for home:", err);
+      }
+    };
+    fetchReels();
+  }, []);
 
   const filteredCatch = useMemo(() => {
     const items = todaysCatch.data ?? [];
@@ -413,9 +429,12 @@ export default function CustomerHomeScreen() {
             <View className="flex-row flex-wrap justify-between gap-y-3">
               {filteredCatch.map((item, idx) => (
                 <Fragment key={item.catch_id}>
-                  {idx === 2 && (
-                    <OceanReelsFeed variant="grid-card" />
-                  )}
+                  {(() => {
+                    const matchingReel = activeReels.find((r) => r.sort_order === idx + 1);
+                    return matchingReel ? (
+                      <OceanReelsFeed variant="grid-card" videoId={matchingReel.id} />
+                    ) : null;
+                  })()}
                   
                 <TodaysCatchCard
                   key={item.catch_id}

@@ -835,6 +835,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
   const [isLoadingCuts, setIsLoadingCuts] = React.useState(false);
   const [selectedCut, setSelectedCut] = React.useState<any>(null);
   const [featuredProducts, setFeaturedProducts] = React.useState<any[]>([]);
+  const [activeReels, setActiveReels] = React.useState<any[]>([]);
 
   const formatTime12h = React.useCallback((timeStr: string) => {
     if (!timeStr) return "";
@@ -905,10 +906,25 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
       } catch (err) { console.warn("Featured Fetch Failed"); }
     };
 
+    const fetchReels = async () => {
+      try {
+        const res = await fetch('/api/admin/videos');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data)) {
+            setActiveReels(data.filter((v: any) => v.is_active === 1));
+          }
+        }
+      } catch (err) {
+        console.error("Reels Sync Failed", err);
+      }
+    };
+
     fetchCMS();
     fetchTerritories();
     fetchTodaysCatch();
     fetchFeatured();
+    fetchReels();
 
     if (!settings.flashDealActive) return;
 
@@ -1294,11 +1310,14 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                   .filter(c => activeBatch === 'ALL' || c.batch_label === activeBatch)
                   .map((catchItem, idx) => (
                   <React.Fragment key={catchItem.id}>
-                     {idx === 2 && (
-                        <div className="group">
-                           <OceanReelsFeed variant="grid-card" />
-                        </div>
-                     )}
+                     {(() => {
+                        const matchingReel = activeReels.find(r => r.sort_order === idx + 1);
+                        return matchingReel ? (
+                           <div className="group">
+                              <OceanReelsFeed variant="grid-card" videoId={matchingReel.id} />
+                           </div>
+                        ) : null;
+                     })()}
                      <motion.div 
                      key={catchItem.id} 
                      initial={{ opacity: 0, scale: 0.95 }}

@@ -20,7 +20,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { product_id, video_url, title } = body;
+    const { product_id, video_url, title, sort_order, description } = body;
 
     if (!product_id || !video_url) {
       return NextResponse.json({ error: "Missing product_id or video_url" }, { status: 400 });
@@ -33,6 +33,8 @@ export async function POST(request: NextRequest) {
         product_id,
         video_url,
         title: title || "Product Showcase",
+        description: description || null,
+        sort_order: typeof sort_order !== 'undefined' ? sort_order : 3, // Default to 3
         is_active: 1
       })
       .select()
@@ -58,27 +60,40 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { id, is_active, product_id, video_url } = body;
+    const { id, is_active, product_id, video_url, title, sort_order, description } = body;
 
-    if (!id || !product_id) {
-      return NextResponse.json({ error: "Missing video id or product_id" }, { status: 400 });
+    if (!id) {
+      return NextResponse.json({ error: "Missing video id" }, { status: 400 });
     }
+
+    // Prepare update payload
+    const updateData: any = {};
+    if (typeof is_active !== 'undefined') updateData.is_active = is_active;
+    if (typeof title !== 'undefined') updateData.title = title;
+    if (typeof sort_order !== 'undefined') updateData.sort_order = sort_order;
+    if (typeof description !== 'undefined') updateData.description = description;
+    if (typeof product_id !== 'undefined') updateData.product_id = product_id;
+    if (typeof video_url !== 'undefined') updateData.video_url = video_url;
 
     // Toggle status in product_videos
     const { error: dbError } = await supabase
       .from('product_videos')
-      .update({ is_active })
+      .update(updateData)
       .eq('id', id);
 
     if (dbError) throw dbError;
 
     // Sync the products table (nullify if turned off, restore if active)
-    const { error: prodError } = await supabase
-      .from('products')
-      .update({ video_url: is_active === 1 ? video_url : null })
-      .eq('id', product_id);
+    if (product_id) {
+      const activeStatus = typeof is_active !== 'undefined' ? is_active : 1;
+      const finalUrl = typeof video_url !== 'undefined' ? video_url : null;
+      const { error: prodError } = await supabase
+        .from('products')
+        .update({ video_url: activeStatus === 1 ? finalUrl : null })
+        .eq('id', product_id);
 
-    if (prodError) throw prodError;
+      if (prodError) throw prodError;
+    }
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
