@@ -950,6 +950,15 @@ export default function CustomerHomeScreen() {
             </View>
           ))}
         </View>
+
+        {(() => {
+          const bannerReel = activeReels.find((r) => r.description === 'banner-newsletter');
+          return bannerReel ? (
+            <View className="px-4">
+              <OceanReelsFeed variant="banner" videoId={bannerReel.id} />
+            </View>
+          ) : null;
+        })()}
       </ScrollView>
 
       <CutSelectionModal

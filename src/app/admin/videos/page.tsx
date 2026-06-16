@@ -278,6 +278,7 @@ export default function AdminVideosPage() {
                 <option value="grid-card" className="bg-bg-card text-text-primary">Grid Card (Inline Ad)</option>
                 <option value="pip" className="bg-bg-card text-text-primary">Floating Bubble (PiP)</option>
                 <option value="banner" className="bg-bg-card text-text-primary">Horizontal Banner (Promo)</option>
+                <option value="banner-newsletter" className="bg-bg-card text-text-primary">Horizontal Banner (Newsletter)</option>
               </select>
             </div>
 
@@ -326,7 +327,7 @@ export default function AdminVideosPage() {
                           POS: {vid.sort_order || 3}
                         </span>
                         <span className="text-[9px] bg-primary/10 text-primary font-bold px-1.5 py-0.5 rounded">
-                          FORMAT: {vid.description === 'pip' ? 'Floating Bubble' : vid.description === 'banner' ? 'Horizontal Banner' : 'Grid Card'}
+                          FORMAT: {vid.description === 'pip' ? 'Floating Bubble' : vid.description === 'banner' ? 'Horizontal Banner' : vid.description === 'banner-newsletter' ? 'Horizontal Banner (Newsletter)' : 'Grid Card'}
                         </span>
                       </div>
                     </div>
@@ -406,6 +407,7 @@ export default function AdminVideosPage() {
               <option value="grid-card" className="bg-bg-card text-text-primary">Grid Card (Inline Ad)</option>
               <option value="pip" className="bg-bg-card text-text-primary">Floating Bubble (PiP)</option>
               <option value="banner" className="bg-bg-card text-text-primary">Horizontal Banner (Promo)</option>
+              <option value="banner-newsletter" className="bg-bg-card text-text-primary">Horizontal Banner (Newsletter)</option>
             </select>
           </div>
           <div className="space-y-2">

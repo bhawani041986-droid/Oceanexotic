@@ -262,7 +262,7 @@ export function OceanReelsFeed({ variant = "feed", videoId }: OceanReelsFeedProp
     const product = products[vid.product_id];
 
     return (
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+      <div className="fixed bottom-24 lg:bottom-6 right-6 z-50 flex flex-col items-end">
         <AnimatePresence>
           {isPipOpen && (
             <motion.div 

@@ -2013,6 +2013,13 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
          </div>
       </section>
 
+      {(() => {
+        const bannerReel = activeReels.find(r => r.description === 'banner-newsletter');
+        return bannerReel ? (
+          <OceanReelsFeed variant="banner" videoId={bannerReel.id} />
+        ) : null;
+      })()}
+
       {/* CUT SELECTION MODAL - HARDENED HUD */}
       <AnimatePresence>
         {isCutModalOpen && (
