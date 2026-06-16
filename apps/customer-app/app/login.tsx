@@ -147,9 +147,9 @@ export default function LoginScreen() {
         <ScrollView contentContainerClassName="flex-grow px-6 py-12" keyboardShouldPersistTaps="handled" bounces={false}>
           <View className="mx-auto w-full max-w-[400px] mt-auto mb-auto">
             <View className="mb-10 items-center space-y-4">
-              <Link href="/" asChild>
-                <Pressable className="items-center"><Logo size="md" /></Pressable>
-              </Link>
+              <View className="items-center">
+                <Logo size="md" />
+              </View>
               <View className="items-center gap-1 mt-4">
                 <Text className="text-2xl font-black tracking-tight text-white text-center">
                   {t('login_title')}

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
-import { View, Text, KeyboardAvoidingView, Platform, ScrollView, Pressable } from "react-native";
+import { View, Text, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, type LoginFormValues } from "@/lib/validation/loginSchema";
@@ -72,9 +72,9 @@ export default function AdminLoginScreen() {
         <ScrollView contentContainerClassName="flex-grow px-6 py-12 justify-center" keyboardShouldPersistTaps="handled" bounces={false}>
           <View className="mx-auto w-full max-w-[400px]">
             <View className="mb-10 items-center space-y-4">
-              <Link href="/" asChild>
-                <Pressable className="items-center"><Logo size="md" /></Pressable>
-              </Link>
+              <View className="items-center">
+                <Logo size="md" />
+              </View>
               <View className="items-center gap-1 mt-4">
                 <Text className="text-2xl font-black tracking-widest text-red-500 uppercase text-center">
                   Admin Command
