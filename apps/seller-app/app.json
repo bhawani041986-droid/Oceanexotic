@@ -7,11 +7,21 @@
     "scheme": "oceanexotic",
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#020617"
+    },
     "assetBundlePatterns": [
       "assets/**"
     ],
     "android": {
-      "package": "com.oceanexotic.seller"
+      "package": "com.oceanexotic.seller",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#020617"
+      }
     },
     "ios": {
       "infoPlist": {
@@ -27,6 +37,7 @@
     },
     "plugins": [
       "expo-router",
+      "./withSplitApks.js",
       [
         "expo-build-properties",
         {
@@ -42,9 +53,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "4f9a293a-8535-46cc-a39b-585511e71454"
+        "projectId": "56f31091-8d99-4bcd-8db3-906405e94527"
       }
     },
-    "owner": "bhawani-ocean"
+    "owner": "oceanxy"
   }
 }
