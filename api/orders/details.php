@@ -37,7 +37,7 @@ try {
             p.name AS product_name,
             p.image_url,
             p.seller_id,
-            s.business_name AS seller_name
+            s.name AS seller_name
         FROM order_items oi
         LEFT JOIN products p ON oi.product_id = p.id
         LEFT JOIN sellers s ON p.seller_id = s.id

@@ -111,16 +111,24 @@ try {
     $order_id = $pdo->lastInsertId();
 
     // 2. Insert Order Items
-    $item_stmt = $pdo->prepare("INSERT INTO order_items (order_id, product_id, quantity, price) 
-                                VALUES (:order_id, :product_id, :quantity, :price)");
+    $item_stmt = $pdo->prepare("INSERT INTO order_items (order_id, product_id, quantity, price, seller_id) 
+                                VALUES (:order_id, :product_id, :quantity, :price, :seller_id)");
+    
+    $seller_stmt = $pdo->prepare("SELECT seller_id FROM products WHERE id = :id");
 
     foreach ($data['items'] as $item) {
         $base_id = $item_base_ids[$item['id']] ?? $item['id'];
+        
+        $seller_stmt->execute(['id' => $base_id]);
+        $seller_row = $seller_stmt->fetch(PDO::FETCH_ASSOC);
+        $seller_id = $seller_row ? $seller_row['seller_id'] : null;
+
         $item_stmt->execute([
             'order_id' => $order_id,
             'product_id' => $base_id,
             'quantity' => $item['quantity'],
-            'price' => $item['price']
+            'price' => $item['price'],
+            'seller_id' => $seller_id
         ]);
 
         // 3. Deduct stock for products only (bypass for addons)
