@@ -130,12 +130,20 @@ export default function LoginScreen() {
     }
   };
 
+  const handleOpenForgotPassword = () => {
+    WebBrowser.openBrowserAsync("https://oceanexotic.com/forgot-password");
+  };
+
+  const handleOpenRegister = () => {
+    WebBrowser.openBrowserAsync("https://oceanexotic.com/register");
+  };
+
   return (
     <View className="relative flex-1 bg-background">
       <Image source={{ uri: BG_IMAGE }} className="absolute inset-0 h-full w-full opacity-20" contentFit="cover" />
       <LinearGradient colors={["rgba(2,6,23,0.3)", "#020617", "#020617"]} className="absolute inset-0" />
 
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} className="flex-1">
+      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Platform.OS === "android" ? 24 : 0} className="flex-1">
         <ScrollView contentContainerClassName="flex-grow px-6 py-12" keyboardShouldPersistTaps="handled" bounces={false}>
           <View className="mx-auto w-full max-w-[400px] mt-auto mb-auto">
             <View className="mb-10 items-center space-y-4">
@@ -202,16 +210,16 @@ export default function LoginScreen() {
                         onChangeText={onChange}
                         onBlur={onBlur}
                         placeholder={t('password_placeholder')}
-                        secureTextEntry
+                        isPassword
                         autoComplete="password"
                         error={errors.password?.message}
                       />
                     )}
                   />
                   <View className="flex-row justify-end mt-2">
-                    <Link href={"/forgot-password" as never} asChild>
-                      <Pressable><Text className="text-[10px] font-bold text-primary">{t('forgot_password') || "FORGOT PASSWORD?"}</Text></Pressable>
-                    </Link>
+                    <Text onPress={handleOpenForgotPassword} className="text-[10px] font-bold text-primary">
+                      {t('forgot_password') || "FORGOT PASSWORD?"}
+                    </Text>
                   </View>
                 </View>
 
@@ -229,9 +237,9 @@ export default function LoginScreen() {
 
               <Text className="text-center text-[11px] font-medium text-slate-400 mt-4">
                 New to the fleet?{" "}
-                <Link href={"/register" as never} asChild>
-                  <Pressable><Text className="font-bold text-white underline">{t('register_account') || "REGISTER ACCOUNT"}</Text></Pressable>
-                </Link>
+                <Text onPress={handleOpenRegister} className="font-bold text-white underline">
+                  {t('register_account') || "REGISTER ACCOUNT"}
+                </Text>
               </Text>
             </View>
           </View>
