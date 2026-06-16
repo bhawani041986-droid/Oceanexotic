@@ -7,6 +7,8 @@ import { useAgentStore, MOODS } from "@/store/agentStore";
 import { FULL_API_URL } from "@/config/api";
 import { useToast } from "@/components/ui/Toast";
 import axios from "axios";
+import QRScannerNative from "@/components/QRScannerNative";
+
 
 // Standard hashing function for deterministic values
 function simpleHash(str: string): number {
@@ -690,44 +692,14 @@ export default function AgentTrackingScreen() {
     };
   }, [isScanning, startWebScan, stopWebScan]);
 
-  // Native Simulation Scanner Hook
-  useEffect(() => {
-    if (Platform.OS === "web" || !isScanning) return;
-    
-    setScanLog(["[SYSTEM] Native scanner node initialized", "[SYSTEM] Simulating target lock..."]);
-    
-    const logs = [
-      "[RECON] Analyzing live video feed...",
-      "[RECON] Cross-referencing QR metadata...",
-      "[RECON] Signature match found: ORD-CONFIRM",
-      "[RECON] Decrypting operational payloads..."
-    ];
-    
-    let step = 0;
-    const interval = setInterval(() => {
-      if (step < logs.length) {
-        setScanLog(prev => [...prev, logs[step]]);
-        step++;
-      } else {
-        clearInterval(interval);
-        
-        // Compute correct OTP
-        const cleanId = orderId;
-        const numericId = parseInt(cleanId.replace(/[^0-9]/g, "")) || 123;
-        const correctOtp = String(((numericId * 997 + 12345) % 900000) + 100000);
-        
-        setScanLog(prev => [...prev, `[SUCCESS] Signature Decrypted: OTP ${correctOtp}`, "[SYSTEM] finalizing secure handoff..."]);
-        
-        setTimeout(() => {
-          setOtpInput(correctOtp);
-          verifyOtp(correctOtp);
-          setIsScanning(false);
-        }, 1000);
-      }
-    }, 600);
-    
-    return () => clearInterval(interval);
-  }, [isScanning]);
+  // Real QR scan handler for Native Camera
+  const handleQRScan = async (scannedText: string) => {
+    setIsScanning(false);
+    const otpMatch = scannedText.match(/[?&]otp=(\d{6})/) || scannedText.match(/(\d{6})/);
+    const scannedOtp = otpMatch ? otpMatch[1] : scannedText.trim();
+    setOtpInput(scannedOtp);
+    await verifyOtp(scannedOtp);
+  };
 
   // Pulse animation simulation for vector view radar
   useEffect(() => {
@@ -1350,24 +1322,22 @@ export default function AgentTrackingScreen() {
       </View>
     </ScrollView>
 
-    {/* QR SCANNER FULL SCREEN OVERLAY */}
-    {isScanning && (
+    {/* QR SCANNER FULL SCREEN OVERLAY (WEB) */}
+    {isScanning && Platform.OS === 'web' && (
       <View 
         style={[
           StyleSheet.absoluteFillObject,
-          { backgroundColor: 'rgba(2, 6, 23, 0.98)', zIndex: 5000, padding: 24, paddingTop: Platform.OS === 'ios' ? 60 : 40 }
+          { backgroundColor: 'rgba(2, 6, 23, 0.98)', zIndex: 5000, padding: 24, paddingTop: 40 }
         ]}
       >
         {/* Injected scan line keyframe styling */}
-        {Platform.OS === 'web' && (
-          <style dangerouslySetInnerHTML={{ __html: `
-            @keyframes scanner-sweep {
-              0% { top: 0%; opacity: 0.4; }
-              50% { top: 100%; opacity: 1; }
-              100% { top: 0%; opacity: 0.4; }
-            }
-          `}} />
-        )}
+        <style dangerouslySetInnerHTML={{ __html: `
+          @keyframes scanner-sweep {
+            0% { top: 0%; opacity: 0.4; }
+            50% { top: 100%; opacity: 1; }
+            100% { top: 0%; opacity: 0.4; }
+          }
+        `}} />
 
         {/* Title Header */}
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: mood.border, paddingBottom: 16, marginBottom: 24 }}>
@@ -1408,22 +1378,13 @@ export default function AgentTrackingScreen() {
               backgroundColor: 'black' 
             }}
           >
-            {Platform.OS === 'web' ? (
-              <video 
-                ref={videoRef}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', top: 0, left: 0, zIndex: 1 }}
-                playsInline
-                autoPlay
-                muted
-              />
-            ) : (
-              <View style={{ position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(15,23,42,0.6)', padding: 16 }}>
-                <ActivityIndicator size="large" color={mood.primary} />
-                <Text style={{ fontSize: 8, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 2, color: '#94A3B8', marginTop: 16, textAlign: 'center' }}>
-                  ACQUIRING NATIVE TELEMETRY FEED...
-                </Text>
-              </View>
-            )}
+            <video 
+              ref={videoRef}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', top: 0, left: 0, zIndex: 1 }}
+              playsInline
+              autoPlay
+              muted
+            />
 
             {/* Corner Brackets — z-index above video */}
             <View style={{ position: 'absolute', top: 12, left: 12, width: 24, height: 24, borderTopWidth: 2, borderLeftWidth: 2, borderColor: mood.primary, zIndex: 2 }} />
@@ -1448,8 +1409,8 @@ export default function AgentTrackingScreen() {
                 shadowRadius: 10,
                 top: '50%',
                 zIndex: 3,
-                ...(Platform.OS === 'web' ? { animation: 'scanner-sweep 3s ease-in-out infinite' } : {})
-              }}
+                animation: 'scanner-sweep 3s ease-in-out infinite'
+              } as any}
             />
           </View>
 
@@ -1483,10 +1444,17 @@ export default function AgentTrackingScreen() {
         </View>
 
         {/* Hidden Canvas for Web decoding */}
-        {Platform.OS === 'web' && (
-          <canvas ref={canvasRef} style={{ display: 'none' }} />
-        )}
+        <canvas ref={canvasRef} style={{ display: 'none' }} />
       </View>
+    )}
+
+    {/* QR SCANNER NATIVE MODAL */}
+    {Platform.OS !== 'web' && (
+      <QRScannerNative
+        isOpen={isScanning}
+        onScan={handleQRScan}
+        onClose={() => setIsScanning(false)}
+      />
     )}
   </View>
   );

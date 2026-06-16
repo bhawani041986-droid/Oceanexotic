@@ -34,8 +34,16 @@
             "usesCleartextTraffic": true
           }
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "OceanExotic Agent needs camera access to scan customer QR codes for delivery confirmation.",
+          "microphonePermission": false
+        }
       ]
     ],
+
     "experiments": {
       "typedRoutes": true
     },
