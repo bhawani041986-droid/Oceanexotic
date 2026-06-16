@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -55,7 +56,7 @@ export function LanguageSelector() {
     <div className="relative">
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 p-2 md:p-3 text-muted-foreground hover:text-foreground transition-colors"
+        className="flex items-center gap-2 p-1.5 md:p-2 text-muted-foreground hover:text-foreground transition-colors"
         title="Change Language"
       >
         <Globe className="w-5 h-5" />

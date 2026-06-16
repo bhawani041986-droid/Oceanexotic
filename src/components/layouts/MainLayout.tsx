@@ -143,8 +143,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
           ? "h-16 md:h-20 bg-[var(--c-bg)]/90 backdrop-blur-3xl border-[var(--foreground)]/10" 
           : "h-20 md:h-24 bg-[var(--c-bg)]/60 backdrop-blur-xl border-[var(--foreground)]/5"
       )}>
-        <div className="w-full px-4 lg:px-8 h-full flex items-center justify-between">
-          <div className="flex items-center gap-3 lg:gap-10">
+        <div className="w-full px-2 lg:px-4 h-full flex items-center justify-between">
+          <div className="flex items-center gap-1 lg:gap-4">
             <button 
               onClick={() => setIsMobileMenuOpen(true)}
               className="p-2 text-[var(--c-text-primary)]"
@@ -217,24 +217,26 @@ export default function MainLayout({ children }: MainLayoutProps) {
              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--c-text-secondary)]" />
           </div>
 
-          <div className="flex items-center gap-2 md:gap-3 lg:gap-4">
-            <LanguageSelector />
+          <div className="flex items-center gap-1.5 md:gap-2.5 lg:gap-3">
+            <div className="hidden sm:block">
+              <LanguageSelector />
+            </div>
             <div className="hidden lg:flex items-center gap-2">
               <button onClick={() => router.push('/customer/wishlist')} className="p-3 text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)]"><Heart className="w-5 h-5" /></button>
             </div>
-            <button onClick={() => router.push('/customer/notifications')} className="p-2 md:p-3 text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] relative">
+            <button onClick={() => router.push('/customer/notifications')} className="p-1.5 md:p-2 text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] relative shrink-0 hidden sm:block">
               <Bell className="w-6 h-6 md:w-5 md:h-5" />
               {mounted && unreadCount > 0 && (
                 <span className="absolute top-2 right-2 md:top-3 md:right-3 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[var(--c-bg)] animate-pulse" />
               )}
             </button>
-            <Link href="/customer/cart" className="p-2 md:px-3 md:py-2 bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/20 rounded-full flex items-center gap-2 relative transition-all">
+            <Link href="/customer/cart" className="p-1.5 md:px-2.5 md:py-1.5 bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/20 rounded-full flex items-center gap-1.5 md:gap-2 relative transition-all shrink-0">
                <ShoppingCart className="w-6 h-6 md:w-5 md:h-5 text-[var(--c-primary)]" />
                <span className="absolute top-1 right-1 md:relative md:top-0 md:right-0 bg-[var(--c-primary)] md:bg-transparent rounded-full text-[8px] md:text-xs font-black text-[var(--foreground)] md:text-[var(--c-primary)] px-1">
                  {mounted ? items.length : 0}
                </span>
             </Link>
-            <button onClick={() => router.push('/customer/profile')} className="h-9 w-9 md:h-10 md:w-10 rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 flex items-center justify-center hover:border-[var(--c-primary)] transition-all overflow-hidden relative group">
+            <button onClick={() => router.push('/customer/profile')} className="h-8 w-8 md:h-9 md:w-9 rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 flex items-center justify-center hover:border-[var(--c-primary)] transition-all overflow-hidden relative group shrink-0">
               {isAuthenticated ? (
                 <img 
                   src={(user?.avatar && user.avatar !== 'null' && user.avatar !== 'undefined') ? user.avatar : "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80"} 
