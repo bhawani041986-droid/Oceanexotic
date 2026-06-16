@@ -131,11 +131,11 @@ export default function LoginScreen() {
   };
 
   const handleOpenForgotPassword = () => {
-    WebBrowser.openBrowserAsync("https://oceanexotic.com/forgot-password");
+    router.push("/forgot-password");
   };
 
   const handleOpenRegister = () => {
-    WebBrowser.openBrowserAsync("https://oceanexotic.com/register");
+    router.push("/register");
   };
 
   return (

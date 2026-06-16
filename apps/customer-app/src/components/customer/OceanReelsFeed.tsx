@@ -336,7 +336,7 @@ export function OceanReelsFeed({ variant = "feed", videoId }: OceanReelsFeedProp
     const product = allProducts?.find((p) => p.id === vid.product_id);
 
     return (
-      <View style={{ position: 'absolute', bottom: 110, right: 16, zIndex: 999, alignItems: 'flex-end' }}>
+      <View style={{ position: 'absolute', bottom: 95, right: 16, zIndex: 999, alignItems: 'flex-end' }}>
         {isPipOpen && (
           <View 
             className="rounded-2xl border bg-black shadow-2xl mb-3 overflow-hidden" 

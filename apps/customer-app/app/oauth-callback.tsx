@@ -13,7 +13,15 @@ export default function OAuthCallbackScreen() {
   useEffect(() => {
     if (token && user) {
       try {
-        const parsedUser = JSON.parse(decodeURIComponent(user));
+        // useLocalSearchParams already decodes the URI components in expo-router, 
+        // but if it was double-encoded, we handle both safely.
+        let parsedUser;
+        try {
+          parsedUser = JSON.parse(decodeURIComponent(user));
+        } catch {
+          parsedUser = JSON.parse(user);
+        }
+
         const authUser = toAuthUser(parsedUser);
         
         setAuthToken(token).then(() => {
@@ -23,10 +31,12 @@ export default function OAuthCallbackScreen() {
           router.replace("/home");
         }).catch((err) => {
           console.error("Storage error:", err);
+          alert("Session storage failed. Please login again.");
           router.replace("/login");
         });
       } catch (err) {
         console.error("Parse error:", err);
+        alert("OAuth parsing failed. Please login manually.");
         router.replace("/login");
       }
     } else {
