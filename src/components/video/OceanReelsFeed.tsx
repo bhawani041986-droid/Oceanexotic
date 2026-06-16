@@ -28,30 +28,31 @@ export function OceanReelsFeed({ variant = "feed", videoId }: OceanReelsFeedProp
   }, []);
 
   const fetchVideos = async () => {
-    const { data: vids } = await supabase
-      .from('product_videos')
-      .select('*')
-      .eq('is_active', 1)
-      .order('sort_order', { ascending: true })
-      .order('created_at', { ascending: false })
-      .limit(10);
-      
-    if (vids && vids.length > 0) {
-      setVideos(vids);
-      
-      const pIds = [...new Set(vids.map(v => v.product_id))];
-      const res = await fetch('/api/seller/products');
-      const allProds = await res.json();
-      
-      if (Array.isArray(allProds)) {
-        const prodMap: Record<string, any> = {};
-        allProds.forEach(p => {
-          if (pIds.includes(p.id)) {
-            prodMap[p.id] = p;
+    try {
+      const vidRes = await fetch('/api/marketplace/videos');
+      if (!vidRes.ok) return;
+      const json = await vidRes.json();
+      if (json.status === 'success' && Array.isArray(json.content)) {
+        const vids = json.content;
+        setVideos(vids);
+        
+        const pIds = [...new Set(vids.map((v: any) => v.product_id))];
+        const res = await fetch('/api/seller/products');
+        if (res.ok) {
+          const allProds = await res.json();
+          if (Array.isArray(allProds)) {
+            const prodMap: Record<string, any> = {};
+            allProds.forEach(p => {
+              if (pIds.includes(p.id)) {
+                prodMap[p.id] = p;
+              }
+            });
+            setProducts(prodMap);
           }
-        });
-        setProducts(prodMap);
+        }
       }
+    } catch (err) {
+      console.error("Failed to fetch videos:", err);
     }
   };
 

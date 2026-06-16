@@ -1313,9 +1313,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                      {(() => {
                         const matchingReel = activeReels.find(r => r.sort_order === idx + 1);
                         return matchingReel ? (
-                           <div className="group">
-                              <OceanReelsFeed variant="grid-card" videoId={matchingReel.id} />
-                           </div>
+                           <OceanReelsFeed variant="grid-card" videoId={matchingReel.id} />
                         ) : null;
                      })()}
                      <motion.div 
