@@ -1,8 +1,17 @@
 import React, { useState } from "react";
-import { View, Text, ScrollView, TextInput, KeyboardAvoidingView, Platform, Pressable } from "react-native";
+import { View, Text, ScrollView, TextInput, KeyboardAvoidingView, Platform, Pressable, Alert, Image } from "react-native";
 import Svg, { Path, Circle, Polyline, Line, Rect } from "react-native-svg";
+import * as ImagePicker from "expo-image-picker";
 import { useAuthStore } from "@/store/authStore";
 import { useAgentStore, MOODS } from "@/store/agentStore";
+
+function AttachIcon({ color }: { color: string }) {
+  return (
+    <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <Path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+    </Svg>
+  );
+}
 
 function MonitorIcon({ color }: { color: string }) {
   return (
@@ -34,7 +43,7 @@ export default function AgentSupportScreen() {
   const mood = MOODS[currentMood];
   const isLight = currentMood === "DAYLIGHT";
 
-  const [messages, setMessages] = useState<{id: string, text: string, sender: string, timestamp: string}[]>(INITIAL_MESSAGES);
+  const [messages, setMessages] = useState<any[]>(INITIAL_MESSAGES);
   const [inputText, setInputText] = useState("");
 
   const handleSend = () => {
@@ -59,6 +68,49 @@ export default function AgentSupportScreen() {
         timestamp: new Date().toISOString()
       }]);
     }, 1500);
+  };
+
+  const handleDeleteMessage = (msgId: string) => {
+    setMessages(prev => prev.filter(m => m.id !== msgId));
+  };
+
+  const handleAttachImage = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+    if (permissionResult.granted === false) {
+      Alert.alert("Permission Required", "Permission to access camera roll is required!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: false,
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const selectedAsset = result.assets[0];
+      
+      const newMsg = {
+        id: Date.now().toString(),
+        text: "",
+        sender: "agent",
+        timestamp: new Date().toISOString(),
+        message_type: "IMAGE",
+        attachment_url: selectedAsset.uri
+      };
+      setMessages(prev => [...prev, newMsg]);
+
+      // Mock HQ response
+      setTimeout(() => {
+        setMessages(prev => [...prev, {
+          id: (Date.now() + 1).toString(),
+          text: "HQ: Encrypted visual log received and stored.",
+          sender: "admin",
+          timestamp: new Date().toISOString()
+        }]);
+      }, 1500);
+    }
   };
 
   return (
@@ -107,8 +159,22 @@ export default function AgentSupportScreen() {
             }
 
             return (
-              <View 
+              <Pressable 
                 key={msg.id} 
+                onLongPress={() => {
+                  Alert.alert(
+                    "Delete Message",
+                    "Are you sure you want to delete this message?",
+                    [
+                      { text: "Cancel", style: "cancel" },
+                      { 
+                        text: "Delete", 
+                        style: "destructive", 
+                        onPress: () => handleDeleteMessage(msg.id) 
+                      }
+                    ]
+                  );
+                }}
                 className={`mb-4 max-w-[80%] ${isMe ? "self-end" : "self-start"}`}
               >
                 <View 
@@ -125,26 +191,42 @@ export default function AgentSupportScreen() {
                       HQ COMMAND
                     </Text>
                   )}
-                  <Text className="text-[11px] font-medium leading-relaxed" style={{ color: mood.text }}>
-                    {msg.text}
-                  </Text>
+                  {msg.message_type === 'IMAGE' && msg.attachment_url ? (
+                    <View className="mb-2 rounded-xl overflow-hidden bg-slate-800" style={{ width: 180, height: 130 }}>
+                      <Image 
+                        source={{ uri: msg.attachment_url }} 
+                        style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
+                      />
+                    </View>
+                  ) : null}
+                  {msg.text ? (
+                    <Text className="text-[11px] font-medium leading-relaxed" style={{ color: mood.text }}>
+                      {msg.text}
+                    </Text>
+                  ) : null}
                 </View>
                 <Text className={`text-[7px] font-black uppercase tracking-widest text-slate-500 mt-1 ${isMe ? "text-right" : "text-left"}`}>
                   {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </Text>
-              </View>
+              </Pressable>
             );
           })}
         </ScrollView>
 
         {/* Input Area */}
         <View 
-          className="flex-row items-end p-2 rounded-2xl border"
+          className="flex-row items-center p-2 rounded-2xl border"
           style={{
             backgroundColor: isLight ? "#FFFFFF" : "rgba(0,0,0,0.2)",
             borderColor: mood.border
           }}
         >
+          <Pressable
+            onPress={handleAttachImage}
+            className="p-2 mr-1 rounded-full bg-white/5 border border-white/5 active:scale-95"
+          >
+            <AttachIcon color={mood.primary} />
+          </Pressable>
           <TextInput
             className="flex-1 max-h-[100px] min-h-[40px] px-3 pt-3 pb-3 text-[12px] font-medium"
             style={{ color: mood.text }}

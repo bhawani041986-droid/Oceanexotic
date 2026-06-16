@@ -1,9 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, ScrollView, Pressable, TextInput, ActivityIndicator, KeyboardAvoidingView, Platform } from "react-native";
+import { View, Text, ScrollView, Pressable, TextInput, ActivityIndicator, KeyboardAvoidingView, Platform, Alert, Image } from "react-native";
 import { useRouter } from "expo-router";
 import Svg, { Path, Circle } from "react-native-svg";
+import * as ImagePicker from "expo-image-picker";
 import api from "@/services/api";
 import { useAuthStore } from "@/store/authStore";
+
+function AttachIcon({ color }: { color: string }) {
+  return (
+    <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <Path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+    </Svg>
+  );
+}
 
 function BackIcon({ color }: { color: string }) {
   return (
@@ -125,6 +134,84 @@ export default function SellerChatScreen() {
     }
   };
 
+  const handleDeleteMessage = async (msgId: number) => {
+    setMessages(prev => prev.filter(m => m.id !== msgId));
+    try {
+      await api.post(`/chat/delete_message`, {
+        message_id: msgId,
+        sender_id: sellerId
+      });
+      fetchConversations();
+    } catch (err) {
+      console.error("Delete message error:", err);
+      if (activeConv) fetchMessages(activeConv.id, false);
+    }
+  };
+
+  const handleAttachImage = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+    if (permissionResult.granted === false) {
+      Alert.alert("Permission Required", "Permission to access camera roll is required!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: false,
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const selectedAsset = result.assets[0];
+      uploadAndSendImage(selectedAsset.uri);
+    }
+  };
+
+  const uploadAndSendImage = async (uri: string) => {
+    setSending(true);
+    try {
+      const filename = uri.split('/').pop() || 'upload.jpg';
+      const match = /\.(\w+)$/.exec(filename);
+      const type = match ? `image/${match[1]}` : `image`;
+
+      const formData = new FormData();
+      formData.append('file', {
+        uri: Platform.OS === 'android' ? uri : uri.replace('file://', ''),
+        name: filename,
+        type: type,
+      } as any);
+
+      const uploadRes = await api.post(`/upload`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (uploadRes.data?.url && activeConv) {
+        const res = await api.post(`/chat/send_message`, {
+          conversation_id: activeConv.id,
+          sender_id: sellerId,
+          message_text: '',
+          message_type: 'IMAGE',
+          attachment_url: uploadRes.data.url
+        });
+
+        if (res.data?.status === "success") {
+          fetchMessages(activeConv.id, false);
+          fetchConversations();
+        }
+      } else {
+        Alert.alert("Upload Failed", "Could not upload the image. Please try again.");
+      }
+    } catch (err) {
+      console.error("Upload image error:", err);
+      Alert.alert("Error", "Failed to upload image.");
+    } finally {
+      setSending(false);
+    }
+  };
+
   return (
     <KeyboardAvoidingView 
       behavior={Platform.OS === "ios" ? "padding" : "height"} 
@@ -227,21 +314,45 @@ export default function SellerChatScreen() {
               messages.map((m) => {
                 const isMe = m.sender_id === sellerId;
                 return (
-                  <View 
+                  <Pressable 
                     key={m.id}
+                    onLongPress={() => {
+                      Alert.alert(
+                        "Delete Message",
+                        "Are you sure you want to delete this message?",
+                        [
+                          { text: "Cancel", style: "cancel" },
+                          { 
+                            text: "Delete", 
+                            style: "destructive", 
+                            onPress: () => handleDeleteMessage(m.id) 
+                          }
+                        ]
+                      );
+                    }}
                     className={`mb-3 max-w-[80%] rounded-2xl p-3.5 border ${
                       isMe 
                         ? "align-self-end bg-[#7C3AED]/15 border-[#7C3AED]/35 ml-auto" 
                         : "align-self-start bg-slate-900 border-white/5 mr-auto"
                     }`}
                   >
-                    <Text className="text-[10px] font-medium text-slate-100">
-                      {m.message_text}
-                    </Text>
-                    <Text className="text-[6px] font-black text-slate-500 uppercase mt-1.5 text-right">
+                    {m.message_type === 'IMAGE' && m.attachment_url ? (
+                      <View className="mb-2 rounded-xl overflow-hidden bg-slate-800" style={{ width: 200, height: 150 }}>
+                        <Image 
+                          source={{ uri: m.attachment_url }} 
+                          style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
+                        />
+                      </View>
+                    ) : null}
+                    {m.message_text ? (
+                      <Text className="text-[10px] font-medium text-slate-100">
+                        {m.message_text}
+                      </Text>
+                    ) : null}
+                    <Text className={`text-[6px] font-black text-slate-500 uppercase mt-1.5 ${isMe ? "text-right" : "text-left"}`}>
                       {new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </Text>
-                  </View>
+                  </Pressable>
                 );
               })
             )}
@@ -252,6 +363,13 @@ export default function SellerChatScreen() {
             className="h-16 border-t bg-slate-950 flex-row items-center px-4"
             style={{ borderColor: "rgba(255, 255, 255, 0.05)" }}
           >
+            <Pressable
+              onPress={handleAttachImage}
+              disabled={sending}
+              className="p-2 mr-1 rounded-full bg-white/5 border border-white/5 active:scale-95"
+            >
+              <AttachIcon color={primaryColor} />
+            </Pressable>
             <TextInput
               value={msgText}
               onChangeText={setMsgText}
