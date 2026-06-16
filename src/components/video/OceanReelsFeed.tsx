@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/Button';
 import { AnimatePresence, motion } from 'framer-motion';
 
 interface OceanReelsFeedProps {
-  variant?: "feed" | "pip" | "grid-card";
+  variant?: "feed" | "pip" | "grid-card" | "banner";
   videoId?: number;
 }
 
@@ -152,6 +152,104 @@ export function OceanReelsFeed({ variant = "feed", videoId }: OceanReelsFeedProp
                 </div>
               )}
            </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── OPTION 1.5: HORIZONTAL BANNER CARD (WEB) ───────────────────────────────
+  if (variant === "banner") {
+    const vid = videoId ? videos.find(v => v.id === videoId) : videos.find(v => v.description === "banner") || videos[0];
+    if (!vid) return null;
+    const product = products[vid.product_id];
+    const isActive = activeVideoId === vid.id;
+
+    return (
+      <div className="w-full lg:w-[50%] mx-auto my-6 px-[2px] md:px-0">
+        <div 
+           onClick={() => setActiveVideoId(isActive ? null : vid.id)}
+           className="relative overflow-hidden bg-[var(--c-card)] border border-[var(--foreground)]/5 hover:border-[var(--c-primary)]/30 transition-all duration-500 shadow-xl hover:shadow-[var(--c-shadow-glow)] cursor-pointer h-[144px] lg:h-[180px] flex flex-row"
+           style={{ clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)' }}
+        >
+          {/* Left Side: Video Preview */}
+          <div className="relative h-full aspect-[9/16] bg-black overflow-hidden flex-shrink-0">
+            {isActive ? (
+              <video 
+                src={vid.video_url} 
+                autoPlay 
+                loop 
+                muted={isMuted}
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover" 
+              />
+            ) : (
+              <img 
+                src={vid.thumbnail_url || "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400"} 
+                className="absolute inset-0 w-full h-full object-cover opacity-90" 
+              />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/40 pointer-events-none" />
+            
+            <div className="absolute top-2 left-2 z-20">
+               <span className="bg-red-500/95 text-white text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded">
+                  PROMO
+               </span>
+            </div>
+
+            {isActive && (
+              <button 
+                onClick={(e) => { e.stopPropagation(); setIsMuted(!isMuted); }}
+                className="absolute top-2 right-2 p-1 bg-black/60 rounded-full text-white hover:bg-black/80 transition-colors z-20"
+              >
+                {isMuted ? <VolumeX className="w-3 h-3" /> : <Volume2 className="w-3 h-3" />}
+              </button>
+            )}
+            
+            {!isActive && (
+               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="w-6 h-6 rounded-full flex items-center justify-center bg-white/20 border border-white/40">
+                     <Play className="w-3 h-3 fill-white text-white ml-0.5" />
+                  </div>
+               </div>
+            )}
+          </div>
+
+          {/* Right Side: Product Details & CTA */}
+          <div className="flex-1 p-3 md:p-5 flex flex-col justify-between min-w-0 bg-[var(--c-bg-alt)]/20">
+            <div className="space-y-1.5">
+              <span className="text-[7px] md:text-[8px] font-black text-emerald-500 uppercase tracking-widest leading-none">
+                Featured Ocean Ad
+              </span>
+              <h4 className="text-sm md:text-base font-black text-[var(--c-text-primary)] uppercase italic leading-tight truncate">
+                {vid.title}
+              </h4>
+              <p className="text-[8px] md:text-[10px] text-[var(--c-text-secondary)] uppercase font-semibold leading-normal line-clamp-2 opacity-80">
+                {vid.description || "Fresh premium catch sourced directly from local harbors. 100% traceable cold-chain delivery."}
+              </p>
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-[var(--foreground)]/5">
+              <div>
+                {product ? (
+                  <p className="text-sm md:text-base font-black text-[var(--c-text-primary)] italic leading-none">
+                    ₹{product.price}<span className="text-[9px] opacity-40 font-normal">/kg</span>
+                  </p>
+                ) : (
+                  <p className="text-[8px] font-black text-[var(--c-text-secondary)] uppercase">
+                    Direct Harbor Catch
+                  </p>
+                )}
+              </div>
+              {product && (
+                <button 
+                  onClick={(e) => handleAddToCart(product, e)}
+                  className="h-8 px-3 rounded-lg bg-[var(--c-primary)] text-[var(--foreground)] shadow-[var(--c-shadow-glow)] text-[8px] md:text-[9px] font-black uppercase hover:scale-105 transition-all flex items-center gap-1"
+                >
+                  <ShoppingCart className="w-3 h-3" /> SHOP NOW
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     );

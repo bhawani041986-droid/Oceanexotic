@@ -28,6 +28,8 @@ export default function AdminVideosPage() {
   const [editSortOrder, setEditSortOrder] = useState<number>(3);
   const [editIsActive, setEditIsActive] = useState<number>(1);
   const [editVideoUrl, setEditVideoUrl] = useState("");
+  const [placementFormat, setPlacementFormat] = useState<string>("grid-card");
+  const [editPlacementFormat, setEditPlacementFormat] = useState<string>("grid-card");
 
   useEffect(() => {
     fetchData();
@@ -95,7 +97,8 @@ export default function AdminVideosPage() {
           product_id: productId,
           video_url: urlData.publicUrl,
           title: title || "Product Showcase",
-          sort_order: sortOrder
+          sort_order: sortOrder,
+          description: placementFormat
         })
       });
 
@@ -170,6 +173,7 @@ export default function AdminVideosPage() {
     setEditSortOrder(vid.sort_order || 3);
     setEditIsActive(vid.is_active);
     setEditVideoUrl(vid.video_url || "");
+    setEditPlacementFormat(vid.description || "grid-card");
   };
 
   const handleUpdateVideo = async (e: React.FormEvent) => {
@@ -185,7 +189,8 @@ export default function AdminVideosPage() {
           product_id: editProductId,
           sort_order: editSortOrder,
           is_active: editIsActive,
-          video_url: editVideoUrl
+          video_url: editVideoUrl,
+          description: editPlacementFormat
         })
       });
       if (!res.ok) {
@@ -263,6 +268,19 @@ export default function AdminVideosPage() {
               />
             </div>
 
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary">Placement Format</label>
+              <select 
+                value={placementFormat}
+                onChange={(e) => setPlacementFormat(e.target.value)}
+                className="w-full h-12 bg-bg-card border border-[var(--border)] rounded-xl px-4 text-sm focus:border-primary outline-none text-text-primary"
+              >
+                <option value="grid-card" className="bg-bg-card text-text-primary">Grid Card (Inline Ad)</option>
+                <option value="pip" className="bg-bg-card text-text-primary">Floating Bubble (PiP)</option>
+                <option value="banner" className="bg-bg-card text-text-primary">Horizontal Banner (Promo)</option>
+              </select>
+            </div>
+
             <Button type="submit" disabled={isUploading} className="w-full h-12">
               {isUploading ? (
                 <><RefreshCw className="w-4 h-4 mr-2 animate-spin" /> UPLOADING...</>
@@ -306,6 +324,9 @@ export default function AdminVideosPage() {
                         </p>
                         <span className="text-[9px] bg-primary/10 text-primary font-bold px-1.5 py-0.5 rounded">
                           POS: {vid.sort_order || 3}
+                        </span>
+                        <span className="text-[9px] bg-primary/10 text-primary font-bold px-1.5 py-0.5 rounded">
+                          FORMAT: {vid.description === 'pip' ? 'Floating Bubble' : vid.description === 'banner' ? 'Horizontal Banner' : 'Grid Card'}
                         </span>
                       </div>
                     </div>
@@ -373,6 +394,19 @@ export default function AdminVideosPage() {
               onChange={(e) => setEditSortOrder(parseInt(e.target.value) || 1)}
               className="h-12 rounded-xl"
             />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary">Placement Format</label>
+            <select 
+              value={editPlacementFormat}
+              onChange={(e) => setEditPlacementFormat(e.target.value)}
+              className="w-full h-12 bg-bg-card border border-[var(--border)] rounded-xl px-4 text-sm focus:border-primary outline-none text-text-primary"
+            >
+              <option value="grid-card" className="bg-bg-card text-text-primary">Grid Card (Inline Ad)</option>
+              <option value="pip" className="bg-bg-card text-text-primary">Floating Bubble (PiP)</option>
+              <option value="banner" className="bg-bg-card text-text-primary">Horizontal Banner (Promo)</option>
+            </select>
           </div>
           <div className="space-y-2">
             <label className="text-[10px] font-black uppercase tracking-widest text-text-secondary">Video Link URL</label>

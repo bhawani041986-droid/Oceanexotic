@@ -1507,6 +1507,13 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
         )}
       </AnimatePresence>
 
+      {(() => {
+        const bannerReel = activeReels.find(r => r.description === 'banner');
+        return bannerReel ? (
+          <OceanReelsFeed variant="banner" videoId={bannerReel.id} />
+        ) : null;
+      })()}
+
       {/* 7. PREMIUM SELLERS - MAX-DENSITY MOBILE (2PX RULE) */}
       <section className="py-1 container mx-auto px-0 md:px-10 relative">
          <div className="mb-3 space-y-0.5 px-[2px] md:px-0">

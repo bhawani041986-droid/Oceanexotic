@@ -18,10 +18,11 @@ interface VideoItem {
   thumbnail_url?: string;
   title: string;
   sort_order: number;
+  description?: string;
 }
 
 interface OceanReelsFeedProps {
-  variant?: "feed" | "pip" | "grid-card";
+  variant?: "feed" | "pip" | "grid-card" | "banner";
   videoId?: number;
 }
 
@@ -211,6 +212,119 @@ export function OceanReelsFeed({ variant = "feed", videoId }: OceanReelsFeedProp
           <Path d="M16,16 L0,16 L16,0 Z" fill={colors.bg} />
           <Path d="M0,16 L16,0" stroke={colors.border} strokeWidth="1" />
         </Svg>
+      </Pressable>
+    );
+  }
+
+  // ── OPTION 1.5: HORIZONTAL BANNER CARD ──────────────────────────────────────
+  if (variant === "banner") {
+    const vid = videoId ? videos.find((v) => v.id === videoId) : videos.find((v) => v.description === "banner") || videos[0];
+    if (!vid) return null;
+    const product = allProducts?.find((p) => p.id === vid.product_id);
+    const isActive = activeVideoId === vid.id;
+
+    return (
+      <Pressable
+        onPress={() => setActiveVideoId(isActive ? null : vid.id)}
+        className="w-full my-4 flex-row overflow-hidden border rounded-2xl"
+        style={{ height: 144, backgroundColor: colors.card, borderColor: colors.border }}
+      >
+        {/* Left Side: Video Preview */}
+        <View className="relative h-full bg-black overflow-hidden" style={{ width: 81 }}>
+          {isActive ? (
+            <ActiveReelVideo videoUrl={vid.video_url} isMuted={isMuted} />
+          ) : (
+            <Image
+              source={{ uri: vid.thumbnail_url || "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400" }}
+              className="w-full h-full opacity-90"
+              contentFit="cover"
+            />
+          )}
+          <View className="absolute inset-0 bg-gradient-to-r from-transparent to-black/30 pointer-events-none" />
+          
+          <View className="absolute left-1.5 top-1.5 rounded bg-red-500/95 px-1 py-0.5 z-20">
+            <Text className="text-[6px] font-black uppercase text-white tracking-widest">
+              PROMO
+            </Text>
+          </View>
+
+          {isActive && (
+            <Pressable 
+              onPress={(e) => {
+                e.stopPropagation();
+                setIsMuted(!isMuted);
+              }}
+              className="absolute top-1.5 right-1.5 p-1 bg-black/60 rounded-full z-20"
+            >
+              <MaterialCommunityIcons
+                name={isMuted ? "volume-mute" : "volume-high"}
+                size={10}
+                color="white"
+              />
+            </Pressable>
+          )}
+
+          {!isActive && (
+            <View className="absolute inset-0 items-center justify-center pointer-events-none">
+              <View className="w-6 h-6 rounded-full items-center justify-center bg-white/20 border border-white/40">
+                <MaterialCommunityIcons name="play" size={12} color="white" style={{ marginLeft: 1 }} />
+              </View>
+            </View>
+          )}
+        </View>
+
+        {/* Right Side: Product Details & CTA */}
+        <View className="flex-1 p-3 justify-between" style={{ backgroundColor: `${colors.bg}10` }}>
+          <View className="space-y-1">
+            <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>
+              Featured Ocean Ad
+            </Text>
+            <Text
+              className="text-sm font-black uppercase italic"
+              style={{ color: colors.text }}
+              numberOfLines={1}
+            >
+              {vid.title}
+            </Text>
+            <Text
+              className="text-[10px] opacity-75 font-semibold"
+              style={{ color: colors.textMuted }}
+              numberOfLines={2}
+            >
+              {vid.description || "Fresh premium catch sourced directly from local harbors. 100% traceable cold-chain delivery."}
+            </Text>
+          </View>
+
+          <View className="flex-row items-center justify-between pt-1 border-t" style={{ borderColor: `${colors.border}20` }}>
+            <View>
+              {product ? (
+                <Text className="text-sm font-black italic" style={{ color: colors.text }}>
+                  ₹{product.price}
+                  <Text className="text-[8px] font-normal opacity-40">/kg</Text>
+                </Text>
+              ) : (
+                <Text className="text-[8px] font-black uppercase" style={{ color: colors.textMuted }}>
+                  Direct Harbor Catch
+                </Text>
+              )}
+            </View>
+            {product && (
+              <Pressable
+                onPress={(e) => {
+                  e.stopPropagation();
+                  handleAddToCart(product);
+                }}
+                className="flex-row items-center rounded-lg px-2.5 py-1.5"
+                style={{ backgroundColor: colors.primary }}
+              >
+                <MaterialCommunityIcons name="cart-plus" size={10} color="white" style={{ marginRight: 4 }} />
+                <Text className="text-[8px] font-black uppercase text-white">
+                  SHOP NOW
+                </Text>
+              </Pressable>
+            )}
+          </View>
+        </View>
       </Pressable>
     );
   }

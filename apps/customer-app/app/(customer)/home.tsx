@@ -717,6 +717,15 @@ export default function CustomerHomeScreen() {
           </Svg>
         </View>
 
+        {(() => {
+          const bannerReel = activeReels.find((r) => r.description === 'banner');
+          return bannerReel ? (
+            <View className="px-4">
+              <OceanReelsFeed variant="banner" videoId={bannerReel.id} />
+            </View>
+          ) : null;
+        })()}
+
         {/* Premium Sellers ("The Fleet Elite") */}
         <View className="px-4 py-8">
           <SectionTitle title={t('the_fleet_elite') || "Top Sellers"} subtitle={t('verified_local_sellers') || "Verified Sellers"} />
