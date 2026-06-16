@@ -45,20 +45,38 @@ export default function CustomerChatScreen() {
 
   const scrollViewRef = useRef<ScrollView>(null);
 
-  const fetchConversations = async () => {
+  async function createDefaultSupportConversation() {
+    if (!customerId) return;
+    try {
+      const res = await api.post(`/chat/create_conversation`, {
+        participant_1: customerId,
+        participant_2: 'ADM-001'
+      });
+      if (res.status === 200 || res.status === 201) {
+        fetchConversations();
+      }
+    } catch (err) {
+      console.error("Auto-create support conversation failed:", err);
+    }
+  }
+
+  async function fetchConversations() {
     try {
       const res = await api.get(`/chat/get_conversations`, {
         params: { user_id: customerId, t: Date.now() }
       });
       if (Array.isArray(res.data)) {
         setConversations(res.data);
+        if (res.data.length === 0 && customerId && (customerId.startsWith('USR-') || customerId === 'USR-001')) {
+          createDefaultSupportConversation();
+        }
       }
     } catch (err) {
       console.error("Conversations fetch failure:", err);
     } finally {
       setLoadingConv(false);
     }
-  };
+  }
 
   const fetchMessages = async (convId: string, showLoader = false) => {
     if (showLoader) setLoadingMsgs(true);

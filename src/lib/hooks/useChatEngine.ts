@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/Toast';
 
-const API_BASE_URL = 'https://oceanexotic.com/api';
+const API_BASE_URL = '/api';
 
 export interface ChatMessage {
   id: number;
@@ -45,7 +45,26 @@ export function useChatEngine(currentUserId: string | undefined | null) {
   const processedInvites = useRef<Set<string>>(new Set());
   const mounted = useRef(true);
 
-  const fetchConversations = async () => {
+  async function createDefaultSupportConversation() {
+    if (!currentUserId) return;
+    try {
+      const res = await fetch(`${API_BASE_URL}/chat/create_conversation`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          participant_1: currentUserId,
+          participant_2: 'ADM-001'
+        })
+      });
+      if (res.ok) {
+        fetchConversations();
+      }
+    } catch (err) {
+      console.error("Auto-create support conversation failed:", err);
+    }
+  }
+
+  async function fetchConversations() {
     if (!currentUserId) return;
     try {
       const res = await fetch(`${API_BASE_URL}/chat/get_conversations?user_id=${currentUserId}&t=${Date.now()}`);
@@ -56,6 +75,8 @@ export function useChatEngine(currentUserId: string | undefined | null) {
         // Auto-select first chat if none selected
         if (data.length > 0 && mounted.current) {
           setActiveChat(prev => prev === null ? data[0].id : prev);
+        } else if (data.length === 0 && currentUserId && (currentUserId.startsWith('USR-') || currentUserId === 'USR-001')) {
+          createDefaultSupportConversation();
         }
         
         // Detect incoming calls globally
@@ -80,9 +101,9 @@ export function useChatEngine(currentUserId: string | undefined | null) {
     } finally {
       if (mounted.current) setIsLoading(false);
     }
-  };
+  }
 
-  const fetchMessages = async (convId: number) => {
+  async function fetchMessages(convId: number) {
     try {
       // Fetch and implicitly mark as read if user_id is passed
       const res = await fetch(`${API_BASE_URL}/chat/get_messages?conversation_id=${convId}&user_id=${currentUserId}&t=${Date.now()}`);
@@ -91,7 +112,7 @@ export function useChatEngine(currentUserId: string | undefined | null) {
     } catch (err) {
       console.error("Fetch messages error:", err);
     }
-  };
+  }
 
   // Setup Global Polling
   useEffect(() => {

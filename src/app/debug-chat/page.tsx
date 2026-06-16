@@ -24,7 +24,7 @@ export default function DebugChatPage() {
     
     addLog(`Testing API Send to conversation ${activeChat}...`);
     try {
-      const res = await fetch(`https://oceanexotic.com/api/chat/send_message`, {
+      const res = await fetch(`/api/chat/send_message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
