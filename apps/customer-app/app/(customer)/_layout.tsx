@@ -41,7 +41,7 @@ export default function CustomerLayout() {
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       <CustomerHeader />
-      <View className="flex-1">
+      <View className="flex-1" style={{ paddingBottom: 87 }}>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="home" />
           <Stack.Screen name="products" />

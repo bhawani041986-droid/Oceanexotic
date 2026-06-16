@@ -425,7 +425,7 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
            </div>
         </header>
 
-        <div className="animate-fade-in" style={{"--agent-primary": mood.primary, "--agent-glow": mood.glow, "--agent-text": mood.text, "--agent-card-bg": mood.cardBg, "--agent-border": mood.border} as any}>
+        <div className="animate-fade-in pb-32 md:pb-0" style={{"--agent-primary": mood.primary, "--agent-glow": mood.glow, "--agent-text": mood.text, "--agent-card-bg": mood.cardBg, "--agent-border": mood.border} as any}>
           {children}
         </div>
       </main>

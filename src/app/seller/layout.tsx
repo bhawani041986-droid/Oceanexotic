@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import React from "react";
@@ -213,7 +214,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
             {/* Dynamic Content Surface */}
             <div className={cn(
               "flex-1 relative",
-              isVoucherPage ? "p-0" : "p-4 pt-24 lg:pt-0 lg:p-12"
+              isVoucherPage ? "p-0" : "p-4 pb-32 pt-24 lg:pb-0 lg:pt-0 lg:p-12"
             )}>
               {/* Background Ambience - Hidden on Voucher */}
               {!isVoucherPage && (

@@ -11,10 +11,7 @@ export default function CustomerLayout({
 }) {
   const pathname = usePathname();
 
-  // If we are exactly on the standalone chat page, bypass the ecommerce layout
-  if (pathname === "/customer/chat") {
-    return <>{children}</>;
-  }
+
 
   return (
     <MainLayout>
