@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, useEffect } from "react";
+import { useMemo, useState, useCallback, useEffect, Fragment } from "react";
 import {
   View,
   Text,
@@ -332,9 +332,6 @@ export default function CustomerHomeScreen() {
           </View>
         </View>
 
-        {/* Ocean Reels Video Feed */}
-        <OceanReelsFeed />
-
         {/* Maritime Wave Divider */}
         <MaritimeWaveDivider />
 
@@ -414,7 +411,12 @@ export default function CustomerHomeScreen() {
             </View>
           ) : filteredCatch.length > 0 ? (
             <View className="flex-row flex-wrap justify-between gap-y-3">
-              {filteredCatch.map((item) => (
+              {filteredCatch.map((item, idx) => (
+                <Fragment key={item.catch_id}>
+                  {idx === 2 && (
+                    <OceanReelsFeed variant="grid-card" />
+                  )}
+                  
                 <TodaysCatchCard
                   key={item.catch_id}
                   item={item}
@@ -423,6 +425,7 @@ export default function CustomerHomeScreen() {
                   }
                   onOpenCut={() => openCutModal(item)}
                 />
+                </Fragment>
               ))}
             </View>
           ) : (
@@ -931,6 +934,7 @@ export default function CustomerHomeScreen() {
         onClose={() => setCutOpen(false)}
         onConfirm={confirmCut}
       />
+      <OceanReelsFeed variant="pip" />
       {ToastHost}
     </View>
   );

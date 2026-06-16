@@ -9,6 +9,7 @@ import { useToast } from "@/components/ui/Toast";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import api from "@/services/api";
 import { t } from "@/lib/i18n";
+import Svg, { Path } from "react-native-svg";
 
 interface VideoItem {
   id: number;
@@ -17,6 +18,10 @@ interface VideoItem {
   thumbnail_url?: string;
   title: string;
   sort_order: number;
+}
+
+interface OceanReelsFeedProps {
+  variant?: "feed" | "pip" | "grid-card";
 }
 
 function ActiveReelVideo({ videoUrl, isMuted }: { videoUrl: string; isMuted: boolean }) {
@@ -40,11 +45,12 @@ function ActiveReelVideo({ videoUrl, isMuted }: { videoUrl: string; isMuted: boo
   );
 }
 
-export function OceanReelsFeed() {
+export function OceanReelsFeed({ variant = "feed" }: OceanReelsFeedProps) {
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeVideoId, setActiveVideoId] = useState<number | null>(null);
   const [isMuted, setIsMuted] = useState(true);
+  const [isPipOpen, setIsPipOpen] = useState(false);
   
   const colors = useThemeColors();
   const cart = useCartStore();
@@ -81,6 +87,7 @@ export function OceanReelsFeed() {
   };
 
   if (loading) {
+    if (variant === "grid-card" || variant === "pip") return null;
     return (
       <View className="py-6 items-center justify-center">
         <ActivityIndicator color={colors.primary} />
@@ -90,6 +97,195 @@ export function OceanReelsFeed() {
 
   if (videos.length === 0) return null;
 
+  // ── OPTION 1: INLINE GRID CARD ──────────────────────────────────────────────
+  if (variant === "grid-card") {
+    const vid = videos[0];
+    if (!vid) return null;
+    const product = allProducts?.find((p) => p.id === vid.product_id);
+    const isActive = activeVideoId === vid.id;
+    
+    // For local layout tracking
+    const w = 170;
+    const h = 258;
+
+    return (
+      <Pressable
+        onPress={() => setActiveVideoId(isActive ? null : vid.id)}
+        className="w-[48%] relative overflow-hidden"
+        style={{ minHeight: 250 }}
+      >
+        <Svg width="100%" height="100%" style={StyleSheet.absoluteFill}>
+          <Path
+            d={`M16,0 L${w},0 L${w},${h - 16} L${w - 16},${h} L0,${h} L0,16 Z`}
+            fill={colors.card}
+            stroke={colors.border}
+            strokeWidth="1"
+          />
+        </Svg>
+        <View 
+          className="relative overflow-hidden w-full"
+          style={{ aspectRatio: 1, backgroundColor: "rgba(0,0,0,0.8)" }}
+        >
+          {isActive ? (
+            <ActiveReelVideo videoUrl={vid.video_url} isMuted={isMuted} />
+          ) : (
+            <Image
+              source={{ uri: vid.thumbnail_url || "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400" }}
+              className="w-full h-full opacity-90"
+              contentFit="cover"
+            />
+          )}
+          <View className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/20 pointer-events-none" />
+
+          <View className="absolute left-2 top-2 rounded bg-red-500/90 px-2 py-0.5 z-20">
+            <Text className="text-[7px] font-black uppercase text-white">
+              PROMO REEL
+            </Text>
+          </View>
+
+          {/* Mute toggle button on card */}
+          {isActive && (
+            <Pressable 
+              onPress={(e) => {
+                e.stopPropagation();
+                setIsMuted(!isMuted);
+              }}
+              className="absolute top-2 right-2 p-1.5 bg-black/50 rounded-full z-20"
+            >
+              <MaterialCommunityIcons
+                name={isMuted ? "volume-mute" : "volume-high"}
+                size={12}
+                color="white"
+              />
+            </Pressable>
+          )}
+
+          {!isActive && (
+            <View className="absolute inset-0 items-center justify-center pointer-events-none">
+              <View className="w-8 h-8 rounded-full items-center justify-center bg-white/20 border border-white/40">
+                <MaterialCommunityIcons name="play" size={16} color="white" style={{ marginLeft: 2 }} />
+              </View>
+            </View>
+          )}
+        </View>
+
+        <View className="gap-2 p-3" style={{ minHeight: 90 }}>
+          <Text className="text-[8px] font-black uppercase text-emerald-500">
+            {t('watch_and_shop') || "Watch & Shop"}
+          </Text>
+          <Text
+            className="text-xs font-black uppercase italic text-foreground"
+            style={{ color: colors.text }}
+            numberOfLines={1}
+          >
+            {vid.title}
+          </Text>
+          {product && (
+            <View className="flex-row items-center justify-between mt-auto">
+              <Text className="text-sm font-black italic text-foreground" style={{ color: colors.text }}>
+                ₹{product.price}
+              </Text>
+              <Pressable
+                onPress={(e) => {
+                  e.stopPropagation();
+                  handleAddToCart(product);
+                }}
+                className="rounded-xl px-3 py-2"
+                style={{ backgroundColor: colors.primary }}
+              >
+                <Text className="text-[9px] font-black uppercase text-white">
+                  SHOP
+                </Text>
+              </Pressable>
+            </View>
+          )}
+        </View>
+
+        {/* High-Tech Beveled Corner Overlays */}
+        <Svg width="16" height="16" style={{ position: "absolute", top: -1, left: -1, zIndex: 40 }}>
+          <Path d="M0,0 L16,0 L0,16 Z" fill={colors.bg} />
+          <Path d="M16,0 L0,16" stroke={colors.border} strokeWidth="1" />
+        </Svg>
+        <Svg width="16" height="16" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 40 }}>
+          <Path d="M16,16 L0,16 L16,0 Z" fill={colors.bg} />
+          <Path d="M0,16 L16,0" stroke={colors.border} strokeWidth="1" />
+        </Svg>
+      </Pressable>
+    );
+  }
+
+  // ── OPTION 2: FLOATING CORNER BUBBLE ────────────────────────────────────────
+  if (variant === "pip") {
+    const vid = videos[0];
+    if (!vid) return null;
+    const product = allProducts?.find((p) => p.id === vid.product_id);
+
+    return (
+      <View style={{ position: 'absolute', bottom: 110, right: 16, zIndex: 999, alignItems: 'flex-end' }}>
+        {isPipOpen && (
+          <View 
+            className="rounded-2xl border bg-black shadow-2xl mb-3 overflow-hidden" 
+            style={{ width: 140, height: 240, borderColor: colors.border }}
+          >
+            <ActiveReelVideo videoUrl={vid.video_url} isMuted={isMuted} />
+            <View className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
+
+            {/* Close & Mute buttons */}
+            <Pressable 
+              onPress={() => setIsPipOpen(false)}
+              className="absolute top-2 left-2 p-1.5 bg-black/40 rounded-full"
+            >
+              <MaterialCommunityIcons name="close" size={14} color="white" />
+            </Pressable>
+            <Pressable 
+              onPress={() => setIsMuted(!isMuted)}
+              className="absolute top-2 right-2 p-1.5 bg-black/40 rounded-full"
+            >
+              <MaterialCommunityIcons name={isMuted ? "volume-mute" : "volume-high"} size={14} color="white" />
+            </Pressable>
+
+            <View className="absolute bottom-0 left-0 right-0 p-2">
+              <Text className="text-white font-bold text-[9px] truncate mb-0.5">{vid.title}</Text>
+              {product && (
+                <View className="flex-row items-center justify-between">
+                  <Text className="font-bold text-[9px]" style={{ color: colors.primary }}>₹{product.price}</Text>
+                  <Pressable 
+                    onPress={() => handleAddToCart(product)} 
+                    className="px-2 py-0.5 rounded bg-primary"
+                    style={{ backgroundColor: colors.primary }}
+                  >
+                    <Text className="text-[8px] font-bold text-white">SHOP</Text>
+                  </Pressable>
+                </View>
+              )}
+            </View>
+          </View>
+        )}
+
+        {/* Pulsing Bubble */}
+        <Pressable 
+          onPress={() => setIsPipOpen(!isPipOpen)}
+          className="w-16 h-16 rounded-full border-2 overflow-hidden shadow-lg items-center justify-center p-0.5 bg-black"
+          style={{ borderColor: colors.primary }}
+        >
+          <View className="w-full h-full rounded-full overflow-hidden relative">
+            <Image 
+              source={{ uri: vid.thumbnail_url || "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400" }} 
+              className="w-full h-full"
+              contentFit="cover"
+            />
+            <View className="absolute inset-0 bg-black/20 items-center justify-center">
+              <View className="w-6 h-6 rounded-full items-center justify-center bg-primary/95" style={{ backgroundColor: colors.primary }}>
+                <MaterialCommunityIcons name="play" size={14} color="white" style={{ marginLeft: 2 }} />
+              </View>
+            </View>
+          </View>
+        </Pressable>
+      </View>
+    );
+  }
+
+  // ── STANDARD LAYOUT: CAROUSEL FEED ──────────────────────────────────────────
   return (
     <View className="w-full py-6 border-t border-b my-4" style={{ borderColor: `${colors.border}20`, backgroundColor: colors.bg }}>
       <View className="px-4 mb-4">
@@ -209,3 +405,4 @@ export function OceanReelsFeed() {
     </View>
   );
 }
+

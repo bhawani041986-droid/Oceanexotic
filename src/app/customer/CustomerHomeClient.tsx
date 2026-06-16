@@ -1201,7 +1201,6 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
 
       {/* MARITIME WAVE DIVIDER - MOBILE SPACED */}
       <div>
-         <OceanReelsFeed />
          <MaritimeWaveDivider />
       </div>
 
@@ -1293,8 +1292,14 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
                {todaysCatch
                   .filter(c => activeBatch === 'ALL' || c.batch_label === activeBatch)
-                  .map((catchItem) => (
-                  <motion.div 
+                  .map((catchItem, idx) => (
+                  <React.Fragment key={catchItem.id}>
+                     {idx === 2 && (
+                        <div className="group">
+                           <OceanReelsFeed variant="grid-card" />
+                        </div>
+                     )}
+                     <motion.div 
                      key={catchItem.id} 
                      initial={{ opacity: 0, scale: 0.95 }}
                      whileInView={{ opacity: 1, scale: 1 }}
@@ -1371,6 +1376,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                         </Card>
                      </Link>
                   </motion.div>
+                  </React.Fragment>
                ))}
             </div>
          ) : (
@@ -2097,6 +2103,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
           </div>
         )}
       </AnimatePresence>
+      <OceanReelsFeed variant="pip" />
     </div>
   );
 }
