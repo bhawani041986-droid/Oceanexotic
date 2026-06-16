@@ -30,11 +30,13 @@ export default function AdminVideosPage() {
       const data = await res.json();
       if (Array.isArray(data)) setProducts(data);
 
-      // Get all uploaded videos
-      const { data: vidData } = await supabase.from('product_videos').select('*').order('created_at', { ascending: false });
-      if (vidData) setVideos(vidData);
+      // Get all uploaded videos via secure server API
+      const vidRes = await fetch('/api/admin/videos');
+      const vidData = await vidRes.json();
+      if (Array.isArray(vidData)) setVideos(vidData);
     } catch (e) {
       console.error(e);
+      toast("Failed to load catalog or videos.", "error");
     } finally {
       setIsLoading(false);
     }
@@ -65,20 +67,21 @@ export default function AdminVideosPage() {
         .from('product_videos')
         .getPublicUrl(filePath);
 
-      // 3. Insert into Database
-      const { error: dbError } = await supabase
-        .from('product_videos')
-        .insert({
+      // 3. Insert into Database and sync products via secure API
+      const dbRes = await fetch('/api/admin/videos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           product_id: productId,
           video_url: urlData.publicUrl,
-          title: title || "Product Showcase",
-          is_active: 1
-        });
+          title: title || "Product Showcase"
+        })
+      });
 
-      if (dbError) throw dbError;
-
-      // 4. Sync with the products table so it shows in the OceanReelsFeed
-      await supabase.from('products').update({ video_url: urlData.publicUrl }).eq('id', productId);
+      if (!dbRes.ok) {
+        const errData = await dbRes.json();
+        throw new Error(errData.error || "Failed to save video database entry");
+      }
 
       toast("Video uploaded and published successfully!", "success");
       setVideoFile(null);
@@ -97,39 +100,45 @@ export default function AdminVideosPage() {
     try {
       const newStatus = vid.is_active === 1 ? 0 : 1;
       
-      // Update product_videos table
-      const { error } = await supabase
-        .from('product_videos')
-        .update({ is_active: newStatus })
-        .eq('id', vid.id);
-        
-      if (error) throw error;
-      
-      // Sync with products table (nullify if turned off, restore if turned on)
-      await supabase
-        .from('products')
-        .update({ video_url: newStatus === 1 ? vid.video_url : null })
-        .eq('id', vid.product_id);
+      const res = await fetch('/api/admin/videos', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: vid.id,
+          is_active: newStatus,
+          product_id: vid.product_id,
+          video_url: vid.video_url
+        })
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || "Failed to update video status");
+      }
         
       toast(newStatus === 1 ? "Video turned ON" : "Video turned OFF", "success");
       fetchData();
-    } catch (e) {
-      toast("Failed to toggle video status.", "error");
+    } catch (e: any) {
+      toast(`Failed to toggle video status: ${e.message}`, "error");
     }
   };
 
   const handleDelete = async (vid: any) => {
     if (!confirm("Are you sure you want to delete this video showcase?")) return;
     try {
-      await supabase.from('product_videos').delete().eq('id', vid.id);
-      
-      // Also remove it from the products table so it disappears from the feed
-      await supabase.from('products').update({ video_url: null }).eq('id', vid.product_id);
+      const res = await fetch(`/api/admin/videos?id=${vid.id}&product_id=${vid.product_id}`, {
+        method: 'DELETE'
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData.error || "Failed to delete video");
+      }
       
       toast("Video deleted.", "success");
       fetchData();
-    } catch (e) {
-      toast("Failed to delete video.", "error");
+    } catch (e: any) {
+      toast(`Failed to delete video: ${e.message}`, "error");
     }
   };
 
