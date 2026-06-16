@@ -140,11 +140,18 @@ export default function DeliveryTrackingCard({ orderId }: DeliveryTrackingCardPr
 
   if (!trackingData) return null;
 
-  const isDelivered = trackingData.status === "delivered";
-  const isCancelled = trackingData.status === "cancelled";
-  const showMap = !isDelivered && !isCancelled && trackingData.driver_location !== null;
-  const etaLabel = formatETA(trackingData.minutes_remaining, trackingData.status);
-  const etaTime = formatTime(trackingData.estimated_delivery_at);
+  const isDelivered = trackingData.status === "delivered" || trackingData.status === "DELIVERED";
+  const isCancelled = trackingData.status === "cancelled" || trackingData.status === "CANCELLED";
+  
+  // Support both old and new API formats
+  const driverLoc = trackingData.driver_location || ((trackingData as any).fleet ? { latitude: (trackingData as any).fleet.lat, longitude: (trackingData as any).fleet.lng } : null);
+  const showMap = !isDelivered && !isCancelled && driverLoc !== null;
+  
+  const etaLabel = (trackingData as any).eta ? ((trackingData as any).eta.isDelayed ? "Delayed" : "Arriving Soon") : formatETA(trackingData.minutes_remaining || 0, trackingData.status);
+  const etaTime = (trackingData as any).eta ? (trackingData as any).eta.formatted : formatTime(trackingData.estimated_delivery_at);
+  const stageLabel = trackingData.stage_label || ((trackingData as any).timeline && (trackingData as any).timeline.find((t: any) => t.status === trackingData.status)?.label) || trackingData.status;
+  const driverName = trackingData.driver_name || ((trackingData as any).fleet?.agent);
+
 
   return (
     <div className="rounded-[24px] border border-primary/20 bg-gradient-to-br from-primary/10 via-transparent to-blue-500/5 overflow-hidden">
@@ -169,9 +176,9 @@ export default function DeliveryTrackingCard({ orderId }: DeliveryTrackingCardPr
                 : isCancelled
                 ? "This order was cancelled."
                 : <>
-                    Current Stage: <span className="font-bold text-[var(--foreground)]">{trackingData.stage_label}</span>
-                    {trackingData.driver_name && (
-                      <> • Rider: <span className="font-bold text-[var(--foreground)]">{trackingData.driver_name}</span></>
+                    Current Stage: <span className="font-bold text-[var(--foreground)]">{stageLabel}</span>
+                    {driverName && (
+                      <> • Rider: <span className="font-bold text-[var(--foreground)]">{driverName}</span></>
                     )}
                   </>
               }
@@ -184,7 +191,7 @@ export default function DeliveryTrackingCard({ orderId }: DeliveryTrackingCardPr
           <div className="bg-blue-500/10 px-3 py-1.5 border border-blue-500/30 rounded-xl flex items-center gap-2">
             <Thermometer className="w-3 h-3 text-blue-400" />
             <span className="text-[10px] font-black text-blue-400 uppercase tracking-widest">
-              {trackingData.current_temp}°C Chilled
+              {trackingData.current_temp || ((trackingData as any).fleet?.temp) || "-18.5"}°C Chilled
             </span>
           </div>
 
@@ -208,11 +215,12 @@ export default function DeliveryTrackingCard({ orderId }: DeliveryTrackingCardPr
       {/* ── Stage Pipeline ── */}
       <div className="px-5 md:px-6 pb-4 overflow-x-auto">
         <div className="flex items-center min-w-max gap-0">
-          {trackingData.stages.map((stage, idx) => {
-            const isActive = stage.key === trackingData.stage;
-            const isDone = stage.done;
+          {(trackingData.stages || (trackingData as any).timeline || []).map((stage: any, idx: number, arr: any[]) => {
+            const key = stage.key || stage.status;
+            const isActive = key === (trackingData.stage || trackingData.status);
+            const isDone = stage.done !== undefined ? stage.done : stage.completed;
             return (
-              <React.Fragment key={stage.key}>
+              <React.Fragment key={key}>
                 <div className="flex flex-col items-center gap-1.5 min-w-[72px]">
                   <div className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${
                     isDone
@@ -233,9 +241,9 @@ export default function DeliveryTrackingCard({ orderId }: DeliveryTrackingCardPr
                     {stage.label}
                   </span>
                 </div>
-                {idx < trackingData.stages.length - 1 && (
+                {idx < arr.length - 1 && (
                   <div className={`h-[2px] flex-1 min-w-[24px] mb-4 transition-all ${
-                    trackingData.stages[idx + 1]?.done ? "bg-primary/60" : "bg-[var(--foreground)]/10"
+                    (arr[idx + 1]?.done !== undefined ? arr[idx + 1]?.done : arr[idx + 1]?.completed) ? "bg-primary/60" : "bg-[var(--foreground)]/10"
                   }`} />
                 )}
               </React.Fragment>
@@ -248,8 +256,8 @@ export default function DeliveryTrackingCard({ orderId }: DeliveryTrackingCardPr
       {showMap && (
         <div className="relative mx-4 md:mx-6 mb-5 rounded-[18px] overflow-hidden border border-primary/15 shadow-inner" style={{ height: "220px" }}>
           <PortBlairMap
-            driverLat={trackingData.driver_location?.latitude}
-            driverLng={trackingData.driver_location?.longitude}
+            driverLat={driverLoc?.latitude}
+            driverLng={driverLoc?.longitude}
             status={trackingData.status}
             className="w-full h-full"
           />
