@@ -36,6 +36,35 @@ export function ChatSystem({ currentUserId, role, backUrl }: ChatSystemProps) {
   const [selectedMessages, setSelectedMessages] = React.useState<number[]>([]);
   const [isNewChatModalOpen, setIsNewChatModalOpen] = React.useState(false);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
+  const [isUploading, setIsUploading] = React.useState(false);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !activeChat) return;
+
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (data.url) {
+        const type = file.type.startsWith('image/') ? 'IMAGE' : 'PDF';
+        await handleSendMessage('', type, data.url);
+      } else {
+        alert('Upload failed: ' + (data.error || 'Unknown error'));
+      }
+    } catch (err) {
+      console.error('File upload error:', err);
+      alert('File upload failed.');
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -226,6 +255,7 @@ export function ChatSystem({ currentUserId, role, backUrl }: ChatSystemProps) {
                            isOwnMessage={isOwnMessage} 
                            currentUserId={currentUserId} 
                            onJoinVideoCall={(roomID) => setActiveVideoRoom(roomID)}
+                           onDeleteMessage={handleDeleteMessage}
                          />
                        </div>
                      </div>
@@ -238,9 +268,26 @@ export function ChatSystem({ currentUserId, role, backUrl }: ChatSystemProps) {
               {/* Input Area (64px exactly) */}
               <footer className="w-full h-[64px] bg-[#1E293B] border-t border-white/5 flex items-center px-4 shrink-0">
                  <div className="flex items-center gap-2 w-full max-w-5xl mx-auto">
-                    <button className="p-2 text-white/50 hover:text-[#0077B6] transition-colors shrink-0">
-                       <Paperclip className="w-6 h-6" />
-                    </button>
+                     {isUploading ? (
+                       <div className="w-6 h-6 rounded-full border-2 border-[#0077B6] border-t-transparent animate-spin shrink-0 mx-2" />
+                     ) : (
+                       <>
+                         <input 
+                           type="file" 
+                           id="chat-file-input" 
+                           className="hidden" 
+                           onChange={handleFileChange}
+                           accept="image/*,application/pdf"
+                         />
+                         <button 
+                           onClick={() => document.getElementById('chat-file-input')?.click()}
+                           className="p-2 text-white/50 hover:text-[#0077B6] transition-colors shrink-0 cursor-pointer"
+                           title="Attach File (Image/PDF)"
+                         >
+                            <Paperclip className="w-6 h-6" />
+                         </button>
+                       </>
+                     )}
                     
                     <input 
                       value={message}

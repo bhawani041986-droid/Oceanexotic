@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Package, Receipt, FileText, Check, CheckCheck, Play, Video } from 'lucide-react';
+import { Package, Receipt, FileText, Check, CheckCheck, Play, Video, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 
 export interface ChatMessage {
@@ -19,9 +19,10 @@ interface MessageBubbleProps {
   isOwnMessage: boolean;
   currentUserId: string;
   onJoinVideoCall?: (roomID: string) => void;
+  onDeleteMessage?: (msgId: number) => void;
 }
 
-export function MessageBubble({ message, isOwnMessage, onJoinVideoCall }: MessageBubbleProps) {
+export function MessageBubble({ message, isOwnMessage, onJoinVideoCall, onDeleteMessage }: MessageBubbleProps) {
   const [timeString, setTimeString] = React.useState("");
 
   React.useEffect(() => {
@@ -193,10 +194,19 @@ export function MessageBubble({ message, isOwnMessage, onJoinVideoCall }: Messag
   };
 
   return (
-    <div className={cn("flex w-full", isOwnMessage ? "justify-end" : "justify-start")}>
+    <div className={cn("flex w-full group/bubble items-center gap-2", isOwnMessage ? "justify-end" : "justify-start")}>
+      {!isOwnMessage && onDeleteMessage && (
+        <button 
+          onClick={(e) => { e.stopPropagation(); onDeleteMessage(message.id); }}
+          className="opacity-0 group-hover/bubble:opacity-100 p-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg transition-all order-last cursor-pointer"
+          title="Delete Message"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+        </button>
+      )}
       <div 
         className={cn(
-          "relative group max-w-[80%] min-w-[80px] px-[16px] py-[12px] rounded-[20px] shadow-sm",
+          "relative max-w-[80%] min-w-[80px] px-[16px] py-[12px] rounded-[20px] shadow-sm",
           isOwnMessage 
             ? "bg-[#0077B6] text-white rounded-br-sm" 
             : "bg-[#1E293B] text-white border border-[#1E293B] rounded-bl-sm"
@@ -218,6 +228,15 @@ export function MessageBubble({ message, isOwnMessage, onJoinVideoCall }: Messag
           )}
         </div>
       </div>
+      {isOwnMessage && onDeleteMessage && (
+        <button 
+          onClick={(e) => { e.stopPropagation(); onDeleteMessage(message.id); }}
+          className="opacity-0 group-hover/bubble:opacity-100 p-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg transition-all order-first cursor-pointer"
+          title="Delete Message"
+        >
+          <Trash2 className="w-3.5 h-3.5" />
+        </button>
+      )}
     </div>
   );
 }

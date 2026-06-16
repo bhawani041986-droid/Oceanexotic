@@ -4,9 +4,9 @@ import { supabase } from '@/lib/supabase';
 export async function POST(request: Request) {
   try {
     const data = await request.json();
-    const { conversation_id, sender_id, message_text } = data;
+    const { conversation_id, sender_id, message_text = '', message_type = 'TEXT', attachment_url = null } = data;
 
-    if (!conversation_id || !sender_id || !message_text) {
+    if (!conversation_id || !sender_id || (!message_text && !attachment_url)) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
@@ -18,6 +18,8 @@ export async function POST(request: Request) {
           conversation_id,
           sender_id,
           message_text,
+          message_type,
+          attachment_url,
           is_read: 0
         }
       ]);

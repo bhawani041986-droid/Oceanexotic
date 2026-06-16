@@ -160,16 +160,21 @@ export function useChatEngine(currentUserId: string | undefined | null) {
     }
   }, [activeChat, currentUserId]);
 
-  const handleSendMessage = async (textToSend: string) => {
-    if (!textToSend.trim() || activeChat === null || !currentUserId) return;
+  const handleSendMessage = async (
+    textToSend: string,
+    messageType: "TEXT" | "IMAGE" | "PDF" | "PRODUCT_CARD" | "ORDER_CARD" | "QUOTATION_CARD" | "VOICE" = "TEXT",
+    attachmentUrl: string | null = null
+  ) => {
+    if ((!textToSend.trim() && !attachmentUrl) || activeChat === null || !currentUserId) return;
     
     const tempMsg: ChatMessage = {
       id: Date.now(),
       conversation_id: activeChat,
       message_text: textToSend,
-      message_type: 'TEXT',
+      message_type: messageType,
       sender_id: currentUserId,
       is_read: false,
+      attachment_url: attachmentUrl,
       created_at: new Date().toISOString()
     };
     
@@ -182,7 +187,9 @@ export function useChatEngine(currentUserId: string | undefined | null) {
         body: JSON.stringify({
           conversation_id: activeChat,
           sender_id: currentUserId,
-          message_text: textToSend
+          message_text: textToSend,
+          message_type: messageType,
+          attachment_url: attachmentUrl
         })
       });
 
