@@ -56,10 +56,10 @@ export function LanguageSelector() {
     <div className="relative">
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 p-1.5 md:p-2 text-muted-foreground hover:text-foreground transition-colors"
+        className="flex items-center gap-1 p-1 sm:p-1.5 md:p-2 text-muted-foreground hover:text-foreground transition-colors"
         title="Change Language"
       >
-        <Globe className="w-5 h-5" />
+        <Globe className="w-4 h-4 sm:w-5 sm:h-5" />
         <span className="text-[10px] font-black uppercase tracking-widest hidden md:block truncate max-w-[80px]">{currentLang.name.split(' ')[0]}</span>
         <ChevronDown className="w-3 h-3 hidden md:block" />
       </button>
