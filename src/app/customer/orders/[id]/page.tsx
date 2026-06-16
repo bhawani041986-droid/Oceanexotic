@@ -80,7 +80,8 @@ export default function OrderDetailsPage() {
               name: item.product_name || item.product_id,
               price: parseFloat(item.price) || 0,
               qty: parseFloat(item.quantity) || 1,
-              sellerId: "1",
+              sellerId: item.seller_id || "1",
+              sellerName: item.seller_name || "OceanExotic Merchant",
               image: item.image_url || "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400"
             }))
           });
@@ -330,7 +331,9 @@ export default function OrderDetailsPage() {
                                  <div className="flex-1 flex flex-col md:flex-row md:items-center justify-between gap-4">
                                     <div className="space-y-0.5 md:space-y-1">
                                        <h3 className="text-sm md:text-lg font-bold text-[var(--foreground)] tracking-tight">{item.name}</h3>
-                                       <p className="text-[8px] md:text-[10px] font-bold text-text-secondary uppercase tracking-widest">QTY: {item.qty} • SKU: OF-{item.id}</p>
+                                       <p className="text-[8px] md:text-[10px] font-bold text-text-secondary uppercase tracking-widest">
+                                          QTY: {item.qty} • SKU: OF-{item.id} • SELLER: {item.sellerName}
+                                       </p>
                                     </div>
                                     <div className="flex items-center gap-4">
                                        <div className="text-right">

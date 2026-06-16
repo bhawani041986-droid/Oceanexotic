@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { getPhpServerUrl } from '@/config/api';
 
 export async function GET(request: Request) {
   try {
@@ -8,44 +8,26 @@ export async function GET(request: Request) {
 
     if (!userId) return NextResponse.json({ error: "Missing Citizen ID" }, { status: 400 });
 
-    // Fetch orders for this user
-    const { data: orders, error: ordersError } = await supabase
-      .from('orders')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
-
-    if (ordersError) throw ordersError;
-
-    let allOrderItems: any[] = [];
-    if (orders && orders.length > 0) {
-      const orderIds = orders.map((o: any) => o.id);
-      const { data: items, error: itemsError } = await supabase
-        .from('order_items')
-        .select('id, order_id')
-        .in('order_id', orderIds);
-        
-      if (!itemsError && items) {
-        allOrderItems = items;
-      }
-    }
-
-    // Map to the format the frontend expects
-    const mappedOrders = (orders || []).map((order: any) => {
-      const orderItemsCount = allOrderItems.filter(item => item.order_id === order.id).length;
-      return {
-        id: order.id,
-        is_pre_order: order.is_pre_order,
-        status: order.status,
-        date: new Date(order.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        items: orderItemsCount,
-        total: order.total_amount
-      };
+    const phpServerUrl = getPhpServerUrl();
+    const phpApiUrl = `${phpServerUrl}/FISH_MARKET/api/orders/customer_history.php?userId=${userId}`;
+    
+    const response = await fetch(phpApiUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // Using no-store to ensure live data (similar to Supabase)
+      cache: 'no-store'
     });
 
-    return NextResponse.json(mappedOrders);
+    if (!response.ok) {
+      throw new Error(`PHP API responded with status ${response.status}`);
+    }
+
+    const data = await response.json();
+    return NextResponse.json(data);
   } catch (error: any) {
-    console.error("User Orders API Error:", error);
+    console.error("User Orders API Proxy Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { getPhpServerUrl } from '@/config/api';
 
 // Stage-based ETA durations in minutes (Port Blair local delivery)
 const STAGE_DURATIONS: Record<string, number> = {
@@ -158,23 +158,29 @@ export async function GET(
       return NextResponse.json({ error: 'Missing order ID' }, { status: 400 });
     }
 
-    // Fetch order details
-    const { data: order, error: orderError } = await supabase
-      .from('orders')
-      .select('id, status, created_at, estimated_delivery, delivery_area, user_id, delivery_address')
-      .eq('id', orderId)
-      .single();
+    const phpServerUrl = getPhpServerUrl();
+    const phpApiUrl = `${phpServerUrl}/FISH_MARKET/api/orders/tracking.php?id=${orderId}`;
+    
+    const response = await fetch(phpApiUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      cache: 'no-store'
+    });
 
-    if (orderError || !order) {
+    if (!response.ok) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
 
-    // Fetch fleet tracking (driver GPS + live ETA)
-    const { data: fleetTracking } = await supabase
-      .from('fleet_tracking')
-      .select('current_lat, current_lng, estimated_arrival, status, last_updated, agent_name, current_temp')
-      .eq('order_id', orderId)
-      .maybeSingle();
+    const data = await response.json();
+    
+    if (data.error || !data.order) {
+        return NextResponse.json({ error: data.error || 'Order not found' }, { status: 404 });
+    }
+
+    const order = data.order;
+    const fleetTracking = data.fleetTracking;
 
     const etaData = calculateDynamicETA(order, fleetTracking);
 
@@ -202,7 +208,7 @@ export async function GET(
       ],
     });
   } catch (err) {
-    console.error('[Tracking API Error]', err);
+    console.error('[Tracking API Proxy Error]', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

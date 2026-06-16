@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { getPhpServerUrl } from '@/config/api';
 import { translateObject, translateArray } from '@/lib/translate';
 
 export async function GET(request: NextRequest) {
@@ -10,70 +10,41 @@ export async function GET(request: NextRequest) {
 
     if (!id) return NextResponse.json({ error: "Missing Order ID" }, { status: 400 });
 
-    // Fetch order
-    const { data: order, error: orderError } = await supabase
-      .from('orders')
-      .select('*')
-      .eq('id', id)
-      .single();
+    const phpServerUrl = getPhpServerUrl();
+    const phpApiUrl = `${phpServerUrl}/FISH_MARKET/api/orders/details.php?id=${id}`;
+    
+    const response = await fetch(phpApiUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      cache: 'no-store'
+    });
 
-    if (orderError) throw orderError;
-    if (!order) return NextResponse.json({ error: "Order not found" }, { status: 404 });
-
-    // Fetch items manually to avoid foreign key issues
-    const { data: items, error: itemsError } = await supabase
-      .from('order_items')
-      .select('*')
-      .eq('order_id', id);
-
-    if (itemsError) throw itemsError;
-
-    // Fetch product details for names and images
-    const productIds = (items || []).map((item: any) => item.product_id).filter(Boolean);
-    let products: any[] = [];
-    if (productIds.length > 0) {
-      const { data: productsData } = await supabase
-        .from('products')
-        .select('id, name, image_url')
-        .in('id', productIds);
-      products = productsData || [];
+    if (!response.ok) {
+      return NextResponse.json({ error: 'Order not found' }, { status: response.status });
     }
 
-    const productMap = products.reduce((acc: any, p: any) => {
-      acc[p.id] = p;
-      return acc;
-    }, {});
+    const data = await response.json();
+    
+    if (data.error) {
+      return NextResponse.json({ error: data.error }, { status: 404 });
+    }
 
-    const itemsWithDetails = (items || []).map((item: any) => ({
-      ...item,
-      product_name: productMap[item.product_id]?.name || item.product_id,
-      image_url: productMap[item.product_id]?.image_url || "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400"
-    }));
-
-    // Calculate dynamic financial breakdown
-    const subtotal = itemsWithDetails.reduce((sum: number, item: any) => sum + (parseFloat(item.price) || 0) * (parseFloat(item.quantity) || 1), 0);
-    const total = parseFloat(order.total_amount) || 0;
-    const shipping = 0; // Complimentary standard delivery
-    const tax = Math.round(Math.max(0, total - subtotal - shipping) * 100) / 100;
-
-    let translatedItems = itemsWithDetails;
-    let translatedOrder = order;
+    let translatedItems = data.items || [];
+    let translatedOrder = data;
 
     if (targetLang && !targetLang.toLowerCase().startsWith("en")) {
-      translatedItems = await translateArray(itemsWithDetails, ['product_name'], targetLang);
-      translatedOrder = await translateObject(order, ['delivery_address', 'delivery_area'], targetLang);
+      translatedItems = await translateArray(translatedItems, ['product_name'], targetLang);
+      translatedOrder = await translateObject(data, ['delivery_address', 'delivery_area'], targetLang);
     }
 
     return NextResponse.json({
       ...translatedOrder,
-      subtotal,
-      shipping,
-      tax,
-      total,
       items: translatedItems
     });
   } catch (error: any) {
-    console.error("User Order Details API Error:", error);
+    console.error("User Order Details API Proxy Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
