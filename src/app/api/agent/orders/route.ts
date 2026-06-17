@@ -10,13 +10,25 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Missing Agent Identity" }, { status: 400 });
     }
 
-    // In a real application, we would map the integer agentId to the delivery_agent_name.
-    // For this prototype, we'll fetch orders where delivery_agent_name is not null.
-    // We will simulate fetching missions assigned to this agent.
+    // 1. Get exact orders assigned to this Agent UUID via fleet_tracking
+    const { data: fleetAssignments, error: fleetError } = await supabase
+      .from('fleet_tracking')
+      .select('order_id')
+      .eq('agent_id', agentId);
+
+    if (fleetError) throw fleetError;
+
+    const assignedOrderIds = fleetAssignments?.map(f => f.order_id) || [];
+
+    if (assignedOrderIds.length === 0) {
+      return NextResponse.json([]);
+    }
+
+    // 2. Fetch those specific orders securely
     const { data: orders, error } = await supabase
       .from('orders')
       .select('*')
-      // .eq('delivery_agent_name', agentName) 
+      .in('id', assignedOrderIds)
       .order('created_at', { ascending: false })
       .limit(20);
 

@@ -62,7 +62,7 @@ export default function AgentHistoryScreen() {
     if (!user) return;
     try {
       setSyncError(null);
-      const url = `${FULL_API_URL}/agent/orders?agent_id=${encodeURIComponent(user.name)}`;
+      const url = `${FULL_API_URL}/agent/orders?agent_id=${encodeURIComponent(user.id)}`;
       const res = await axios.get(url);
       
       if (Array.isArray(res.data)) {
@@ -109,8 +109,20 @@ export default function AgentHistoryScreen() {
   };
 
   const totalCargoUnits = allMissions.reduce((acc, m) => {
-    const itemsCount = Array.isArray(m.items) ? m.items.length : 1;
-    return acc + itemsCount;
+    // If the items array exists, sum up their quantities if available
+    if (Array.isArray(m.items)) {
+      const itemsCount = m.items.reduce((sum: number, item: any) => {
+        const qty = item.qty || item.quantity;
+        if (typeof qty === 'number') return sum + qty;
+        if (typeof qty === 'string') {
+          const parsed = parseInt(qty.replace(/\D/g, ''), 10);
+          return sum + (isNaN(parsed) ? 1 : parsed);
+        }
+        return sum + 1;
+      }, 0);
+      return acc + itemsCount;
+    }
+    return acc + 1;
   }, 0);
 
   return (
@@ -130,7 +142,7 @@ export default function AgentHistoryScreen() {
         >
           Mission Log Ledger
         </Text>
-        <Text className="text-[8px] font-black uppercase tracking-[0.25em] text-slate-500">
+        <Text className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500 mt-1">
           System Operations History Archive
         </Text>
       </View>
@@ -144,7 +156,7 @@ export default function AgentHistoryScreen() {
         }}
       >
         <View className="items-center flex-1">
-          <Text className="text-[7px] font-black text-slate-400 uppercase tracking-widest text-center">
+          <Text className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
             MISSIONS COMPLETED
           </Text>
           <Text className="text-2xl font-black italic mt-1" style={{ color: mood.primary }}>
@@ -155,8 +167,8 @@ export default function AgentHistoryScreen() {
         <View className="w-[1px] h-10 bg-white/5 mx-4" />
 
         <View className="items-center flex-1">
-          <Text className="text-[7px] font-black text-slate-400 uppercase tracking-widest text-center">
-            CARGO DELIVERED
+          <Text className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
+            CARGO UNITS LIFTED
           </Text>
           <Text className="text-2xl font-black italic mt-1" style={{ color: mood.text }}>
             {totalCargoUnits} UNITS
@@ -214,7 +226,7 @@ export default function AgentHistoryScreen() {
           style={{ borderColor: mood.border, backgroundColor: "rgba(255,255,255,0.01)" }}
         >
           <Text className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
-            {searchQuery ? "No matching records found" : "No completed missions in archive"}
+            No History Found in Registry
           </Text>
         </View>
       ) : (
@@ -234,17 +246,17 @@ export default function AgentHistoryScreen() {
                   <Text className="text-lg font-black italic tracking-tighter" style={{ color: mood.text }}>
                     {mission.id}
                   </Text>
-                  <Text className="text-[8px] font-black text-slate-400 uppercase tracking-wider">
+                  <Text className="text-xs font-black text-slate-400 uppercase tracking-wider">
                     CONSIGNEE: {mission.customer}
                   </Text>
                 </View>
 
                 {/* Delivered Badge */}
                 <View 
-                  className="flex-row items-center px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20"
+                  className="flex-row items-center px-2 py-1 rounded bg-emerald-500/10 border border-emerald-500/20"
                 >
                   <ShieldCheckIcon color="#10B981" />
-                  <Text className="text-[6.5px] font-black text-emerald-500 uppercase tracking-widest ml-1">
+                  <Text className="text-[10px] font-black text-emerald-500 uppercase tracking-widest ml-1">
                     DELIVERED SECURE
                   </Text>
                 </View>
@@ -260,24 +272,42 @@ export default function AgentHistoryScreen() {
               >
                 <MapPinIcon color={mood.primary} />
                 <View className="flex-1 space-y-0.5">
-                  <Text className="text-[6px] font-black text-slate-400 uppercase tracking-widest">
+                  <Text className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
                     Drop-off Node
                   </Text>
-                  <Text className="text-[8.5px] font-bold uppercase leading-tight" style={{ color: mood.text }}>
+                  <Text className="text-xs font-bold uppercase leading-tight" style={{ color: mood.text }}>
                     {mission.location}
                   </Text>
                 </View>
               </View>
 
+              <Pressable
+                onPress={() => {}}
+                className="w-full h-12 rounded-xl flex-row items-center justify-center space-x-1.5 mb-4"
+                style={{
+                  backgroundColor: mood.primary,
+                  shadowColor: mood.primary,
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.2,
+                  shadowRadius: 5,
+                  elevation: 3,
+                }}
+              >
+                <CalendarIcon color="#0F172A" />
+                <Text className="text-[10px] font-black uppercase tracking-widest text-[#0F172A]">
+                  Log Details
+                </Text>
+              </Pressable>
+
               {/* Timestamp block */}
               <View className="flex-row justify-between items-center border-t border-white/5 pt-3">
                 <View className="flex-row items-center space-x-2">
                   <CalendarIcon color={isLight ? "#94A3B8" : "rgba(255,255,255,0.4)"} />
-                  <Text className="text-[8px] font-black text-slate-400 uppercase tracking-wider">
+                  <Text className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
                     {new Date(mission.time).toLocaleDateString([], { month: 'short', day: '2-digit', year: 'numeric' })}
                   </Text>
                 </View>
-                <Text className="text-[8px] font-black text-slate-400 uppercase tracking-wider">
+                <Text className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
                   Transit: {mission.agent_details.method || "STANDARD"}
                 </Text>
               </View>

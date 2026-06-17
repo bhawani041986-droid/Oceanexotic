@@ -1,6 +1,7 @@
 import { Stack, useRouter } from "expo-router";
 import { useEffect } from "react";
 import { View, ActivityIndicator } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuthStore } from "@/store/authStore";
 import { useAgentStore, MOODS } from "@/store/agentStore";
 import { AgentHeader } from "@/components/agent/AgentHeader";
@@ -32,9 +33,9 @@ export default function AgentLayout() {
   }
 
   return (
-    <View className="flex-1" style={{ backgroundColor: mood.bg }}>
+    <SafeAreaView className="flex-1" style={{ backgroundColor: mood.bg }}>
       <AgentHeader />
-      <View className="flex-1 pt-16 pb-20">
+      <View className="flex-1 pb-20">
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="dashboard" />
           <Stack.Screen name="tracking" />
@@ -43,6 +44,6 @@ export default function AgentLayout() {
         </Stack>
       </View>
       <AgentTabBar />
-    </View>
+    </SafeAreaView>
   );
 }

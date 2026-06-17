@@ -87,8 +87,8 @@ export default function AgentDashboardScreen() {
     if (!user) return;
     try {
       setSyncError(null);
-      // Pass the agent's name to fetch assignments
-      const url = `${FULL_API_URL}/agent/orders?agent_id=${encodeURIComponent(user.name)}`;
+      // Pass the agent's UUID to securely fetch assignments
+      const url = `${FULL_API_URL}/agent/orders?agent_id=${encodeURIComponent(user.id)}`;
       const res = await axios.get(url);
       
       if (Array.isArray(res.data)) {
@@ -116,9 +116,14 @@ export default function AgentDashboardScreen() {
     fetchMissions();
   };
 
-  const handleNavigate = (destination: string) => {
-    const formattedAddress = encodeURIComponent(destination);
-    const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${formattedAddress}&travelmode=driving`;
+  const handleNavigate = (mission: any) => {
+    let destLat = 11.667;
+    let destLng = 92.7359;
+    
+    // We parse coordinates if we have a robust geocoder, otherwise fallback to standard link.
+    // Assuming mission object has parsed coordinates (we will pass a known fallback)
+    const encodedDest = encodeURIComponent(mission.location);
+    const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodedDest}&travelmode=driving`;
     Linking.openURL(mapUrl).catch(() => {
       alert("Could not open navigation map app.");
     });
@@ -160,7 +165,7 @@ export default function AgentDashboardScreen() {
           >
             Fleet Agent Hub
           </Text>
-          <Text className="text-[8px] font-black uppercase tracking-[0.25em] text-slate-500">
+          <Text className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500 mt-1">
             Operator: {user?.name || "INS-AGENT"} • SEA-COMMAND ACTIVE
           </Text>
         </View>
@@ -170,7 +175,7 @@ export default function AgentDashboardScreen() {
           style={{ backgroundColor: "rgba(255,255,255,0.03)", borderColor: mood.border }}
         >
           <View className="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-2 animate-pulse" />
-          <Text className="text-[8px] font-black uppercase tracking-wider" style={{ color: mood.text }}>
+          <Text className="text-[10px] font-black uppercase tracking-wider" style={{ color: mood.text }}>
             Registry Live
           </Text>
         </View>
@@ -188,7 +193,7 @@ export default function AgentDashboardScreen() {
             }}
           >
             {stat.icon}
-            <Text className="text-[6.5px] font-black text-slate-400 uppercase tracking-widest text-center">
+            <Text className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">
               {stat.label}
             </Text>
             <Text
@@ -213,14 +218,14 @@ export default function AgentDashboardScreen() {
           className="px-2.5 py-1 rounded-full border"
           style={{ backgroundColor: isLight ? "#E2E8F0" : "rgba(255,255,255,0.05)", borderColor: mood.border }}
         >
-          <Text className="text-[7.5px] font-black uppercase tracking-widest" style={{ color: mood.primary }}>
+          <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: mood.primary }}>
             {missions.length} ASSIGNMENTS
           </Text>
         </View>
       </View>
 
       {syncError && (
-        <Text className="mb-4 text-center text-[10px] font-bold text-red-500 uppercase tracking-wider">
+        <Text className="mb-4 text-center text-xs font-bold text-red-500 uppercase tracking-wider">
           ⚠️ {syncError}
         </Text>
       )}
@@ -229,7 +234,7 @@ export default function AgentDashboardScreen() {
       {isLoading ? (
         <View className="py-12 items-center justify-center">
           <ActivityIndicator color={mood.primary} />
-          <Text className="text-[9px] font-black uppercase tracking-widest text-slate-500 mt-4 animate-pulse">
+          <Text className="text-[10px] font-black uppercase tracking-widest text-slate-500 mt-4 animate-pulse">
             Synchronizing with Registry...
           </Text>
         </View>
@@ -238,7 +243,7 @@ export default function AgentDashboardScreen() {
           className="py-16 border border-dashed rounded-[24px] items-center justify-center space-y-4"
           style={{ borderColor: mood.border, backgroundColor: "rgba(255,255,255,0.01)" }}
         >
-          <Text className="text-[9px] font-black text-slate-500 uppercase tracking-widest">
+          <Text className="text-[12px] font-black text-slate-500 uppercase tracking-widest">
             No Active Missions Assigned
           </Text>
         </View>
@@ -260,18 +265,18 @@ export default function AgentDashboardScreen() {
                       {mission.id}
                     </Text>
                     {mission.urgency === "HIGH" && (
-                      <View className="bg-red-500/20 px-2 py-0.5 rounded border border-red-500/30">
-                        <Text className="text-[6.5px] font-black text-red-500 uppercase tracking-widest">
+                      <View className="bg-red-500/20 px-2 py-1 rounded border border-red-500/30">
+                        <Text className="text-[10px] font-black text-red-500 uppercase tracking-widest">
                           URGENT
                         </Text>
                       </View>
                     )}
                   </View>
-                  <Text className="text-[8px] font-black text-slate-400 uppercase tracking-wider">
+                  <Text className="text-xs font-black text-slate-400 uppercase tracking-wider">
                     CONSIGNEE: {mission.customer}
                   </Text>
                 </View>
-                <Text className="text-[8px] font-black italic" style={{ color: mood.primary }}>
+                <Text className="text-[10px] font-black italic" style={{ color: mood.primary }}>
                   {mission.time}
                 </Text>
               </View>
@@ -286,10 +291,10 @@ export default function AgentDashboardScreen() {
               >
                 <MapPinIcon color={mood.primary} />
                 <View className="flex-1 space-y-0.5">
-                  <Text className="text-[6px] font-black text-slate-400 uppercase tracking-widest">
+                  <Text className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                     Destination Node
                   </Text>
-                  <Text className="text-[9px] font-bold uppercase leading-tight" style={{ color: mood.text }}>
+                  <Text className="text-xs font-bold uppercase leading-tight" style={{ color: mood.text }}>
                     {mission.location}
                   </Text>
                 </View>
@@ -299,7 +304,7 @@ export default function AgentDashboardScreen() {
               <View className="flex-row space-x-2">
                 <Pressable
                   onPress={() => router.push({ pathname: "/(agent)/tracking", params: { order_id: mission.id } } as any)}
-                  className="flex-1 h-10 rounded-xl flex-row items-center justify-center space-x-1.5"
+                  className="flex-1 h-12 rounded-xl flex-row items-center justify-center space-x-2"
                   style={{
                     backgroundColor: mood.primary,
                     shadowColor: mood.primary,
@@ -310,21 +315,21 @@ export default function AgentDashboardScreen() {
                   }}
                 >
                   <ZapIcon color="#FFFFFF" />
-                  <Text className="text-[8.5px] font-black text-white uppercase tracking-widest">
+                  <Text className="text-[10px] font-black text-white uppercase tracking-widest">
                     START TRACKING
                   </Text>
                 </Pressable>
 
                 <Pressable
-                  onPress={() => handleNavigate(mission.location)}
-                  className="flex-1 h-10 rounded-xl border flex-row items-center justify-center space-x-1.5"
+                  onPress={() => handleNavigate(mission)}
+                  className="flex-1 h-12 flex-row items-center justify-center space-x-2 rounded-xl border"
                   style={{
                     borderColor: isLight ? "#CBD5E1" : "rgba(255,255,255,0.1)",
                     backgroundColor: "rgba(0, 0, 0, 0.05)",
                   }}
                 >
                   <MapIcon color={mood.primary} />
-                  <Text className="text-[8.5px] font-black uppercase tracking-widest" style={{ color: mood.text }}>
+                  <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: mood.text }}>
                     NAVIGATE
                   </Text>
                 </Pressable>

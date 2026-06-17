@@ -55,11 +55,10 @@ export function AgentHeader() {
 
   return (
     <View 
-      className="absolute top-0 left-0 right-0 z-50 h-16 flex-row items-center justify-between px-4 border-b"
+      className="z-50 h-16 flex-row items-center justify-between px-4 border-b"
       style={{
         backgroundColor: isLight ? "#F8FAFCF0" : "rgba(2, 6, 23, 0.9)",
         borderColor: mood.border,
-        paddingTop: 12, // adjust for safe area top bar spacing
       }}
     >
       <View className="flex-row items-center space-x-2">
