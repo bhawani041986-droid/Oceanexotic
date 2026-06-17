@@ -133,7 +133,11 @@ export default function MarketplaceThemeControl() {
     { id: 'favicon', title: 'System Favicon', desc: '32x32', icon: <Globe className="w-5 h-5 text-blue-500" />, aspect: 'aspect-square w-16 mx-auto', preview: tempAssets.favicon },
     { id: 'appleIcon', title: 'Apple Icon', desc: '180x180', icon: <Apple className="w-5 h-5 text-[var(--foreground)]" />, aspect: 'aspect-square w-24 mx-auto', preview: (tempAssets as any).appleIcon || null },
     { id: 'promo', title: 'Promo #1', desc: 'Campaign', icon: <Megaphone className="w-5 h-5 text-success" />, aspect: 'aspect-[16/9]', preview: tempAssets.promo },
-    { id: 'mobile', title: 'Mobile Splash', desc: 'Launch', icon: <Smartphone className="w-5 h-5 text-purple-500" />, aspect: 'aspect-[9/16] w-24 mx-auto', preview: tempAssets.mobile }
+    { id: 'mobile', title: 'Mobile Splash', desc: 'Launch', icon: <Smartphone className="w-5 h-5 text-purple-500" />, aspect: 'aspect-[9/16] w-24 mx-auto', preview: tempAssets.mobile },
+    { id: 'customerAppIcon', title: 'Customer App Icon', desc: '1024x1024 PNG', icon: <Smartphone className="w-5 h-5 text-blue-400" />, aspect: 'aspect-square w-24 mx-auto', preview: tempAssets.customerAppIcon || null },
+    { id: 'agentAppIcon', title: 'Agent App Icon', desc: '1024x1024 PNG', icon: <Smartphone className="w-5 h-5 text-indigo-400" />, aspect: 'aspect-square w-24 mx-auto', preview: tempAssets.agentAppIcon || null },
+    { id: 'sellerAppIcon', title: 'Seller App Icon', desc: '1024x1024 PNG', icon: <Smartphone className="w-5 h-5 text-green-400" />, aspect: 'aspect-square w-24 mx-auto', preview: tempAssets.sellerAppIcon || null },
+    { id: 'adminAppIcon', title: 'Admin App Icon', desc: '1024x1024 PNG', icon: <Smartphone className="w-5 h-5 text-red-400" />, aspect: 'aspect-square w-24 mx-auto', preview: tempAssets.adminAppIcon || null }
   ];
 
   return (

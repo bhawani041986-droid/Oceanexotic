@@ -45,6 +45,10 @@ interface SettingsState {
     promoSecondary: string;
     mobile: string;
     placeholder: string;
+    customerAppIcon?: string;
+    agentAppIcon?: string;
+    sellerAppIcon?: string;
+    adminAppIcon?: string;
   };
 
   // PayU Registry
