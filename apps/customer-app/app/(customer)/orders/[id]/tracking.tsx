@@ -1,18 +1,35 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator, Pressable } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { WebView } from "react-native-webview";
 import api from "@/services/api";
 import { t } from "@/lib/i18n";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useToast } from "@/components/ui/Toast";
 
 export default function OrderTrackingScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const { toast, ToastHost } = useToast();
   const [trackingData, setTrackingData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const webViewRef = useRef<WebView>(null);
+
+  const handleLayerToggle = () => {
+    if (webViewRef.current) {
+      webViewRef.current.injectJavaScript(`if (typeof toggleMapLayer === 'function') { toggleMapLayer(); } true;`);
+      toast("Map Layer Recalibrated", "success");
+    }
+  };
+
+  const handleRecenter = () => {
+    if (webViewRef.current) {
+      webViewRef.current.injectJavaScript(`if (typeof recenterMap === 'function') { recenterMap(); } true;`);
+      toast("Recentered on Driver Signal", "success");
+    }
+  };
 
   const fetchTelemetry = async () => {
     try {
@@ -72,20 +89,47 @@ export default function OrderTrackingScreen() {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
         }
+        @keyframes radar-sweep {
+          0% { transform: translateY(-10px); }
+          100% { transform: translateY(100vh); }
+        }
+        .radar-sweep-container {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          pointer-events: none;
+          z-index: 1000;
+          overflow: hidden;
+        }
+        .radar-sweep-line {
+          width: 100%;
+          height: 1px;
+          background: #7C3AED;
+          box-shadow: 0 0 20px #7C3AED;
+          opacity: 0.4;
+          animation: radar-sweep 5s linear infinite;
+        }
       </style>
     </head>
     <body>
       <div id="map"></div>
+      <div class="radar-sweep-container">
+        <div class="radar-sweep-line"></div>
+      </div>
       <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
       <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
       <script>
         var map, agentMarker, customerMarker, routingControl;
         var customerLat = 13.160704, customerLng = 92.946892;
+        var currentTileLayer = null;
+        var mapMode = 'hybrid'; // 'hybrid' or 'streets'
 
         function initMap(initialLat, initialLng) {
           map = L.map('map', { zoomControl: false }).setView([initialLat, initialLng], 13);
           
-          L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+          currentTileLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
             attribution: '&copy; Google Maps'
           }).addTo(map);
 
@@ -156,6 +200,29 @@ export default function OrderTrackingScreen() {
           map.panTo([lat, lng]);
         }
 
+        function toggleMapLayer() {
+          if (!map || !currentTileLayer) return 'hybrid';
+          map.removeLayer(currentTileLayer);
+          if (mapMode === 'hybrid') {
+            currentTileLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+              attribution: '&copy; Google Maps'
+            }).addTo(map);
+            mapMode = 'streets';
+          } else {
+            currentTileLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+              attribution: '&copy; Google Maps'
+            }).addTo(map);
+            mapMode = 'hybrid';
+          }
+          return mapMode;
+        }
+
+        function recenterMap() {
+          if (map && agentMarker) {
+            map.panTo(agentMarker.getLatLng());
+          }
+        }
+
         initMap(${currentLat}, ${currentLng});
       </script>
     </body>
@@ -222,31 +289,77 @@ export default function OrderTrackingScreen() {
             scrollEnabled={false}
           />
           
-          <View className="absolute top-3 left-3 z-50 pointer-events-none">
-            <View className="rounded bg-black/60 px-2 py-0.5">
-              <Text className="text-[8px] font-black uppercase tracking-widest text-primary">
-                {t('live_delivery_map') || "Live Delivery Map"}
+          {/* Top-Left Skewed Node HUD */}
+          <View className="absolute top-3 left-3 z-50 pointer-events-none gap-1.5 items-start">
+            <View 
+              className="bg-primary px-3 py-1 shadow-lg" 
+              style={{ transform: [{ skewX: "-12deg" }] }}
+            >
+              <Text 
+                className="text-[9px] font-black uppercase tracking-widest text-white italic"
+                style={{ transform: [{ skewX: "12deg" }] }}
+              >
+                Node: Sentinel-01
+              </Text>
+            </View>
+            
+            <View 
+              className="flex-row items-center gap-2 px-2 py-1 border border-primary/30 bg-slate-950/90" 
+              style={{ transform: [{ skewX: "-12deg" }] }}
+            >
+              <View 
+                className={cn("w-1.5 h-1.5 rounded-full", loading ? "bg-slate-500" : "bg-emerald-500")} 
+                style={{ transform: [{ skewX: "12deg" }] }}
+              />
+              <Text 
+                className="text-[8px] font-bold uppercase tracking-[0.2em] text-primary"
+                style={{ transform: [{ skewX: "12deg" }] }}
+              >
+                Telemetry: {loading ? "Locking..." : "Registry Live"}
               </Text>
             </View>
           </View>
 
-          <View className="absolute bottom-3 left-3 right-3 flex-row items-center justify-between rounded-2xl border border-white/10 bg-background/95 p-3 pointer-events-none">
-            <View>
-              <Text className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">
-                {t('arrival') || "Arrival"}
-              </Text>
-              <Text className="text-sm font-black uppercase text-foreground">
-                {displayData.estimated_arrival}
-              </Text>
+          {/* Bottom-Left Arrival Overlay */}
+          <View className="absolute bottom-3 left-3 right-16 p-2.5 rounded-xl bg-slate-950/95 border border-primary/30 flex-row items-center justify-between z-50 pointer-events-none">
+            <View className="flex-row items-center gap-3">
+              <View className="w-8 h-8 rounded-[8px] bg-primary/10 items-center justify-center relative">
+                <MaterialCommunityIcons name="truck" size={16} color="#7C3AED" />
+                <View className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-emerald-500 rounded-full border border-white" />
+              </View>
+              <View>
+                <Text className="text-[6px] font-black text-muted-foreground uppercase tracking-widest leading-none">Arrival</Text>
+                <Text className="text-xs font-black text-white uppercase leading-tight mt-0.5">
+                  {displayData.estimated_arrival}
+                </Text>
+              </View>
             </View>
             <View className="items-end">
-              <Text className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">
-                {t('telemetry') || "Telemetry"}
-              </Text>
-              <Text className="text-[10px] font-black text-primary opacity-80">
+              <Text className="text-[6px] font-black text-muted-foreground uppercase tracking-widest leading-none">Coordinates</Text>
+              <Text className="text-[8px] font-black text-primary font-mono opacity-80 leading-tight mt-0.5">
                 {currentLat.toFixed(3)}, {currentLng.toFixed(3)}
               </Text>
             </View>
+          </View>
+
+          {/* Bottom-Right Skewed Controls */}
+          <View className="absolute bottom-3 right-3 z-50 flex-col gap-1.5">
+            <Pressable
+              onPress={handleLayerToggle}
+              className="w-9 h-9 border flex items-center justify-center -skew-x-12 bg-slate-950/90 border-primary/30 active:bg-primary/20"
+            >
+              <View style={{ transform: [{ skewX: "12deg" }] }}>
+                <Ionicons name="layers" size={16} color="#7C3AED" />
+              </View>
+            </Pressable>
+            <Pressable
+              onPress={handleRecenter}
+              className="w-9 h-9 border flex items-center justify-center -skew-x-12 bg-slate-950/90 border-primary/30 active:bg-primary/20"
+            >
+              <View style={{ transform: [{ skewX: "12deg" }] }}>
+                <Ionicons name="navigate" size={16} color="#7C3AED" />
+              </View>
+            </Pressable>
           </View>
         </View>
 
@@ -291,6 +404,7 @@ export default function OrderTrackingScreen() {
           ))}
         </View>
       </ScrollView>
+      {ToastHost}
     </View>
   );
 }
