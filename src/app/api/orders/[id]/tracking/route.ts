@@ -20,9 +20,23 @@ function calculateDynamicETA(order: any, fleetTracking: any) {
   if (fleetTracking?.estimated_arrival) {
     baseEta = new Date(fleetTracking.estimated_arrival);
   } else if (order.status) {
+    // Map status to dynamic timeline status to adjust ETA correctly
+    let activeStatus = order.status;
+    if (order.status === 'SHIPPED') {
+      if (fleetTracking?.status === 'DELIVERED') {
+        activeStatus = 'DELIVERED';
+      } else if (fleetTracking?.status === 'IN_TRANSIT' || fleetTracking?.status === 'NEAR_DESTINATION') {
+        activeStatus = 'IN_TRANSIT';
+      } else if (fleetTracking?.status === 'ASSIGNED') {
+        activeStatus = 'ASSIGNED';
+      } else {
+        activeStatus = 'PACKED';
+      }
+    }
+
     // Dynamically adjust ETA based on current stage remaining
     const stages = Object.keys(STAGE_DURATIONS);
-    const currentIndex = stages.indexOf(order.status);
+    const currentIndex = stages.indexOf(activeStatus);
     
     if (currentIndex !== -1 && currentIndex < stages.length - 1) {
       let remainingMinutes = 0;
@@ -44,7 +58,7 @@ function calculateDynamicETA(order: any, fleetTracking: any) {
     raw: baseEta.toISOString(),
     formatted: formattedEta,
     isDelayed: baseEta.getTime() < now.getTime(),
-    isLive: fleetTracking?.status === 'ACTIVE'
+    isLive: fleetTracking?.status === 'ACTIVE' || fleetTracking?.status === 'IN_TRANSIT' || fleetTracking?.status === 'NEAR_DESTINATION'
   };
 }
 
@@ -77,9 +91,23 @@ export async function GET(
 
       const etaData = calculateDynamicETA(order, fleetTracking);
 
+      let activeStatus = order.status;
+      if (order.status === 'SHIPPED') {
+        if (fleetTracking?.status === 'DELIVERED') {
+          activeStatus = 'DELIVERED';
+        } else if (fleetTracking?.status === 'IN_TRANSIT' || fleetTracking?.status === 'NEAR_DESTINATION') {
+          activeStatus = 'IN_TRANSIT';
+        } else if (fleetTracking?.status === 'ASSIGNED') {
+          activeStatus = 'ASSIGNED';
+        } else {
+          activeStatus = 'PACKED';
+        }
+      }
+
       return NextResponse.json({
         id: order.id,
-        status: order.status,
+        status: activeStatus,
+        stage: activeStatus,
         customerArea: order.delivery_area || 'Port Blair',
         customerAddress: order.delivery_address || '',
         eta: etaData,
@@ -92,12 +120,12 @@ export async function GET(
         } : null,
         timeline: [
           { status: 'PENDING', label: 'Order Placed', completed: true },
-          { status: 'ACCEPTED', label: 'Seller Accepted', completed: ['ACCEPTED', 'PREPARING', 'PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(order.status) },
-          { status: 'PREPARING', label: 'Preparing', completed: ['PREPARING', 'PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(order.status) },
-          { status: 'PACKED', label: 'Packed', completed: ['PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(order.status) },
-          { status: 'ASSIGNED', label: 'Rider Assigned', completed: ['ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(order.status) },
-          { status: 'IN_TRANSIT', label: 'Out for Delivery', completed: ['IN_TRANSIT', 'DELIVERED'].includes(order.status) },
-          { status: 'DELIVERED', label: 'Delivered', completed: order.status === 'DELIVERED' }
+          { status: 'ACCEPTED', label: 'Seller Accepted', completed: ['ACCEPTED', 'PREPARING', 'PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED', 'SHIPPED'].includes(order.status) },
+          { status: 'PREPARING', label: 'Preparing', completed: ['PREPARING', 'PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED', 'SHIPPED'].includes(order.status) },
+          { status: 'PACKED', label: 'Packed', completed: ['PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED', 'SHIPPED'].includes(order.status) || ['PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(activeStatus) },
+          { status: 'ASSIGNED', label: 'Rider Assigned', completed: ['ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(activeStatus) && activeStatus !== 'ASSIGNED' },
+          { status: 'IN_TRANSIT', label: 'Out for Delivery', completed: ['IN_TRANSIT', 'DELIVERED'].includes(activeStatus) && activeStatus !== 'IN_TRANSIT' },
+          { status: 'DELIVERED', label: 'Delivered', completed: activeStatus === 'DELIVERED' }
         ],
       });
     }
@@ -128,9 +156,23 @@ export async function GET(
 
     const etaData = calculateDynamicETA(order, fleetTracking);
 
+    let activeStatus = order.status;
+    if (order.status === 'SHIPPED') {
+      if (fleetTracking?.status === 'DELIVERED') {
+        activeStatus = 'DELIVERED';
+      } else if (fleetTracking?.status === 'IN_TRANSIT' || fleetTracking?.status === 'NEAR_DESTINATION') {
+        activeStatus = 'IN_TRANSIT';
+      } else if (fleetTracking?.status === 'ASSIGNED') {
+        activeStatus = 'ASSIGNED';
+      } else {
+        activeStatus = 'PACKED';
+      }
+    }
+
     return NextResponse.json({
       id: order.id,
-      status: order.status,
+      status: activeStatus,
+      stage: activeStatus,
       customerArea: order.delivery_area || 'Port Blair',
       customerAddress: order.delivery_address || '',
       eta: etaData,
@@ -143,12 +185,12 @@ export async function GET(
       } : null,
       timeline: [
         { status: 'PENDING', label: 'Order Placed', completed: true },
-        { status: 'ACCEPTED', label: 'Seller Accepted', completed: ['ACCEPTED', 'PREPARING', 'PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(order.status) },
-        { status: 'PREPARING', label: 'Preparing', completed: ['PREPARING', 'PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(order.status) },
-        { status: 'PACKED', label: 'Packed', completed: ['PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(order.status) },
-        { status: 'ASSIGNED', label: 'Rider Assigned', completed: ['ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(order.status) },
-        { status: 'IN_TRANSIT', label: 'Out for Delivery', completed: ['IN_TRANSIT', 'DELIVERED'].includes(order.status) },
-        { status: 'DELIVERED', label: 'Delivered', completed: order.status === 'DELIVERED' }
+        { status: 'ACCEPTED', label: 'Seller Accepted', completed: ['ACCEPTED', 'PREPARING', 'PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED', 'SHIPPED'].includes(order.status) },
+        { status: 'PREPARING', label: 'Preparing', completed: ['PREPARING', 'PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED', 'SHIPPED'].includes(order.status) },
+        { status: 'PACKED', label: 'Packed', completed: ['PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED', 'SHIPPED'].includes(order.status) || ['PACKED', 'ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(activeStatus) },
+        { status: 'ASSIGNED', label: 'Rider Assigned', completed: ['ASSIGNED', 'IN_TRANSIT', 'DELIVERED'].includes(activeStatus) && activeStatus !== 'ASSIGNED' },
+        { status: 'IN_TRANSIT', label: 'Out for Delivery', completed: ['IN_TRANSIT', 'DELIVERED'].includes(activeStatus) && activeStatus !== 'IN_TRANSIT' },
+        { status: 'DELIVERED', label: 'Delivered', completed: activeStatus === 'DELIVERED' }
       ],
     });
   } catch (err) {
