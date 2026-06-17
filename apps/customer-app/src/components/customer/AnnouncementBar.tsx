@@ -2,11 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { View, Text, Animated, Easing, Dimensions } from "react-native";
 import api from "../../services/api";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 
 export function AnnouncementBar() {
   const [coupons, setCoupons] = useState<any[]>([]);
   const colors = useThemeColors();
+  const { t } = useTranslation();
   const screenWidth = Dimensions.get("window").width;
   const animatedValue = useRef(new Animated.Value(screenWidth)).current;
 

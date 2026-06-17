@@ -22,7 +22,7 @@ import { useToast } from "@/components/ui/Toast";
 import { homeService, type CutOption, type TodaysCatchItem } from "@/services/homeService";
 import type { Product } from "@/services/productService";
 import { cn } from "@/lib/utils";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 
 const TABS = [
@@ -105,7 +105,8 @@ export default function ProductsScreen() {
   const { toast, ToastHost } = useToast();
   const cart = useCartStore();
   const colors = useThemeColors();
-  const currentLanguage = useSettingsStore((s) => s.language); // force re-render
+  const currentLanguage = useSettingsStore((s) => s.language);
+  const { t } = useTranslation(); // reactive — re-renders on language change
 
   const [searchQuery, setSearchQuery] = useState(params.search ?? "");
   const [activeTab, setActiveTab] = useState(() => {

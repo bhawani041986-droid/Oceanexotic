@@ -10,7 +10,7 @@ import { orderService, type OrderDetail } from "@/services/orderService";
 import api from "@/services/api";
 import { useAuthStore } from "@/store/authStore";
 import * as ImagePicker from "expo-image-picker";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function OrderDetailsScreen() {
@@ -18,6 +18,7 @@ export default function OrderDetailsScreen() {
   const router = useRouter();
   const { toast, ToastHost } = useToast();
   const colors = useThemeColors();
+  const { t } = useTranslation();
 
   const [order, setOrder] = useState<OrderDetail | null>(null);
   const [loading, setLoading] = useState(true);

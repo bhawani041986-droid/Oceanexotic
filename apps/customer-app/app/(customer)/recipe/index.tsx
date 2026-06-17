@@ -8,7 +8,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Svg, { Path, Circle } from 'react-native-svg';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { RECIPES_DB, Recipe } from '@/constants/recipes';
-import { t } from '@/lib/i18n';
+import { useTranslation } from '@/lib/i18n';
 
 // Premium stylized outline fish SVG decorator
 const FishDecoratorSVG = ({ style, color }: { style?: any; color: string }) => (
@@ -27,6 +27,7 @@ const FishDecoratorSVG = ({ style, color }: { style?: any; color: string }) => (
 // High-fidelity background telemetry grid
 const CyberFishGrid = () => {
   const colors = useThemeColors();
+  const { t } = useTranslation();
   return (
     <View style={StyleSheet.absoluteFillObject} className="pointer-events-none opacity-35">
       <Svg width="100%" height="100%" style={StyleSheet.absoluteFill}>
@@ -46,6 +47,7 @@ export default function RecipesListScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const colors = useThemeColors();
+  const { t } = useTranslation();
 
   const [search, setSearch] = useState('');
   const [selectedPrep, setSelectedPrep] = useState<'ALL' | 'CURRY' | 'GRILL' | 'FRY'>('ALL');

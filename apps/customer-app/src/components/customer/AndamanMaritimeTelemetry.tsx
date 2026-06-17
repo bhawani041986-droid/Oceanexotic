@@ -13,7 +13,7 @@ import Animated, {
 import type { Territory } from "@/services/homeService";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useSettingsStore } from "@/store/settingsStore";
-import { t as translate } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 
 interface TelemetryProps {
   territories: Territory[];
@@ -29,6 +29,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
 
   const colors = useThemeColors();
   const theme = useSettingsStore((s) => s.theme);
+  const { t: translate } = useTranslation(); // reactive – re-renders on language change
 
   // Dynamically tailor the radar/telemetry color palette based on selected admin theme
   const getPalette = () => {

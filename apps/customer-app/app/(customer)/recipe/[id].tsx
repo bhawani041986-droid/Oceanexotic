@@ -9,7 +9,7 @@ import Svg, { Path, Circle } from 'react-native-svg';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useHomeData } from '@/hooks/useHomeData';
 import { RECIPES_DB } from '@/constants/recipes';
-import { t } from '@/lib/i18n';
+import { useTranslation } from '@/lib/i18n';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const HEADER_HEIGHT = SCREEN_HEIGHT * 0.42;
@@ -59,6 +59,7 @@ export default function RecipeDetailsScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const colors = useThemeColors();
+  const { t } = useTranslation();
   const { cms } = useHomeData();
   const [activeImg, setActiveImg] = React.useState(0);
 

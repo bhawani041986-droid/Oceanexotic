@@ -15,7 +15,7 @@ import Svg, { Path } from "react-native-svg";
 import * as WebBrowser from "expo-web-browser";
 import * as Linking from "expo-linking";
 import { setAuthToken, setAuthUser } from "@/lib/storage";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -36,6 +36,7 @@ export default function WelcomeOnboardingScreen() {
   const { toast, ToastHost } = useToast();
   const loginMutation = useLogin();
   const colors = useThemeColors();
+  const { t } = useTranslation();
   const [isGuestAuthenticating, setIsGuestAuthenticating] = useState(false);
   const [forceShow, setForceShow] = useState(false);
 

@@ -11,7 +11,7 @@ import { useState, useEffect } from "react";
 import type { CutOption, TodaysCatchItem } from "@/services/homeService";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 
 interface CutSelectionModalProps {
   visible: boolean;
@@ -35,6 +35,7 @@ export function CutSelectionModal({
   onConfirm,
 }: CutSelectionModalProps) {
   const [weight, setWeight] = useState(1);
+  const { t } = useTranslation();
 
   // Reset weight to 1 when modal opens
   useEffect(() => {

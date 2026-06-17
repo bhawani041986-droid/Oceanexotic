@@ -18,7 +18,7 @@ import { checkoutService, type SavedAddress } from "@/services/checkoutService";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { cn } from "@/lib/utils";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 
 type Step = 1 | 2 | 3;
 
@@ -28,7 +28,8 @@ export default function CheckoutScreen() {
   const { user } = useAuthStore();
   const { toast, ToastHost } = useToast();
   const colors = useThemeColors();
-  const currentLanguage = useSettingsStore((s) => s.language); // force re-render on language change
+  const currentLanguage = useSettingsStore((s) => s.language);
+  const { t } = useTranslation();
 
   const primaryColor = colors.primary;
 
@@ -509,6 +510,7 @@ interface StepCardProps {
 function StepCard({ stepNum, label, active, done, summary, onEdit, children }: StepCardProps) {
   const colors = useThemeColors();
   const primaryColor = colors.primary;
+  const { t } = useTranslation();
 
   return (
     <View

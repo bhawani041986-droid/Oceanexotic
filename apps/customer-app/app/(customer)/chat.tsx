@@ -5,7 +5,7 @@ import Svg, { Path, Circle } from "react-native-svg";
 import * as ImagePicker from "expo-image-picker";
 import api from "@/services/api";
 import { useAuthStore } from "@/store/authStore";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 
 function AttachIcon({ color }: { color: string }) {
   return (
@@ -34,6 +34,7 @@ function SendIcon({ color }: { color: string }) {
 
 export default function CustomerChatScreen() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { user } = useAuthStore();
 
   const primaryColor = '#00D1FF';

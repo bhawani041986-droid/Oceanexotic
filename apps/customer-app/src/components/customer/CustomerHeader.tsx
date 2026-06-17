@@ -13,7 +13,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import { cn } from "@/lib/utils";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { LanguageSelector } from "@/components/LanguageSelector";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 
 interface CustomerHeaderProps {
   showSearch?: boolean;
@@ -54,7 +54,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
 
   const colors = useThemeColors();
   const primaryColor = colors.primary;
-  const currentLanguage = useSettingsStore((s) => s.language); // trigger re-render on language change
+  const { t } = useTranslation(); // subscribes to language, triggers re-render
 
   const getRgba = (hex: string, alpha: number) => {
     const cleanHex = hex.replace("#", "");

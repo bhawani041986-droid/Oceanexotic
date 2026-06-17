@@ -34,7 +34,7 @@ import { homeService, type CutOption, type TodaysCatchItem } from "@/services/ho
 import { cn } from "@/lib/utils";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { useImageAspectRatio } from "@/hooks/useImageAspectRatio";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
 
@@ -65,6 +65,7 @@ function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
   const h = layout.height;
 
   const colors = useThemeColors();
+  const { t } = useTranslation();
 
   return (
     <Pressable
@@ -180,7 +181,7 @@ export default function CustomerHomeScreen() {
   const { width } = Dimensions.get("window");
   const router = useRouter();
   const settings = useSettingsStore();
-  const currentLanguage = useSettingsStore((s) => s.language); // Force re-render on language change
+  const { t } = useTranslation(); // subscribes to language, re-renders on change
   const cart = useCartStore();
   const { toast, ToastHost } = useToast();
   const { cms, territories, todaysCatch } = useHomeData();

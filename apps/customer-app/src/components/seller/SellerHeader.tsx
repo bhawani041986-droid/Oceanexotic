@@ -8,7 +8,7 @@ import { Logo } from "@/components/ui/Logo";
 import { useToast } from "@/components/ui/Toast";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { cn } from "@/lib/utils";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 
 const MenuIcon = ({ color }: { color: string }) => (
   <Svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
@@ -27,6 +27,7 @@ const NotificationIcon = ({ color = "#F8FAFC" }: { color?: string }) => (
 
 export function SellerHeader() {
   const router = useRouter();
+  const { t } = useTranslation();
   const pathname = usePathname();
   const { user, logout } = useAuthStore();
   const { toast, ToastHost } = useToast();

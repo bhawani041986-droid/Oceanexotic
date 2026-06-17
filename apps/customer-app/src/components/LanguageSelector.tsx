@@ -15,7 +15,7 @@ const LANGUAGES = [
   { code: 'ml', name: 'Malayalam (മലയാളം)' },
   { code: 'or', name: 'Odia (ଓଡ଼ିଆ)' },
   { code: 'as', name: 'Assamese (অসমীয়া)' },
-  { code: 'mni-Mtei', name: 'Manipuri (ꯃꯤꯇꯩꯂꯣꯟ)' },
+  { code: 'mni', name: 'Manipuri (ꯃꯤꯇꯩꯂꯣꯟ)' },
   { code: 'zh-CN', name: 'Chinese (中文)' },
   { code: 'th', name: 'Thai (ไทย)' },
   { code: 'tl', name: 'Filipino' },

@@ -8,7 +8,7 @@ import { useProducts } from "@/hooks/useProducts";
 import { useToast } from "@/components/ui/Toast";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import api from "@/services/api";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import Svg, { Path } from "react-native-svg";
 
 interface VideoItem {
@@ -55,6 +55,7 @@ export function OceanReelsFeed({ variant = "feed", videoId }: OceanReelsFeedProp
   const [isPipOpen, setIsPipOpen] = useState(false);
   
   const colors = useThemeColors();
+  const { t } = useTranslation();
   const cart = useCartStore();
   const { toast } = useToast();
   const { data: allProducts } = useProducts();

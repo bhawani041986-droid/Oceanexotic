@@ -24,7 +24,7 @@ import { useToast } from "@/components/ui/Toast";
 import { FULL_API_URL } from "@/config/api";
 import { Logo } from "@/components/ui/Logo";
 import Svg, { Path } from "react-native-svg";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import * as WebBrowser from "expo-web-browser";
@@ -49,7 +49,8 @@ export default function LoginScreen() {
   const { login } = useAuthStore();
   const loginMutation = useLogin();
   const { toast, ToastHost } = useToast();
-  const currentLanguage = useSettingsStore((s) => s.language); // re-render on language change
+  const currentLanguage = useSettingsStore((s) => s.language);
+  const { t } = useTranslation();
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { WebView } from "react-native-webview";
 import api from "@/services/api";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useToast } from "@/components/ui/Toast";
 
@@ -13,6 +13,7 @@ export default function OrderTrackingScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { toast, ToastHost } = useToast();
+  const { t } = useTranslation();
   const [trackingData, setTrackingData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const webViewRef = useRef<WebView>(null);

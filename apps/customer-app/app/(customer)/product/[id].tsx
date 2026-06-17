@@ -20,7 +20,7 @@ import { useProducts } from "@/hooks/useProducts";
 import { ProductCard } from "@/components/customer/ProductCard";
 import { useAuthStore } from "@/store/authStore";
 import { checkoutService } from "@/services/checkoutService";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 
 const MOCK_RECIPES = [
@@ -39,7 +39,8 @@ export default function ProductDetailScreen() {
   const cart = useCartStore();
   const { toast, ToastHost } = useToast();
   const { user } = useAuthStore();
-  const currentLanguage = useSettingsStore((s) => s.language); // force re-render
+  const currentLanguage = useSettingsStore((s) => s.language);
+  const { t } = useTranslation();
 
   const [product, setProduct] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);

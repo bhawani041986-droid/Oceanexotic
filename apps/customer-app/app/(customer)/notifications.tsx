@@ -2,12 +2,13 @@ import React from "react";
 import { View, Text, ScrollView } from "react-native";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { Ionicons } from "@expo/vector-icons";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 
 export default function NotificationsScreen() {
   const colors = useThemeColors();
-  const currentLanguage = useSettingsStore((s) => s.language); // force re-render
+  const currentLanguage = useSettingsStore((s) => s.language);
+  const { t } = useTranslation();
 
   const mockNotifications = [
     {

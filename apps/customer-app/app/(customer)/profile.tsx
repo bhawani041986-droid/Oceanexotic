@@ -7,7 +7,7 @@ import { orderService } from "@/services/orderService";
 import { useCartStore } from "@/store/cartStore";
 import { useSettingsStore } from "@/store/settingsStore";
 import { authService } from "@/services/authService";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
@@ -26,7 +26,8 @@ export default function ProfileScreen() {
   const cart = useCartStore();
   const { toast, ToastHost } = useToast();
   const colors = useThemeColors();
-  const currentLanguage = useSettingsStore((s) => s.language); // force re-render
+  const currentLanguage = useSettingsStore((s) => s.language);
+  const { t } = useTranslation();
 
   const primaryColor = colors.primary;
 

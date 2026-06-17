@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 import { useAuthStore } from "@/store/authStore";
 import { checkoutService } from "@/services/checkoutService";
 import api from "@/services/api";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 
 const staticFallback = [
@@ -24,7 +24,8 @@ export default function CartScreen() {
   const { items, updateQuantity, removeItem, getTotal, clearCart, toggleMarination } = useCartStore();
   const colors = useThemeColors();
   const { user } = useAuthStore();
-  const currentLanguage = useSettingsStore((s) => s.language); // force re-render
+  const currentLanguage = useSettingsStore((s) => s.language);
+  const { t } = useTranslation();
   const [addons, setAddons] = useState<any[]>([]);
   const [loadingAddons, setLoadingAddons] = useState(true);
 

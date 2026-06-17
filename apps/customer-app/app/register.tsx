@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
 import { FULL_API_URL } from "@/config/api";
 import { Logo } from "@/components/ui/Logo";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { useThemeColors } from "@/hooks/useThemeColors";
 
 const BG_IMAGE = "https://images.unsplash.com/photo-1551244072-5d12893278ab?auto=format&fit=crop&q=80&w=2000";
@@ -25,6 +25,7 @@ export default function RegisterScreen() {
   const router = useRouter();
   const { toast, ToastHost } = useToast();
   const colors = useThemeColors();
+  const { t } = useTranslation();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

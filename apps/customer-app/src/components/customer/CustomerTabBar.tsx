@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 
 const NAV: { label: string; href: Href }[] = [
   { label: "Home", href: "/home" },
@@ -133,6 +133,7 @@ export function CustomerTabBar() {
   const count = useCartStore((s) => s.itemCount());
   const colors = useThemeColors();
   const language = useSettingsStore((s) => s.language);
+  const { t } = useTranslation();
 
   return (
     <View 

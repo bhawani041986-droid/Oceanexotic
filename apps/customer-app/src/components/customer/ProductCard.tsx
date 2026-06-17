@@ -6,7 +6,7 @@ import Svg, { Path } from "react-native-svg";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import type { Product } from "@/services/productService";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 
 import { useImageAspectRatio } from "@/hooks/useImageAspectRatio";
@@ -39,6 +39,7 @@ export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCar
   const h = layout.height;
 
   const colors = useThemeColors();
+  const { t } = useTranslation();
 
   // Dynamic badge: only show when discount_percent > 0
   const discount = Number(product.discount_percent ?? 0);
