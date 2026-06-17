@@ -141,6 +141,18 @@ export const useSettingsStore = create<SettingsState>()(
       pushSettings: async () => {
         try {
           const state = get();
+
+          // Strip base64 data: URIs from customerAssets before sending.
+          // Base64-encoded images can be 3–5 MB, exceeding Vercel's 4.5 MB
+          // serverless function payload limit and causing "sync failed" errors.
+          // Only URL references are persisted; data URIs are transient UI previews.
+          const sanitisedAssets = Object.fromEntries(
+            Object.entries(state.customerAssets || {}).map(([k, v]) => [
+              k,
+              typeof v === 'string' && v.startsWith('data:') ? '' : v
+            ])
+          );
+
           const settingsToSave = {
             marketplaceName: state.marketplaceName,
             currency: state.currency,
@@ -152,7 +164,7 @@ export const useSettingsStore = create<SettingsState>()(
             atmosphericGlow: state.atmosphericGlow,
             flashDealActive: state.flashDealActive,
             flashDealEnd: state.flashDealEnd,
-            customerAssets: state.customerAssets,
+            customerAssets: sanitisedAssets,
             instagram: state.instagram,
             youtube: state.youtube,
             whatsapp: state.whatsapp,

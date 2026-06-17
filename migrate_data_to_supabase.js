@@ -4,7 +4,9 @@ const supabaseUrl = 'https://kyqmhibffbwoqlpdplfu.supabase.co/rest/v1';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cW1oaWJmZmJ3b3FscGRwbGZ1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MDU5Njg3NCwiZXhwIjoyMDk2MTcyODc0fQ.kEpSJdXULNm_9lzXE6UvqIXPc2L-UB38BFwVhR9OcPs';
 
 const tablesToMigrate = [
+    'users',
     'sellers', // first because of products
+    'products',
     'maritime_territories',
     'delivery_agents',
     'cms_content',
@@ -36,9 +38,24 @@ async function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function cleanRow(row) {
+function cleanRow(row, table) {
     let clean = {};
     for (const [key, value] of Object.entries(row)) {
+        if (table === 'products' && (key === 'catch_date' || key === 'harbor_node' || key === 'is_live_inventory' || key === 'nutrition' || key === 'quality_rank' || key === 'unit')) {
+            continue;
+        }
+        if (table === 'products' && key === 'stock') {
+            clean[key] = Math.round(parseFloat(value)) || 0;
+            continue;
+        }
+        if (table === 'products' && key === 'price') {
+            clean[key] = parseFloat(value) || 0.0;
+            continue;
+        }
+        if (table === 'products' && key === 'seller_id' && value === 'SEL-DUMMY-001') {
+            clean[key] = 'SEL-2001';
+            continue;
+        }
         if (value instanceof Date) {
             // MySQL zero dates become Invalid Date in JS or strings. Handle them:
             if (isNaN(value)) {
@@ -80,7 +97,7 @@ async function migrateData() {
 
             const chunkSize = 200;
             for (let i = 0; i < rows.length; i += chunkSize) {
-                const chunk = rows.slice(i, i + chunkSize).map(cleanRow);
+                const chunk = rows.slice(i, i + chunkSize).map(row => cleanRow(row, table));
                 
                 const res = await fetch(`${supabaseUrl}/${table}`, {
                     method: 'POST',
