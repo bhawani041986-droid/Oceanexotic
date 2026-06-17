@@ -37,17 +37,20 @@ export async function GET(request: Request) {
       const otherPartyId = conv.participant_1 === userId ? conv.participant_2 : conv.participant_1;
       
       // Try to get other party name
-      const { data: user } = await supabase.from('users').select('name, role').eq('id', otherPartyId).single();
-      const { data: admin } = await supabase.from('admins').select('name').eq('id', otherPartyId).single();
+      const { data: user } = await supabase.from('users').select('name, role, avatar_url').eq('id', otherPartyId).single();
+      const { data: admin } = await supabase.from('admins').select('name, avatar').eq('id', otherPartyId).single();
 
       let otherName = conv.title || otherPartyId;
       let role = 'Node';
+      let avatar = null;
       if (user) {
         otherName = user.name;
         role = user.role;
+        avatar = user.avatar_url;
       } else if (admin || otherPartyId === 'ADM-001') {
         otherName = admin ? admin.name : 'OceanExotic Admin';
         role = 'Admin';
+        avatar = admin ? admin.avatar : null;
       } else if (otherPartyId.startsWith('FLEET-')) {
         otherName = `Delivery Agent (${otherPartyId})`;
         role = 'Agent';
@@ -76,6 +79,7 @@ export async function GET(request: Request) {
         other_party_id: otherPartyId,
         other_party_name: otherName,
         other_party_role: role,
+        other_party_avatar: avatar || "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80",
         last_message: conv.last_message_text || "Secure channel opened.",
         last_message_sender_id: lastMsg?.sender_id || null,
         time: lastTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),

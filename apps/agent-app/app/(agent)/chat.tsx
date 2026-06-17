@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { View, Text, ScrollView, TextInput, KeyboardAvoidingView, Platform, Pressable, Alert, Image } from "react-native";
-import Svg, { Path, Circle, Polyline, Line, Rect } from "react-native-svg";
+import React, { useState, useEffect, useRef } from "react";
+import { View, Text, ScrollView, TextInput, KeyboardAvoidingView, Platform, Pressable, Alert, Image, ActivityIndicator } from "react-native";
+import Svg, { Path, Line, Rect } from "react-native-svg";
 import * as ImagePicker from "expo-image-picker";
 import { useAuthStore } from "@/store/authStore";
 import { useAgentStore, MOODS } from "@/store/agentStore";
+import api from "@/services/api";
 
 function AttachIcon({ color }: { color: string }) {
   return (
@@ -32,84 +33,179 @@ function SendIcon({ color }: { color: string }) {
   );
 }
 
-const INITIAL_MESSAGES = [
-  { id: "1", text: "OceanExotic Secure Comms Channel initialized.", sender: "system", timestamp: new Date(Date.now() - 3600000).toISOString() },
-  { id: "2", text: "HQ: All sectors clear. Awaiting dispatch.", sender: "admin", timestamp: new Date(Date.now() - 3000000).toISOString() },
-];
-
 export default function AgentSupportScreen() {
   const user = useAuthStore((s) => s.user);
   const currentMood = useAgentStore((s) => s.currentMood);
   const mood = MOODS[currentMood];
   const isLight = currentMood === "DAYLIGHT";
 
-  const [messages, setMessages] = useState<any[]>(INITIAL_MESSAGES);
+  // Format ID for agent
+  const agentId = user?.id ? (user.id.startsWith("FLEET-") ? user.id : `FLEET-${user.id}`) : 'FLEET-001';
+
+  const [activeConv, setActiveConv] = useState<any | null>(null);
+  const [messages, setMessages] = useState<any[]>([]);
   const [inputText, setInputText] = useState("");
+  const [sending, setSending] = useState(false);
+  const [loadingConv, setLoadingConv] = useState(true);
 
-  const handleSend = () => {
-    if (!inputText.trim()) return;
-    
-    const newMessage = {
-      id: Date.now().toString(),
-      text: inputText.trim(),
-      sender: "agent",
-      timestamp: new Date().toISOString()
-    };
+  const scrollViewRef = useRef<ScrollView>(null);
 
-    setMessages([...messages, newMessage]);
-    setInputText("");
+  async function createDefaultSupportConversation() {
+    if (!agentId) return;
+    try {
+      const res = await api.post(`/chat/create_conversation`, {
+        participant_1: agentId,
+        participant_2: 'ADM-001'
+      });
+      if (res.status === 200 || res.status === 201) {
+        fetchConversations();
+      }
+    } catch (err) {
+      console.error("Auto-create support conversation failed:", err);
+    }
+  }
 
-    // Simulate HQ reply
-    setTimeout(() => {
-      setMessages(prev => [...prev, {
-        id: (Date.now() + 1).toString(),
-        text: "HQ: Message received. Logged in central registry.",
-        sender: "admin",
-        timestamp: new Date().toISOString()
-      }]);
-    }, 1500);
+  const fetchConversations = async () => {
+    try {
+      const res = await api.get(`/chat/get_conversations`, {
+        params: { user_id: agentId, t: Date.now() }
+      });
+      if (Array.isArray(res.data)) {
+        if (res.data.length > 0) {
+          setActiveConv(res.data[0]); // Auto-select the first conversation to match the old UI perfectly
+        } else if (agentId) {
+          createDefaultSupportConversation();
+        }
+      }
+    } catch (err) {
+      console.error("Conversations fetch failure:", err);
+    } finally {
+      setLoadingConv(false);
+    }
   };
 
-  const handleDeleteMessage = (msgId: string) => {
+  const fetchMessages = async (convId: string) => {
+    try {
+      const res = await api.get(`/chat/get_messages`, {
+        params: { conversation_id: convId, t: Date.now() }
+      });
+      if (Array.isArray(res.data)) {
+        setMessages(res.data);
+      }
+    } catch (err) {
+      console.error("Messages fetch failure:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchConversations();
+  }, [agentId]);
+
+  // Polling for active chat
+  useEffect(() => {
+    if (!activeConv) return;
+    fetchMessages(activeConv.id);
+    const interval = setInterval(() => {
+      fetchMessages(activeConv.id);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [activeConv]);
+
+  // Auto-scroll logic
+  useEffect(() => {
+    if (scrollViewRef.current) {
+      setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 150);
+    }
+  }, [messages]);
+
+  const handleSend = async () => {
+    if (!inputText.trim() || !activeConv) return;
+    setSending(true);
+    const toSend = inputText.trim();
+    setInputText("");
+
+    try {
+      const res = await api.post(`/chat/send_message`, {
+        conversation_id: activeConv.id,
+        sender_id: agentId,
+        message_text: toSend
+      });
+      if (res.data?.status === "success") {
+        fetchMessages(activeConv.id);
+      }
+    } catch (err) {
+      console.error("Message send failure:", err);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleDeleteMessage = async (msgId: number) => {
     setMessages(prev => prev.filter(m => m.id !== msgId));
+    try {
+      await api.post(`/chat/delete_message`, {
+        message_id: msgId,
+        sender_id: agentId
+      });
+    } catch (err) {
+      console.error("Delete message error:", err);
+      if (activeConv) fetchMessages(activeConv.id);
+    }
+  };
+
+  const uploadAndSendImage = async (uri: string) => {
+    setSending(true);
+    try {
+      const filename = uri.split('/').pop() || 'upload.jpg';
+      const match = /\.(\w+)$/.exec(filename);
+      const type = match ? `image/${match[1]}` : `image`;
+
+      const formData = new FormData();
+      formData.append('file', {
+        uri: Platform.OS === 'android' ? uri : uri.replace('file://', ''),
+        name: filename,
+        type: type,
+      } as any);
+
+      const uploadRes = await api.post(`/upload`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      if (uploadRes.data?.url && activeConv) {
+        const res = await api.post(`/chat/send_message`, {
+          conversation_id: activeConv.id,
+          sender_id: agentId,
+          message_text: '',
+          message_type: 'IMAGE',
+          attachment_url: uploadRes.data.url
+        });
+        if (res.data?.status === "success") {
+          fetchMessages(activeConv.id);
+        }
+      } else {
+        Alert.alert("Upload Failed", "Could not upload the image.");
+      }
+    } catch (err) {
+      console.error("Upload image error:", err);
+      Alert.alert("Error", "Failed to upload image.");
+    } finally {
+      setSending(false);
+    }
   };
 
   const handleAttachImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
     if (permissionResult.granted === false) {
       Alert.alert("Permission Required", "Permission to access camera roll is required!");
       return;
     }
-
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
       allowsEditing: false,
       quality: 0.8,
     });
-
     if (!result.canceled && result.assets && result.assets.length > 0) {
-      const selectedAsset = result.assets[0];
-      
-      const newMsg = {
-        id: Date.now().toString(),
-        text: "",
-        sender: "agent",
-        timestamp: new Date().toISOString(),
-        message_type: "IMAGE",
-        attachment_url: selectedAsset.uri
-      };
-      setMessages(prev => [...prev, newMsg]);
-
-      // Mock HQ response
-      setTimeout(() => {
-        setMessages(prev => [...prev, {
-          id: (Date.now() + 1).toString(),
-          text: "HQ: Encrypted visual log received and stored.",
-          sender: "admin",
-          timestamp: new Date().toISOString()
-        }]);
-      }, 1500);
+      uploadAndSendImage(result.assets[0].uri);
     }
   };
 
@@ -122,36 +218,48 @@ export default function AgentSupportScreen() {
     >
       <View className="flex-1 px-4 py-4">
         {/* Header */}
-        <View className="mb-6 flex-row items-center border-b pb-4" style={{ borderColor: mood.border }}>
-          <View className="w-10 h-10 rounded-xl items-center justify-center mr-3" style={{ backgroundColor: mood.primary + "20" }}>
-            <MonitorIcon color={mood.primary} />
+        <View className="mb-6 flex-row items-center border-b pb-4 justify-between" style={{ borderColor: mood.border }}>
+          <View className="flex-row items-center">
+            {activeConv?.other_party_avatar ? (
+              <Image 
+                source={{ uri: activeConv.other_party_avatar }} 
+                className="w-12 h-12 rounded-xl mr-3 bg-slate-800"
+                style={{ borderWidth: 1, borderColor: mood.primary }}
+              />
+            ) : (
+              <View className="w-12 h-12 rounded-xl items-center justify-center mr-3" style={{ backgroundColor: mood.primary + "20" }}>
+                <MonitorIcon color={mood.primary} />
+              </View>
+            )}
+            <View>
+              <Text className="text-xl font-black italic tracking-tighter uppercase" style={{ color: mood.text }}>
+                {activeConv ? activeConv.other_party_name : "Secure Comms"}
+              </Text>
+              <Text className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
+                {activeConv ? activeConv.other_party_role : "Direct Uplink to Command"}
+              </Text>
+            </View>
           </View>
-          <View>
-            <Text className="text-xl font-black italic tracking-tighter uppercase" style={{ color: mood.text }}>
-              Secure Comms
-            </Text>
-            <Text className="text-[8px] font-black uppercase tracking-[0.25em] text-slate-500">
-              Direct Uplink to Command Center
-            </Text>
-          </View>
+          {loadingConv && <ActivityIndicator color={mood.primary} />}
         </View>
 
         {/* Chat Log */}
         <ScrollView 
+          ref={scrollViewRef}
           className="flex-1 mb-4"
           contentContainerStyle={{ paddingBottom: 20 }}
           showsVerticalScrollIndicator={false}
         >
           {messages.map((msg) => {
-            const isMe = msg.sender === "agent";
-            const isSystem = msg.sender === "system";
+            const isMe = msg.sender_id === agentId;
 
-            if (isSystem) {
+            // Optional generic system message logic if needed based on metadata/sender
+            if (msg.message_type === 'SYSTEM' || msg.sender_id === 'system') {
               return (
                 <View key={msg.id} className="items-center my-4">
-                  <View className="px-3 py-1 rounded-full border border-dashed" style={{ borderColor: mood.border, backgroundColor: mood.text + "05" }}>
-                    <Text className="text-[7px] font-black uppercase tracking-widest text-slate-400">
-                      {msg.text}
+                  <View className="px-3 py-1.5 rounded-full border border-dashed" style={{ borderColor: mood.border, backgroundColor: mood.text + "05" }}>
+                    <Text className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                      {msg.message_text}
                     </Text>
                   </View>
                 </View>
@@ -164,11 +272,11 @@ export default function AgentSupportScreen() {
                 onLongPress={() => {
                   Alert.alert(
                     "Delete Message",
-                    "Are you sure you want to delete this message?",
+                    "Are you sure you want to completely erase this communication from the registry?",
                     [
                       { text: "Cancel", style: "cancel" },
                       { 
-                        text: "Delete", 
+                        text: "Erase", 
                         style: "destructive", 
                         onPress: () => handleDeleteMessage(msg.id) 
                       }
@@ -178,7 +286,7 @@ export default function AgentSupportScreen() {
                 className={`mb-4 max-w-[80%] ${isMe ? "self-end" : "self-start"}`}
               >
                 <View 
-                  className={`p-3 rounded-2xl border`}
+                  className={`p-3.5 rounded-2xl border`}
                   style={{
                     backgroundColor: isMe ? mood.primary + "20" : isLight ? "#F1F5F9" : "rgba(255,255,255,0.05)",
                     borderColor: isMe ? mood.primary + "40" : mood.border,
@@ -187,8 +295,8 @@ export default function AgentSupportScreen() {
                   }}
                 >
                   {!isMe && (
-                    <Text className="text-[8px] font-black uppercase tracking-widest mb-1" style={{ color: mood.primary }}>
-                      HQ COMMAND
+                    <Text className="text-[10px] font-black uppercase tracking-widest mb-1.5" style={{ color: mood.primary }}>
+                      {activeConv?.other_party_role || "HQ COMMAND"}
                     </Text>
                   )}
                   {msg.message_type === 'IMAGE' && msg.attachment_url ? (
@@ -199,14 +307,14 @@ export default function AgentSupportScreen() {
                       />
                     </View>
                   ) : null}
-                  {msg.text ? (
-                    <Text className="text-[11px] font-medium leading-relaxed" style={{ color: mood.text }}>
-                      {msg.text}
+                  {msg.message_text ? (
+                    <Text className="text-[12px] font-medium leading-relaxed" style={{ color: mood.text }}>
+                      {msg.message_text}
                     </Text>
                   ) : null}
                 </View>
-                <Text className={`text-[7px] font-black uppercase tracking-widest text-slate-500 mt-1 ${isMe ? "text-right" : "text-left"}`}>
-                  {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                <Text className={`text-[9px] font-black uppercase tracking-widest text-slate-500 mt-1.5 ${isMe ? "text-right" : "text-left"}`}>
+                  {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                 </Text>
               </Pressable>
             );
@@ -223,12 +331,13 @@ export default function AgentSupportScreen() {
         >
           <Pressable
             onPress={handleAttachImage}
-            className="p-2 mr-1 rounded-full bg-white/5 border border-white/5 active:scale-95"
+            disabled={sending}
+            className="p-2.5 mr-1 rounded-full bg-white/5 border border-white/5 active:scale-95"
           >
             <AttachIcon color={mood.primary} />
           </Pressable>
           <TextInput
-            className="flex-1 max-h-[100px] min-h-[40px] px-3 pt-3 pb-3 text-[12px] font-medium"
+            className="flex-1 max-h-[100px] min-h-[44px] px-3 pt-3 pb-3 text-[13px] font-medium"
             style={{ color: mood.text }}
             placeholder="Transmit secure message..."
             placeholderTextColor={isLight ? "#94A3B8" : "rgba(255,255,255,0.3)"}
@@ -238,10 +347,15 @@ export default function AgentSupportScreen() {
           />
           <Pressable 
             onPress={handleSend}
-            className="w-10 h-10 rounded-xl items-center justify-center ml-2 mb-[2px] active:scale-95"
-            style={{ backgroundColor: mood.primary }}
+            disabled={sending || !inputText.trim()}
+            className="w-11 h-11 rounded-xl items-center justify-center ml-2 active:scale-95"
+            style={{ backgroundColor: mood.primary, opacity: (sending || !inputText.trim()) ? 0.5 : 1 }}
           >
-            <SendIcon color={isLight ? "#FFFFFF" : "#020617"} />
+            {sending ? (
+              <ActivityIndicator color={isLight ? "#FFFFFF" : "#020617"} size="small" />
+            ) : (
+              <SendIcon color={isLight ? "#FFFFFF" : "#020617"} />
+            )}
           </Pressable>
         </View>
       </View>
