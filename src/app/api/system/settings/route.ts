@@ -27,7 +27,16 @@ export async function GET() {
       }
     }
 
-    return NextResponse.json({ status: "success", settings });
+    return NextResponse.json(
+      { status: "success", settings },
+      {
+        headers: {
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          'CDN-Cache-Control': 'no-store',
+          'Vercel-CDN-Cache-Control': 'no-store'
+        }
+      }
+    );
   } catch (error: any) {
     console.error("Settings API GET Error:", error);
     return NextResponse.json({ status: "error", message: error.message }, { status: 500 });
