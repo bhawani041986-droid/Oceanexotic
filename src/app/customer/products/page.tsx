@@ -270,6 +270,7 @@ function ProductListingContent() {
   // --- LIVE REGISTRY SYNC ENGINE ---
   const [products, setProducts] = React.useState<any[]>([]);
   const [addons, setAddons] = React.useState<any[]>([]);
+  const [todaysCatch, setTodaysCatch] = React.useState<any[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
   const [subscriberEmail, setSubscriberEmail] = React.useState("");
   const [isSubscribing, setIsSubscribing] = React.useState(false);
@@ -399,6 +400,19 @@ function ProductListingContent() {
         }
       } catch (err) {
         console.error("Coupons sync failed", err);
+      }
+
+      // Fetch Today's Catch
+      try {
+        const catchRes = await fetch('/api/products/todays_catch');
+        if (catchRes.ok) {
+          const catchData = await catchRes.json();
+          if (catchData.status === 'success') {
+            setTodaysCatch(catchData.items || []);
+          }
+        }
+      } catch (catchErr) {
+        console.error("Today's catch sync failed", catchErr);
       }
 
     } catch (err) {
@@ -658,11 +672,33 @@ function ProductListingContent() {
                              <button onClick={() => setActiveTab("Fresh Fish")} className="text-[10px] font-black uppercase text-[var(--c-primary)] flex items-center gap-1 group">View All <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" /></button>
                           </div>
                           <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 snap-x">
-                             {bestsellers.map(product => (
-                               <div key={product.id} className="w-[280px] lg:w-[calc(25%-12px)] flex-shrink-0 snap-start">
-                                 <ProductCard product={product} />
-                               </div>
-                             ))}
+                             {todaysCatch.length > 0 ? (
+                               todaysCatch.map(catchItem => {
+                                 const mappedProduct = {
+                                   id: catchItem.product_id,
+                                   name: catchItem.name,
+                                   price: catchItem.price_per_kg,
+                                   images: [catchItem.catch_image_url || catchItem.image_url || "/og-image.jpg"],
+                                   seller: catchItem.seller_name,
+                                   seller_id: catchItem.seller_id,
+                                   status: catchItem.status,
+                                   is_live_inventory: 1,
+                                   badge: catchItem.batch_label ? `${catchItem.batch_label} BATCH` : "FRESH CATCH",
+                                   harbor_node: catchItem.harbor_node
+                                 };
+                                 return (
+                                   <div key={catchItem.id} className="w-[280px] lg:w-[calc(25%-12px)] flex-shrink-0 snap-start">
+                                     <ProductCard product={mappedProduct} />
+                                   </div>
+                                 );
+                               })
+                             ) : (
+                               bestsellers.map(product => (
+                                 <div key={product.id} className="w-[280px] lg:w-[calc(25%-12px)] flex-shrink-0 snap-start">
+                                   <ProductCard product={product} />
+                                 </div>
+                               ))
+                             )}
                           </div>
                        </div>
 
