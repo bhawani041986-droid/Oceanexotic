@@ -69,23 +69,33 @@ export default function MarketplaceThemeControl() {
     toast(`Selected ${CUSTOMER_THEMES.find(t => t.id === themeId)?.name} for the PUBLIC STOREFRONT. Click SYNCHRONIZE to publish.`, "info");
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && activeStation) {
-      const reader = new FileReader(
-  );
-      reader.onloadend = () => {
-        const base64String = reader.result as string;
-        setTempAssets(prev => ({
-          ...prev,
-          [activeStation]: base64String
-        })
-  );
-        toast(`${activeStation.toUpperCase()} asset staged for commitment.`, "success"
-  );
-      };
-      reader.readAsDataURL(file
-  );
+      toast(`Uploading ${activeStation.toUpperCase()} to secure CDN storage...`, "info");
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const response = await fetch("/api/system/upload", {
+          method: "POST",
+          body: formData
+        });
+
+        const data = await response.json();
+        if (data.status === "success" && data.url) {
+          setTempAssets(prev => ({
+            ...prev,
+            [activeStation]: data.url
+          }));
+          toast(`${activeStation.toUpperCase()} uploaded successfully and staged.`, "success");
+        } else {
+          toast(data.message || "Failed to upload asset.", "error");
+        }
+      } catch (err) {
+        console.error("Asset upload error:", err);
+        toast("An error occurred during file upload.", "error");
+      }
     }
   };
 
