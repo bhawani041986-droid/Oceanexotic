@@ -74,11 +74,10 @@ export default function PortBlairMap({
       });
       mapInstanceRef.current = map;
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
         maxZoom: 19,
+        attribution: '&copy; Google Maps'
       }).addTo(map);
-
-      L.control.attribution({ position: "bottomright", prefix: "© OSM" }).addTo(map);
 
       // Landmark dots
       PORT_BLAIR_LANDMARKS.forEach((lm) => {
@@ -98,10 +97,15 @@ export default function PortBlairMap({
       const destLng = deliveryLng || PORT_BLAIR_CENTER[1] + 0.015;
       L.marker([destLat, destLng], {
         icon: L.divIcon({
-          html: `<div style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#22c55e,#16a34a);border:3px solid white;box-shadow:0 4px 12px rgba(34,197,94,0.6);font-size:16px">🏠</div>`,
+          html: `<div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                <div style="position: absolute; width: 50px; height: 50px; border: 2px dashed rgba(99, 102, 241, 0.4); border-radius: 50%; animation: harbor-rotate 10s linear infinite;"></div>
+                <div style="width: 28px; height: 28px; background: #6366F1; border: 2px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(99, 102, 241, 0.5); z-index: 2;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: white;"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                </div>
+              </div><style>@keyframes harbor-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }</style>`,
           className: "",
-          iconSize: [36, 36],
-          iconAnchor: [18, 18],
+          iconSize: [40, 40],
+          iconAnchor: [20, 20],
         }),
       }).bindTooltip("Your Delivery Location", { permanent: false, direction: "top" }).addTo(map);
 
@@ -110,10 +114,26 @@ export default function PortBlairMap({
       const dLng = driverLng || 92.7359;
       const driverMarker = L.marker([dLat, dLng], {
         icon: L.divIcon({
-          html: `<div style="position:relative;width:44px;height:44px"><div style="position:absolute;inset:0;border-radius:50%;background:rgba(14,165,233,0.3);animation:ping 1.5s cubic-bezier(0,0,0.2,1) infinite"></div><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#0ea5e9,#0284c7);border:3px solid white;box-shadow:0 4px 12px rgba(14,165,233,0.7);display:flex;align-items:center;justify-content:center;font-size:13px">🏍️</div></div><style>@keyframes ping{0%{transform:scale(1);opacity:.8}100%{transform:scale(2.5);opacity:0}}</style>`,
+          html: `<div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                <div style="position: absolute; width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(45deg, #00D1FF, #6366F1); opacity: 0.3; animation: sentinel-pulse 2s infinite;"></div>
+                <div style="position: relative; color: white; display: flex; filter: drop-shadow(0 0 10px rgba(0, 209, 255, 0.6)) drop-shadow(0 0 5px rgba(99, 102, 241, 0.4)); z-index: 2;">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <defs>
+                        <linearGradient id="fish-neon-cust" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" style="stop-color:#00D1FF;stop-opacity:1" />
+                          <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M23 12c-2.5 2.5-5 5-10 5s-8-3-11-5c3-2 6-5 11-5s7.5 2.5 10 5z" stroke="url(#fish-neon-cust)" />
+                      <path d="M23 12l-3-3m0 6l3-3" stroke="url(#fish-neon-cust)" />
+                      <path d="M13 8c-1 1-1 3 0 4" stroke="url(#fish-neon-cust)" opacity="0.6" />
+                      <circle cx="6" cy="12" r="1" fill="#00D1FF" />
+                   </svg>
+                </div>
+              </div><style>@keyframes sentinel-pulse { 0% { transform: scale(0.5); opacity: 0.8; } 100% { transform: scale(1.8); opacity: 0; } }</style>`,
           className: "",
-          iconSize: [44, 44],
-          iconAnchor: [22, 22],
+          iconSize: [40, 40],
+          iconAnchor: [20, 20],
         }),
       }).bindTooltip("Your Delivery Rider", { permanent: false, direction: "top" }).addTo(map);
       driverMarkerRef.current = driverMarker;

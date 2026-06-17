@@ -36,8 +36,42 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
-  }
-  );
+  });
+
+  React.useEffect(() => {
+    const hash = window.location.hash;
+    if (hash && hash.includes("access_token=")) {
+      setIsLoading(true);
+      const params = new URLSearchParams(hash.substring(1));
+      const accessToken = params.get("access_token");
+      
+      if (accessToken) {
+        fetch('/api/auth/sync-oauth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ access_token: accessToken })
+        })
+        .then(res => res.json())
+        .then(result => {
+          if (result.success) {
+            localStorage.setItem("auth_token", result.token);
+            login(result.user);
+            toast(`Welcome back, ${result.user.name}!`, "success");
+            router.push(result.redirectUrl);
+          } else {
+            toast(result.message || "OAuth sync failed", "error");
+            router.push("/login?error=OAuthSyncFailed");
+          }
+        })
+        .catch(() => {
+          toast("Connection failed during OAuth sync.", "error");
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+      }
+    }
+  }, [login, router, toast]);
 
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
@@ -111,7 +145,7 @@ export default function LoginPage() {
                 await supabaseFrontend.auth.signInWithOAuth({
                   provider: 'google',
                   options: {
-                    redirectTo: `${window.location.origin}/api/auth/callback`
+                    redirectTo: `${window.location.origin}/login`
                   }
                 });
               }}

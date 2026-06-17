@@ -229,7 +229,7 @@ function AgentTrackingContent() {
           </div>
           <style>{`
             @keyframes radar-sweep { 0%{transform:translateY(-100%)} 100%{transform:translateY(500%)} }
-            .leaflet-container { background:#e5e7eb !important; }
+            .leaflet-container { background:#020617 !important; }
           `}</style>
 
           {/* HUD overlays */}
