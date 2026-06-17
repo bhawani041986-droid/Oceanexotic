@@ -8,6 +8,7 @@ import { FULL_API_URL } from "@/config/api";
 import { useToast } from "@/components/ui/Toast";
 import axios from "axios";
 import QRScannerNative from "@/components/QRScannerNative";
+import MapView, { Marker, Polyline, UrlTile, PROVIDER_DEFAULT } from "react-native-maps";
 
 
 // Standard hashing function for deterministic values
@@ -862,111 +863,51 @@ export default function AgentTrackingScreen() {
             position: 'relative',
           }}
         >
-          {/* Background map tile */}
-          <RNImage
-            source={{ uri: `https://static-maps.yandex.ru/1.x/?ll=${coords.lng},${coords.lat}&z=14&l=map&size=640,560` }}
-            style={{ width: '100%', height: '100%', position: 'absolute', opacity: isLight ? 0.45 : 0.5 }}
-            resizeMode="cover"
-          />
-
-          {/* Dark blueprint overlay */}
-          <View
-            style={[
-              StyleSheet.absoluteFillObject,
-              { backgroundColor: isLight ? 'rgba(241,245,249,0.45)' : 'rgba(2,6,23,0.62)' }
-            ]}
-          />
-
-          {/* SVG radar graphics */}
-          <Svg width="100%" height="100%" viewBox="0 0 300 290" style={{ position: 'absolute' }}>
-            {/* Three concentric radar rings */}
-            <Circle cx="150" cy="145" r="45" stroke={mood.primary} strokeWidth="0.6" strokeDasharray="3,3" fill="none" opacity="0.28" />
-            <Circle cx="150" cy="145" r="80" stroke={mood.primary} strokeWidth="0.5" strokeDasharray="2,5" fill="none" opacity="0.17" />
-            <Circle cx="150" cy="145" r="115" stroke={mood.primary} strokeWidth="0.8" fill="none" opacity="0.1" />
-
-            {/* Compass cross-hair lines */}
-            <Line x1="150" y1="4" x2="150" y2="286" stroke={mood.primary} strokeWidth="0.5" opacity="0.14" />
-            <Line x1="4" y1="145" x2="296" y2="145" stroke={mood.primary} strokeWidth="0.5" opacity="0.14" />
-
-            {/* Diagonal grid */}
-            <Line x1="4" y1="4" x2="296" y2="286" stroke={mood.primary} strokeWidth="0.3" opacity="0.07" />
-            <Line x1="296" y1="4" x2="4" y2="286" stroke={mood.primary} strokeWidth="0.3" opacity="0.07" />
-
-            {/* Dashed route path from hub → agent → customer */}
-            <Line
-              x1={hubCoords.x * 1.25}
-              y1={hubCoords.y * 1.45}
-              x2={customerCoords.x * 1.25}
-              y2={customerCoords.y * 1.45}
-              stroke={mood.primary}
-              strokeWidth="2"
-              strokeDasharray="5,5"
-              opacity="0.35"
+          {/* Native MapView Replacement */}
+          <MapView
+            style={StyleSheet.absoluteFillObject}
+            provider={PROVIDER_DEFAULT}
+            initialRegion={{
+              latitude: coords.lat,
+              longitude: coords.lng,
+              latitudeDelta: 0.05,
+              longitudeDelta: 0.05,
+            }}
+            userInterfaceStyle={isLight ? "light" : "dark"}
+            showsUserLocation={false} // We draw our own agent marker
+            pitchEnabled={false}
+          >
+            <UrlTile
+              urlTemplate={
+                isLight 
+                  ? "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                  : "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+              }
+              maximumZ={19}
             />
 
-            {/* HUB origin node */}
-            <G>
-              <Circle cx={hubCoords.x * 1.25} cy={hubCoords.y * 1.45} r="7" fill="#334155" opacity="0.5" />
-              <Circle cx={hubCoords.x * 1.25} cy={hubCoords.y * 1.45} r="3.5" fill="#64748B" />
-            </G>
+            {/* Hub Marker */}
+            <Marker coordinate={{ latitude: 11.6670, longitude: 92.7359 }} title="Hub" pinColor="#64748B" />
+            
+            {/* Customer Marker */}
+            <Marker coordinate={{ latitude: destLat, longitude: destLng }} title="Customer" pinColor={mood.primary} />
 
-            {/* CUSTOMER destination node */}
-            <G>
-              <Circle cx={customerCoords.x * 1.25} cy={customerCoords.y * 1.45} r="11" fill="none" stroke={mood.primary} strokeWidth="1.5" opacity="0.8" />
-              <Circle cx={customerCoords.x * 1.25} cy={customerCoords.y * 1.45} r="5.5" fill={mood.primary} />
-              <Circle cx={customerCoords.x * 1.25} cy={customerCoords.y * 1.45} r="16" fill="none" stroke={mood.primary} strokeWidth="0.8" opacity="0.3" strokeDasharray="2,3" />
-            </G>
+            {/* Agent Marker */}
+            <Marker coordinate={{ latitude: coords.lat, longitude: coords.lng }} title="Agent (You)">
+               <View style={{ width: 16, height: 16, borderRadius: 8, backgroundColor: mood.primary, borderWidth: 2, borderColor: '#fff', shadowColor: mood.primary, shadowRadius: 5, shadowOpacity: 0.8 }} />
+            </Marker>
 
-            {/* AGENT animated pulsing dot */}
-            {missionState !== 'DELIVERED' && (
-              <G>
-                <Circle
-                  cx={userCoords.x * 1.25}
-                  cy={userCoords.y * 1.45}
-                  r={8 * pulseScale}
-                  fill="none"
-                  stroke={mood.primary}
-                  strokeWidth="2"
-                  opacity="0.55"
-                />
-                <Circle
-                  cx={userCoords.x * 1.25}
-                  cy={userCoords.y * 1.45}
-                  r={14 * pulseScale}
-                  fill="none"
-                  stroke={mood.primary}
-                  strokeWidth="0.8"
-                  opacity="0.18"
-                />
-                <Circle cx={userCoords.x * 1.25} cy={userCoords.y * 1.45} r="6" fill={mood.primary} />
-                {/* Direction cross on agent */}
-                <Line x1={userCoords.x * 1.25 - 10} y1={userCoords.y * 1.45} x2={userCoords.x * 1.25 + 10} y2={userCoords.y * 1.45} stroke={mood.primary} strokeWidth="1" opacity="0.4" />
-                <Line x1={userCoords.x * 1.25} y1={userCoords.y * 1.45 - 10} x2={userCoords.x * 1.25} y2={userCoords.y * 1.45 + 10} stroke={mood.primary} strokeWidth="1" opacity="0.4" />
-              </G>
-            )}
-          </Svg>
-
-          {/* Animated radar sweep line (mirrors web CSS animation) */}
-          <Animated.View
-            style={{
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              height: 1.5,
-              backgroundColor: mood.primary,
-              opacity: 0.45,
-              shadowColor: mood.primary,
-              shadowOffset: { width: 0, height: 0 },
-              shadowOpacity: 0.9,
-              shadowRadius: 8,
-              transform: [{
-                translateY: sweepAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0, 290]
-                })
-              }]
-            }}
-          />
+            {/* Route Polyline */}
+            <Polyline
+              coordinates={[
+                { latitude: coords.lat, longitude: coords.lng },
+                { latitude: destLat, longitude: destLng }
+              ]}
+              strokeColor={mood.primary}
+              strokeWidth={3}
+              lineDashPattern={[5, 5]}
+            />
+          </MapView>
 
           {/* TOP-LEFT HUD — Sentinel node label (skewed style matching web) */}
           <View style={{ position: 'absolute', top: 12, left: 12, gap: 6 }}>
