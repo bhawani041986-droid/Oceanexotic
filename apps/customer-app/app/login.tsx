@@ -128,7 +128,9 @@ export default function LoginScreen() {
       if (response.type === 'success' && response.data?.idToken) {
         const idToken = response.data.idToken;
         const SUPABASE_URL = "https://kyqmhibffbwoqlpdplfu.supabase.co";
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cW1oaWJmZmJ3b3FscGRwbGZ1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MDU5Njg3NCwiZXhwIjoyMDk2MTcyODc0fQ.kEpSJdXULNm_9lzXE6UvqIXPc2L-UB38BFwVhR9OcPs";
+        // IMPORTANT: Use the PUBLIC anon key here — not service_role. 
+        // The /auth/v1/token endpoint rejects service_role keys.
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cW1oaWJmZmJ3b3FscGRwbGZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTY4NzQsImV4cCI6MjA5NjE3Mjg3NH0.h4n0LxfWBRbEwrLKFxoUGJYmylLHVGVH3TWKOH7E-M4";
 
         // Exchange Google ID token for Supabase Session natively
         const sbResponse = await axios.post(
@@ -148,8 +150,9 @@ export default function LoginScreen() {
         const supabaseToken = sbResponse.data.access_token;
         
         if (supabaseToken) {
-          // Sync with Next.js backend to get our custom API JWT and DB User
-          const syncResponse = await axios.post(`${FULL_API_URL}/api/auth/sync-oauth`, {
+          // Sync with Next.js backend — use live domain for production
+          const apiBase = "https://oceanexotic.com/api";
+          const syncResponse = await axios.post(`${apiBase}/auth/sync-oauth`, {
             access_token: supabaseToken
           });
           
