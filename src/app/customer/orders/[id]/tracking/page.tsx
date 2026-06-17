@@ -13,12 +13,15 @@ import {
   Droplets,
   Navigation as NavigationIcon,
   Home as HomeIcon,
-  Anchor
+  Anchor,
+  Layers
 } from "lucide-react";
+import { useToast } from "@/components/ui/Toast";
 
 export default function OrderTrackingPage() {
   const { id } = useParams();
   const router = useRouter();
+  const { toast } = useToast();
   const [trackingData, setTrackingData] = React.useState<any>(null);
   const [loading, setLoading] = React.useState(true);
 
@@ -199,14 +202,58 @@ export default function OrderTrackingPage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
-               <Card className="lg:col-span-2 p-1 relative overflow-hidden bg-bg-secondary rounded-[24px] lg:rounded-[40px] border-[var(--foreground)]/5 h-[350px] lg:h-[450px]">
+               <div className="lg:col-span-2 relative overflow-hidden bg-bg-secondary rounded-[24px] lg:rounded-[40px] border border-[var(--foreground)]/10 h-[350px] lg:h-[450px] transition-all duration-500 shadow-lg">
+                  <style>{`
+                    .leaflet-tooltip-dark {
+                      background: rgba(15, 23, 42, 0.9);
+                      border: 1px solid rgba(255, 255, 255, 0.1);
+                      color: white;
+                      font-size: 10px;
+                      font-weight: 700;
+                      letter-spacing: .05em;
+                      border-radius: 6px;
+                      padding: 4px 8px;
+                      text-transform: uppercase;
+                    }
+                    .leaflet-tooltip-dark::before {
+                      border-top-color: rgba(15, 23, 42, 0.9);
+                    }
+                    @keyframes radar-sweep {
+                      0% { transform: translateY(-100%); }
+                      100% { transform: translateY(500%); }
+                    }
+                    .animate-radar-sweep {
+                      animation: radar-sweep 5s linear infinite;
+                    }
+                    .leaflet-container {
+                      background: #e5e7eb !important;
+                    }
+                  `}</style>
+
                   <div id="map" className="w-full h-full rounded-[22px] lg:rounded-[38px]" />
-                  
-                  <div className="absolute top-3 left-3 z-[1000] space-y-1 pointer-events-none">
-                      <Badge variant="glass" className="bg-[var(--foreground)]/90 text-primary border-primary/20 uppercase tracking-[0.2em] text-[7px] font-black backdrop-blur-md">Live Delivery Map</Badge>
+
+                  {/* Radar sweep */}
+                  <div className="absolute inset-0 pointer-events-none z-[400] overflow-hidden">
+                    <div className="w-full h-[1px] shadow-[0_0_20px_var(--primary)] animate-radar-sweep opacity-40 bg-primary" />
                   </div>
 
-                  <div className="absolute bottom-3 left-3 right-3 p-2.5 lg:p-4 rounded-xl lg:rounded-[20px] bg-[var(--foreground)]/95 backdrop-blur-xl border border-[var(--foreground)]/10 flex items-center justify-between z-[1000] shadow-2xl pointer-events-none">
+                  {/* Top-Left Skewed Node HUD */}
+                  <div className="absolute top-3 left-3 z-[1000] space-y-1.5 pointer-events-none">
+                    <div className="relative -skew-x-12 px-3 py-1 shadow-lg bg-primary">
+                      <span className="block skew-x-12 text-[9px] font-black uppercase tracking-widest text-white italic">
+                        Node: Sentinel-01
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 px-2 py-1 backdrop-blur-md border border-primary/30 -skew-x-12 bg-slate-950/80">
+                      <div className={cn("w-1.5 h-1.5 skew-x-12 rounded-full", loading ? "bg-slate-500 animate-pulse" : "bg-emerald-500 shadow-[0_0_8px_#10B981]")} />
+                      <span className="skew-x-12 text-[8px] font-bold uppercase tracking-[0.2em] text-primary">
+                        Telemetry: {loading ? "Locking..." : "Registry Live"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Bottom-Left Arrival Overlay */}
+                  <div className="absolute bottom-3 left-3 right-16 p-2.5 lg:p-4 rounded-xl lg:rounded-[20px] bg-slate-950/95 border border-primary/30 flex items-center justify-between z-[1000] shadow-2xl pointer-events-none">
                       <div className="flex items-center gap-3 lg:gap-4">
                          <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-[8px] lg:rounded-[10px] bg-primary/10 flex items-center justify-center text-primary relative">
                             <Truck className="w-4 h-4 lg:w-5 lg:h-5" />
@@ -214,17 +261,42 @@ export default function OrderTrackingPage() {
                          </div>
                          <div className="space-y-0">
                             <p className="text-[6px] lg:text-[7px] font-black text-text-secondary uppercase tracking-widest leading-none">Arrival</p>
-                            <p className="text-sm lg:text-lg font-black text-bg-primary uppercase leading-tight">{displayData.estimated_arrival}</p>
+                            <p className="text-sm lg:text-lg font-black text-white uppercase leading-tight">{displayData.estimated_arrival}</p>
                          </div>
                       </div>
                       <div className="flex flex-col items-end space-y-0">
                          <p className="text-[6px] lg:text-[7px] font-black text-text-secondary uppercase tracking-widest leading-none">Coordinates</p>
-                         <p className="text-[8px] lg:text-[10px] font-black text-bg-primary font-mono opacity-80 leading-tight">
+                         <p className="text-[8px] lg:text-[10px] font-black text-primary font-mono opacity-80 leading-tight">
                             {displayData.current_lat?.toFixed(3)}, {displayData.current_lng?.toFixed(3)}
                          </p>
                       </div>
                   </div>
-               </Card>
+
+                  {/* Bottom-Right Skewed Controls */}
+                  <div className="absolute bottom-3 right-3 z-[1000] flex flex-col gap-1.5">
+                    <button
+                      onClick={() => {
+                        toast("Map Recalibrated", "success");
+                      }}
+                      className="w-9 h-9 border flex items-center justify-center -skew-x-12 transition-all hover:bg-primary/20 bg-slate-950/90 border-primary/30 text-primary"
+                    >
+                      <Layers className="w-4 h-4 skew-x-12" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        const lat = displayData.current_lat || 13.160704;
+                        const lng = displayData.current_lng || 92.746892;
+                        if (mapRef.current) {
+                          mapRef.current.panTo([lat, lng]);
+                          toast("Recentered on Driver Signal", "success");
+                        }
+                      }}
+                      className="w-9 h-9 border flex items-center justify-center -skew-x-12 hover:bg-primary hover:text-white transition-all bg-slate-950/90 border-primary/30 text-primary"
+                    >
+                      <NavigationIcon className="w-4 h-4 skew-x-12" />
+                    </button>
+                  </div>
+               </div>
 
                <div className="space-y-4 lg:space-y-8">
                   <div className="space-y-1">
