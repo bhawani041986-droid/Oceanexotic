@@ -11,6 +11,7 @@ import api from "@/services/api";
 import { useAuthStore } from "@/store/authStore";
 import * as ImagePicker from "expo-image-picker";
 import { t } from "@/lib/i18n";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function OrderDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -23,9 +24,9 @@ export default function OrderDetailsScreen() {
   const [reviewItem, setReviewItem] = useState<any | null>(null);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
-  const [eta, setEta] = useState<string>("35");
-  const [currentTemp, setCurrentTemp] = useState<string>("1.2");
-  const [currentNode, setCurrentNode] = useState<string>("Port Blair Phoenix Bay Hub");
+  const [trackingData, setTrackingData] = useState<any>(null);
+  const [trackingLoading, setTrackingLoading] = useState<boolean>(true);
+  const [countdown, setCountdown] = useState<number>(20);
   const [submitting, setSubmitting] = useState(false);
   const [images, setImages] = useState<string[]>([]);
   const [pickingImage, setPickingImage] = useState(false);
@@ -54,25 +55,43 @@ export default function OrderDetailsScreen() {
     }
   };
 
+  const fetchTracking = async () => {
+    if (!id) return;
+    try {
+      const { data } = await api.get(`/orders/${id}/tracking`);
+      setTrackingData(data);
+    } catch (e) {
+      console.log("[OrderDetails] Tracking Telemetry Drift:", e);
+    } finally {
+      setTrackingLoading(false);
+      setCountdown(20);
+    }
+  };
+
   useEffect(() => {
     const load = async () => {
       if (!id) return;
-      const data = await orderService.getUserOrderDetails(id);
-      setOrder(data);
-      setLoading(false);
-      
       try {
-        const { data: fleetData } = await api.get(`/fleet?order_id=${id}`);
-        if (fleetData) {
-          if (fleetData.minutes_remaining) setEta(String(fleetData.minutes_remaining));
-          if (fleetData.current_temp) setCurrentTemp(String(fleetData.current_temp));
-          if (fleetData.agent_name) setCurrentNode(`Driver: ${fleetData.agent_name}`);
-        }
-      } catch (e) {
-        console.log("Telemetry check failed:", e);
+        const data = await orderService.getUserOrderDetails(id);
+        setOrder(data);
+      } catch (err) {
+        console.log("[OrderDetails] Load order failed:", err);
+      } finally {
+        setLoading(false);
       }
     };
     load();
+    fetchTracking();
+
+    const interval = setInterval(fetchTracking, 20000);
+    const cdInterval = setInterval(() => {
+      setCountdown((prev) => (prev <= 1 ? 20 : prev - 1));
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+      clearInterval(cdInterval);
+    };
   }, [id]);
 
   // Compute OTP from numeric part of order ID
@@ -205,35 +224,122 @@ export default function OrderDetailsScreen() {
           </Text>
         </View>
 
-        {/* 🚚 Live Cold-Chain Delivery Radar */}
-        <View
-          className="mb-6 rounded-2xl p-5"
-          style={{ backgroundColor: `${colors.primary}0D`, borderWidth: 1, borderColor: `${colors.primary}33` }}
-        >
-          <View className="flex-row items-center gap-3">
-            <View
-              className="h-10 w-10 items-center justify-center rounded-full"
-              style={{ backgroundColor: `${colors.primary}33`, borderWidth: 1, borderColor: `${colors.primary}50` }}
+        {/* 🚚 Live Cold-Chain Delivery Stepper */}
+        {trackingLoading && !trackingData ? (
+          <View className="mb-6 rounded-2xl p-5 bg-slate-900/40 items-center justify-center border border-white/5">
+            <ActivityIndicator color={colors.primary} size="small" />
+            <Text className="mt-2 text-[10px] font-black uppercase tracking-widest text-slate-500">
+              Syncing Telemetry...
+            </Text>
+          </View>
+        ) : trackingData ? (
+          <View className="mb-6 overflow-hidden rounded-[24px] border border-sky-500/20 bg-slate-950/40">
+            <LinearGradient
+              colors={["rgba(14,165,233,0.1)", "transparent"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              className="p-5"
             >
-              <Text className="text-lg">🚚</Text>
-            </View>
-            <View className="flex-1">
-              <Text className="text-xs font-black uppercase italic" style={{ color: colors.text }}>
-                {t('delivery_radar')}
-              </Text>
-              <Text className="mt-0.5 text-[9px]" style={{ color: colors.textMuted }}>
-                {t('current_node')}: {currentNode}
-              </Text>
-            </View>
+              <View className="flex-row items-center justify-between gap-4 flex-wrap">
+                <View className="flex-row items-center gap-3">
+                  <View className="h-12 w-12 items-center justify-center rounded-full border border-sky-500/30 bg-sky-500/20">
+                    <Text className="text-xl">🚚</Text>
+                  </View>
+                  <View>
+                    <Text className="text-xs font-black uppercase italic tracking-tighter" style={{ color: colors.text }}>
+                      {t('delivery_radar') || "Live Delivery Tracking"}
+                    </Text>
+                    <Text className="mt-0.5 text-[9px] font-medium" style={{ color: colors.textMuted }}>
+                      Current Stage: <Text className="font-bold" style={{ color: colors.text }}>{trackingData.status || "SHIPPED"}</Text>
+                    </Text>
+                  </View>
+                </View>
+
+                <View className="flex-row items-center gap-3 flex-wrap">
+                  <View className="flex-row items-center gap-1.5 rounded-xl border border-blue-500/30 bg-blue-500/10 px-2.5 py-1">
+                    <Text className="text-[9px] font-black text-blue-400 uppercase tracking-widest">
+                      {trackingData.fleet?.temp || "-18.5"}°C {t('chilled')}
+                    </Text>
+                  </View>
+                  <View className="items-end">
+                    <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
+                      Estimated Arrival
+                    </Text>
+                    <Text className="text-xs font-black italic" style={{ color: colors.text }}>
+                      {trackingData.eta?.isDelayed ? "Delayed" : "Arriving Soon"}
+                    </Text>
+                    {trackingData.eta?.formatted && trackingData.eta.formatted !== "--" && (
+                      <Text className="text-[8px] font-medium" style={{ color: colors.textMuted }}>
+                        By {trackingData.eta.formatted}
+                      </Text>
+                    )}
+                  </View>
+                </View>
+              </View>
+
+              {/* 7 Circles Stepper */}
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-6 pb-2">
+                <View className="flex-row items-center">
+                  {(trackingData.timeline || []).map((stage: any, idx: number, arr: any[]) => {
+                    const isActive = stage.status === trackingData.status;
+                    const isDone = stage.completed;
+                    return (
+                      <React.Fragment key={stage.status}>
+                        <View className="flex flex-col items-center gap-1.5 min-w-[72px]">
+                          <View
+                            className={cn(
+                              "h-6 w-6 rounded-full items-center justify-center border",
+                              isDone
+                                ? "bg-sky-500 border-sky-500"
+                                : isActive
+                                ? "bg-sky-500/20 border-sky-500"
+                                : "bg-white/5 border-white/10"
+                            )}
+                          >
+                            <Text className="text-[10px] font-bold text-white leading-none">
+                              {isDone ? "✓" : isActive ? "●" : "○"}
+                            </Text>
+                          </View>
+                          <Text
+                            className={cn(
+                              "text-[8px] font-black uppercase tracking-wide text-center leading-tight max-w-[70px]",
+                              isDone ? "text-sky-500" : isActive ? "text-white" : "text-slate-500"
+                            )}
+                          >
+                            {stage.label}
+                          </Text>
+                        </View>
+                        {idx < arr.length - 1 && (
+                          <View
+                            className={cn(
+                              "h-[2px] w-8 mx-1 mb-4",
+                              arr[idx + 1]?.completed ? "bg-sky-500/60" : "bg-white/10"
+                            )}
+                          />
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
+                </View>
+              </ScrollView>
+
+              {/* Footer Indicator & Refresh */}
+              <View className="mt-4 border-t border-white/5 pt-3 flex-row items-center justify-between">
+                <View className="flex-row items-center gap-2">
+                  <View className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  <Text className="text-[8px] font-bold uppercase tracking-widest" style={{ color: colors.textMuted }}>
+                    Live • Refreshes in {countdown}s
+                  </Text>
+                </View>
+                <Pressable onPress={fetchTracking}>
+                  <Text className="text-[8px] font-black text-sky-500 uppercase tracking-widest">
+                    Refresh Now
+                  </Text>
+                </Pressable>
+              </View>
+            </LinearGradient>
           </View>
-          <View className="mt-4 flex-row flex-wrap items-center justify-between gap-2 border-t pt-3" style={{ borderTopColor: colors.border }}>
-            <View className="flex-row items-center gap-1.5 rounded-full px-2 py-1" style={{ backgroundColor: "rgba(59,130,246,0.1)", borderWidth: 1, borderColor: "rgba(59,130,246,0.3)" }}>
-              <View className="h-1.5 w-1.5 rounded-full bg-blue-400" />
-              <Text className="text-[9px] font-black uppercase text-blue-400">{currentTemp}°C {t('chilled')}</Text>
-            </View>
-            <Text className="text-[10px] font-black" style={{ color: colors.text }}>{eta} {t('mins_remaining')}</Text>
-          </View>
-        </View>
+        ) : null}
 
         {/* 🔐 Secure Handoff Protocol */}
         <View
