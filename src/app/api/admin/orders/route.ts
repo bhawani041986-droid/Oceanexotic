@@ -76,7 +76,7 @@ export async function PUT(request: Request) {
 export async function PATCH(request: Request) {
   try {
     const body = await request.json();
-    const { order_id, status, logistics_status } = body;
+    const { order_id, status, logistics_status, delivery_agent_name, delivery_agent_phone } = body;
 
     if (!order_id) {
       return NextResponse.json({ status: "error", message: "Missing order_id" }, { status: 400 });
@@ -85,6 +85,8 @@ export async function PATCH(request: Request) {
     const updates: any = {};
     if (status) updates.status = status;
     if (logistics_status) updates.logistics_status = logistics_status;
+    if (delivery_agent_name !== undefined) updates.delivery_agent_name = delivery_agent_name;
+    if (delivery_agent_phone !== undefined) updates.delivery_agent_phone = delivery_agent_phone;
 
     if (Object.keys(updates).length === 0) {
       return NextResponse.json({ status: "error", message: "No fields to update" }, { status: 400 });
