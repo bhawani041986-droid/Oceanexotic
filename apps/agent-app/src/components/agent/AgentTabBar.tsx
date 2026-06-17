@@ -119,7 +119,7 @@ export function AgentTabBar() {
 
             <Text
               className={cn(
-                "text-[7px] font-black uppercase tracking-[0.15em] mt-1 text-center"
+                "text-[9px] font-black uppercase tracking-[0.1em] mt-1 text-center"
               )}
               style={{ color: active ? activeColor : inactiveColor }}
             >

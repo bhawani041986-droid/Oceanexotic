@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { View, Text, ScrollView, Pressable, Platform, Alert, ActivityIndicator } from "react-native";
+import { View, Text, ScrollView, Pressable, Alert, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
-import Svg, { Circle, Path, Rect, Line } from "react-native-svg";
+import Svg, { Circle, Path, Line } from "react-native-svg";
 import { useAuthStore } from "@/store/authStore";
 import { useAgentStore, MOODS, type TacticalMood } from "@/store/agentStore";
 import * as ImagePicker from "expo-image-picker";
@@ -129,7 +129,7 @@ export default function AgentProfileScreen() {
         >
           Fleet Agent Profile
         </Text>
-        <Text className="text-[8px] font-black uppercase tracking-[0.25em] text-slate-500">
+        <Text className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500 mt-1">
           Operator Registry & UI Controls
         </Text>
       </View>
@@ -163,7 +163,7 @@ export default function AgentProfileScreen() {
             <UserIcon color={mood.primary} />
           )}
           <View className="absolute bottom-0 left-0 right-0 bg-black/60 py-0.5 items-center justify-center">
-            <Text className="text-[7px] font-black text-white uppercase tracking-widest">EDIT</Text>
+            <Text className="text-[9px] font-black text-white uppercase tracking-widest">EDIT</Text>
           </View>
         </Pressable>
 
@@ -176,7 +176,7 @@ export default function AgentProfileScreen() {
           </Text>
           <View className="flex-row items-center mt-1">
             <View className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse" />
-            <Text className="text-[7.5px] font-black text-emerald-500 uppercase tracking-widest">
+            <Text className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">
               ROLE: SOVEREIGN AGENT
             </Text>
           </View>
@@ -184,7 +184,7 @@ export default function AgentProfileScreen() {
       </View>
 
       {/* Environmental Controls */}
-      <Text className="mb-4 text-[9px] font-black uppercase tracking-[0.25em] text-slate-500">
+      <Text className="mb-4 text-[10px] font-black uppercase tracking-[0.25em] text-slate-500">
         ENVIRONMENT THEME SETTINGS
       </Text>
 
@@ -213,7 +213,7 @@ export default function AgentProfileScreen() {
                 >
                   {m.label}
                 </Text>
-                <Text className="text-[8px] font-medium leading-normal text-slate-400">
+                <Text className="text-[10px] font-medium leading-normal text-slate-400">
                   {m.desc}
                 </Text>
               </View>
@@ -244,10 +244,10 @@ export default function AgentProfileScreen() {
       >
         <ShieldAlertIcon color="#EF4444" />
         <View className="flex-1 space-y-1">
-          <Text className="text-[9px] font-black text-red-500 uppercase tracking-widest leading-none">
+          <Text className="text-[10px] font-black text-red-500 uppercase tracking-widest leading-none">
             SECURE TERMINATION PROTOCOL
           </Text>
-          <Text className="text-[8px] leading-relaxed text-red-500/80">
+          <Text className="text-[10px] leading-relaxed text-red-500/80">
             Terminating your session clears your secure local cache of registry nodes, active missions, and credentials. Ensure all transit signals are complete.
           </Text>
         </View>

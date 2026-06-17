@@ -6,7 +6,6 @@ import { useAuthStore } from "@/store/authStore";
 import { useAgentStore, MOODS } from "@/store/agentStore";
 import { FULL_API_URL } from "@/config/api";
 import axios from "axios";
-import { cn } from "@/lib/utils";
 
 // Custom UI Icons matching Lucide
 function TruckIcon({ color }: { color: string }) {
@@ -116,12 +115,7 @@ export default function AgentDashboardScreen() {
     fetchMissions();
   };
 
-  const handleNavigate = (mission: any) => {
-    let destLat = 11.667;
-    let destLng = 92.7359;
-    
-    // We parse coordinates if we have a robust geocoder, otherwise fallback to standard link.
-    // Assuming mission object has parsed coordinates (we will pass a known fallback)
+  const handleNavigate = (mission: { location: string }) => {
     const encodedDest = encodeURIComponent(mission.location);
     const mapUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodedDest}&travelmode=driving`;
     Linking.openURL(mapUrl).catch(() => {

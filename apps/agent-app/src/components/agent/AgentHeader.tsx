@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { View, Text, Pressable, Modal } from "react-native";
-import Svg, { Path, Circle } from "react-native-svg";
+import Svg, { Path } from "react-native-svg";
 import { useRouter, usePathname } from "expo-router";
 import { Image } from "expo-image";
 import { useAgentStore, MOODS } from "@/store/agentStore";
@@ -8,7 +8,6 @@ import { useAuthStore } from "@/store/authStore";
 import { Logo } from "@/components/ui/Logo";
 import { useToast } from "@/components/ui/Toast";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
-import { cn } from "@/lib/utils";
 
 const MenuIcon = ({ color }: { color: string }) => (
   <Svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
@@ -93,13 +92,13 @@ export function AgentHeader() {
           
           <View className="flex-col justify-center">
             <Text 
-              className="text-[8px] font-black uppercase tracking-[0.1em] leading-none"
+              className="text-[10px] font-black uppercase tracking-[0.1em] leading-none"
               style={{ color: mood.primary }}
             >
               Active
             </Text>
             <Text 
-              className="text-[7px] font-bold opacity-60 uppercase tracking-[0.05em] mt-0.5 max-w-[60px]"
+              className="text-[9px] font-bold opacity-60 uppercase tracking-[0.05em] mt-0.5 max-w-[60px]"
               style={{ color: mood.text }}
               numberOfLines={1}
             >
@@ -193,7 +192,7 @@ export function AgentHeader() {
               >
                 <View className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
                 <View className="flex-1">
-                  <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: mood.primary }}>Active Operator Node</Text>
+                  <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: mood.primary }}>Active Operator Node</Text>
                   <Text className="text-[10px] font-bold" style={{ color: mood.text }} numberOfLines={1}>{user?.email ?? "Guest Operator"}</Text>
                 </View>
               </View>
@@ -243,7 +242,7 @@ export function AgentHeader() {
               >
                 <Text className="text-xs font-black uppercase tracking-widest text-red-500">Terminate Session</Text>
               </Pressable>
-              <Text className="text-[7px] font-black text-center uppercase tracking-widest" style={{ color: mood.text, opacity: 0.4 }}>OceanExotic Operator Protocol v1.4</Text>
+              <Text className="text-[10px] font-black text-center uppercase tracking-widest" style={{ color: mood.text, opacity: 0.4 }}>OceanExotic Operator Protocol v1.4</Text>
             </View>
           </View>
         </View>
