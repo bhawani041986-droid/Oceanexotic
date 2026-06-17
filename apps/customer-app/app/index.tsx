@@ -40,6 +40,13 @@ export default function WelcomeOnboardingScreen() {
   const [forceShow, setForceShow] = useState(false);
 
   useEffect(() => {
+    WebBrowser.warmUpAsync();
+    return () => {
+      WebBrowser.coolDownAsync();
+    };
+  }, []);
+
+  useEffect(() => {
     // Safety net: Force display welcome layout if storage hydration is delayed or uncalled on browser storage
     const timer = setTimeout(() => {
       setForceShow(true);
@@ -88,7 +95,8 @@ export default function WelcomeOnboardingScreen() {
   const handleGoogleSignIn = async () => {
     try {
       const redirectUrl = Linking.createURL("oauth-callback");
-      const authUrl = `https://kyqmhibffbwoqlpdplfu.supabase.co/auth/v1/authorize?provider=google&redirect_to=https://oceanexotic.com/api/auth/callback?platform=mobile&redirect_uri=${encodeURIComponent(redirectUrl)}`;
+      const redirectTo = encodeURIComponent(`https://oceanexotic.com/api/auth/callback?platform=mobile&redirect_uri=${encodeURIComponent(redirectUrl)}`);
+      const authUrl = `https://kyqmhibffbwoqlpdplfu.supabase.co/auth/v1/authorize?provider=google&redirect_to=${redirectTo}`;
       
       const result = await WebBrowser.openAuthSessionAsync(authUrl, redirectUrl);
       

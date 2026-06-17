@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import {
   View,
@@ -51,6 +51,13 @@ export default function LoginScreen() {
   const { toast, ToastHost } = useToast();
   const currentLanguage = useSettingsStore((s) => s.language); // re-render on language change
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  useEffect(() => {
+    WebBrowser.warmUpAsync();
+    return () => {
+      WebBrowser.coolDownAsync();
+    };
+  }, []);
 
   const {
     control,
