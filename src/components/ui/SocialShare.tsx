@@ -32,11 +32,7 @@ export function SocialShare({ url, title, text }: SocialShareProps) {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(url);
-    toast({
-      title: "Link Copied!",
-      description: "The product link has been copied to your clipboard.",
-      variant: "success"
-    });
+    toast("Link Copied! The product link has been copied to your clipboard.", "success");
   };
 
   const shareUrls = {

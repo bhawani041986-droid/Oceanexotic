@@ -540,7 +540,7 @@ export default function AdminOrders() {
       });
       const data = await res.json();
       if (data.status === 'success') {
-        toast(`LOGISTICS ALERT: Immediate review triggered for Node ${orderId}. Merchant & Peer notified.`, "warning");
+        toast(`LOGISTICS ALERT: Immediate review triggered for Node ${orderId}. Merchant & Peer notified.`, "error");
         fetchLedger();
       } else {
         toast("Alert Failure: Could not sync warning state.", "error");

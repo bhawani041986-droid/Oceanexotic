@@ -64,10 +64,10 @@ function calculateDynamicETA(order: any, fleetTracking: any) {
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const orderId = params.id;
+    const { id: orderId } = await params;
     if (!orderId) {
       return NextResponse.json({ error: 'Missing order ID' }, { status: 400 });
     }

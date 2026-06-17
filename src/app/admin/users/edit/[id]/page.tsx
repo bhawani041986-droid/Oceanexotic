@@ -63,7 +63,7 @@ export default function AdminEditUserPage() {
         const data = await res.json();
         if (data.url) {
           setProfileImage(data.url);
-          setFormData(prev => ({ ...prev, avatar_url: data.url }));
+          setFormData((prev: any) => ({ ...prev, avatar_url: data.url }));
           toast("Biometric asset captured. Commit to sync.", "success");
         } else {
           toast("Failed to upload image.", "error");

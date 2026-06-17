@@ -78,8 +78,8 @@ export async function generateMetadata(): Promise<Metadata> {
           title: dynamicTitle,
           description: dynamicDesc as string,
           icons: {
-            icon: assets.favicon || defaultMeta.icons?.icon || '/favicon.ico',
-            apple: assets.appleIcon || defaultMeta.icons?.apple || '/apple-icon.png',
+            icon: assets.favicon || '/favicon.ico',
+            apple: assets.appleIcon || '/apple-icon.png',
           },
           openGraph: {
             ...defaultMeta.openGraph,

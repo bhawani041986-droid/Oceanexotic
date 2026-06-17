@@ -38,6 +38,7 @@ export async function GET() {
       role: 'Agent',
       status: 'active',
       rank: 'Level 3 Delivery Node',
+      avatar_url: null,
       orders: 142,
       joined: 'Oct 12, 2025'
     });
