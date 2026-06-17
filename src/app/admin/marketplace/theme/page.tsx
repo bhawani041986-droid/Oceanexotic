@@ -31,33 +31,26 @@ import { useToast } from "@/components/ui/Toast";
 import { Logo } from "@/components/ui/Logo";
 
 export default function MarketplaceThemeControl() {
-  const { customerTheme, atmosphericGlow, customerAssets, setSettings, pushSettings } = useSettingsStore(
-  );
-  const { toast } = useToast(
-  );
-  const [selectedThemeId, setSelectedThemeId] = useState(customerTheme
-  );
-  const [tempAssets, setTempAssets] = useState(customerAssets
-  );
-  const [tempGlow, setTempGlow] = useState(atmosphericGlow
-  );
-  const [isCommitting, setIsCommitting] = useState(false
-  );
-  const fileInputRef = useRef<HTMLInputElement>(null
-  );
-  const [activeStation, setActiveStation] = useState<string | null>(null
-  );
+  const { customerTheme, atmosphericGlow, customerAssets, setSettings, pushSettings, fetchSettings } = useSettingsStore();
+  const { toast } = useToast();
+  const [selectedThemeId, setSelectedThemeId] = useState(customerTheme);
+  const [tempAssets, setTempAssets] = useState(customerAssets);
+  const [tempGlow, setTempGlow] = useState(atmosphericGlow);
+  const [isCommitting, setIsCommitting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [activeStation, setActiveStation] = useState<string | null>(null);
+
+  // Fetch settings on mount
+  useEffect(() => {
+    fetchSettings();
+  }, [fetchSettings]);
 
   // Sync with store when hydrated or updated
   useEffect(() => {
-    setTempAssets(customerAssets
-  );
-    setSelectedThemeId(customerTheme
-  );
-    setTempGlow(atmosphericGlow
-  );
-  }, [customerAssets, customerTheme, atmosphericGlow]
-  );
+    setTempAssets(customerAssets);
+    setSelectedThemeId(customerTheme);
+    setTempGlow(atmosphericGlow);
+  }, [customerAssets, customerTheme, atmosphericGlow]);
 
   const isDirty = selectedThemeId !== customerTheme || 
                   tempGlow !== atmosphericGlow || 
