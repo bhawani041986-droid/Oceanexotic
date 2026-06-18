@@ -710,7 +710,7 @@ export default function CustomerHomeScreen() {
  onPress={() => router.push({ pathname:"/products", params: { sellerId: seller.id } })}
  className="mr-3 w-56 shadow-xl relative overflow-hidden"
  >
- <ChamferedBox fillColor={colors.card} strokeColor={colors.border} className="p-4 w-full h-full">
+ <ChamferedBox fillColor={colors.card} strokeColor={colors.border} className="p-4 w-full">
  <View className="flex-row justify-between items-center mb-2">
  <Text className="text-[8px] font-black uppercase" style={{ color: primaryColor }}>{seller.id}</Text>
  <View className="flex-row items-center gap-1">
@@ -765,7 +765,7 @@ export default function CustomerHomeScreen() {
  { icon:"📍", title:"Local", subtitle:"Local Stores", color:"#ef4444" } 
  ].map((item, i) => (
  <View key={i} className="flex-1 p-1 shadow-xl">
- <ChamferedBox fillColor={colors.card} strokeColor={colors.border} className="items-center justify-center p-3 w-full h-full">
+ <ChamferedBox fillColor={colors.card} strokeColor={colors.border} className="items-center justify-center p-3 w-full">
  <View 
  style={{ backgroundColor: `${item.color}15`, borderColor: `${item.color}30` }} 
  className="w-10 h-10 items-center justify-center border mb-2 shadow-lg"
