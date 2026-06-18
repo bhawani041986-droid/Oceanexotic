@@ -8,7 +8,7 @@ import { FULL_API_URL } from "@/config/api";
 import { useToast } from "@/components/ui/Toast";
 import axios from "axios";
 import QRScannerNative from "@/components/QRScannerNative";
-import MapView, { Marker, Polyline, UrlTile, PROVIDER_DEFAULT } from "react-native-maps";
+import { WebView } from "react-native-webview";
 
 
 // Standard hashing function for deterministic values
@@ -559,8 +559,9 @@ export default function AgentTrackingScreen() {
       
       try {
         // 1. Update database orders table status to DELIVERED
+        const dbId = orderInfo?.original_id || String(orderId).replace(/\D/g, "");
         await axios.post(`${FULL_API_URL}/seller/orders`, {
-          order_id: orderId,
+          order_id: dbId,
           status: "DELIVERED",
           delivery_agent_name: user?.name || "INS-AGENT"
         });
@@ -864,50 +865,63 @@ export default function AgentTrackingScreen() {
           }}
         >
           {/* Native MapView Replacement */}
-          <MapView
-            style={StyleSheet.absoluteFillObject}
-            provider={PROVIDER_DEFAULT}
-            initialRegion={{
-              latitude: coords.lat,
-              longitude: coords.lng,
-              latitudeDelta: 0.05,
-              longitudeDelta: 0.05,
-            }}
-            userInterfaceStyle={isLight ? "light" : "dark"}
-            showsUserLocation={false} // We draw our own agent marker
-            pitchEnabled={false}
-          >
-            <UrlTile
-              urlTemplate={
-                isLight 
-                  ? "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-                  : "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-              }
-              maximumZ={19}
-            />
+          {/* Native WebView Leaflet Map Replacement */}
+          <WebView
+            originWhitelist={['*']}
+            source={{ html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    body { padding: 0; margin: 0; background-color: ${isLight ? '#E2E8F0' : '#020617'}; }
+    html, body, #map { height: 100%; width: 100%; }
+    .leaflet-control-attribution { display: none; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+    var map = L.map('map', { zoomControl: false, attributionControl: false }).setView([${coords.lat}, ${coords.lng}], 16);
+    
+    L.tileLayer('${isLight ? "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}"}', {
+      maxZoom: 19
+    }).addTo(map);
 
-            {/* Hub Marker */}
-            <Marker coordinate={{ latitude: 11.6670, longitude: 92.7359 }} title="Hub" pinColor="#64748B" />
-            
-            {/* Customer Marker */}
-            <Marker coordinate={{ latitude: destLat, longitude: destLng }} title="Customer" pinColor={mood.primary} />
+    var agentIcon = L.divIcon({ 
+      className: 'sentinel-marker', 
+      html: \`${AGENT_SENTINEL_HTML(mood.primary, mood.glow)}\`, 
+      iconSize: [40, 40], 
+      iconAnchor: [20, 20] 
+    });
 
-            {/* Agent Marker */}
-            <Marker coordinate={{ latitude: coords.lat, longitude: coords.lng }} title="Agent (You)">
-               <View style={{ width: 16, height: 16, borderRadius: 8, backgroundColor: mood.primary, borderWidth: 2, borderColor: '#fff', shadowColor: mood.primary, shadowRadius: 5, shadowOpacity: 0.8 }} />
-            </Marker>
+    var harborIcon = L.divIcon({ 
+      className: 'harbor-marker', 
+      html: \`${CUSTOMER_HARBOR_HTML(mood.primary)}\`, 
+      iconSize: [40, 40], 
+      iconAnchor: [20, 20] 
+    });
 
-            {/* Route Polyline */}
-            <Polyline
-              coordinates={[
-                { latitude: coords.lat, longitude: coords.lng },
-                { latitude: destLat, longitude: destLng }
-              ]}
-              strokeColor={mood.primary}
-              strokeWidth={3}
-              lineDashPattern={[5, 5]}
-            />
-          </MapView>
+    // Hub Marker
+    L.circleMarker([11.6670, 92.7359], { color: '#64748B', radius: 5, fillOpacity: 1 }).addTo(map);
+
+    var agentMarker = L.marker([${coords.lat}, ${coords.lng}], { icon: agentIcon }).addTo(map);
+    var custMarker = L.marker([${destLat}, ${destLng}], { icon: harborIcon }).addTo(map);
+
+    // Dotted line route
+    var routeLine = L.polyline([
+      [${coords.lat}, ${coords.lng}],
+      [${destLat}, ${destLng}]
+    ], { color: '${mood.primary}', weight: 3, dashArray: '5, 5' }).addTo(map);
+  </script>
+</body>
+</html>
+            ` }}
+            style={{ flex: 1, backgroundColor: 'transparent' }}
+            scrollEnabled={false}
+          />
 
           {/* TOP-LEFT HUD — Sentinel node label (skewed style matching web) */}
           <View style={{ position: 'absolute', top: 12, left: 12, gap: 6 }}>

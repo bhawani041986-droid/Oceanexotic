@@ -35,7 +35,7 @@ import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-si
 WebBrowser.maybeCompleteAuthSession();
 
 GoogleSignin.configure({
- webClientId: '863954093381-1hli8gae6lmjh6g2nsrr711fddtcb316.apps.googleusercontent.com',
+ webClientId: '35091982026-2m9jph951go89uj2suql5dju9luor378.apps.googleusercontent.com',
  offlineAccess: true,
 });
 

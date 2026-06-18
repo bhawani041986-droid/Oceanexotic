@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "362094243872",
-    "project_id": "oc9531828099",
-    "storage_bucket": "oc9531828099.firebasestorage.app"
+    "project_number": "35091982026",
+    "project_id": "oc9531828099-faa1c",
+    "storage_bucket": "oc9531828099-faa1c.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:362094243872:android:c5b130f52dcc6e5a7fcc45",
+        "mobilesdk_app_id": "1:35091982026:android:c3dd2ce818647bda743633",
         "android_client_info": {
           "package_name": "com.oceanexotic.customer"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "35091982026-ctpk1s5v0gg574dhr7l2527sreg9i2i8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oceanexotic.customer",
+            "certificate_hash": "78d809eb111cd64b161de06ba52fac0eb4b41c64"
+          }
+        },
+        {
+          "client_id": "35091982026-2m9jph951go89uj2suql5dju9luor378.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCnq1rf5izn58ByuD3jN_ErnDuyShRtVcw"
+          "current_key": "AIzaSyDrDfVA9CMF-tGkkxTZXGsuiHTiB9D8GWs"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "35091982026-2m9jph951go89uj2suql5dju9luor378.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

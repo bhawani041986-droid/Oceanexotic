@@ -75,10 +75,15 @@ function AgentTrackingContent() {
       setVerificationError("");
       await handleStateTransition(MissionState.DELIVERED);
       try {
+        const dbId = orderInfo?.original_id || String(orderId).replace(/\D/g, "");
         await fetch("/api/seller/orders", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ order_id: orderId, status: "DELIVERED" }),
+          body: JSON.stringify({ 
+            order_id: dbId, 
+            status: "DELIVERED",
+            delivery_agent_name: "Web Agent"
+          }),
         });
         toast("Delivery Confirmed ✅ Registry Updated", "success");
       } catch (err) {

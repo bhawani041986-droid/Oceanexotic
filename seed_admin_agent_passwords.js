@@ -30,6 +30,32 @@ async function seedAdmin() {
     
     if (!resAdmin.ok) console.error(`Error seeding admin:`, await resAdmin.text());
     else console.log(`Successfully seeded admin@oceanexotic.com`);
+
+    console.log(`Seeding Agent banti@agent.com...`);
+    const resAgent1 = await fetch(supabaseUrl + '?email=eq.banti@agent.com', {
+        method: 'PATCH',
+        headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ password: hash })
+    });
+    if (!resAgent1.ok) console.error(`Error seeding agent:`, await resAgent1.text());
+    else console.log(`Successfully seeded banti@agent.com with password ocean123`);
+
+    console.log(`Seeding Agent ravi@agent.com...`);
+    const resAgent2 = await fetch(supabaseUrl + '?email=eq.ravi@agent.com', {
+        method: 'PATCH',
+        headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ password: hash })
+    });
+    if (!resAgent2.ok) console.error(`Error seeding agent:`, await resAgent2.text());
+    else console.log(`Successfully seeded ravi@agent.com with password ocean123`);
 }
 
 seedAdmin();
