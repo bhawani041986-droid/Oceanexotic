@@ -35,3 +35,10 @@ logo
 artifacts
 **/artifacts
 *.log
+
+.git
+**/.git
+outputs
+**/outputs
+scratch
+**/scratch

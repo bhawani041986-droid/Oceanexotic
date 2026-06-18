@@ -91,9 +91,11 @@ export async function POST(request: Request) {
     if (error) throw error;
 
     // Also upsert into fleet_tracking so agent tracking map shows immediately
+    // IMPORTANT: delivery_agent_name contains the raw agent user ID from the selector
+    // We store that as agent_id so it matches what the agent uses when they log in
     await supabase.from('fleet_tracking').upsert({
       order_id,
-      agent_id: delivery_agent_name,
+      agent_id: delivery_agent_name,  // This IS the user's ID (e.g. USR-1778761853962)
       agent_name: resolvedName,
       current_lat: 11.667,
       current_lng: 92.7359,

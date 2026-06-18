@@ -20,42 +20,34 @@ import {
   Navigation
 } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
+import { useAuthStore } from "@/store/authStore";
 
 export default function AgentHistoryPage() {
-  const { toast } = useToast(
-  );
-  const [history, setHistory] = React.useState<any[]>([]
-  );
-  const [loading, setLoading] = React.useState(true
-  );
-  const [searchTerm, setSearchTerm] = React.useState(""
-  );
+  const { toast } = useToast();
+  const { user } = useAuthStore();
+  const [history, setHistory] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [searchTerm, setSearchTerm] = React.useState("");
 
   const fetchHistory = async () => {
+    if (!user) return;
     try {
-      // Simulate historical payload fetch
-      const res = await fetch("/api/agent/orders?agent_id=7");
+      const res = await fetch(`/api/agent/orders?agent_id=${encodeURIComponent(user.id)}`);
       if (res.ok) {
-        const data = await res.json(
-  );
-        // Show all history for this agent
-        setHistory(data
-  );
+        const data = await res.json();
+        const completed = data.filter((m: any) => m.status === 'DELIVERED');
+        setHistory(completed);
       }
     } catch (error) {
-      toast("Archive Handshake Failed", "error"
-  );
+      toast("Archive Handshake Failed", "error");
     } finally {
-      setLoading(false
-  );
+      setLoading(false);
     }
   };
 
   React.useEffect(() => {
-    fetchHistory(
-  );
-  }, []
-  );
+    fetchHistory();
+  }, [user]);
 
   const filteredHistory = history.filter(item => 
     item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||

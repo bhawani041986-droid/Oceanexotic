@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useToast } from "@/components/ui/Toast";
+import { useAuthStore } from "@/store/authStore";
 
 export default function AgentDashboardPage() {
   const router = useRouter(
@@ -31,32 +32,28 @@ export default function AgentDashboardPage() {
   const [missions, setMissions] = React.useState<any[]>([]
   );
 
+  const { user } = useAuthStore();
+
   const fetchMissions = async () => {
+    if (!user) return;
     try {
-      const res = await fetch("/api/agent/orders?agent_id=7");
+      const res = await fetch(`/api/agent/orders?agent_id=${encodeURIComponent(user.id)}`);
       if (res.ok) {
-        const data = await res.json(
-  );
+        const data = await res.json();
         // Filter for active missions (READY/TRANSIT/SHIPPED)
-        const active = data.filter((m: any) => m.status !== 'DELIVERED'
-  );
-        setMissions(active
-  );
+        const active = data.filter((m: any) => m.status !== 'DELIVERED');
+        setMissions(active);
       }
     } catch (error) {
-      toast("Mission Control Sync Failed", "error"
-  );
+      toast("Mission Control Sync Failed", "error");
     } finally {
-      setIsLoading(false
-  );
+      setIsLoading(false);
     }
   };
 
   React.useEffect(() => {
-    fetchMissions(
-  );
-  }, []
-  );
+    fetchMissions();
+  }, [user]);
 
   const stats = [
     { label: "Active Missions", value: missions.length.toString(), icon: <Navigation className="w-5 h-5" />, color: "text-primary" },
@@ -65,14 +62,13 @@ export default function AgentDashboardPage() {
   ];
 
   return (
-
     <div className="bg-bg-primary min-h-screen p-4 md:p-10 space-y-8 md:space-y-10 pb-24 md:pb-10">
       
       {/* Header - Agent Identity */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
            <div className="space-y-1 text-center md:text-left">
               <h1 className="text-2xl md:text-3xl font-black italic uppercase tracking-tighter text-[var(--foreground)]">FLEET AGENT HUB</h1>
-              <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.3em]">Operator: AGENT-742 • SEA-COMMAND ACTIVE</p>
+              <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.3em]">Operator: {user?.name || "INS-AGENT"} • SEA-COMMAND ACTIVE</p>
            </div>
            <div className="flex items-center justify-between md:justify-start w-full md:w-auto gap-4 p-4 rounded-[20px] bg-[var(--foreground)]/5 border border-[var(--foreground)]/10">
               <div className="flex items-center gap-3">

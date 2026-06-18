@@ -10,21 +10,36 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Missing Agent Identity" }, { status: 400 });
     }
 
-    // 1. Get exact orders assigned to this Agent UUID via fleet_tracking
+    // 0. Resolve the Agent's details if they passed a UUID
+    const { data: agentData } = await supabase.from('users').select('email, name').eq('id', agentId).single();
+    const agentEmail = agentData?.email || agentId;
+    const agentName = agentData?.name || agentId;
+
+    // 1. Get exact orders assigned to this Agent via fleet_tracking
+    // We match by UUID, Email, or Name since legacy assignments vary in format
     const { data: fleetAssignments, error: fleetError } = await supabase
       .from('fleet_tracking')
-      .select('order_id')
-      .eq('agent_id', agentId);
+      .select('order_id, agent_id, agent_name');
 
     if (fleetError) throw fleetError;
 
-    const assignedOrderIds = fleetAssignments?.map(f => f.order_id) || [];
+    const matchedAssignments = fleetAssignments?.filter(f => 
+      f.agent_id === agentId || 
+      f.agent_id === agentEmail || 
+      f.agent_id === agentName || 
+      f.agent_name === agentName
+    ) || [];
+
+    // Convert string "ORD-123" to integer 123 for the orders table
+    const assignedOrderIds = matchedAssignments
+      ?.map(f => parseInt(String(f.order_id).replace(/\D/g, ""), 10))
+      .filter(id => !isNaN(id)) || [];
 
     if (assignedOrderIds.length === 0) {
       return NextResponse.json([]);
     }
 
-    // 2. Fetch those specific orders securely
+    // 2. Fetch those specific orders securely using the numeric IDs
     const { data: orders, error } = await supabase
       .from('orders')
       .select('*')
