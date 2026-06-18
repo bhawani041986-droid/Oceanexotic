@@ -51,7 +51,7 @@ export default function CustomerTrackPage() {
             <ChevronLeft size={20} />
           </Button>
           <div className="space-y-0.5">
-            <h1 className="text-sm font-black uppercase tracking-widest leading-none">Live Telemetry Hub</h1>
+            <h1 className="text-sm font-black uppercase tracking-widest leading-none">Live Tracking Hub</h1>
             <p className="text-[9px] font-bold text-blue-400 uppercase tracking-[0.2em]">Transit Node: {id}</p>
           </div>
         </div>
@@ -75,7 +75,7 @@ export default function CustomerTrackPage() {
         {/* Map Grid Layer */}
         <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
         
-        {/* Vessel Node Animation */}
+        {/* Source Node Animation */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="relative">
             {/* Pulsing Radius */}
@@ -90,7 +90,7 @@ export default function CustomerTrackPage() {
               <path d="M 0 400 Q 200 200 400 0" fill="none" stroke="white" strokeWidth="2" strokeDasharray="8,8" />
             </svg>
 
-            {/* The Vessel */}
+            {/* The Source */}
             <motion.div 
               animate={{ rotate: [0, 5, -5, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -98,7 +98,7 @@ export default function CustomerTrackPage() {
             >
               <Navigation className="text-white w-8 h-8 rotate-45" />
               <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 border border-white/10 px-3 py-1.5 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-                <p className="text-[8px] font-black uppercase tracking-widest text-blue-400">Merchant Vessel: OCEAN-EX-01</p>
+                <p className="text-[8px] font-black uppercase tracking-widest text-blue-400">Merchant Source: OCEAN-EX-01</p>
                 <p className="text-[10px] font-bold">SPD: 12.4 KNOTS</p>
               </div>
             </motion.div>
@@ -176,7 +176,7 @@ export default function CustomerTrackPage() {
               <ShieldCheck size={20} />
             </div>
             <div>
-              <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Registry</p>
+              <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Catalog</p>
               <p className="text-xs font-black italic">VERIFIED</p>
             </div>
           </motion.div>

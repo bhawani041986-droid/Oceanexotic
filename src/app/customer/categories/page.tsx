@@ -25,7 +25,7 @@ import { MASTER_PRODUCT_REGISTRY } from "@/constants/products";
 
 const CATEGORY_UI_MAPPING: Record<string, { desc: string, icon: string, color: string }> = {
   'FRESHWATER FISH': { icon: "🐟", color: "from-cyan-500/20", desc: "Freshwater river catch and aquaculture species." },
-  'SEAWATER FISH': { icon: "🌊", color: "from-blue-500/20", desc: "Ocean and deep-sea harvests from the maritime sector." },
+  'SEAWATER FISH': { icon: "🌊", color: "from-blue-500/20", desc: "Ocean and deep-sea products from the maritime sector." },
   'PRAWNS & SHRIMPS': { icon: "🍤", color: "from-orange-500/20", desc: "Premium prawns and shrimps sourced for global trade." },
   'CRABS & LOBSTERS': { icon: "🦀", color: "from-red-500/20", desc: "Elite mud crabs and lobsters from sustainable reefs." },
   'STEAKS & FILLETS': { icon: "🥩", color: "from-rose-500/20", desc: "Premium cuts, steaks, and fillets for culinary excellence." },
@@ -39,7 +39,7 @@ const CATEGORIES = PRODUCT_CATEGORIES.map(cat => ({
    name: cat.label,
    count: MASTER_PRODUCT_REGISTRY.filter(p => p.category === cat.id).length,
    icon: CATEGORY_UI_MAPPING[cat.id]?.icon || "🐟",
-   desc: CATEGORY_UI_MAPPING[cat.id]?.desc || "Premium maritime harvest.",
+   desc: CATEGORY_UI_MAPPING[cat.id]?.desc || "Premium maritime product.",
    color: CATEGORY_UI_MAPPING[cat.id]?.color || "from-blue-500/20"
 }));
 
@@ -52,7 +52,7 @@ export default function CustomerCategoriesPage() {
         <div className="space-y-2 md:space-y-4 max-w-2xl">
           <Badge variant="glass" className="bg-primary/10 text-primary border-primary/20 text-[8px] md:text-[10px]">HARBOR CATEGORIES</Badge>
           <h1 className="text-3xl md:text-5xl font-black text-[var(--foreground)] tracking-tighter uppercase leading-none italic">
-            Explore the <span className="text-primary italic">Harvest.</span>
+            Explore the <span className="text-primary italic">Product.</span>
           </h1>
           <p className="text-[10px] md:text-sm font-medium text-text-secondary leading-tight md:leading-relaxed italic">
             Browse our fresh seafood catalog by category and species.

@@ -111,8 +111,8 @@ export default function CheckoutPage() {
            setActiveStep(2);
         }
       } catch (err) {
-        console.error("Registry Sync Failure:", err);
-        toast("Failed to sync with the address vault.", "error");
+        console.error("Catalog Sync Failure:", err);
+        toast("Failed to sync with saved addresses.", "error");
       } finally {
         setIsFetchingData(false);
       }
@@ -271,7 +271,7 @@ export default function CheckoutPage() {
                       <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
                     </h4>
                     <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                      Fleet instant deliveries are currently closed as we are outside of active operating hours (<span className="font-bold text-slate-800">{ordersOpenTime} - {ordersCloseTime}</span>) or the administrator has enabled Pre-Orders Only.
+                      Delivery instant deliveries are currently closed as we are outside of active operating hours (<span className="font-bold text-slate-800">{ordersOpenTime} - {ordersCloseTime}</span>) or the administrator has enabled Pre-Orders Only.
                     </p>
                     <p className="text-[11px] font-bold text-amber-700 uppercase tracking-wide mt-1.5 flex items-center gap-1.5">
                       <Truck className="w-3.5 h-3.5" /> Next dispatch window starts: {ordersNextOpenText || "Tomorrow at 09:00 AM"}
@@ -298,7 +298,7 @@ export default function CheckoutPage() {
                     {isFetchingData ? (
                        <div className="flex flex-col items-center justify-center py-12 space-y-4">
                           <Loader2 className="w-8 h-8 text-primary animate-spin" />
-                          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Syncing with Address Vault...</p>
+                          <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Loading Saved Addresses...</p>
                        </div>
                     ) : savedAddresses.length > 0 ? (
                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -366,7 +366,7 @@ export default function CheckoutPage() {
                           <Truck className="w-8 h-8 text-primary" />
                           <div>
                              <p className="font-bold text-slate-900 uppercase italic">Cash on Delivery</p>
-                             <p className="text-xs text-slate-500">Handshake at the jetty upon trade fulfillment</p>
+                             <p className="text-xs text-slate-500">Delivery at the jetty upon trade fulfillment</p>
                           </div>
                        </div>
                        <CheckCircle2 className="w-5 h-5 text-primary" />
@@ -411,7 +411,7 @@ export default function CheckoutPage() {
                     <div className="p-8 bg-[var(--c-bg-alt)]/40 rounded-2xl flex flex-col items-center text-center space-y-6">
                        <ShieldCheck className="w-12 h-12 text-[var(--c-primary)]" />
                        <div>
-                          <p className="text-sm font-black uppercase tracking-widest mb-2 italic">Authorize Final Handshake</p>
+                          <p className="text-sm font-black uppercase tracking-widest mb-2 italic">Authorize Final Delivery</p>
                           <p className="text-xs text-[var(--c-text-secondary)] max-w-sm italic">By finalizing, you authorize the secure transfer of maritime assets to your designated coordinates.</p>
                        </div>
                        <Button 
@@ -438,7 +438,7 @@ export default function CheckoutPage() {
                   >
                     PLACE YOUR ORDER
                   </Button>
-                  <p className="text-[10px] text-center text-slate-400 italic">By placing your order, you agree to OceanExotic's Trade Handshake Privacy Policy and Conditions of Use.</p>
+                  <p className="text-[10px] text-center text-slate-400 italic">By placing your order, you agree to OceanExotic's Trade Delivery Privacy Policy and Conditions of Use.</p>
                </div>
 
                {/* Promo Code System */}
@@ -533,7 +533,7 @@ export default function CheckoutPage() {
                     <ShieldCheck className="w-4 h-4" />
                     <p className="text-[10px] font-black uppercase tracking-widest">System Protection</p>
                   </div>
-                  <p className="text-[9px] text-[var(--c-text-secondary)] italic leading-relaxed">Your trade is protected by the Andaman Maritime Protocol. Secure handshake guaranteed upon delivery.</p>
+                  <p className="text-[9px] text-[var(--c-text-secondary)] italic leading-relaxed">Your trade is protected by the Andaman Maritime Protocol. Secure delivery guaranteed upon delivery.</p>
                </div>
             </Card>
           </div>

@@ -14,7 +14,7 @@ export default function NotificationsScreen() {
     {
       id: "1",
       title: "Order Dispatched",
-      message: "Your order #ORD-892 is out for delivery with our fleet.",
+      message: "Your order #ORD-892 is out for delivery with our delivery.",
       time: "2 mins ago",
       icon: "boat-outline",
       unread: true,

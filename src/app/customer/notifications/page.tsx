@@ -254,7 +254,7 @@ export default function NotificationsPage() {
             {[
               { id: 'push', label: 'In-App Radar Alerts', desc: 'Real-time dashboard notifications' },
               { id: 'email', label: 'Email Dispatches', desc: 'Order receipts and security logs' },
-              { id: 'sms', label: 'SMS Carrier Signals', desc: 'Live fleet delivery tracking' },
+              { id: 'sms', label: 'SMS Carrier Signals', desc: 'Live delivery delivery tracking' },
               { id: 'promo', label: 'Trade Promotions', desc: 'Discounts and midnight catches' }
             ].map((setting) => (
               <div key={setting.id} className="flex items-center justify-between p-4 rounded-xl border border-[var(--foreground)]/5 bg-[var(--foreground)]/5">

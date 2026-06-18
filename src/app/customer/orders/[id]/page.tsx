@@ -497,7 +497,7 @@ export default function OrderDetailsPage() {
                      </h2>
                      <div className="space-y-3">
                         <div className="flex justify-between text-[10px] font-medium text-text-secondary">
-                           <span>Harvest Method</span>
+                           <span>Product Method</span>
                            <span className="text-[var(--foreground)] font-black uppercase text-[9px] italic">100% Line-Caught</span>
                         </div>
                         <div className="flex justify-between text-[10px] font-medium text-text-secondary">

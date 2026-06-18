@@ -119,16 +119,16 @@ function WriteReviewContent() {
   );
       
       if (result.success || result.status === "success") {
-        toast("Review Registry Synchronized.", "success"
+        toast("Review Catalog Synchronized.", "success"
   );
         router.push(`/customer/products/${productId}`
   );
       } else {
-        toast(result.message || "Registry Handshake Refused.", "error"
+        toast(result.message || "Catalog Delivery Refused.", "error"
   );
       }
     } catch (err) {
-      toast("Critical Registry Sync Failure.", "error"
+      toast("Critical Catalog Sync Failure.", "error"
   );
       console.error("Submission Error:", err
   );
@@ -152,7 +152,7 @@ function WriteReviewContent() {
               <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
               <span className="text-sm font-black uppercase tracking-widest italic">Abort Submission</span>
            </button>
-           <h1 className="text-xl font-black uppercase italic tracking-tighter hidden md:block">Registry Feedback</h1>
+           <h1 className="text-xl font-black uppercase italic tracking-tighter hidden md:block">Catalog Feedback</h1>
            <div className="w-10 md:w-40" />
         </div>
       </header>
@@ -180,7 +180,7 @@ function WriteReviewContent() {
                <div className="space-y-6 text-center md:text-left">
                   <div className="space-y-1">
                      <h4 className="text-lg font-black uppercase italic">Authority Rating</h4>
-                     <p className="text-xs text-text-secondary italic">Authorize a technical score for this harvest node.</p>
+                     <p className="text-xs text-text-secondary italic">Authorize a technical score for this product node.</p>
                   </div>
                   <div className="flex items-center justify-center md:justify-start gap-4">
                      {[1, 2, 3, 4, 5].map((star) => (
@@ -206,8 +206,8 @@ function WriteReviewContent() {
                <div className="space-y-6">
                   <div className="flex items-center justify-between">
                      <div className="space-y-1">
-                        <h4 className="text-lg font-black uppercase italic">Evidence Registry</h4>
-                        <p className="text-xs text-text-secondary italic">Upload visual telemetry of the harvest (Max 5).</p>
+                        <h4 className="text-lg font-black uppercase italic">Evidence Catalog</h4>
+                        <p className="text-xs text-text-secondary italic">Upload visual tracking of the product (Max 5).</p>
                      </div>
                      <Button 
                        onClick={() => fileInputRef.current?.click()}
@@ -270,7 +270,7 @@ function WriteReviewContent() {
                <div className="space-y-6">
                   <div className="space-y-1">
                      <h4 className="text-lg font-black uppercase italic">Detailed Analysis</h4>
-                     <p className="text-xs text-text-secondary italic">Provide a technical summary of the harvest experience.</p>
+                     <p className="text-xs text-text-secondary italic">Provide a technical summary of the product experience.</p>
                   </div>
                   <div className="relative group">
                      <textarea 
@@ -310,8 +310,8 @@ function WriteReviewContent() {
             <div className="p-8 rounded-[40px] bg-primary/5 border border-primary/10 flex items-start gap-6">
                <Info className="w-6 h-6 text-primary shrink-0 mt-1" />
                <div className="space-y-1">
-                  <h5 className="text-[10px] font-black uppercase tracking-widest">Public Registry Protocol</h5>
-                  <p className="text-xs text-text-secondary italic leading-relaxed">Your feedback will be published to the global maritime registry once analyzed by our authority nodes. Personal telemetry remains encrypted.</p>
+                  <h5 className="text-[10px] font-black uppercase tracking-widest">Public Catalog Protocol</h5>
+                  <p className="text-xs text-text-secondary italic leading-relaxed">Your feedback will be published to the global maritime catalog once analyzed by our authority nodes. Personal tracking remains encrypted.</p>
                </div>
             </div>
 

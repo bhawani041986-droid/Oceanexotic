@@ -32,7 +32,7 @@ export default function OrderTrackingPage() {
 
   const fetchTelemetry = async () => {
     try {
-      const res = await fetch(`/api/fleet?order_id=${id}`);
+      const res = await fetch(`/api/delivery?order_id=${id}`);
       if (res.ok) {
         const data = await res.json();
         setTrackingData(data);
@@ -247,7 +247,7 @@ export default function OrderTrackingPage() {
                     <div className="flex items-center gap-2 px-2 py-1 backdrop-blur-md border border-primary/30 -skew-x-12 bg-slate-950/80">
                       <div className={cn("w-1.5 h-1.5 skew-x-12 rounded-full", loading ? "bg-slate-500 animate-pulse" : "bg-emerald-500 shadow-[0_0_8px_#10B981]")} />
                       <span className="skew-x-12 text-[8px] font-bold uppercase tracking-[0.2em] text-primary">
-                        Telemetry: {loading ? "Locking..." : "Registry Live"}
+                        Tracking: {loading ? "Locking..." : "Catalog Live"}
                       </span>
                     </div>
                   </div>

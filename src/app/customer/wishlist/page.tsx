@@ -17,7 +17,7 @@ import {
 import Link from "next/link";
 
 const WISHLIST_ITEMS = [
-  { id: "1", name: "Andaman Mud Crab", category: "Premium Crustacean", price: 3800, rating: 4.9, seller: "Phoenix Bay Harvest", fresh: true, tag: "FRESH CATCH" },
+  { id: "1", name: "Andaman Mud Crab", category: "Premium Crustacean", price: 3800, rating: 4.9, seller: "Phoenix Bay Product", fresh: true, tag: "FRESH CATCH" },
   { id: "2", name: "Swaraj Dweep Tiger Prawns", category: "Andaman Shellfish", price: 2400, rating: 4.8, seller: "Havelock Dock No.3", fresh: true, tag: "JUMBO" },
 ];
 
@@ -28,7 +28,7 @@ export default function WishlistPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-[10px] md:gap-6 border-b border-[var(--foreground)]/5 pb-[10px] md:pb-10">
         <div className="space-y-1">
-          <h2 className="text-2xl md:text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic">Curated Registry</h2>
+          <h2 className="text-2xl md:text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic">Curated Catalog</h2>
           <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Managing Your Personalized Maritime Collection</p>
         </div>
         <div className="flex items-center justify-between md:justify-end gap-4 w-full md:w-auto">
@@ -89,9 +89,9 @@ export default function WishlistPage() {
               <Heart className="w-10 h-10" />
            </div>
            <div className="space-y-4">
-              <h3 className="text-2xl font-black text-[var(--foreground)] uppercase tracking-tight">Curated Registry Empty</h3>
+              <h3 className="text-2xl font-black text-[var(--foreground)] uppercase tracking-tight">Curated Catalog Empty</h3>
               <p className="text-sm font-medium text-text-secondary max-w-sm mx-auto leading-relaxed italic">
-                 Explore the global maritime marketplace and save harvests to your personalized registry.
+                 Explore the global maritime marketplace and save products to your personalized catalog.
               </p>
            </div>
            <Link href="/customer/products">
@@ -110,7 +110,7 @@ export default function WishlistPage() {
          <div className="space-y-0.5 md:space-y-1">
             <h4 className="text-xs md:text-sm font-bold text-[var(--foreground)] uppercase tracking-tight italic">Immutability Protocol</h4>
             <p className="text-[10px] md:text-xs text-text-secondary font-medium leading-relaxed italic">
-               Saved harvests are monitored for availability. Pricing is governed by the live maritime settlement registry at the time of commissioning.
+               Saved products are monitored for availability. Pricing is governed by the live maritime settlement catalog at the time of ordering.
             </p>
          </div>
       </Card>

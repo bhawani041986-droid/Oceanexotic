@@ -295,7 +295,7 @@ export default function CustomerRecipeDetailsPage() {
       <div className="sticky top-[76px] z-40 bg-[var(--c-bg)]/90 backdrop-blur-3xl border-b border-[var(--foreground)]/5 shadow-sm">
         <div className="container mx-auto px-4 md:px-12 py-3 md:py-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
           
-          {/* Scientific Telemetry - Scrollable on mobile to prevent squishing */}
+          {/* Scientific Tracking - Scrollable on mobile to prevent squishing */}
           <div className="flex items-center justify-between xl:justify-start gap-4 md:gap-12 w-full xl:w-auto overflow-x-auto no-scrollbar pb-1 xl:pb-0">
             <div className="flex items-center gap-2.5 shrink-0">
               <Flame className="w-4 h-4 md:w-5 md:h-5 text-[var(--c-primary)]" />

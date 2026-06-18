@@ -37,7 +37,7 @@ export default function AllReviewsPage() {
       const p = MASTER_PRODUCT_REGISTRY.find(item => item.id === productId);
       
       // --- RESILIENT ASSET HYDRATION ---
-      // If product is missing from registry, create a high-fidelity shadow placeholder
+      // If product is missing from catalog, create a high-fidelity shadow placeholder
       if (!p) {
         setProduct({
           id: productId,

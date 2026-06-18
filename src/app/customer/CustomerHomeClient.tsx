@@ -75,7 +75,7 @@ const AndamanMaritimeMap = ({ territories }: { territories: any[] }) => {
   const [isLReady, setIsLReady] = React.useState(false);
   const [isMapInit, setIsMapInit] = React.useState(false);
   
-  // 1. Script & CSS Handshake
+  // 1. Script & CSS Delivery
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
     if ((window as any).L) {
@@ -130,7 +130,7 @@ const AndamanMaritimeMap = ({ territories }: { territories: any[] }) => {
     };
   }, [isLReady]);
 
-  // 3. Dynamic Marker & Route Registry Sync
+  // 3. Dynamic Marker & Route Catalog Sync
   React.useEffect(() => {
     if (!isMapInit || !mapRef.current) return;
     const L = (window as any).L;
@@ -787,15 +787,15 @@ const CATEGORIES: {
 
 const FEATURED_PRODUCTS = [
   { id: "PRD-101", name: "Saku Grade Bluefin Tuna", price: 2450, rating: 4.9, delivery: "45 min", sellerId: "SEL-001", sellerName: "Marine Masters", image: "🍣" },
-  { id: "PRD-102", name: "Andaman King Lobster", price: 3800, rating: 5.0, delivery: "60 min", sellerId: "SEL-002", sellerName: "Deep Sea Fleet", image: "🦞" },
-  { id: "PRD-103", name: "Arctic Snow Crab Legs", price: 5200, rating: 4.8, delivery: "90 min", sellerId: "SEL-003", sellerName: "Arctic Harvest", image: "🦀" },
+  { id: "PRD-102", name: "Andaman King Lobster", price: 3800, rating: 5.0, delivery: "60 min", sellerId: "SEL-002", sellerName: "Deep Sea Delivery", image: "🦞" },
+  { id: "PRD-103", name: "Arctic Snow Crab Legs", price: 5200, rating: 4.8, delivery: "90 min", sellerId: "SEL-003", sellerName: "Arctic Product", image: "🦀" },
   { id: "PRD-104", name: "Wild Tiger Prawns", price: 1250, rating: 4.7, delivery: "30 min", sellerId: "SEL-004", sellerName: "Coastal Scout", image: "🦐" },
 ];
 
 const PREMIUM_SELLERS = [
   { id: "SEL-001", name: "Marine Masters", rating: 4.9, speed: "30 min", image: "🚢", banner: "bg-blue-600/10", products: ["🍣", "🐟", "🦑"] },
-  { id: "SEL-002", name: "Deep Sea Fleet", rating: 5.0, speed: "45 min", image: "⚓", banner: "bg-purple-600/10", products: ["🦞", "🦀", "🦐"] },
-  { id: "SEL-003", name: "Arctic Harvest", rating: 4.8, speed: "60 min", image: "❄️", banner: "bg-cyan-600/10", products: ["🥩", "🐟", "🦀"] },
+  { id: "SEL-002", name: "Deep Sea Delivery", rating: 5.0, speed: "45 min", image: "⚓", banner: "bg-purple-600/10", products: ["🦞", "🦀", "🦐"] },
+  { id: "SEL-003", name: "Arctic Product", rating: 4.8, speed: "60 min", image: "❄️", banner: "bg-cyan-600/10", products: ["🥩", "🐟", "🦀"] },
 ];
 
 const REVIEWS = [
@@ -952,7 +952,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
 
     return () => clearInterval(timer);
   }, [settings.flashDealActive, settings.flashDealEnd]);
-  // 2. Absolute Hydration Handshake
+  // 2. Absolute Hydration Delivery
   React.useEffect(() => {
     setMounted(true);
   }, []);
@@ -1477,7 +1477,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center relative z-10">
                    <div className="space-y-4 md:space-y-6">
                       <Badge className="bg-[var(--foreground)]/20 text-[8px] md:text-[10px] font-black tracking-[0.3em] px-4 md:px-6 py-2 border-[var(--foreground)]/20 uppercase">
-                        {cmsContent.find(c => c.type === 'PROMO' && c.status === 'PUBLISHED')?.sector || 'Flash Harvest'} Live
+                        {cmsContent.find(c => c.type === 'PROMO' && c.status === 'PUBLISHED')?.sector || 'Flash Product'} Live
                       </Badge>
                       <h2 className="text-4xl md:text-8xl font-black text-[var(--foreground)] uppercase italic leading-[0.9] md:leading-[0.85]">
                         {cmsContent.find(c => c.type === 'PROMO' && c.status === 'PUBLISHED')?.title || 'Flash Deals.'}
@@ -1895,7 +1895,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                           <span className="text-[var(--c-primary)]">GRILL.</span>
                        </h3>
                        <p className="text-[8px] md:text-xs text-[var(--c-text-secondary)] font-medium italic opacity-80 leading-tight">
-                          Volcanic harvests.
+                          Volcanic products.
                        </p>
                     </div>
                     <Button 

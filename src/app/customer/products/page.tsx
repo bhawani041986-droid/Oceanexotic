@@ -95,7 +95,7 @@ const ProductCard = ({ product }: { product: any }) => {
   const { addItem } = useCartStore();
 
   // --- REGISTRY SYNC (LIVE) ---
-  // The product data is now managed by the parent registry fetch engine.
+  // The product data is now managed by the parent catalog fetch engine.
   const hydratedProduct = product;
 
   const handleAddToCart = () => {
@@ -358,7 +358,7 @@ function ProductListingContent() {
       const res = await fetch(url);
       const data = await res.json();
       
-      // Hydrate Registry with extended metadata fallbacks
+      // Hydrate Catalog with extended metadata fallbacks
       const hydrated = data.map((p: any) => {
         const fallback = MASTER_PRODUCT_REGISTRY.find(m => m.id === p.id) || MASTER_PRODUCT_REGISTRY[0];
         return {
@@ -625,7 +625,7 @@ function ProductListingContent() {
                      <h4 className="text-sm font-black uppercase italic border-b border-[var(--foreground)]/5 pb-2 text-[var(--c-text-primary)]">Filters</h4>
                      <div className="space-y-4">
                         <FilterSection title="Fish Type" options={["Live Catch", "Shellfish", "Whole Fish", "Fillets", "Value Packs"]} />
-                        <FilterSection title="Fresh / Frozen" options={["Fresh Harvest", "Flash Frozen", "Chilled", "Dry Aged"]} />
+                        <FilterSection title="Fresh / Frozen" options={["Fresh Product", "Flash Frozen", "Chilled", "Dry Aged"]} />
                         <FilterSection title="Availability" options={["In Stock", "Out of Stock", "Coming Soon"]} />
                      </div>
                      <div className="space-y-2 pt-2 border-t border-[var(--foreground)]/5">

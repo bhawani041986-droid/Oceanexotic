@@ -77,7 +77,7 @@ export function CutSelectionModal({
               ))}
               {options.length === 0 ? (
                 <Text className="py-6 text-center text-xs text-muted-foreground">
-                  {t('no_cut_options') || "No cut options in registry for this harvest."}
+                  {t('no_cut_options') || "No cut options in catalog for this product."}
                 </Text>
               ) : null}
             </ScrollView>

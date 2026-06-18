@@ -123,7 +123,7 @@ export default function ProductsScreen() {
     return TABS.find((t) => t.toLowerCase().includes(slug)) ?? "All Seafood";
   });
 
-  const registry = useProducts();
+  const catalog = useProducts();
   const search = useProductSearch(searchQuery, "");
 
   const [cutProduct, setCutProduct] = useState<Product | null>(null);
@@ -144,11 +144,11 @@ export default function ProductsScreen() {
           stock: p.stock ?? 10,
           status: p.is_live ? "LIVE" : "ACTIVE",
         })) as Product[]) ?? [])
-      : (registry.data ?? []);
+      : (catalog.data ?? []);
 
     if (!searchQuery.trim()) return rawList;
     return rawList.filter((p) => p.name.toLowerCase().includes(searchQuery.toLowerCase()));
-  }, [searchQuery, registry.data, search.data]);
+  }, [searchQuery, catalog.data, search.data]);
 
   const displayList = useMemo(() => {
     return allProducts.filter((p) => matchesCategory(p, activeTab));
@@ -161,7 +161,7 @@ export default function ProductsScreen() {
     })).filter((section) => section.data.length > 0);
   }, [allProducts]);
 
-  const isLoading = registry.isLoading || (searchQuery.trim() ? search.isLoading : false);
+  const isLoading = catalog.isLoading || (searchQuery.trim() ? search.isLoading : false);
 
   const [addons, setAddons] = useState<any[]>([]);
   useEffect(() => {
@@ -259,7 +259,7 @@ export default function ProductsScreen() {
         className="flex-1"
         contentContainerClassName="pb-28 px-4 pt-2"
         refreshControl={
-          <RefreshControl refreshing={registry.isRefetching} onRefresh={() => registry.refetch()} tintColor={colors.primary} />
+          <RefreshControl refreshing={catalog.isRefetching} onRefresh={() => catalog.refetch()} tintColor={colors.primary} />
         }
       >
         <SectionTitle title={t('product_catalog') || "Product Catalog"} subtitle={t('catalog_subtitle') || "Premium Seafood Discovery • Fast Delivery"} />
@@ -460,7 +460,7 @@ export default function ProductsScreen() {
             className="my-12 items-center rounded-2xl border border-dashed p-8"
             style={{ borderColor: colors.border }}
           >
-            <Text className="text-xs font-black uppercase" style={{ color: colors.textMuted }}>{t('no_harvest') || "No harvest in this sector"}</Text>
+            <Text className="text-xs font-black uppercase" style={{ color: colors.textMuted }}>{t('no_harvest') || "No product in this sector"}</Text>
             <Pressable onPress={() => router.replace("/home")} className="mt-4">
               <Text className="text-[10px] font-bold" style={{ color: colors.primary }}>{t('return_home') || "Return to Harbor Home"}</Text>
             </Pressable>

@@ -62,7 +62,7 @@ export default function CustomerSettingsPage() {
               </div>
               <div className="space-y-8">
                  {[
-                   { label: "Harvest Alerts", desc: "Real-time signals when saved species are listed.", icon: <Zap /> },
+                   { label: "Product Alerts", desc: "Real-time signals when saved species are listed.", icon: <Zap /> },
                    { label: "Order Fulfilment", desc: "Live tracking signals for your active commissions.", icon: <Droplets /> },
                    { label: "Market Intelligence", desc: "Daily bulletins on maritime trade trends.", icon: <MessageSquare /> },
                  ].map((toggle) => (
@@ -89,7 +89,7 @@ export default function CustomerSettingsPage() {
                     <label className="text-[9px] font-black text-text-secondary uppercase tracking-[0.2em] ml-1">Linguistic Hub</label>
                     <select defaultValue="English (Global)" className="w-full h-12 bg-bg-secondary border border-[var(--foreground)]/5 rounded-[14px] px-4 text-xs font-bold text-[var(--foreground)] outline-none focus:border-primary/40 transition-all">
                        <option>English (Global)</option>
-                       <option>Japanese (Registry)</option>
+                       <option>Japanese (Catalog)</option>
                        <option>Norwegian (Arctic)</option>
                     </select>
                  </div>

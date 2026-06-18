@@ -51,7 +51,7 @@ export default function InvoicePage() {
     customer: {
       name: "Vikram Sharma",
       address: "12/A, Maritime Towers, Port Blair, Andaman",
-      email: "vikram.sharma@fleet.com"
+      email: "vikram.sharma@delivery.com"
     },
     items: [
       { name: "Andaman King Lobster", qty: 2, price: 3800, total: 7600 },

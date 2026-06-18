@@ -34,10 +34,10 @@ export default function OrderTrackingScreen() {
 
   const fetchTelemetry = async () => {
     try {
-      const { data } = await api.get(`/fleet?order_id=${id}`);
+      const { data } = await api.get(`/delivery?order_id=${id}`);
       setTrackingData(data);
     } catch (error) {
-      console.error("Telemetry Drift:", error);
+      console.error("Tracking Drift:", error);
     } finally {
       setLoading(false);
     }
@@ -62,7 +62,7 @@ export default function OrderTrackingScreen() {
   const currentLat = displayData.current_lat || 13.160704;
   const currentLng = displayData.current_lng || 92.946892;
 
-  // Sync telemetry updates back to WebView Leaflet instance
+  // Sync tracking updates back to WebView Leaflet instance
   useEffect(() => {
     if (webViewRef.current && trackingData) {
       const lat = trackingData.current_lat || 13.160704;
@@ -260,7 +260,7 @@ export default function OrderTrackingScreen() {
               </Text>
             </View>
             <Text className="mt-1 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-              {t('id') || "ID"}: {id} • {t('vessel') || "VESSEL"}: {displayData.agent_name}
+              {t('id') || "ID"}: {id} • {t('source') || "VESSEL"}: {displayData.agent_name}
             </Text>
           </View>
           <View className="rounded-2xl border border-primary/20 bg-primary/10 p-3">
@@ -316,7 +316,7 @@ export default function OrderTrackingScreen() {
                 className="text-[8px] font-bold uppercase tracking-[0.2em] text-primary"
                 style={{ transform: [{ skewX: "12deg" }] }}
               >
-                Telemetry: {loading ? "Locking..." : "Registry Live"}
+                Tracking: {loading ? "Locking..." : "Catalog Live"}
               </Text>
             </View>
           </View>

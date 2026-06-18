@@ -46,7 +46,7 @@ export default function ProfileScreen() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [changingPassword, setChangingPassword] = useState(false);
 
-  // Address Vault States
+  // Saved Addresses States
   const [addresses, setAddresses] = useState<SavedAddress[]>([]);
   const [addressModalVisible, setAddressModalVisible] = useState(false);
   const [addressLoading, setAddressLoading] = useState(false);
@@ -79,7 +79,7 @@ export default function ProfileScreen() {
         avatar: p.avatar_url,
       });
     } catch (err) {
-      console.error("Vault/Profile Sync drift:", err);
+      console.error("Address/Profile Sync drift:", err);
       setName(user.name);
       setEmail(user.email);
     } finally {
@@ -200,7 +200,7 @@ export default function ProfileScreen() {
         phone: addrPhone,
         is_default: addrDefault ? 1 : 0,
       });
-      toast("Address commissioned to vault", "success");
+      toast("Address saved successfully", "success");
       setAddressModalVisible(false);
       // Reset form fields
       setAddrHotel("");
@@ -209,11 +209,11 @@ export default function ProfileScreen() {
       setAddrPhone("");
       setAddrType("HOME");
       setAddrDefault(true);
-      // Reload address vault list
+      // Reload saved address list
       const freshList = await checkoutService.fetchAddresses(user.id);
       setAddresses(freshList);
     } catch (err) {
-      toast("Commissioning failed", "error");
+      toast("Ordering failed", "error");
       console.error(err);
     } finally {
       setAddressLoading(false);
@@ -224,11 +224,11 @@ export default function ProfileScreen() {
     if (!user?.id) return;
     try {
       await checkoutService.deleteAddress(id);
-      toast("Address decommissioned", "success");
+      toast("Address deleted", "success");
       const freshList = await checkoutService.fetchAddresses(user.id);
       setAddresses(freshList);
     } catch (err) {
-      toast("Decommission failure", "error");
+      toast("Failed to delete", "error");
     }
   };
 
@@ -368,14 +368,14 @@ export default function ProfileScreen() {
           />
         </View>
 
-        {/* Address Vault Manager */}
+        {/* Saved Addresses Manager */}
         <View 
           className="mt-6 rounded-2xl border p-5"
           style={{ borderColor: colors.border, backgroundColor: colors.card }}
         >
           <View className="flex-row items-center justify-between mb-4">
             <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
-              {t('address_vault') || "Address Vault"}
+              {t('saved_addresses') || "Saved Addresses"}
             </Text>
             <Pressable 
               onPress={() => setAddressModalVisible(true)} 
@@ -590,7 +590,7 @@ export default function ProfileScreen() {
             </View>
 
             <Button
-              label={addressLoading ? (t('commissioning') || "COMMISSIONING…") : (t('save_address') || "SAVE ADDRESS")}
+              label={addressLoading ? (t('saving') || "SAVING…") : (t('save_address') || "SAVE ADDRESS")}
               loading={addressLoading}
               onPress={handleAddAddress}
               className="w-full"

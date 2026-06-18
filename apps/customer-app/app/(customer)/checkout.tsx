@@ -43,7 +43,7 @@ export default function CheckoutScreen() {
   const tax = subtotal * 0.05;
   const grandTotal = subtotal + tax;
 
-  // ── Load address vault ────────────────────────────────────────────────────
+  // ── Load saved addresses ────────────────────────────────────────────────────
   useEffect(() => {
     const loadAddresses = async () => {
       const userId = user?.id;
@@ -58,7 +58,7 @@ export default function CheckoutScreen() {
           setActiveStep(2); // skip to payment if address already exists
         }
       } catch {
-        toast("Failed to sync Address Vault.", "error");
+        toast("Failed to load saved addresses.", "error");
       } finally {
         setIsFetchingAddresses(false);
       }
@@ -225,7 +225,7 @@ export default function CheckoutScreen() {
             <View className="py-10 items-center gap-3">
               <ActivityIndicator color={primaryColor} />
               <Text className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
-                {t('syncing_address_vault') || "Syncing Address Vault..."}
+                {t('syncing_addresses') || "Loading Addresses..."}
               </Text>
             </View>
           ) : savedAddresses.length > 0 ? (
@@ -300,7 +300,7 @@ export default function CheckoutScreen() {
             <View className="py-10 items-center gap-4 border-2 border-dashed border-white/10 rounded-xl">
               <Text className="text-4xl">📍</Text>
               <Text className="text-sm font-bold text-muted-foreground text-center">
-                {t('no_addresses_found_in_vault') || "No addresses found in your vault."}
+                {t('no_saved_addresses') || "No saved addresses found."}
               </Text>
               <Button
                 label={t('add_in_profile') || "+ ADD IN PROFILE"}

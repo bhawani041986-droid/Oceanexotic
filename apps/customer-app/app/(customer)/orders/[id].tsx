@@ -62,7 +62,7 @@ export default function OrderDetailsScreen() {
       const { data } = await api.get(`/orders/${id}/tracking`);
       setTrackingData(data);
     } catch (e) {
-      console.log("[OrderDetails] Tracking Telemetry Drift:", e);
+      console.log("[OrderDetails] Tracking Tracking Drift:", e);
     } finally {
       setTrackingLoading(false);
       setCountdown(20);
@@ -230,7 +230,7 @@ export default function OrderDetailsScreen() {
           <View className="mb-6 rounded-2xl p-5 bg-slate-900/40 items-center justify-center border border-white/5">
             <ActivityIndicator color={colors.primary} size="small" />
             <Text className="mt-2 text-[10px] font-black uppercase tracking-widest text-slate-500">
-              Syncing Telemetry...
+              Syncing Tracking...
             </Text>
           </View>
         ) : trackingData ? (
@@ -259,7 +259,7 @@ export default function OrderDetailsScreen() {
                 <View className="flex-row items-center gap-3 flex-wrap">
                   <View className="flex-row items-center gap-1.5 rounded-xl border border-blue-500/30 bg-blue-500/10 px-2.5 py-1">
                     <Text className="text-[9px] font-black text-blue-400 uppercase tracking-widest">
-                      {trackingData.fleet?.temp || "-18.5"}°C {t('chilled')}
+                      {trackingData.delivery?.temp || "-18.5"}°C {t('chilled')}
                     </Text>
                   </View>
                   <View className="items-end">
@@ -380,7 +380,7 @@ export default function OrderDetailsScreen() {
           </View>
         </View>
 
-        {/* Manifest Items */}
+        {/* Order Items */}
         <Text className="mb-4 text-xs font-black uppercase tracking-widest" style={{ color: colors.text }}>
           {t('manifest_items')}
         </Text>
@@ -441,7 +441,7 @@ export default function OrderDetailsScreen() {
           />
         </View>
 
-        {/* Manifest Summary — correct tally */}
+        {/* Order Summary — correct tally */}
         <View
           className="mb-6 rounded-2xl p-5"
           style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
@@ -521,7 +521,7 @@ export default function OrderDetailsScreen() {
           </View>
         </View>
 
-        {/* Fleet Sustainability */}
+        {/* Delivery Sustainability */}
         <View
           className="mt-6 rounded-2xl p-5"
           style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}

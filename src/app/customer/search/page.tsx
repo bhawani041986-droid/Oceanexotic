@@ -29,7 +29,7 @@ const OceanReelsFeed = dynamic(
 );
 
 const MOCK_RESULTS = [
-  { id: "1", name: "Andaman Mud Crab", category: "Premium Crustacean", price: 3800, rating: 4.9, reviews: 124, seller: "Phoenix Bay Harvest", fresh: true, tag: "FRESH CATCH" },
+  { id: "1", name: "Andaman Mud Crab", category: "Premium Crustacean", price: 3800, rating: 4.9, reviews: 124, seller: "Phoenix Bay Product", fresh: true, tag: "FRESH CATCH" },
   { id: "2", name: "Swaraj Dweep Reef Cod", category: "Deep Sea Fish", price: 1200, rating: 4.7, reviews: 85, seller: "Havelock Dock No.3", fresh: true, tag: "LOCAL SPECIAL" },
   { id: "3", name: "Neil Island Squids", category: "Mollusks", price: 950, rating: 5.0, reviews: 42, seller: "Shaheed Dweep Port", fresh: false, tag: "PREMIUM" },
   { id: "4", name: "Port Blair King Prawns", category: "Shellfish", price: 2200, rating: 4.8, reviews: 210, seller: "Junglighat Jetty", fresh: true, tag: "JUMBO" },
@@ -60,7 +60,7 @@ export default function SearchResultsPage() {
         setResults(data.results || []);
       }
     } catch (err) {
-      toast("Registry Search Failure", "error");
+      toast("Catalog Search Failure", "error");
     } finally {
       setIsLoading(false);
     }
@@ -89,7 +89,7 @@ export default function SearchResultsPage() {
         }
       }
     } catch (err) {
-      toast("Cut Registry Handshake Failure", "error");
+      toast("Cut Catalog Delivery Failure", "error");
     } finally {
       setIsLoadingCuts(false);
     }
@@ -123,7 +123,7 @@ export default function SearchResultsPage() {
         <div className="space-y-2 md:space-y-4 flex-1 w-full">
           <div className="flex items-center gap-2 md:gap-3">
              <Badge variant="glass" className="bg-primary/10 text-primary border-primary/20 text-[8px] md:text-[10px]">MARKETPLACE DISCOVERY</Badge>
-             <span className="text-[9px] md:text-[10px] font-black text-text-secondary uppercase tracking-[0.2em] italic">Live Registry Query</span>
+             <span className="text-[9px] md:text-[10px] font-black text-text-secondary uppercase tracking-[0.2em] italic">Live Catalog Query</span>
           </div>
           <div className="relative group max-w-2xl">
             <Input 
@@ -135,7 +135,7 @@ export default function SearchResultsPage() {
             <Search className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 w-5 h-5 md:w-6 md:h-6 text-text-secondary opacity-40 group-focus-within:opacity-100 transition-opacity" />
           </div>
           <p className="text-[9px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest ml-1 italic">
-            Matched {results.length} Premium Harvests in your sector
+            Matched {results.length} Premium Products in your sector
           </p>
         </div>
         <div className="flex items-center gap-4 w-full md:w-auto">
@@ -287,7 +287,7 @@ export default function SearchResultsPage() {
                 {isLoadingCuts ? (
                   <div className="py-12 flex flex-col items-center gap-4">
                     <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
-                    <p className="text-[10px] font-black text-primary uppercase animate-pulse">Syncing Cut Registry...</p>
+                    <p className="text-[10px] font-black text-primary uppercase animate-pulse">Syncing Cut Catalog...</p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 gap-3">
@@ -316,7 +316,7 @@ export default function SearchResultsPage() {
                 )}
                 <div className="pt-6 border-t border-[var(--foreground)]/5 flex items-center justify-between">
                   <div className="space-y-1">
-                    <p className="text-[9px] font-black text-text-secondary uppercase">Commission Total</p>
+                    <p className="text-[9px] font-black text-text-secondary uppercase">Order Total</p>
                     <p className="text-2xl font-black text-primary italic">₹{selectedCut?.final_price || 0}</p>
                   </div>
                   <Button 
@@ -324,7 +324,7 @@ export default function SearchResultsPage() {
                     disabled={!selectedCut}
                     className="h-14 px-10 bg-primary text-[var(--foreground)] font-black uppercase tracking-widest rounded-xl shadow-glow-purple"
                   >
-                    Confirm & Commission
+                    Confirm & Order
                   </Button>
                 </div>
               </div>

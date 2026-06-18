@@ -84,12 +84,12 @@ export default function CustomerSecurityPage() {
            </Card>
         </div>
 
-        {/* Identity Registry Sidepanel */}
+        {/* Identity Catalog Sidepanel */}
         <aside className="lg:col-span-1 space-y-8">
            <Card className="p-8 space-y-8">
               <div className="flex items-center gap-4">
                  <History className="w-4 h-4 text-primary" />
-                 <h4 className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest">Login Registry</h4>
+                 <h4 className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest">Login Catalog</h4>
               </div>
               <div className="space-y-6">
                  {LOGIN_HISTORY.map((log) => (

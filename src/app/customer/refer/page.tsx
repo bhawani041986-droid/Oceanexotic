@@ -62,7 +62,7 @@ export default function ReferPage() {
   const referralStats = [
     { label: "Successful Handshakes", value: "12", icon: <Users className="w-5 h-5" />, color: "text-primary" },
     { label: "Rewards Accrued", value: "₹4,500", icon: <Gift className="w-5 h-5" />, color: "text-success" },
-    { label: "Network Grade", value: "Fleet Ambassador", icon: <Star className="w-5 h-5" />, color: "text-warning" },
+    { label: "Network Grade", value: "Delivery Ambassador", icon: <Star className="w-5 h-5" />, color: "text-warning" },
   ];
 
   return (
@@ -105,7 +105,7 @@ export default function ReferPage() {
                >
                   <Badge className="bg-primary/20 text-primary border-primary/20 px-6 py-2.5 rounded-full text-[12px] font-black uppercase italic tracking-[0.3em] shadow-glow-purple/20">Growth Node Protocol</Badge>
                   <h1 className="text-5xl md:text-8xl font-black uppercase italic tracking-tighter leading-[0.85]">Propagate The <br /><span className="text-primary">Maritime</span> Network</h1>
-                  <p className="text-xl text-text-secondary font-medium italic max-w-2xl mx-auto">Authorize a referral handshake and commission ₹500 for every new fleet member who joins our sustainable harvest registry.</p>
+                  <p className="text-xl text-text-secondary font-medium italic max-w-2xl mx-auto">Authorize a referral delivery and order ₹500 for every new delivery member who joins our sustainable product catalog.</p>
                </motion.div>
 
                {/* Referral Code Hub */}
@@ -157,9 +157,9 @@ export default function ReferPage() {
                   <h2 className="text-4xl font-black uppercase italic tracking-tighter">Propagation <br />Protocol Steps</h2>
                   <div className="space-y-8">
                      {[
-                       { step: "01", title: "Share Registry Node", desc: "Propagate your unique code across your social communication nodes.", icon: <Share2 className="w-6 h-6" /> },
-                       { step: "02", title: "Handshake Authorized", desc: "Your contact commissions their first maritime harvest of ₹1,500+.", icon: <Zap className="w-6 h-6" /> },
-                       { step: "03", title: "Accrue Rewards", desc: "₹500 is instantly commissioned to your loyalty registry vault.", icon: <Gift className="w-6 h-6" /> }
+                       { step: "01", title: "Share Catalog Node", desc: "Propagate your unique code across your social communication nodes.", icon: <Share2 className="w-6 h-6" /> },
+                       { step: "02", title: "Delivery Authorized", desc: "Your contact commissions their first maritime product of ₹1,500+.", icon: <Zap className="w-6 h-6" /> },
+                       { step: "03", title: "Accrue Rewards", desc: "₹500 is instantly commissioned to your loyalty catalog vault.", icon: <Gift className="w-6 h-6" /> }
                      ].map((item, i) => (
                        <div key={i} className="flex gap-8 group">
                           <div className="text-4xl font-black text-[var(--foreground)]/10 group-hover:text-primary/40 transition-colors">{item.step}</div>
@@ -200,7 +200,7 @@ export default function ReferPage() {
                <div className="w-20 h-20 bg-success/10 rounded-3xl flex items-center justify-center text-success shrink-0"><ShieldCheck className="w-10 h-10" /></div>
                <div className="flex-1 space-y-2">
                   <h4 className="text-xl font-black uppercase italic">Authority Governance</h4>
-                  <p className="text-xs text-text-secondary italic leading-relaxed">Propagation rewards are analyzed by our authority nodes for integrity. All referrals must be unique maritime citizens with verified communication nodes. Rewards have no expiration within the active registry.</p>
+                  <p className="text-xs text-text-secondary italic leading-relaxed">Propagation rewards are analyzed by our authority nodes for integrity. All referrals must be unique maritime citizens with verified communication nodes. Rewards have no expiration within the active catalog.</p>
                </div>
                <Button variant="outline" className="w-full md:w-auto h-14 px-10 rounded-2xl border-[var(--foreground)]/10 text-[10px] font-black uppercase tracking-widest">READ PROTOCOLS</Button>
             </div>

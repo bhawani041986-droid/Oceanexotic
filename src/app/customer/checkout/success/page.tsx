@@ -32,7 +32,7 @@ function CheckoutSuccessContent() {
       minute: '2-digit'
     }));
 
-    // Trigger confetti for the harvest celebration
+    // Trigger confetti for the product celebration
     const duration = 3 * 1000;
     const animationEnd = Date.now() + duration;
     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
@@ -69,8 +69,8 @@ function CheckoutSuccessContent() {
              </div>
 
              <div className="space-y-3">
-                <h1 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-[var(--c-text-primary)]">Harvest Confirmed</h1>
-                <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-[var(--c-primary)] italic">Order Synchronized with System Fleet</p>
+                <h1 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-[var(--c-text-primary)]">Product Confirmed</h1>
+                <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.3em] text-[var(--c-primary)] italic">Order Synchronized with System Delivery</p>
              </div>
 
              <div className="grid grid-cols-2 gap-4 py-8 border-y border-[var(--border)]">
@@ -95,7 +95,7 @@ function CheckoutSuccessContent() {
                    </div>
                    <div>
                       <h4 className="text-[10px] font-black uppercase tracking-widest italic text-[var(--c-text-primary)]">Dispatch Status: PENDING</h4>
-                      <p className="text-[8px] font-medium text-[var(--c-text-secondary)] uppercase leading-relaxed">Fleet is preparing for cold-chain synchronization</p>
+                      <p className="text-[8px] font-medium text-[var(--c-text-secondary)] uppercase leading-relaxed">Delivery is preparing for cold-chain synchronization</p>
                    </div>
                 </div>
 

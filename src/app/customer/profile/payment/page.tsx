@@ -45,7 +45,7 @@ export default function CustomerPaymentPage() {
                <h3 className="text-5xl font-black text-[var(--foreground)] tracking-tighter uppercase flex items-center gap-4">
                  <Gem className="w-10 h-10 text-primary shadow-glow-purple" /> 1,240.50
                </h3>
-               <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.2em]">Available for immediate harvest settlement</p>
+               <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.2em]">Available for immediate product settlement</p>
             </div>
             <Button className="h-14 px-12 text-[11px] font-black tracking-widest uppercase shadow-glow-purple">RECHARGE WALLET</Button>
          </div>

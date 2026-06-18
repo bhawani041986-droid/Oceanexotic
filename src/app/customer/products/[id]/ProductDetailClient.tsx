@@ -852,7 +852,7 @@ export default function ProductDetailPage({
                        </div>
                     </div>
 
-                    {/* Live Vessel & Traceability Registry */}
+                    {/* Live Source & Traceability Catalog */}
                     <div className="pt-3 border-t border-[var(--foreground)]/5 space-y-2">
                        <p className="text-[8px] font-black uppercase text-[var(--c-primary)] tracking-widest">🚢 Sourcing Details</p>
                        <div className="space-y-1 text-[8px] font-black uppercase text-[var(--c-text-secondary)]">

@@ -18,10 +18,10 @@ import {
 import { Input } from "@/components/ui/Input";
 
 const SUPPORT_TOPICS = [
-  { title: "Ordering & Commissioning", icon: <Ship className="text-primary" />, desc: "How to navigate the global harvest registry." },
+  { title: "Ordering & Ordering", icon: <Ship className="text-primary" />, desc: "How to navigate the global product catalog." },
   { title: "Cold-Chain Protocols", icon: <ShieldCheck className="text-success" />, desc: "Details on our thermal monitoring and logistics." },
   { title: "Settlement & Payments", icon: <FileText className="text-warning" />, desc: "Managing your maritime financial transactions." },
-  { title: "Fleet Rank & Loyalty", icon: <LifeBuoy className="text-purple-500" />, desc: "Understanding Admiral ranks and rewards." },
+  { title: "Delivery Rank & Loyalty", icon: <LifeBuoy className="text-purple-500" />, desc: "Understanding Admiral ranks and rewards." },
 ];
 
 export default function CustomerSupportPage() {
@@ -33,14 +33,14 @@ export default function CustomerSupportPage() {
       <div className="text-center space-y-8">
         <div className="space-y-4">
            <Badge variant="glass" className="bg-primary/10 text-primary border-primary/20">SUPPORT RADAR</Badge>
-           <h1 className="text-5xl font-black text-[var(--foreground)] tracking-tight uppercase">How can the Fleet <span className="text-primary">Assist?</span></h1>
+           <h1 className="text-5xl font-black text-[var(--foreground)] tracking-tight uppercase">How can the Delivery <span className="text-primary">Assist?</span></h1>
            <p className="text-sm font-medium text-text-secondary max-w-xl mx-auto leading-relaxed">
-             Access the global maritime knowledge registry or initiate a live signal with our support admirals.
+             Access the global maritime knowledge catalog or initiate a live signal with our support admirals.
            </p>
         </div>
         <div className="relative max-w-2xl mx-auto group">
           <Input 
-            placeholder="Search the knowledge registry (e.g., Shipping, Refunds)..." 
+            placeholder="Search the knowledge catalog (e.g., Shipping, Refunds)..." 
             className="h-16 pl-16 pr-8 text-lg font-bold bg-bg-secondary border-[var(--foreground)]/5 focus:border-primary/50 transition-all rounded-[20px] shadow-premium" 
           />
           <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-text-secondary opacity-40 group-focus-within:opacity-100 transition-opacity" />
@@ -56,7 +56,7 @@ export default function CustomerSupportPage() {
             <div className="space-y-4">
                <h3 className="text-2xl font-bold text-[var(--foreground)] tracking-tight uppercase">Initiate Live Signal</h3>
                <p className="text-sm text-text-secondary leading-relaxed">
-                  Direct encrypted channel with a Fleet Admiral. Real-time response for urgent harvest commissions.
+                  Direct encrypted channel with a Delivery Admiral. Real-time response for urgent product commissions.
                </p>
                <Button className="h-14 px-10 text-[11px] font-black tracking-widest uppercase shadow-glow-purple">START LIVE CHAT</Button>
             </div>
@@ -66,20 +66,20 @@ export default function CustomerSupportPage() {
                <Mail className="w-8 h-8" />
             </div>
             <div className="space-y-4">
-               <h3 className="text-2xl font-bold text-[var(--foreground)] tracking-tight uppercase">Formal Commissioning</h3>
+               <h3 className="text-2xl font-bold text-[var(--foreground)] tracking-tight uppercase">Formal Ordering</h3>
                <p className="text-sm text-text-secondary leading-relaxed">
-                  Submit a detailed support directive for complex fleet inquiries. Guaranteed 4h response time.
+                  Submit a detailed support directive for complex delivery inquiries. Guaranteed 4h response time.
                </p>
                <Button variant="outline" className="h-14 px-10 text-[11px] font-black tracking-widest uppercase">SUBMIT DIRECTIVE</Button>
             </div>
          </Card>
       </div>
 
-      {/* Knowledge Registry Grid */}
+      {/* Knowledge Catalog Grid */}
       <section className="space-y-8">
          <div className="space-y-1">
-            <h3 className="text-lg font-bold text-[var(--foreground)] tracking-tight uppercase">Knowledge Registry</h3>
-            <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Select a sector to explore fleet documentation</p>
+            <h3 className="text-lg font-bold text-[var(--foreground)] tracking-tight uppercase">Knowledge Catalog</h3>
+            <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Select a sector to explore delivery documentation</p>
          </div>
          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {SUPPORT_TOPICS.map((topic) => (
@@ -103,7 +103,7 @@ export default function CustomerSupportPage() {
       <div className="p-10 rounded-[40px] bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 flex flex-col md:flex-row md:items-center justify-around gap-10 text-center">
          <div className="space-y-2">
             <Phone className="w-6 h-6 text-primary mx-auto opacity-40" />
-            <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Global Fleet Line</p>
+            <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Global Delivery Line</p>
             <p className="text-sm font-bold text-[var(--foreground)]">+1 (800) OCEAN-FR</p>
          </div>
          <div className="h-12 w-px bg-[var(--foreground)]/5 hidden md:block" />
@@ -115,7 +115,7 @@ export default function CustomerSupportPage() {
          <div className="h-12 w-px bg-[var(--foreground)]/5 hidden md:block" />
          <div className="space-y-2">
             <MessageSquare className="w-6 h-6 text-primary mx-auto opacity-40" />
-            <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Fleet Response Hub</p>
+            <p className="text-[10px] font-black text-text-secondary uppercase tracking-widest">Delivery Response Hub</p>
             <p className="text-sm font-bold text-[var(--foreground)]">Live 24/7 Global</p>
          </div>
       </div>

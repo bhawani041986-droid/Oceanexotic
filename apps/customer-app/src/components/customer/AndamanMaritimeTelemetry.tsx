@@ -31,7 +31,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
   const theme = useSettingsStore((s) => s.theme);
   const { t: translate } = useTranslation(); // reactive – re-renders on language change
 
-  // Dynamically tailor the radar/telemetry color palette based on selected admin theme
+  // Dynamically tailor the radar/tracking color palette based on selected admin theme
   const getPalette = () => {
     return [
       colors.primary,
@@ -123,7 +123,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
     );
   }, []);
 
-  // Web Leaflet Script & CSS Handshake Loader
+  // Web Leaflet Script & CSS Delivery Loader
   useEffect(() => {
     if (Platform.OS !== "web" || typeof window === "undefined") return;
     if ((window as any).L) {
@@ -176,7 +176,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
     };
   }, [isLReady]);
 
-  // Web Dynamic Marker Registry Sync
+  // Web Dynamic Marker Catalog Sync
   useEffect(() => {
     if (Platform.OS !== "web" || !isMapInit || !mapRef.current) return;
     const L = (window as any).L;
@@ -262,7 +262,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
     transform: [{ translateY: scanPosition.value }],
   }));
 
-  // Filter active telemetry nodes with valid coordinates
+  // Filter active tracking nodes with valid coordinates
   const activeNodes = (territories || [])
     .filter((t) => t.status === "ACTIVE" && t.coordinates);
 
@@ -318,7 +318,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
             </View>
             <View className="flex-1">
               <Text className="text-[8px] font-black text-rose-500 uppercase tracking-[0.1em]">{translate('done') || "DONE"}</Text>
-              <Text className="text-xs font-black text-foreground uppercase italic">{translate('fleet_auth') || "Fleet Auth"}</Text>
+              <Text className="text-xs font-black text-foreground uppercase italic">{translate('fleet_auth') || "Delivery Auth"}</Text>
             </View>
           </View>
 
@@ -416,7 +416,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
             style={{ borderColor: colors.primary + "33" }}
             className="absolute bottom-4 right-4 bg-black/60 border px-2 py-1 rounded-lg z-[1000] pointer-events-none"
           >
-            <Text className="text-[7px] font-mono text-white uppercase">{translate('telemetry') || "TELEMETRY"} 042.8° NE</Text>
+            <Text className="text-[7px] font-mono text-white uppercase">{translate('tracking') || "TELEMETRY"} 042.8° NE</Text>
           </View>
         </View>
       </View>
@@ -441,7 +441,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
           </View>
           <View className="flex-1">
             <Text className="text-[8px] font-black text-rose-500 uppercase tracking-[0.1em]">{translate('done') || "DONE"}</Text>
-            <Text className="text-xs font-black text-foreground uppercase italic">{translate('fleet_auth') || "Fleet Auth"}</Text>
+            <Text className="text-xs font-black text-foreground uppercase italic">{translate('fleet_auth') || "Delivery Auth"}</Text>
           </View>
         </View>
 
@@ -640,7 +640,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
           style={{ borderColor: colors.primary + "33" }}
           className="absolute bottom-4 right-4 bg-black/60 border px-2 py-1 rounded-lg z-30 pointer-events-none"
         >
-          <Text className="text-[7px] font-mono text-white uppercase">{translate('telemetry') || "TELEMETRY"} 042.8° NE</Text>
+          <Text className="text-[7px] font-mono text-white uppercase">{translate('tracking') || "TELEMETRY"} 042.8° NE</Text>
         </View>
       </View>
     </View>

@@ -155,7 +155,7 @@ export default function OrdersPage() {
               </div>
               <div className="space-y-4">
                 <h2 className="text-2xl font-bold text-[var(--foreground)] tracking-tight">Start Shopping</h2>
-                <p className="text-sm text-text-secondary font-medium leading-relaxed">Continue your discovery of the world's most premium sustainable seafood harvest.</p>
+                <p className="text-sm text-text-secondary font-medium leading-relaxed">Continue your discovery of the world's most premium sustainable seafood product.</p>
               </div>
               <Link href="/customer/products">
                 <Button className="h-14 px-12 text-sm font-black tracking-[0.2em] shadow-glow-purple">

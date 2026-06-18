@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 const ACTIVE_PERKS = [
-  { title: "Admiral's Discount", desc: "Permanent 5% discount on all premium harvests.", icon: <Zap />, active: true },
+  { title: "Admiral's Discount", desc: "Permanent 5% discount on all premium products.", icon: <Zap />, active: true },
   { title: "Priority Docking", desc: "Your orders bypass standard fulfillment queues.", icon: <Clock />, active: true },
   { title: "Cold-Chain Waiver", desc: "Complimentary thermal logistics on orders over ₹15,000.", icon: <Star />, active: false },
 ];
@@ -48,7 +48,7 @@ export default function LoyaltyRewardsPage() {
              <div className="space-y-2 md:space-y-4">
                 <Badge variant="glass" className="bg-primary/10 text-primary border-primary/20 text-[8px] md:text-[10px]">ELITE ADMIRAL REGISTRY</Badge>
                 <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-[var(--foreground)] tracking-tighter uppercase leading-none italic">
-                   Your Fleet <span className="text-primary italic">Legacy.</span>
+                   Your Delivery <span className="text-primary italic">Legacy.</span>
                 </h1>
                 <p className="text-xs md:text-sm font-medium text-text-secondary leading-tight md:leading-relaxed max-w-xl mx-auto lg:mx-0 italic">
                    You are currently in the top 2% of the Global Oceanic Network. Accumulate 1,240 more Shells to reach Diamond Systemty.
@@ -73,11 +73,11 @@ export default function LoyaltyRewardsPage() {
         </div>
       </Card>
 
-      {/* Perks Registry */}
+      {/* Perks Catalog */}
       <section className="space-y-[4px] md:space-y-8">
          <div className="flex items-end justify-between px-2">
             <div className="space-y-1">
-               <h3 className="text-base md:text-lg font-black text-[var(--foreground)] tracking-tight uppercase italic">Active Harvest Perks</h3>
+               <h3 className="text-base md:text-lg font-black text-[var(--foreground)] tracking-tight uppercase italic">Active Product Perks</h3>
                <p className="text-[9px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic">Permanent benefits linked to your Admiral Rank</p>
             </div>
             <Button variant="ghost" className="text-[8px] md:text-[10px] font-black tracking-widest uppercase opacity-40 hover:opacity-100 flex items-center gap-2 md:gap-3 h-8 md:h-10">
@@ -120,8 +120,8 @@ export default function LoyaltyRewardsPage() {
             {[
                { action: "Settlement: Premium King Lobster", points: "+840 Shells", date: "May 09, 2026" },
                { action: "Redemption: Phoenix Bay Waiver", points: "-500 Shells", date: "May 04, 2026" },
-               { action: "Fleet Multiplier (Admiral x1.5)", points: "+240 Shells", date: "May 01, 2026" },
-               { action: "Welcome to Admiral Registry", points: "+1,000 Shells", date: "Apr 28, 2026" },
+               { action: "Delivery Multiplier (Admiral x1.5)", points: "+240 Shells", date: "May 01, 2026" },
+               { action: "Welcome to Admiral Catalog", points: "+1,000 Shells", date: "Apr 28, 2026" },
             ].map((entry, i) => (
                <div key={i} className="flex items-center justify-between p-3 md:p-6 rounded-xl md:rounded-[20px] bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 hover:border-[var(--foreground)]/20 transition-all cursor-default">
                   <div className="space-y-0.5 md:space-y-1">

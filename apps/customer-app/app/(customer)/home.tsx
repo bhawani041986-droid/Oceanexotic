@@ -42,8 +42,8 @@ type BatchFilter = "ALL" | "MORNING" | "AFTERNOON" | "EVENING";
 
 const PREMIUM_SELLERS = [
   { id: "SEL-001", name: "Marine Masters", rating: 4.9, speed: "30 min", image: "🚢", products: ["🍣", "🐟", "🦑"] },
-  { id: "SEL-002", name: "Deep Sea Fleet", rating: 5.0, speed: "45 min", image: "⚓", products: ["🦞", "🦀", "🦐"] },
-  { id: "SEL-003", name: "Arctic Harvest", rating: 4.8, speed: "60 min", image: "❄️", products: ["🥩", "🐟", "🦀"] },
+  { id: "SEL-002", name: "Deep Sea Delivery", rating: 5.0, speed: "45 min", image: "⚓", products: ["🦞", "🦀", "🦐"] },
+  { id: "SEL-003", name: "Arctic Product", rating: 4.8, speed: "60 min", image: "❄️", products: ["🥩", "🐟", "🦀"] },
 ];
 
 const RECIPES = [
@@ -473,7 +473,7 @@ export default function CustomerHomeScreen() {
                   catch_id: p.id,
                   product_id: p.id,
                   name: p.name,
-                  seller_name: p.seller_name ?? "Verified Fleet",
+                  seller_name: p.seller_name ?? "Verified Delivery",
                   harbor_node: "",
                   remaining_kg: p.stock ?? 0,
                   price_per_kg: Number(p.price),
@@ -727,7 +727,7 @@ export default function CustomerHomeScreen() {
           ) : null;
         })()}
 
-        {/* Premium Sellers ("The Fleet Elite") */}
+        {/* Premium Sellers ("The Delivery Elite") */}
         <View className="px-4 py-8">
           <SectionTitle title={t('the_fleet_elite') || "Top Sellers"} subtitle={t('verified_local_sellers') || "Verified Sellers"} />
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
@@ -786,7 +786,7 @@ export default function CustomerHomeScreen() {
           </ScrollView>
         </View>
 
-        {/* Live Telemetry Radar */}
+        {/* Live Tracking Radar */}
         <AndamanMaritimeTelemetry territories={territories.data ?? []} />
 
 
@@ -830,7 +830,7 @@ export default function CustomerHomeScreen() {
 
         {/* Customer Reviews */}
         <View className="px-4 pb-8">
-          <SectionTitle title={t('fleet_testimonials') || "Fleet Testimonials"} subtitle={t('verified_citizen_feedback') || "Verified Citizen Feedback"} />
+          <SectionTitle title={t('fleet_testimonials') || "Delivery Testimonials"} subtitle={t('verified_citizen_feedback') || "Verified Citizen Feedback"} />
           {[
             { user: "Vikram S.", text: t('tuna_pristine') || "The Bluefin Tuna was absolutely pristine. Delivered in 40 minutes.", rating: 5 },
             { user: "Ananya K.", text: t('best_lobster') || "Best lobster I've had in years. The cold-chain delivery is real.", rating: 5 },
@@ -854,7 +854,7 @@ export default function CustomerHomeScreen() {
           ))}
         </View>
 
-        {/* Join the Fleet - Subscription Newsletter Panel */}
+        {/* Join the Delivery - Subscription Newsletter Panel */}
         <View className="mx-4 mb-8 p-6 relative overflow-hidden" style={{ backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1 }}>
           <LinearGradient
             colors={["transparent", getRgba(primaryColor, 0.06)]}
@@ -871,7 +871,7 @@ export default function CustomerHomeScreen() {
               {t('global_dispatch_subscription') || "Global Dispatch Subscription"}
             </Text>
             <Text className="text-2xl font-black uppercase italic text-center" style={{ color: colors.text }}>
-              {t('join_the_fleet') || "Join the Fleet."}
+              {t('join_the_fleet') || "Join the Delivery."}
             </Text>
             <Text className="text-[9px] text-center italic max-w-[280px]" style={{ color: colors.textMuted }}>
               {t('join_newsletter_for_catches') || "Join our newsletter for the latest fresh catches and exclusive offers."}

@@ -34,7 +34,7 @@ const FishDecoratorSVG = ({ style, color }: { style?: any; color: string }) => (
   </Svg>
 );
 
-// High-fidelity background telemetry grid
+// High-fidelity background tracking grid
 const CyberFishGrid = () => {
   const colors = useThemeColors();
   return (
@@ -142,7 +142,7 @@ export default function RecipeDetailsScreen() {
 
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
-      {/* Dynamic Telemetry Cyber Background */}
+      {/* Dynamic Tracking Cyber Background */}
       <CyberFishGrid />
 
       <ScrollView 
@@ -240,11 +240,11 @@ export default function RecipeDetailsScreen() {
         {/* Content Section */}
         <View className="px-5 pt-6 space-y-8">
 
-          {/* Scientific Nutrition Telemetry */}
+          {/* Scientific Nutrition Tracking */}
           <View className="space-y-4">
             <View className="flex-row items-center gap-2">
               <MaterialCommunityIcons name="heart-pulse" size={16} color={colors.primary} />
-              <Text className="text-sm font-black uppercase text-foreground tracking-widest">{t('efficiency_telemetry') || "Efficiency Telemetry"}</Text>
+              <Text className="text-sm font-black uppercase text-foreground tracking-widest">{t('efficiency_telemetry') || "Efficiency Tracking"}</Text>
             </View>
             
             <LinearGradient

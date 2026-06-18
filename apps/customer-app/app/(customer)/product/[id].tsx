@@ -358,7 +358,7 @@ export default function ProductDetailScreen() {
         )}
         <View className="p-6">
           <Text className="text-[10px] font-black uppercase text-primary">
-            {String(product.seller_name ?? (t("verified_fleet") || "Verified Fleet"))}
+            {String(product.seller_name ?? (t("verified_fleet") || "Verified Delivery"))}
           </Text>
           <Text className="mt-2 text-3xl font-black uppercase italic text-foreground">
             {String(product.name)}
@@ -605,10 +605,10 @@ export default function ProductDetailScreen() {
             ))}
           </View>
 
-          {/* --- COLD-CHAIN TELEMETRY GUARD --- */}
+          {/* --- QUALITY GUARANTEE --- */}
           <View className="mt-4 p-4 border" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
             <Text className="text-[10px] font-black uppercase tracking-widest mb-3" style={{ color: colors.primary }}>
-              ❄️ {t('cold_chain_telemetry') || "Cold-Chain Telemetry Guard"}
+              ❄️ {t('quality_guarantee') || "Quality Guarantee"}
             </Text>
             <View className="flex-row justify-between items-center">
               <View>
@@ -660,17 +660,17 @@ export default function ProductDetailScreen() {
 
         {/* --- LAYER 4: AUTHORITY REGISTRY --- */}
         <View className="px-4 py-6 border-t" style={{ borderColor: colors.border }}>
-          <SectionTitle title={t('authority_registry') || "Authority Registry"} subtitle={t('fleet_certification') || "Fleet Certification"} />
+          <SectionTitle title={t('authority_registry') || "Authority Catalog"} subtitle={t('fleet_certification') || "Delivery Certification"} />
           <View className="p-4 mt-4 border flex-row items-center gap-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
              <View className="w-12 h-12 rounded-full items-center justify-center border" style={{ backgroundColor: `${colors.primary}20`, borderColor: `${colors.primary}40` }}>
                 <Text className="text-xl">⚓</Text>
              </View>
              <View>
                 <Text className="text-sm font-black uppercase italic" style={{ color: colors.text }}>
-                  {String(p.seller_name ?? (t("verified_fleet") || "Verified Fleet"))}
+                  {String(p.seller_name ?? (t("verified_fleet") || "Verified Delivery"))}
                 </Text>
                 <Text className="text-[9px] font-black uppercase tracking-widest text-emerald-500 mt-1">
-                  {t('fleet_certified_agent') || "Fleet Certified Agent"}
+                  {t('fleet_certified_agent') || "Delivery Certified Agent"}
                 </Text>
              </View>
           </View>
@@ -678,11 +678,11 @@ export default function ProductDetailScreen() {
           {/* --- LIVE VESSEL & TRACEABILITY REGISTRY --- */}
           <View className="p-4 mt-3 border" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
             <Text className="text-[10px] font-black uppercase tracking-widest mb-3" style={{ color: colors.primary }}>
-              🚢 {t('live_vessel_traceability') || "Live Vessel & Traceability Registry"}
+              🚢 {t('live_vessel_traceability') || "Live Source & Traceability Catalog"}
             </Text>
             <View className="gap-2">
               <View className="flex-row justify-between">
-                <Text className="text-[10px] font-black uppercase text-muted-foreground">{t('vessel_id') || "Vessel ID"}</Text>
+                <Text className="text-[10px] font-black uppercase text-muted-foreground">{t('vessel_id') || "Source ID"}</Text>
                 <Text className="text-[10px] font-black uppercase text-foreground">{t('m_v_samudra') || "M.V. Samudra-III"}</Text>
               </View>
               <View className="flex-row justify-between">
@@ -724,7 +724,7 @@ export default function ProductDetailScreen() {
 
         {/* --- LAYER 6: SIMILAR FLEET ASSETS --- */}
         <View className="px-4 py-6 border-t" style={{ borderColor: colors.border }}>
-          <SectionTitle title={t('similar_fleet_assets') || "Similar Fleet Assets"} subtitle={t('explore_alternatives') || "Explore Alternatives"} />
+          <SectionTitle title={t('similar_fleet_assets') || "Similar Delivery Assets"} subtitle={t('explore_alternatives') || "Explore Alternatives"} />
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
             {similarProducts.map((p) => (
               <View key={p.id} className="mr-3 w-48">

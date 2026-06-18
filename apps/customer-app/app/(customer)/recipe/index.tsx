@@ -24,7 +24,7 @@ const FishDecoratorSVG = ({ style, color }: { style?: any; color: string }) => (
   </Svg>
 );
 
-// High-fidelity background telemetry grid
+// High-fidelity background tracking grid
 const CyberFishGrid = () => {
   const colors = useThemeColors();
   const { t } = useTranslation();

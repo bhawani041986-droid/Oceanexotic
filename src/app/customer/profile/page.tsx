@@ -144,7 +144,7 @@ export default function CustomerProfilePage() {
         });
       }
     } catch (err) {
-      toast("Registry Sync Failure", "error");
+      toast("Catalog Sync Failure", "error");
     } finally {
       setIsHydrating(false);
     }
@@ -157,7 +157,7 @@ export default function CustomerProfilePage() {
   React.useEffect(() => {
     if (mounted && isHydrated) {
       if (!isAuthenticated) {
-        toast("Session handshake required", "error");
+        toast("Session delivery required", "error");
         router.push("/login");
       } else if (user?.id) {
         fetchRegistry();
@@ -603,8 +603,8 @@ export default function CustomerProfilePage() {
              {activeTab === "addresses" && (
                 <div className="space-y-[4px] md:space-y-6 animate-fade-in">
                    <div className="flex items-center justify-between px-2">
-                      <h4 className="text-sm md:text-xl font-black uppercase italic text-[var(--foreground)] shadow-glow-purple/5">Address Vault</h4>
-                      <Button onClick={() => handleOpenModal("address")} variant="outline" className="h-8 md:h-10 border-primary/20 text-primary rounded-full text-[8px] md:text-[9px] font-black uppercase gap-2 italic shadow-glow-purple/5">+ ADD PROTOCOL</Button>
+                      <h4 className="text-sm md:text-xl font-black uppercase italic text-[var(--foreground)] shadow-glow-purple/5">Saved Addresses</h4>
+                      <Button onClick={() => handleOpenModal("address")} variant="outline" className="h-8 md:h-10 border-primary/20 text-primary rounded-full text-[8px] md:text-[9px] font-black uppercase gap-2 italic shadow-glow-purple/5">+ ADD ADDRESS</Button>
                    </div>
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-[4px] md:gap-6">
                       {Array.isArray(addresses) && addresses.map((addr) => (

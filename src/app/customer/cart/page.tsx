@@ -119,7 +119,7 @@ export default function CartPage() {
           <div className="w-32 h-32 bg-[var(--foreground)]/5 rounded-full flex items-center justify-center text-5xl opacity-20 border border-[var(--foreground)]/5 shadow-inner">🛒</div>
           <div className="space-y-4 max-w-sm">
             <h1 className="text-[32px] font-bold tracking-tight text-[var(--c-text-primary)] leading-tight">Your cart is empty</h1>
-            <p className="text-[var(--c-text-secondary)] font-medium leading-relaxed italic">It looks like you haven't discovered our fresh harvest yet. Experience the world's finest seafood today.</p>
+            <p className="text-[var(--c-text-secondary)] font-medium leading-relaxed italic">It looks like you haven't discovered our fresh product yet. Experience the world's finest seafood today.</p>
           </div>
           <Link href="/customer/products">
             <Button size="lg" className="h-16 px-12 text-sm font-black tracking-widest shadow-[var(--c-shadow-glow)] rounded-full bg-[var(--c-primary)] text-[var(--foreground)]">EXPLORE MARKETPLACE</Button>
