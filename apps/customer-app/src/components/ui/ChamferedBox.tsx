@@ -51,7 +51,7 @@ export function ChamferedBox({
  ) : null}
  
  {/* Content layer */}
- <View className="relative z-10 w-full h-full">
+ <View className="relative z-10 w-full">
  {children}
  </View>
  </View>
