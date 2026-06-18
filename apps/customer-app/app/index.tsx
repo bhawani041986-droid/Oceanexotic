@@ -16,9 +16,15 @@ import * as WebBrowser from "expo-web-browser";
 import * as Linking from "expo-linking";
 import { setAuthToken, setAuthUser } from "@/lib/storage";
 import { useTranslation } from "@/lib/i18n";
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import axios from 'axios';
 
 WebBrowser.maybeCompleteAuthSession();
 
+GoogleSignin.configure({
+  webClientId: '863954093381-1hli8gae6lmjh6g2nsrr711fddtcb316.apps.googleusercontent.com',
+  offlineAccess: true,
+});
 const BG_IMAGE = "https://images.unsplash.com/photo-1551244072-5d12893278ab?auto=format&fit=crop&q=80&w=2000";
 
 const GoogleIcon = () => (
@@ -94,31 +100,71 @@ export default function WelcomeOnboardingScreen() {
   };
 
   const handleGoogleSignIn = async () => {
+    if (Platform.OS === 'web') {
+      toast("Native Google Sign-In is active. Use the web app for web login.", "error");
+      return;
+    }
+    
     try {
-      const redirectUrl = Linking.createURL("oauth-callback");
-      const redirectTo = encodeURIComponent(`https://oceanexotic.com/api/auth/callback?platform=mobile&redirect_uri=${encodeURIComponent(redirectUrl)}`);
-      const authUrl = `https://kyqmhibffbwoqlpdplfu.supabase.co/auth/v1/authorize?provider=google&redirect_to=${redirectTo}`;
+      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+      const response = await GoogleSignin.signIn();
       
-      const result = await WebBrowser.openAuthSessionAsync(authUrl, redirectUrl);
-      
-      if (result.type === "success" && result.url) {
-        const parsedUrl = Linking.parse(result.url);
-        const { token, user } = parsedUrl.queryParams || {};
+      if (response.type === 'success' && response.data?.idToken) {
+        const idToken = response.data.idToken;
+        const SUPABASE_URL = "https://kyqmhibffbwoqlpdplfu.supabase.co";
+        // IMPORTANT: Use the PUBLIC anon key here — not service_role. 
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cW1oaWJmZmJ3b3FscGRwbGZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTY4NzQsImV4cCI6MjA5NjE3Mjg3NH0.h4n0LxfWBRbEwrLKFxoUGJYmylLHVGVH3TWKOH7E-M4";
+
+        // Exchange Google ID token for Supabase Session natively
+        const sbResponse = await axios.post(
+          `${SUPABASE_URL}/auth/v1/token?grant_type=id_token`,
+          {
+            provider: "google",
+            id_token: idToken,
+          },
+          {
+            headers: {
+              "apikey": SUPABASE_ANON_KEY,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const supabaseToken = sbResponse.data.access_token;
         
-        if (token && user) {
-          const parsedUser = JSON.parse(decodeURIComponent(user as string));
-          const authUser = toAuthUser(parsedUser);
+        if (supabaseToken) {
+          // Sync with Next.js backend — use live domain for production
+          const apiBase = "https://oceanexotic.com/api";
+          const syncResponse = await axios.post(`${apiBase}/auth/sync-oauth`, {
+            access_token: supabaseToken
+          });
           
-          await setAuthToken(token as string);
-          await setAuthUser(authUser);
-          login(authUser);
-          router.replace("/home");
-          toast(`Welcome back, ${authUser.name}!`, "success");
+          if (syncResponse.data.success) {
+             const { token, user } = syncResponse.data;
+             const authUser = toAuthUser(user);
+             await setAuthToken(token);
+             await setAuthUser(authUser);
+             login(authUser);
+             router.replace("/home");
+             toast(`Welcome back, ${authUser.name}!`, "success");
+          } else {
+             throw new Error(syncResponse.data.message || "Failed to sync OAuth user");
+          }
         }
+      } else if (response.type === 'cancelled') {
+        toast("Login cancelled", "error");
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Google login failed:", err);
-      toast("Google login failed. Try again.", "error");
+      if (err.code === statusCodes.SIGN_IN_CANCELLED) {
+        toast("Login cancelled", "error");
+      } else if (err.code === statusCodes.IN_PROGRESS) {
+        toast("Login already in progress", "error");
+      } else if (err.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        toast("Play services not available or outdated", "error");
+      } else {
+        toast("Google login failed. Try again.", "error");
+      }
     }
   };
 
