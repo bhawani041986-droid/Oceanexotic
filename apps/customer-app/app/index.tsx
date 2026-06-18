@@ -63,13 +63,16 @@ export default function WelcomeOnboardingScreen() {
 
  const activeHydration = isHydrated || forceShow;
 
+ const [hasRedirected, setHasRedirected] = useState(false);
+
  useEffect(() => {
- if (!activeHydration) return;
+ if (!activeHydration || hasRedirected) return;
 
  if (isAuthenticated && user) {
+ setHasRedirected(true);
  router.replace(getPostLoginRoute(user.role) as never);
  }
- }, [activeHydration, isAuthenticated, user, router]);
+ }, [activeHydration, isAuthenticated, user, router, hasRedirected]);
 
  const handleGuestAccess = async () => {
  if (isGuestAuthenticating) return;

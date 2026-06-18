@@ -53,7 +53,12 @@ export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCar
  return (
  <Pressable
  onPress={() => router.push({ pathname:"/product/[id]", params: { id: product.id } })}
- onLayout={(e) => setLayout(e.nativeEvent.layout)}
+ onLayout={(e) => {
+        const { width, height } = e.nativeEvent.layout;
+        if (Math.abs(width - layout.width) > 1 || Math.abs(height - layout.height) > 1) {
+          setLayout({ width, height });
+        }
+      }}
  className={`${compact ?"w-[48%]" :"w-full"} relative overflow-hidden`}
  style={{ minHeight: 250 }}
  >

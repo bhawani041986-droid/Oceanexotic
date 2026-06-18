@@ -71,7 +71,12 @@ function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
  return (
  <Pressable
  onPress={onPress}
- onLayout={(e) => setLayout(e.nativeEvent.layout)}
+  onLayout={(e) => {
+    const { width, height } = e.nativeEvent.layout;
+    if (Math.abs(width - layout.width) > 1 || Math.abs(height - layout.height) > 1) {
+      setLayout({ width, height });
+    }
+  }}
  className="w-[48%] relative overflow-hidden"
  style={{ minHeight: 250 }}
  >
@@ -825,7 +830,12 @@ export default function CustomerHomeScreen() {
  </View>
  <View className="mt-5 space-y-2">
  <View 
- onLayout={(e) => setSubEmailLayout(e.nativeEvent.layout)}
+ onLayout={(e) => {
+   const layout = e.nativeEvent.layout;
+   if (Math.abs(layout.width - subEmailLayout.width) > 1 || Math.abs(layout.height - subEmailLayout.height) > 1) {
+     setSubEmailLayout(layout);
+   }
+ }}
  className="px-4 py-3.5 items-center justify-center relative overflow-hidden"
  style={{ height: 50 }}
  >
@@ -845,7 +855,12 @@ export default function CustomerHomeScreen() {
  </View>
  <Pressable
  onPress={() => toast("Subscribed to newsletter!","success")}
- onLayout={(e) => setSubBtnLayout(e.nativeEvent.layout)}
+ onLayout={(e) => {
+   const layout = e.nativeEvent.layout;
+   if (Math.abs(layout.width - subBtnLayout.width) > 1 || Math.abs(layout.height - subBtnLayout.height) > 1) {
+     setSubBtnLayout(layout);
+   }
+ }}
  className="py-3.5 items-center justify-center relative overflow-hidden"
  style={{ height: 50 }}
  >
