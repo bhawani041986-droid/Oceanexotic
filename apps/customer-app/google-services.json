@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "362094243872",
+    "project_id": "oc9531828099",
+    "storage_bucket": "oc9531828099.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:362094243872:android:c5b130f52dcc6e5a7fcc45",
+        "android_client_info": {
+          "package_name": "com.oceanexotic.customer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnq1rf5izn58ByuD3jN_ErnDuyShRtVcw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

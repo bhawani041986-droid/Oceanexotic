@@ -10,6 +10,7 @@ import { loginSchema, type LoginFormValues } from "@/lib/validation/loginSchema"
 import { useAuthStore } from "@/store/authStore";
 import { useLogin } from "@/hooks/useLogin";
 import { getPostLoginRoute, toAuthUser } from "@/lib/auth/roles";
+import { setAuthToken } from "@/lib/storage";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
@@ -44,6 +45,7 @@ export default function SellerLoginScreen() {
           return;
         }
         login(user);
+        await setAuthToken(result.token);
         const destination = getPostLoginRoute(user.role);
         toast(`Welcome back, ${user.name}!`, "success");
         setTimeout(() => { router.replace(destination as never); }, 100);
