@@ -1,7 +1,8 @@
 node_modules
-.expo
-dist
-.env
-*.log
 .git
-.github
+*.log
+*.tar.gz
+outputs/
+android/
+ios/
+.expo/
