@@ -33,7 +33,8 @@ export async function GET(request: Request) {
 
     // Convert string "ORD-123" to integer 123 for the orders table
     const assignedOrderIds = matchedAssignments
-      ?.map(f => parseInt(String(f.order_id).replace(/\D/g, ""), 10))
+      ?.filter(f => !String(f.order_id).startsWith('LIVE_AGENT_'))
+      .map(f => parseInt(String(f.order_id).replace(/\D/g, ""), 10))
       .filter(id => !isNaN(id)) || [];
 
     if (assignedOrderIds.length === 0) {
