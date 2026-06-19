@@ -67,7 +67,7 @@ export default function AgentHistoryPage() {
       const res = await fetch(`/api/agent/orders?agent_id=${encodeURIComponent(user.id)}`);
       if (res.ok) {
         const data = await res.json();
-        const completed = data.filter((m: any) => m.status === 'DELIVERED');
+        const completed = data.filter((m: any) => m.status?.toUpperCase() === 'DELIVERED' || m.status?.toUpperCase() === 'COMPLETED');
         setHistory(completed);
       }
     } catch (error) {

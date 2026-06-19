@@ -23,12 +23,13 @@ export async function GET(request: Request) {
 
     if (fleetError) throw fleetError;
 
-    const matchedAssignments = fleetAssignments?.filter(f => 
-      f.agent_id === agentId || 
-      f.agent_id === agentEmail || 
-      f.agent_id === agentName || 
-      f.agent_name === agentName
-    ) || [];
+    const matchedAssignments = fleetAssignments?.filter(f => {
+      const isIdMatch = f.agent_id === agentId;
+      const isEmailMatch = f.agent_id && agentEmail && String(f.agent_id).toLowerCase() === String(agentEmail).toLowerCase();
+      const isNameMatch1 = f.agent_id && agentName && String(f.agent_id).toLowerCase() === String(agentName).toLowerCase();
+      const isNameMatch2 = f.agent_name && agentName && String(f.agent_name).toLowerCase() === String(agentName).toLowerCase();
+      return isIdMatch || isEmailMatch || isNameMatch1 || isNameMatch2;
+    }) || [];
 
     // Convert string "ORD-123" to integer 123 for the orders table
     const assignedOrderIds = matchedAssignments
