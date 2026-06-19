@@ -21,6 +21,7 @@ export interface PortBlairMapProps {
   deliveryLng?: number;
   status?: string;
   className?: string;
+  recenterTrigger?: number;
 }
 
 /** Fleet mode: show multiple drivers (Admin/Seller/Agent) */
@@ -47,6 +48,7 @@ export default function PortBlairMap({
   deliveryLng,
   status = "out_for_delivery",
   className = "",
+  recenterTrigger = 0,
 }: PortBlairMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
@@ -153,6 +155,12 @@ export default function PortBlairMap({
     if (!driverMarkerRef.current || !driverLat || !driverLng) return;
     driverMarkerRef.current?.setLatLng([driverLat, driverLng]);
   }, [driverLat, driverLng]);
+
+  useEffect(() => {
+    if (mapInstanceRef.current && driverLat && driverLng && recenterTrigger > 0) {
+      mapInstanceRef.current.flyTo([driverLat, driverLng], 15, { animate: true, duration: 1.5 });
+    }
+  }, [recenterTrigger, driverLat, driverLng]);
 
   return (
     <>

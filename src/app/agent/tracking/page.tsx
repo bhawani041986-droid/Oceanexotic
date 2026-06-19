@@ -61,6 +61,7 @@ function AgentTrackingContent() {
   const [verificationError, setVerificationError] = React.useState("");
   const [isVerifying, setIsVerifying] = React.useState(false);
   const [showScanner, setShowScanner] = React.useState(false);
+  const [recenterTrigger, setRecenterTrigger] = React.useState(0);
 
   // ─── OTP Helpers ────────────────────────────────────────────────────────────
   const getExpectedOtp = () => {
@@ -169,27 +170,48 @@ function AgentTrackingContent() {
     toast(`Update: ${nextState.replace("_", " ")}`, "success");
   };
 
-  // ─── GPS Simulation ──────────────────────────────────────────────────────────
+  // ─── Real-Time GPS Tracking ──────────────────────────────────────────────────
   const PORT_BLAIR_DESTINATION = { lat: 11.6234, lng: 92.7265 };
 
   React.useEffect(() => {
     fetchOrderDetails();
+    let watchId: number;
+
     if (missionState === MissionState.IN_TRANSIT) {
       const { lat: targetLat, lng: targetLng } = PORT_BLAIR_DESTINATION;
-      const interval = setInterval(() => {
-        setCoords((prev) => {
-          const latDiff = targetLat - prev.lat;
-          const lngDiff = targetLng - prev.lng;
-          const distance = Math.sqrt(latDiff ** 2 + lngDiff ** 2);
-          if (distance < 0.0005) {
-            clearInterval(interval);
-            handleStateTransition(MissionState.ARRIVED);
-            return { lat: targetLat, lng: targetLng };
-          }
-          return { lat: prev.lat + latDiff * 0.15, lng: prev.lng + lngDiff * 0.15 };
-        });
-      }, 4000);
-      return () => clearInterval(interval);
+      
+      if ("geolocation" in navigator) {
+        watchId = navigator.geolocation.watchPosition(
+          (position) => {
+            const newLat = position.coords.latitude;
+            const newLng = position.coords.longitude;
+            setCoords({ lat: newLat, lng: newLng });
+
+            const latDiff = targetLat - newLat;
+            const lngDiff = targetLng - newLng;
+            const distance = Math.sqrt(latDiff ** 2 + lngDiff ** 2);
+            
+            // Auto-arrive if within close proximity
+            if (distance < 0.0005) {
+              handleStateTransition(MissionState.ARRIVED);
+              navigator.geolocation.clearWatch(watchId);
+            }
+          },
+          (error) => {
+            console.error("GPS Watch Error:", error);
+            toast("GPS Signal Lost. Check permissions.", "error");
+          },
+          { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
+        );
+      } else {
+        toast("Geolocation is not supported by your browser", "error");
+      }
+
+      return () => {
+        if (watchId !== undefined && "geolocation" in navigator) {
+          navigator.geolocation.clearWatch(watchId);
+        }
+      };
     }
   }, [missionState]);
 
@@ -198,7 +220,10 @@ function AgentTrackingContent() {
   }, [coords]);
 
   const toggleMapMode = () => toast("Map mode: OpenStreetMap (no API key required)", "success");
-  const recenterMap = () => toast("Recalibrating Navigation Node", "success");
+  const recenterMap = () => {
+    setRecenterTrigger(prev => prev + 1);
+    toast("Recalibrating Navigation Node", "success");
+  };
 
   // ─── RENDER ──────────────────────────────────────────────────────────────────
   return (
@@ -218,6 +243,7 @@ function AgentTrackingContent() {
             deliveryLat={11.6234}
             deliveryLng={92.7265}
             status={missionState === MissionState.DELIVERED ? "delivered" : "out_for_delivery"}
+            recenterTrigger={recenterTrigger}
             className="w-full h-full"
           />
 
