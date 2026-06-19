@@ -77,8 +77,8 @@ const TodaysCatchCard = React.memo(function TodaysCatchCard({ item, onPress, onO
       setLayout({ width, height });
     }
   }}
- className="w-[48%] relative overflow-hidden"
- style={{ minHeight: 250 }}
+ className="relative overflow-hidden"
+ style={{ width: '48%', minHeight: 250 }}
  >
  {/* Absolute Svg Custom Card Bevel Shape Background with Border */}
  {w > 0 && h > 0 ? (
@@ -93,7 +93,7 @@ const TodaysCatchCard = React.memo(function TodaysCatchCard({ item, onPress, onO
  ) : null}
  <View 
  className="relative items-center justify-center overflow-hidden w-full"
- style={{ aspectRatio: 1, backgroundColor: colors.isDark ?"rgba(255,255,255,0.03)" :"rgba(0,0,0,0.03)" }}
+ style={{ width: '100%', aspectRatio: 1, backgroundColor: colors.isDark ?"rgba(255,255,255,0.03)" :"rgba(0,0,0,0.03)" }}
  >
  <Image
  source={{ uri }}
@@ -436,7 +436,7 @@ export default function CustomerHomeScreen() {
  ) : filteredCatch.length > 0 ? (
  <View className="flex-row flex-wrap justify-between gap-y-3">
  {filteredCatch.map((item, idx) => (
- <Fragment key={item.catch_id}>
+ <Fragment key={item.id || idx}>
  {(() => {
  const matchingReel = activeReels.find((r) => r.sort_order === idx + 1);
  return matchingReel ? (
@@ -445,7 +445,7 @@ export default function CustomerHomeScreen() {
  })()}
  
  <TodaysCatchCard
- key={item.catch_id}
+ key={item.id || idx}
  item={item}
  onPress={() =>
  router.push({ pathname:"/product/[id]", params: { id: String(item.product_id) } })
@@ -477,7 +477,7 @@ export default function CustomerHomeScreen() {
  <View className="mt-4 flex-row flex-wrap justify-between gap-y-3">
  {featured.map((p) => (
  <ProductCard key={p.id} product={p} compact onSelectCut={() => openCutModal({
- catch_id: p.id,
+ id: p.id,
  product_id: p.id,
  name: p.name,
  seller_name: p.seller_name ??"Verified Delivery",

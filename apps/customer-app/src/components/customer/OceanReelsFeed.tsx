@@ -116,13 +116,13 @@ export function OceanReelsFeed({ variant ="feed", videoId, videos: propVideos }:
  return (
  <Pressable
  onPress={() => setActiveVideoId(isActive ? null : vid.id)}
- className="w-[48%] relative overflow-hidden"
- style={{ minHeight: 250 }}
+ className="relative overflow-hidden"
+ style={{ width: '48%', minHeight: 250 }}
  >
  <ChamferedBox fillColor={colors.card} strokeColor={colors.border} className="w-full h-full">
  <View 
  className="relative overflow-hidden w-full"
- style={{ aspectRatio: 1, backgroundColor:"rgba(0,0,0,0.8)" }}
+ style={{ width: '100%', aspectRatio: 1, backgroundColor:"rgba(0,0,0,0.8)" }}
  >
  {isActive ? (
  <ActiveReelVideo videoUrl={vid.video_url} isMuted={isMuted} />

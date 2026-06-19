@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { Platform, Alert } from 'react-native';
 import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
@@ -31,11 +31,9 @@ export function useGoogleAuth() {
       
       if (response.type === 'success' && response.data?.idToken) {
         const idToken = response.data.idToken;
-        // Use the correct Supabase Project URL and Public Anon Key
         const SUPABASE_URL = "https://kyqmhibffbwoqlpdplfu.supabase.co";
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cW1oaWJmZmJ3b3FscGRwbGZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTY4NzQsImV4cCI6MjA5NjE3Mjg3NH0.h4n0LxfWBRbEwrLKFxoUGJYmylLHVGVH3TWKOH7E-M4";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cW1oaWJmZmJ3b3FscGRwbGZ1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MDU5Njg3NCwiZXhwIjoyMDk2MTcyODc0fQ.kEpSJdXULNm_9lzXE6UvqIXPc2L-UB38BFwVhR9OcPs";
 
-        // Exchange Google ID token for Supabase Session natively
         const sbResponse = await axios.post(
           `${SUPABASE_URL}/auth/v1/token?grant_type=id_token`,
           {
@@ -53,7 +51,6 @@ export function useGoogleAuth() {
         const supabaseToken = sbResponse.data.access_token;
         
         if (supabaseToken) {
-          // Sync with our backend API
           const syncResponse = await axios.post(`${FULL_API_URL}/auth/sync-oauth`, {
             access_token: supabaseToken
           });
@@ -74,9 +71,17 @@ export function useGoogleAuth() {
         }
       } else if (response.type === 'cancelled') {
         toast("Login cancelled", "error");
+      } else {
+        // Handle noSavedCredentialFound or other types natively so we can debug!
+        Alert.alert("Google Sign In", `Response returned: ${response.type}`);
       }
     } catch (err: any) {
       console.error("Google login failed:", err);
+      // Natively pop up the EXACT string error code Google returned to help debug
+      const responseError = err.response?.data ? JSON.stringify(err.response.data) : null;
+      const exactError = responseError || (err.code ? `Code: ${err.code}` : err.message);
+      Alert.alert("Google Error", `Details: ${exactError}`);
+      
       if (err.code === statusCodes.SIGN_IN_CANCELLED) {
         toast("Login cancelled", "error");
       } else if (err.code === statusCodes.IN_PROGRESS) {

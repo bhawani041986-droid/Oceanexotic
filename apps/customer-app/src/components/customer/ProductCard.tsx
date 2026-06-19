@@ -59,8 +59,8 @@ export const ProductCard = React.memo(function ProductCard({ product, onAdd, onS
           setLayout({ width, height });
         }
       }}
- className={`${compact ?"w-[48%]" :"w-full"} relative overflow-hidden`}
- style={{ minHeight: 250 }}
+ className="relative overflow-hidden"
+ style={{ width: compact ? '48%' : '100%', minHeight: 250 }}
  >
  {/* Absolute Svg Custom Card Bevel Shape Background with Border */}
  {w > 0 && h > 0 ? (
@@ -76,7 +76,7 @@ export const ProductCard = React.memo(function ProductCard({ product, onAdd, onS
 
  <View 
  className="relative items-center justify-center overflow-hidden w-full"
- style={{ aspectRatio: 1, backgroundColor: colors.isDark ?"rgba(255,255,255,0.03)" :"rgba(0,0,0,0.03)" }}
+ style={{ width: '100%', aspectRatio: 1, backgroundColor: colors.isDark ?"rgba(255,255,255,0.03)" :"rgba(0,0,0,0.03)" }}
  >
  {uri && (uri.startsWith("http") || uri.startsWith("/") || uri.startsWith("data:")) ? (
  <Image source={{ uri }} onLoad={onLoad} className="h-full w-full" contentFit="contain" />

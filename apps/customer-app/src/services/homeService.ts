@@ -15,7 +15,7 @@ export interface Territory {
 }
 
 export interface TodaysCatchItem {
-  catch_id: string;
+  id: string;
   product_id: string;
   name: string;
   seller_name: string;
