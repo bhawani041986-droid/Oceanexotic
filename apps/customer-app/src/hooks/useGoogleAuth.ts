@@ -1,0 +1,93 @@
+import { Platform } from 'react-native';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import axios from 'axios';
+import { useRouter } from 'expo-router';
+import { useToast } from '@/components/ui/Toast';
+import { useAuthStore } from '@/store/authStore';
+import { setAuthToken, setAuthUser } from '@/lib/storage';
+import { toAuthUser, getPostLoginRoute } from '@/lib/auth/roles';
+import { FULL_API_URL } from '@/config/api';
+
+// Configure Google Sign-In globally with the correct Web Client ID
+GoogleSignin.configure({
+  webClientId: '35091982026-2m9jph951go89uj2suql5dju9luor378.apps.googleusercontent.com',
+  offlineAccess: true,
+});
+
+export function useGoogleAuth() {
+  const { toast } = useToast();
+  const router = useRouter();
+  const { login } = useAuthStore();
+
+  const handleGoogleSignIn = async () => {
+    if (Platform.OS === 'web') {
+      toast("Native Google Sign-In is active. Use the web app for web login.", "error");
+      return;
+    }
+    
+    try {
+      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+      const response = await GoogleSignin.signIn();
+      
+      if (response.type === 'success' && response.data?.idToken) {
+        const idToken = response.data.idToken;
+        // Use the correct Supabase Project URL and Public Anon Key
+        const SUPABASE_URL = "https://kyqmhibffbwoqlpdplfu.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cW1oaWJmZmJ3b3FscGRwbGZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTY4NzQsImV4cCI6MjA5NjE3Mjg3NH0.h4n0LxfWBRbEwrLKFxoUGJYmylLHVGVH3TWKOH7E-M4";
+
+        // Exchange Google ID token for Supabase Session natively
+        const sbResponse = await axios.post(
+          `${SUPABASE_URL}/auth/v1/token?grant_type=id_token`,
+          {
+            provider: "google",
+            id_token: idToken,
+          },
+          {
+            headers: { 
+              "apikey": SUPABASE_ANON_KEY,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const supabaseToken = sbResponse.data.access_token;
+        
+        if (supabaseToken) {
+          // Sync with our backend API
+          const syncResponse = await axios.post(`${FULL_API_URL}/auth/sync-oauth`, {
+            access_token: supabaseToken
+          });
+          
+          if (syncResponse.data.success) {
+            const { token, user } = syncResponse.data;
+            const authUser = toAuthUser(user);
+            await setAuthToken(token);
+            await setAuthUser(authUser);
+            login(authUser);
+            
+            const destination = getPostLoginRoute(authUser.role);
+            router.replace(destination as never);
+            toast(`Welcome back, ${authUser.name}!`, "success");
+          } else {
+            throw new Error(syncResponse.data.message || "Failed to sync OAuth user");
+          }
+        }
+      } else if (response.type === 'cancelled') {
+        toast("Login cancelled", "error");
+      }
+    } catch (err: any) {
+      console.error("Google login failed:", err);
+      if (err.code === statusCodes.SIGN_IN_CANCELLED) {
+        toast("Login cancelled", "error");
+      } else if (err.code === statusCodes.IN_PROGRESS) {
+        toast("Login already in progress", "error");
+      } else if (err.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        toast("Play services not available or outdated", "error");
+      } else {
+        toast("Google login failed. Try again.", "error");
+      }
+    }
+  };
+
+  return { handleGoogleSignIn };
+}
