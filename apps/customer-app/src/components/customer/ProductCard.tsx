@@ -1,4 +1,4 @@
-import { useState } from"react";
+import React, { useState } from"react";
 import { View, Text, Pressable, StyleSheet } from"react-native";
 import { Image } from"expo-image";
 import { useRouter } from"expo-router";
@@ -27,7 +27,7 @@ function imageUri(product: Product): string {
  return"";
 }
 
-export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCardProps) {
+export const ProductCard = React.memo(function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCardProps) {
  const router = useRouter();
  const uri = imageUri(product);
  const outOfStock = (product.stock ?? 1) <= 0 || product.status ==="OUT OF STOCK";
@@ -154,4 +154,4 @@ export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCar
  </Svg>
  </Pressable>
  );
-}
+});

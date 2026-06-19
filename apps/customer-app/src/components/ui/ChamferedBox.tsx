@@ -33,7 +33,12 @@ export function ChamferedBox({
 
  return (
  <View
- onLayout={(e) => setLayout(e.nativeEvent.layout)}
+ onLayout={(e) => {
+  const { width, height } = e.nativeEvent.layout;
+  if (Math.abs(width - layout.width) > 1 || Math.abs(height - layout.height) > 1) {
+    setLayout({ width, height });
+  }
+ }}
  className={cn("relative overflow-hidden", className)}
  style={style}
  {...props}

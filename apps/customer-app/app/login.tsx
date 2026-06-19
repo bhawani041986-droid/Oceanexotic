@@ -91,7 +91,7 @@ export default function LoginScreen() {
  login(user);
  const destination = getPostLoginRoute(user.role);
  toast(`Welcome back, ${user.name}!`,"success");
- setHasRedirected(true);
+
  setTimeout(() => {
  router.replace(destination as never);
  }, 100);

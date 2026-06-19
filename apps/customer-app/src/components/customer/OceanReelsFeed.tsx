@@ -24,6 +24,7 @@ interface VideoItem {
 interface OceanReelsFeedProps {
  variant?:"feed" |"pip" |"grid-card" |"banner";
  videoId?: number;
+ videos?: VideoItem[];
 }
 
 function ActiveReelVideo({ videoUrl, isMuted }: { videoUrl: string; isMuted: boolean }) {
@@ -47,9 +48,9 @@ function ActiveReelVideo({ videoUrl, isMuted }: { videoUrl: string; isMuted: boo
  );
 }
 
-export function OceanReelsFeed({ variant ="feed", videoId }: OceanReelsFeedProps) {
- const [videos, setVideos] = useState<VideoItem[]>([]);
- const [loading, setLoading] = useState(true);
+export function OceanReelsFeed({ variant ="feed", videoId, videos: propVideos }: OceanReelsFeedProps) {
+ const [videos, setVideos] = useState<VideoItem[]>(propVideos || []);
+ const [loading, setLoading] = useState(!propVideos);
  const [activeVideoId, setActiveVideoId] = useState<number | null>(null);
  const [isMuted, setIsMuted] = useState(true);
  const [isPipOpen, setIsPipOpen] = useState(false);
@@ -61,6 +62,11 @@ export function OceanReelsFeed({ variant ="feed", videoId }: OceanReelsFeedProps
  const { data: allProducts } = useProducts();
 
  useEffect(() => {
+ if (propVideos) {
+   setVideos(propVideos);
+   setLoading(false);
+   return;
+ }
  const fetchVideos = async () => {
  try {
  const { data } = await api.get<{ status: string; content: VideoItem[] }>("/marketplace/videos");
@@ -74,7 +80,7 @@ export function OceanReelsFeed({ variant ="feed", videoId }: OceanReelsFeedProps
  }
  };
  fetchVideos();
- }, []);
+ }, [propVideos]);
 
  const handleAddToCart = (product: any) => {
  if (!product) return;

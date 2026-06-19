@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, useEffect, Fragment } from"react";
+import React, { memo, useMemo, useState, useCallback, useEffect, Fragment } from"react";
 import {
  View,
  Text,
@@ -16,8 +16,8 @@ import { useRouter } from"expo-router";
 import { MaterialCommunityIcons } from"@expo/vector-icons";
 import { useHomeData } from"@/hooks/useHomeData";
 import { useProducts } from"@/hooks/useProducts";
-import { useFlashDealTimer } from"@/hooks/useFlashDealTimer";
 import { ProductCard } from"@/components/customer/ProductCard";
+import { FlashDealCard } from"@/components/customer/FlashDealCard";
 import { useSettingsStore } from"@/store/settingsStore";
 import { useCartStore } from"@/store/cartStore";
 import { CATEGORIES } from"@/constants/categories";
@@ -58,7 +58,7 @@ interface TodaysCatchCardProps {
  onOpenCut: () => void;
 }
 
-function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
+const TodaysCatchCard = React.memo(function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
  const uri = resolveMediaUrl(item.catch_image_url || item.image_url);
  const { aspectRatio, onLoad } = useImageAspectRatio(uri);
  const [layout, setLayout] = useState({ width: 0, height: 0 });
@@ -181,6 +181,14 @@ function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
  </Svg>
  </Pressable>
  );
+});
+
+function getRgba(hex: string, alpha: number): string {
+  const cleanHex = hex.replace("#", "");
+  const r = parseInt(cleanHex.substring(0, 2), 16);
+  const g = parseInt(cleanHex.substring(2, 4), 16);
+  const b = parseInt(cleanHex.substring(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
 export default function CustomerHomeScreen() {
@@ -192,7 +200,6 @@ export default function CustomerHomeScreen() {
  const { toast, ToastHost } = useToast();
  const { cms, territories, todaysCatch } = useHomeData();
  const { data: allProducts } = useProducts();
- const { timeLeft, flashDealActive } = useFlashDealTimer();
  const featured = (allProducts ?? []).slice(0, 4);
  const promo = cms.data?.find((c) => c.type ==="PROMO" && c.status ==="PUBLISHED");
 
@@ -217,13 +224,7 @@ export default function CustomerHomeScreen() {
  const colors = useThemeColors();
  const primaryColor = colors.primary;
 
- const getRgba = (hex: string, alpha: number) => {
- const cleanHex = hex.replace("#","");
- const r = parseInt(cleanHex.substring(0, 2), 16);
- const g = parseInt(cleanHex.substring(2, 4), 16);
- const b = parseInt(cleanHex.substring(4, 6), 16);
- return `rgba(${r}, ${g}, ${b}, ${alpha})`;
- };
+
 
  useEffect(() => {
  settings.fetchSettings();
@@ -439,7 +440,7 @@ export default function CustomerHomeScreen() {
  {(() => {
  const matchingReel = activeReels.find((r) => r.sort_order === idx + 1);
  return matchingReel ? (
- <OceanReelsFeed variant="grid-card" videoId={matchingReel.id} />
+ <OceanReelsFeed variant="grid-card" videoId={matchingReel.id} videos={activeReels} />
  ) : null;
  })()}
  
@@ -561,41 +562,7 @@ export default function CustomerHomeScreen() {
  </View>
 
  {/* Flash Deals */}
- {promo ? (
- <ChamferedBox 
-   className="mt-6 mx-4 p-5 shadow-2xl"
-   fillColor={getRgba(primaryColor, 0.2)}
-   strokeColor={colors.border}
- >
- <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>
- {promo?.sector ||"Flash Deal"}
- </Text>
- <Text className="mt-2 text-3xl font-black uppercase italic" style={{ color: colors.text }}>
- {promo?.title ||"Flash Deals."}
- </Text>
- 
- {flashDealActive ? (
- <View className="mt-4 flex-row justify-center gap-2">
- {[timeLeft.hrs, timeLeft.min, timeLeft.sec].map((val, i) => (
- <View key={i} className="min-w-[56px] border px-3 py-2" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
- <Text className="text-center text-xl font-black italic" style={{ color: colors.text }}>{val}</Text>
- <Text className="text-center text-[7px] font-black uppercase" style={{ color: colors.textMuted }}>
- {i === 0 ? t('hrs') ||"HRS" : i === 1 ? t('min') ||"MIN" : t('sec') ||"SEC"}
- </Text>
- </View>
- ))}
- </View>
- ) : (
- <View className="mt-4 self-center border border-emerald-500/20 bg-emerald-500/10 px-3 py-1">
- <Text className="text-[9px] font-black uppercase text-emerald-500">
- {t('promo_active') ||"PROMO ACTIVE"}
- </Text>
- </View>
- )}
- 
- <Button label={t('claim_access_now') ||"CLAIM ACCESS NOW"} onPress={() => router.push("/products")} className="mt-6" />
- </ChamferedBox>
- ) : null}
+ {promo ? <FlashDealCard promo={promo} /> : null}
 
  {/* Split Promo: Maritime Grill & Flame-Sea Collections */}
  <ChamferedBox 
