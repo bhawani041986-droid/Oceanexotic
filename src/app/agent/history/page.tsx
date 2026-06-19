@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -239,7 +239,7 @@ export default function AgentHistoryPage() {
                         <Activity className="w-8 h-8 text-primary animate-spin" />
                      </div>
                   ) : (
-                     missionLogs.map((log, idx) => {
+                     missionLogs.map((log: any, idx: number) => {
                         const isLast = idx === missionLogs.length - 1;
                         let Icon = Navigation;
                         if (log.status?.includes('HARBOR') || log.status?.includes('PACKED')) Icon = PackageCheck;

@@ -10,7 +10,7 @@ import { FULL_API_URL } from '@/config/api';
 
 // Configure Google Sign-In globally with the correct Web Client ID
 GoogleSignin.configure({
-  webClientId: '35091982026-2m9jph951go89uj2suql5dju9luor378.apps.googleusercontent.com',
+  webClientId: '843916088941-cn34sa328ckaf2g3vu6r8gv40qkb18oi.apps.googleusercontent.com',
   offlineAccess: true,
 });
 
