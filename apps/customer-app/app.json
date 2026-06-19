@@ -18,7 +18,6 @@
     ],
     "android": {
       "package": "com.oceanexotic.customer",
-      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#050B18"
@@ -49,12 +48,7 @@
       ],
       "expo-video",
       "expo-web-browser",
-      [
-        "@react-native-google-signin/google-signin",
-        {
-          "iosUrlScheme": "com.googleusercontent.apps.35091982026-2m9jph951go89uj2suql5dju9luor378"
-        }
-      ]
+      "@react-native-google-signin/google-signin"
     ],
     "experiments": {
       "typedRoutes": true
