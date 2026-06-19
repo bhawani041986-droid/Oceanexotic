@@ -1522,6 +1522,22 @@ video {
   white-space: nowrap;
 }
 
+.rounded-\[26px\] {
+  border-radius: 26px;
+}
+
+.rounded-\[28px\] {
+  border-radius: 28px;
+}
+
+.rounded-\[30px\] {
+  border-radius: 30px;
+}
+
+.rounded-\[32px\] {
+  border-radius: 32px;
+}
+
 .border {
   border-width: 1px;
 }

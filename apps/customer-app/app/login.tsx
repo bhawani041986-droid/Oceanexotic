@@ -152,7 +152,7 @@ export default function LoginScreen() {
  {/* Google Auth Button */}
  <Pressable 
  onPress={handleGoogleSignIn}
- className="w-full h-14 bg-white flex-row items-center justify-center gap-3 shadow-lg active:opacity-80"
+ className="w-full h-14 bg-white rounded-2xl flex-row items-center justify-center gap-3 shadow-lg active:opacity-80"
  >
  <GoogleIcon />
  <Text className="text-[#020617] font-black text-[12px] uppercase tracking-widest">
@@ -167,8 +167,7 @@ export default function LoginScreen() {
  </View>
 
  {/* Email Form */}
- <View className="rounded-[28px] bg-white/5 border border-white/10 p-1">
- <View className="rounded-[26px] bg-card p-6 space-y-4">
+ <View className="rounded-3xl bg-white/5 border border-white/10 p-6 space-y-4">
  <Controller
  control={control}
  name="email"
@@ -218,7 +217,6 @@ export default function LoginScreen() {
  onPress={() => void handleSubmit(onSubmit)()}
  className="mt-2"
  />
-  </View>
   </View>
 
  <Text className="text-center text-[11px] font-medium text-slate-400 mt-4">
