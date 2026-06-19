@@ -180,7 +180,7 @@ export default function LoginScreen() {
               </View>
 
               {/* Email Form */}
-              <View className="rounded-3xl bg-white/5 border border-white/10 p-6 space-y-4">
+              <View className="rounded-none border border-white/10 p-6 space-y-4">
                 <Controller
                   control={control}
                   name="email"
@@ -247,4 +247,5 @@ export default function LoginScreen() {
     </View>
   );
 }
+
 

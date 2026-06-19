@@ -222,8 +222,8 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
             className: "maritime-cyber-pointer",
             html: `<div class="relative" style="width: 20px; height: 20px;">
                   <div class="w-3 h-3 flex items-center justify-center">
-                      <div class="absolute w-6 h-6 rounded-full border border-[var(--foreground)]/10 animate-ping" style="border-color: ${color}22"></div>
-                      <div class="w-2.5 h-2.5 rounded-full border border-white shadow-[0_0_8px_${color}]" style="background-color: ${color}"></div>
+                      <div class="absolute w-6 h-6 rounded-none border border-[var(--foreground)]/10 animate-ping" style="border-color: ${color}22"></div>
+                      <div class="w-2.5 h-2.5 rounded-none border border-white shadow-[0_0_8px_${color}]" style="background-color: ${color}"></div>
                   </div>
                   <div class="absolute bottom-[2px] left-1/2 -translate-x-1/2 animate-pulse">
                     <svg width="12" height="8" viewBox="0 0 24 16" fill="${color}" style="filter: drop-shadow(0 0 3px ${color}88)">
@@ -234,7 +234,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
                        style="border-bottom-color: ${color}; transform: translateX(-50%); pointer-events: none; width: max-content;">
                        <div class="flex items-center gap-1">
                          <span class="text-[5.5px] font-black text-white/40 uppercase tracking-tighter">NODE REG: 0${i + 1}</span>
-                         <div class="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
+                         <div class="w-1 h-1 rounded-none bg-emerald-500 animate-pulse" />
                        </div>
                        <span class="text-[9px] font-black text-white uppercase tracking-wider">${t.name}</span>
                        <span class="text-[5px] font-mono text-[${color}] opacity-80">${t.coordinates}</span>
@@ -310,8 +310,8 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
 
         {/* Dynamic Status Tabs */}
         <View className="flex-row gap-3 mb-4">
-          <View className="flex-1 flex-row items-center gap-3 rounded-xl border border-white/5 bg-secondary/30 p-3">
-            <View className="h-8 w-8 bg-rose-500/15 flex items-center justify-center rounded-lg">
+          <View className="flex-1 flex-row items-center gap-3 rounded-none border border-white/5 bg-secondary/30 p-3">
+            <View className="h-8 w-8 bg-rose-500/15 flex items-center justify-center rounded-none">
               <Text className="text-rose-500 text-sm">🛡️</Text>
             </View>
             <View className="flex-1">
@@ -320,8 +320,8 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
             </View>
           </View>
 
-          <View className="flex-1 flex-row items-center gap-3 rounded-xl border border-white/5 bg-secondary/30 p-3">
-            <View className="h-8 w-8 bg-rose-500/15 flex items-center justify-center rounded-lg">
+          <View className="flex-1 flex-row items-center gap-3 rounded-none border border-white/5 bg-secondary/30 p-3">
+            <View className="h-8 w-8 bg-rose-500/15 flex items-center justify-center rounded-none">
               <Text className="text-rose-500 text-sm">🧭</Text>
             </View>
             <View className="flex-1">
@@ -390,29 +390,29 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
           {/* Global HUD Stats Overlays (Identical to Web Version) */}
           <View 
             style={{ borderColor: colors.primary + "33" }}
-            className="absolute top-4 right-4 flex-row items-center gap-1.5 bg-black/60 border px-2 py-1 rounded-lg z-[1000] pointer-events-none"
+            className="absolute top-4 right-4 flex-row items-center gap-1.5 bg-black/60 border px-2 py-1 rounded-none z-[1000] pointer-events-none"
           >
-            <View className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <View className="h-1.5 w-1.5 rounded-none bg-emerald-500 animate-pulse" />
             <Text className="text-[7px] font-black text-white uppercase tracking-widest">Stable Connection</Text>
           </View>
 
           <View 
             style={{ borderColor: colors.primary + "33" }}
-            className="absolute top-4 left-4 bg-black/60 border px-2 py-1 rounded-lg z-[1000] pointer-events-none"
+            className="absolute top-4 left-4 bg-black/60 border px-2 py-1 rounded-none z-[1000] pointer-events-none"
           >
             <Text className="text-[7px] font-black uppercase" style={{ color: colors.primary }}>Sector: ALPHA-6</Text>
           </View>
           
           <View 
             style={{ borderColor: colors.primary + "33" }}
-            className="absolute bottom-4 left-4 bg-black/60 border px-2 py-1 rounded-lg z-[1000] pointer-events-none"
+            className="absolute bottom-4 left-4 bg-black/60 border px-2 py-1 rounded-none z-[1000] pointer-events-none"
           >
             <Text className="text-[7px] font-mono text-muted-foreground uppercase">REF: MAR-PB-NODE</Text>
           </View>
 
           <View 
             style={{ borderColor: colors.primary + "33" }}
-            className="absolute bottom-4 right-4 bg-black/60 border px-2 py-1 rounded-lg z-[1000] pointer-events-none"
+            className="absolute bottom-4 right-4 bg-black/60 border px-2 py-1 rounded-none z-[1000] pointer-events-none"
           >
             <Text className="text-[7px] font-mono text-white uppercase">TELEMETRY 042.8° NE</Text>
           </View>
@@ -433,8 +433,8 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
 
       {/* Dynamic Status Tabs */}
       <View className="flex-row gap-3 mb-4">
-        <View className="flex-1 flex-row items-center gap-3 rounded-xl border border-white/5 bg-secondary/30 p-3">
-          <View className="h-8 w-8 bg-rose-500/15 flex items-center justify-center rounded-lg">
+        <View className="flex-1 flex-row items-center gap-3 rounded-none border border-white/5 bg-secondary/30 p-3">
+          <View className="h-8 w-8 bg-rose-500/15 flex items-center justify-center rounded-none">
             <Text className="text-rose-500 text-sm">🛡️</Text>
           </View>
           <View className="flex-1">
@@ -443,8 +443,8 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
           </View>
         </View>
 
-        <View className="flex-1 flex-row items-center gap-3 rounded-xl border border-white/5 bg-secondary/30 p-3">
-          <View className="h-8 w-8 bg-rose-500/15 flex items-center justify-center rounded-lg">
+        <View className="flex-1 flex-row items-center gap-3 rounded-none border border-white/5 bg-secondary/30 p-3">
+          <View className="h-8 w-8 bg-rose-500/15 flex items-center justify-center rounded-none">
             <Text className="text-rose-500 text-sm">🧭</Text>
           </View>
           <View className="flex-1">
@@ -535,14 +535,14 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
                       {/* Ripple */}
                       <View 
                         style={{ borderColor: item.color }} 
-                        className="absolute h-8 w-8 rounded-full border border-white/20 animate-ping opacity-35" 
+                        className="absolute h-8 w-8 rounded-none border border-white/20 animate-ping opacity-35" 
                       />
                       {/* Solid anchor point */}
                       <View 
                         style={{ backgroundColor: item.color, shadowColor: item.color }} 
-                        className="h-2.5 w-2.5 rounded-full border border-white shadow-[0_0_8px_#00f3ff] items-center justify-center"
+                        className="h-2.5 w-2.5 rounded-none border border-white shadow-[0_0_8px_#00f3ff] items-center justify-center"
                       >
-                        <View className="h-1 w-1 rounded-full bg-white" />
+                        <View className="h-1 w-1 rounded-none bg-white" />
                       </View>
                     </View>
 
@@ -560,7 +560,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
                     >
                       <View className="flex-row items-center gap-1">
                         <Text className="text-[5.5px] font-black text-white/50 tracking-tighter uppercase">{item.registryId}</Text>
-                        <View className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
+                        <View className="h-1 w-1 rounded-none bg-emerald-500 animate-pulse" />
                       </View>
                       <Text className="text-[8.5px] font-black uppercase text-white tracking-widest text-center" numberOfLines={1}>
                         {item.node.name}
@@ -614,29 +614,29 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
         {/* Global HUD Stats Overlays (Identical to Web Version) */}
         <View 
           style={{ borderColor: colors.primary + "33" }}
-          className="absolute top-4 right-4 flex-row items-center gap-1.5 bg-black/60 border px-2 py-1 rounded-lg z-30 pointer-events-none"
+          className="absolute top-4 right-4 flex-row items-center gap-1.5 bg-black/60 border px-2 py-1 rounded-none z-30 pointer-events-none"
         >
-          <View className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <View className="h-1.5 w-1.5 rounded-none bg-emerald-500 animate-pulse" />
           <Text className="text-[7px] font-black text-white uppercase tracking-widest">Stable Connection</Text>
         </View>
 
         <View 
           style={{ borderColor: colors.primary + "33" }}
-          className="absolute top-4 left-4 bg-black/60 border px-2 py-1 rounded-lg z-30 pointer-events-none"
+          className="absolute top-4 left-4 bg-black/60 border px-2 py-1 rounded-none z-30 pointer-events-none"
         >
           <Text className="text-[7px] font-black uppercase" style={{ color: colors.primary }}>Sector: ALPHA-6</Text>
         </View>
         
         <View 
           style={{ borderColor: colors.primary + "33" }}
-          className="absolute bottom-4 left-4 bg-black/60 border px-2 py-1 rounded-lg z-30 pointer-events-none"
+          className="absolute bottom-4 left-4 bg-black/60 border px-2 py-1 rounded-none z-30 pointer-events-none"
         >
           <Text className="text-[7px] font-mono text-muted-foreground uppercase">REF: MAR-PB-NODE</Text>
         </View>
 
         <View 
           style={{ borderColor: colors.primary + "33" }}
-          className="absolute bottom-4 right-4 bg-black/60 border px-2 py-1 rounded-lg z-30 pointer-events-none"
+          className="absolute bottom-4 right-4 bg-black/60 border px-2 py-1 rounded-none z-30 pointer-events-none"
         >
           <Text className="text-[7px] font-mono text-white uppercase">TELEMETRY 042.8° NE</Text>
         </View>
@@ -650,3 +650,4 @@ const styles = StyleSheet.create({
     borderRadius: 9999,
   },
 });
+
