@@ -99,7 +99,9 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
       try {
         const res = await fetch('/api/agent/settings');
         const data = await res.json();
-        if (data.current_mood) setCurrentMood(data.current_mood);
+        if (data.current_mood && MOODS[data.current_mood as TacticalMood]) {
+          setCurrentMood(data.current_mood);
+        }
         setIsHydrated(true);
       } catch (err) { setIsHydrated(true); }
     };
@@ -121,7 +123,7 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
   useEffect(() => {
     if (!isHydrated) return;
     const root = document.documentElement;
-    const mood = MOODS[currentMood];
+    const mood = MOODS[currentMood] || MOODS.SENTINEL;
     root.style.setProperty("--agent-primary", mood.primary);
     root.style.setProperty("--agent-glow", mood.glow);
     root.style.setProperty("--agent-bg", mood.bg);
@@ -138,7 +140,7 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
     { label: "Profile", icon: <User className="w-5 h-5" />, href: "/agent/profile", color: "#EC4899" },
   ];
 
-  const mood = MOODS[currentMood];
+  const mood = MOODS[currentMood] || MOODS.SENTINEL;
 
   if (!isHydrated) return <div className="h-screen bg-slate-950 flex items-center justify-center"><Zap className="w-8 h-8 text-cyan-400 animate-pulse" /></div>;
 
