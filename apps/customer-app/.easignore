@@ -1,8 +1,10 @@
 node_modules
+.expo
 .git
+.eas
+dist
+outputs
+android
+ios
 *.log
 *.tar.gz
-outputs/
-android/
-ios/
-.expo/
