@@ -165,10 +165,10 @@ export default function AgentDashboardScreen() {
         </View>
 
         <View 
-          className="flex-row items-center p-3 rounded-2xl border"
+          className="flex-row items-center p-3 rounded-none border"
           style={{ backgroundColor: "rgba(255,255,255,0.03)", borderColor: mood.border }}
         >
-          <View className="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-2 animate-pulse" />
+          <View className="w-2.5 h-2.5 rounded-none bg-emerald-500 mr-2 animate-pulse" />
           <Text className="text-[10px] font-black uppercase tracking-wider" style={{ color: mood.text }}>
             Registry Live
           </Text>
@@ -180,7 +180,7 @@ export default function AgentDashboardScreen() {
         {stats.map((stat, i) => (
           <View
             key={i}
-            className="flex-1 p-4 rounded-2xl border items-center space-y-2"
+            className="flex-1 p-4 rounded-none border items-center space-y-2"
             style={{
               backgroundColor: isLight ? "#F1F5F9" : "rgba(255, 255, 255, 0.03)",
               borderColor: mood.border,
@@ -209,7 +209,7 @@ export default function AgentDashboardScreen() {
           </Text>
         </View>
         <View 
-          className="px-2.5 py-1 rounded-full border"
+          className="px-2.5 py-1 rounded-none border"
           style={{ backgroundColor: isLight ? "#E2E8F0" : "rgba(255,255,255,0.05)", borderColor: mood.border }}
         >
           <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: mood.primary }}>
@@ -277,7 +277,7 @@ export default function AgentDashboardScreen() {
 
               {/* Destination address card */}
               <View 
-                className="flex-row items-center space-x-3 p-3 rounded-xl border mb-5"
+                className="flex-row items-center space-x-3 p-3 rounded-none border mb-5"
                 style={{
                   backgroundColor: isLight ? "#E2E8F0" : "rgba(0, 0, 0, 0.2)",
                   borderColor: mood.border,
@@ -298,7 +298,7 @@ export default function AgentDashboardScreen() {
               <View className="flex-row space-x-2">
                 <Pressable
                   onPress={() => router.push({ pathname: "/(agent)/tracking", params: { order_id: mission.id } } as any)}
-                  className="flex-1 h-12 rounded-xl flex-row items-center justify-center space-x-2"
+                  className="flex-1 h-12 rounded-none flex-row items-center justify-center space-x-2"
                   style={{
                     backgroundColor: mood.primary,
                     shadowColor: mood.primary,
@@ -316,7 +316,7 @@ export default function AgentDashboardScreen() {
 
                 <Pressable
                   onPress={() => handleNavigate(mission)}
-                  className="flex-1 h-12 flex-row items-center justify-center space-x-2 rounded-xl border"
+                  className="flex-1 h-12 flex-row items-center justify-center space-x-2 rounded-none border"
                   style={{
                     borderColor: isLight ? "#CBD5E1" : "rgba(255,255,255,0.1)",
                     backgroundColor: "rgba(0, 0, 0, 0.05)",

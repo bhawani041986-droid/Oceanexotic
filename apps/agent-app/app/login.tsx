@@ -88,7 +88,7 @@ export default function AgentLoginScreen() {
             </View>
 
             <View className="gap-4 w-full">
-              <View className="rounded-3xl bg-white/5 border border-indigo-400/20 p-6 space-y-4">
+              <View className="rounded-none bg-white/5 border border-indigo-400/20 p-6 space-y-4">
                 <Controller
                   control={control}
                   name="email"

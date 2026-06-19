@@ -714,26 +714,26 @@ export default function AgentTrackingScreen() {
 
           {/* TACTICAL HUD OVERLAYS */}
           <View className="absolute top-3 left-3 z-[1000] space-y-1.5 pointer-events-none">
-             <View className="bg-primary/95 px-3 py-1 rounded-sm" style={{ backgroundColor: mood.primary }}>
+             <View className="bg-primary/95 px-3 py-1 rounded-none" style={{ backgroundColor: mood.primary }}>
                 <Text className="text-[9px] font-black uppercase tracking-widest text-slate-900 italic">Node: Sentinel-01</Text>
              </View>
-             <View className="flex-row items-center gap-2 px-2 py-1 backdrop-blur-md border rounded-sm" style={{ backgroundColor: "rgba(15,23,42,0.8)", borderColor: mood.primary + "4D" }}>
-                <View className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: isSyncing ? "#64748B" : "#10B981" }} />
+             <View className="flex-row items-center gap-2 px-2 py-1 backdrop-blur-md border rounded-none" style={{ backgroundColor: "rgba(15,23,42,0.8)", borderColor: mood.primary + "4D" }}>
+                <View className="w-1.5 h-1.5 rounded-none" style={{ backgroundColor: isSyncing ? "#64748B" : "#10B981" }} />
                 <Text className="text-[8px] font-bold uppercase tracking-[0.2em]" style={{ color: mood.primary }}>Telemetry: {isSyncing ? "Lock" : "Registry Live"}</Text>
              </View>
           </View>
 
           {/* MAP MODE & RECENTER CONTROLS */}
           <View className="absolute bottom-3 right-3 z-[1000] flex-col gap-1.5">
-             <Pressable onPress={toggleMapMode} className="w-9 h-9 border flex items-center justify-center rounded-lg transition-all" style={{ backgroundColor: mapMode === 'satellite' ? mood.primary : 'rgba(15,23,42,0.9)', borderColor: mood.primary + '4D' }}>
+             <Pressable onPress={toggleMapMode} className="w-9 h-9 border flex items-center justify-center rounded-none transition-all" style={{ backgroundColor: mapMode === 'satellite' ? mood.primary : 'rgba(15,23,42,0.9)', borderColor: mood.primary + '4D' }}>
                 <LayersIcon color={mapMode === 'satellite' ? '#FFFFFF' : mood.primary} />
              </Pressable>
-             <Pressable onPress={recenterMap} className="w-9 h-9 border flex items-center justify-center rounded-lg transition-all" style={{ backgroundColor: 'rgba(15,23,42,0.9)', borderColor: mood.primary + '4D' }}>
+             <Pressable onPress={recenterMap} className="w-9 h-9 border flex items-center justify-center rounded-none transition-all" style={{ backgroundColor: 'rgba(15,23,42,0.9)', borderColor: mood.primary + '4D' }}>
                 <NavigationIcon color={mood.primary} />
              </Pressable>
           </View>
 
-          <View className="absolute bottom-3 left-3 bg-slate-950/80 px-3 py-1.5 rounded-xl border border-white/5 pointer-events-none z-[1000]">
+          <View className="absolute bottom-3 left-3 bg-slate-950/80 px-3 py-1.5 rounded-none border border-white/5 pointer-events-none z-[1000]">
             <Text className="text-[6.5px] font-black text-slate-500 uppercase tracking-widest leading-none">
               GRID COORDINATES
             </Text>
@@ -926,7 +926,7 @@ export default function AgentTrackingScreen() {
         {/* Tactical Metrics Grid */}
         <View className="flex-row mb-4 space-x-2">
           <View 
-            className="flex-1 p-3 rounded-2xl border flex-row items-center space-x-2.5"
+            className="flex-1 p-3 rounded-none border flex-row items-center space-x-2.5"
             style={{ backgroundColor: "rgba(0, 0, 0, 0.05)", borderColor: mood.border }}
           >
             <ClockIcon color={mood.primary} />
@@ -939,7 +939,7 @@ export default function AgentTrackingScreen() {
           </View>
 
           <View 
-            className="flex-1 p-3 rounded-2xl border flex-row items-center space-x-2.5"
+            className="flex-1 p-3 rounded-none border flex-row items-center space-x-2.5"
             style={{ backgroundColor: "rgba(0, 0, 0, 0.05)", borderColor: mood.border }}
           >
             <ThermometerIcon color="#10B981" />
@@ -954,7 +954,7 @@ export default function AgentTrackingScreen() {
 
         {/* Consignee details */}
         <View 
-          className="p-4 rounded-2xl border space-y-3 mb-4"
+          className="p-4 rounded-none border space-y-3 mb-4"
           style={{ backgroundColor: "rgba(0,0,0,0.1)", borderColor: mood.border }}
         >
           <View className="flex-row items-center justify-between">
@@ -966,7 +966,7 @@ export default function AgentTrackingScreen() {
             </View>
             <Pressable
               onPress={() => handleCall("+91 99332 12345")}
-              className="px-2.5 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex-row items-center space-x-1"
+              className="px-2.5 py-1 rounded-none bg-emerald-500/10 border border-emerald-500/20 flex-row items-center space-x-1"
             >
               <PhoneIcon color="#10B981" />
               <Text className="text-[7.5px] font-black text-emerald-500 uppercase tracking-widest">CALL PEER</Text>
@@ -989,14 +989,14 @@ export default function AgentTrackingScreen() {
         {/* Cargo items manifest */}
         <View className="mb-6">
           <View className="flex-row items-center space-x-1.5 mb-2">
-            <View className="w-1.5 h-3 rounded-full" style={{ backgroundColor: mood.primary }} />
+            <View className="w-1.5 h-3 rounded-none" style={{ backgroundColor: mood.primary }} />
             <Text className="text-[8px] font-black uppercase tracking-[0.2em] text-slate-400">Cargo Items</Text>
           </View>
           <View className="space-y-1.5">
             {orderInfo.items && orderInfo.items.map((item: any, i: number) => (
               <View 
                 key={i} 
-                className="flex-row justify-between items-center px-4 py-2 border rounded-xl"
+                className="flex-row justify-between items-center px-4 py-2 border rounded-none"
                 style={{ backgroundColor: "rgba(0,0,0,0.05)", borderColor: mood.border }}
               >
                 <View className="flex-row items-center space-x-2">
@@ -1014,7 +1014,7 @@ export default function AgentTrackingScreen() {
           {missionState === "NOT_STARTED" && (
             <Pressable
               onPress={() => handleStateTransition("IN_TRANSIT")}
-              className="h-12 w-full rounded-2xl flex-row items-center justify-center space-x-2"
+              className="h-12 w-full rounded-none flex-row items-center justify-center space-x-2"
               style={{
                 backgroundColor: mood.primary,
                 shadowColor: mood.primary,
@@ -1033,7 +1033,7 @@ export default function AgentTrackingScreen() {
           {missionState === "IN_TRANSIT" && (
             <Pressable
               onPress={() => handleStateTransition("ARRIVED")}
-              className="h-12 w-full bg-emerald-600 rounded-2xl flex-row items-center justify-center space-x-2"
+              className="h-12 w-full bg-emerald-600 rounded-none flex-row items-center justify-center space-x-2"
               style={{
                 shadowColor: "#10B981",
                 shadowOffset: { width: 0, height: 4 },
@@ -1050,13 +1050,13 @@ export default function AgentTrackingScreen() {
 
           {missionState === "ARRIVED" && (
             <View 
-              className="p-4 border rounded-2xl space-y-4"
+              className="p-4 border rounded-none space-y-4"
               style={{ backgroundColor: "rgba(0,0,0,0.15)", borderColor: mood.border }}
             >
               {/* Scan QR Code Button */}
               <Pressable
                 onPress={() => setIsScanning(true)}
-                className="h-12 w-full rounded-xl flex-row items-center justify-center space-x-2"
+                className="h-12 w-full rounded-none flex-row items-center justify-center space-x-2"
                 style={{
                   backgroundColor: mood.primary,
                   shadowColor: mood.primary,
@@ -1092,7 +1092,7 @@ export default function AgentTrackingScreen() {
                   keyboardType="numeric"
                   placeholder="ENTER 6-DIGIT OTP"
                   placeholderTextColor={isLight ? "#94A3B8" : "rgba(255,255,255,0.15)"}
-                  className="bg-slate-950/40 text-center font-bold tracking-[0.3em] h-11 rounded-xl border text-sm"
+                  className="bg-slate-950/40 text-center font-bold tracking-[0.3em] h-11 rounded-none border text-sm"
                   style={{
                     borderColor: mood.border,
                     color: mood.text,
@@ -1110,7 +1110,7 @@ export default function AgentTrackingScreen() {
                 <Pressable
                   onPress={() => verifyOtp(otpInput)}
                   disabled={otpInput.length !== 6 || isVerifying}
-                  className="h-10 rounded-xl flex-row items-center justify-center space-x-1.5"
+                  className="h-10 rounded-none flex-row items-center justify-center space-x-1.5"
                   style={{
                     backgroundColor: mood.primary,
                     opacity: otpInput.length !== 6 || isVerifying ? 0.5 : 1
@@ -1133,10 +1133,10 @@ export default function AgentTrackingScreen() {
 
           {missionState === "DELIVERED" && (
             <View 
-              className="p-4 flex-row items-center space-x-3.5 border rounded-2xl"
+              className="p-4 flex-row items-center space-x-3.5 border rounded-none"
               style={{ backgroundColor: "rgba(16,185,129,0.06)", borderColor: "rgba(16,185,129,0.25)" }}
             >
-              <View className="w-9 h-9 rounded-xl bg-emerald-500/20 items-center justify-center">
+              <View className="w-9 h-9 rounded-none bg-emerald-500/20 items-center justify-center">
                 <ShieldCheckIcon color="#10B981" />
               </View>
               <View>

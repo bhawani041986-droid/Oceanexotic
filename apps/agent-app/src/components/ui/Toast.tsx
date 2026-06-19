@@ -28,7 +28,7 @@ export function useToast() {
     <View className="absolute bottom-8 left-6 right-6 z-50">
       <View
         className={cn(
-          "rounded-2xl border px-4 py-3",
+          "rounded-none border px-4 py-3",
           toast.type === "success"
             ? "border-primary/30 bg-primary/20"
             : "border-danger/30 bg-danger/20"

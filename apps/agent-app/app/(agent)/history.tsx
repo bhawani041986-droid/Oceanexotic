@@ -189,7 +189,7 @@ export default function AgentHistoryScreen() {
 
       {/* Search Input */}
       <View 
-        className="flex-row items-center px-4 h-11 border rounded-2xl mb-6"
+        className="flex-row items-center px-4 h-11 border rounded-none mb-6"
         style={{
           backgroundColor: isLight ? "#FFFFFF" : "rgba(0,0,0,0.2)",
           borderColor: mood.border
@@ -264,7 +264,7 @@ export default function AgentHistoryScreen() {
 
               {/* Delivery Node location details */}
               <View 
-                className="flex-row items-center space-x-3 p-3 rounded-xl border mb-4"
+                className="flex-row items-center space-x-3 p-3 rounded-none border mb-4"
                 style={{
                   backgroundColor: isLight ? "#E2E8F0" : "rgba(0, 0, 0, 0.2)",
                   borderColor: mood.border,
@@ -283,7 +283,7 @@ export default function AgentHistoryScreen() {
 
               <Pressable
                 onPress={() => {}}
-                className="w-full h-12 rounded-xl flex-row items-center justify-center space-x-1.5 mb-4"
+                className="w-full h-12 rounded-none flex-row items-center justify-center space-x-1.5 mb-4"
                 style={{
                   backgroundColor: mood.primary,
                   shadowColor: mood.primary,

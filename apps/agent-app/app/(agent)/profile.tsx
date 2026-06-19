@@ -175,7 +175,7 @@ export default function AgentProfileScreen() {
             {user?.email || "agent@oceanfresh.com"}
           </Text>
           <View className="flex-row items-center mt-1">
-            <View className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse" />
+            <View className="w-1.5 h-1.5 rounded-none bg-emerald-500 mr-1.5 animate-pulse" />
             <Text className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">
               ROLE: SOVEREIGN AGENT
             </Text>
@@ -195,7 +195,7 @@ export default function AgentProfileScreen() {
             <Pressable
               key={m.key}
               onPress={() => setMood(m.key)}
-              className="p-4 rounded-2xl border flex-row items-center justify-between"
+              className="p-4 rounded-none border flex-row items-center justify-between"
               style={{
                 backgroundColor: selected
                   ? isLight
@@ -219,12 +219,12 @@ export default function AgentProfileScreen() {
               </View>
 
               <View 
-                className="w-5 h-5 rounded-full border items-center justify-center"
+                className="w-5 h-5 rounded-none border items-center justify-center"
                 style={{ borderColor: selected ? m.primary : mood.border }}
               >
                 {selected && (
                   <View 
-                    className="w-2.5 h-2.5 rounded-full"
+                    className="w-2.5 h-2.5 rounded-none"
                     style={{ backgroundColor: m.primary }}
                   />
                 )}
@@ -236,7 +236,7 @@ export default function AgentProfileScreen() {
 
       {/* Security notice block */}
       <View 
-        className="p-4 rounded-2xl border flex-row items-start space-x-3 mb-8"
+        className="p-4 rounded-none border flex-row items-start space-x-3 mb-8"
         style={{
           backgroundColor: isLight ? "#FFF1F2" : "rgba(239, 68, 68, 0.05)",
           borderColor: isLight ? "#FECDD3" : "rgba(239, 68, 68, 0.2)"
@@ -256,7 +256,7 @@ export default function AgentProfileScreen() {
       {/* Logout button */}
       <Pressable
         onPress={handleLogout}
-        className="h-12 w-full rounded-2xl border-2 flex-row items-center justify-center space-x-2"
+        className="h-12 w-full rounded-none border-2 flex-row items-center justify-center space-x-2"
         style={{
           borderColor: "#EF4444",
           backgroundColor: isLight ? "#FFF1F2" : "rgba(239, 68, 68, 0.03)"

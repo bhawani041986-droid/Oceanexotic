@@ -18,7 +18,7 @@ export function Input({ className, error, isPassword, secureTextEntry, ...props 
       <View className="relative flex-row items-center w-full">
         <TextInput
           className={cn(
-            "h-12 w-full rounded-2xl border border-white/10 bg-card text-sm text-foreground",
+            "h-12 w-full rounded-none border border-white/10 bg-card text-sm text-foreground",
             isPassword ? "pl-4 pr-12" : "px-4",
             "placeholder:text-muted-foreground",
             error && "border-danger/50",

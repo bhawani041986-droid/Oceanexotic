@@ -223,11 +223,11 @@ export default function AgentSupportScreen() {
             {activeConv?.other_party_avatar ? (
               <Image 
                 source={{ uri: activeConv.other_party_avatar }} 
-                className="w-12 h-12 rounded-xl mr-3 bg-slate-800"
+                className="w-12 h-12 rounded-none mr-3 bg-slate-800"
                 style={{ borderWidth: 1, borderColor: mood.primary }}
               />
             ) : (
-              <View className="w-12 h-12 rounded-xl items-center justify-center mr-3" style={{ backgroundColor: mood.primary + "20" }}>
+              <View className="w-12 h-12 rounded-none items-center justify-center mr-3" style={{ backgroundColor: mood.primary + "20" }}>
                 <MonitorIcon color={mood.primary} />
               </View>
             )}
@@ -257,7 +257,7 @@ export default function AgentSupportScreen() {
             if (msg.message_type === 'SYSTEM' || msg.sender_id === 'system') {
               return (
                 <View key={msg.id} className="items-center my-4">
-                  <View className="px-3 py-1.5 rounded-full border border-dashed" style={{ borderColor: mood.border, backgroundColor: mood.text + "05" }}>
+                  <View className="px-3 py-1.5 rounded-none border border-dashed" style={{ borderColor: mood.border, backgroundColor: mood.text + "05" }}>
                     <Text className="text-[10px] font-black uppercase tracking-widest text-slate-400">
                       {msg.message_text}
                     </Text>
@@ -286,7 +286,7 @@ export default function AgentSupportScreen() {
                 className={`mb-4 max-w-[80%] ${isMe ? "self-end" : "self-start"}`}
               >
                 <View 
-                  className={`p-3.5 rounded-2xl border`}
+                  className={`p-3.5 rounded-none border`}
                   style={{
                     backgroundColor: isMe ? mood.primary + "20" : isLight ? "#F1F5F9" : "rgba(255,255,255,0.05)",
                     borderColor: isMe ? mood.primary + "40" : mood.border,
@@ -300,7 +300,7 @@ export default function AgentSupportScreen() {
                     </Text>
                   )}
                   {msg.message_type === 'IMAGE' && msg.attachment_url ? (
-                    <View className="mb-2 rounded-xl overflow-hidden bg-slate-800" style={{ width: 180, height: 130 }}>
+                    <View className="mb-2 rounded-none overflow-hidden bg-slate-800" style={{ width: 180, height: 130 }}>
                       <Image 
                         source={{ uri: msg.attachment_url }} 
                         style={{ width: '100%', height: '100%', resizeMode: 'cover' }}
@@ -323,7 +323,7 @@ export default function AgentSupportScreen() {
 
         {/* Input Area */}
         <View 
-          className="flex-row items-center p-2 rounded-2xl border"
+          className="flex-row items-center p-2 rounded-none border"
           style={{
             backgroundColor: isLight ? "#FFFFFF" : "rgba(0,0,0,0.2)",
             borderColor: mood.border
@@ -332,7 +332,7 @@ export default function AgentSupportScreen() {
           <Pressable
             onPress={handleAttachImage}
             disabled={sending}
-            className="p-2.5 mr-1 rounded-full bg-white/5 border border-white/5 active:scale-95"
+            className="p-2.5 mr-1 rounded-none bg-white/5 border border-white/5 active:scale-95"
           >
             <AttachIcon color={mood.primary} />
           </Pressable>
@@ -348,7 +348,7 @@ export default function AgentSupportScreen() {
           <Pressable 
             onPress={handleSend}
             disabled={sending || !inputText.trim()}
-            className="w-11 h-11 rounded-xl items-center justify-center ml-2 active:scale-95"
+            className="w-11 h-11 rounded-none items-center justify-center ml-2 active:scale-95"
             style={{ backgroundColor: mood.primary, opacity: (sending || !inputText.trim()) ? 0.5 : 1 }}
           >
             {sending ? (

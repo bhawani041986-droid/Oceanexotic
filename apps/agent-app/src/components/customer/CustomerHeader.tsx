@@ -84,7 +84,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
           <View className="flex-row items-center gap-2.5">
             <Pressable 
               onPress={() => setIsMenuOpen(true)} 
-              className="h-9 w-9 items-center justify-center rounded-xl border active:opacity-70"
+              className="h-9 w-9 items-center justify-center rounded-none border active:opacity-70"
               style={{
                 borderColor: colors.border,
                 backgroundColor: colors.card
@@ -99,7 +99,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
           <View className="flex-row items-center gap-2">
             <Pressable
               onPress={handleNotificationPress}
-              className="relative h-9 w-9 items-center justify-center rounded-full border active:opacity-70"
+              className="relative h-9 w-9 items-center justify-center rounded-none border active:opacity-70"
               style={{
                 borderColor: colors.border,
                 backgroundColor: colors.card
@@ -108,7 +108,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               <NotificationIcon color={colors.text} />
               {/* Subtle active notification beacon */}
               <View 
-                className="absolute right-2.5 top-2.5 h-2 w-2 rounded-full border" 
+                className="absolute right-2.5 top-2.5 h-2 w-2 rounded-none border" 
                 style={{ 
                   backgroundColor: primaryColor,
                   borderColor: colors.card
@@ -118,7 +118,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
 
             <Pressable
               onPress={() => router.push("/cart")}
-              className="relative h-9 w-9 items-center justify-center rounded-full border active:opacity-70"
+              className="relative h-9 w-9 items-center justify-center rounded-none border active:opacity-70"
               style={{
                 borderColor: getRgba(primaryColor, 0.3),
                 backgroundColor: getRgba(primaryColor, 0.1)
@@ -127,7 +127,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               <CartIcon color={primaryColor} />
               {cartCount > 0 ? (
                 <View 
-                  className="absolute -right-1 -top-1 min-w-[16px] h-4 rounded-full px-1 items-center justify-center"
+                  className="absolute -right-1 -top-1 min-w-[16px] h-4 rounded-none px-1 items-center justify-center"
                   style={{ backgroundColor: primaryColor }}
                 >
                   <Text className="text-center text-[8px] font-black text-white">{cartCount}</Text>
@@ -137,7 +137,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
 
             <Pressable
               onPress={() => router.push("/profile")}
-              className="h-9 w-9 rounded-full border overflow-hidden items-center justify-center active:opacity-70"
+              className="h-9 w-9 rounded-none border overflow-hidden items-center justify-center active:opacity-70"
               style={{
                 borderColor: colors.border,
                 backgroundColor: colors.card
@@ -145,7 +145,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
             >
               <Image 
                 source={{ uri: resolveMediaUrl(user?.avatar) || "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80" }} 
-                className="h-full w-full rounded-full"
+                className="h-full w-full rounded-none"
                 contentFit="cover"
               />
             </Pressable>
@@ -161,7 +161,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               placeholder="Search harvests..."
               placeholderTextColor={colors.textMuted}
               returnKeyType="search"
-              className="h-10 rounded-xl border px-4 text-xs"
+              className="h-10 rounded-none border px-4 text-xs"
               style={{
                 borderColor: colors.border,
                 backgroundColor: colors.card,
@@ -204,7 +204,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                 <Logo size="sm" style={{ width: 128, height: 32 }} />
                 <Pressable 
                   onPress={() => setIsMenuOpen(false)} 
-                  className="h-7 w-7 rounded-full border items-center justify-center active:opacity-70"
+                  className="h-7 w-7 rounded-none border items-center justify-center active:opacity-70"
                   style={{
                     borderColor: colors.border,
                     backgroundColor: colors.card
@@ -215,13 +215,13 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               </View>
 
               <View 
-                className="rounded-xl p-3 flex-row items-center gap-2 border"
+                className="rounded-none p-3 flex-row items-center gap-2 border"
                 style={{
                   borderColor: getRgba(primaryColor, 0.2),
                   backgroundColor: getRgba(primaryColor, 0.05)
                 }}
               >
-                <View className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                <View className="h-2.5 w-2.5 rounded-none bg-emerald-500" />
                 <View className="flex-1">
                   <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>Local Delivery Hub</Text>
                   <Text className="text-[10px] font-bold" style={{ color: colors.text }} numberOfLines={1}>{user?.email ?? "Guest Mode"}</Text>
@@ -242,7 +242,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                     <Pressable 
                       key={item.href} 
                       onPress={() => navigateTo(item.href)} 
-                      className="flex-row items-center px-4 py-3 rounded-xl border"
+                      className="flex-row items-center px-4 py-3 rounded-none border"
                       style={active ? {
                         borderColor: getRgba(primaryColor, 0.2),
                         backgroundColor: getRgba(primaryColor, 0.1)
@@ -270,7 +270,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                   logout();
                   router.replace("/login");
                 }}
-                className="w-full py-4 rounded-xl border border-red-500/20 bg-red-500/10 items-center active:bg-red-500/20"
+                className="w-full py-4 rounded-none border border-red-500/20 bg-red-500/10 items-center active:bg-red-500/20"
               >
                 <Text className="text-xs font-black uppercase tracking-widest text-red-500">Sign Out</Text>
               </Pressable>
