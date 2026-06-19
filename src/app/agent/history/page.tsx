@@ -17,7 +17,11 @@ import {
   Clock,
   ArrowUpRight,
   User,
-  Navigation
+  Navigation,
+  X,
+  Activity,
+  CheckCircle2,
+  PackageCheck
 } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 import { useAuthStore } from "@/store/authStore";
@@ -28,6 +32,7 @@ export default function AgentHistoryPage() {
   const [history, setHistory] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [searchTerm, setSearchTerm] = React.useState("");
+  const [selectedLogId, setSelectedLogId] = React.useState<string | null>(null);
 
   const fetchHistory = async () => {
     if (!user) return;
@@ -145,7 +150,10 @@ export default function AgentHistoryPage() {
                    </div>
 
                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mt-6 xl:mt-0">
-                      <Button variant="ghost" className="h-14 w-full sm:w-auto px-6 flex items-center justify-center bg-white/5 rounded-2xl hover:bg-primary hover:text-white transition-all group/btn text-[10px] font-black uppercase tracking-widest italic gap-2 shrink-0">
+                      <Button 
+                         variant="ghost" 
+                         onClick={() => setSelectedLogId(job.id)}
+                         className="h-14 w-full sm:w-auto px-6 flex items-center justify-center bg-white/5 rounded-2xl hover:bg-primary hover:text-white transition-all group/btn text-[10px] font-black uppercase tracking-widest italic gap-2 shrink-0">
                          LOGS <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform shrink-0" />
                       </Button>
                    </div>
@@ -177,6 +185,60 @@ export default function AgentHistoryPage() {
             <p className="text-4xl font-black text-[var(--foreground)] italic tracking-tighter">₹5,42,850</p>
          </div>
       </Card>
+
+      {/* Logs Modal Overlay */}
+      {selectedLogId && (
+         <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#020617]/90 backdrop-blur-md p-4 animate-in fade-in duration-200">
+            <div className="absolute inset-0" onClick={() => setSelectedLogId(null)} />
+            <Card className="relative w-full max-w-lg bg-[#050B18] border border-white/10 rounded-[32px] overflow-hidden shadow-2xl p-8 animate-in slide-in-from-bottom-8 duration-300">
+               <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center gap-4">
+                     <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center border border-primary/30">
+                        <Activity className="w-5 h-5 text-primary" />
+                     </div>
+                     <div>
+                        <h3 className="text-xl font-black text-white italic uppercase tracking-tighter leading-none">MISSION LOGS</h3>
+                        <p className="text-[10px] text-primary font-black uppercase tracking-[0.2em]">{selectedLogId}</p>
+                     </div>
+                  </div>
+                  <button onClick={() => setSelectedLogId(null)} className="p-2 rounded-full hover:bg-white/10 transition-colors text-white/50 hover:text-white">
+                     <X className="w-5 h-5" />
+                  </button>
+               </div>
+               
+               <div className="relative pl-6 border-l-2 border-white/10 space-y-8 py-4">
+                  {[
+                     { title: "MISSION DISPATCHED", desc: "Agent assigned and routing calculated.", icon: Navigation, time: "T-0" },
+                     { title: "HARBOR ACQUISITION", desc: "Package scanned at origin coordinates.", icon: PackageCheck, time: "T+15m" },
+                     { title: "BIOMETRIC VERIFICATION", desc: "Recipient identity confirmed via crypto-signature.", icon: CheckCircle2, time: "T+42m" },
+                     { title: "MISSION COMPLETED", desc: "Yield transferred to agent ledger.", icon: DollarSign, time: "T+45m" }
+                  ].map((log, idx) => {
+                     const isLast = idx === 3;
+                     return (
+                        <div key={idx} className="relative">
+                           <div className={`absolute -left-[35px] top-0 w-4 h-4 rounded-full border-4 border-[#050B18] ${isLast ? 'bg-success shadow-glow-success' : 'bg-primary shadow-glow-purple'}`} />
+                           <div className="flex items-start justify-between gap-4">
+                              <div className="space-y-1">
+                                 <h4 className={`text-sm font-black uppercase tracking-widest ${isLast ? 'text-success' : 'text-white'}`}>{log.title}</h4>
+                                 <p className="text-[10px] text-white/50 font-medium leading-relaxed max-w-[200px]">{log.desc}</p>
+                              </div>
+                              <Badge variant="glass" className="text-[8px] font-black uppercase tracking-widest text-white/70">
+                                 {log.time}
+                              </Badge>
+                           </div>
+                        </div>
+                     )
+                  })}
+               </div>
+               
+               <div className="mt-8 pt-6 border-t border-white/10">
+                  <Button className="w-full h-12 bg-white/5 border border-white/10 text-white hover:bg-white/10" variant="ghost" onClick={() => setSelectedLogId(null)}>
+                     CLOSE ARCHIVE
+                  </Button>
+               </div>
+            </Card>
+         </div>
+      )}
 
     </div>
   
