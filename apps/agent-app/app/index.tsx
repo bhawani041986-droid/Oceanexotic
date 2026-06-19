@@ -46,8 +46,8 @@ export default function AgentSplash() {
         <View className="items-center mt-12"><Logo size="md" /></View>
 
         <View className="items-center my-auto space-y-6">
-          <View className="rounded-[32px] border border-indigo-400/20 bg-white/5 p-1 max-w-[340px]">
-            <View className="rounded-[30px] bg-[#020617]/90 px-6 py-8 items-center border border-white/5 shadow-2xl">
+          <View className="rounded-3xl border border-indigo-400/20 bg-white/5 p-1 max-w-[340px]">
+            <View className="rounded-3xl bg-[#020617]/90 px-6 py-8 items-center border border-white/5 shadow-2xl">
               <Text className="text-[36px] font-black italic text-center tracking-tight text-white leading-none">
                 AGENT <Text className="text-indigo-400">SYNC</Text>
               </Text>
