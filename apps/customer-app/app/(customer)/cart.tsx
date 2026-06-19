@@ -153,7 +153,7 @@ export default function CartScreen() {
               return (
                 <View
                   key={item.id}
-                  className="mt-4 gap-3 border p-3"
+                  className="mt-4 gap-3 rounded-2xl border p-3"
                   style={{
                     borderColor: colors.border,
                     backgroundColor: colors.card,
@@ -163,12 +163,12 @@ export default function CartScreen() {
                     {img ? (
                       <Image
                         source={{ uri: img }}
-                        className="h-20 w-20"
+                        className="h-20 w-20 rounded-xl"
                         contentFit="cover"
                       />
                     ) : (
                       <View
-                        className="h-20 w-20 items-center justify-center"
+                        className="h-20 w-20 items-center justify-center rounded-xl"
                         style={{ backgroundColor: colors.bgAlt }}
                       >
                         <Text className="text-2xl">🐟</Text>
@@ -187,7 +187,7 @@ export default function CartScreen() {
                         <View className="mt-1.5 flex-row items-center gap-2">
                           <Pressable
                             onPress={() => toggleMarination(item.id)}
-                            className="px-2.5 py-1 border"
+                            className="px-2.5 py-1 rounded-full border"
                             style={{
                               borderColor: item.isMarinated
                                 ? colors.primary
@@ -233,7 +233,7 @@ export default function CartScreen() {
                   >
                     <Pressable
                       onPress={() => updateQuantity(item.id, item.quantity - 1)}
-                      className="h-8 w-8 items-center justify-center"
+                      className="h-8 w-8 items-center justify-center rounded-lg"
                       style={{ backgroundColor: colors.bgAlt }}
                     >
                       <Text
@@ -251,7 +251,7 @@ export default function CartScreen() {
                     </Text>
                     <Pressable
                       onPress={() => updateQuantity(item.id, item.quantity + 1)}
-                      className="h-8 w-8 items-center justify-center"
+                      className="h-8 w-8 items-center justify-center rounded-lg"
                       style={{ backgroundColor: colors.bgAlt }}
                     >
                       <Text
@@ -299,7 +299,7 @@ export default function CartScreen() {
                     return (
                       <View
                         key={addon.id}
-                        className="w-32 border p-2 mr-3"
+                        className="w-32 rounded-xl border p-2 mr-3"
                         style={{
                           borderColor: colors.border,
                           backgroundColor: colors.card,
@@ -307,7 +307,7 @@ export default function CartScreen() {
                       >
                         <Image
                           source={{ uri: addonImg }}
-                          className="h-16 w-full"
+                          className="h-16 w-full rounded-lg"
                           contentFit="cover"
                         />
                         <Text
@@ -343,7 +343,7 @@ export default function CartScreen() {
                                 sellerId: "ADDON",
                               });
                             }}
-                            className="px-2 py-0.5"
+                            className="px-2 py-0.5 rounded-full"
                             style={{
                               backgroundColor: alreadyInCart
                                 ? colors.border
@@ -377,7 +377,7 @@ export default function CartScreen() {
               const grandTotal = subtotal + tax;
               return (
                 <View
-                  className="mt-6 border p-5 gap-2"
+                  className="mt-6 rounded-2xl border p-5 gap-2"
                   style={{
                     borderColor: colors.primary + "33",
                     backgroundColor: colors.primary + "1A",

@@ -360,7 +360,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
             className="flex-1"
           >
             <View className="flex-1 flex-row items-center gap-3 p-3">
-              <View className="h-8 w-8 bg-rose-500/15 flex items-center justify-center">
+              <View className="h-8 w-8 bg-rose-500/15 flex items-center justify-center rounded-lg">
                 <Text className="text-rose-500 text-sm">🛡️</Text>
               </View>
               <View className="flex-1">
@@ -380,7 +380,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
             className="flex-1"
           >
             <View className="flex-1 flex-row items-center gap-3 p-3">
-              <View className="h-8 w-8 bg-rose-500/15 flex items-center justify-center">
+              <View className="h-8 w-8 bg-rose-500/15 flex items-center justify-center rounded-lg">
                 <Text className="text-rose-500 text-sm">🧭</Text>
               </View>
               <View className="flex-1">
@@ -526,9 +526,9 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
           {/* Global HUD Stats Overlays (Identical to Web Version) */}
           <View
             style={{ borderColor: colors.primary + "33" }}
-            className="absolute top-4 right-4 flex-row items-center gap-1.5 bg-black/60 border px-2 py-1 z-[1000] pointer-events-none"
+            className="absolute top-4 right-4 flex-row items-center gap-1.5 bg-black/60 border px-2 py-1 rounded-lg z-[1000] pointer-events-none"
           >
-            <View className="h-1.5 w-1.5 bg-emerald-500 animate-pulse" />
+            <View className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
             <Text className="text-[7px] font-black text-white uppercase tracking-widest">
               {translate("stable_connection") || "Stable Connection"}
             </Text>
@@ -536,7 +536,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
 
           <View
             style={{ borderColor: colors.primary + "33" }}
-            className="absolute top-4 left-4 bg-black/60 border px-2 py-1 z-[1000] pointer-events-none"
+            className="absolute top-4 left-4 bg-black/60 border px-2 py-1 rounded-lg z-[1000] pointer-events-none"
           >
             <Text
               className="text-[7px] font-black uppercase"
@@ -548,7 +548,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
 
           <View
             style={{ borderColor: colors.primary + "33" }}
-            className="absolute bottom-4 left-4 bg-black/60 border px-2 py-1 z-[1000] pointer-events-none"
+            className="absolute bottom-4 left-4 bg-black/60 border px-2 py-1 rounded-lg z-[1000] pointer-events-none"
           >
             <Text className="text-[7px] font-mono text-muted-foreground uppercase">
               {translate("ref") || "REF"}: MAR-PB-NODE
@@ -557,7 +557,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
 
           <View
             style={{ borderColor: colors.primary + "33" }}
-            className="absolute bottom-4 right-4 bg-black/60 border px-2 py-1 z-[1000] pointer-events-none"
+            className="absolute bottom-4 right-4 bg-black/60 border px-2 py-1 rounded-lg z-[1000] pointer-events-none"
           >
             <Text className="text-[7px] font-mono text-white uppercase">
               {translate("tracking") || "TELEMETRY"} 042.8° NE
@@ -592,7 +592,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
           className="flex-1"
         >
           <View className="flex-1 flex-row items-center gap-3 p-3">
-            <View className="h-8 w-8 bg-rose-500/15 flex items-center justify-center">
+            <View className="h-8 w-8 bg-rose-500/15 flex items-center justify-center rounded-lg">
               <Text className="text-rose-500 text-sm">🛡️</Text>
             </View>
             <View className="flex-1">
@@ -612,7 +612,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
           className="flex-1"
         >
           <View className="flex-1 flex-row items-center gap-3 p-3">
-            <View className="h-8 w-8 bg-rose-500/15 flex items-center justify-center">
+            <View className="h-8 w-8 bg-rose-500/15 flex items-center justify-center rounded-lg">
               <Text className="text-rose-500 text-sm">🧭</Text>
             </View>
             <View className="flex-1">
@@ -782,7 +782,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
                       {/* Ripple */}
                       <View
                         style={{ borderColor: item.color }}
-                        className="absolute h-8 w-8 border border-white/20 animate-ping opacity-35"
+                        className="absolute h-8 w-8 rounded-full border border-white/20 animate-ping opacity-35"
                       />
                       {/* Solid anchor point */}
                       <View
@@ -790,9 +790,9 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
                           backgroundColor: item.color,
                           shadowColor: item.color,
                         }}
-                        className="h-2.5 w-2.5 border border-white shadow-[0_0_8px_#00f3ff] items-center justify-center"
+                        className="h-2.5 w-2.5 rounded-full border border-white shadow-[0_0_8px_#00f3ff] items-center justify-center"
                       >
-                        <View className="h-1 w-1 bg-white" />
+                        <View className="h-1 w-1 rounded-full bg-white" />
                       </View>
                     </View>
 
@@ -806,13 +806,13 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
                         alignItems: "center",
                         borderBottomColor: item.color,
                       }}
-                      className="bg-[#030712]/95 border border-white/15 border-b-2 px-2 py-1 shadow-[0_0_20px_rgba(0,0,0,0.7)]"
+                      className="bg-[#030712]/95 border border-white/15 border-b-2 px-2 py-1 rounded shadow-[0_0_20px_rgba(0,0,0,0.7)]"
                     >
                       <View className="flex-row items-center gap-1">
                         <Text className="text-[5.5px] font-black text-white/50 tracking-tighter uppercase">
                           {item.registryId}
                         </Text>
-                        <View className="h-1 w-1 bg-emerald-500 animate-pulse" />
+                        <View className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
                       </View>
                       <Text
                         className="text-[8.5px] font-black uppercase text-white tracking-widest text-center"
@@ -882,7 +882,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
             transform: [{ translateY: -28 }],
             borderColor: colors.primary + "33",
           }}
-          className="bg-[#090D1A]/95 border flex-col items-center justify-center p-0.5 z-30 shadow-[0_0_15px_rgba(0,0,0,0.5)]"
+          className="bg-[#090D1A]/95 border rounded flex-col items-center justify-center p-0.5 z-30 shadow-[0_0_15px_rgba(0,0,0,0.5)]"
         >
           <Pressable
             onPress={() => setZoom((prev) => Math.min(15, prev + 1))}
@@ -912,9 +912,9 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
         {/* Global HUD Stats Overlays (Identical to Web Version) */}
         <View
           style={{ borderColor: colors.primary + "33" }}
-          className="absolute top-4 right-4 flex-row items-center gap-1.5 bg-black/60 border px-2 py-1 z-30 pointer-events-none"
+          className="absolute top-4 right-4 flex-row items-center gap-1.5 bg-black/60 border px-2 py-1 rounded-lg z-30 pointer-events-none"
         >
-          <View className="h-1.5 w-1.5 bg-emerald-500 animate-pulse" />
+          <View className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
           <Text className="text-[7px] font-black text-white uppercase tracking-widest">
             {translate("stable_connection") || "Stable Connection"}
           </Text>
@@ -922,7 +922,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
 
         <View
           style={{ borderColor: colors.primary + "33" }}
-          className="absolute top-4 left-4 bg-black/60 border px-2 py-1 z-30 pointer-events-none"
+          className="absolute top-4 left-4 bg-black/60 border px-2 py-1 rounded-lg z-30 pointer-events-none"
         >
           <Text
             className="text-[7px] font-black uppercase"
@@ -934,7 +934,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
 
         <View
           style={{ borderColor: colors.primary + "33" }}
-          className="absolute bottom-4 left-4 bg-black/60 border px-2 py-1 z-30 pointer-events-none"
+          className="absolute bottom-4 left-4 bg-black/60 border px-2 py-1 rounded-lg z-30 pointer-events-none"
         >
           <Text className="text-[7px] font-mono text-muted-foreground uppercase">
             {translate("ref") || "REF"}: MAR-PB-NODE
@@ -943,7 +943,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
 
         <View
           style={{ borderColor: colors.primary + "33" }}
-          className="absolute bottom-4 right-4 bg-black/60 border px-2 py-1 z-30 pointer-events-none"
+          className="absolute bottom-4 right-4 bg-black/60 border px-2 py-1 rounded-lg z-30 pointer-events-none"
         >
           <Text className="text-[7px] font-mono text-white uppercase">
             {translate("tracking") || "TELEMETRY"} 042.8° NE

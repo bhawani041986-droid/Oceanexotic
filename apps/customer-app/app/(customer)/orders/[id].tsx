@@ -260,7 +260,7 @@ export default function OrderDetailsScreen() {
               {id}
             </Text>
             <View
-              className="px-2 py-1"
+              className="rounded px-2 py-1"
               style={{
                 backgroundColor: isDelivered
                   ? "rgba(16,185,129,0.2)"
@@ -297,7 +297,7 @@ export default function OrderDetailsScreen() {
               colors={["rgba(14,165,233,0.1)", "transparent"]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
-              className="p-5"
+              className="rounded-2xl p-5"
             >
               <View className="flex-row items-center justify-between gap-4 flex-wrap">
                 <View className="flex-row items-center gap-3">
@@ -441,7 +441,7 @@ export default function OrderDetailsScreen() {
 
         {/* 🔐 Secure Handoff Protocol */}
         <View
-          className="mb-6 p-5"
+          className="mb-6 rounded-2xl p-5"
           style={{
             backgroundColor: "rgba(59,130,246,0.05)",
             borderWidth: 1,
@@ -450,7 +450,7 @@ export default function OrderDetailsScreen() {
         >
           <View className="flex-row items-center gap-3">
             <View
-              className="h-10 w-10 items-center justify-center"
+              className="h-10 w-10 items-center justify-center rounded-full"
               style={{
                 backgroundColor: "rgba(59,130,246,0.2)",
                 borderWidth: 1,
@@ -517,7 +517,7 @@ export default function OrderDetailsScreen() {
           {(order?.items ?? []).map((item) => (
             <View
               key={item.id}
-              className="p-4"
+              className="rounded-2xl p-4"
               style={{
                 borderWidth: 1,
                 borderColor: colors.border,
@@ -575,7 +575,7 @@ export default function OrderDetailsScreen() {
 
         {/* 🔄 Reorder Hub */}
         <View
-          className="mb-6 p-5"
+          className="mb-6 rounded-2xl p-5"
           style={{
             borderWidth: 1,
             borderColor: colors.border,
@@ -605,7 +605,7 @@ export default function OrderDetailsScreen() {
 
         {/* Order Summary — correct tally */}
         <View
-          className="mb-6 p-5"
+          className="mb-6 rounded-2xl p-5"
           style={{
             borderWidth: 1,
             borderColor: colors.border,
@@ -712,7 +712,7 @@ export default function OrderDetailsScreen() {
 
         {/* Culinary Prep & Storage */}
         <View
-          className="mt-6 p-5"
+          className="mt-6 rounded-2xl p-5"
           style={{
             borderWidth: 1,
             borderColor: colors.border,
@@ -760,7 +760,7 @@ export default function OrderDetailsScreen() {
 
         {/* Delivery Sustainability */}
         <View
-          className="mt-6 p-5"
+          className="mt-6 rounded-2xl p-5"
           style={{
             borderWidth: 1,
             borderColor: colors.border,
@@ -816,7 +816,7 @@ export default function OrderDetailsScreen() {
           style={{ backgroundColor: `${colors.bg}E6` }}
         >
           <View
-            className="p-6 shadow-2xl"
+            className="rounded-3xl p-6 shadow-2xl"
             style={{
               borderWidth: 1,
               borderColor: colors.border,
@@ -832,7 +832,7 @@ export default function OrderDetailsScreen() {
               </Text>
               <Pressable
                 onPress={() => setReviewItem(null)}
-                className="p-2"
+                className="rounded-full p-2"
                 style={{ backgroundColor: colors.bg }}
               >
                 <Text
@@ -846,7 +846,7 @@ export default function OrderDetailsScreen() {
 
             {reviewItem && (
               <View
-                className="mb-6 flex-row items-center gap-4 p-3"
+                className="mb-6 flex-row items-center gap-4 rounded-2xl p-3"
                 style={{
                   borderWidth: 1,
                   borderColor: colors.border,
@@ -950,7 +950,7 @@ export default function OrderDetailsScreen() {
                   {images.map((img, idx) => (
                     <View
                       key={idx}
-                      className="relative w-16 h-16 overflow-hidden border"
+                      className="relative w-16 h-16 rounded-xl overflow-hidden border"
                       style={{ borderColor: colors.border }}
                     >
                       <Image
@@ -962,7 +962,7 @@ export default function OrderDetailsScreen() {
                         onPress={() =>
                           setImages((prev) => prev.filter((_, i) => i !== idx))
                         }
-                        className="absolute right-1 top-1 bg-black/60 w-5 h-5 items-center justify-center"
+                        className="absolute right-1 top-1 bg-black/60 rounded-full w-5 h-5 items-center justify-center"
                       >
                         <Text className="text-white text-[8px] font-black">
                           ✕
@@ -983,7 +983,7 @@ export default function OrderDetailsScreen() {
                   borderWidth: 1,
                   borderColor: colors.border,
                 }}
-                className="w-full h-10"
+                className="w-full h-10 rounded-xl"
               />
             </View>
 

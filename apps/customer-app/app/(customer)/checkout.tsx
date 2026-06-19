@@ -171,7 +171,7 @@ export default function CheckoutScreen() {
                   className="items-center gap-1"
                 >
                   <View
-                    className="w-7 h-7 items-center justify-center border"
+                    className="w-7 h-7 rounded-full items-center justify-center border"
                     style={
                       done
                         ? {
@@ -263,7 +263,7 @@ export default function CheckoutScreen() {
                   <Pressable
                     key={String(addr.id)}
                     onPress={() => setSelectedAddress(addr)}
-                    className="border-2 p-4"
+                    className="rounded-xl border-2 p-4"
                     style={
                       selected
                         ? {
@@ -277,14 +277,14 @@ export default function CheckoutScreen() {
                     }
                   >
                     <View className="flex-row items-start justify-between mb-2">
-                      <View className="bg-white/10 px-2 py-0.5">
+                      <View className="bg-white/10 px-2 py-0.5 rounded">
                         <Text className="text-[8px] font-black uppercase text-foreground">
                           {addr.type || addr.label}
                         </Text>
                       </View>
                       {selected && (
                         <View
-                          className="w-4 h-4 items-center justify-center"
+                          className="w-4 h-4 rounded-full items-center justify-center"
                           style={{ backgroundColor: primaryColor }}
                         >
                           <Text className="text-[8px] text-foreground font-black">
@@ -339,7 +339,7 @@ export default function CheckoutScreen() {
               </View>
             </View>
           ) : (
-            <View className="py-10 items-center gap-4 border-2 border-dashed border-white/10">
+            <View className="py-10 items-center gap-4 border-2 border-dashed border-white/10 rounded-xl">
               <Text className="text-4xl">📍</Text>
               <Text className="text-sm font-bold text-muted-foreground text-center">
                 {t("no_saved_addresses") || "No saved addresses found."}
@@ -365,7 +365,7 @@ export default function CheckoutScreen() {
         >
           {/* COD is the only method (mirrors web) */}
           <View
-            className="border-2 p-5 flex-row items-center gap-4"
+            className="border-2 rounded-xl p-5 flex-row items-center gap-4"
             style={{
               borderColor: primaryColor,
               backgroundColor: colors.primary + "0D",
@@ -382,7 +382,7 @@ export default function CheckoutScreen() {
               </Text>
             </View>
             <View
-              className="w-5 h-5 items-center justify-center"
+              className="w-5 h-5 rounded-full items-center justify-center"
               style={{ backgroundColor: primaryColor }}
             >
               <Text className="text-[9px] text-foreground font-black">✓</Text>
@@ -411,9 +411,9 @@ export default function CheckoutScreen() {
               return (
                 <View
                   key={item.id}
-                  className="flex-row gap-4 items-center p-3 border border-white/10 bg-secondary/30"
+                  className="flex-row gap-4 items-center p-3 rounded-xl border border-white/10 bg-secondary/30"
                 >
-                  <View className="w-14 h-14 overflow-hidden bg-secondary/50">
+                  <View className="w-14 h-14 rounded-lg overflow-hidden bg-secondary/50">
                     {imgUri ? (
                       <Image
                         source={{ uri: imgUri }}
@@ -446,7 +446,7 @@ export default function CheckoutScreen() {
           </View>
 
           {/* Order Total */}
-          <View className="bg-secondary/40 border border-white/10 p-4 mb-6 gap-2">
+          <View className="bg-secondary/40 border border-white/10 rounded-xl p-4 mb-6 gap-2">
             <View className="flex-row justify-between">
               <Text className="text-xs text-muted-foreground">
                 {t("subtotal") || "Subtotal"}
@@ -490,7 +490,7 @@ export default function CheckoutScreen() {
           {/* Delivery summary */}
           {selectedAddress && (
             <View
-              className="border p-4 mb-6 gap-1"
+              className="border rounded-xl p-4 mb-6 gap-1"
               style={{
                 backgroundColor: colors.primary + "0D",
                 borderColor: colors.primary + "33",
@@ -515,7 +515,7 @@ export default function CheckoutScreen() {
           )}
 
           {/* Authorize finalize */}
-          <View className="bg-secondary/40 border border-white/10 p-6 items-center gap-4">
+          <View className="bg-secondary/40 border border-white/10 rounded-2xl p-6 items-center gap-4">
             <Text className="text-3xl">🛡️</Text>
             <Text className="text-[10px] font-black uppercase tracking-widest text-foreground italic text-center">
               {t("confirm_delivery_address") || "Confirm Delivery Address"}
@@ -561,7 +561,7 @@ export default function CheckoutScreen() {
             className="w-full"
           />
         ) : (
-          <View className="w-full py-3 border border-white/10 bg-secondary/40 items-center">
+          <View className="w-full py-3 rounded-xl border border-white/10 bg-secondary/40 items-center">
             <Text className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
               {t("complete_steps_above_to_place_order") ||
                 "Complete steps above to place order"}
@@ -601,7 +601,7 @@ function StepCard({
 
   return (
     <View
-      className="border overflow-hidden"
+      className="rounded-2xl border overflow-hidden"
       style={{
         borderColor: active
           ? colors.primary + "66"
@@ -619,7 +619,7 @@ function StepCard({
       >
         <View className="flex-row items-center gap-3">
           <View
-            className="w-6 h-6 items-center justify-center"
+            className="w-6 h-6 rounded-full items-center justify-center"
             style={
               done
                 ? {

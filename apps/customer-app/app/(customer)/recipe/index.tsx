@@ -156,7 +156,7 @@ export default function RecipesListScreen() {
       >
         <Pressable
           onPress={() => router.back()}
-          className="w-10 h-10 items-center justify-center bg-white/5 border"
+          className="w-10 h-10 rounded-full items-center justify-center bg-white/5 border"
           style={{ borderColor: colors.border }}
         >
           <MaterialCommunityIcons name="arrow-left" size={20} color="white" />
@@ -172,7 +172,7 @@ export default function RecipesListScreen() {
             {t("chefs_recipes") || "Chef's Recipes"}
           </Text>
         </View>
-        <View className="w-10 h-10 items-center justify-center bg-primary/10 border border-primary/20">
+        <View className="w-10 h-10 rounded-xl items-center justify-center bg-primary/10 border border-primary/20">
           <MaterialCommunityIcons
             name="chef-hat"
             size={20}
@@ -190,7 +190,7 @@ export default function RecipesListScreen() {
         <View className="p-5 space-y-5">
           {/* Glassmorphic Search Bar */}
           <View
-            className="flex-row items-center px-4 h-12 border bg-white/5"
+            className="flex-row items-center px-4 h-12 rounded-xl border bg-white/5"
             style={{ borderColor: colors.border }}
           >
             <MaterialCommunityIcons
@@ -237,7 +237,7 @@ export default function RecipesListScreen() {
                   <Pressable
                     key={p}
                     onPress={() => setSelectedPrep(p)}
-                    className="px-4 py-2 border transition-all"
+                    className="px-4 py-2 rounded-lg border transition-all"
                     style={{
                       backgroundColor: active
                         ? `${colors.primary}15`
@@ -275,7 +275,7 @@ export default function RecipesListScreen() {
                   <Pressable
                     key={r}
                     onPress={() => setSelectedRegion(r)}
-                    className="px-4 py-2 border transition-all"
+                    className="px-4 py-2 rounded-lg border transition-all"
                     style={{
                       backgroundColor: active
                         ? `${colors.primary}15`
@@ -332,7 +332,7 @@ export default function RecipesListScreen() {
                 <View className="relative z-10 p-5 gap-2">
                   <View className="flex-row gap-2 flex-wrap">
                     <View
-                      className="border px-2 py-0.5"
+                      className="border px-2 py-0.5 rounded"
                       style={{
                         backgroundColor: "rgba(16,185,129,0.1)",
                         borderColor: "rgba(16,185,129,0.3)",
@@ -343,7 +343,7 @@ export default function RecipesListScreen() {
                       </Text>
                     </View>
                     <View
-                      className="border px-2 py-0.5"
+                      className="border px-2 py-0.5 rounded"
                       style={{
                         backgroundColor: "rgba(6,182,212,0.1)",
                         borderColor: "rgba(6,182,212,0.3)",
@@ -353,7 +353,7 @@ export default function RecipesListScreen() {
                         {recipe.prepType}
                       </Text>
                     </View>
-                    <View className="bg-white/5 border border-white/10 px-2 py-0.5">
+                    <View className="bg-white/5 border border-white/10 px-2 py-0.5 rounded">
                       <Text className="text-[8px] font-black uppercase text-slate-400">
                         {recipe.time}
                       </Text>
@@ -415,7 +415,7 @@ export default function RecipesListScreen() {
               </Pressable>
             ))
           ) : (
-            <View className="py-16 items-center justify-center border-2 border-dashed border-white/5 opacity-50">
+            <View className="py-16 items-center justify-center border-2 border-dashed border-white/5 rounded-3xl opacity-50">
               <MaterialCommunityIcons
                 name="fish-off"
                 size={32}

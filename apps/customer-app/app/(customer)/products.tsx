@@ -343,7 +343,7 @@ export default function ProductsScreen() {
           onChangeText={setSearchQuery}
           placeholder={t("search_seafood")}
           placeholderTextColor={colors.isDark ? "#94A3B8" : "#6B7280"}
-          className="mt-4 h-12 border px-4 text-sm"
+          className="mt-4 h-12 rounded-xl border px-4 text-sm"
           style={{
             backgroundColor: colors.card,
             borderColor: colors.border,
@@ -411,7 +411,7 @@ export default function ProductsScreen() {
               <Pressable
                 key={tab}
                 onPress={() => setActiveTab(tab)}
-                className="mr-2 px-4 py-2 border"
+                className="mr-2 rounded-xl px-4 py-2 border"
                 style={
                   active
                     ? {
@@ -535,7 +535,7 @@ export default function ProductsScreen() {
                         {addons.map((addon) => (
                           <View
                             key={addon.id}
-                            className="w-[180px] border p-2"
+                            className="w-[180px] rounded-xl border p-2"
                             style={{
                               backgroundColor: colors.card,
                               borderColor: colors.border,
@@ -548,7 +548,7 @@ export default function ProductsScreen() {
                                     addon.image_url ||
                                     "https://images.unsplash.com/photo-1596683788737-88981f33f674?q=80&w=500",
                                 }}
-                                className="h-10 w-10 bg-black/10"
+                                className="h-10 w-10 rounded-lg bg-black/10"
                                 contentFit="cover"
                               />
                               <View className="flex-1">
@@ -576,7 +576,7 @@ export default function ProductsScreen() {
                               </Text>
                               <Pressable
                                 onPress={() => handleAddAddon(addon)}
-                                className="px-3 py-1.5"
+                                className="rounded-md px-3 py-1.5"
                                 style={{ backgroundColor: colors.primary }}
                               >
                                 <Text className="text-[8px] font-black uppercase text-white">
@@ -671,7 +671,7 @@ export default function ProductsScreen() {
           </View>
         ) : (
           <View
-            className="my-12 items-center border border-dashed p-8"
+            className="my-12 items-center rounded-2xl border border-dashed p-8"
             style={{ borderColor: colors.border }}
           >
             <Text

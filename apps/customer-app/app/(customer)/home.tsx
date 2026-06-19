@@ -175,18 +175,18 @@ const TodaysCatchCard = React.memo(function TodaysCatchCard({
           ]}
           className="absolute inset-0"
         />
-        <View className="absolute left-2 top-2 bg-emerald-500/80 px-2 py-0.5">
+        <View className="absolute left-2 top-2 rounded bg-emerald-500/80 px-2 py-0.5">
           <Text className="text-[7px] font-black uppercase text-white">
             {item.freshness_label}
           </Text>
         </View>
         {/* Offer Badge (Amazon/Licious Style) */}
-        <View className="absolute right-2 top-2 bg-red-500/90 px-2 py-0.5 z-20">
+        <View className="absolute right-2 top-2 rounded bg-red-500/90 px-2 py-0.5 z-20">
           <Text className="text-[7px] font-black uppercase text-white">
             15% {t("off_text") || "OFF"}
           </Text>
         </View>
-        <View className="absolute bottom-2 left-2 border border-white/10 bg-black/60 px-2 py-1">
+        <View className="absolute bottom-2 left-2 rounded-lg border border-white/10 bg-black/60 px-2 py-1">
           <Text className="text-[7px] font-black uppercase text-foreground">
             {item.harbor_node}
           </Text>
@@ -235,7 +235,7 @@ const TodaysCatchCard = React.memo(function TodaysCatchCard({
               e.stopPropagation();
               onOpenCut();
             }}
-            className="px-3 py-2 overflow-hidden relative"
+            className="rounded-xl px-3 py-2 overflow-hidden relative"
             style={{ backgroundColor: colors.primary }}
           >
             <Text className="text-[9px] font-black uppercase text-white relative z-10">
@@ -429,7 +429,7 @@ export default function CustomerHomeScreen() {
           <View className="relative z-10 px-4 pb-5 pt-3 flex-1">
             <View className="flex-1">
               <View
-                className="self-start border px-2.5 py-1"
+                className="self-start rounded-full border px-2.5 py-1"
                 style={{
                   borderColor: getRgba(primaryColor, 0.2),
                   backgroundColor: getRgba(primaryColor, 0.1),
@@ -493,7 +493,7 @@ export default function CustomerHomeScreen() {
                 className="w-[23%] items-center"
               >
                 <View
-                  className="w-14 h-14 items-center justify-center relative overflow-hidden"
+                  className="w-14 h-14 rounded-full items-center justify-center relative overflow-hidden"
                   style={{
                     backgroundColor: colors.isDark
                       ? "rgba(30, 41, 59, 0.4)"
@@ -527,14 +527,14 @@ export default function CustomerHomeScreen() {
               title={t("todays_catch")}
               subtitle={t("todays_catch_subtitle") || "Fresh from the Harbor"}
             />
-            <View className="flex-row flex-wrap border border-white/5 bg-secondary/40 p-1">
+            <View className="flex-row flex-wrap rounded-2xl border border-white/5 bg-secondary/40 p-1">
               {(
                 ["ALL", "MORNING", "AFTERNOON", "EVENING"] as BatchFilter[]
               ).map((batch) => (
                 <Pressable
                   key={batch}
                   onPress={() => setActiveBatch(batch)}
-                  className="px-3 py-2"
+                  className="rounded-xl px-3 py-2"
                   style={
                     activeBatch === batch
                       ? { backgroundColor: primaryColor }
@@ -560,7 +560,7 @@ export default function CustomerHomeScreen() {
               {[0, 1, 2, 3].map((i) => (
                 <View
                   key={i}
-                  className="h-64 w-[47%] animate-pulse bg-secondary/40"
+                  className="h-64 w-[47%] animate-pulse rounded-3xl bg-secondary/40"
                 />
               ))}
             </View>
@@ -596,7 +596,7 @@ export default function CustomerHomeScreen() {
               ))}
             </View>
           ) : (
-            <View className="h-48 items-center justify-center border-2 border-dashed border-white/10 opacity-50">
+            <View className="h-48 items-center justify-center rounded-3xl border-2 border-dashed border-white/10 opacity-50">
               <Text className="text-xs font-black uppercase tracking-widest text-muted-foreground">
                 {t("no_live_harbor_stock") ||
                   "No fresh catch available in your area"}
@@ -656,7 +656,7 @@ export default function CustomerHomeScreen() {
             />
             <Pressable
               onPress={() => router.push("/recipe")}
-              className="px-3 py-1.5 border"
+              className="px-3 py-1.5 rounded-lg border"
               style={{
                 backgroundColor: "rgba(255,255,255,0.03)",
                 borderColor: colors.border,
@@ -704,7 +704,7 @@ export default function CustomerHomeScreen() {
                   <View className="relative z-10 p-5 gap-2">
                     <View className="flex-row gap-2">
                       <View
-                        className="border px-2 py-0.5"
+                        className="border px-2 py-0.5 rounded"
                         style={{
                           borderColor: getRgba(primaryColor, 0.2),
                           backgroundColor: getRgba(primaryColor, 0.1),
@@ -717,7 +717,7 @@ export default function CustomerHomeScreen() {
                           {meta.difficulty || recipe.difficulty || "Expert"}
                         </Text>
                       </View>
-                      <View className="bg-white/5 border border-white/10 px-2 py-0.5">
+                      <View className="bg-white/5 border border-white/10 px-2 py-0.5 rounded">
                         <Text className="text-[8px] font-black uppercase text-muted-foreground">
                           {meta.time || recipe.time || "25m"}
                         </Text>
@@ -897,7 +897,7 @@ export default function CustomerHomeScreen() {
             </Text>
             <Pressable
               onPress={() => router.push("/products")}
-              className="mt-3 self-start bg-white px-3 py-1.5 active:bg-white/90"
+              className="mt-3 self-start rounded-full bg-white px-3 py-1.5 active:bg-white/90"
               style={{
                 shadowColor: "#000",
                 shadowOffset: { width: 0, height: 2 },
@@ -1029,7 +1029,7 @@ export default function CustomerHomeScreen() {
                       {seller.id}
                     </Text>
                     <View className="flex-row items-center gap-1">
-                      <View className="h-1.5 w-1.5 bg-[#00ff88]" />
+                      <View className="h-1.5 w-1.5 rounded-full bg-[#00ff88]" />
                       <Text
                         className="text-[6px] font-black uppercase"
                         style={{ color: colors.textMuted }}
@@ -1041,7 +1041,7 @@ export default function CustomerHomeScreen() {
 
                   <View className="flex-row items-center gap-3">
                     <View
-                      className="h-10 w-10 items-center justify-center border"
+                      className="h-10 w-10 rounded-xl items-center justify-center border"
                       style={{
                         backgroundColor: colors.bgAlt,
                         borderColor: colors.border,
@@ -1079,7 +1079,7 @@ export default function CustomerHomeScreen() {
                       {seller.products.map((p, idx) => (
                         <View
                           key={idx}
-                          className="h-5 w-5 items-center justify-center border"
+                          className="h-5 w-5 rounded items-center justify-center border"
                           style={{
                             backgroundColor: colors.bgAlt,
                             borderColor: colors.border,
@@ -1148,7 +1148,7 @@ export default function CustomerHomeScreen() {
                       backgroundColor: `${item.color}15`,
                       borderColor: `${item.color}30`,
                     }}
-                    className="w-10 h-10 items-center justify-center border mb-2 shadow-lg"
+                    className="w-10 h-10 rounded-xl items-center justify-center border mb-2 shadow-lg"
                   >
                     <Text className="text-lg">{item.icon}</Text>
                   </View>
@@ -1375,14 +1375,14 @@ export default function CustomerHomeScreen() {
 
         {/* Trust strip */}
         <View
-          className="mx-4 mb-8 flex-row flex-wrap justify-center gap-3 border p-4"
+          className="mx-4 mb-8 flex-row flex-wrap justify-center gap-3 rounded-2xl border p-4"
           style={{ backgroundColor: colors.card, borderColor: colors.border }}
         >
           {["FSSAI AUTH", "ISO 22000", "COLD-CHAIN", "SUSTAINABLE"].map(
             (label) => (
               <View
                 key={label}
-                className="border px-3 py-1"
+                className="rounded-full border px-3 py-1"
                 style={{
                   borderColor: getRgba(primaryColor, 0.2),
                   backgroundColor: getRgba(primaryColor, 0.1),

@@ -117,7 +117,7 @@ export const ProductCard = React.memo(function ProductCard({
             </Text>
           </View>
         ) : hasDiscount ? (
-          <View className="absolute right-2 top-2 bg-red-500/90 px-2 py-0.5 z-20">
+          <View className="absolute right-2 top-2 rounded bg-red-500/90 px-2 py-0.5 z-20">
             <Text className="text-[7px] font-black uppercase text-white">
               {discount}% OFF
             </Text>
@@ -161,7 +161,7 @@ export const ProductCard = React.memo(function ProductCard({
           {onSelectCut ? (
             <Pressable
               onPress={onSelectCut}
-              className="px-3 py-2 overflow-hidden relative"
+              className="rounded-xl px-3 py-2 overflow-hidden relative"
               style={{ backgroundColor: colors.primary }}
             >
               <Text className="text-[9px] font-black uppercase text-white relative z-10">
@@ -191,7 +191,7 @@ export const ProductCard = React.memo(function ProductCard({
             <Pressable
               onPress={onAdd}
               disabled={outOfStock}
-              className="px-3 py-2 opacity-100 disabled:opacity-40 overflow-hidden relative"
+              className="rounded-xl px-3 py-2 opacity-100 disabled:opacity-40 overflow-hidden relative"
               style={{ backgroundColor: colors.primary }}
             >
               <Text className="text-[9px] font-black uppercase text-white relative z-10">

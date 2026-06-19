@@ -93,7 +93,7 @@ export default function OrdersScreen() {
             {orders.map((order) => (
               <View
                 key={order.id}
-                className="overflow-hidden border p-4"
+                className="overflow-hidden rounded-2xl border p-4"
                 style={{
                   borderColor: colors.border,
                   backgroundColor: colors.card,
@@ -146,7 +146,7 @@ export default function OrdersScreen() {
                         params: { id: order.id },
                       } as never)
                     }
-                    className="flex-1 h-10"
+                    className="flex-1 h-10 rounded-xl"
                     style={{ borderColor: colors.border, borderWidth: 1 }}
                   />
                   {!["DELIVERED", "CANCELLED"].includes(
@@ -160,7 +160,7 @@ export default function OrdersScreen() {
                           params: { id: order.id },
                         } as never)
                       }
-                      className="flex-1 h-10"
+                      className="flex-1 h-10 rounded-xl"
                     />
                   )}
                 </View>
@@ -169,7 +169,7 @@ export default function OrdersScreen() {
           </View>
         ) : (
           <View
-            className="my-16 items-center border border-dashed p-8"
+            className="my-16 items-center rounded-2xl border border-dashed p-8"
             style={{ borderColor: colors.border }}
           >
             <Text

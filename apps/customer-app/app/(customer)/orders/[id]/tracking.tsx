@@ -281,7 +281,7 @@ export default function OrderTrackingScreen() {
               {displayData.agent_name}
             </Text>
           </View>
-          <View className="border border-primary/20 bg-primary/10 p-3">
+          <View className="rounded-2xl border border-primary/20 bg-primary/10 p-3">
             <Text className="text-[8px] font-black uppercase tracking-widest text-foreground">
               {t("cold_chain") || "Cold-Chain"}
             </Text>
@@ -290,7 +290,7 @@ export default function OrderTrackingScreen() {
             </Text>
           </View>
         </View>
-        <View className="mb-8 self-start bg-emerald-500/20 px-3 py-1">
+        <View className="mb-8 self-start rounded bg-emerald-500/20 px-3 py-1">
           <Text className="text-[10px] font-black uppercase text-emerald-400">
             {displayData.status}
           </Text>

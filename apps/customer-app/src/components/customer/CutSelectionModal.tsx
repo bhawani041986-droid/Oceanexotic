@@ -53,7 +53,7 @@ export function CutSelectionModal({
       onRequestClose={onClose}
     >
       <View className="flex-1 justify-end bg-black/70">
-        <View className="max-h-[80%] border border-white/10 bg-card p-6">
+        <View className="max-h-[80%] rounded-t-3xl border border-white/10 bg-card p-6">
           <Text className="text-lg font-black uppercase italic text-foreground">
             {t("select_cut") || "Select Cut"} — {product?.name}
           </Text>
@@ -96,14 +96,14 @@ export function CutSelectionModal({
 
           {/* Weight Selector UI */}
           {!loading && options.length > 0 && (
-            <View className="mt-2 mb-4 flex-row items-center justify-between border border-white/10 bg-background/50 px-4 py-3">
+            <View className="mt-2 mb-4 flex-row items-center justify-between rounded-xl border border-white/10 bg-background/50 px-4 py-3">
               <Text className="text-sm font-bold uppercase text-foreground">
                 {t("weight") || "Weight"}
               </Text>
               <View className="flex-row items-center gap-4">
                 <TouchableOpacity
                   onPress={handleDecrease}
-                  className="h-8 w-8 items-center justify-center bg-white/10"
+                  className="h-8 w-8 items-center justify-center rounded-full bg-white/10"
                 >
                   <Text className="text-white text-lg">-</Text>
                 </TouchableOpacity>
@@ -112,7 +112,7 @@ export function CutSelectionModal({
                 </Text>
                 <TouchableOpacity
                   onPress={handleIncrease}
-                  className="h-8 w-8 items-center justify-center bg-primary/20 border border-primary"
+                  className="h-8 w-8 items-center justify-center rounded-full bg-primary/20 border border-primary"
                 >
                   <Text className="text-primary text-lg">+</Text>
                 </TouchableOpacity>

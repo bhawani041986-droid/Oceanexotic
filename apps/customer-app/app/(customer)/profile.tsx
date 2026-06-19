@@ -298,13 +298,13 @@ export default function ProfileScreen() {
 
         {/* Identity Head & Avatar */}
         <View
-          className="flex-row items-center gap-4 mt-6 border p-4"
+          className="flex-row items-center gap-4 mt-6 rounded-2xl border p-4"
           style={{ borderColor: colors.border, backgroundColor: colors.card }}
         >
           <Pressable
             onPress={handlePickImage}
             disabled={uploadingAvatar}
-            className="relative w-16 h-16 overflow-hidden border-2 justify-center items-center"
+            className="relative w-16 h-16 rounded-full overflow-hidden border-2 justify-center items-center"
             style={{
               borderColor: colors.primary + "4D",
               backgroundColor: colors.bgAlt,
@@ -353,7 +353,7 @@ export default function ProfileScreen() {
         <View className="mt-6 flex-row gap-3">
           <Pressable
             onPress={() => router.push("/orders")}
-            className="flex-1 border p-4"
+            className="flex-1 rounded-2xl border p-4"
             style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
             <Text
@@ -371,7 +371,7 @@ export default function ProfileScreen() {
           </Pressable>
           <Pressable
             onPress={() => router.push("/cart")}
-            className="flex-1 border p-4"
+            className="flex-1 rounded-2xl border p-4"
             style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
             <Text
@@ -391,7 +391,7 @@ export default function ProfileScreen() {
 
         {/* Identity node */}
         <View
-          className="mt-6 gap-4 border p-5"
+          className="mt-6 gap-4 rounded-2xl border p-5"
           style={{ borderColor: colors.border, backgroundColor: colors.card }}
         >
           <Text
@@ -436,7 +436,7 @@ export default function ProfileScreen() {
 
         {/* Change Password node */}
         <View
-          className="mt-6 gap-4 border p-5"
+          className="mt-6 gap-4 rounded-2xl border p-5"
           style={{ borderColor: colors.border, backgroundColor: colors.card }}
         >
           <Text
@@ -500,7 +500,7 @@ export default function ProfileScreen() {
 
         {/* Saved Addresses Manager */}
         <View
-          className="mt-6 border p-5"
+          className="mt-6 rounded-2xl border p-5"
           style={{ borderColor: colors.border, backgroundColor: colors.card }}
         >
           <View className="flex-row items-center justify-between mb-4">
@@ -512,7 +512,7 @@ export default function ProfileScreen() {
             </Text>
             <Pressable
               onPress={() => setAddressModalVisible(true)}
-              className="border px-3 py-1"
+              className="rounded-lg border px-3 py-1"
               style={{
                 backgroundColor: colors.primary + "1A",
                 borderColor: colors.primary + "33",
@@ -529,7 +529,7 @@ export default function ProfileScreen() {
 
           {addresses.length === 0 ? (
             <View
-              className="items-center py-6 border border-dashed"
+              className="items-center py-6 border border-dashed rounded-xl"
               style={{ borderColor: colors.border }}
             >
               <Text
@@ -544,7 +544,7 @@ export default function ProfileScreen() {
               {addresses.map((addr) => (
                 <View
                   key={addr.id}
-                  className="p-4 border relative"
+                  className="p-4 rounded-xl border relative"
                   style={{
                     borderColor: colors.border,
                     backgroundColor: colors.bgAlt,
@@ -553,7 +553,7 @@ export default function ProfileScreen() {
                   <View className="flex-row items-center justify-between mb-1">
                     <View className="flex-row items-center gap-2">
                       <View
-                        className="px-2 py-0.5"
+                        className="px-2 py-0.5 rounded"
                         style={{ backgroundColor: colors.primary + "1A" }}
                       >
                         <Text
@@ -605,7 +605,7 @@ export default function ProfileScreen() {
         <View className="mt-4 gap-2">
           <Pressable
             onPress={() => router.push("/products")}
-            className="border px-4 py-4"
+            className="rounded-xl border px-4 py-4"
             style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
             <Text className="text-sm font-bold" style={{ color: colors.text }}>
@@ -614,7 +614,7 @@ export default function ProfileScreen() {
           </Pressable>
           <Pressable
             onPress={() => router.push("/home")}
-            className="border px-4 py-4"
+            className="rounded-xl border px-4 py-4"
             style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
             <Text className="text-sm font-bold" style={{ color: colors.text }}>
@@ -655,7 +655,7 @@ export default function ProfileScreen() {
               </Text>
               <Pressable
                 onPress={() => setAddressModalVisible(false)}
-                className="p-2"
+                className="rounded-full p-2"
                 style={{ backgroundColor: colors.textMuted + "1A" }}
               >
                 <Text
@@ -679,7 +679,7 @@ export default function ProfileScreen() {
                   <Pressable
                     key={t}
                     onPress={() => setAddrType(t)}
-                    className="flex-1 py-2 border items-center"
+                    className="flex-1 py-2 rounded-xl border items-center"
                     style={
                       addrType === t
                         ? {
@@ -749,7 +749,7 @@ export default function ProfileScreen() {
                   <Pressable
                     key={j}
                     onPress={() => setAddrJetty(j)}
-                    className="px-3 py-2 border mr-2"
+                    className="px-3 py-2 rounded-xl border mr-2"
                     style={
                       addrJetty === j
                         ? {
