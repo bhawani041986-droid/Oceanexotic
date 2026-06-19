@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "OceanExotic Customer",
-    "slug": "oceanexotic-customer",
+    "slug": "ocenexotic",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "oceanexotic",
@@ -62,9 +62,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "cb7808ae-533b-4f25-a0dd-5d982c81152d"
+        "projectId": "8e5eebe4-8c44-4ddc-85f8-bab9b6074092"
       }
     },
-    "owner": "oceanxy2"
+    "owner": "oceanexpo3"
   }
 }
