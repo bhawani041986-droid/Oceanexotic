@@ -9,7 +9,7 @@ import { useToast } from "@/components/ui/Toast";
 import axios from "axios";
 import QRScannerNative from "@/components/QRScannerNative";
 import { WebView } from "react-native-webview";
-
+import * as Location from "expo-location";
 
 // Standard hashing function for deterministic values
 function simpleHash(str: string): number {
@@ -226,9 +226,6 @@ export default function AgentTrackingScreen() {
   const [isScanning, setIsScanning] = useState(false);
   const [scanLog, setScanLog] = useState<string[]>([]);
   const [isCameraActive, setIsCameraActive] = useState(false);
-  const videoRef = useRef<any>(null);
-  const canvasRef = useRef<any>(null);
-  const streamRef = useRef<any>(null);
 
   // Web Interactive Leaflet state
   const [isLReady, setIsLReady] = useState(false);
@@ -471,42 +468,49 @@ export default function AgentTrackingScreen() {
     loadOrderDetails();
   }, [orderId, user]);
 
-  // Periodic Telemetry Synchronization & Coordinate Drift Simulation
+  // Real-Time Telemetry Tracking via GPS Hardware
   useEffect(() => {
-    let interval: any = null;
+    let locationSubscription: Location.LocationSubscription | null = null;
 
-    if (missionState === "IN_TRANSIT") {
-      interval = setInterval(() => {
-        // Fluctuating temp slightly
-        setTemp(prev => {
-          const delta = (Math.random() - 0.5) * 0.2;
-          const next = prev + delta;
-          return next < -24 ? -24 : next > -20 ? -20 : next;
-        });
+    const startTracking = async () => {
+      if (missionState !== "IN_TRANSIT") return;
 
-        // Drift towards customer destination node
-        setCoords(prev => {
-          const deltaLat = destLat - prev.lat;
-          const deltaLng = destLng - prev.lng;
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        toast("GPS Permission Denied. Cannot track mission.", "error");
+        return;
+      }
+
+      locationSubscription = await Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.High,
+          timeInterval: 5000,
+          distanceInterval: 10,
+        },
+        (location) => {
+          const newLat = location.coords.latitude;
+          const newLng = location.coords.longitude;
+          
+          setCoords({ lat: newLat, lng: newLng });
+
+          const deltaLat = destLat - newLat;
+          const deltaLng = destLng - newLng;
           const distance = Math.sqrt(deltaLat * deltaLat + deltaLng * deltaLng);
 
-          // If distance is extremely small, vehicle arrived at destination
+          // Auto-Arrival Trigger if within range
           if (distance < 0.0004) {
             handleStateTransition("ARRIVED");
-            return { lat: destLat, lng: destLng };
           }
+        }
+      );
+    };
 
-          // Move 15% closer to destination node
-          return {
-            lat: prev.lat + deltaLat * 0.15,
-            lng: prev.lng + deltaLng * 0.15
-          };
-        });
-      }, 4000);
-    }
+    startTracking();
 
     return () => {
-      if (interval) clearInterval(interval);
+      if (locationSubscription) {
+        locationSubscription.remove();
+      }
     };
   }, [missionState, destLat, destLng]);
 
@@ -581,118 +585,6 @@ export default function AgentTrackingScreen() {
       setVerificationError("Invalid Handoff OTP. Please confirm with customer.");
     }
   };
-
-  const tickScan = React.useCallback(() => {
-    if (!videoRef.current || !canvasRef.current || !streamRef.current) return;
-    const video = videoRef.current;
-    if (video.readyState === video.HAVE_ENOUGH_DATA) {
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const jsQR = (window as any).jsQR;
-        if (jsQR) {
-          const code = jsQR(imageData.data, imageData.width, imageData.height, {
-            inversionAttempts: "dontInvert"
-          });
-          
-          if (code && code.data) {
-            const qrData = code.data;
-            setScanLog(prev => [...prev, `[FOUND] Decoded payload: ${qrData.slice(0, 32)}...`]);
-            
-            // Extract OTP from URL query parameters (e.g. otp=123456)
-            const otpMatch = qrData.match(/[?&]otp=(\d{6})/);
-            const detectedOtp = otpMatch ? otpMatch[1] : qrData.replace(/[^0-9]/g, "").slice(0, 6);
-            
-            if (detectedOtp && detectedOtp.length === 6) {
-              setScanLog(prev => [...prev, `[SUCCESS] Signature match: OTP ${detectedOtp}`, "[SYSTEM] finalizing dispatch node..."]);
-              setOtpInput(detectedOtp);
-              verifyOtp(detectedOtp);
-              
-              // Clean up camera stream and scanner overlay
-              setTimeout(() => {
-                setIsScanning(false);
-                if (streamRef.current) {
-                  streamRef.current.getTracks().forEach((track: any) => track.stop());
-                  streamRef.current = null;
-                }
-                setIsCameraActive(false);
-              }, 800);
-              return;
-            }
-          }
-        }
-      }
-    }
-    if (isScanning) {
-      requestAnimationFrame(tickScan);
-    }
-  }, [isScanning, verifyOtp]);
-
-  const startWebScan = React.useCallback(async () => {
-    setScanLog(["[SYSTEM] Scanner node initialized", "[SYSTEM] Requesting camera permission..."]);
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" }
-      });
-      streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        videoRef.current.setAttribute("playsinline", "true");
-        videoRef.current.play();
-        setIsCameraActive(true);
-        setScanLog(prev => [...prev, "[SYSTEM] Video feed synced", "[SYSTEM] Analyzing viewfinder frames..."]);
-        requestAnimationFrame(tickScan);
-      }
-    } catch (err) {
-      console.error("Camera access error:", err);
-      setScanLog(prev => [...prev, "⚠️ [ERROR] Camera hardware connection failed", "[SYSTEM] Confirm with customer and use manual OTP"]);
-      toast("Camera permission or hardware error", "error");
-    }
-  }, [tickScan, toast]);
-
-  const stopWebScan = React.useCallback(() => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((track: any) => track.stop());
-      streamRef.current = null;
-    }
-    setIsCameraActive(false);
-  }, []);
-
-  // Web Scanner Hook
-  useEffect(() => {
-    if (Platform.OS !== "web" || !isScanning) return;
-    
-    let active = true;
-    
-    const loadAndStart = async () => {
-      if (!(window as any).jsQR) {
-        setScanLog(["[SYSTEM] Dynamic dependency resolver active", "[SYSTEM] Fetching jsQR module..."]);
-        const script = document.createElement("script");
-        script.src = "https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js";
-        script.async = true;
-        script.onload = () => {
-          if (active) startWebScan();
-        };
-        script.onerror = () => {
-          setScanLog(prev => [...prev, "⚠️ [ERROR] Dependency load failed. Use manual entry."]);
-        };
-        document.head.appendChild(script);
-      } else {
-        startWebScan();
-      }
-    };
-    
-    loadAndStart();
-    
-    return () => {
-      active = false;
-      stopWebScan();
-    };
-  }, [isScanning, startWebScan, stopWebScan]);
 
   // Real QR scan handler for Native Camera
   const handleQRScan = async (scannedText: string) => {
@@ -1235,22 +1127,6 @@ export default function AgentTrackingScreen() {
                     </>
                   )}
                 </Pressable>
-
-                <Pressable
-                  onPress={() => {
-                    const cleanId = orderId;
-                    const numericId = parseInt(cleanId.replace(/[^0-9]/g, "")) || 123;
-                    const computed = String(((numericId * 997 + 12345) % 900000) + 100000);
-                    setOtpInput(computed);
-                    verifyOtp(computed);
-                  }}
-                  className="h-8 border border-dashed rounded-xl flex-row items-center justify-center"
-                  style={{ borderColor: mood.border }}
-                >
-                  <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: mood.text }}>
-                    Simulate QR Scan Input
-                  </Text>
-                </Pressable>
               </View>
             </View>
           )}
@@ -1306,111 +1182,11 @@ export default function AgentTrackingScreen() {
           </View>
           <Pressable 
             onPress={() => {
-              setIsScanning(false);
-              stopWebScan();
-            }}
-            style={{ paddingHorizontal: 16, paddingVertical: 8, borderRadius: 12, borderWidth: 1, borderColor: mood.border, backgroundColor: 'rgba(15,23,42,0.6)', alignItems: 'center', justifyContent: 'center' }}
-          >
-            <Text style={{ fontSize: 9, fontWeight: '900', letterSpacing: 1.5, textTransform: 'uppercase', color: '#94A3B8' }}>
-              CLOSE SCANNER
-            </Text>
-          </Pressable>
-        </View>
-
-        {/* Viewfinder Area */}
-        <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1, marginVertical: 16 }}>
-          <View 
-            style={{ 
-              width: 260, 
-              height: 260, 
-              position: 'relative', 
-              overflow: 'hidden', 
-              borderWidth: 2, 
-              borderRadius: 32, 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              borderColor: mood.primary, 
-              backgroundColor: 'black' 
-            }}
-          >
-            <video 
-              ref={videoRef}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', top: 0, left: 0, zIndex: 1 }}
-              playsInline
-              autoPlay
-              muted
-            />
-
-            {/* Corner Brackets — z-index above video */}
-            <View style={{ position: 'absolute', top: 12, left: 12, width: 24, height: 24, borderTopWidth: 2, borderLeftWidth: 2, borderColor: mood.primary, zIndex: 2 }} />
-            <View style={{ position: 'absolute', top: 12, right: 12, width: 24, height: 24, borderTopWidth: 2, borderRightWidth: 2, borderColor: mood.primary, zIndex: 2 }} />
-            <View style={{ position: 'absolute', bottom: 12, left: 12, width: 24, height: 24, borderBottomWidth: 2, borderLeftWidth: 2, borderColor: mood.primary, zIndex: 2 }} />
-            <View style={{ position: 'absolute', bottom: 12, right: 12, width: 24, height: 24, borderBottomWidth: 2, borderRightWidth: 2, borderColor: mood.primary, zIndex: 2 }} />
-
-            {/* Dashed focus guide */}
-            <View style={{ position: 'absolute', top: 24, right: 24, bottom: 24, left: 24, borderWidth: 1, borderStyle: 'dashed', borderColor: mood.primary, opacity: 0.25, zIndex: 2 }} />
-
-            {/* In-view active scanner beam */}
-            <View 
-              style={{ 
-                position: 'absolute',
-                left: 0,
-                right: 0,
-                height: 2.5,
-                backgroundColor: mood.primary,
-                shadowColor: mood.primary,
-                shadowOffset: { width: 0, height: 0 },
-                shadowOpacity: 0.8,
-                shadowRadius: 10,
-                top: '50%',
-                zIndex: 3,
-                animation: 'scanner-sweep 3s ease-in-out infinite'
-              } as any}
-            />
-          </View>
-
-          <Text style={{ fontSize: 9, fontWeight: '900', color: '#475569', textTransform: 'uppercase', letterSpacing: 3, marginTop: 16, textAlign: 'center' }}>
-            Point camera at customer QR code
-          </Text>
-        </View>
-
-        {/* Terminal Diagnostics Logs */}
-        <View 
-          className="h-[140px] rounded-2xl border p-4 font-mono text-[9px] mb-4"
-          style={{ backgroundColor: 'rgba(0,0,0,0.65)', borderColor: mood.border }}
-        >
-          <Text className="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-2 font-mono">
-            DIAGNOSTICS PROTOCOL
-          </Text>
-          <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 10 }}>
-            {scanLog.map((log, index) => (
-              <Text key={index} className="text-slate-300 font-mono text-[9px] mb-1">
-                {log}
-              </Text>
-            ))}
-          </ScrollView>
-        </View>
-
-        {/* Metadata Footer */}
-        <View className="items-center mb-6">
-          <Text className="text-[8px] font-black text-slate-500 uppercase tracking-[0.4em] leading-none">
-            SOVEREIGN HANDOFF LAYER
-          </Text>
-        </View>
-
-        {/* Hidden Canvas for Web decoding */}
-        <canvas ref={canvasRef} style={{ display: 'none' }} />
-      </View>
-    )}
-
-    {/* QR SCANNER NATIVE MODAL */}
-    {Platform.OS !== 'web' && (
-      <QRScannerNative
-        isOpen={isScanning}
-        onScan={handleQRScan}
-        onClose={() => setIsScanning(false)}
-      />
-    )}
+    <QRScannerNative
+      isOpen={isScanning}
+      onScan={handleQRScan}
+      onClose={() => setIsScanning(false)}
+    />
   </View>
   );
 }
