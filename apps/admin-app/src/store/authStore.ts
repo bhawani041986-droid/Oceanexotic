@@ -30,7 +30,7 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       isLoading: true,
       isHydrated: false,
-      login: (user) => set({ user, isAuthenticated: true, isLoading: false }),
+      login: (user) => set({ user, isAuthenticated: true, isLoading: false, isHydrated: true }),
       logout: () => set({ user: null, isAuthenticated: false, isLoading: false }),
       updateUser: (updatedUser) =>
         set((state) => ({
