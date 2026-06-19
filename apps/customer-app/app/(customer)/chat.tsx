@@ -142,14 +142,14 @@ export default function CustomerChatScreen() {
               setMessages([]);
               fetchConversations();
             }} 
-            className="p-2 mr-2 rounded-full bg-white/5 border border-white/5 active:scale-95"
+            className="p-2 mr-2 rounded-none bg-white/5 border border-white/5 active:scale-95"
           >
             <BackIcon color="white" />
           </Pressable>
         ) : (
           <Pressable 
             onPress={() => router.back()} 
-            className="p-2 mr-2 rounded-full bg-white/5 border border-white/5 active:scale-95"
+            className="p-2 mr-2 rounded-none bg-white/5 border border-white/5 active:scale-95"
           >
             <BackIcon color="white" />
           </Pressable>
@@ -178,7 +178,7 @@ export default function CustomerChatScreen() {
           {loadingConv ? (
             <ActivityIndicator color={primaryColor} className="py-12" />
           ) : conversations.length === 0 ? (
-            <View className="py-16 items-center justify-center opacity-30 border border-white/5 rounded-2xl bg-slate-900/20">
+            <View className="py-16 items-center justify-center opacity-30 border border-white/5 rounded-none bg-slate-900/20">
               <Text className="text-[10px] font-bold text-white uppercase tracking-widest italic">
                 No active chats found
               </Text>
@@ -188,12 +188,12 @@ export default function CustomerChatScreen() {
               <Pressable
                 key={conv.id}
                 onPress={() => setActiveConv(conv)}
-                className="p-4 rounded-2xl border mb-3 bg-slate-950/40 flex-row justify-between items-center active:bg-slate-900/50"
+                className="p-4 rounded-none border mb-3 bg-slate-950/40 flex-row justify-between items-center active:bg-slate-900/50"
                 style={{ borderColor: borderColor }}
               >
                 <View className="flex-1 pr-3">
                   <View className="flex-row items-center gap-2 mb-1">
-                    <View className="w-2 h-2 rounded-full bg-emerald-500" />
+                    <View className="w-2 h-2 rounded-none bg-emerald-500" />
                     <Text className="text-[11px] font-black text-white uppercase tracking-wider italic">
                       {conv.other_party_name}
                     </Text>
@@ -229,7 +229,7 @@ export default function CustomerChatScreen() {
                 return (
                   <View 
                     key={m.id}
-                    className={`mb-3 max-w-[80%] rounded-2xl p-3.5 border ${
+                    className={`mb-3 max-w-[80%] rounded-none p-3.5 border ${
                       isMe 
                         ? "align-self-end bg-[#7C3AED]/15 border-[#7C3AED]/35 ml-auto" 
                         : "align-self-start bg-slate-900 border-white/5 mr-auto"
@@ -258,13 +258,13 @@ export default function CustomerChatScreen() {
               placeholder="Type a message..."
               placeholderTextColor="rgba(255,255,255,0.2)"
               onSubmitEditing={handleSendMessage}
-              className="flex-1 h-10 border rounded-xl bg-slate-900/50 px-3 text-xs font-bold text-white uppercase tracking-wider"
+              className="flex-1 h-10 border rounded-none bg-slate-900/50 px-3 text-xs font-bold text-white uppercase tracking-wider"
               style={{ borderColor: borderColor }}
             />
             <Pressable
               onPress={handleSendMessage}
               disabled={sending || !msgText.trim()}
-              className="w-10 h-10 rounded-xl bg-[#7C3AED] items-center justify-center ml-2.5 active:bg-[#6D28D9]"
+              className="w-10 h-10 rounded-none bg-[#7C3AED] items-center justify-center ml-2.5 active:bg-[#6D28D9]"
             >
               {sending ? (
                 <ActivityIndicator color="white" size="small" />

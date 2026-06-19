@@ -146,7 +146,7 @@ export function OceanReelsFeed() {
               {!isActive && (
                 <View className="absolute inset-0 items-center justify-center pointer-events-none">
                   <View
-                    className="w-8 h-8 rounded-full items-center justify-center border"
+                    className="w-8 h-8 rounded-none items-center justify-center border"
                     style={{
                       backgroundColor: "rgba(255, 255, 255, 0.2)",
                       borderColor: "rgba(255, 255, 255, 0.4)",
@@ -176,7 +176,7 @@ export function OceanReelsFeed() {
                         e.stopPropagation();
                         handleAddToCart(product);
                       }}
-                      className="h-6 w-6 rounded-full items-center justify-center shadow-lg"
+                      className="h-6 w-6 rounded-none items-center justify-center shadow-lg"
                       style={{ backgroundColor: colors.primary }}
                     >
                       <MaterialCommunityIcons name="cart-plus" size={12} color="white" />
@@ -192,7 +192,7 @@ export function OceanReelsFeed() {
                     e.stopPropagation();
                     setIsMuted(!isMuted);
                   }}
-                  className="absolute top-2 right-2 p-1 bg-black/50 rounded-full"
+                  className="absolute top-2 right-2 p-1 bg-black/50 rounded-none"
                 >
                   <MaterialCommunityIcons
                     name={isMuted ? "volume-mute" : "volume-high"}

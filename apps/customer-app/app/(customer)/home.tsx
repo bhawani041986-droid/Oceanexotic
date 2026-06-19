@@ -107,7 +107,7 @@ function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
             15% OFF
           </Text>
         </View>
-        <View className="absolute bottom-2 left-2 rounded-lg border border-white/10 bg-black/60 px-2 py-1">
+        <View className="absolute bottom-2 left-2 rounded-none border border-white/10 bg-black/60 px-2 py-1">
           <Text className="text-[7px] font-black uppercase text-foreground">
             {item.harbor_node}
           </Text>
@@ -145,7 +145,7 @@ function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
               e.stopPropagation();
               onOpenCut();
             }}
-            className="rounded-xl px-3 py-2 overflow-hidden relative"
+            className="rounded-none px-3 py-2 overflow-hidden relative"
             style={{ backgroundColor: colors.primary }}
           >
             <Text className="text-[9px] font-black uppercase text-white relative z-10">
@@ -295,7 +295,7 @@ export default function CustomerHomeScreen() {
           <View className="relative z-10 px-4 pb-5 pt-3 flex-1">
             <View className="flex-1">
               <View 
-                className="self-start rounded-full border px-2.5 py-1"
+                className="self-start rounded-none border px-2.5 py-1"
                 style={{
                   borderColor: getRgba(primaryColor, 0.2),
                   backgroundColor: getRgba(primaryColor, 0.1)
@@ -348,7 +348,7 @@ export default function CustomerHomeScreen() {
                 className="w-[23%] items-center"
               >
                 <View
-                  className="w-14 h-14 rounded-full items-center justify-center relative overflow-hidden"
+                  className="w-14 h-14 rounded-none items-center justify-center relative overflow-hidden"
                   style={{
                     backgroundColor: colors.isDark ? "rgba(30, 41, 59, 0.4)" : "rgba(241, 245, 249, 0.9)",
                     borderWidth: 1.5,
@@ -380,12 +380,12 @@ export default function CustomerHomeScreen() {
               title={t('todays_catch')}
               subtitle="Live Harbor Arrival • Freshness Guaranteed"
             />
-             <View className="flex-row flex-wrap rounded-2xl border border-white/5 bg-secondary/40 p-1">
+             <View className="flex-row flex-wrap rounded-none border border-white/5 bg-secondary/40 p-1">
               {(["ALL", "MORNING", "AFTERNOON", "EVENING"] as BatchFilter[]).map((batch) => (
                 <Pressable
                   key={batch}
                   onPress={() => setActiveBatch(batch)}
-                  className="rounded-xl px-3 py-2"
+                  className="rounded-none px-3 py-2"
                   style={activeBatch === batch ? { backgroundColor: primaryColor } : undefined}
                 >
                   <Text
@@ -406,7 +406,7 @@ export default function CustomerHomeScreen() {
               {[0, 1, 2, 3].map((i) => (
                 <View
                   key={i}
-                  className="h-64 w-[47%] animate-pulse rounded-3xl bg-secondary/40"
+                  className="h-64 w-[47%] animate-pulse rounded-none bg-secondary/40"
                 />
               ))}
             </View>
@@ -424,7 +424,7 @@ export default function CustomerHomeScreen() {
               ))}
             </View>
           ) : (
-            <View className="h-48 items-center justify-center rounded-3xl border-2 border-dashed border-white/10 opacity-50">
+            <View className="h-48 items-center justify-center rounded-none border-2 border-dashed border-white/10 opacity-50">
               <Text className="text-xs font-black uppercase tracking-widest text-muted-foreground">
                 No Live Harbor Stock in this sector
               </Text>
@@ -469,7 +469,7 @@ export default function CustomerHomeScreen() {
             <SectionTitle title="Chef's Recipes" subtitle="Chef Tested Recipes" />
             <Pressable 
               onPress={() => router.push("/recipe")}
-              className="px-3 py-1.5 rounded-lg border"
+              className="px-3 py-1.5 rounded-none border"
               style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderColor: colors.border }}
             >
               <Text className="text-[9px] font-black uppercase tracking-widest text-primary">VIEW ALL ➜</Text>
@@ -550,7 +550,7 @@ export default function CustomerHomeScreen() {
             {flashDealActive ? (
               <View className="mt-4 flex-row justify-center gap-2">
                 {[timeLeft.hrs, timeLeft.min, timeLeft.sec].map((val, i) => (
-                  <View key={i} className="min-w-[56px] rounded-xl border px-3 py-2" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+                  <View key={i} className="min-w-[56px] rounded-none border px-3 py-2" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
                     <Text className="text-center text-xl font-black italic" style={{ color: colors.text }}>{val}</Text>
                     <Text className="text-center text-[7px] font-black uppercase" style={{ color: colors.textMuted }}>
                       {i === 0 ? "HRS" : i === 1 ? "MIN" : "SEC"}
@@ -646,7 +646,7 @@ export default function CustomerHomeScreen() {
             <Text className="mt-1.5 text-[8px] font-bold text-white/70 uppercase">Fresh Catches</Text>
             <Pressable
               onPress={() => router.push("/products")}
-              className="mt-3 self-start rounded-full bg-white px-3 py-1.5 active:bg-white/90"
+              className="mt-3 self-start rounded-none bg-white px-3 py-1.5 active:bg-white/90"
               style={{ shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 3 }}
             >
               <Text className="text-[7.5px] font-black uppercase text-black tracking-wider">EXPLORE</Text>
@@ -672,7 +672,7 @@ export default function CustomerHomeScreen() {
             <Text className="mt-1.5 text-[8px] font-bold text-white/70 uppercase text-right">Prime Seasteak</Text>
             <Pressable
               onPress={() => router.push("/products")}
-              className="mt-3 rounded-full border border-white/20 bg-black/40 px-3 py-1.5 active:bg-black/60"
+              className="mt-3 rounded-none border border-white/20 bg-black/40 px-3 py-1.5 active:bg-black/60"
             >
               <Text className="text-[7.5px] font-black uppercase text-white tracking-wider">VIEW ALL</Text>
             </Pressable>
@@ -707,13 +707,13 @@ export default function CustomerHomeScreen() {
                 <View className="flex-row justify-between items-center mb-2">
                   <Text className="text-[8px] font-black uppercase" style={{ color: primaryColor }}>{seller.id}</Text>
                   <View className="flex-row items-center gap-1">
-                    <View className="h-1.5 w-1.5 rounded-full bg-[#00ff88]" />
+                    <View className="h-1.5 w-1.5 rounded-none bg-[#00ff88]" />
                     <Text className="text-[6px] font-black uppercase" style={{ color: colors.textMuted }}>LIVE</Text>
                   </View>
                 </View>
                 
                 <View className="flex-row items-center gap-3">
-                  <View className="h-10 w-10 rounded-xl items-center justify-center border" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
+                  <View className="h-10 w-10 rounded-none items-center justify-center border" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
                     <Text className="text-2xl">{seller.image}</Text>
                   </View>
                   <View className="flex-1">
@@ -773,7 +773,7 @@ export default function CustomerHomeScreen() {
               >
                 <View 
                   style={{ backgroundColor: `${item.color}15`, borderColor: `${item.color}30` }} 
-                  className="w-10 h-10 rounded-xl items-center justify-center border mb-2 shadow-lg"
+                  className="w-10 h-10 rounded-none items-center justify-center border mb-2 shadow-lg"
                 >
                   <Text className="text-lg">{item.icon}</Text>
                 </View>
@@ -903,11 +903,11 @@ export default function CustomerHomeScreen() {
         </View>
 
         {/* Trust strip */}
-        <View className="mx-4 mb-8 flex-row flex-wrap justify-center gap-3 rounded-2xl border p-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+        <View className="mx-4 mb-8 flex-row flex-wrap justify-center gap-3 rounded-none border p-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
           {["FSSAI AUTH", "ISO 22000", "COLD-CHAIN", "SUSTAINABLE"].map((label) => (
             <View 
               key={label} 
-              className="rounded-full border px-3 py-1"
+              className="rounded-none border px-3 py-1"
               style={{
                 borderColor: getRgba(primaryColor, 0.2),
                 backgroundColor: getRgba(primaryColor, 0.1)

@@ -76,7 +76,7 @@ export default function OrdersScreen() {
             {orders.map((order) => (
               <View 
                 key={order.id} 
-                className="overflow-hidden rounded-2xl border p-4"
+                className="overflow-hidden rounded-none border p-4"
                 style={{ borderColor: colors.border, backgroundColor: colors.card }}
               >
                 <View className="flex-row items-start justify-between">
@@ -84,7 +84,7 @@ export default function OrdersScreen() {
                     <Text className="text-base font-black uppercase italic" style={{ color: colors.text }}>{order.id}</Text>
                     <View
                       className={cn(
-                        "mt-1 self-start rounded-full px-2 py-0.5",
+                        "mt-1 self-start rounded-none px-2 py-0.5",
                         order.status === "DELIVERED" ? "bg-emerald-500/20" : "bg-primary/20"
                       )}
                     >
@@ -108,7 +108,7 @@ export default function OrdersScreen() {
                     onPress={() =>
                       router.push({ pathname: "/orders/[id]", params: { id: order.id } } as never)
                     }
-                    className="flex-1 h-10 rounded-xl"
+                    className="flex-1 h-10 rounded-none"
                     style={{ borderColor: colors.border, borderWidth: 1 }}
                   />
                   {!["DELIVERED", "CANCELLED"].includes(order.status?.toUpperCase() ?? "") && (
@@ -117,7 +117,7 @@ export default function OrdersScreen() {
                       onPress={() =>
                         router.push({ pathname: "/orders/[id]/tracking", params: { id: order.id } } as never)
                       }
-                      className="flex-1 h-10 rounded-xl"
+                      className="flex-1 h-10 rounded-none"
                     />
                   )}
                 </View>
@@ -126,7 +126,7 @@ export default function OrdersScreen() {
           </View>
         ) : (
           <View 
-            className="my-16 items-center rounded-2xl border border-dashed p-8"
+            className="my-16 items-center rounded-none border border-dashed p-8"
             style={{ borderColor: colors.border }}
           >
             <Text className="text-xs font-black uppercase" style={{ color: colors.textMuted }}>No commissions yet</Text>

@@ -156,7 +156,7 @@ export default function OrderDetailsScreen() {
               onPress={() =>
                 router.push({ pathname: "/orders/[id]/tracking", params: { id } } as never)
               }
-              className="h-9 px-4 rounded-xl text-[9px]"
+              className="h-9 px-4 rounded-none text-[9px]"
             />
           )}
         </View>
@@ -188,12 +188,12 @@ export default function OrderDetailsScreen() {
 
         {/* 🚚 Live Cold-Chain Delivery Radar */}
         <View
-          className="mb-6 rounded-2xl p-5"
+          className="mb-6 rounded-none p-5"
           style={{ backgroundColor: `${colors.primary}0D`, borderWidth: 1, borderColor: `${colors.primary}33` }}
         >
           <View className="flex-row items-center gap-3">
             <View
-              className="h-10 w-10 items-center justify-center rounded-full"
+              className="h-10 w-10 items-center justify-center rounded-none"
               style={{ backgroundColor: `${colors.primary}33`, borderWidth: 1, borderColor: `${colors.primary}50` }}
             >
               <Text className="text-lg">🚚</Text>
@@ -208,8 +208,8 @@ export default function OrderDetailsScreen() {
             </View>
           </View>
           <View className="mt-4 flex-row flex-wrap items-center justify-between gap-2 border-t pt-3" style={{ borderTopColor: colors.border }}>
-            <View className="flex-row items-center gap-1.5 rounded-full px-2 py-1" style={{ backgroundColor: "rgba(59,130,246,0.1)", borderWidth: 1, borderColor: "rgba(59,130,246,0.3)" }}>
-              <View className="h-1.5 w-1.5 rounded-full bg-blue-400" />
+            <View className="flex-row items-center gap-1.5 rounded-none px-2 py-1" style={{ backgroundColor: "rgba(59,130,246,0.1)", borderWidth: 1, borderColor: "rgba(59,130,246,0.3)" }}>
+              <View className="h-1.5 w-1.5 rounded-none bg-blue-400" />
               <Text className="text-[9px] font-black uppercase text-blue-400">1.2°C {t('chilled')}</Text>
             </View>
             <Text className="text-[10px] font-black" style={{ color: colors.text }}>32 {t('mins_remaining')}</Text>
@@ -218,12 +218,12 @@ export default function OrderDetailsScreen() {
 
         {/* 🔐 Secure Handoff Protocol */}
         <View
-          className="mb-6 rounded-2xl p-5"
+          className="mb-6 rounded-none p-5"
           style={{ backgroundColor: "rgba(59,130,246,0.05)", borderWidth: 1, borderColor: "rgba(59,130,246,0.2)" }}
         >
           <View className="flex-row items-center gap-3">
             <View
-              className="h-10 w-10 items-center justify-center rounded-full"
+              className="h-10 w-10 items-center justify-center rounded-none"
               style={{ backgroundColor: "rgba(59,130,246,0.2)", borderWidth: 1, borderColor: "rgba(59,130,246,0.3)" }}
             >
               <Text className="text-lg">🔐</Text>
@@ -262,7 +262,7 @@ export default function OrderDetailsScreen() {
           {(order?.items ?? []).map((item) => (
             <View
               key={item.id}
-              className="rounded-2xl p-4"
+              className="rounded-none p-4"
               style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
             >
               <View className="flex-row gap-4">
@@ -298,7 +298,7 @@ export default function OrderDetailsScreen() {
 
         {/* 🔄 Reorder Hub */}
         <View
-          className="mb-6 rounded-2xl p-5"
+          className="mb-6 rounded-none p-5"
           style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
         >
           <View className="flex-row items-center gap-3">
@@ -317,7 +317,7 @@ export default function OrderDetailsScreen() {
 
         {/* Manifest Summary — correct tally */}
         <View
-          className="mb-6 rounded-2xl p-5"
+          className="mb-6 rounded-none p-5"
           style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
         >
           <Text className="mb-4 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
@@ -353,7 +353,7 @@ export default function OrderDetailsScreen() {
 
         {/* Port of Destination */}
         <View
-          className="rounded-2xl p-5"
+          className="rounded-none p-5"
           style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
         >
           <Text className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
@@ -371,7 +371,7 @@ export default function OrderDetailsScreen() {
 
         {/* Culinary Prep & Storage */}
         <View
-          className="mt-6 rounded-2xl p-5"
+          className="mt-6 rounded-none p-5"
           style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
         >
           <Text className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
@@ -397,7 +397,7 @@ export default function OrderDetailsScreen() {
 
         {/* Fleet Sustainability */}
         <View
-          className="mt-6 rounded-2xl p-5"
+          className="mt-6 rounded-none p-5"
           style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
         >
           <Text className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
@@ -429,7 +429,7 @@ export default function OrderDetailsScreen() {
           style={{ backgroundColor: `${colors.bg}E6` }}
         >
           <View
-            className="rounded-3xl p-6 shadow-2xl"
+            className="rounded-none p-6 shadow-2xl"
             style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
           >
             <View className="mb-6 flex-row items-center justify-between">
@@ -438,7 +438,7 @@ export default function OrderDetailsScreen() {
               </Text>
               <Pressable
                 onPress={() => setReviewItem(null)}
-                className="rounded-full p-2"
+                className="rounded-none p-2"
                 style={{ backgroundColor: colors.bg }}
               >
                 <Text className="text-xs font-black" style={{ color: colors.text }}>✕</Text>
@@ -447,7 +447,7 @@ export default function OrderDetailsScreen() {
 
             {reviewItem && (
               <View
-                className="mb-6 flex-row items-center gap-4 rounded-2xl p-3"
+                className="mb-6 flex-row items-center gap-4 rounded-none p-3"
                 style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: `${colors.bg}80` }}
               >
                 <Image
@@ -505,11 +505,11 @@ export default function OrderDetailsScreen() {
               {images.length > 0 && (
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }} className="flex-row mb-3">
                   {images.map((img, idx) => (
-                    <View key={idx} className="relative w-16 h-16 rounded-xl overflow-hidden border" style={{ borderColor: colors.border }}>
+                    <View key={idx} className="relative w-16 h-16 rounded-none overflow-hidden border" style={{ borderColor: colors.border }}>
                       <Image source={{ uri: img }} style={{ width: "100%", height: "100%" }} contentFit="cover" />
                       <Pressable
                         onPress={() => setImages(prev => prev.filter((_, i) => i !== idx))}
-                        className="absolute right-1 top-1 bg-black/60 rounded-full w-5 h-5 items-center justify-center"
+                        className="absolute right-1 top-1 bg-black/60 rounded-none w-5 h-5 items-center justify-center"
                       >
                         <Text className="text-white text-[8px] font-black">✕</Text>
                       </Pressable>
@@ -522,7 +522,7 @@ export default function OrderDetailsScreen() {
                 label={pickingImage ? t('selecting') : "➕ " + t('add_photo_evidence')}
                 onPress={handlePickImage}
                 style={{ borderStyle: "dashed", borderWidth: 1, borderColor: colors.border }}
-                className="w-full h-10 rounded-xl"
+                className="w-full h-10 rounded-none"
               />
             </View>
 

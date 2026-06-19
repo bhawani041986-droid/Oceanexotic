@@ -66,7 +66,7 @@ export function AgentHeader() {
         {/* 3-line Menu Button */}
         <Pressable 
           onPress={() => setIsMenuOpen(true)} 
-          className="h-9 w-9 items-center justify-center rounded-xl border active:opacity-70"
+          className="h-9 w-9 items-center justify-center rounded-none border active:opacity-70"
           style={{
             borderColor: mood.border,
             backgroundColor: isLight ? "#E2E8F0" : "rgba(255, 255, 255, 0.05)"
@@ -76,13 +76,13 @@ export function AgentHeader() {
         </Pressable>
 
         {/* Signal Active pulsing indicator */}
-        <View className="flex-row items-center space-x-1.5 bg-black/5 dark:bg-white/5 px-2 py-1 rounded-lg">
+        <View className="flex-row items-center space-x-1.5 bg-black/5 dark:bg-white/5 px-2 py-1 rounded-none">
           <View 
-            className="w-5 h-5 rounded-md flex items-center justify-center"
+            className="w-5 h-5 rounded-none flex items-center justify-center"
             style={{ backgroundColor: "rgba(16, 185, 129, 0.1)" }}
           >
             <View 
-              className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" 
+              className="w-1.5 h-1.5 rounded-none bg-emerald-500 animate-pulse" 
               style={{
                 shadowColor: "#10B981",
                 shadowOffset: { width: 0, height: 0 },
@@ -119,7 +119,7 @@ export function AgentHeader() {
       <View className="flex-row items-center space-x-2">
         <Pressable
           onPress={handleNotificationPress}
-          className="relative h-9 w-9 items-center justify-center rounded-full border active:opacity-70"
+          className="relative h-9 w-9 items-center justify-center rounded-none border active:opacity-70"
           style={{
             borderColor: mood.border,
             backgroundColor: isLight ? "#E2E8F0" : "rgba(255, 255, 255, 0.05)"
@@ -127,7 +127,7 @@ export function AgentHeader() {
         >
           <NotificationIcon color={mood.text} />
           <View 
-            className="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-full" 
+            className="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-none" 
             style={{ 
               backgroundColor: mood.primary,
               borderColor: isLight ? "#F8FAFC" : "#020617"
@@ -137,7 +137,7 @@ export function AgentHeader() {
 
         <Pressable
           onPress={() => router.push("/(agent)/profile" as any)}
-          className="h-9 w-9 rounded-full border overflow-hidden items-center justify-center active:opacity-70"
+          className="h-9 w-9 rounded-none border overflow-hidden items-center justify-center active:opacity-70"
           style={{
             borderColor: mood.border,
             backgroundColor: isLight ? "#E2E8F0" : "rgba(255, 255, 255, 0.05)"
@@ -145,7 +145,7 @@ export function AgentHeader() {
         >
           <Image 
             source={{ uri: resolveMediaUrl(user?.avatar) || "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80" }} 
-            className="h-full w-full rounded-full"
+            className="h-full w-full rounded-none"
             contentFit="cover"
           />
         </Pressable>
@@ -175,7 +175,7 @@ export function AgentHeader() {
                 <Logo size="sm" style={{ width: 128, height: 32 }} />
                 <Pressable 
                   onPress={() => setIsMenuOpen(false)} 
-                  className="h-7 w-7 rounded-full border items-center justify-center active:opacity-70"
+                  className="h-7 w-7 rounded-none border items-center justify-center active:opacity-70"
                   style={{
                     borderColor: mood.border,
                     backgroundColor: isLight ? "#E2E8F0" : "rgba(255, 255, 255, 0.05)"
@@ -186,13 +186,13 @@ export function AgentHeader() {
               </View>
 
               <View 
-                className="rounded-xl p-3 flex-row items-center gap-2 border"
+                className="rounded-none p-3 flex-row items-center gap-2 border"
                 style={{
                   borderColor: getRgba(mood.primary, 0.2),
                   backgroundColor: getRgba(mood.primary, 0.05)
                 }}
               >
-                <View className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                <View className="h-2.5 w-2.5 rounded-none bg-emerald-500" />
                 <View className="flex-1">
                   <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: mood.primary }}>Active Operator Node</Text>
                   <Text className="text-[10px] font-bold" style={{ color: mood.text }} numberOfLines={1}>{user?.email ?? "Guest Operator"}</Text>
@@ -211,7 +211,7 @@ export function AgentHeader() {
                     <Pressable 
                       key={item.href} 
                       onPress={() => navigateTo(item.href)} 
-                      className="flex-row items-center px-4 py-3 rounded-xl border"
+                      className="flex-row items-center px-4 py-3 rounded-none border"
                       style={active ? {
                         borderColor: getRgba(mood.primary, 0.2),
                         backgroundColor: getRgba(mood.primary, 0.1)
@@ -239,7 +239,7 @@ export function AgentHeader() {
                   logout();
                   router.replace("/login");
                 }}
-                className="w-full py-4 rounded-xl border border-red-500/20 bg-red-500/10 items-center active:bg-red-500/20"
+                className="w-full py-4 rounded-none border border-red-500/20 bg-red-500/10 items-center active:bg-red-500/20"
               >
                 <Text className="text-xs font-black uppercase tracking-widest text-red-500">Terminate Session</Text>
               </Pressable>

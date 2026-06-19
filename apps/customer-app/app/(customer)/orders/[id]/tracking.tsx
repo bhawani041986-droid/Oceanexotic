@@ -194,7 +194,7 @@ export default function OrderTrackingScreen() {
               ID: {id} • VESSEL: {displayData.agent_name}
             </Text>
           </View>
-          <View className="rounded-2xl border border-primary/20 bg-primary/10 p-3">
+          <View className="rounded-none border border-primary/20 bg-primary/10 p-3">
             <Text className="text-[8px] font-black uppercase tracking-widest text-foreground">
               Cold-Chain
             </Text>
@@ -229,7 +229,7 @@ export default function OrderTrackingScreen() {
             </View>
           </View>
 
-          <View className="absolute bottom-3 left-3 right-3 flex-row items-center justify-between rounded-2xl border border-white/10 bg-background/95 p-3 pointer-events-none">
+          <View className="absolute bottom-3 left-3 right-3 flex-row items-center justify-between rounded-none border border-white/10 bg-background/95 p-3 pointer-events-none">
             <View>
               <Text className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">
                 Arrival
@@ -263,7 +263,7 @@ export default function OrderTrackingScreen() {
               {/* Timeline dot */}
               <View
                 className={cn(
-                  "absolute left-0 top-1.5 h-2 w-2 rounded-full",
+                  "absolute left-0 top-1.5 h-2 w-2 rounded-none",
                   event.active ? "bg-primary shadow-lg" : "bg-white/20"
                 )}
               />

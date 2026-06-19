@@ -100,14 +100,14 @@ export default function CartScreen() {
               return (
                 <View
                   key={item.id}
-                  className="mt-4 gap-3 rounded-2xl border p-3"
+                  className="mt-4 gap-3 rounded-none border p-3"
                   style={{ borderColor: colors.border, backgroundColor: colors.card }}
                 >
                   <View className="flex-row gap-3">
                     {img ? (
-                      <Image source={{ uri: img }} className="h-20 w-20 rounded-xl" contentFit="cover" />
+                      <Image source={{ uri: img }} className="h-20 w-20 rounded-none" contentFit="cover" />
                     ) : (
-                      <View className="h-20 w-20 items-center justify-center rounded-xl" style={{ backgroundColor: colors.bgAlt }}>
+                      <View className="h-20 w-20 items-center justify-center rounded-none" style={{ backgroundColor: colors.bgAlt }}>
                         <Text className="text-2xl">🐟</Text>
                       </View>
                     )}
@@ -120,7 +120,7 @@ export default function CartScreen() {
                         <View className="mt-1.5 flex-row items-center gap-2">
                           <Pressable 
                             onPress={() => toggleMarination(item.id)}
-                            className="px-2.5 py-1 rounded-full border"
+                            className="px-2.5 py-1 rounded-none border"
                             style={{ 
                               borderColor: item.isMarinated ? colors.primary : colors.border,
                               backgroundColor: item.isMarinated ? colors.primary + '1F' : 'transparent'
@@ -142,7 +142,7 @@ export default function CartScreen() {
                   <View className="flex-row items-center gap-3 border-t pt-2" style={{ borderTopColor: colors.border + '22' }}>
                     <Pressable
                       onPress={() => updateQuantity(item.id, item.quantity - 1)}
-                      className="h-8 w-8 items-center justify-center rounded-lg"
+                      className="h-8 w-8 items-center justify-center rounded-none"
                       style={{ backgroundColor: colors.bgAlt }}
                     >
                       <Text className="font-bold" style={{ color: colors.text }}>−</Text>
@@ -150,7 +150,7 @@ export default function CartScreen() {
                     <Text className="text-sm font-black" style={{ color: colors.text }}>{item.quantity}</Text>
                     <Pressable
                       onPress={() => updateQuantity(item.id, item.quantity + 1)}
-                      className="h-8 w-8 items-center justify-center rounded-lg"
+                      className="h-8 w-8 items-center justify-center rounded-none"
                       style={{ backgroundColor: colors.bgAlt }}
                     >
                       <Text className="font-bold" style={{ color: colors.text }}>+</Text>
@@ -175,10 +175,10 @@ export default function CartScreen() {
                     return (
                       <View 
                         key={addon.id} 
-                        className="w-32 rounded-xl border p-2 mr-3"
+                        className="w-32 rounded-none border p-2 mr-3"
                         style={{ borderColor: colors.border, backgroundColor: colors.card }}
                       >
-                        <Image source={{ uri: addonImg }} className="h-16 w-full rounded-lg" contentFit="cover" />
+                        <Image source={{ uri: addonImg }} className="h-16 w-full rounded-none" contentFit="cover" />
                         <Text className="mt-1 text-[10px] font-black uppercase" style={{ color: colors.text }} numberOfLines={1}>
                           {addon.name}
                         </Text>
@@ -199,7 +199,7 @@ export default function CartScreen() {
                                 sellerId: 'ADDON'
                               });
                             }}
-                            className="px-2 py-0.5 rounded-full"
+                            className="px-2 py-0.5 rounded-none"
                             style={{ backgroundColor: alreadyInCart ? colors.border : colors.primary }}
                           >
                             <Text className="text-[8px] font-black uppercase" style={{ color: alreadyInCart ? colors.textMuted : colors.bg }}>
@@ -220,7 +220,7 @@ export default function CartScreen() {
               const grandTotal = subtotal + tax;
               return (
                 <View 
-                  className="mt-6 rounded-2xl border p-5 gap-2"
+                  className="mt-6 rounded-none border p-5 gap-2"
                   style={{ 
                     borderColor: colors.primary + "33", 
                     backgroundColor: colors.primary + "1A" 

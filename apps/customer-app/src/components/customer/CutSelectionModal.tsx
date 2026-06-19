@@ -63,7 +63,7 @@ export function CutSelectionModal({
                   key={cut.cut_type}
                   onPress={() => onSelect(cut)}
                   className={cn(
-                    "mb-2 flex-row items-center justify-between rounded-xl border px-4 py-3",
+                    "mb-2 flex-row items-center justify-between rounded-none border px-4 py-3",
                     selected?.cut_type === cut.cut_type
                       ? "border-primary bg-primary/20"
                       : "border-white/10 bg-background/50"
@@ -83,14 +83,14 @@ export function CutSelectionModal({
 
           {/* Weight Selector UI */}
           {!loading && options.length > 0 && (
-            <View className="mt-2 mb-4 flex-row items-center justify-between rounded-xl border border-white/10 bg-background/50 px-4 py-3">
+            <View className="mt-2 mb-4 flex-row items-center justify-between rounded-none border border-white/10 bg-background/50 px-4 py-3">
               <Text className="text-sm font-bold uppercase text-foreground">Weight</Text>
               <View className="flex-row items-center gap-4">
-                <TouchableOpacity onPress={handleDecrease} className="h-8 w-8 items-center justify-center rounded-full bg-white/10">
+                <TouchableOpacity onPress={handleDecrease} className="h-8 w-8 items-center justify-center rounded-none bg-white/10">
                   <Text className="text-white text-lg">-</Text>
                 </TouchableOpacity>
                 <Text className="text-base font-black text-foreground w-12 text-center">{weight} KG</Text>
-                <TouchableOpacity onPress={handleIncrease} className="h-8 w-8 items-center justify-center rounded-full bg-primary/20 border border-primary">
+                <TouchableOpacity onPress={handleIncrease} className="h-8 w-8 items-center justify-center rounded-none bg-primary/20 border border-primary">
                   <Text className="text-primary text-lg">+</Text>
                 </TouchableOpacity>
               </View>

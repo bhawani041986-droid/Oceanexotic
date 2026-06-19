@@ -318,7 +318,7 @@ export default function ProductDetailScreen() {
 
             {/* Floating Badge Indicator (Amazon Style) */}
             {allImages.length > 1 && (
-              <View className="absolute bottom-4 right-4 bg-black/60 px-3 py-1 rounded-full border border-white/10 z-10">
+              <View className="absolute bottom-4 right-4 bg-black/60 px-3 py-1 rounded-none border border-white/10 z-10">
                 <Text className="text-white text-[10px] font-black tracking-widest">
                   {activeImageIndex + 1} / {allImages.length}
                 </Text>
@@ -396,7 +396,7 @@ export default function ProductDetailScreen() {
                 <Text className="text-[8px] font-bold uppercase" style={{ color: colors.textMuted }}>Prime Quality Index (A+)</Text>
               </View>
             </View>
-            <View className="rounded-full bg-emerald-500/10 px-2 py-1 border border-emerald-500/20">
+            <View className="rounded-none bg-emerald-500/10 px-2 py-1 border border-emerald-500/20">
               <Text className="text-[8px] font-black text-emerald-500 uppercase">98% FRESH</Text>
             </View>
           </View>
@@ -428,13 +428,13 @@ export default function ProductDetailScreen() {
                   return (
                     <View 
                       key={addon.id} 
-                      className="w-full p-2 border rounded-xl flex-row items-center justify-between"
+                      className="w-full p-2 border rounded-none flex-row items-center justify-between"
                       style={{ backgroundColor: colors.card, borderColor: colors.border }}
                     >
                       <View className="flex-row items-center flex-1 pr-3">
                         <Image 
                           source={{ uri: addonImg }} 
-                          className="w-10 h-10 rounded-lg bg-black/10 border mr-3"
+                          className="w-10 h-10 rounded-none bg-black/10 border mr-3"
                           style={{ borderColor: 'rgba(255, 255, 255, 0.05)' }}
                         />
                         <View className="flex-1 justify-center">
@@ -448,7 +448,7 @@ export default function ProductDetailScreen() {
                       
                       <Pressable
                         onPress={() => handleToggleAddon(addon)}
-                        className={`px-3 py-1.5 rounded-lg flex-row items-center justify-center gap-1 border ${
+                        className={`px-3 py-1.5 rounded-none flex-row items-center justify-center gap-1 border ${
                           inCart ? 'bg-emerald-600 border-emerald-600' : 'bg-transparent'
                         }`}
                         style={{ borderColor: inCart ? '#059669' : colors.primary }}
@@ -469,7 +469,7 @@ export default function ProductDetailScreen() {
               {p.addons.length > 3 && (
                 <Pressable
                   onPress={() => setShowAllAddons(!showAllAddons)}
-                  className="mt-3 py-2 items-center justify-center border rounded-lg bg-emerald-500/10"
+                  className="mt-3 py-2 items-center justify-center border rounded-none bg-emerald-500/10"
                   style={{ borderColor: 'rgba(16, 185, 129, 0.2)' }}
                 >
                   <Text className="text-[10px] font-black uppercase tracking-widest text-emerald-500">
@@ -502,7 +502,7 @@ export default function ProductDetailScreen() {
                     <Pressable
                       key={option.id}
                       onPress={() => setSelectedPrepOption(option)}
-                      className="p-3 border rounded-xl items-center justify-center min-w-[90px]"
+                      className="p-3 border rounded-none items-center justify-center min-w-[90px]"
                       style={{
                         backgroundColor: isSelected ? `${colors.primary}15` : colors.card,
                         borderColor: isSelected ? colors.primary : colors.border
@@ -523,7 +523,7 @@ export default function ProductDetailScreen() {
 
           {isComingSoon ? (
             <View className="mt-8">
-              <View className="bg-amber-500/20 border border-amber-500/30 rounded-xl py-4 items-center">
+              <View className="bg-amber-500/20 border border-amber-500/30 rounded-none py-4 items-center">
                 <Text className="text-amber-500 font-black uppercase tracking-widest text-center">
                   🚢 COMING SOON - NOT YET HARVESTED IN THIS SECTOR
                 </Text>
@@ -661,7 +661,7 @@ export default function ProductDetailScreen() {
         <View className="px-4 py-6 border-t" style={{ borderColor: colors.border }}>
           <SectionTitle title="Authority Registry" subtitle="Fleet Certification" />
           <View className="p-4 mt-4 border flex-row items-center gap-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-             <View className="w-12 h-12 rounded-full items-center justify-center border" style={{ backgroundColor: `${colors.primary}20`, borderColor: `${colors.primary}40` }}>
+             <View className="w-12 h-12 rounded-none items-center justify-center border" style={{ backgroundColor: `${colors.primary}20`, borderColor: `${colors.primary}40` }}>
                 <Text className="text-xl">⚓</Text>
              </View>
              <View>
@@ -704,7 +704,7 @@ export default function ProductDetailScreen() {
               <View key={i} className="p-4 border" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
                 <View className="flex-row justify-between items-start mb-2">
                   <View className="flex-row items-center gap-2">
-                    <View className="w-8 h-8 rounded-full items-center justify-center" style={{ backgroundColor: `${colors.primary}20` }}>
+                    <View className="w-8 h-8 rounded-none items-center justify-center" style={{ backgroundColor: `${colors.primary}20` }}>
                       <Text className="font-black" style={{ color: colors.primary }}>{review.name.charAt(0)}</Text>
                     </View>
                     <View>
@@ -766,7 +766,7 @@ export default function ProductDetailScreen() {
             </Text>
             <Pressable
               onPress={() => setIsFullScreenVisible(false)}
-              className="w-10 h-10 rounded-full bg-white/10 items-center justify-center border border-white/10"
+              className="w-10 h-10 rounded-none bg-white/10 items-center justify-center border border-white/10"
             >
               <MaterialCommunityIcons name="close" size={20} color="#fff" />
             </Pressable>

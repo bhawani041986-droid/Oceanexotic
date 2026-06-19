@@ -260,7 +260,7 @@ export default function ProductsScreen() {
           onChangeText={setSearchQuery}
           placeholder={t('search_seafood')}
           placeholderTextColor={colors.isDark ? "#94A3B8" : "#6B7280"}
-          className="mt-4 h-12 rounded-xl border px-4 text-sm"
+          className="mt-4 h-12 rounded-none border px-4 text-sm"
           style={{ 
             backgroundColor: colors.card, 
             borderColor: colors.border, 
@@ -275,7 +275,7 @@ export default function ProductsScreen() {
               <Pressable
                 key={tab}
                 onPress={() => setActiveTab(tab)}
-                className="mr-2 rounded-xl px-4 py-2 border"
+                className="mr-2 rounded-none px-4 py-2 border"
                 style={active ? { 
                   backgroundColor: colors.primary, 
                   borderColor: colors.primary 
@@ -357,9 +357,9 @@ export default function ProductsScreen() {
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
                       <View className="flex-row gap-3 pr-8">
                         {addons.map(addon => (
-                          <View key={addon.id} className="w-[180px] rounded-xl border p-2" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+                          <View key={addon.id} className="w-[180px] rounded-none border p-2" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
                             <View className="flex-row items-center gap-2">
-                              <Image source={{ uri: addon.image_url || "https://images.unsplash.com/photo-1596683788737-88981f33f674?q=80&w=500" }} className="h-10 w-10 rounded-lg bg-black/10" contentFit="cover" />
+                              <Image source={{ uri: addon.image_url || "https://images.unsplash.com/photo-1596683788737-88981f33f674?q=80&w=500" }} className="h-10 w-10 rounded-none bg-black/10" contentFit="cover" />
                               <View className="flex-1">
                                 <Text className="text-[10px] font-black uppercase leading-tight" style={{ color: colors.text }} numberOfLines={2}>{addon.name}</Text>
                                 <Text className="text-[8px] italic" style={{ color: colors.textMuted }}>{addon.type || "Add-on"}</Text>
@@ -367,7 +367,7 @@ export default function ProductsScreen() {
                             </View>
                             <View className="mt-2 flex-row items-center justify-between border-t pt-2" style={{ borderTopColor: colors.border }}>
                               <Text className="text-[10px] font-black text-emerald-400">₹{addon.price}</Text>
-                              <Pressable onPress={() => handleAddAddon(addon)} className="rounded-md px-3 py-1.5" style={{ backgroundColor: colors.primary }}>
+                              <Pressable onPress={() => handleAddAddon(addon)} className="rounded-none px-3 py-1.5" style={{ backgroundColor: colors.primary }}>
                                 <Text className="text-[8px] font-black uppercase text-white">+ ADD</Text>
                               </Pressable>
                             </View>
@@ -394,7 +394,7 @@ export default function ProductsScreen() {
           </View>
         ) : (
           <View 
-            className="my-12 items-center rounded-2xl border border-dashed p-8"
+            className="my-12 items-center rounded-none border border-dashed p-8"
             style={{ borderColor: colors.border }}
           >
             <Text className="text-xs font-black uppercase" style={{ color: colors.textMuted }}>No harvest in this sector</Text>

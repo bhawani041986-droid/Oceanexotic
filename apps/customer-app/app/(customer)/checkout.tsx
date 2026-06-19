@@ -157,7 +157,7 @@ export default function CheckoutScreen() {
                   className="items-center gap-1"
                 >
                   <View
-                    className="w-7 h-7 rounded-full items-center justify-center border"
+                    className="w-7 h-7 rounded-none items-center justify-center border"
                     style={done ? {
                       backgroundColor: "#10B981",
                       borderColor: "#10B981"
@@ -235,7 +235,7 @@ export default function CheckoutScreen() {
                   <Pressable
                     key={String(addr.id)}
                     onPress={() => setSelectedAddress(addr)}
-                    className="rounded-xl border-2 p-4"
+                    className="rounded-none border-2 p-4"
                     style={selected ? {
                       borderColor: primaryColor,
                       backgroundColor: colors.primary + "1A"
@@ -251,7 +251,7 @@ export default function CheckoutScreen() {
                         </Text>
                       </View>
                       {selected && (
-                        <View className="w-4 h-4 rounded-full items-center justify-center" style={{ backgroundColor: primaryColor }}>
+                        <View className="w-4 h-4 rounded-none items-center justify-center" style={{ backgroundColor: primaryColor }}>
                           <Text className="text-[8px] text-foreground font-black">✓</Text>
                         </View>
                       )}
@@ -296,7 +296,7 @@ export default function CheckoutScreen() {
               </View>
             </View>
           ) : (
-            <View className="py-10 items-center gap-4 border-2 border-dashed border-white/10 rounded-xl">
+            <View className="py-10 items-center gap-4 border-2 border-dashed border-white/10 rounded-none">
               <Text className="text-4xl">📍</Text>
               <Text className="text-sm font-bold text-muted-foreground text-center">
                 No addresses found in your vault.
@@ -322,7 +322,7 @@ export default function CheckoutScreen() {
         >
           {/* COD is the only method (mirrors web) */}
           <View 
-            className="border-2 rounded-xl p-5 flex-row items-center gap-4"
+            className="border-2 rounded-none p-5 flex-row items-center gap-4"
             style={{
               borderColor: primaryColor,
               backgroundColor: colors.primary + "0D"
@@ -337,7 +337,7 @@ export default function CheckoutScreen() {
                 Pay with cash upon delivery of your items
               </Text>
             </View>
-            <View className="w-5 h-5 rounded-full items-center justify-center" style={{ backgroundColor: primaryColor }}>
+            <View className="w-5 h-5 rounded-none items-center justify-center" style={{ backgroundColor: primaryColor }}>
               <Text className="text-[9px] text-foreground font-black">✓</Text>
             </View>
           </View>
@@ -364,9 +364,9 @@ export default function CheckoutScreen() {
               return (
                 <View
                   key={item.id}
-                  className="flex-row gap-4 items-center p-3 rounded-xl border border-white/10 bg-secondary/30"
+                  className="flex-row gap-4 items-center p-3 rounded-none border border-white/10 bg-secondary/30"
                 >
-                  <View className="w-14 h-14 rounded-lg overflow-hidden bg-secondary/50">
+                  <View className="w-14 h-14 rounded-none overflow-hidden bg-secondary/50">
                     {imgUri ? (
                       <Image
                         source={{ uri: imgUri }}
@@ -399,7 +399,7 @@ export default function CheckoutScreen() {
           </View>
 
           {/* Order Total */}
-          <View className="bg-secondary/40 border border-white/10 rounded-xl p-4 mb-6 gap-2">
+          <View className="bg-secondary/40 border border-white/10 rounded-none p-4 mb-6 gap-2">
             <View className="flex-row justify-between">
               <Text className="text-xs text-muted-foreground">Subtotal</Text>
               <Text className="text-xs font-bold text-foreground">₹{subtotal.toLocaleString()}</Text>
@@ -423,7 +423,7 @@ export default function CheckoutScreen() {
           {/* Delivery summary */}
           {selectedAddress && (
             <View 
-              className="border rounded-xl p-4 mb-6 gap-1"
+              className="border rounded-none p-4 mb-6 gap-1"
               style={{
                 backgroundColor: colors.primary + "0D",
                 borderColor: colors.primary + "33"
@@ -445,7 +445,7 @@ export default function CheckoutScreen() {
           )}
 
           {/* Authorize finalize */}
-          <View className="bg-secondary/40 border border-white/10 rounded-2xl p-6 items-center gap-4">
+          <View className="bg-secondary/40 border border-white/10 rounded-none p-6 items-center gap-4">
             <Text className="text-3xl">🛡️</Text>
             <Text className="text-[10px] font-black uppercase tracking-widest text-foreground italic text-center">
               Confirm Delivery Address
@@ -482,7 +482,7 @@ export default function CheckoutScreen() {
             className="w-full"
           />
         ) : (
-          <View className="w-full py-3 rounded-xl border border-white/10 bg-secondary/40 items-center">
+          <View className="w-full py-3 rounded-none border border-white/10 bg-secondary/40 items-center">
             <Text className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
               Complete steps above to place order
             </Text>
@@ -512,7 +512,7 @@ function StepCard({ stepNum, label, active, done, summary, onEdit, children }: S
 
   return (
     <View
-      className="rounded-2xl border overflow-hidden"
+      className="rounded-none border overflow-hidden"
       style={{
         borderColor: active
           ? colors.primary + "66"
@@ -530,7 +530,7 @@ function StepCard({ stepNum, label, active, done, summary, onEdit, children }: S
       >
         <View className="flex-row items-center gap-3">
           <View
-            className="w-6 h-6 rounded-full items-center justify-center"
+            className="w-6 h-6 rounded-none items-center justify-center"
             style={done ? {
               backgroundColor: "#10B981"
             } : active ? {

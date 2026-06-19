@@ -253,13 +253,13 @@ export default function ProfileScreen() {
 
         {/* Identity Head & Avatar */}
         <View 
-          className="flex-row items-center gap-4 mt-6 rounded-2xl border p-4"
+          className="flex-row items-center gap-4 mt-6 rounded-none border p-4"
           style={{ borderColor: colors.border, backgroundColor: colors.card }}
         >
           <Pressable 
             onPress={handlePickImage} 
             disabled={uploadingAvatar}
-            className="relative w-16 h-16 rounded-full overflow-hidden border-2 justify-center items-center"
+            className="relative w-16 h-16 rounded-none overflow-hidden border-2 justify-center items-center"
             style={{ borderColor: colors.primary + "4D", backgroundColor: colors.bgAlt }}
           >
             {uploadingAvatar ? (
@@ -290,7 +290,7 @@ export default function ProfileScreen() {
         <View className="mt-6 flex-row gap-3">
           <Pressable
             onPress={() => router.push("/orders")}
-            className="flex-1 rounded-2xl border p-4"
+            className="flex-1 rounded-none border p-4"
             style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
             <Text className="text-2xl font-black" style={{ color: primaryColor }}>{orderCount}</Text>
@@ -298,7 +298,7 @@ export default function ProfileScreen() {
           </Pressable>
           <Pressable
             onPress={() => router.push("/cart")}
-            className="flex-1 rounded-2xl border p-4"
+            className="flex-1 rounded-none border p-4"
             style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
             <Text className="text-2xl font-black" style={{ color: primaryColor }}>{cart.itemCount()}</Text>
@@ -308,7 +308,7 @@ export default function ProfileScreen() {
 
         {/* Identity node */}
         <View 
-          className="mt-6 gap-4 rounded-2xl border p-5"
+          className="mt-6 gap-4 rounded-none border p-5"
           style={{ borderColor: colors.border, backgroundColor: colors.card }}
         >
           <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
@@ -327,7 +327,7 @@ export default function ProfileScreen() {
 
         {/* Change Password node */}
         <View 
-          className="mt-6 gap-4 rounded-2xl border p-5"
+          className="mt-6 gap-4 rounded-none border p-5"
           style={{ borderColor: colors.border, backgroundColor: colors.card }}
         >
           <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
@@ -369,7 +369,7 @@ export default function ProfileScreen() {
 
         {/* Address Vault Manager */}
         <View 
-          className="mt-6 rounded-2xl border p-5"
+          className="mt-6 rounded-none border p-5"
           style={{ borderColor: colors.border, backgroundColor: colors.card }}
         >
           <View className="flex-row items-center justify-between mb-4">
@@ -378,7 +378,7 @@ export default function ProfileScreen() {
             </Text>
             <Pressable 
               onPress={() => setAddressModalVisible(true)} 
-              className="rounded-lg border px-3 py-1"
+              className="rounded-none border px-3 py-1"
               style={{
                 backgroundColor: colors.primary + "1A",
                 borderColor: colors.primary + "33"
@@ -390,7 +390,7 @@ export default function ProfileScreen() {
 
           {addresses.length === 0 ? (
             <View 
-              className="items-center py-6 border border-dashed rounded-xl"
+              className="items-center py-6 border border-dashed rounded-none"
               style={{ borderColor: colors.border }}
             >
               <Text className="text-xs font-bold uppercase" style={{ color: colors.textMuted }}>No addresses registered</Text>
@@ -400,7 +400,7 @@ export default function ProfileScreen() {
               {addresses.map((addr) => (
                 <View 
                   key={addr.id} 
-                  className="p-4 rounded-xl border relative"
+                  className="p-4 rounded-none border relative"
                   style={{ borderColor: colors.border, backgroundColor: colors.bgAlt }}
                 >
                   <View className="flex-row items-center justify-between mb-1">
@@ -437,14 +437,14 @@ export default function ProfileScreen() {
         <View className="mt-4 gap-2">
           <Pressable 
             onPress={() => router.push("/products")} 
-            className="rounded-xl border px-4 py-4"
+            className="rounded-none border px-4 py-4"
             style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
             <Text className="text-sm font-bold" style={{ color: colors.text }}>Browse Market</Text>
           </Pressable>
           <Pressable 
             onPress={() => router.push("/home")} 
-            className="rounded-xl border px-4 py-4"
+            className="rounded-none border px-4 py-4"
             style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
             <Text className="text-sm font-bold" style={{ color: colors.text }}>Harbor Home</Text>
@@ -463,7 +463,7 @@ export default function ProfileScreen() {
       >
         <View className="flex-1 justify-end px-4 pb-12 pt-20" style={{ backgroundColor: colors.bg + "E6" }}>
           <ScrollView 
-            contentContainerClassName="rounded-3xl border p-6 shadow-2xl"
+            contentContainerClassName="rounded-none border p-6 shadow-2xl"
             style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
             <View className="mb-6 flex-row items-center justify-between">
@@ -472,7 +472,7 @@ export default function ProfileScreen() {
               </Text>
               <Pressable
                 onPress={() => setAddressModalVisible(false)}
-                className="rounded-full p-2"
+                className="rounded-none p-2"
                 style={{ backgroundColor: colors.textMuted + "1A" }}
               >
                 <Text className="text-xs font-black" style={{ color: colors.text }}>X</Text>
@@ -491,7 +491,7 @@ export default function ProfileScreen() {
                   <Pressable
                     key={t}
                     onPress={() => setAddrType(t)}
-                    className="flex-1 py-2 rounded-xl border items-center"
+                    className="flex-1 py-2 rounded-none border items-center"
                     style={addrType === t ? {
                       borderColor: primaryColor,
                       backgroundColor: colors.primary + "1A"
@@ -536,7 +536,7 @@ export default function ProfileScreen() {
                   <Pressable
                     key={j}
                     onPress={() => setAddrJetty(j)}
-                    className="px-3 py-2 rounded-xl border mr-2"
+                    className="px-3 py-2 rounded-none border mr-2"
                     style={addrJetty === j ? {
                       borderColor: primaryColor,
                       backgroundColor: colors.primary + "1A"

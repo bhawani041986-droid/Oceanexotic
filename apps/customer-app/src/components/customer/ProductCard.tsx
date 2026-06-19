@@ -114,7 +114,7 @@ export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCar
             ) : null}
           </View>
           {onSelectCut ? (
-            <Pressable onPress={onSelectCut} className="rounded-xl px-3 py-2 overflow-hidden relative" style={{ backgroundColor: colors.primary }}>
+            <Pressable onPress={onSelectCut} className="rounded-none px-3 py-2 overflow-hidden relative" style={{ backgroundColor: colors.primary }}>
               <Text className="text-[9px] font-black uppercase text-white relative z-10">+ CUT</Text>
               <Svg width="8" height="8" style={{ position: "absolute", top: -1, left: -1, zIndex: 20 }}>
                 <Path d="M0,0 L8,0 L0,8 Z" fill={colors.card} />
@@ -124,7 +124,7 @@ export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCar
               </Svg>
             </Pressable>
           ) : onAdd ? (
-            <Pressable onPress={onAdd} disabled={outOfStock} className="rounded-xl px-3 py-2 opacity-100 disabled:opacity-40 overflow-hidden relative" style={{ backgroundColor: colors.primary }}>
+            <Pressable onPress={onAdd} disabled={outOfStock} className="rounded-none px-3 py-2 opacity-100 disabled:opacity-40 overflow-hidden relative" style={{ backgroundColor: colors.primary }}>
               <Text className="text-[9px] font-black uppercase text-white relative z-10">+ ADD</Text>
               <Svg width="8" height="8" style={{ position: "absolute", top: -1, left: -1, zIndex: 20 }}>
                 <Path d="M0,0 L8,0 L0,8 Z" fill={colors.card} />

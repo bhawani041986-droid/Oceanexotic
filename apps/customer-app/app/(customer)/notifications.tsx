@@ -53,14 +53,14 @@ export default function NotificationsScreen() {
         {mockNotifications.map((notif) => (
           <View
             key={notif.id}
-            className="flex-row p-4 rounded-2xl border"
+            className="flex-row p-4 rounded-none border"
             style={{
               backgroundColor: notif.unread ? colors.primary + "10" : colors.card,
               borderColor: notif.unread ? colors.primary + "30" : colors.border,
             }}
           >
             <View
-              className="w-10 h-10 rounded-full items-center justify-center mr-4 border"
+              className="w-10 h-10 rounded-none items-center justify-center mr-4 border"
               style={{
                 backgroundColor: notif.unread ? colors.primary + "20" : colors.bgAlt,
                 borderColor: notif.unread ? colors.primary + "40" : colors.border,

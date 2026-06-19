@@ -180,7 +180,7 @@ export default function RecipeDetailsScreen() {
                 {recipe.gallery.map((_: any, idx: number) => (
                   <View 
                     key={idx} 
-                    className="w-1.5 h-1.5 rounded-full" 
+                    className="w-1.5 h-1.5 rounded-none" 
                     style={{ backgroundColor: idx === activeImg ? colors.primary : 'rgba(255,255,255,0.4)' }}
                   />
                 ))}
@@ -207,11 +207,11 @@ export default function RecipeDetailsScreen() {
           >
             <Pressable 
               onPress={() => router.back()}
-              className="w-10 h-10 rounded-full items-center justify-center bg-black/50 border border-white/10 backdrop-blur-md"
+              className="w-10 h-10 rounded-none items-center justify-center bg-black/50 border border-white/10 backdrop-blur-md"
             >
               <MaterialCommunityIcons name="arrow-left" size={20} color="white" />
             </Pressable>
-            <View className="bg-black/50 border border-white/10 px-3 py-1.5 rounded-full backdrop-blur-md flex-row items-center gap-1.5">
+            <View className="bg-black/50 border border-white/10 px-3 py-1.5 rounded-none backdrop-blur-md flex-row items-center gap-1.5">
               <MaterialCommunityIcons name="chef-hat" size={12} color={colors.primary} />
               <Text className="text-[9px] font-black text-white uppercase tracking-widest">Recipe Active</Text>
             </View>
@@ -220,11 +220,11 @@ export default function RecipeDetailsScreen() {
           {/* Title Area */}
           <View className="absolute bottom-6 left-5 right-5 space-y-3">
             <View className="flex-row items-center gap-2 flex-wrap">
-              <View className="flex-row items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-md border border-white/20 backdrop-blur-md">
+              <View className="flex-row items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-none border border-white/20 backdrop-blur-md">
                 <MaterialCommunityIcons name="fire" size={12} color={colors.primary} />
                 <Text className="text-[9px] font-black text-white uppercase tracking-widest">{meta.difficulty || 'Expert'}</Text>
               </View>
-              <View className="flex-row items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-md border border-white/20 backdrop-blur-md">
+              <View className="flex-row items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-none border border-white/20 backdrop-blur-md">
                 <MaterialCommunityIcons name="clock-outline" size={12} color="white" />
                 <Text className="text-[9px] font-black text-white uppercase tracking-widest">{meta.time || '25m'}</Text>
               </View>
@@ -257,7 +257,7 @@ export default function RecipeDetailsScreen() {
                   <Text className="text-[10px] font-black uppercase text-slate-400">Omega-3 Concentration</Text>
                   <Text className="text-lg font-black text-white italic mt-0.5">High Density (94%)</Text>
                 </View>
-                <View className="w-10 h-10 rounded-xl items-center justify-center bg-cyan-500/10 border border-cyan-500/20">
+                <View className="w-10 h-10 rounded-none items-center justify-center bg-cyan-500/10 border border-cyan-500/20">
                   <MaterialCommunityIcons name="water-percent" size={20} color="#00d4ff" />
                 </View>
               </View>
@@ -268,12 +268,12 @@ export default function RecipeDetailsScreen() {
                   <Text>Bio-absorption Index</Text>
                   <Text>98% Optimal</Text>
                 </View>
-                <View className="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+                <View className="h-2 w-full bg-slate-800 rounded-none overflow-hidden">
                   <LinearGradient
                     colors={['#00d4ff', '#00ffaa']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
-                    className="h-full rounded-full"
+                    className="h-full rounded-none"
                     style={{ width: '98%' }}
                   />
                 </View>
@@ -314,7 +314,7 @@ export default function RecipeDetailsScreen() {
                 <View key={i} className="flex-row items-center gap-3.5">
                   {/* Premium fish bullet icon */}
                   <View 
-                    className="w-7 h-7 rounded-lg items-center justify-center border"
+                    className="w-7 h-7 rounded-none items-center justify-center border"
                     style={{
                       backgroundColor: 'rgba(16, 185, 129, 0.08)',
                       borderColor: 'rgba(16, 185, 129, 0.25)',
@@ -340,14 +340,14 @@ export default function RecipeDetailsScreen() {
                 <LinearGradient
                   key={i}
                   colors={['rgba(30, 41, 59, 0.3)', 'rgba(15, 23, 42, 0.5)']}
-                  className="flex-row items-start gap-4 rounded-xl p-4 border relative overflow-hidden"
+                  className="flex-row items-start gap-4 rounded-none p-4 border relative overflow-hidden"
                   style={{ borderColor: 'rgba(255, 255, 255, 0.06)' }}
                 >
                   {/* Left neon indicator border */}
                   <View className="absolute left-0 top-0 bottom-0 w-[3px]" style={{ backgroundColor: colors.primary }} />
                   
                   <View 
-                    className="w-6 h-6 rounded-full items-center justify-center border" 
+                    className="w-6 h-6 rounded-none items-center justify-center border" 
                     style={{ 
                       borderColor: colors.primary, 
                       backgroundColor: 'rgba(255,255,255,0.03)',

@@ -84,7 +84,7 @@ export default function RecipesListScreen() {
       >
         <Pressable 
           onPress={() => router.back()}
-          className="w-10 h-10 rounded-full items-center justify-center bg-white/5 border"
+          className="w-10 h-10 rounded-none items-center justify-center bg-white/5 border"
           style={{ borderColor: colors.border }}
         >
           <MaterialCommunityIcons name="arrow-left" size={20} color="white" />
@@ -97,7 +97,7 @@ export default function RecipesListScreen() {
             Chef's Recipes
           </Text>
         </View>
-        <View className="w-10 h-10 rounded-xl items-center justify-center bg-primary/10 border border-primary/20">
+        <View className="w-10 h-10 rounded-none items-center justify-center bg-primary/10 border border-primary/20">
           <MaterialCommunityIcons name="chef-hat" size={20} color={colors.primary} />
         </View>
       </View>
@@ -111,7 +111,7 @@ export default function RecipesListScreen() {
         <View className="p-5 space-y-5">
           {/* Glassmorphic Search Bar */}
           <View 
-            className="flex-row items-center px-4 h-12 rounded-xl border bg-white/5"
+            className="flex-row items-center px-4 h-12 rounded-none border bg-white/5"
             style={{ borderColor: colors.border }}
           >
             <MaterialCommunityIcons name="magnify" size={20} color={colors.textMuted} className="mr-2" />
@@ -140,7 +140,7 @@ export default function RecipesListScreen() {
                   <Pressable
                     key={p}
                     onPress={() => setSelectedPrep(p)}
-                    className="px-4 py-2 rounded-lg border transition-all"
+                    className="px-4 py-2 rounded-none border transition-all"
                     style={{
                       backgroundColor: active ? `${colors.primary}15` : 'rgba(255,255,255,0.02)',
                       borderColor: active ? colors.primary : colors.border
@@ -168,7 +168,7 @@ export default function RecipesListScreen() {
                   <Pressable
                     key={r}
                     onPress={() => setSelectedRegion(r)}
-                    className="px-4 py-2 rounded-lg border transition-all"
+                    className="px-4 py-2 rounded-none border transition-all"
                     style={{
                       backgroundColor: active ? `${colors.primary}15` : 'rgba(255,255,255,0.02)',
                       borderColor: active ? colors.primary : colors.border
@@ -264,7 +264,7 @@ export default function RecipesListScreen() {
               </Pressable>
             ))
           ) : (
-            <View className="py-16 items-center justify-center border-2 border-dashed border-white/5 rounded-3xl opacity-50">
+            <View className="py-16 items-center justify-center border-2 border-dashed border-white/5 rounded-none opacity-50">
               <MaterialCommunityIcons name="fish-off" size={32} color={colors.textMuted} />
               <Text className="text-xs font-black uppercase tracking-widest text-muted-foreground mt-4">
                 No Matching Recipes Found

@@ -165,7 +165,7 @@ export default function LoginScreen() {
               {/* Google Auth Button */}
               <Pressable 
                 onPress={handleGoogleSignIn}
-                className="w-full h-14 bg-white rounded-2xl flex-row items-center justify-center gap-3 shadow-lg active:opacity-80"
+                className="w-full h-14 bg-white rounded-none flex-row items-center justify-center gap-3 shadow-lg active:opacity-80"
               >
                 <GoogleIcon />
                 <Text className="text-[#020617] font-black text-[12px] uppercase tracking-widest">
