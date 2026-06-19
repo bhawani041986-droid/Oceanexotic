@@ -192,13 +192,17 @@ export default function SellerFleetControl() {
            </Card>
             <Card className="h-[300px] lg:h-[500px] relative overflow-hidden bg-black/40 border-primary/20">
               <PortBlairFleetMap
-                agents={missions.map((m: any) => ({
-                  id: m.order_id,
-                  lat: m.current_lat || 11.6670,
-                  lng: m.current_lng || 92.7359,
-                  label: `${m.order_id} — ${m.agent_name || 'Unassigned'}`,
-                  isActive: m.order_id === activeOrder,
-                }))}
+                agents={missions.map((m: any) => {
+                  const isLiveAgent = m.order_id?.startsWith('LIVE_AGENT_');
+                  const displayName = isLiveAgent ? `[LIVE] ${m.agent_name}` : `${m.order_id} — ${m.agent_name || 'Unassigned'}`;
+                  return {
+                    id: m.order_id,
+                    lat: m.current_lat || 11.6670,
+                    lng: m.current_lng || 92.7359,
+                    label: displayName,
+                    isActive: m.order_id === activeOrder,
+                  }
+                })}
                 activeAgentId={activeOrder}
                 className="absolute inset-0 z-10"
               />

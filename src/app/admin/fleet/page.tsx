@@ -160,13 +160,17 @@ export default function AgentMissionControl() {
 
       <Card className="h-[250px] md:h-[450px] relative overflow-hidden border-primary/20 bg-black/40 rounded-[24px] md:rounded-[48px] shadow-glow-purple/10">
          <PortBlairFleetMap
-           agents={missions.map((m: any) => ({
-             id: m.order_id,
-             lat: m.current_lat || 11.6670,
-             lng: m.current_lng || 92.7359,
-             label: `${m.order_id} — ${m.agent_name || 'Unassigned'}`,
-             isActive: m.order_id === activeOrder,
-           }))}
+           agents={missions.map((m: any) => {
+             const isLiveAgent = m.order_id?.startsWith('LIVE_AGENT_');
+             const displayName = isLiveAgent ? `[LIVE] ${m.agent_name}` : `${m.order_id} — ${m.agent_name || 'Unassigned'}`;
+             return {
+               id: m.order_id,
+               lat: m.current_lat || 11.6670,
+               lng: m.current_lng || 92.7359,
+               label: displayName,
+               isActive: m.order_id === activeOrder,
+             }
+           })}
            activeAgentId={activeOrder}
            className="absolute inset-0 z-10"
          />

@@ -1181,12 +1181,30 @@ export default function AgentTrackingScreen() {
             </Text>
           </View>
           <Pressable 
-            onPress={() => {
-    <QRScannerNative
-      isOpen={isScanning}
-      onScan={handleQRScan}
-      onClose={() => setIsScanning(false)}
-    />
+            onPress={() => setIsScanning(false)}
+            style={{ padding: 8, backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: 12 }}
+          >
+            <Text style={{ color: 'white', fontWeight: 'bold' }}>X</Text>
+          </Pressable>
+        </View>
+
+        {/* Browser native video element */}
+        <View style={{ flex: 1, backgroundColor: 'black', borderRadius: 24, overflow: 'hidden', position: 'relative' }}>
+          {/* @ts-ignore - React Native Web supports standard HTML elements */}
+          <video id="qr-video" style={{ width: '100%', height: '100%', objectFit: 'cover' }}></video>
+          <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, borderWidth: 2, borderColor: mood.primary, opacity: 0.3 }} />
+        </View>
+      </View>
+    )}
+
+    {/* NATIVE OS QR SCANNER OVERLAY */}
+    {Platform.OS !== 'web' && (
+      <QRScannerNative
+        isOpen={isScanning}
+        onScan={handleQRScan}
+        onClose={() => setIsScanning(false)}
+      />
+    )}
   </View>
   );
 }

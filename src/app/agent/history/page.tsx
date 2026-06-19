@@ -32,7 +32,34 @@ export default function AgentHistoryPage() {
   const [history, setHistory] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [searchTerm, setSearchTerm] = React.useState("");
-  const [selectedLogId, setSelectedLogId] = React.useState<string | null>(null);
+  const [selectedLogId, setSelectedLogId] = useState<string | null>(null);
+  const [missionLogs, setMissionLogs] = useState<any[]>([]);
+  const [isLoadingLogs, setIsLoadingLogs] = useState(false);
+
+  useEffect(() => {
+    if (selectedLogId) {
+      setIsLoadingLogs(true);
+      fetch(`/api/agent/logs?order_id=${selectedLogId}`)
+        .then(res => res.json())
+        .then(data => {
+           if (data.logs && data.logs.length > 0) {
+              setMissionLogs(data.logs);
+           } else {
+              // Fallback to placeholder if no DB logs exist yet
+              setMissionLogs([
+                 { status: "MISSION DISPATCHED", location_name: "Agent assigned and routing calculated.", created_at: new Date().toISOString() }
+              ]);
+           }
+           setIsLoadingLogs(false);
+        })
+        .catch(err => {
+           console.error(err);
+           setIsLoadingLogs(false);
+        });
+    } else {
+      setMissionLogs([]);
+    }
+  }, [selectedLogId]);
 
   const fetchHistory = async () => {
     if (!user) return;
@@ -207,28 +234,36 @@ export default function AgentHistoryPage() {
                </div>
                
                <div className="relative pl-6 border-l-2 border-white/10 space-y-8 py-4">
-                  {[
-                     { title: "MISSION DISPATCHED", desc: "Agent assigned and routing calculated.", icon: Navigation, time: "T-0" },
-                     { title: "HARBOR ACQUISITION", desc: "Package scanned at origin coordinates.", icon: PackageCheck, time: "T+15m" },
-                     { title: "BIOMETRIC VERIFICATION", desc: "Recipient identity confirmed via crypto-signature.", icon: CheckCircle2, time: "T+42m" },
-                     { title: "MISSION COMPLETED", desc: "Yield transferred to agent ledger.", icon: DollarSign, time: "T+45m" }
-                  ].map((log, idx) => {
-                     const isLast = idx === 3;
-                     return (
-                        <div key={idx} className="relative">
-                           <div className={`absolute -left-[35px] top-0 w-4 h-4 rounded-full border-4 border-[#050B18] ${isLast ? 'bg-success shadow-glow-success' : 'bg-primary shadow-glow-purple'}`} />
-                           <div className="flex items-start justify-between gap-4">
-                              <div className="space-y-1">
-                                 <h4 className={`text-sm font-black uppercase tracking-widest ${isLast ? 'text-success' : 'text-white'}`}>{log.title}</h4>
-                                 <p className="text-[10px] text-white/50 font-medium leading-relaxed max-w-[200px]">{log.desc}</p>
+                  {isLoadingLogs ? (
+                     <div className="flex items-center justify-center py-10">
+                        <Activity className="w-8 h-8 text-primary animate-spin" />
+                     </div>
+                  ) : (
+                     missionLogs.map((log, idx) => {
+                        const isLast = idx === missionLogs.length - 1;
+                        let Icon = Navigation;
+                        if (log.status?.includes('HARBOR') || log.status?.includes('PACKED')) Icon = PackageCheck;
+                        else if (log.status?.includes('BIOMETRIC') || log.status?.includes('VERIFI')) Icon = CheckCircle2;
+                        else if (log.status?.includes('COMPLETED') || log.status?.includes('DELIVERED')) Icon = DollarSign;
+
+                        const timeStr = log.created_at ? new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "T+0";
+
+                        return (
+                           <div key={idx} className="relative">
+                              <div className={`absolute -left-[35px] top-0 w-4 h-4 rounded-full border-4 border-[#050B18] ${isLast ? 'bg-success shadow-glow-success' : 'bg-primary shadow-glow-purple'}`} />
+                              <div className="flex items-start justify-between gap-4">
+                                 <div className="space-y-1">
+                                    <h4 className={`text-sm font-black uppercase tracking-widest ${isLast ? 'text-success' : 'text-white'}`}>{log.status || "UPDATE"}</h4>
+                                    <p className="text-[10px] text-white/50 font-medium leading-relaxed max-w-[200px]">{log.location_name || log.desc || "Log recorded."}</p>
+                                 </div>
+                                 <Badge variant="glass" className="text-[8px] font-black uppercase tracking-widest text-white/70 shrink-0">
+                                    {timeStr}
+                                 </Badge>
                               </div>
-                              <Badge variant="glass" className="text-[8px] font-black uppercase tracking-widest text-white/70">
-                                 {log.time}
-                              </Badge>
                            </div>
-                        </div>
-                     )
-                  })}
+                        )
+                     })
+                  )}
                </div>
                
                <div className="mt-8 pt-6 border-t border-white/10">

@@ -172,48 +172,55 @@ function AgentTrackingContent() {
 
   // ─── Real-Time GPS Tracking ──────────────────────────────────────────────────
   const PORT_BLAIR_DESTINATION = { lat: 11.6234, lng: 92.7265 };
+  const [hasInitialLock, setHasInitialLock] = React.useState(false);
 
   React.useEffect(() => {
     fetchOrderDetails();
     let watchId: number;
 
-    if (missionState === MissionState.IN_TRANSIT) {
-      const { lat: targetLat, lng: targetLng } = PORT_BLAIR_DESTINATION;
-      
-      if ("geolocation" in navigator) {
-        watchId = navigator.geolocation.watchPosition(
-          (position) => {
-            const newLat = position.coords.latitude;
-            const newLng = position.coords.longitude;
-            setCoords({ lat: newLat, lng: newLng });
+    if ("geolocation" in navigator) {
+      watchId = navigator.geolocation.watchPosition(
+        (position) => {
+          const newLat = position.coords.latitude;
+          const newLng = position.coords.longitude;
+          setCoords({ lat: newLat, lng: newLng });
 
-            const latDiff = targetLat - newLat;
-            const lngDiff = targetLng - newLng;
-            const distance = Math.sqrt(latDiff ** 2 + lngDiff ** 2);
-            
-            // Auto-arrive if within close proximity
-            if (distance < 0.0005) {
-              handleStateTransition(MissionState.ARRIVED);
-              navigator.geolocation.clearWatch(watchId);
-            }
-          },
-          (error) => {
-            console.error("GPS Watch Error:", error);
-            toast("GPS Signal Lost. Check permissions.", "error");
-          },
-          { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
-        );
-      } else {
-        toast("Geolocation is not supported by your browser", "error");
-      }
+          // First GPS Lock: Center map & hide syncing spinner
+          if (!hasInitialLock) {
+             setHasInitialLock(true);
+             setIsSyncing(false);
+             setRecenterTrigger(prev => prev + 1);
+          }
 
-      return () => {
-        if (watchId !== undefined && "geolocation" in navigator) {
-          navigator.geolocation.clearWatch(watchId);
-        }
-      };
+          if (missionState === MissionState.IN_TRANSIT) {
+             const { lat: targetLat, lng: targetLng } = PORT_BLAIR_DESTINATION;
+             const latDiff = targetLat - newLat;
+             const lngDiff = targetLng - newLng;
+             const distance = Math.sqrt(latDiff ** 2 + lngDiff ** 2);
+             
+             // Auto-arrive if within close proximity
+             if (distance < 0.0005) {
+               handleStateTransition(MissionState.ARRIVED);
+               // Do NOT clear watch; we still want to track them while arrived/delivered
+             }
+          }
+        },
+        (error) => {
+          console.error("GPS Watch Error:", error);
+          toast("GPS Signal Lost. Check permissions.", "error");
+        },
+        { enableHighAccuracy: true, maximumAge: 0, timeout: 5000 }
+      );
+    } else {
+      toast("Geolocation is not supported by your browser", "error");
     }
-  }, [missionState]);
+
+    return () => {
+      if (watchId !== undefined && "geolocation" in navigator) {
+        navigator.geolocation.clearWatch(watchId);
+      }
+    };
+  }, [missionState, hasInitialLock]);
 
   React.useEffect(() => {
     broadcastTelemetry();

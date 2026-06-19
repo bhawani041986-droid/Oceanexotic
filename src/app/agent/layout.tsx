@@ -89,6 +89,13 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
   };
 
   const logout = () => {
+    if (user) {
+      fetch('/api/agent/presence', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ agent_id: user.id, is_online: false })
+      }).catch(console.error);
+    }
     authLogout();
     router.push("/login");
   };
@@ -118,6 +125,54 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
       });
     } catch (err) {}
   };
+
+  // --- LIVE PRESENCE TRACKER ---
+  useEffect(() => {
+    if (!user) return;
+    
+    let watchId: number;
+    const broadcastPresence = (lat: number, lng: number) => {
+      fetch('/api/agent/presence', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          agent_id: user.id,
+          agent_name: user.name,
+          lat,
+          lng,
+          is_online: true
+        })
+      }).catch(console.error);
+    };
+
+    if ('geolocation' in navigator) {
+      // Immediate broadcast
+      navigator.geolocation.getCurrentPosition(
+        (pos) => broadcastPresence(pos.coords.latitude, pos.coords.longitude),
+        (err) => console.error("Geo Error:", err),
+        { enableHighAccuracy: true }
+      );
+      
+      // Watch for movement
+      watchId = navigator.geolocation.watchPosition(
+        (pos) => broadcastPresence(pos.coords.latitude, pos.coords.longitude),
+        (err) => console.error("Geo Watch Error:", err),
+        { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
+      );
+      
+      // Heartbeat every 2 minutes
+      const heartbeat = setInterval(() => {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => broadcastPresence(pos.coords.latitude, pos.coords.longitude)
+        );
+      }, 120000);
+
+      return () => {
+        navigator.geolocation.clearWatch(watchId);
+        clearInterval(heartbeat);
+      };
+    }
+  }, [user]);
 
   // Apply mood variables to root
   useEffect(() => {
