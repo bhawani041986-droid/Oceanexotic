@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  Pressable,
-  StyleSheet,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, ScrollView, Pressable, StyleSheet, ActivityIndicator } from "react-native";
 import { Image } from "expo-image";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useVideoPlayer, VideoView } from "expo-video";
@@ -15,8 +8,6 @@ import { useProducts } from "@/hooks/useProducts";
 import { useToast } from "@/components/ui/Toast";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import api from "@/services/api";
-import { useTranslation } from "@/lib/i18n";
-import { ChamferedBox } from "@/components/ui/ChamferedBox";
 
 interface VideoItem {
   id: number;
@@ -25,22 +16,9 @@ interface VideoItem {
   thumbnail_url?: string;
   title: string;
   sort_order: number;
-  description?: string;
 }
 
-interface OceanReelsFeedProps {
-  variant?: "feed" | "pip" | "grid-card" | "banner";
-  videoId?: number;
-  videos?: VideoItem[];
-}
-
-function ActiveReelVideo({
-  videoUrl,
-  isMuted,
-}: {
-  videoUrl: string;
-  isMuted: boolean;
-}) {
+function ActiveReelVideo({ videoUrl, isMuted }: { videoUrl: string; isMuted: boolean }) {
   const player = useVideoPlayer(videoUrl, (playerInstance) => {
     playerInstance.loop = true;
     playerInstance.muted = isMuted;
@@ -61,35 +39,21 @@ function ActiveReelVideo({
   );
 }
 
-export function OceanReelsFeed({
-  variant = "feed",
-  videoId,
-  videos: propVideos,
-}: OceanReelsFeedProps) {
-  const [videos, setVideos] = useState<VideoItem[]>(propVideos || []);
-  const [loading, setLoading] = useState(!propVideos);
+export function OceanReelsFeed() {
+  const [videos, setVideos] = useState<VideoItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [activeVideoId, setActiveVideoId] = useState<number | null>(null);
   const [isMuted, setIsMuted] = useState(true);
-  const [isPipOpen, setIsPipOpen] = useState(false);
-
+  
   const colors = useThemeColors();
-  const { t } = useTranslation();
   const cart = useCartStore();
   const { toast } = useToast();
   const { data: allProducts } = useProducts();
 
   useEffect(() => {
-    if (propVideos) {
-      setVideos(propVideos);
-      setLoading(false);
-      return;
-    }
     const fetchVideos = async () => {
       try {
-        const { data } = await api.get<{
-          status: string;
-          content: VideoItem[];
-        }>("/marketplace/videos");
+        const { data } = await api.get<{ status: string; content: VideoItem[] }>("/marketplace/videos");
         if (data.status === "success") {
           setVideos(data.content || []);
         }
@@ -100,7 +64,7 @@ export function OceanReelsFeed({
       }
     };
     fetchVideos();
-  }, [propVideos]);
+  }, []);
 
   const handleAddToCart = (product: any) => {
     if (!product) return;
@@ -109,20 +73,13 @@ export function OceanReelsFeed({
       name: product.name,
       price: product.price,
       quantity: 1,
-      image:
-        product.image_url ||
-        product.image ||
-        "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400",
+      image: product.image_url || product.image || "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400",
       sellerId: product.seller_id || "OCEAN",
     });
-    toast(
-      `${product.name} ${t("added_from_reels") || "added from Ocean Reels!"}`,
-      "success",
-    );
+    toast(`${product.name} added from Ocean Reels!`, "success");
   };
 
   if (loading) {
-    if (variant === "grid-card" || variant === "pip") return null;
     return (
       <View className="py-6 items-center justify-center">
         <ActivityIndicator color={colors.primary} />
@@ -132,402 +89,16 @@ export function OceanReelsFeed({
 
   if (videos.length === 0) return null;
 
-  // ── OPTION 1: INLINE GRID CARD ──────────────────────────────────────────────
-  if (variant === "grid-card") {
-    const vid = videoId ? videos.find((v) => v.id === videoId) : videos[0];
-    if (!vid) return null;
-    const product = allProducts?.find((p) => p.id === vid.product_id);
-    const isActive = activeVideoId === vid.id;
-
-    return (
-      <Pressable
-        onPress={() => setActiveVideoId(isActive ? null : vid.id)}
-        className="relative overflow-hidden"
-        style={{ width: "48%", minHeight: 250 }}
-      >
-        <ChamferedBox
-          fillColor={colors.card}
-          strokeColor={colors.border}
-          className="w-full h-full"
-        >
-          <View
-            className="relative overflow-hidden w-full"
-            style={{
-              width: "100%",
-              aspectRatio: 1,
-              backgroundColor: "rgba(0,0,0,0.8)",
-            }}
-          >
-            {isActive ? (
-              <ActiveReelVideo videoUrl={vid.video_url} isMuted={isMuted} />
-            ) : (
-              <Image
-                source={{
-                  uri:
-                    vid.thumbnail_url ||
-                    "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400",
-                }}
-                className="w-full h-full opacity-90"
-                contentFit="cover"
-              />
-            )}
-            <View className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/20 pointer-events-none" />
-
-            <View className="absolute left-2 top-2 bg-red-500/90 px-2 py-0.5 z-20">
-              <Text className="text-[7px] font-black uppercase text-white">
-                PROMO REEL
-              </Text>
-            </View>
-
-            {/* Mute toggle button on card */}
-            {isActive && (
-              <Pressable
-                onPress={(e) => {
-                  e.stopPropagation();
-                  setIsMuted(!isMuted);
-                }}
-                className="absolute top-2 right-2 p-1.5 bg-black/50 z-20"
-              >
-                <MaterialCommunityIcons
-                  name={isMuted ? "volume-mute" : "volume-high"}
-                  size={12}
-                  color="white"
-                />
-              </Pressable>
-            )}
-
-            {!isActive && (
-              <View className="absolute inset-0 items-center justify-center pointer-events-none">
-                <View className="w-8 h-8 items-center justify-center bg-white/20 border border-white/40">
-                  <MaterialCommunityIcons
-                    name="play"
-                    size={16}
-                    color="white"
-                    style={{ marginLeft: 2 }}
-                  />
-                </View>
-              </View>
-            )}
-          </View>
-
-          <View className="gap-2 p-3" style={{ minHeight: 90 }}>
-            <Text className="text-[8px] font-black uppercase text-emerald-500">
-              {t("watch_and_shop") || "Watch & Shop"}
-            </Text>
-            <Text
-              className="text-xs font-black uppercase italic text-foreground"
-              style={{ color: colors.text }}
-              numberOfLines={1}
-            >
-              {vid.title}
-            </Text>
-            {product && (
-              <View className="flex-row items-center justify-between mt-auto">
-                <Text
-                  className="text-sm font-black italic text-foreground"
-                  style={{ color: colors.text }}
-                >
-                  ₹{product.price}
-                </Text>
-                <Pressable
-                  onPress={(e) => {
-                    e.stopPropagation();
-                    handleAddToCart(product);
-                  }}
-                  className="px-3 py-2"
-                  style={{ backgroundColor: colors.primary }}
-                >
-                  <Text className="text-[9px] font-black uppercase text-white">
-                    SHOP
-                  </Text>
-                </Pressable>
-              </View>
-            )}
-          </View>
-        </ChamferedBox>
-      </Pressable>
-    );
-  }
-
-  // ── OPTION 1.5: HORIZONTAL BANNER CARD ──────────────────────────────────────
-  if (variant === "banner") {
-    const vid = videoId
-      ? videos.find((v) => v.id === videoId)
-      : videos.find((v) => v.description === "banner") || videos[0];
-    if (!vid) return null;
-    const product = allProducts?.find((p) => p.id === vid.product_id);
-    const isActive = activeVideoId === vid.id;
-
-    return (
-      <Pressable
-        onPress={() => setActiveVideoId(isActive ? null : vid.id)}
-        className="w-full my-4 flex-row overflow-hidden border"
-        style={{
-          height: 144,
-          backgroundColor: colors.card,
-          borderColor: colors.border,
-        }}
-      >
-        {/* Left Side: Video Preview */}
-        <View
-          className="relative h-full bg-black overflow-hidden"
-          style={{ width: 81 }}
-        >
-          {isActive ? (
-            <ActiveReelVideo videoUrl={vid.video_url} isMuted={isMuted} />
-          ) : (
-            <Image
-              source={{
-                uri:
-                  vid.thumbnail_url ||
-                  "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400",
-              }}
-              className="w-full h-full opacity-90"
-              contentFit="cover"
-            />
-          )}
-          <View className="absolute inset-0 bg-gradient-to-r from-transparent to-black/30 pointer-events-none" />
-
-          <View className="absolute left-1.5 top-1.5 bg-red-500/95 px-1 py-0.5 z-20">
-            <Text className="text-[6px] font-black uppercase text-white tracking-widest">
-              PROMO
-            </Text>
-          </View>
-
-          {isActive && (
-            <Pressable
-              onPress={(e) => {
-                e.stopPropagation();
-                setIsMuted(!isMuted);
-              }}
-              className="absolute top-1.5 right-1.5 p-1 bg-black/60 z-20"
-            >
-              <MaterialCommunityIcons
-                name={isMuted ? "volume-mute" : "volume-high"}
-                size={10}
-                color="white"
-              />
-            </Pressable>
-          )}
-
-          {!isActive && (
-            <View className="absolute inset-0 items-center justify-center pointer-events-none">
-              <View className="w-6 h-6 items-center justify-center bg-white/20 border border-white/40">
-                <MaterialCommunityIcons
-                  name="play"
-                  size={12}
-                  color="white"
-                  style={{ marginLeft: 1 }}
-                />
-              </View>
-            </View>
-          )}
-        </View>
-
-        {/* Right Side: Product Details & CTA */}
-        <View
-          className="flex-1 p-3 justify-between"
-          style={{ backgroundColor: `${colors.bg}10` }}
-        >
-          <View className="space-y-1">
-            <Text
-              className="text-[8px] font-black uppercase tracking-widest"
-              style={{ color: colors.primary }}
-            >
-              Featured Ocean Ad
-            </Text>
-            <Text
-              className="text-sm font-black uppercase italic"
-              style={{ color: colors.text }}
-              numberOfLines={1}
-            >
-              {vid.title}
-            </Text>
-            <Text
-              className="text-[10px] opacity-75 font-semibold"
-              style={{ color: colors.textMuted }}
-              numberOfLines={2}
-            >
-              {vid.description ||
-                "Fresh premium catch sourced directly from local harbors. 100% traceable cold-chain delivery."}
-            </Text>
-          </View>
-
-          <View
-            className="flex-row items-center justify-between pt-1 border-t"
-            style={{ borderColor: `${colors.border}20` }}
-          >
-            <View>
-              {product ? (
-                <Text
-                  className="text-sm font-black italic"
-                  style={{ color: colors.text }}
-                >
-                  ₹{product.price}
-                  <Text className="text-[8px] font-normal opacity-40">/kg</Text>
-                </Text>
-              ) : (
-                <Text
-                  className="text-[8px] font-black uppercase"
-                  style={{ color: colors.textMuted }}
-                >
-                  Direct Harbor Catch
-                </Text>
-              )}
-            </View>
-            {product && (
-              <Pressable
-                onPress={(e) => {
-                  e.stopPropagation();
-                  handleAddToCart(product);
-                }}
-                className="flex-row items-center px-2.5 py-1.5"
-                style={{ backgroundColor: colors.primary }}
-              >
-                <MaterialCommunityIcons
-                  name="cart-plus"
-                  size={10}
-                  color="white"
-                  style={{ marginRight: 4 }}
-                />
-                <Text className="text-[8px] font-black uppercase text-white">
-                  SHOP NOW
-                </Text>
-              </Pressable>
-            )}
-          </View>
-        </View>
-      </Pressable>
-    );
-  }
-
-  // ── OPTION 2: FLOATING CORNER BUBBLE ────────────────────────────────────────
-  if (variant === "pip") {
-    const vid = videoId ? videos.find((v) => v.id === videoId) : videos[0];
-    if (!vid) return null;
-    const product = allProducts?.find((p) => p.id === vid.product_id);
-
-    return (
-      <View
-        style={{
-          position: "absolute",
-          bottom: 95,
-          right: 16,
-          zIndex: 999,
-          alignItems: "flex-end",
-        }}
-      >
-        {isPipOpen && (
-          <View
-            className="border bg-black shadow-2xl mb-3 overflow-hidden"
-            style={{ width: 140, height: 240, borderColor: colors.border }}
-          >
-            <ActiveReelVideo videoUrl={vid.video_url} isMuted={isMuted} />
-            <View className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
-
-            {/* Close & Mute buttons */}
-            <Pressable
-              onPress={() => setIsPipOpen(false)}
-              className="absolute top-2 left-2 p-1.5 bg-black/40"
-            >
-              <MaterialCommunityIcons name="close" size={14} color="white" />
-            </Pressable>
-            <Pressable
-              onPress={() => setIsMuted(!isMuted)}
-              className="absolute top-2 right-2 p-1.5 bg-black/40"
-            >
-              <MaterialCommunityIcons
-                name={isMuted ? "volume-mute" : "volume-high"}
-                size={14}
-                color="white"
-              />
-            </Pressable>
-
-            <View className="absolute bottom-0 left-0 right-0 p-2">
-              <Text className="text-white font-bold text-[9px] truncate mb-0.5">
-                {vid.title}
-              </Text>
-              {product && (
-                <View className="flex-row items-center justify-between">
-                  <Text
-                    className="font-bold text-[9px]"
-                    style={{ color: colors.primary }}
-                  >
-                    ₹{product.price}
-                  </Text>
-                  <Pressable
-                    onPress={() => handleAddToCart(product)}
-                    className="px-2 py-0.5 bg-primary"
-                    style={{ backgroundColor: colors.primary }}
-                  >
-                    <Text className="text-[8px] font-bold text-white">
-                      SHOP
-                    </Text>
-                  </Pressable>
-                </View>
-              )}
-            </View>
-          </View>
-        )}
-
-        {/* Pulsing Bubble */}
-        <Pressable
-          onPress={() => setIsPipOpen(!isPipOpen)}
-          className="w-16 h-16 border-2 overflow-hidden shadow-lg items-center justify-center p-0.5 bg-black"
-          style={{ borderColor: colors.primary }}
-        >
-          <View className="w-full h-full overflow-hidden relative">
-            <Image
-              source={{
-                uri:
-                  vid.thumbnail_url ||
-                  "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400",
-              }}
-              className="w-full h-full"
-              contentFit="cover"
-            />
-            <View className="absolute inset-0 bg-black/20 items-center justify-center">
-              <View
-                className="w-6 h-6 items-center justify-center bg-primary/95"
-                style={{ backgroundColor: colors.primary }}
-              >
-                <MaterialCommunityIcons
-                  name="play"
-                  size={14}
-                  color="white"
-                  style={{ marginLeft: 2 }}
-                />
-              </View>
-            </View>
-          </View>
-        </Pressable>
-      </View>
-    );
-  }
-
-  // ── STANDARD LAYOUT: CAROUSEL FEED ──────────────────────────────────────────
   return (
-    <View
-      className="w-full py-6 border-t border-b my-4"
-      style={{ borderColor: `${colors.border}20`, backgroundColor: colors.bg }}
-    >
+    <View className="w-full py-6 border-t border-b my-4" style={{ borderColor: `${colors.border}20`, backgroundColor: colors.bg }}>
       <View className="px-4 mb-4">
         <View className="flex-row items-center justify-between">
           <View>
-            <Text
-              className="text-lg font-black uppercase italic tracking-tighter"
-              style={{ color: colors.text }}
-            >
-              {t("ocean") || "Ocean"}{" "}
-              <Text style={{ color: colors.primary }}>
-                {t("reels") || "Reels"}
-              </Text>
+            <Text className="text-lg font-black uppercase italic tracking-tighter" style={{ color: colors.text }}>
+              Ocean <Text style={{ color: colors.primary }}>Reels</Text>
             </Text>
-            <Text
-              className="text-[9px] uppercase tracking-widest font-black"
-              style={{ color: colors.textMuted }}
-            >
-              {t("watch_and_shop") || "Watch & Shop"}
+            <Text className="text-[9px] uppercase tracking-widest font-black" style={{ color: colors.textMuted }}>
+              Watch & Shop
             </Text>
           </View>
         </View>
@@ -547,13 +118,11 @@ export function OceanReelsFeed({
             <Pressable
               key={vid.id}
               onPress={() => setActiveVideoId(isActive ? null : vid.id)}
-              className="relative overflow-hidden bg-black shadow-md border"
+              className="relative rounded-[16px] overflow-hidden bg-black shadow-md border"
               style={{
                 width: 120,
                 height: 200,
-                borderColor: isActive
-                  ? colors.primary
-                  : "rgba(255,255,255,0.1)",
+                borderColor: isActive ? colors.primary : "rgba(255,255,255,0.1)",
               }}
             >
               {/* Video Player or Thumbnail */}
@@ -562,9 +131,7 @@ export function OceanReelsFeed({
               ) : (
                 <Image
                   source={{
-                    uri:
-                      vid.thumbnail_url ||
-                      "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400",
+                    uri: vid.thumbnail_url || "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400",
                   }}
                   className="w-full h-full"
                   contentFit="cover"
@@ -585,12 +152,7 @@ export function OceanReelsFeed({
                       borderColor: "rgba(255, 255, 255, 0.4)",
                     }}
                   >
-                    <MaterialCommunityIcons
-                      name="play"
-                      size={16}
-                      color="white"
-                      style={{ marginLeft: 2 }}
-                    />
+                    <MaterialCommunityIcons name="play" size={16} color="white" style={{ marginLeft: 2 }} />
                   </View>
                 </View>
               )}
@@ -600,20 +162,13 @@ export function OceanReelsFeed({
                 <Text
                   className="text-white font-bold text-[9px] leading-tight mb-1"
                   numberOfLines={2}
-                  style={{
-                    textShadowColor: "rgba(0,0,0,0.8)",
-                    textShadowOffset: { width: 0, height: 1 },
-                    textShadowRadius: 2,
-                  }}
+                  style={{ textShadowColor: "rgba(0,0,0,0.8)", textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }}
                 >
                   {vid.title}
                 </Text>
                 {product && (
                   <View className="flex-row items-center justify-between mt-1">
-                    <Text
-                      className="font-black text-[10px]"
-                      style={{ color: colors.primary }}
-                    >
+                    <Text className="font-black text-[10px]" style={{ color: colors.primary }}>
                       ₹{product.price}
                     </Text>
                     <Pressable
@@ -624,11 +179,7 @@ export function OceanReelsFeed({
                       className="h-6 w-6 rounded-full items-center justify-center shadow-lg"
                       style={{ backgroundColor: colors.primary }}
                     >
-                      <MaterialCommunityIcons
-                        name="cart-plus"
-                        size={12}
-                        color="white"
-                      />
+                      <MaterialCommunityIcons name="cart-plus" size={12} color="white" />
                     </Pressable>
                   </View>
                 )}

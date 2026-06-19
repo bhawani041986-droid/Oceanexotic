@@ -1,14 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  ActivityIndicator,
-  Pressable,
-  FlatList,
-  Dimensions,
-  Modal,
-} from "react-native";
+import { View, Text, ScrollView, ActivityIndicator, Pressable, FlatList, Dimensions, Modal } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { productService } from "@/services/productService";
@@ -29,27 +20,17 @@ import { useProducts } from "@/hooks/useProducts";
 import { ProductCard } from "@/components/customer/ProductCard";
 import { useAuthStore } from "@/store/authStore";
 import { checkoutService } from "@/services/checkoutService";
-import { useTranslation } from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 
 const MOCK_RECIPES = [
   { title: "Simple Steam", time: "15 min", difficulty: "Easy" },
-  { title: "Pan-Seared with Garlic", time: "20 min", difficulty: "Medium" },
+  { title: "Pan-Seared with Garlic", time: "20 min", difficulty: "Medium" }
 ];
 
 const MOCK_REVIEWS = [
-  {
-    name: "John D.",
-    rating: 5,
-    date: "2 days ago",
-    comment: "Exceptional quality. The freshness was undeniable.",
-  },
-  {
-    name: "Sarah M.",
-    rating: 4,
-    date: "1 week ago",
-    comment: "Very good, though delivery took slightly longer than expected.",
-  },
+  { name: "John D.", rating: 5, date: "2 days ago", comment: "Exceptional quality. The freshness was undeniable." },
+  { name: "Sarah M.", rating: 4, date: "1 week ago", comment: "Very good, though delivery took slightly longer than expected." }
 ];
 
 export default function ProductDetailScreen() {
@@ -58,8 +39,7 @@ export default function ProductDetailScreen() {
   const cart = useCartStore();
   const { toast, ToastHost } = useToast();
   const { user } = useAuthStore();
-  const currentLanguage = useSettingsStore((s) => s.language);
-  const { t } = useTranslation();
+  const currentLanguage = useSettingsStore((s) => s.language); // force re-render
 
   const [product, setProduct] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
@@ -84,8 +64,7 @@ export default function ProductDetailScreen() {
     if (!galleryVal) return [];
     if (Array.isArray(galleryVal)) return galleryVal;
     try {
-      const parsed =
-        typeof galleryVal === "string" ? JSON.parse(galleryVal) : galleryVal;
+      const parsed = typeof galleryVal === 'string' ? JSON.parse(galleryVal) : galleryVal;
       return Array.isArray(parsed) ? parsed : [];
     } catch (e) {
       return [];
@@ -94,13 +73,8 @@ export default function ProductDetailScreen() {
 
   const rawImages = product
     ? [
-        String(
-          product.image_url ??
-            (product.images as string[])?.[0] ??
-            product.image ??
-            "",
-        ),
-        ...getProductGallery(product),
+        String(product.image_url ?? (product.images as string[])?.[0] ?? product.image ?? ""),
+        ...getProductGallery(product)
       ].filter(Boolean)
     : [];
   const allImages = Array.from(new Set(rawImages));
@@ -110,15 +84,12 @@ export default function ProductDetailScreen() {
   const paddingRight = 16;
   const thumbnailWidth = hasThumbnails ? 72 : 0;
   const gapWidth = hasThumbnails ? 10 : 0;
-  const viewWidth =
-    screenWidth - paddingLeft - paddingRight - thumbnailWidth - gapWidth;
+  const viewWidth = screenWidth - paddingLeft - paddingRight - thumbnailWidth - gapWidth;
 
   const img = allImages[0] ?? "";
   const colors = useThemeColors();
   const { data: allProducts } = useProducts();
-  const similarProducts = (allProducts ?? [])
-    .filter((p) => p.id !== id)
-    .slice(0, 4);
+  const similarProducts = (allProducts ?? []).filter(p => p.id !== id).slice(0, 4);
 
   useEffect(() => {
     if (!id) return;
@@ -128,10 +99,7 @@ export default function ProductDetailScreen() {
       try {
         if (user) {
           const addresses = await checkoutService.fetchAddresses(user.id);
-          const defaultAddr =
-            addresses.find(
-              (a) => a.is_default === 1 || a.is_default === true,
-            ) || addresses[0];
+          const defaultAddr = addresses.find((a) => a.is_default === 1 || a.is_default === true) || addresses[0];
           if (defaultAddr && defaultAddr.jetty) {
             area = defaultAddr.jetty;
             setCurrentArea(area);
@@ -140,14 +108,12 @@ export default function ProductDetailScreen() {
       } catch (err) {
         console.log("Error loading address in mobile details:", err);
       }
-
+      
       try {
         const data = await productService.fetchById(String(id), area);
         setProduct(data);
         if (data && data.prep_options && data.prep_options.length > 0) {
-          const rawOpt = data.prep_options.find(
-            (o: any) => o.prep_type === "RAW",
-          );
+          const rawOpt = data.prep_options.find((o: any) => o.prep_type === 'RAW');
           setSelectedPrepOption(rawOpt || data.prep_options[0]);
         }
       } catch {
@@ -163,9 +129,7 @@ export default function ProductDetailScreen() {
     if (!product) return;
     const p = product as any;
     const base = Number(p.live_price ?? p.price ?? 0);
-    const prepAdd = selectedPrepOption
-      ? parseFloat(selectedPrepOption.price_flat_add)
-      : 0;
+    const prepAdd = selectedPrepOption ? parseFloat(selectedPrepOption.price_flat_add) : 0;
     setCurrentPrice(base + prepAdd);
   }, [product, selectedPrepOption]);
 
@@ -173,14 +137,9 @@ export default function ProductDetailScreen() {
     setCutOpen(true);
     setCutLoading(true);
     try {
-      const options = await homeService.fetchCutOptions(
-        String(id),
-        currentArea,
-      );
+      const options = await homeService.fetchCutOptions(String(id), currentArea);
       setCutOptions(options);
-      setSelectedCut(
-        options.find((c) => c.is_available !== false) ?? options[0] ?? null,
-      );
+      setSelectedCut(options.find((c) => c.is_available !== false) ?? options[0] ?? null);
     } catch {
       toast("Cut options unavailable", "error");
     } finally {
@@ -191,18 +150,11 @@ export default function ProductDetailScreen() {
   const confirmCut = (weight: number) => {
     if (!product || !selectedCut) return;
     const name = String(product.name ?? "Product");
-    const rawImg = String(
-      product.image_url ??
-        (product.images as string[])?.[0] ??
-        product.image ??
-        "",
-    );
-    const prepAdd = selectedPrepOption
-      ? parseFloat(selectedPrepOption.price_flat_add)
-      : 0;
+    const rawImg = String(product.image_url ?? (product.images as string[])?.[0] ?? product.image ?? "");
+    const prepAdd = selectedPrepOption ? parseFloat(selectedPrepOption.price_flat_add) : 0;
     cart.addItem({
-      id: `${id}-${selectedCut.cut_type}${selectedPrepOption ? "-" + selectedPrepOption.prep_type : ""}`,
-      name: `${name} (${selectedCut.label})${selectedPrepOption ? " - " + selectedPrepOption.name : ""}`,
+      id: `${id}-${selectedCut.cut_type}${selectedPrepOption ? '-' + selectedPrepOption.prep_type : ''}`,
+      name: `${name} (${selectedCut.label})${selectedPrepOption ? ' - ' + selectedPrepOption.name : ''}`,
       price: selectedCut.final_price + prepAdd,
       quantity: weight,
       image: rawImg,
@@ -210,14 +162,12 @@ export default function ProductDetailScreen() {
       metadata: {
         cut_type: selectedCut.cut_type,
         base_product_id: id,
-        prep_option: selectedPrepOption
-          ? {
-              id: selectedPrepOption.id,
-              prep_type: selectedPrepOption.prep_type,
-              name: selectedPrepOption.name,
-              price_flat_add: selectedPrepOption.price_flat_add,
-            }
-          : null,
+        prep_option: selectedPrepOption ? {
+          id: selectedPrepOption.id,
+          prep_type: selectedPrepOption.prep_type,
+          name: selectedPrepOption.name,
+          price_flat_add: selectedPrepOption.price_flat_add
+        } : null
       },
     });
     toast("Added to cart", "success");
@@ -232,7 +182,7 @@ export default function ProductDetailScreen() {
       quantity: 1,
       image: addon.image_url || resolveMediaUrl("/ICONS/masala.png"),
       sellerId: product ? String(product.seller_id ?? "") : "",
-      metadata: { is_addon: true },
+      metadata: { is_addon: true }
     });
     toast(`${addon.name} added to cart.`, "success");
   };
@@ -250,12 +200,7 @@ export default function ProductDetailScreen() {
     }
   };
 
-  const isComingSoon = product
-    ? product.badge === "COMING SOON" ||
-      product.badge === "COMING_SOON" ||
-      product.availability === "Coming Soon" ||
-      product.availability === "COMING SOON"
-    : false;
+  const isComingSoon = product ? (product.badge === 'COMING SOON' || product.badge === 'COMING_SOON' || product.availability === 'Coming Soon' || product.availability === 'COMING SOON') : false;
 
   if (loading) {
     return (
@@ -268,14 +213,8 @@ export default function ProductDetailScreen() {
   if (!product) {
     return (
       <View className="flex-1 items-center justify-center bg-background px-6">
-        <Text className="text-center font-black uppercase text-foreground">
-          {t("product_not_found") || "Product not found"}
-        </Text>
-        <Button
-          label={t("go_back") || "GO BACK"}
-          onPress={() => router.back()}
-          className="mt-6"
-        />
+        <Text className="text-center font-black uppercase text-foreground">Product not found</Text>
+        <Button label="GO BACK" onPress={() => router.back()} className="mt-6" />
       </View>
     );
   }
@@ -285,59 +224,38 @@ export default function ProductDetailScreen() {
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       <ScrollView contentContainerClassName="pb-28">
-        <View
-          style={{
-            width: screenWidth,
-            height: viewWidth,
-            flexDirection: "row",
-            backgroundColor: colors.bg,
-            paddingLeft: paddingLeft,
-            paddingRight: paddingRight,
-            marginTop: 8,
-          }}
-        >
+        <View style={{ width: screenWidth, height: viewWidth, flexDirection: 'row', backgroundColor: colors.bg, paddingLeft: paddingLeft, paddingRight: paddingRight, marginTop: 8 }}>
           {/* Left-side Thumbnails */}
           {allImages.length > 1 && (
-            <ScrollView
-              style={{ width: 72, height: "100%" }}
+            <ScrollView 
+              style={{ width: 72, height: '100%' }} 
               showsVerticalScrollIndicator={false}
             >
               {allImages.map((imgUrl, i) => {
                 const isActive = i === activeImageIndex;
                 return (
-                  <Pressable
-                    key={i}
+                  <Pressable 
+                    key={i} 
                     onPress={() => {
-                      flatListRef.current?.scrollToIndex({
-                        index: i,
-                        animated: true,
-                      });
+                      flatListRef.current?.scrollToIndex({ index: i, animated: true });
                       setActiveImageIndex(i);
                     }}
-                    style={{
-                      width: 72,
-                      height: 72,
-                      marginBottom: 6,
-                      borderWidth: 2,
+                    style={{ 
+                      width: 72, 
+                      height: 72, 
+                      marginBottom: 6, 
+                      borderWidth: 2, 
                       borderRadius: 8,
-                      borderColor: isActive ? colors.primary : "transparent",
+                      borderColor: isActive ? colors.primary : 'transparent',
                       opacity: isActive ? 1 : 0.6,
-                      backgroundColor: "rgba(0,0,0,0.05)",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      overflow: "hidden",
+                      backgroundColor: 'rgba(0,0,0,0.05)',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      overflow: 'hidden'
                     }}
                   >
                     {imgUrl ? (
-                      <Image
-                        source={{ uri: resolveMediaUrl(imgUrl) }}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          borderRadius: 6,
-                        }}
-                        contentFit="contain"
-                      />
+                      <Image source={{ uri: resolveMediaUrl(imgUrl) }} style={{ width: '100%', height: '100%', borderRadius: 6 }} contentFit="contain" />
                     ) : (
                       <Text style={{ fontSize: 24 }}>🐟</Text>
                     )}
@@ -347,17 +265,17 @@ export default function ProductDetailScreen() {
             </ScrollView>
           )}
 
-          <View
-            style={{
-              width: viewWidth,
-              height: viewWidth,
-              position: "relative",
-              backgroundColor: colors.card,
-              borderRadius: 12,
-              borderWidth: 1,
+          <View 
+            style={{ 
+              width: viewWidth, 
+              height: viewWidth, 
+              position: 'relative', 
+              backgroundColor: colors.card, 
+              borderRadius: 12, 
+              borderWidth: 1, 
               borderColor: colors.border,
-              overflow: "hidden",
-              marginLeft: gapWidth,
+              overflow: 'hidden',
+              marginLeft: gapWidth
             }}
           >
             {allImages.length > 0 ? (
@@ -372,11 +290,7 @@ export default function ProductDetailScreen() {
                 onScroll={(event) => {
                   const xOffset = event.nativeEvent.contentOffset.x;
                   const index = Math.round(xOffset / viewWidth);
-                  if (
-                    index !== activeImageIndex &&
-                    index >= 0 &&
-                    index < allImages.length
-                  ) {
+                  if (index !== activeImageIndex && index >= 0 && index < allImages.length) {
                     setActiveImageIndex(index);
                   }
                 }}
@@ -389,7 +303,7 @@ export default function ProductDetailScreen() {
                     >
                       <Image
                         source={{ uri: resolveMediaUrl(item) }}
-                        style={{ width: "100%", height: "100%" }}
+                        style={{ width: '100%', height: '100%' }}
                         contentFit="contain"
                       />
                     </Pressable>
@@ -397,15 +311,7 @@ export default function ProductDetailScreen() {
                 }}
               />
             ) : (
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: viewWidth,
-                  height: viewWidth,
-                }}
-              >
+              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', width: viewWidth, height: viewWidth }}>
                 <Text className="text-8xl">🐟</Text>
               </View>
             )}
@@ -422,14 +328,8 @@ export default function ProductDetailScreen() {
             {/* Tap overlay info */}
             {allImages.length > 0 && (
               <View className="absolute top-4 right-4 bg-black/45 px-2 py-1 rounded flex-row items-center gap-1 border border-white/5 z-10">
-                <MaterialCommunityIcons
-                  name="magnify-plus-outline"
-                  size={10}
-                  color="#fff"
-                />
-                <Text className="text-white text-[8px] font-bold uppercase">
-                  {t("tap_to_zoom") || "Tap to zoom"}
-                </Text>
+                <MaterialCommunityIcons name="magnify-plus-outline" size={10} color="#fff" />
+                <Text className="text-white text-[8px] font-bold uppercase">Tap to zoom</Text>
               </View>
             )}
           </View>
@@ -448,9 +348,7 @@ export default function ProductDetailScreen() {
                     height: 6,
                     width: isActive ? 16 : 6,
                     borderRadius: 3,
-                    backgroundColor: isActive
-                      ? colors.primary
-                      : `${colors.textMuted}30`,
+                    backgroundColor: isActive ? colors.primary : `${colors.textMuted}30`
                   }}
                 />
               );
@@ -459,205 +357,123 @@ export default function ProductDetailScreen() {
         )}
         <View className="p-6">
           <Text className="text-[10px] font-black uppercase text-primary">
-            {String(
-              product.seller_name ??
-                (t("verified_fleet") || "Verified Delivery"),
-            )}
+            {String(product.seller_name ?? "Verified Fleet")}
           </Text>
           <Text className="mt-2 text-3xl font-black uppercase italic text-foreground">
             {String(product.name)}
           </Text>
           {product.description ? (
-            <Text className="mt-3 text-sm text-muted-foreground">
-              {String(product.description)}
-            </Text>
+            <Text className="mt-3 text-sm text-muted-foreground">{String(product.description)}</Text>
           ) : null}
           <View className="flex-row items-baseline gap-2 mt-4">
             <Text className="text-3xl font-black italic text-primary">
               ₹{currentPrice.toLocaleString()}
-              <Text className="text-sm opacity-60 font-normal">
-                /{String(product.unit ?? (t("kg") || "kg"))}
-              </Text>
+              <Text className="text-sm opacity-60 font-normal">/{String(product.unit ?? "kg")}</Text>
             </Text>
             {p.discount_percent > 0 ? (
               <>
                 <Text className="text-sm line-through text-muted-foreground ml-1 font-mono">
-                  ₹
-                  {Math.round(
-                    Number(
-                      p.originalPrice ??
-                        currentPrice * (100 / (100 - p.discount_percent)),
-                    ),
-                  ).toLocaleString()}
+                  ₹{Math.round(Number(p.originalPrice ?? currentPrice * (100/(100-p.discount_percent)))).toLocaleString()}
                 </Text>
                 <View className="rounded bg-red-500/10 px-1.5 py-0.5 border border-red-500/20 ml-1">
-                  <Text className="text-[8px] font-black text-red-500 uppercase">
-                    {p.discount_percent}% {t("off") || "OFF"}
-                  </Text>
+                  <Text className="text-[8px] font-black text-red-500 uppercase">{p.discount_percent}% OFF</Text>
                 </View>
               </>
             ) : null}
           </View>
           {product.live_harbor ? (
             <Text className="mt-2 text-[10px] font-black uppercase text-emerald-500">
-              {t("live_at") || "Live @"} {String(product.live_harbor)} •{" "}
-              {String(product.remaining_kg ?? product.live_stock)}kg{" "}
-              {t("left") || "left"}
+              Live @ {String(product.live_harbor)} • {String(product.remaining_kg ?? product.live_stock)}kg left
             </Text>
           ) : null}
 
           {/* --- FRESHNESS DECAY CLOCK --- */}
-          <View
-            className="mt-4 p-3 border flex-row items-center justify-between"
-            style={{ backgroundColor: colors.card, borderColor: colors.border }}
-          >
+          <View className="mt-4 p-3 border flex-row items-center justify-between" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
             <View className="flex-row items-center gap-2">
-              <MaterialCommunityIcons
-                name="clock-outline"
-                size={16}
-                color={colors.primary}
-              />
+              <MaterialCommunityIcons name="clock-outline" size={16} color={colors.primary} />
               <View>
-                <Text
-                  className="text-[10px] font-black uppercase"
-                  style={{ color: colors.text }}
-                >
-                  {t("landed") || "Landed"}: 4h 12m {t("ago") || "ago"}
-                </Text>
-                <Text
-                  className="text-[8px] font-bold uppercase"
-                  style={{ color: colors.textMuted }}
-                >
-                  {t("prime_quality_index") || "Prime Quality Index (A+)"}
-                </Text>
+                <Text className="text-[10px] font-black uppercase" style={{ color: colors.text }}>Landed: 4h 12m ago</Text>
+                <Text className="text-[8px] font-bold uppercase" style={{ color: colors.textMuted }}>Prime Quality Index (A+)</Text>
               </View>
             </View>
             <View className="rounded-full bg-emerald-500/10 px-2 py-1 border border-emerald-500/20">
-              <Text className="text-[8px] font-black text-emerald-500 uppercase">
-                98% {t("fresh") || "FRESH"}
-              </Text>
+              <Text className="text-[8px] font-black text-emerald-500 uppercase">98% FRESH</Text>
             </View>
           </View>
 
           {/* Licious-Style Smart Add-ons Cross-Sell Engine */}
           {p.addons && p.addons.length > 0 ? (
-            <View
-              className="mt-6 p-4 border"
-              style={{
-                backgroundColor: "rgba(16, 185, 129, 0.03)",
-                borderColor: "rgba(16, 185, 129, 0.15)",
-              }}
-            >
+            <View className="mt-6 p-4 rounded-[20px] border" style={{ backgroundColor: 'rgba(16, 185, 129, 0.03)', borderColor: 'rgba(16, 185, 129, 0.15)' }}>
               <View className="flex-row items-center justify-between mb-2">
                 <View className="flex-row items-center gap-1">
-                  <MaterialCommunityIcons
-                    name="plus"
-                    size={14}
-                    color="#10B981"
-                  />
+                  <MaterialCommunityIcons name="plus" size={14} color="#10B981" />
                   <Text className="text-[10px] font-black uppercase tracking-wider text-emerald-400">
-                    {t("complete_your_recipe") || "Complete Your Recipe"}
+                    Complete Your Recipe
                   </Text>
                 </View>
                 <View className="rounded bg-emerald-500/10 px-1.5 py-0.5 border border-emerald-500/20">
                   <Text className="text-[6px] font-black text-emerald-400 uppercase tracking-widest">
-                    {t("recommended_pairing") || "RECOMMENDED PAIRING"}
+                    RECOMMENDED PAIRING
                   </Text>
                 </View>
               </View>
               <Text className="text-[9px] text-muted-foreground mb-3 leading-4">
-                {t("frequently_bought_together") ||
-                  "Frequently bought together with this catch for a perfect culinary experience:"}
+                Frequently bought together with this catch for a perfect culinary experience:
               </Text>
-
+              
               <View className="flex-col gap-2 mt-1">
-                {(showAllAddons ? p.addons : p.addons.slice(0, 3)).map(
-                  (addon: any) => {
-                    const inCart = isAddonInCart(addon.id);
-                    const addonImg =
-                      addon.image_url || resolveMediaUrl("/ICONS/masala.png");
-                    return (
-                      <View
-                        key={addon.id}
-                        className="w-full p-2 border rounded-xl flex-row items-center justify-between"
-                        style={{
-                          backgroundColor: colors.card,
-                          borderColor: colors.border,
-                        }}
-                      >
-                        <View className="flex-row items-center flex-1 pr-3">
-                          <Image
-                            source={{ uri: addonImg }}
-                            className="w-10 h-10 rounded-lg bg-black/10 border mr-3"
-                            style={{ borderColor: "rgba(255, 255, 255, 0.05)" }}
-                          />
-                          <View className="flex-1 justify-center">
-                            <Text
-                              className="text-[10px] font-black uppercase text-foreground"
-                              numberOfLines={1}
-                            >
-                              {addon.name}
-                            </Text>
-                            <Text
-                              className="text-[8px] text-muted-foreground mt-0.5"
-                              numberOfLines={1}
-                            >
-                              {addon.description ||
-                                t("fresh_pairing") ||
-                                "Fresh pairing."}
-                            </Text>
-                            <Text className="text-[10px] font-black text-emerald-400 mt-0.5">
-                              ₹{addon.price}
-                            </Text>
-                          </View>
+                {(showAllAddons ? p.addons : p.addons.slice(0, 3)).map((addon: any) => {
+                  const inCart = isAddonInCart(addon.id);
+                  const addonImg = addon.image_url || resolveMediaUrl("/ICONS/masala.png");
+                  return (
+                    <View 
+                      key={addon.id} 
+                      className="w-full p-2 border rounded-xl flex-row items-center justify-between"
+                      style={{ backgroundColor: colors.card, borderColor: colors.border }}
+                    >
+                      <View className="flex-row items-center flex-1 pr-3">
+                        <Image 
+                          source={{ uri: addonImg }} 
+                          className="w-10 h-10 rounded-lg bg-black/10 border mr-3"
+                          style={{ borderColor: 'rgba(255, 255, 255, 0.05)' }}
+                        />
+                        <View className="flex-1 justify-center">
+                          <Text className="text-[10px] font-black uppercase text-foreground" numberOfLines={1}>{addon.name}</Text>
+                          <Text className="text-[8px] text-muted-foreground mt-0.5" numberOfLines={1}>
+                            {addon.description || "Fresh pairing."}
+                          </Text>
+                          <Text className="text-[10px] font-black text-emerald-400 mt-0.5">₹{addon.price}</Text>
                         </View>
-
-                        <Pressable
-                          onPress={() => handleToggleAddon(addon)}
-                          className={`px-3 py-1.5 flex-row items-center justify-center gap-1 border ${
-                            inCart
-                              ? "bg-emerald-600 border-emerald-600"
-                              : "bg-transparent"
-                          }`}
-                          style={{
-                            borderColor: inCart ? "#059669" : colors.primary,
-                          }}
-                        >
-                          {inCart ? (
-                            <>
-                              <MaterialCommunityIcons
-                                name="check"
-                                size={10}
-                                color="#fff"
-                              />
-                              <Text className="text-[9px] font-black uppercase tracking-widest text-white">
-                                {t("added") || "ADDED"}
-                              </Text>
-                            </>
-                          ) : (
-                            <Text
-                              className="text-[9px] font-black uppercase tracking-widest"
-                              style={{ color: colors.primary }}
-                            >
-                              {t("plus_add") || "+ ADD"}
-                            </Text>
-                          )}
-                        </Pressable>
                       </View>
-                    );
-                  },
-                )}
+                      
+                      <Pressable
+                        onPress={() => handleToggleAddon(addon)}
+                        className={`px-3 py-1.5 rounded-lg flex-row items-center justify-center gap-1 border ${
+                          inCart ? 'bg-emerald-600 border-emerald-600' : 'bg-transparent'
+                        }`}
+                        style={{ borderColor: inCart ? '#059669' : colors.primary }}
+                      >
+                        {inCart ? (
+                          <>
+                            <MaterialCommunityIcons name="check" size={10} color="#fff" />
+                            <Text className="text-[9px] font-black uppercase tracking-widest text-white">ADDED</Text>
+                          </>
+                        ) : (
+                          <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>+ ADD</Text>
+                        )}
+                      </Pressable>
+                    </View>
+                  );
+                })}
               </View>
               {p.addons.length > 3 && (
                 <Pressable
                   onPress={() => setShowAllAddons(!showAllAddons)}
                   className="mt-3 py-2 items-center justify-center border rounded-lg bg-emerald-500/10"
-                  style={{ borderColor: "rgba(16, 185, 129, 0.2)" }}
+                  style={{ borderColor: 'rgba(16, 185, 129, 0.2)' }}
                 >
                   <Text className="text-[10px] font-black uppercase tracking-widest text-emerald-500">
-                    {showAllAddons
-                      ? t("view_less") || "View Less ↑"
-                      : `${t("view") || "View"} ${p.addons.length - 3} ${t("more_addons") || "More Add-ons ↓"}`}
+                    {showAllAddons ? "View Less ↑" : `View ${p.addons.length - 3} More Add-ons ↓`}
                   </Text>
                 </Pressable>
               )}
@@ -667,33 +483,19 @@ export default function ProductDetailScreen() {
           {/* Preparation & Cooking Customizations */}
           {p.prep_options && p.prep_options.length > 0 ? (
             <View className="mt-6">
-              <Text
-                className="text-[10px] font-black uppercase tracking-widest mb-3"
-                style={{ color: colors.primary }}
-              >
-                🍳{" "}
-                {t("cooking_prep_customization") ||
-                  "Cooking Prep Customization"}
+              <Text className="text-[10px] font-black uppercase tracking-widest mb-3" style={{ color: colors.primary }}>
+                🍳 Cooking Prep Customization
               </Text>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={{ gap: 8, paddingBottom: 4 }}
-              >
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingBottom: 4 }}>
                 {p.prep_options.map((option: any) => {
                   const isSelected = selectedPrepOption?.id === option.id;
                   const getPrepEmoji = (type: string) => {
                     switch (type.toUpperCase()) {
-                      case "RAW":
-                        return "🐟";
-                      case "MARINATED":
-                        return "🧂";
-                      case "GRILLED":
-                        return "🔥";
-                      case "FRIED":
-                        return "🍳";
-                      default:
-                        return "🍽️";
+                      case 'RAW': return '🐟';
+                      case 'MARINATED': return '🧂';
+                      case 'GRILLED': return '🔥';
+                      case 'FRIED': return '🍳';
+                      default: return '🍽️';
                     }
                   };
                   return (
@@ -702,24 +504,14 @@ export default function ProductDetailScreen() {
                       onPress={() => setSelectedPrepOption(option)}
                       className="p-3 border rounded-xl items-center justify-center min-w-[90px]"
                       style={{
-                        backgroundColor: isSelected
-                          ? `${colors.primary}15`
-                          : colors.card,
-                        borderColor: isSelected
-                          ? colors.primary
-                          : colors.border,
+                        backgroundColor: isSelected ? `${colors.primary}15` : colors.card,
+                        borderColor: isSelected ? colors.primary : colors.border
                       }}
                     >
-                      <Text className="text-xl mb-1">
-                        {getPrepEmoji(option.prep_type)}
-                      </Text>
-                      <Text className="text-[10px] font-black uppercase text-foreground">
-                        {option.name}
-                      </Text>
+                      <Text className="text-xl mb-1">{getPrepEmoji(option.prep_type)}</Text>
+                      <Text className="text-[10px] font-black uppercase text-foreground">{option.name}</Text>
                       <Text className="text-[9px] text-muted-foreground mt-0.5">
-                        {option.price_flat_add > 0
-                          ? `+ ₹${option.price_flat_add}`
-                          : t("included") || "Included"}
+                        {option.price_flat_add > 0 ? `+ ₹${option.price_flat_add}` : "Included"}
                       </Text>
                     </Pressable>
                   );
@@ -728,108 +520,62 @@ export default function ProductDetailScreen() {
             </View>
           ) : null}
 
+
           {isComingSoon ? (
             <View className="mt-8">
               <View className="bg-amber-500/20 border border-amber-500/30 rounded-xl py-4 items-center">
                 <Text className="text-amber-500 font-black uppercase tracking-widest text-center">
-                  🚢{" "}
-                  {t("coming_soon_msg") ||
-                    "COMING SOON - NOT YET HARVESTED IN THIS SECTOR"}
+                  🚢 COMING SOON - NOT YET HARVESTED IN THIS SECTOR
                 </Text>
               </View>
             </View>
           ) : (
             <View className="mt-8 gap-3">
+              <Button label="SELECT CUT & ADD" onPress={openCut} />
               <Button
-                label={t("select_cut_and_add") || "SELECT CUT & ADD"}
-                onPress={openCut}
-              />
-              <Button
-                label={t("add_whole_to_cart") || "ADD WHOLE TO CART"}
+                label="ADD WHOLE TO CART"
                 variant="ghost"
                 onPress={() => {
-                  const prepAdd = selectedPrepOption
-                    ? parseFloat(selectedPrepOption.price_flat_add)
-                    : 0;
+                  const prepAdd = selectedPrepOption ? parseFloat(selectedPrepOption.price_flat_add) : 0;
                   cart.addItem({
-                    id: `${id}${selectedPrepOption ? "-" + selectedPrepOption.prep_type : ""}`,
-                    name: selectedPrepOption
-                      ? `${String(product.name)} (${selectedPrepOption.name})`
-                      : String(product.name),
-                    price:
-                      Number(product.live_price ?? product.price ?? 0) +
-                      prepAdd,
+                    id: `${id}${selectedPrepOption ? '-' + selectedPrepOption.prep_type : ''}`,
+                    name: selectedPrepOption ? `${String(product.name)} (${selectedPrepOption.name})` : String(product.name),
+                    price: Number(product.live_price ?? product.price ?? 0) + prepAdd,
                     quantity: 1,
                     image: img,
                     sellerId: String(product.seller_id ?? ""),
                     metadata: {
-                      prep_option: selectedPrepOption
-                        ? {
-                            id: selectedPrepOption.id,
-                            prep_type: selectedPrepOption.prep_type,
-                            name: selectedPrepOption.name,
-                            price_flat_add: selectedPrepOption.price_flat_add,
-                          }
-                        : null,
-                    },
+                      prep_option: selectedPrepOption ? {
+                        id: selectedPrepOption.id,
+                        prep_type: selectedPrepOption.prep_type,
+                        name: selectedPrepOption.name,
+                        price_flat_add: selectedPrepOption.price_flat_add
+                      } : null
+                    }
                   });
-                  toast(t("added_to_cart") || "Added to cart", "success");
+                  toast("Added to cart", "success");
                 }}
               />
             </View>
           )}
 
           {/* --- YIELD & CULINARY CUT VISUALIZER --- */}
-          <View
-            className="mt-6 p-4 border"
-            style={{ backgroundColor: colors.card, borderColor: colors.border }}
-          >
-            <Text
-              className="text-[10px] font-black uppercase tracking-widest mb-3"
-              style={{ color: colors.primary }}
-            >
-              🔪 {t("yield_cut_reference") || "Yield & Cut Reference"}
+          <View className="mt-6 p-4 border" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+            <Text className="text-[10px] font-black uppercase tracking-widest mb-3" style={{ color: colors.primary }}>
+              🔪 Yield & Cut Reference
             </Text>
             <View className="gap-2">
               {[
-                {
-                  name: t("curry_cut") || "Curry Cut",
-                  yield: "75% Yield",
-                  desc:
-                    t("curry_cut_desc") ||
-                    "Bone-in, perfect for traditional slow curries.",
-                },
-                {
-                  name: t("fillet") || "Fillet",
-                  yield: "55% Yield",
-                  desc:
-                    t("fillet_desc") ||
-                    "Boneless & skinless, ideal for pan-searing/grilling.",
-                },
-                {
-                  name: t("whole_cleaned") || "Whole Cleaned",
-                  yield: "85% Yield",
-                  desc:
-                    t("whole_cleaned_desc") ||
-                    "Cleaned gills & entrails, best for baking/tandoor.",
-                },
+                { name: "Curry Cut", yield: "75% Yield", desc: "Bone-in, perfect for traditional slow curries." },
+                { name: "Fillet", yield: "55% Yield", desc: "Boneless & skinless, ideal for pan-searing/grilling." },
+                { name: "Whole Cleaned", yield: "85% Yield", desc: "Cleaned gills & entrails, best for baking/tandoor." }
               ].map((item, idx) => (
-                <View
-                  key={idx}
-                  className="flex-row justify-between items-start py-1.5 border-b"
-                  style={{ borderBottomColor: `${colors.border}50` }}
-                >
+                <View key={idx} className="flex-row justify-between items-start py-1.5 border-b" style={{ borderBottomColor: `${colors.border}50` }}>
                   <View className="flex-1 pr-4">
-                    <Text className="text-xs font-black uppercase text-foreground">
-                      {item.name}
-                    </Text>
-                    <Text className="text-[10px] text-muted-foreground mt-0.5">
-                      {item.desc}
-                    </Text>
+                    <Text className="text-xs font-black uppercase text-foreground">{item.name}</Text>
+                    <Text className="text-[10px] text-muted-foreground mt-0.5">{item.desc}</Text>
                   </View>
-                  <Text className="text-xs font-black italic text-primary">
-                    {item.yield}
-                  </Text>
+                  <Text className="text-xs font-black italic text-primary">{item.yield}</Text>
                 </View>
               ))}
             </View>
@@ -837,382 +583,166 @@ export default function ProductDetailScreen() {
         </View>
 
         {/* --- LAYER 2: INTELLIGENCE MATRIX --- */}
-        <View
-          className="px-4 py-6 border-t"
-          style={{ borderColor: colors.border }}
-        >
-          <SectionTitle
-            title={t("scientific_intelligence") || "Scientific Intelligence"}
-            subtitle={t("alpha_v1_1") || "ALPHA-v1.1"}
-          />
+        <View className="px-4 py-6 border-t" style={{ borderColor: colors.border }}>
+          <SectionTitle title="Scientific Intelligence" subtitle="ALPHA-v1.1" />
           <View className="flex-row flex-wrap gap-2 mt-4">
             {[
-              {
-                label: t("protein") || "Protein",
-                value: p?.nutrition?.protein || "20g",
-                icon: "fire",
-                color: colors.primary,
-              },
-              {
-                label: t("omega3") || "Omega-3",
-                value: p?.nutrition?.omega3 || "300mg",
-                icon: "heart",
-                color: "#3b82f6",
-              },
-              {
-                label: t("calories") || "Calories",
-                value: p?.nutrition?.calories || "100 kcal",
-                icon: "lightning-bolt",
-                color: "#f59e0b",
-              },
-              {
-                label: t("fat") || "Fat",
-                value: p?.nutrition?.fat || "2g",
-                icon: "snowflake",
-                color: "#06b6d4",
-              },
+              { label: "Protein", value: p?.nutrition?.protein || "20g", icon: "fire", color: colors.primary },
+              { label: "Omega-3", value: p?.nutrition?.omega3 || "300mg", icon: "heart", color: "#3b82f6" },
+              { label: "Calories", value: p?.nutrition?.calories || "100 kcal", icon: "lightning-bolt", color: "#f59e0b" },
+              { label: "Fat", value: p?.nutrition?.fat || "2g", icon: "snowflake", color: "#06b6d4" }
             ].map((fact, idx) => (
-              <View
-                key={idx}
-                className="w-[48%] p-3 items-center justify-center border"
-                style={{
-                  backgroundColor: colors.card,
-                  borderColor: colors.border,
-                }}
+              <View 
+                key={idx} 
+                className="w-[48%] p-3 items-center justify-center border" 
+                style={{ backgroundColor: colors.card, borderColor: colors.border }}
               >
-                <MaterialCommunityIcons
-                  name={fact.icon as any}
-                  size={16}
-                  color={fact.color}
-                />
-                <Text
-                  className="text-[10px] font-black uppercase mt-1"
-                  style={{ color: colors.textMuted }}
-                >
-                  {fact.label}
-                </Text>
-                <Text
-                  className="text-sm font-black italic mt-1"
-                  style={{ color: colors.text }}
-                >
-                  {fact.value}
-                </Text>
+                <MaterialCommunityIcons name={fact.icon as any} size={16} color={fact.color} />
+                <Text className="text-[10px] font-black uppercase mt-1" style={{ color: colors.textMuted }}>{fact.label}</Text>
+                <Text className="text-sm font-black italic mt-1" style={{ color: colors.text }}>{fact.value}</Text>
               </View>
             ))}
           </View>
 
-          {/* --- QUALITY GUARANTEE --- */}
-          <View
-            className="mt-4 p-4 border"
-            style={{ backgroundColor: colors.card, borderColor: colors.border }}
-          >
-            <Text
-              className="text-[10px] font-black uppercase tracking-widest mb-3"
-              style={{ color: colors.primary }}
-            >
-              ❄️ {t("quality_guarantee") || "Quality Guarantee"}
+          {/* --- COLD-CHAIN TELEMETRY GUARD --- */}
+          <View className="mt-4 p-4 border" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+            <Text className="text-[10px] font-black uppercase tracking-widest mb-3" style={{ color: colors.primary }}>
+              ❄️ Cold-Chain Telemetry Guard
             </Text>
             <View className="flex-row justify-between items-center">
               <View>
-                <Text
-                  className="text-xs font-black"
-                  style={{ color: colors.text }}
-                >
-                  {t("stable") || "Stable"} -18.2°C
-                </Text>
-                <Text
-                  className="text-[8px] font-bold uppercase mt-0.5"
-                  style={{ color: colors.textMuted }}
-                >
-                  {t("continuous_cold_chain") || "Continuous Cold-Chain Active"}
-                </Text>
+                <Text className="text-xs font-black" style={{ color: colors.text }}>Stable -18.2°C</Text>
+                <Text className="text-[8px] font-bold uppercase mt-0.5" style={{ color: colors.textMuted }}>Continuous Cold-Chain Active</Text>
               </View>
               <View className="flex-row gap-1">
                 {[-18.0, -18.2, -18.1, -18.2].map((t, idx) => (
-                  <View
-                    key={idx}
-                    className="bg-blue-500/10 px-1.5 py-1 border border-blue-500/20 rounded"
-                  >
-                    <Text className="text-[8px] font-black text-blue-500">
-                      {t}°C
-                    </Text>
+                  <View key={idx} className="bg-blue-500/10 px-1.5 py-1 border border-blue-500/20 rounded">
+                    <Text className="text-[8px] font-black text-blue-500">{t}°C</Text>
                   </View>
                 ))}
               </View>
             </View>
           </View>
 
-          <View
-            className="mt-4 p-4 border flex-row items-center gap-4"
-            style={{
-              backgroundColor: "rgba(34,197,94,0.1)",
-              borderColor: "rgba(34,197,94,0.3)",
-            }}
-          >
-            <MaterialCommunityIcons
-              name="check-decagram"
-              size={24}
-              color="#22c55e"
-            />
+          <View className="mt-4 p-4 border flex-row items-center gap-4" style={{ backgroundColor: "rgba(34,197,94,0.1)", borderColor: "rgba(34,197,94,0.3)" }}>
+            <MaterialCommunityIcons name="check-decagram" size={24} color="#22c55e" />
             <View>
-              <Text className="text-[10px] font-black uppercase tracking-widest text-emerald-500">
-                {t("quality_certified") ||
-                  "Quality Tested & Freshness Certified"}
-              </Text>
-              <Text className="text-[10px] uppercase font-bold text-emerald-500/70 mt-1">
-                {t("certified_fresh") || "Certified Fresh • 100% Safe"}
-              </Text>
+              <Text className="text-[10px] font-black uppercase tracking-widest text-emerald-500">Quality Tested & Freshness Certified</Text>
+              <Text className="text-[10px] uppercase font-bold text-emerald-500/70 mt-1">Certified Fresh • 100% Safe</Text>
             </View>
           </View>
         </View>
 
         {/* --- LAYER 3: CULINARY INTELLIGENCE --- */}
-        <View
-          className="px-4 py-6 border-t"
-          style={{ borderColor: colors.border }}
-        >
-          <SectionTitle
-            title={t("chef_recipes") || "Chef Recipes"}
-            subtitle={
-              t("chef_recommended_preparations") ||
-              "Chef Recommended Preparations"
-            }
-          />
+        <View className="px-4 py-6 border-t" style={{ borderColor: colors.border }}>
+          <SectionTitle title="Chef Recipes" subtitle="Chef Recommended Preparations" />
           <View className="mt-4 gap-3">
             {(p.recipes || MOCK_RECIPES).map((recipe: any, i: number) => (
-              <Pressable
-                key={i}
-                onPress={() =>
-                  router.push({
-                    pathname: "/recipe/[id]",
-                    params: { id: String(recipe.id || 1) },
-                  })
-                }
+              <Pressable 
+                key={i} 
+                onPress={() => router.push({ pathname: "/recipe/[id]", params: { id: String(recipe.id || 1) } })}
                 className="p-4 border flex-row items-center justify-between"
-                style={{
-                  backgroundColor: colors.card,
-                  borderColor: colors.border,
-                }}
+                style={{ backgroundColor: colors.card, borderColor: colors.border }}
               >
                 <View>
-                  <Text
-                    className="text-xs font-black uppercase italic"
-                    style={{ color: colors.text }}
-                  >
-                    {recipe.title}
-                  </Text>
+                  <Text className="text-xs font-black uppercase italic" style={{ color: colors.text }}>{recipe.title}</Text>
                   <View className="flex-row items-center gap-3 mt-1 text-[10px] font-bold uppercase tracking-widest">
-                    <Text
-                      className="text-[10px]"
-                      style={{ color: colors.textMuted }}
-                    >
-                      ⏱ {recipe.time}
-                    </Text>
-                    <Text
-                      className="text-[10px]"
-                      style={{ color: colors.textMuted }}
-                    >
-                      {recipe.difficulty}
-                    </Text>
+                    <Text className="text-[10px]" style={{ color: colors.textMuted }}>⏱ {recipe.time}</Text>
+                    <Text className="text-[10px]" style={{ color: colors.textMuted }}>{recipe.difficulty}</Text>
                   </View>
                 </View>
-                <MaterialCommunityIcons
-                  name="chevron-right"
-                  size={20}
-                  color={colors.primary}
-                />
+                <MaterialCommunityIcons name="chevron-right" size={20} color={colors.primary} />
               </Pressable>
             ))}
           </View>
         </View>
 
         {/* --- LAYER 4: AUTHORITY REGISTRY --- */}
-        <View
-          className="px-4 py-6 border-t"
-          style={{ borderColor: colors.border }}
-        >
-          <SectionTitle
-            title={t("authority_registry") || "Authority Catalog"}
-            subtitle={t("fleet_certification") || "Delivery Certification"}
-          />
-          <View
-            className="p-4 mt-4 border flex-row items-center gap-4"
-            style={{ backgroundColor: colors.card, borderColor: colors.border }}
-          >
-            <View
-              className="w-12 h-12 rounded-full items-center justify-center border"
-              style={{
-                backgroundColor: `${colors.primary}20`,
-                borderColor: `${colors.primary}40`,
-              }}
-            >
-              <Text className="text-xl">⚓</Text>
-            </View>
-            <View>
-              <Text
-                className="text-sm font-black uppercase italic"
-                style={{ color: colors.text }}
-              >
-                {String(
-                  p.seller_name ?? (t("verified_fleet") || "Verified Delivery"),
-                )}
-              </Text>
-              <Text className="text-[9px] font-black uppercase tracking-widest text-emerald-500 mt-1">
-                {t("fleet_certified_agent") || "Delivery Certified Agent"}
-              </Text>
-            </View>
+        <View className="px-4 py-6 border-t" style={{ borderColor: colors.border }}>
+          <SectionTitle title="Authority Registry" subtitle="Fleet Certification" />
+          <View className="p-4 mt-4 border flex-row items-center gap-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+             <View className="w-12 h-12 rounded-full items-center justify-center border" style={{ backgroundColor: `${colors.primary}20`, borderColor: `${colors.primary}40` }}>
+                <Text className="text-xl">⚓</Text>
+             </View>
+             <View>
+                <Text className="text-sm font-black uppercase italic" style={{ color: colors.text }}>
+                  {String(p.seller_name ?? "Verified Fleet")}
+                </Text>
+                <Text className="text-[9px] font-black uppercase tracking-widest text-emerald-500 mt-1">
+                  Fleet Certified Agent
+                </Text>
+             </View>
           </View>
 
           {/* --- LIVE VESSEL & TRACEABILITY REGISTRY --- */}
-          <View
-            className="p-4 mt-3 border"
-            style={{ backgroundColor: colors.card, borderColor: colors.border }}
-          >
-            <Text
-              className="text-[10px] font-black uppercase tracking-widest mb-3"
-              style={{ color: colors.primary }}
-            >
-              🚢{" "}
-              {t("live_vessel_traceability") ||
-                "Live Source & Traceability Catalog"}
+          <View className="p-4 mt-3 border" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+            <Text className="text-[10px] font-black uppercase tracking-widest mb-3" style={{ color: colors.primary }}>
+              🚢 Live Vessel & Traceability Registry
             </Text>
             <View className="gap-2">
               <View className="flex-row justify-between">
-                <Text className="text-[10px] font-black uppercase text-muted-foreground">
-                  {t("vessel_id") || "Source ID"}
-                </Text>
-                <Text className="text-[10px] font-black uppercase text-foreground">
-                  {t("m_v_samudra") || "M.V. Samudra-III"}
-                </Text>
+                <Text className="text-[10px] font-black uppercase text-muted-foreground">Vessel ID</Text>
+                <Text className="text-[10px] font-black uppercase text-foreground">M.V. Samudra-III</Text>
               </View>
               <View className="flex-row justify-between">
-                <Text className="text-[10px] font-black uppercase text-muted-foreground">
-                  {t("gear_used") || "Gear Used"}
-                </Text>
-                <Text className="text-[10px] font-black uppercase text-foreground">
-                  {t("handline") || "Handline / Line-Caught"}
-                </Text>
+                <Text className="text-[10px] font-black uppercase text-muted-foreground">Gear Used</Text>
+                <Text className="text-[10px] font-black uppercase text-foreground">Handline / Line-Caught</Text>
               </View>
               <View className="flex-row justify-between">
-                <Text className="text-[10px] font-black uppercase text-muted-foreground">
-                  {t("captain") || "Captain"}
-                </Text>
-                <Text className="text-[10px] font-black uppercase text-foreground">
-                  {t("capt_anand") || "Capt. Anand Shekhar"}
-                </Text>
+                <Text className="text-[10px] font-black uppercase text-muted-foreground">Captain</Text>
+                <Text className="text-[10px] font-black uppercase text-foreground">Capt. Anand Shekhar</Text>
               </View>
             </View>
           </View>
         </View>
 
         {/* --- LAYER 5: CUSTOMER INTELLIGENCE --- */}
-        <View
-          className="px-4 py-6 border-t"
-          style={{ borderColor: colors.border }}
-        >
-          <SectionTitle
-            title={t("customer_intelligence") || "Customer Intelligence"}
-            subtitle={t("reputation_ledger") || "Reputation Ledger"}
-          />
+        <View className="px-4 py-6 border-t" style={{ borderColor: colors.border }}>
+          <SectionTitle title="Customer Intelligence" subtitle="Reputation Ledger" />
           <View className="mt-4 gap-3">
-            {(p.customerReviews || MOCK_REVIEWS).map(
-              (review: any, i: number) => (
-                <View
-                  key={i}
-                  className="p-4 border"
-                  style={{
-                    backgroundColor: colors.card,
-                    borderColor: colors.border,
-                  }}
-                >
-                  <View className="flex-row justify-between items-start mb-2">
-                    <View className="flex-row items-center gap-2">
-                      <View
-                        className="w-8 h-8 rounded-full items-center justify-center"
-                        style={{ backgroundColor: `${colors.primary}20` }}
-                      >
-                        <Text
-                          className="font-black"
-                          style={{ color: colors.primary }}
-                        >
-                          {review.name.charAt(0)}
-                        </Text>
-                      </View>
-                      <View>
-                        <Text
-                          className="text-[10px] font-black uppercase"
-                          style={{ color: colors.text }}
-                        >
-                          {review.name}
-                        </Text>
-                        <Text
-                          className="text-[8px] font-bold uppercase"
-                          style={{ color: colors.textMuted }}
-                        >
-                          {review.date}
-                        </Text>
-                      </View>
+            {(p.customerReviews || MOCK_REVIEWS).map((review: any, i: number) => (
+              <View key={i} className="p-4 border" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+                <View className="flex-row justify-between items-start mb-2">
+                  <View className="flex-row items-center gap-2">
+                    <View className="w-8 h-8 rounded-full items-center justify-center" style={{ backgroundColor: `${colors.primary}20` }}>
+                      <Text className="font-black" style={{ color: colors.primary }}>{review.name.charAt(0)}</Text>
                     </View>
-                    <Text
-                      className="text-[10px] font-black"
-                      style={{ color: "#f59e0b" }}
-                    >
-                      ★ {review.rating}
-                    </Text>
+                    <View>
+                      <Text className="text-[10px] font-black uppercase" style={{ color: colors.text }}>{review.name}</Text>
+                      <Text className="text-[8px] font-bold uppercase" style={{ color: colors.textMuted }}>{review.date}</Text>
+                    </View>
                   </View>
-                  <Text
-                    className="text-xs italic"
-                    style={{ color: colors.textMuted }}
-                  >
-                    "{review.comment}"
-                  </Text>
+                  <Text className="text-[10px] font-black" style={{ color: "#f59e0b" }}>★ {review.rating}</Text>
                 </View>
-              ),
-            )}
+                <Text className="text-xs italic" style={{ color: colors.textMuted }}>"{review.comment}"</Text>
+              </View>
+            ))}
           </View>
-          <Button
-            label={t("submit_feedback") || "SUBMIT FEEDBACK"}
-            variant="ghost"
-            className="mt-4 border border-white/10"
-          />
+          <Button label="SUBMIT FEEDBACK" variant="ghost" className="mt-4 border border-white/10" />
         </View>
 
         {/* --- LAYER 6: SIMILAR FLEET ASSETS --- */}
-        <View
-          className="px-4 py-6 border-t"
-          style={{ borderColor: colors.border }}
-        >
-          <SectionTitle
-            title={t("similar_fleet_assets") || "Similar Delivery Assets"}
-            subtitle={t("explore_alternatives") || "Explore Alternatives"}
-          />
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            className="mt-4"
-          >
+        <View className="px-4 py-6 border-t" style={{ borderColor: colors.border }}>
+          <SectionTitle title="Similar Fleet Assets" subtitle="Explore Alternatives" />
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
             {similarProducts.map((p) => (
               <View key={p.id} className="mr-3 w-48">
-                <ProductCard
-                  product={p}
+                <ProductCard 
+                  product={p} 
                   onSelectCut={() => {
-                    // Normally you would navigate to the new product or open cut modal here
-                    router.push({
-                      pathname: "/product/[id]",
-                      params: { id: String(p.id) },
-                    });
-                  }}
+                     // Normally you would navigate to the new product or open cut modal here
+                     router.push({ pathname: "/product/[id]", params: { id: String(p.id) } });
+                  }} 
                 />
               </View>
             ))}
           </ScrollView>
         </View>
+
       </ScrollView>
       <CutSelectionModal
         visible={cutOpen}
-        product={
-          { name: String(p.name), product_id: String(id) } as TodaysCatchItem
-        }
+        product={{ name: String(p.name), product_id: String(id) } as TodaysCatchItem}
         options={cutOptions}
         selected={selectedCut}
         loading={cutLoading}
@@ -1232,7 +762,7 @@ export default function ProductDetailScreen() {
           {/* Top bar with Close button */}
           <View className="absolute top-12 left-0 right-0 px-6 flex-row justify-between items-center z-50">
             <Text className="text-white/60 text-xs font-black uppercase tracking-widest">
-              {t("product_media_room") || "Product Media Room"}
+              Product Media Room
             </Text>
             <Pressable
               onPress={() => setIsFullScreenVisible(false)}
@@ -1257,12 +787,8 @@ export default function ProductDetailScreen() {
             keyExtractor={(item, index) => `fs-${item}-${index}`}
             renderItem={({ item }) => (
               <ScrollView
-                style={{ width: screenWidth, height: "100%" }}
-                contentContainerStyle={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                  minHeight: "100%",
-                }}
+                style={{ width: screenWidth, height: '100%' }}
+                contentContainerStyle={{ justifyContent: 'center', alignItems: 'center', minHeight: '100%' }}
                 maximumZoomScale={5.0}
                 minimumZoomScale={1.0}
                 bounces={false}
@@ -1284,8 +810,7 @@ export default function ProductDetailScreen() {
               {String(product.name)}
             </Text>
             <Text className="text-white/50 text-[10px] uppercase font-bold mt-1">
-              {t("swipe_left_right_to_navigate") ||
-                "Swipe left / right to navigate"}
+              Swipe left / right to navigate
             </Text>
           </View>
         </View>

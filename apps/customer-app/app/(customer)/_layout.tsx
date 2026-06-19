@@ -32,10 +32,7 @@ export default function CustomerLayout() {
 
   if (!isHydrated || !isAuthenticated || !user || user.role !== "customer") {
     return (
-      <View
-        className="flex-1 items-center justify-center"
-        style={{ backgroundColor: colors.bg }}
-      >
+      <View className="flex-1 items-center justify-center" style={{ backgroundColor: colors.bg }}>
         <ActivityIndicator color={colors.primary} size="large" />
       </View>
     );
@@ -44,7 +41,7 @@ export default function CustomerLayout() {
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       <CustomerHeader />
-      <View className="flex-1" style={{ paddingBottom: 87 }}>
+      <View className="flex-1">
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="home" />
           <Stack.Screen name="products" />

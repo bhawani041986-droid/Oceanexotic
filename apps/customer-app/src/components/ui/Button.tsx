@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  Pressable,
-  Text,
-  ActivityIndicator,
-  PressableProps,
-  StyleSheet,
-} from "react-native";
+import { Pressable, Text, ActivityIndicator, PressableProps, StyleSheet } from "react-native";
 import Svg, { Path } from "react-native-svg";
 import { cn } from "@/lib/utils";
 import { useSettingsStore } from "@/store/settingsStore";
@@ -34,10 +28,7 @@ export function Button({
   const colors = useThemeColors();
   const primaryBgColor = colors.primary;
 
-  const pathD =
-    w && h
-      ? `M${b},0 L${w},0 L${w},${h - b} L${w - b},${h} L0,${h} L0,${b} Z`
-      : "";
+  const pathD = w && h ? `M${b},0 L${w},0 L${w},${h - b} L${w - b},${h} L0,${h} L0,${b} Z` : "";
 
   return (
     <Pressable
@@ -46,7 +37,7 @@ export function Button({
       className={cn(
         "h-14 w-full items-center justify-center active:opacity-90 relative overflow-hidden",
         isDisabled && "opacity-50",
-        className,
+        className
       )}
       {...props}
     >
@@ -55,12 +46,8 @@ export function Button({
         <Svg width={w} height={h} style={StyleSheet.absoluteFill}>
           <Path
             d={pathD}
-            fill={
-              variant === "primary" ? primaryBgColor : "rgba(2, 6, 23, 0.4)"
-            }
-            stroke={
-              variant === "ghost" ? "rgba(255, 255, 255, 0.15)" : "transparent"
-            }
+            fill={variant === "primary" ? primaryBgColor : "rgba(2, 6, 23, 0.4)"}
+            stroke={variant === "ghost" ? "rgba(255, 255, 255, 0.15)" : "transparent"}
             strokeWidth="1.5"
           />
         </Svg>
@@ -72,7 +59,7 @@ export function Button({
         <Text
           className={cn(
             "text-xs font-black tracking-[0.2em] uppercase relative z-10",
-            variant === "primary" ? "text-foreground" : "text-muted-foreground",
+            variant === "primary" ? "text-foreground" : "text-muted-foreground"
           )}
         >
           {label}

@@ -7,42 +7,26 @@ import { View, ActivityIndicator } from "react-native";
 
 export default function OAuthCallbackScreen() {
   const router = useRouter();
-  const { token, user } = useLocalSearchParams<{
-    token?: string;
-    user?: string;
-  }>();
+  const { token, user } = useLocalSearchParams<{ token?: string; user?: string }>();
   const { login } = useAuthStore();
 
   useEffect(() => {
     if (token && user) {
       try {
-        // useLocalSearchParams already decodes the URI components in expo-router,
-        // but if it was double-encoded, we handle both safely.
-        let parsedUser;
-        try {
-          parsedUser = JSON.parse(decodeURIComponent(user));
-        } catch {
-          parsedUser = JSON.parse(user);
-        }
-
+        const parsedUser = JSON.parse(decodeURIComponent(user));
         const authUser = toAuthUser(parsedUser);
-
-        setAuthToken(token)
-          .then(() => {
-            return setAuthUser(authUser);
-          })
-          .then(() => {
-            login(authUser);
-            router.replace("/home");
-          })
-          .catch((err) => {
-            console.error("Storage error:", err);
-            alert("Session storage failed. Please login again.");
-            router.replace("/login");
-          });
+        
+        setAuthToken(token).then(() => {
+          return setAuthUser(authUser);
+        }).then(() => {
+          login(authUser);
+          router.replace("/home");
+        }).catch((err) => {
+          console.error("Storage error:", err);
+          router.replace("/login");
+        });
       } catch (err) {
         console.error("Parse error:", err);
-        alert("OAuth parsing failed. Please login manually.");
         router.replace("/login");
       }
     } else {
@@ -51,14 +35,7 @@ export default function OAuthCallbackScreen() {
   }, [token, user, login, router]);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: "#020617",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
+    <View style={{ flex: 1, backgroundColor: "#020617", alignItems: "center", justifyContent: "center" }}>
       <ActivityIndicator size="large" color="#00D1FF" />
     </View>
   );

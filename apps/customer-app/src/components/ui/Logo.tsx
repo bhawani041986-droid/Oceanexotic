@@ -1,11 +1,5 @@
 import React, { useEffect, useRef, useMemo } from "react";
-import {
-  View,
-  StyleSheet,
-  Animated,
-  Easing,
-  type ViewStyle,
-} from "react-native";
+import { View, StyleSheet, Animated, Easing, type ViewStyle } from "react-native";
 import Svg, {
   Path,
   Defs,
@@ -39,10 +33,7 @@ interface LogoProps {
 
 /** Animated OceanExotic mark — powered by standard core Animated for bulletproof 100% native platform support */
 export function Logo({ size = "md", className, style }: LogoProps) {
-  const uid = useMemo(
-    () => `logo${Math.random().toString(36).slice(2, 9)}`,
-    [],
-  );
+  const uid = useMemo(() => `logo${Math.random().toString(36).slice(2, 9)}`, []);
   const dims = SIZES[size];
   const colors = useThemeColors();
   const textFill = "#F8FAFC";
@@ -63,7 +54,7 @@ export function Logo({ size = "md", className, style }: LogoProps) {
         duration: 3500,
         easing: Easing.linear,
         useNativeDriver: false,
-      }),
+      })
     ).start();
 
     // 2. Pulsing Fish Mark Animation
@@ -81,7 +72,7 @@ export function Logo({ size = "md", className, style }: LogoProps) {
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: false,
         }),
-      ]),
+      ])
     ).start();
 
     return () => {
@@ -97,42 +88,28 @@ export function Logo({ size = "md", className, style }: LogoProps) {
   });
 
   return (
-    <View
-      className={cn("overflow-hidden", className)}
-      style={[{ width: dims.width, height: dims.height }, style]}
-    >
-      <Svg
-        width="100%"
-        height="100%"
-        viewBox="0 0 800 200"
-        preserveAspectRatio="xMinYMid meet"
-      >
+    <View className={cn("overflow-hidden", className)} style={[{ width: dims.width, height: dims.height }, style]}>
+      <Svg width="100%" height="100%" viewBox="0 0 800 200" preserveAspectRatio="xMinYMid meet">
         <Defs>
-          <LinearGradient
-            id={`neonGrad-${uid}`}
-            x1="0%"
-            y1="0%"
-            x2="100%"
-            y2="0%"
-          >
+          <LinearGradient id={`neonGrad-${uid}`} x1="0%" y1="0%" x2="100%" y2="0%">
             <Stop offset="0%" stopColor={accentCyan} />
             <Stop offset="50%" stopColor={accentPink} />
             <Stop offset="100%" stopColor="#FACC15" />
           </LinearGradient>
-          <LinearGradient
-            id={`eyeGrad-${uid}`}
-            x1="0%"
-            y1="0%"
-            x2="100%"
-            y2="100%"
-          >
+          <LinearGradient id={`eyeGrad-${uid}`} x1="0%" y1="0%" x2="100%" y2="100%">
             <Stop offset="0%" stopColor="#FFFFFF" />
             <Stop offset="100%" stopColor={accentCyan} />
           </LinearGradient>
         </Defs>
 
         {/* Fish Mark Group - Pulsating and Center-aligned to logo text */}
-        <AnimatedG x={45} y={45} scale={pulseAnim} originX={50} originY={50}>
+        <AnimatedG
+          x={45}
+          y={45}
+          scale={pulseAnim}
+          originX={50}
+          originY={50}
+        >
           {/* Neon Glow Aura behind the fish */}
           <Path
             fill="none"
@@ -199,7 +176,7 @@ export function Logo({ size = "md", className, style }: LogoProps) {
             strokeDashoffset={strokeDashoffset}
             opacity={0.9}
           />
-
+          
           <SvgText
             fill={textFill}
             x="0"
@@ -211,22 +188,8 @@ export function Logo({ size = "md", className, style }: LogoProps) {
             OceanExotic
           </SvgText>
           <G transform="translate(0, 38)">
-            <Rect
-              fill={primaryFill}
-              x="0"
-              y="-8"
-              width="50"
-              height="5"
-              rx="2.5"
-            />
-            <SvgText
-              fill={primaryFill}
-              x="65"
-              y="0"
-              fontSize="24"
-              fontWeight="900"
-              fontStyle="italic"
-            >
+            <Rect fill={primaryFill} x="0" y="-8" width="50" height="5" rx="2.5" />
+            <SvgText fill={primaryFill} x="65" y="0" fontSize="24" fontWeight="900" fontStyle="italic">
               GLOBAL
             </SvgText>
           </G>

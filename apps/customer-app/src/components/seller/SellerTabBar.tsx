@@ -16,20 +16,11 @@ function pathActive(pathname: string, href: string): boolean {
 
 function TabIcon({ label, color }: { label: string; color: string }) {
   const normalizedLabel = label.toLowerCase();
-
+  
   if (normalizedLabel === "dashboard") {
     // LayoutDashboard
     return (
-      <Svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
+      <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <Path d="M3 3h7v9H3z" />
         <Path d="M14 3h7v5h-7z" />
         <Path d="M14 12h7v9h-7z" />
@@ -41,16 +32,7 @@ function TabIcon({ label, color }: { label: string; color: string }) {
   if (normalizedLabel === "inventory") {
     // Anchor/Box icon
     return (
-      <Svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
+      <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <Path d="M12 2L2 7l10 5 10-5-10-5z" />
         <Path d="M2 17l10 5 10-5" />
         <Path d="M2 12l10 5 10-5" />
@@ -61,16 +43,7 @@ function TabIcon({ label, color }: { label: string; color: string }) {
   if (normalizedLabel === "orders") {
     // Receipt/List icon
     return (
-      <Svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
+      <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <Path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
         <Path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
       </Svg>
@@ -79,16 +52,7 @@ function TabIcon({ label, color }: { label: string; color: string }) {
 
   // Profile / User
   return (
-    <Svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke={color}
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <Path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
       <Circle cx="12" cy="7" r="4" />
     </Svg>
@@ -98,14 +62,14 @@ function TabIcon({ label, color }: { label: string; color: string }) {
 export function SellerTabBar() {
   const pathname = usePathname();
   const router = useRouter();
-
+  
   const primaryColor = "#7C3AED"; // purple accent
   const borderColor = "rgba(124, 58, 237, 0.25)";
   const activeColor = primaryColor;
   const inactiveColor = "rgba(255, 255, 255, 0.4)";
 
   return (
-    <View
+    <View 
       className="absolute bottom-4 left-4 right-4 z-50 h-[58px] flex-row items-center justify-around px-4"
       style={{
         backgroundColor: "rgba(15, 23, 42, 0.95)",
@@ -129,8 +93,8 @@ export function SellerTabBar() {
             className="flex-grow items-center justify-center h-full relative"
           >
             {active && (
-              <View
-                style={{
+              <View 
+                style={{ 
                   position: "absolute",
                   top: 0,
                   width: 24,
@@ -148,10 +112,7 @@ export function SellerTabBar() {
             )}
 
             <View className="items-center justify-center mt-1">
-              <TabIcon
-                label={item.label}
-                color={active ? activeColor : inactiveColor}
-              />
+              <TabIcon label={item.label} color={active ? activeColor : inactiveColor} />
             </View>
 
             <Text

@@ -17,20 +17,11 @@ function pathActive(pathname: string, href: string): boolean {
 
 function TabIcon({ label, color }: { label: string; color: string }) {
   const normalizedLabel = label.toLowerCase();
-
+  
   if (normalizedLabel === "missions") {
     // LayoutDashboard
     return (
-      <Svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
+      <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <Path d="M3 3h7v9H3z" />
         <Path d="M14 3h7v5h-7z" />
         <Path d="M14 12h7v9h-7z" />
@@ -42,16 +33,7 @@ function TabIcon({ label, color }: { label: string; color: string }) {
   if (normalizedLabel === "live trace") {
     // Navigation/Compass Icon
     return (
-      <Svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
+      <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <Path d="M3 11l19-9-9 19-2-8-8-2z" />
       </Svg>
     );
@@ -60,16 +42,7 @@ function TabIcon({ label, color }: { label: string; color: string }) {
   if (normalizedLabel === "history") {
     // History clock
     return (
-      <Svg
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
+      <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <Path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
         <Path d="M3 3v5h5" />
         <Path d="M12 7v5l4 2" />
@@ -79,16 +52,7 @@ function TabIcon({ label, color }: { label: string; color: string }) {
 
   // Profile / User
   return (
-    <Svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke={color}
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
+    <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <Path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
       <Circle cx="12" cy="7" r="4" />
     </Svg>
@@ -100,12 +64,12 @@ export function AgentTabBar() {
   const router = useRouter();
   const currentMood = useAgentStore((s) => s.currentMood);
   const mood = MOODS[currentMood];
-
+  
   // Custom HUD styling for Sentinel theme: clip-path shape emulation or futuristic look
   const isLight = currentMood === "DAYLIGHT";
 
   return (
-    <View
+    <View 
       className="absolute bottom-4 left-4 right-4 z-50 h-[58px] flex-row items-center justify-around px-4"
       style={{
         backgroundColor: isLight ? "#F8FAFCFD" : "rgba(15, 23, 42, 0.95)",
@@ -131,8 +95,8 @@ export function AgentTabBar() {
             className="flex-grow items-center justify-center h-full relative"
           >
             {active && (
-              <View
-                style={{
+              <View 
+                style={{ 
                   position: "absolute",
                   top: 0,
                   width: 24,
@@ -150,15 +114,12 @@ export function AgentTabBar() {
             )}
 
             <View className="items-center justify-center mt-1">
-              <TabIcon
-                label={item.label}
-                color={active ? activeColor : inactiveColor}
-              />
+              <TabIcon label={item.label} color={active ? activeColor : inactiveColor} />
             </View>
 
             <Text
               className={cn(
-                "text-[7px] font-black uppercase tracking-[0.15em] mt-1 text-center",
+                "text-[7px] font-black uppercase tracking-[0.15em] mt-1 text-center"
               )}
               style={{ color: active ? activeColor : inactiveColor }}
             >

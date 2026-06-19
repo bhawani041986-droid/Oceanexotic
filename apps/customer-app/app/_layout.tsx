@@ -1,12 +1,7 @@
 import "../global.css";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import {
-  useFonts,
-  Inter_400Regular,
-  Inter_700Bold,
-  Inter_900Black,
-} from "@expo-google-fonts/inter";
+import { useFonts, Inter_400Regular, Inter_700Bold, Inter_900Black } from "@expo-google-fonts/inter";
 import { useEffect } from "react";
 import { Platform, LogBox } from "react-native";
 import { StatusBar } from "expo-status-bar";
@@ -36,6 +31,8 @@ cssInterop(LinearGradient, { className: "style" });
 
 SplashScreen.preventAutoHideAsync();
 
+import { useAuthStore } from "@/store/authStore";
+
 export default function RootLayout() {
   const [loaded, error] = useFonts({
     Inter_400Regular,
@@ -43,25 +40,23 @@ export default function RootLayout() {
     Inter_900Black,
   });
 
+  const isHydrated = useAuthStore((s) => s.isHydrated);
+
   useEffect(() => {
     if (error) throw error;
   }, [error]);
 
   useEffect(() => {
-    if (loaded) SplashScreen.hideAsync();
-  }, [loaded]);
+    if (loaded && isHydrated) SplashScreen.hideAsync();
+  }, [loaded, isHydrated]);
 
   if (!loaded && Platform.OS !== "web") return null;
+  if (!isHydrated) return null;
 
   return (
     <AppProviders>
       <StatusBar style="light" />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: "#020617" },
-        }}
-      >
+      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: "#020617" } }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="login" />
         <Stack.Screen name="oauth-callback" />

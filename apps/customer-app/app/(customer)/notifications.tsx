@@ -2,19 +2,18 @@ import React from "react";
 import { View, Text, ScrollView } from "react-native";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { Ionicons } from "@expo/vector-icons";
-import { useTranslation } from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 
 export default function NotificationsScreen() {
   const colors = useThemeColors();
-  const currentLanguage = useSettingsStore((s) => s.language);
-  const { t } = useTranslation();
+  const currentLanguage = useSettingsStore((s) => s.language); // force re-render
 
   const mockNotifications = [
     {
       id: "1",
       title: "Order Dispatched",
-      message: "Your order #ORD-892 is out for delivery with our delivery.",
+      message: "Your order #ORD-892 is out for delivery with our fleet.",
       time: "2 mins ago",
       icon: "boat-outline",
       unread: true,
@@ -47,7 +46,7 @@ export default function NotificationsScreen() {
         className="text-2xl font-black uppercase mb-6"
         style={{ color: colors.text }}
       >
-        {t("notifications")}
+        {t('notifications')}
       </Text>
 
       <View className="gap-4">
@@ -56,21 +55,15 @@ export default function NotificationsScreen() {
             key={notif.id}
             className="flex-row p-4 rounded-2xl border"
             style={{
-              backgroundColor: notif.unread
-                ? colors.primary + "10"
-                : colors.card,
+              backgroundColor: notif.unread ? colors.primary + "10" : colors.card,
               borderColor: notif.unread ? colors.primary + "30" : colors.border,
             }}
           >
             <View
               className="w-10 h-10 rounded-full items-center justify-center mr-4 border"
               style={{
-                backgroundColor: notif.unread
-                  ? colors.primary + "20"
-                  : colors.bgAlt,
-                borderColor: notif.unread
-                  ? colors.primary + "40"
-                  : colors.border,
+                backgroundColor: notif.unread ? colors.primary + "20" : colors.bgAlt,
+                borderColor: notif.unread ? colors.primary + "40" : colors.border,
               }}
             >
               <Ionicons
@@ -107,3 +100,4 @@ export default function NotificationsScreen() {
     </ScrollView>
   );
 }
+

@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  ActivityIndicator,
-  Pressable,
-  Modal,
-  Switch,
-} from "react-native";
+import { View, Text, ScrollView, ActivityIndicator, Pressable, Modal, Switch } from "react-native";
 import { useRouter } from "expo-router";
 import { useAuthStore } from "@/store/authStore";
 import { userService, type UserProfile } from "@/services/userService";
@@ -15,7 +7,7 @@ import { orderService } from "@/services/orderService";
 import { useCartStore } from "@/store/cartStore";
 import { useSettingsStore } from "@/store/settingsStore";
 import { authService } from "@/services/authService";
-import { useTranslation } from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
@@ -26,13 +18,7 @@ import { Image } from "expo-image";
 import { assetUrl } from "@/config/assets";
 import { useThemeColors } from "@/hooks/useThemeColors";
 
-const JETTIES = [
-  "Phoenix Bay Jetty",
-  "Haddo Jetty",
-  "Junglighat Jetty",
-  "Havelock Jetty",
-  "Chatham Jetty",
-];
+const JETTIES = ["Phoenix Bay Jetty", "Haddo Jetty", "Junglighat Jetty", "Havelock Jetty", "Chatham Jetty"];
 
 export default function ProfileScreen() {
   const router = useRouter();
@@ -40,8 +26,7 @@ export default function ProfileScreen() {
   const cart = useCartStore();
   const { toast, ToastHost } = useToast();
   const colors = useThemeColors();
-  const currentLanguage = useSettingsStore((s) => s.language);
-  const { t } = useTranslation();
+  const currentLanguage = useSettingsStore((s) => s.language); // force re-render
 
   const primaryColor = colors.primary;
 
@@ -60,7 +45,7 @@ export default function ProfileScreen() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [changingPassword, setChangingPassword] = useState(false);
 
-  // Saved Addresses States
+  // Address Vault States
   const [addresses, setAddresses] = useState<SavedAddress[]>([]);
   const [addressModalVisible, setAddressModalVisible] = useState(false);
   const [addressLoading, setAddressLoading] = useState(false);
@@ -93,7 +78,7 @@ export default function ProfileScreen() {
         avatar: p.avatar_url,
       });
     } catch (err) {
-      console.error("Address/Profile Sync drift:", err);
+      console.error("Vault/Profile Sync drift:", err);
       setName(user.name);
       setEmail(user.email);
     } finally {
@@ -111,9 +96,9 @@ export default function ProfileScreen() {
     try {
       await userService.updateProfile({ id: user.id, name, email });
       updateUser({ name, email });
-      toast(t("profile_synchronized") || "Profile synchronized", "success");
+      toast("Profile synchronized", "success");
     } catch {
-      toast(t("profile_sync_failed") || "Profile sync failed", "error");
+      toast("Profile sync failed", "error");
     } finally {
       setSaving(false);
     }
@@ -122,18 +107,14 @@ export default function ProfileScreen() {
   const handlePickImage = async () => {
     if (!user?.id) return;
     try {
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== "granted") {
-        toast(
-          t("permission_denied") || "Permission to access gallery denied",
-          "error",
-        );
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        toast("Permission to access gallery denied", "error");
         return;
       }
 
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ["images"],
+        mediaTypes: ['images'],
         allowsEditing: true,
         aspect: [1, 1],
         quality: 0.8,
@@ -145,20 +126,14 @@ export default function ProfileScreen() {
         try {
           const res = await userService.uploadAvatar(user.id, selectedUri);
           if (res.success) {
-            toast(
-              t("avatar_synchronized") || "Profile picture synchronized",
-              "success",
-            );
+            toast("Profile picture synchronized", "success");
             setAvatarTimestamp(Date.now());
             await loadData();
           } else {
-            toast(t("upload_failed") || "Upload failed", "error");
+            toast("Upload failed", "error");
           }
         } catch (err: any) {
-          const errMsg =
-            err?.response?.data?.error ||
-            t("avatar_sync_failure") ||
-            "Avatar sync failure";
+          const errMsg = err?.response?.data?.error || "Avatar sync failure";
           toast(errMsg, "error");
         } finally {
           setUploadingAvatar(false);
@@ -166,21 +141,18 @@ export default function ProfileScreen() {
       }
     } catch (err) {
       console.error("Image pick error:", err);
-      toast(t("failed_to_pick_image") || "Failed to pick image", "error");
+      toast("Failed to pick image", "error");
     }
   };
 
   const handleChangePassword = async () => {
     if (!user?.id) return;
     if (!currentPassword || !newPassword || !confirmPassword) {
-      toast(
-        t("fill_all_security_fields") || "Please fill all security fields",
-        "error",
-      );
+      toast("Please fill all security fields", "error");
       return;
     }
     if (newPassword !== confirmPassword) {
-      toast(t("passwords_not_match") || "New passwords do not match", "error");
+      toast("New passwords do not match", "error");
       return;
     }
     setChangingPassword(true);
@@ -190,18 +162,12 @@ export default function ProfileScreen() {
         currentPassword,
         newPassword,
       });
-      toast(
-        t("password_updated_securely") || "Password updated securely",
-        "success",
-      );
+      toast("Password updated securely", "success");
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
     } catch (err: any) {
-      const errMsg =
-        err?.response?.data?.error ||
-        t("password_sync_failed") ||
-        "Password synchronization failed";
+      const errMsg = err?.response?.data?.error || "Password synchronization failed";
       toast(errMsg, "error");
     } finally {
       setChangingPassword(false);
@@ -217,10 +183,7 @@ export default function ProfileScreen() {
   const handleAddAddress = async () => {
     if (!user?.id) return;
     if (!addrLine || !addrPhone) {
-      toast(
-        t("address_phone_required") || "Address & Phone are required",
-        "error",
-      );
+      toast("Address & Phone are required", "error");
       return;
     }
 
@@ -236,7 +199,7 @@ export default function ProfileScreen() {
         phone: addrPhone,
         is_default: addrDefault ? 1 : 0,
       });
-      toast("Address saved successfully", "success");
+      toast("Address commissioned to vault", "success");
       setAddressModalVisible(false);
       // Reset form fields
       setAddrHotel("");
@@ -245,11 +208,11 @@ export default function ProfileScreen() {
       setAddrPhone("");
       setAddrType("HOME");
       setAddrDefault(true);
-      // Reload saved address list
+      // Reload address vault list
       const freshList = await checkoutService.fetchAddresses(user.id);
       setAddresses(freshList);
     } catch (err) {
-      toast("Ordering failed", "error");
+      toast("Commissioning failed", "error");
       console.error(err);
     } finally {
       setAddressLoading(false);
@@ -260,20 +223,17 @@ export default function ProfileScreen() {
     if (!user?.id) return;
     try {
       await checkoutService.deleteAddress(id);
-      toast("Address deleted", "success");
+      toast("Address decommissioned", "success");
       const freshList = await checkoutService.fetchAddresses(user.id);
       setAddresses(freshList);
     } catch (err) {
-      toast("Failed to delete", "error");
+      toast("Decommission failure", "error");
     }
   };
 
   if (loading) {
     return (
-      <View
-        className="flex-1 items-center justify-center"
-        style={{ backgroundColor: colors.bg }}
-      >
+      <View className="flex-1 items-center justify-center" style={{ backgroundColor: colors.bg }}>
         <ActivityIndicator color={primaryColor} size="large" />
       </View>
     );
@@ -283,68 +243,45 @@ export default function ProfileScreen() {
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       {ToastHost}
       <ScrollView contentContainerClassName="px-4 pb-28 pt-16">
-        <Text
-          className="text-2xl font-black uppercase italic"
-          style={{ color: colors.text }}
-        >
-          {t("my_profile") || "My Profile"}
-        </Text>
-        <Text
-          className="mt-1 text-[10px] font-black uppercase tracking-widest"
+        <Text className="text-2xl font-black uppercase italic" style={{ color: colors.text }}>My Profile</Text>
+        <Text 
+          className="mt-1 text-[10px] font-black uppercase tracking-widest" 
           style={{ color: colors.textMuted }}
         >
           {profile?.grade || "Customer"}
         </Text>
 
         {/* Identity Head & Avatar */}
-        <View
+        <View 
           className="flex-row items-center gap-4 mt-6 rounded-2xl border p-4"
           style={{ borderColor: colors.border, backgroundColor: colors.card }}
         >
-          <Pressable
-            onPress={handlePickImage}
+          <Pressable 
+            onPress={handlePickImage} 
             disabled={uploadingAvatar}
             className="relative w-16 h-16 rounded-full overflow-hidden border-2 justify-center items-center"
-            style={{
-              borderColor: colors.primary + "4D",
-              backgroundColor: colors.bgAlt,
-            }}
+            style={{ borderColor: colors.primary + "4D", backgroundColor: colors.bgAlt }}
           >
             {uploadingAvatar ? (
               <ActivityIndicator color={primaryColor} size="small" />
             ) : profile?.avatar_url ? (
               <Image
-                source={{
-                  uri: `${assetUrl(profile.avatar_url)}?t=${avatarTimestamp}`,
-                }}
+                source={{ uri: `${assetUrl(profile.avatar_url)}?t=${avatarTimestamp}` }}
                 className="w-full h-full"
                 contentFit="cover"
               />
             ) : (
-              <Text
-                className="text-xl font-black"
-                style={{ color: colors.primary }}
-              >
+              <Text className="text-xl font-black" style={{ color: colors.primary }}>
                 {name ? name.charAt(0).toUpperCase() : "M"}
               </Text>
             )}
             <View className="absolute bottom-0 left-0 right-0 bg-black/60 py-0.5 items-center justify-center">
-              <Text className="text-[7px] font-black text-white uppercase tracking-widest">
-                {t("edit") || "EDIT"}
-              </Text>
+              <Text className="text-[7px] font-black text-white uppercase tracking-widest">EDIT</Text>
             </View>
           </Pressable>
           <View className="flex-1">
-            <Text
-              className="text-lg font-black uppercase"
-              style={{ color: colors.text }}
-            >
-              {name || "Customer"}
-            </Text>
-            <Text
-              className="text-[8px] font-black uppercase tracking-widest mt-0.5"
-              style={{ color: primaryColor }}
-            >
+            <Text className="text-lg font-black uppercase" style={{ color: colors.text }}>{name || "Customer"}</Text>
+            <Text className="text-[8px] font-black uppercase tracking-widest mt-0.5" style={{ color: primaryColor }}>
               🚢 {profile?.grade || "Customer"}
             </Text>
           </View>
@@ -356,102 +293,48 @@ export default function ProfileScreen() {
             className="flex-1 rounded-2xl border p-4"
             style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
-            <Text
-              className="text-2xl font-black"
-              style={{ color: primaryColor }}
-            >
-              {orderCount}
-            </Text>
-            <Text
-              className="text-[9px] font-black uppercase"
-              style={{ color: colors.textMuted }}
-            >
-              {t("orders") || "Orders"}
-            </Text>
+            <Text className="text-2xl font-black" style={{ color: primaryColor }}>{orderCount}</Text>
+            <Text className="text-[9px] font-black uppercase" style={{ color: colors.textMuted }}>Orders</Text>
           </Pressable>
           <Pressable
             onPress={() => router.push("/cart")}
             className="flex-1 rounded-2xl border p-4"
             style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
-            <Text
-              className="text-2xl font-black"
-              style={{ color: primaryColor }}
-            >
-              {cart.itemCount()}
-            </Text>
-            <Text
-              className="text-[9px] font-black uppercase"
-              style={{ color: colors.textMuted }}
-            >
-              {t("cart_items") || "Cart items"}
-            </Text>
+            <Text className="text-2xl font-black" style={{ color: primaryColor }}>{cart.itemCount()}</Text>
+            <Text className="text-[9px] font-black uppercase" style={{ color: colors.textMuted }}>Cart items</Text>
           </Pressable>
         </View>
 
         {/* Identity node */}
-        <View
+        <View 
           className="mt-6 gap-4 rounded-2xl border p-5"
           style={{ borderColor: colors.border, backgroundColor: colors.card }}
         >
-          <Text
-            className="text-[10px] font-black uppercase tracking-widest"
-            style={{ color: colors.textMuted }}
-          >
-            {t("identity_node") || "Identity node"}
+          <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
+            Identity node
           </Text>
           <View>
-            <Text
-              className="mb-1 text-[10px] font-black uppercase"
-              style={{ color: colors.text }}
-            >
-              {t("name") || "Name"}
-            </Text>
+            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Name</Text>
             <Input value={name} onChangeText={setName} />
           </View>
           <View>
-            <Text
-              className="mb-1 text-[10px] font-black uppercase"
-              style={{ color: colors.text }}
-            >
-              {t("email") || "Email"}
-            </Text>
-            <Input
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
+            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Email</Text>
+            <Input value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
           </View>
-          <Button
-            label={
-              saving
-                ? t("saving") || "SAVING…"
-                : t("save_profile") || "SAVE PROFILE"
-            }
-            loading={saving}
-            onPress={save}
-          />
+          <Button label={saving ? "SAVING…" : "SAVE PROFILE"} loading={saving} onPress={save} />
         </View>
 
         {/* Change Password node */}
-        <View
+        <View 
           className="mt-6 gap-4 rounded-2xl border p-5"
           style={{ borderColor: colors.border, backgroundColor: colors.card }}
         >
-          <Text
-            className="text-[10px] font-black uppercase tracking-widest"
-            style={{ color: colors.textMuted }}
-          >
-            {t("security_credentials") || "Security credentials"}
+          <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
+            Security credentials
           </Text>
           <View>
-            <Text
-              className="mb-1 text-[10px] font-black uppercase"
-              style={{ color: colors.text }}
-            >
-              {t("current_password") || "Current Password"}
-            </Text>
+            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Current Password</Text>
             <Input
               value={currentPassword}
               onChangeText={setCurrentPassword}
@@ -460,12 +343,7 @@ export default function ProfileScreen() {
             />
           </View>
           <View>
-            <Text
-              className="mb-1 text-[10px] font-black uppercase"
-              style={{ color: colors.text }}
-            >
-              {t("new_password") || "New Password"}
-            </Text>
+            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>New Password</Text>
             <Input
               value={newPassword}
               onChangeText={setNewPassword}
@@ -474,12 +352,7 @@ export default function ProfileScreen() {
             />
           </View>
           <View>
-            <Text
-              className="mb-1 text-[10px] font-black uppercase"
-              style={{ color: colors.text }}
-            >
-              {t("confirm_new_password") || "Confirm New Password"}
-            </Text>
+            <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Confirm New Password</Text>
             <Input
               value={confirmPassword}
               onChangeText={setConfirmPassword}
@@ -488,112 +361,71 @@ export default function ProfileScreen() {
             />
           </View>
           <Button
-            label={
-              changingPassword
-                ? t("synchronizing") || "SYNCHRONIZING…"
-                : t("change_password") || "CHANGE PASSWORD"
-            }
+            label={changingPassword ? "SYNCHRONIZING…" : "CHANGE PASSWORD"}
             loading={changingPassword}
             onPress={handleChangePassword}
           />
         </View>
 
-        {/* Saved Addresses Manager */}
-        <View
+        {/* Address Vault Manager */}
+        <View 
           className="mt-6 rounded-2xl border p-5"
           style={{ borderColor: colors.border, backgroundColor: colors.card }}
         >
           <View className="flex-row items-center justify-between mb-4">
-            <Text
-              className="text-[10px] font-black uppercase tracking-widest"
-              style={{ color: colors.textMuted }}
-            >
-              {t("saved_addresses") || "Saved Addresses"}
+            <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
+              Address Vault
             </Text>
-            <Pressable
-              onPress={() => setAddressModalVisible(true)}
+            <Pressable 
+              onPress={() => setAddressModalVisible(true)} 
               className="rounded-lg border px-3 py-1"
               style={{
                 backgroundColor: colors.primary + "1A",
-                borderColor: colors.primary + "33",
+                borderColor: colors.primary + "33"
               }}
             >
-              <Text
-                className="text-[9px] font-black uppercase"
-                style={{ color: primaryColor }}
-              >
-                {t("add_new") || "+ ADD NEW"}
-              </Text>
+              <Text className="text-[9px] font-black uppercase" style={{ color: primaryColor }}>+ ADD NEW</Text>
             </Pressable>
           </View>
 
           {addresses.length === 0 ? (
-            <View
+            <View 
               className="items-center py-6 border border-dashed rounded-xl"
               style={{ borderColor: colors.border }}
             >
-              <Text
-                className="text-xs font-bold uppercase"
-                style={{ color: colors.textMuted }}
-              >
-                {t("no_addresses_registered") || "No addresses registered"}
-              </Text>
+              <Text className="text-xs font-bold uppercase" style={{ color: colors.textMuted }}>No addresses registered</Text>
             </View>
           ) : (
             <View className="gap-3">
               {addresses.map((addr) => (
-                <View
-                  key={addr.id}
+                <View 
+                  key={addr.id} 
                   className="p-4 rounded-xl border relative"
-                  style={{
-                    borderColor: colors.border,
-                    backgroundColor: colors.bgAlt,
-                  }}
+                  style={{ borderColor: colors.border, backgroundColor: colors.bgAlt }}
                 >
                   <View className="flex-row items-center justify-between mb-1">
                     <View className="flex-row items-center gap-2">
-                      <View
+                      <View 
                         className="px-2 py-0.5 rounded"
                         style={{ backgroundColor: colors.primary + "1A" }}
                       >
-                        <Text
-                          className="text-[9px] font-black uppercase tracking-widest"
-                          style={{ color: primaryColor }}
-                        >
+                        <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>
                           {addr.type}
                         </Text>
                       </View>
                       {addr.is_default ? (
                         <Text className="text-[8px] font-black text-emerald-400 uppercase tracking-widest">
-                          {t("default") || "Default"}
+                          Default
                         </Text>
                       ) : null}
                     </View>
-                    <Pressable
-                      onPress={() => handleDeleteAddress(addr.id)}
-                      className="opacity-60 active:opacity-100 p-1"
-                    >
-                      <Text className="text-[9px] font-black text-rose-500 uppercase">
-                        {t("delete") || "Delete"}
-                      </Text>
+                    <Pressable onPress={() => handleDeleteAddress(addr.id)} className="opacity-60 active:opacity-100 p-1">
+                      <Text className="text-[9px] font-black text-rose-500 uppercase">Delete</Text>
                     </Pressable>
                   </View>
-                  <Text
-                    className="text-xs font-bold"
-                    style={{ color: colors.text }}
-                  >
-                    {addr.hotel_name || "Private Residence"}
-                  </Text>
-                  <Text
-                    className="text-[11px] mt-1 leading-tight"
-                    style={{ color: colors.textMuted }}
-                  >
-                    {addr.address}
-                  </Text>
-                  <Text
-                    className="text-[9px] mt-1 italic"
-                    style={{ color: colors.textMuted + "99" }}
-                  >
+                  <Text className="text-xs font-bold" style={{ color: colors.text }}>{addr.hotel_name || "Private Residence"}</Text>
+                  <Text className="text-[11px] mt-1 leading-tight" style={{ color: colors.textMuted }}>{addr.address}</Text>
+                  <Text className="text-[9px] mt-1 italic" style={{ color: colors.textMuted + "99" }}>
                     🚢 Jetty: {addr.jetty} · 📞 {addr.phone}
                   </Text>
                 </View>
@@ -603,32 +435,23 @@ export default function ProfileScreen() {
         </View>
 
         <View className="mt-4 gap-2">
-          <Pressable
-            onPress={() => router.push("/products")}
+          <Pressable 
+            onPress={() => router.push("/products")} 
             className="rounded-xl border px-4 py-4"
             style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
-            <Text className="text-sm font-bold" style={{ color: colors.text }}>
-              {t("browse_market") || "Browse Market"}
-            </Text>
+            <Text className="text-sm font-bold" style={{ color: colors.text }}>Browse Market</Text>
           </Pressable>
-          <Pressable
-            onPress={() => router.push("/home")}
+          <Pressable 
+            onPress={() => router.push("/home")} 
             className="rounded-xl border px-4 py-4"
             style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
-            <Text className="text-sm font-bold" style={{ color: colors.text }}>
-              {t("harbor_home") || "Harbor Home"}
-            </Text>
+            <Text className="text-sm font-bold" style={{ color: colors.text }}>Harbor Home</Text>
           </Pressable>
         </View>
 
-        <Button
-          label={t("logout").toUpperCase()}
-          variant="ghost"
-          onPress={handleLogout}
-          className="mt-8 border border-danger/30"
-        />
+        <Button label={t('logout').toUpperCase()} variant="ghost" onPress={handleLogout} className="mt-8 border border-danger/30" />
       </ScrollView>
 
       {/* Address Addition Modal */}
@@ -638,41 +461,30 @@ export default function ProfileScreen() {
         animationType="slide"
         onRequestClose={() => setAddressModalVisible(false)}
       >
-        <View
-          className="flex-1 justify-end px-4 pb-12 pt-20"
-          style={{ backgroundColor: colors.bg + "E6" }}
-        >
-          <ScrollView
-            contentContainerClassName=" border p-6 shadow-2xl"
+        <View className="flex-1 justify-end px-4 pb-12 pt-20" style={{ backgroundColor: colors.bg + "E6" }}>
+          <ScrollView 
+            contentContainerClassName="rounded-3xl border p-6 shadow-2xl"
             style={{ borderColor: colors.border, backgroundColor: colors.card }}
           >
             <View className="mb-6 flex-row items-center justify-between">
-              <Text
-                className="text-xl font-black uppercase italic"
-                style={{ color: colors.text }}
-              >
-                {t("register_node") || "Register Node"}
+              <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
+                Register Node
               </Text>
               <Pressable
                 onPress={() => setAddressModalVisible(false)}
                 className="rounded-full p-2"
                 style={{ backgroundColor: colors.textMuted + "1A" }}
               >
-                <Text
-                  className="text-xs font-black"
-                  style={{ color: colors.text }}
-                >
-                  X
-                </Text>
+                <Text className="text-xs font-black" style={{ color: colors.text }}>X</Text>
               </Pressable>
             </View>
 
             <View className="mb-4">
-              <Text
-                className="mb-2 text-[10px] font-black uppercase tracking-widest"
+              <Text 
+                className="mb-2 text-[10px] font-black uppercase tracking-widest" 
                 style={{ color: colors.text }}
               >
-                {t("type_label") || "Type / Label"}
+                Type / Label
               </Text>
               <View className="flex-row gap-2">
                 {["HOME", "WORK", "HOTEL", "OTHER"].map((t) => (
@@ -680,140 +492,93 @@ export default function ProfileScreen() {
                     key={t}
                     onPress={() => setAddrType(t)}
                     className="flex-1 py-2 rounded-xl border items-center"
-                    style={
-                      addrType === t
-                        ? {
-                            borderColor: primaryColor,
-                            backgroundColor: colors.primary + "1A",
-                          }
-                        : {
-                            borderColor: colors.border,
-                            backgroundColor: colors.bgAlt,
-                          }
-                    }
+                    style={addrType === t ? {
+                      borderColor: primaryColor,
+                      backgroundColor: colors.primary + "1A"
+                    } : {
+                      borderColor: colors.border,
+                      backgroundColor: colors.bgAlt
+                    }}
                   >
-                    <Text
-                      className="text-[9px] font-black"
-                      style={{ color: colors.text }}
-                    >
-                      {t}
-                    </Text>
+                    <Text className="text-[9px] font-black" style={{ color: colors.text }}>{t}</Text>
                   </Pressable>
                 ))}
               </View>
             </View>
 
             <View className="mb-4">
-              <Text
-                className="mb-1 text-[10px] font-black uppercase"
-                style={{ color: colors.text }}
-              >
-                {t("hotel_resort_name") || "Hotel / Resort Name"}
-              </Text>
+              <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Hotel / Resort Name</Text>
               <Input
-                placeholder={
-                  t("placeholder_resort") || "e.g. Symphony Palms Resort"
-                }
+                placeholder="e.g. Symphony Palms Resort"
                 value={addrHotel}
                 onChangeText={setAddrHotel}
               />
             </View>
 
             <View className="mb-4">
-              <Text
-                className="mb-1 text-[10px] font-black uppercase"
-                style={{ color: colors.text }}
-              >
-                {t("room_villa_no") || "Room / Villa No (Optional)"}
-              </Text>
+              <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Room / Villa No (Optional)</Text>
               <Input
-                placeholder={t("placeholder_room") || "e.g. Room 204"}
+                placeholder="e.g. Room 204"
                 value={addrRoom}
                 onChangeText={setAddrRoom}
               />
             </View>
 
             <View className="mb-4">
-              <Text
-                className="mb-2 text-[10px] font-black uppercase tracking-widest"
+              <Text 
+                className="mb-2 text-[10px] font-black uppercase tracking-widest" 
                 style={{ color: colors.text }}
               >
-                {t("delivery_jetty") || "Delivery Jetty"}
+                Delivery Jetty
               </Text>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                className="flex-row gap-2"
-              >
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row gap-2">
                 {JETTIES.map((j) => (
                   <Pressable
                     key={j}
                     onPress={() => setAddrJetty(j)}
                     className="px-3 py-2 rounded-xl border mr-2"
-                    style={
-                      addrJetty === j
-                        ? {
-                            borderColor: primaryColor,
-                            backgroundColor: colors.primary + "1A",
-                          }
-                        : {
-                            borderColor: colors.border,
-                            backgroundColor: colors.bgAlt,
-                          }
-                    }
+                    style={addrJetty === j ? {
+                      borderColor: primaryColor,
+                      backgroundColor: colors.primary + "1A"
+                    } : {
+                      borderColor: colors.border,
+                      backgroundColor: colors.bgAlt
+                    }}
                   >
-                    <Text
-                      className="text-[8px] font-black uppercase"
-                      style={{ color: colors.text }}
-                    >
-                      {j}
-                    </Text>
+                    <Text className="text-[8px] font-black uppercase" style={{ color: colors.text }}>{j}</Text>
                   </Pressable>
                 ))}
               </ScrollView>
             </View>
 
             <View className="mb-4">
-              <Text
-                className="mb-1 text-[10px] font-black uppercase"
-                style={{ color: colors.text }}
-              >
-                {t("delivery_address") || "Delivery Address / Destination"}
-              </Text>
+              <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Delivery Address / Destination</Text>
               <Input
-                placeholder={
-                  t("placeholder_beach") ||
-                  "e.g. Govind Nagar Beach No 3, Havelock"
-                }
+                placeholder="e.g. Govind Nagar Beach No 3, Havelock"
                 value={addrLine}
                 onChangeText={setAddrLine}
               />
             </View>
 
             <View className="mb-4">
-              <Text
-                className="mb-1 text-[10px] font-black uppercase"
-                style={{ color: colors.text }}
-              >
-                {t("contact_phone") || "Contact Phone"}
-              </Text>
+              <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>Contact Phone</Text>
               <Input
-                placeholder={t("placeholder_phone") || "e.g. +91 9999999999"}
+                placeholder="e.g. +91 9999999999"
                 value={addrPhone}
                 onChangeText={setAddrPhone}
                 keyboardType="phone-pad"
               />
             </View>
 
-            <View
+            <View 
               className="mb-6 flex-row items-center justify-between border-t pt-4"
               style={{ borderTopColor: colors.border }}
             >
-              <Text
-                className="text-[10px] font-black uppercase tracking-widest"
+              <Text 
+                className="text-[10px] font-black uppercase tracking-widest" 
                 style={{ color: colors.text }}
               >
-                {t("set_as_default_address") || "Set as Default Address"}
+                Set as Default Address
               </Text>
               <Switch
                 value={addrDefault}
@@ -824,11 +589,7 @@ export default function ProfileScreen() {
             </View>
 
             <Button
-              label={
-                addressLoading
-                  ? t("saving") || "SAVING…"
-                  : t("save_address") || "SAVE ADDRESS"
-              }
+              label={addressLoading ? "COMMISSIONING…" : "SAVE ADDRESS"}
               loading={addressLoading}
               onPress={handleAddAddress}
               className="w-full"
@@ -839,3 +600,4 @@ export default function ProfileScreen() {
     </View>
   );
 }
+

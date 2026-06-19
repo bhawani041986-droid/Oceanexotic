@@ -8,19 +8,9 @@ import { Logo } from "@/components/ui/Logo";
 import { useToast } from "@/components/ui/Toast";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { cn } from "@/lib/utils";
-import { useTranslation } from "@/lib/i18n";
 
 const MenuIcon = ({ color }: { color: string }) => (
-  <Svg
-    width={18}
-    height={18}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke={color}
-    strokeWidth={2.5}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
+  <Svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
     <Path d="M3 12h18" />
     <Path d="M3 6h12" />
     <Path d="M3 18h16" />
@@ -28,16 +18,7 @@ const MenuIcon = ({ color }: { color: string }) => (
 );
 
 const NotificationIcon = ({ color = "#F8FAFC" }: { color?: string }) => (
-  <Svg
-    width={18}
-    height={18}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke={color}
-    strokeWidth={2.5}
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
+  <Svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
     <Path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
     <Path d="M13.73 21a2 2 0 0 1-3.46 0" />
   </Svg>
@@ -45,7 +26,6 @@ const NotificationIcon = ({ color = "#F8FAFC" }: { color?: string }) => (
 
 export function SellerHeader() {
   const router = useRouter();
-  const { t } = useTranslation();
   const pathname = usePathname();
   const { user, logout } = useAuthStore();
   const { toast, ToastHost } = useToast();
@@ -73,7 +53,7 @@ export function SellerHeader() {
   };
 
   return (
-    <View
+    <View 
       className="absolute top-0 left-0 right-0 z-50 h-16 flex-row items-center justify-between px-4 border-b bg-background/90"
       style={{
         borderColor: borderColor,
@@ -82,8 +62,8 @@ export function SellerHeader() {
     >
       <View className="flex-row items-center space-x-2">
         {/* Menu Toggle */}
-        <Pressable
-          onPress={() => setIsMenuOpen(true)}
+        <Pressable 
+          onPress={() => setIsMenuOpen(true)} 
           className="h-9 w-9 items-center justify-center rounded-xl border active:opacity-70 bg-white/5"
           style={{ borderColor: borderColor }}
         >
@@ -92,12 +72,12 @@ export function SellerHeader() {
 
         {/* Pulse Indicator */}
         <View className="flex-row items-center space-x-1.5 bg-white/5 px-2 py-1 rounded-lg">
-          <View
+          <View 
             className="w-5 h-5 rounded-md flex items-center justify-center"
             style={{ backgroundColor: "rgba(16, 185, 129, 0.1)" }}
           >
-            <View
-              className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"
+            <View 
+              className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" 
               style={{
                 shadowColor: "#10B981",
                 shadowOffset: { width: 0, height: 0 },
@@ -106,15 +86,15 @@ export function SellerHeader() {
               }}
             />
           </View>
-
+          
           <View className="flex-col justify-center">
-            <Text
+            <Text 
               className="text-[8px] font-black uppercase tracking-[0.1em] leading-none"
               style={{ color: primaryColor }}
             >
-              {t("merchant") || "Merchant"}
+              Merchant
             </Text>
-            <Text
+            <Text 
               className="text-[7px] font-bold opacity-60 uppercase tracking-[0.05em] mt-0.5 max-w-[60px]"
               style={{ color: textColor }}
               numberOfLines={1}
@@ -138,9 +118,9 @@ export function SellerHeader() {
           style={{ borderColor: borderColor }}
         >
           <NotificationIcon color={textColor} />
-          <View
+          <View 
             className="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-primary"
-            style={{ borderColor: "#020617" }}
+            style={{ borderColor: "#020617" }} 
           />
         </Pressable>
 
@@ -149,12 +129,8 @@ export function SellerHeader() {
           className="h-9 w-9 rounded-full border overflow-hidden items-center justify-center active:opacity-70"
           style={{ borderColor: borderColor }}
         >
-          <Image
-            source={{
-              uri:
-                resolveMediaUrl(user?.avatar) ||
-                "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80",
-            }}
+          <Image 
+            source={{ uri: resolveMediaUrl(user?.avatar) || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80" }} 
             className="h-full w-full rounded-full"
             contentFit="cover"
           />
@@ -169,88 +145,58 @@ export function SellerHeader() {
         onRequestClose={() => setIsMenuOpen(false)}
       >
         <View className="flex-1 flex-row">
-          <Pressable
-            className="absolute inset-0 bg-black/60"
-            onPress={() => setIsMenuOpen(false)}
+          <Pressable 
+            className="absolute inset-0 bg-black/60" 
+            onPress={() => setIsMenuOpen(false)} 
           />
-          <View
+          <View 
             className="w-[280px] h-full border-r p-5 pt-12 gap-6 relative shadow-2xl justify-between bg-background"
             style={{ borderRightColor: borderColor }}
           >
             <View className="gap-6">
               <View className="flex-row items-center justify-between">
                 <Logo size="sm" style={{ width: 128, height: 32 }} />
-                <Pressable
-                  onPress={() => setIsMenuOpen(false)}
+                <Pressable 
+                  onPress={() => setIsMenuOpen(false)} 
                   className="h-7 w-7 rounded-full border items-center justify-center active:opacity-70 bg-white/5"
                   style={{ borderColor: borderColor }}
                 >
-                  <Text className="text-[10px] font-black text-foreground">
-                    ✕
-                  </Text>
+                  <Text className="text-[10px] font-black text-foreground">✕</Text>
                 </Pressable>
               </View>
 
-              <View
+              <View 
                 className="rounded-xl p-3 flex-row items-center gap-2 border bg-white/5"
                 style={{ borderColor: getRgba(primaryColor, 0.2) }}
               >
                 <View className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
                 <View className="flex-1">
-                  <Text
-                    className="text-[8px] font-black uppercase tracking-widest"
-                    style={{ color: primaryColor }}
-                  >
-                    {t("active_merchant_node") || "Active Merchant Node"}
-                  </Text>
-                  <Text
-                    className="text-[10px] font-bold text-foreground"
-                    numberOfLines={1}
-                  >
-                    {user?.email ?? (t("guest_merchant") || "Guest Merchant")}
-                  </Text>
+                  <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>Active Merchant Node</Text>
+                  <Text className="text-[10px] font-bold text-foreground" numberOfLines={1}>{user?.email ?? "Guest Merchant"}</Text>
                 </View>
               </View>
 
               <View className="gap-2">
                 {[
-                  {
-                    label: t("fleet_dashboard") || "Fleet Dashboard",
-                    href: "/(seller)/dashboard",
-                  },
-                  {
-                    label: t("harbor_registry") || "Harbor Registry",
-                    href: "/(seller)/inventory",
-                  },
-                  {
-                    label: t("commission_line") || "Commission Line",
-                    href: "/(seller)/orders",
-                  },
-                  {
-                    label: t("merchant_settings") || "Merchant Settings",
-                    href: "/(seller)/profile",
-                  },
+                  { label: "Fleet Dashboard", href: "/(seller)/dashboard" },
+                  { label: "Harbor Registry", href: "/(seller)/inventory" },
+                  { label: "Commission Line", href: "/(seller)/orders" },
+                  { label: "Merchant Settings", href: "/(seller)/profile" }
                 ].map((item) => {
-                  const active =
-                    pathname === item.href ||
-                    pathname.startsWith(`${item.href}/`);
+                  const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
                   return (
-                    <Pressable
-                      key={item.href}
-                      onPress={() => navigateTo(item.href)}
+                    <Pressable 
+                      key={item.href} 
+                      onPress={() => navigateTo(item.href)} 
                       className="flex-row items-center px-4 py-3 rounded-xl border bg-white/5"
-                      style={
-                        active
-                          ? {
-                              borderColor: getRgba(primaryColor, 0.4),
-                              backgroundColor: getRgba(primaryColor, 0.15),
-                            }
-                          : {
-                              borderColor: borderColor,
-                            }
-                      }
+                      style={active ? {
+                        borderColor: getRgba(primaryColor, 0.4),
+                        backgroundColor: getRgba(primaryColor, 0.15)
+                      } : {
+                        borderColor: borderColor,
+                      }}
                     >
-                      <Text
+                      <Text 
                         className="text-xs font-black uppercase tracking-wider text-foreground"
                         style={active ? { color: primaryColor } : {}}
                       >
@@ -263,7 +209,7 @@ export function SellerHeader() {
             </View>
 
             <View className="gap-2 pb-6">
-              <Pressable
+              <Pressable 
                 onPress={() => {
                   setIsMenuOpen(false);
                   logout();
@@ -271,13 +217,9 @@ export function SellerHeader() {
                 }}
                 className="w-full py-4 rounded-xl border border-red-500/20 bg-red-500/10 items-center active:bg-red-500/20"
               >
-                <Text className="text-xs font-black uppercase tracking-widest text-red-500">
-                  {t("deauthorize_node") || "Deauthorize Node"}
-                </Text>
+                <Text className="text-xs font-black uppercase tracking-widest text-red-500">Deauthorize Node</Text>
               </Pressable>
-              <Text className="text-[7px] font-black text-center uppercase tracking-widest text-muted-foreground opacity-40">
-                {t("seller_protocol") || "OceanExotic Seller Protocol v1.0"}
-              </Text>
+              <Text className="text-[7px] font-black text-center uppercase tracking-widest text-muted-foreground opacity-40">OceanExotic Seller Protocol v1.0</Text>
             </View>
           </View>
         </View>

@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { useTranslation } from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 
 const NAV: { label: string; href: Href }[] = [
   { label: "Home", href: "/home" },
@@ -24,21 +24,21 @@ function TabIcon({ label, color }: { label: string; color: string }) {
   if (label.toLowerCase() === "home") {
     return (
       <Svg width="20" height="20" viewBox="0 0 24 24">
-        <Path
-          d="M3 9.5L12 2.5L21 9.5V20.5C21 21.3284 20.3284 22 19.5 22H4.5C3.67157 22 3 21.3284 3 20.5V9.5Z"
-          fill="none"
-          stroke={color}
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+        <Path 
+          d="M3 9.5L12 2.5L21 9.5V20.5C21 21.3284 20.3284 22 19.5 22H4.5C3.67157 22 3 21.3284 3 20.5V9.5Z" 
+          fill="none" 
+          stroke={color} 
+          strokeWidth="1.8" 
+          strokeLinecap="round" 
+          strokeLinejoin="round" 
         />
-        <Path
-          d="M9 22V13.5H15V22"
-          fill="none"
-          stroke={color}
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+        <Path 
+          d="M9 22V13.5H15V22" 
+          fill="none" 
+          stroke={color} 
+          strokeWidth="1.8" 
+          strokeLinecap="round" 
+          strokeLinejoin="round" 
         />
       </Svg>
     );
@@ -47,21 +47,21 @@ function TabIcon({ label, color }: { label: string; color: string }) {
   if (label.toLowerCase() === "market") {
     return (
       <Svg width="20" height="20" viewBox="0 0 24 24">
-        <Path
-          d="M6 21H18C19.1046 21 20 20.1046 20 19V7.5C20 6.39543 19.1046 5.5 18 5.5H6C4.89543 5.5 4 6.39543 4 7.5V19C4 20.1046 4.89543 21 6 21Z"
-          fill="none"
-          stroke={color}
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+        <Path 
+          d="M6 21H18C19.1046 21 20 20.1046 20 19V7.5C20 6.39543 19.1046 5.5 18 5.5H6C4.89543 5.5 4 6.39543 4 7.5V19C4 20.1046 4.89543 21 6 21Z" 
+          fill="none" 
+          stroke={color} 
+          strokeWidth="1.8" 
+          strokeLinecap="round" 
+          strokeLinejoin="round" 
         />
-        <Path
-          d="M9 5.5C9 3.567 10.3431 2 12 2C13.6569 2 15 3.567 15 5.5"
-          fill="none"
-          stroke={color}
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+        <Path 
+          d="M9 5.5C9 3.567 10.3431 2 12 2C13.6569 2 15 3.567 15 5.5" 
+          fill="none" 
+          stroke={color} 
+          strokeWidth="1.8" 
+          strokeLinecap="round" 
+          strokeLinejoin="round" 
         />
       </Svg>
     );
@@ -70,13 +70,13 @@ function TabIcon({ label, color }: { label: string; color: string }) {
   if (label.toLowerCase() === "chat") {
     return (
       <Svg width="20" height="20" viewBox="0 0 24 24">
-        <Path
+        <Path 
           d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
-          fill="none"
-          stroke={color}
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+          fill="none" 
+          stroke={color} 
+          strokeWidth="1.8" 
+          strokeLinecap="round" 
+          strokeLinejoin="round" 
         />
       </Svg>
     );
@@ -85,21 +85,21 @@ function TabIcon({ label, color }: { label: string; color: string }) {
   if (label.toLowerCase() === "orders") {
     return (
       <Svg width="20" height="20" viewBox="0 0 24 24">
-        <Path
-          d="M6 3.5H18C19.1046 3.5 20 4.39543 20 5.5V19.5C20 20.6046 19.1046 21.5 18 21.5H6C4.89543 21.5 4 20.6046 4 19.5V5.5C4 4.39543 4.89543 3.5 6 3.5Z"
-          fill="none"
-          stroke={color}
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+        <Path 
+          d="M6 3.5H18C19.1046 3.5 20 4.39543 20 5.5V19.5C20 20.6046 19.1046 21.5 18 21.5H6C4.89543 21.5 4 20.6046 4 19.5V5.5C4 4.39543 4.89543 3.5 6 3.5Z" 
+          fill="none" 
+          stroke={color} 
+          strokeWidth="1.8" 
+          strokeLinecap="round" 
+          strokeLinejoin="round" 
         />
-        <Path
-          d="M12 7.5V17.5M9.5 9.5C9.5 9.5 14 8.5 14 11.5C14 14.5 9.5 12.5 9.5 15.5C9.5 18.5 14.5 17.5 14.5 17.5"
-          fill="none"
-          stroke={color}
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+        <Path 
+          d="M12 7.5V17.5M9.5 9.5C9.5 9.5 14 8.5 14 11.5C14 14.5 9.5 12.5 9.5 15.5C9.5 18.5 14.5 17.5 14.5 17.5" 
+          fill="none" 
+          stroke={color} 
+          strokeWidth="1.8" 
+          strokeLinecap="round" 
+          strokeLinejoin="round" 
         />
       </Svg>
     );
@@ -107,21 +107,21 @@ function TabIcon({ label, color }: { label: string; color: string }) {
 
   return (
     <Svg width="20" height="20" viewBox="0 0 24 24">
-      <Circle
-        cx="12"
-        cy="8"
-        r="4.5"
-        fill="none"
-        stroke={color}
-        strokeWidth="1.8"
-        strokeLinecap="round"
+      <Circle 
+        cx="12" 
+        cy="8" 
+        r="4.5" 
+        fill="none" 
+        stroke={color} 
+        strokeWidth="1.8" 
+        strokeLinecap="round" 
       />
-      <Path
-        d="M4.5 20C4.5 15.8579 7.85786 14.5 12 14.5C16.1421 14.5 19.5 15.8579 19.5 20"
-        fill="none"
-        stroke={color}
-        strokeWidth="1.8"
-        strokeLinecap="round"
+      <Path 
+        d="M4.5 20C4.5 15.8579 7.85786 14.5 12 14.5C16.1421 14.5 19.5 15.8579 19.5 20" 
+        fill="none" 
+        stroke={color} 
+        strokeWidth="1.8" 
+        strokeLinecap="round" 
       />
     </Svg>
   );
@@ -133,18 +133,15 @@ export function CustomerTabBar() {
   const count = useCartStore((s) => s.itemCount());
   const colors = useThemeColors();
   const language = useSettingsStore((s) => s.language);
-  const { t } = useTranslation();
 
   return (
-    <View
+    <View 
       className="absolute bottom-0 left-0 right-0 z-50 flex-row items-center justify-around"
       style={{
         height: 87,
-        paddingBottom: 31, // 12 + 19 = 31 (keep visual padding + fill gap)
+        paddingBottom: 31,  // 12 + 19 = 31 (keep visual padding + fill gap)
         paddingTop: 4,
-        backgroundColor: colors.isDark
-          ? "#080C16FA"
-          : "rgba(255, 255, 255, 0.98)",
+        backgroundColor: colors.isDark ? "#080C16FA" : "rgba(255, 255, 255, 0.98)",
         borderTopWidth: 1.5,
         borderTopColor: colors.border,
         shadowColor: "#000",
@@ -167,8 +164,8 @@ export function CustomerTabBar() {
           >
             {/* Horizontal glowing indicator directly above the active tab */}
             {active && (
-              <View
-                style={{
+              <View 
+                style={{ 
                   position: "absolute",
                   top: -1,
                   width: 32,
@@ -186,15 +183,12 @@ export function CustomerTabBar() {
             )}
 
             <View className="items-center justify-center mt-1">
-              <TabIcon
-                label={item.label}
-                color={active ? activeColor : inactiveColor}
-              />
+              <TabIcon label={item.label} color={active ? activeColor : inactiveColor} />
             </View>
 
             <Text
               className={cn(
-                "text-[8px] font-black uppercase tracking-[0.08em] mt-1 text-center",
+                "text-[8px] font-black uppercase tracking-[0.08em] mt-1 text-center"
               )}
               style={{ color: active ? activeColor : inactiveColor }}
             >
@@ -204,7 +198,7 @@ export function CustomerTabBar() {
         );
       })}
       {count > 0 ? (
-        <View
+        <View 
           style={{
             position: "absolute",
             top: 6,

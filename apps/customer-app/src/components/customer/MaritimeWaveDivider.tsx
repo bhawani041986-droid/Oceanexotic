@@ -1,12 +1,5 @@
 import { useEffect, useRef } from "react";
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Animated,
-  Easing,
-  Text,
-} from "react-native";
+import { View, StyleSheet, Dimensions, Animated, Easing, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Path, Circle, Line } from "react-native-svg";
 import { Image } from "expo-image";
@@ -52,17 +45,7 @@ function OceanStones() {
   );
 }
 
-function SwayingCoral({
-  x,
-  y,
-  size = 26,
-  color = "#ff4d6d",
-}: {
-  x: number;
-  y: number;
-  size?: number;
-  color?: string;
-}) {
+function SwayingCoral({ x, y, size = 26, color = "#ff4d6d" }: { x: number; y: number; size?: number; color?: string }) {
   const animValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -79,8 +62,8 @@ function SwayingCoral({
           duration: 1500 + Math.random() * 1000,
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
-        }),
-      ]),
+        })
+      ])
     ).start();
 
     return () => animValue.stopAnimation();
@@ -98,7 +81,9 @@ function SwayingCoral({
         {
           left: x,
           top: y,
-          transform: [{ rotate: rotate }],
+          transform: [
+            { rotate: rotate },
+          ],
         },
       ]}
     >
@@ -129,17 +114,7 @@ function SwayingCoral({
   );
 }
 
-function Starfish({
-  x,
-  y,
-  size = 14,
-  color = "#ff7b00",
-}: {
-  x: number;
-  y: number;
-  size?: number;
-  color?: string;
-}) {
+function Starfish({ x, y, size = 14, color = "#ff7b00" }: { x: number; y: number; size?: number; color?: string }) {
   const animValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -156,8 +131,8 @@ function Starfish({
           duration: 1200 + Math.random() * 600,
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
-        }),
-      ]),
+        })
+      ])
     ).start();
 
     return () => animValue.stopAnimation();
@@ -175,7 +150,9 @@ function Starfish({
         {
           left: x,
           top: y,
-          transform: [{ scale: scale }],
+          transform: [
+            { scale: scale }
+          ],
         },
       ]}
     >
@@ -191,70 +168,21 @@ function Starfish({
   );
 }
 
-function SeaSnail({
-  x,
-  y,
-  size = 15,
-}: {
-  x: number;
-  y: number;
-  size?: number;
-}) {
+function SeaSnail({ x, y, size = 15 }: { x: number; y: number; size?: number }) {
   return (
     <View style={{ position: "absolute", left: x, top: y, zIndex: 20 }}>
       <Svg width={size} height={size} viewBox="0 0 24 24">
-        <Circle
-          cx="10"
-          cy="12"
-          r="5"
-          fill="#f1f5f9"
-          stroke="#94a3b8"
-          strokeWidth="0.8"
-        />
-        <Circle
-          cx="10"
-          cy="12"
-          r="2.5"
-          fill="#cbd5e1"
-          stroke="#94a3b8"
-          strokeWidth="0.8"
-        />
-        <Path
-          d="M4 15c2-0.5 4-0.5 6-0.5h6c1.5 0 2 0.8 2 1.5s-0.8 1-2 1H6c-1.5 0-1.5 0-2-2z"
-          fill="#fda4af"
-        />
-        <Line
-          x1="15"
-          y1="14"
-          x2="17"
-          y2="11"
-          stroke="#fda4af"
-          strokeWidth="1"
-        />
-        <Line
-          x1="16"
-          y1="14.5"
-          x2="18"
-          y2="11.5"
-          stroke="#fda4af"
-          strokeWidth="1"
-        />
+        <Circle cx="10" cy="12" r="5" fill="#f1f5f9" stroke="#94a3b8" strokeWidth="0.8" />
+        <Circle cx="10" cy="12" r="2.5" fill="#cbd5e1" stroke="#94a3b8" strokeWidth="0.8" />
+        <Path d="M4 15c2-0.5 4-0.5 6-0.5h6c1.5 0 2 0.8 2 1.5s-0.8 1-2 1H6c-1.5 0-1.5 0-2-2z" fill="#fda4af" />
+        <Line x1="15" y1="14" x2="17" y2="11" stroke="#fda4af" strokeWidth="1" />
+        <Line x1="16" y1="14.5" x2="18" y2="11.5" stroke="#fda4af" strokeWidth="1" />
       </Svg>
     </View>
   );
 }
 
-function SwayingSeaweed({
-  x,
-  y,
-  size = 26,
-  color = "#10b981",
-}: {
-  x: number;
-  y: number;
-  size?: number;
-  color?: string;
-}) {
+function SwayingSeaweed({ x, y, size = 26, color = "#10b981" }: { x: number; y: number; size?: number; color?: string }) {
   const animValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -271,8 +199,8 @@ function SwayingSeaweed({
           duration: 1800 + Math.random() * 1200,
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
-        }),
-      ]),
+        })
+      ])
     ).start();
 
     return () => animValue.stopAnimation();
@@ -322,8 +250,8 @@ function RestingCrab({ x, y }: { x: number; y: number }) {
           duration: 800 + Math.random() * 500,
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
-        }),
-      ]),
+        })
+      ])
     ).start();
 
     return () => animValue.stopAnimation();
@@ -349,17 +277,7 @@ function RestingCrab({ x, y }: { x: number; y: number }) {
   );
 }
 
-function RubyDiamondSprinkle({
-  x,
-  y,
-  size = 10,
-  isRuby = true,
-}: {
-  x: number;
-  y: number;
-  size?: number;
-  isRuby?: boolean;
-}) {
+function RubyDiamondSprinkle({ x, y, size = 10, isRuby = true }: { x: number; y: number; size?: number; isRuby?: boolean }) {
   const animValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -376,8 +294,8 @@ function RubyDiamondSprinkle({
           duration: 1000 + Math.random() * 800,
           easing: Easing.inOut(Easing.ease),
           useNativeDriver: true,
-        }),
-      ]),
+        })
+      ])
     ).start();
 
     return () => animValue.stopAnimation();
@@ -429,7 +347,7 @@ function FloatingBubble({ index }: { index: number }) {
   const animValue = useRef(new Animated.Value(0)).current;
   const startX = 30 + (index * (width - 60)) / 6;
   const size = 3 + (index % 3) * 2;
-
+  
   useEffect(() => {
     const delay = index * 600;
     const startAnimation = () => {
@@ -437,10 +355,10 @@ function FloatingBubble({ index }: { index: number }) {
       Animated.loop(
         Animated.timing(animValue, {
           toValue: 1,
-          duration: 3500 + index * 800,
+          duration: 3500 + (index * 800),
           easing: Easing.linear,
           useNativeDriver: true,
-        }),
+        })
       ).start();
     };
 
@@ -474,7 +392,10 @@ function FloatingBubble({ index }: { index: number }) {
           width: size,
           height: size,
           opacity: opacity,
-          transform: [{ translateX: translateX }, { translateY: translateY }],
+          transform: [
+            { translateX: translateX },
+            { translateY: translateY }
+          ],
         },
       ]}
     />
@@ -483,8 +404,8 @@ function FloatingBubble({ index }: { index: number }) {
 
 function SwimmingFish({ fish, index }: { fish: any; index: number }) {
   const animValue = useRef(new Animated.Value(0)).current;
-  const swimY = 1 + ((index * 7) % 16);
-  const duration = 15000 + index * 2500;
+  const swimY = 1 + (index * 7) % 16; 
+  const duration = 15000 + (index * 2500);
 
   useEffect(() => {
     // Distribute fish starts across space using clean timing delays
@@ -497,7 +418,7 @@ function SwimmingFish({ fish, index }: { fish: any; index: number }) {
           duration: duration,
           easing: Easing.linear,
           useNativeDriver: true,
-        }),
+        })
       ).start();
     };
 
@@ -518,7 +439,7 @@ function SwimmingFish({ fish, index }: { fish: any; index: number }) {
     outputRange: ["0deg", "4deg", "0deg", "-4deg", "0deg"],
   });
 
-  const scale = 0.6 + index * 0.06;
+  const scale = 0.6 + (index * 0.06);
 
   return (
     <Animated.View
@@ -529,7 +450,7 @@ function SwimmingFish({ fish, index }: { fish: any; index: number }) {
             { translateX: translateX },
             { translateY: swimY },
             { scale: scale },
-            { rotate: rotate },
+            { rotate: rotate }
           ],
         },
       ]}
@@ -554,7 +475,7 @@ export function MaritimeWaveDivider() {
         duration: 9000,
         easing: Easing.linear,
         useNativeDriver: true,
-      }),
+      })
     ).start();
 
     Animated.loop(
@@ -563,7 +484,7 @@ export function MaritimeWaveDivider() {
         duration: 13000,
         easing: Easing.linear,
         useNativeDriver: true,
-      }),
+      })
     ).start();
 
     return () => {
@@ -665,28 +586,13 @@ export function MaritimeWaveDivider() {
       <RubyDiamondSprinkle x={35} y={32} size={10} isRuby={true} />
       <RubyDiamondSprinkle x={width / 4 + 40} y={33} size={8} isRuby={false} />
       <RubyDiamondSprinkle x={width / 2 - 80} y={31} size={9} isRuby={true} />
-      <RubyDiamondSprinkle
-        x={width / 2 + 120}
-        y={34}
-        size={11}
-        isRuby={false}
-      />
-      <RubyDiamondSprinkle
-        x={width * 0.75 + 10}
-        y={32}
-        size={9}
-        isRuby={true}
-      />
+      <RubyDiamondSprinkle x={width / 2 + 120} y={34} size={11} isRuby={false} />
+      <RubyDiamondSprinkle x={width * 0.75 + 10} y={32} size={9} isRuby={true} />
       <RubyDiamondSprinkle x={width - 75} y={33} size={10} isRuby={false} />
       <RubyDiamondSprinkle x={width - 22} y={31} size={8} isRuby={true} />
       <RubyDiamondSprinkle x={120} y={33} size={10} isRuby={false} />
       <RubyDiamondSprinkle x={width / 2 - 20} y={32} size={9} isRuby={true} />
-      <RubyDiamondSprinkle
-        x={width * 0.75 - 70}
-        y={33}
-        size={8}
-        isRuby={false}
-      />
+      <RubyDiamondSprinkle x={width * 0.75 - 70} y={33} size={8} isRuby={false} />
 
       {/* Animated Resting Crabs */}
       <RestingCrab x={width / 4 + 10} y={26} />
