@@ -7,12 +7,16 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import { useTranslation } from "@/lib/i18n";
 import { useRouter } from "expo-router";
 
-export const FlashDealCard = React.memo(function FlashDealCard({ promo }: { promo: any }) {
+export const FlashDealCard = React.memo(function FlashDealCard({
+  promo,
+}: {
+  promo: any;
+}) {
   const { timeLeft, flashDealActive } = useFlashDealTimer();
   const colors = useThemeColors();
   const { t } = useTranslation();
   const router = useRouter();
-  
+
   // getRgba copied temporarily or locally so it works in this component, or import it.
   // Actually, I can just use getRgba here as a local utility.
   const getRgba = (hex: string, alpha: number) => {
@@ -26,25 +30,50 @@ export const FlashDealCard = React.memo(function FlashDealCard({ promo }: { prom
   if (!promo) return null;
 
   return (
-    <ChamferedBox 
+    <ChamferedBox
       className="mt-6 mx-4 p-5 shadow-2xl"
       fillColor={getRgba(colors.primary, 0.2)}
       strokeColor={colors.border}
     >
-      <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>
+      <Text
+        className="text-[10px] font-black uppercase tracking-widest"
+        style={{ color: colors.primary }}
+      >
         {promo.sector || "Flash Deal"}
       </Text>
-      <Text className="mt-2 text-3xl font-black uppercase italic" style={{ color: colors.text }}>
+      <Text
+        className="mt-2 text-3xl font-black uppercase italic"
+        style={{ color: colors.text }}
+      >
         {promo.title || "Flash Deals."}
       </Text>
-      
+
       {flashDealActive ? (
         <View className="mt-4 flex-row justify-center gap-2">
           {[timeLeft.hrs, timeLeft.min, timeLeft.sec].map((val, i) => (
-            <View key={i} className="min-w-[56px] border px-3 py-2" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-              <Text className="text-center text-xl font-black italic" style={{ color: colors.text }}>{val}</Text>
-              <Text className="text-center text-[7px] font-black uppercase" style={{ color: colors.textMuted }}>
-                {i === 0 ? t('hrs') || "HRS" : i === 1 ? t('min') || "MIN" : t('sec') || "SEC"}
+            <View
+              key={i}
+              className="min-w-[56px] border px-3 py-2"
+              style={{
+                backgroundColor: colors.card,
+                borderColor: colors.border,
+              }}
+            >
+              <Text
+                className="text-center text-xl font-black italic"
+                style={{ color: colors.text }}
+              >
+                {val}
+              </Text>
+              <Text
+                className="text-center text-[7px] font-black uppercase"
+                style={{ color: colors.textMuted }}
+              >
+                {i === 0
+                  ? t("hrs") || "HRS"
+                  : i === 1
+                    ? t("min") || "MIN"
+                    : t("sec") || "SEC"}
               </Text>
             </View>
           ))}
@@ -52,12 +81,16 @@ export const FlashDealCard = React.memo(function FlashDealCard({ promo }: { prom
       ) : (
         <View className="mt-4 self-center border border-emerald-500/20 bg-emerald-500/10 px-3 py-1">
           <Text className="text-[9px] font-black uppercase text-emerald-500">
-            {t('promo_active') || "PROMO ACTIVE"}
+            {t("promo_active") || "PROMO ACTIVE"}
           </Text>
         </View>
       )}
-      
-      <Button label={t('claim_access_now') || "CLAIM ACCESS NOW"} onPress={() => router.push("/products")} className="mt-6" />
+
+      <Button
+        label={t("claim_access_now") || "CLAIM ACCESS NOW"}
+        onPress={() => router.push("/products")}
+        className="mt-6"
+      />
     </ChamferedBox>
   );
 });

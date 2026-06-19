@@ -10,7 +10,7 @@ export function AppProviders({ children }: PropsWithChildren) {
           queries: { retry: 2, staleTime: 30_000 },
           mutations: { retry: 0 },
         },
-      })
+      }),
   );
 
   // Load saved language on app startup — once at root level
@@ -18,5 +18,7 @@ export function AppProviders({ children }: PropsWithChildren) {
     loadSavedLanguage();
   }, []);
 
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+  return (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
 }

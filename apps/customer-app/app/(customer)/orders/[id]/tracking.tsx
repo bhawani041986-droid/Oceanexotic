@@ -1,79 +1,96 @@
-import React, { useState, useEffect, useRef } from"react";
-import { View, Text, ScrollView, ActivityIndicator, Pressable } from"react-native";
-import { useLocalSearchParams, useRouter } from"expo-router";
-import { Button } from"@/components/ui/Button";
-import { cn } from"@/lib/utils";
-import { WebView } from"react-native-webview";
-import api from"@/services/api";
-import { useTranslation } from"@/lib/i18n";
-import { Ionicons, MaterialCommunityIcons } from"@expo/vector-icons";
-import { useToast } from"@/components/ui/Toast";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  View,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+  Pressable,
+} from "react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { Button } from "@/components/ui/Button";
+import { cn } from "@/lib/utils";
+import { WebView } from "react-native-webview";
+import api from "@/services/api";
+import { useTranslation } from "@/lib/i18n";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useToast } from "@/components/ui/Toast";
 
 export default function OrderTrackingScreen() {
- const { id } = useLocalSearchParams<{ id: string }>();
- const router = useRouter();
- const { toast, ToastHost } = useToast();
- const { t } = useTranslation();
- const [trackingData, setTrackingData] = useState<any>(null);
- const [loading, setLoading] = useState(true);
- const webViewRef = useRef<WebView>(null);
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const router = useRouter();
+  const { toast, ToastHost } = useToast();
+  const { t } = useTranslation();
+  const [trackingData, setTrackingData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const webViewRef = useRef<WebView>(null);
 
- const handleLayerToggle = () => {
- if (webViewRef.current) {
- webViewRef.current.injectJavaScript(`if (typeof toggleMapLayer === 'function') { toggleMapLayer(); } true;`);
- toast("Map Layer Recalibrated","success");
- }
- };
+  const handleLayerToggle = () => {
+    if (webViewRef.current) {
+      webViewRef.current.injectJavaScript(
+        `if (typeof toggleMapLayer === 'function') { toggleMapLayer(); } true;`,
+      );
+      toast("Map Layer Recalibrated", "success");
+    }
+  };
 
- const handleRecenter = () => {
- if (webViewRef.current) {
- webViewRef.current.injectJavaScript(`if (typeof recenterMap === 'function') { recenterMap(); } true;`);
- toast("Recentered on Driver Signal","success");
- }
- };
+  const handleRecenter = () => {
+    if (webViewRef.current) {
+      webViewRef.current.injectJavaScript(
+        `if (typeof recenterMap === 'function') { recenterMap(); } true;`,
+      );
+      toast("Recentered on Driver Signal", "success");
+    }
+  };
 
- const fetchTelemetry = async () => {
- try {
- const { data } = await api.get(`/delivery?order_id=${id}`);
- setTrackingData(data);
- } catch (error) {
- console.error("Tracking Drift:", error);
- } finally {
- setLoading(false);
- }
- };
+  const fetchTelemetry = async () => {
+    try {
+      const { data } = await api.get(`/delivery?order_id=${id}`);
+      setTrackingData(data);
+    } catch (error) {
+      console.error("Tracking Drift:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
- useEffect(() => {
- fetchTelemetry();
- const interval = setInterval(fetchTelemetry, 20000);
- return () => clearInterval(interval);
- }, [id]);
+  useEffect(() => {
+    fetchTelemetry();
+    const interval = setInterval(fetchTelemetry, 20000);
+    return () => clearInterval(interval);
+  }, [id]);
 
- const displayData = trackingData || {
- status:"PROCESSING",
- current_temp: -22.4,
- estimated_arrival:"ACQUIRING...",
- current_lat: 13.160704,
- current_lng: 92.946892,
- agent_name:"ASSIGNING...",
- logs: [{ time:"Now", status:"Order Processed", location:"Andaman Sector", active: true }],
- };
+  const displayData = trackingData || {
+    status: "PROCESSING",
+    current_temp: -22.4,
+    estimated_arrival: "ACQUIRING...",
+    current_lat: 13.160704,
+    current_lng: 92.946892,
+    agent_name: "ASSIGNING...",
+    logs: [
+      {
+        time: "Now",
+        status: "Order Processed",
+        location: "Andaman Sector",
+        active: true,
+      },
+    ],
+  };
 
- const currentLat = displayData.current_lat || 13.160704;
- const currentLng = displayData.current_lng || 92.946892;
+  const currentLat = displayData.current_lat || 13.160704;
+  const currentLng = displayData.current_lng || 92.946892;
 
- // Sync tracking updates back to WebView Leaflet instance
- useEffect(() => {
- if (webViewRef.current && trackingData) {
- const lat = trackingData.current_lat || 13.160704;
- const lng = trackingData.current_lng || 92.946892;
- const js = `if (typeof updateTelemetry === 'function') { updateTelemetry(${lat}, ${lng}); } true;`;
- webViewRef.current.injectJavaScript(js);
- }
- }, [currentLat, currentLng]);
+  // Sync tracking updates back to WebView Leaflet instance
+  useEffect(() => {
+    if (webViewRef.current && trackingData) {
+      const lat = trackingData.current_lat || 13.160704;
+      const lng = trackingData.current_lng || 92.946892;
+      const js = `if (typeof updateTelemetry === 'function') { updateTelemetry(${lat}, ${lng}); } true;`;
+      webViewRef.current.injectJavaScript(js);
+    }
+  }, [currentLat, currentLng]);
 
- // Leaflet HTML with Google Maps hybrid tiles and custom marker pulsing styles
- const htmlTemplate = `
+  // Leaflet HTML with Google Maps hybrid tiles and custom marker pulsing styles
+  const htmlTemplate = `
  <!DOCTYPE html>
  <html>
  <head>
@@ -230,179 +247,194 @@ export default function OrderTrackingScreen() {
  </html>
  `;
 
- if (loading && !trackingData) {
- return (
- <View className="flex-1 items-center justify-center bg-background">
- <ActivityIndicator color="#7C3AED" size="large" />
- <Text className="mt-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
- {t('loading_tracking') ||"Loading Tracking..."}
- </Text>
- </View>
- );
- }
+  if (loading && !trackingData) {
+    return (
+      <View className="flex-1 items-center justify-center bg-background">
+        <ActivityIndicator color="#7C3AED" size="large" />
+        <Text className="mt-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+          {t("loading_tracking") || "Loading Tracking..."}
+        </Text>
+      </View>
+    );
+  }
 
- return (
- <View className="flex-1 bg-background">
- <ScrollView contentContainerClassName="px-4 pb-24 pt-16">
- <Button
- variant="ghost"
- label={"←" + (t('back') ||"BACK")}
- onPress={() => router.back()}
- className="mb-6 self-start px-0"
- />
+  return (
+    <View className="flex-1 bg-background">
+      <ScrollView contentContainerClassName="px-4 pb-24 pt-16">
+        <Button
+          variant="ghost"
+          label={"←" + (t("back") || "BACK")}
+          onPress={() => router.back()}
+          className="mb-6 self-start px-0"
+        />
 
- {/* Header */}
- <View className="mb-6 flex-row items-start justify-between">
- <View className="flex-1">
- <View className="flex-row items-center gap-3">
- <Text className="text-3xl font-black uppercase italic leading-tight text-foreground">
- {t('live_tracking') ||"Live Tracking"}
- </Text>
- </View>
- <Text className="mt-1 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
- {t('id') ||"ID"}: {id} • {t('source') ||"VESSEL"}: {displayData.agent_name}
- </Text>
- </View>
- <View className="border border-primary/20 bg-primary/10 p-3">
- <Text className="text-[8px] font-black uppercase tracking-widest text-foreground">
- {t('cold_chain') ||"Cold-Chain"}
- </Text>
- <Text className="mt-1 text-base font-black text-primary">
- {displayData.current_temp}°C
- </Text>
- </View>
- </View>
- <View className="mb-8 self-start bg-emerald-500/20 px-3 py-1">
- <Text className="text-[10px] font-black uppercase text-emerald-400">
- {displayData.status}
- </Text>
- </View>
+        {/* Header */}
+        <View className="mb-6 flex-row items-start justify-between">
+          <View className="flex-1">
+            <View className="flex-row items-center gap-3">
+              <Text className="text-3xl font-black uppercase italic leading-tight text-foreground">
+                {t("live_tracking") || "Live Tracking"}
+              </Text>
+            </View>
+            <Text className="mt-1 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+              {t("id") || "ID"}: {id} • {t("source") || "VESSEL"}:{" "}
+              {displayData.agent_name}
+            </Text>
+          </View>
+          <View className="border border-primary/20 bg-primary/10 p-3">
+            <Text className="text-[8px] font-black uppercase tracking-widest text-foreground">
+              {t("cold_chain") || "Cold-Chain"}
+            </Text>
+            <Text className="mt-1 text-base font-black text-primary">
+              {displayData.current_temp}°C
+            </Text>
+          </View>
+        </View>
+        <View className="mb-8 self-start bg-emerald-500/20 px-3 py-1">
+          <Text className="text-[10px] font-black uppercase text-emerald-400">
+            {displayData.status}
+          </Text>
+        </View>
 
- {/* WebView Map Container */}
- <View className="mb-8 h-80 overflow-hidden -[32px] border border-white/5 bg-secondary/30 relative">
- <WebView
- ref={webViewRef}
- originWhitelist={["*"]}
- source={{ html: htmlTemplate }}
- style={{ flex: 1, backgroundColor:"#020617" }}
- javaScriptEnabled={true}
- domStorageEnabled={true}
- scrollEnabled={false}
- />
- 
- {/* Top-Left Skewed Node HUD */}
- <View className="absolute top-3 left-3 z-50 pointer-events-none gap-1.5 items-start">
- <View 
- className="bg-primary px-3 py-1 shadow-lg" 
- style={{ transform: [{ skewX:"-12deg" }] }}
- >
- <Text 
- className="text-[9px] font-black uppercase tracking-widest text-white italic"
- style={{ transform: [{ skewX:"12deg" }] }}
- >
- Node: Sentinel-01
- </Text>
- </View>
- 
- <View 
- className="flex-row items-center gap-2 px-2 py-1 border border-primary/30 bg-slate-950/90" 
- style={{ transform: [{ skewX:"-12deg" }] }}
- >
- <View 
- className={cn("w-1.5 h-1.5", loading ?"bg-slate-500" :"bg-emerald-500")} 
- style={{ transform: [{ skewX:"12deg" }] }}
- />
- <Text 
- className="text-[8px] font-bold uppercase tracking-[0.2em] text-primary"
- style={{ transform: [{ skewX:"12deg" }] }}
- >
- Tracking: {loading ?"Locking..." :"Catalog Live"}
- </Text>
- </View>
- </View>
+        {/* WebView Map Container */}
+        <View className="mb-8 h-80 overflow-hidden border border-white/5 bg-secondary/30 relative">
+          <WebView
+            ref={webViewRef}
+            originWhitelist={["*"]}
+            source={{ html: htmlTemplate }}
+            style={{ flex: 1, backgroundColor: "#020617" }}
+            javaScriptEnabled={true}
+            domStorageEnabled={true}
+            scrollEnabled={false}
+          />
 
- {/* Bottom-Left Arrival Overlay */}
- <View className="absolute bottom-3 left-3 right-16 p-2.5 bg-slate-950/95 border border-primary/30 flex-row items-center justify-between z-50 pointer-events-none">
- <View className="flex-row items-center gap-3">
- <View className="w-8 h-8 -[8px] bg-primary/10 items-center justify-center relative">
- <MaterialCommunityIcons name="truck" size={16} color="#7C3AED" />
- <View className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-emerald-500 border border-white" />
- </View>
- <View>
- <Text className="text-[6px] font-black text-muted-foreground uppercase tracking-widest leading-none">Arrival</Text>
- <Text className="text-xs font-black text-white uppercase leading-tight mt-0.5">
- {displayData.estimated_arrival}
- </Text>
- </View>
- </View>
- <View className="items-end">
- <Text className="text-[6px] font-black text-muted-foreground uppercase tracking-widest leading-none">Coordinates</Text>
- <Text className="text-[8px] font-black text-primary font-mono opacity-80 leading-tight mt-0.5">
- {currentLat.toFixed(3)}, {currentLng.toFixed(3)}
- </Text>
- </View>
- </View>
+          {/* Top-Left Skewed Node HUD */}
+          <View className="absolute top-3 left-3 z-50 pointer-events-none gap-1.5 items-start">
+            <View
+              className="bg-primary px-3 py-1 shadow-lg"
+              style={{ transform: [{ skewX: "-12deg" }] }}
+            >
+              <Text
+                className="text-[9px] font-black uppercase tracking-widest text-white italic"
+                style={{ transform: [{ skewX: "12deg" }] }}
+              >
+                Node: Sentinel-01
+              </Text>
+            </View>
 
- {/* Bottom-Right Skewed Controls */}
- <View className="absolute bottom-3 right-3 z-50 flex-col gap-1.5">
- <Pressable
- onPress={handleLayerToggle}
- className="w-9 h-9 border flex items-center justify-center -skew-x-12 bg-slate-950/90 border-primary/30 active:bg-primary/20"
- >
- <View style={{ transform: [{ skewX:"12deg" }] }}>
- <Ionicons name="layers" size={16} color="#7C3AED" />
- </View>
- </Pressable>
- <Pressable
- onPress={handleRecenter}
- className="w-9 h-9 border flex items-center justify-center -skew-x-12 bg-slate-950/90 border-primary/30 active:bg-primary/20"
- >
- <View style={{ transform: [{ skewX:"12deg" }] }}>
- <Ionicons name="navigate" size={16} color="#7C3AED" />
- </View>
- </Pressable>
- </View>
- </View>
+            <View
+              className="flex-row items-center gap-2 px-2 py-1 border border-primary/30 bg-slate-950/90"
+              style={{ transform: [{ skewX: "-12deg" }] }}
+            >
+              <View
+                className={cn(
+                  "w-1.5 h-1.5",
+                  loading ? "bg-slate-500" : "bg-emerald-500",
+                )}
+                style={{ transform: [{ skewX: "12deg" }] }}
+              />
+              <Text
+                className="text-[8px] font-bold uppercase tracking-[0.2em] text-primary"
+                style={{ transform: [{ skewX: "12deg" }] }}
+              >
+                Tracking: {loading ? "Locking..." : "Catalog Live"}
+              </Text>
+            </View>
+          </View>
 
- {/* Delivery Timeline Logs */}
- <Text className="mb-4 text-base font-black uppercase italic tracking-tighter text-foreground">
- {t('delivery_timeline') ||"Delivery Timeline"}
- </Text>
- <View className="pl-2">
- {displayData.logs.map((event: any, i: number) => (
- <View key={i} className="relative mb-6 pl-8">
- {/* Timeline line */}
- {i !== displayData.logs.length - 1 && (
- <View className="absolute bottom-[-24px] left-[3px] top-[14px] w-[1px] bg-white/10" />
- )}
- {/* Timeline dot */}
- <View
- className={cn("absolute left-0 top-1.5 h-2 w-2",
- event.active ?"bg-primary shadow-lg" :"bg-white/20"
- )}
- />
- <Text
- className={cn("text-[9px] font-black uppercase tracking-widest",
- event.active ?"text-primary" :"text-muted-foreground"
- )}
- >
- {event.time}
- </Text>
- <Text
- className={cn("mt-0.5 text-xs font-bold leading-tight",
- event.active ?"text-foreground" :"text-muted-foreground"
- )}
- >
- {event.status}
- </Text>
- <Text className="text-[9px] font-medium italic text-muted-foreground/60">
- {event.location}
- </Text>
- </View>
- ))}
- </View>
- </ScrollView>
- {ToastHost}
- </View>
- );
+          {/* Bottom-Left Arrival Overlay */}
+          <View className="absolute bottom-3 left-3 right-16 p-2.5 bg-slate-950/95 border border-primary/30 flex-row items-center justify-between z-50 pointer-events-none">
+            <View className="flex-row items-center gap-3">
+              <View className="w-8 h-8 bg-primary/10 items-center justify-center relative">
+                <MaterialCommunityIcons
+                  name="truck"
+                  size={16}
+                  color="#7C3AED"
+                />
+                <View className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-emerald-500 border border-white" />
+              </View>
+              <View>
+                <Text className="text-[6px] font-black text-muted-foreground uppercase tracking-widest leading-none">
+                  Arrival
+                </Text>
+                <Text className="text-xs font-black text-white uppercase leading-tight mt-0.5">
+                  {displayData.estimated_arrival}
+                </Text>
+              </View>
+            </View>
+            <View className="items-end">
+              <Text className="text-[6px] font-black text-muted-foreground uppercase tracking-widest leading-none">
+                Coordinates
+              </Text>
+              <Text className="text-[8px] font-black text-primary font-mono opacity-80 leading-tight mt-0.5">
+                {currentLat.toFixed(3)}, {currentLng.toFixed(3)}
+              </Text>
+            </View>
+          </View>
+
+          {/* Bottom-Right Skewed Controls */}
+          <View className="absolute bottom-3 right-3 z-50 flex-col gap-1.5">
+            <Pressable
+              onPress={handleLayerToggle}
+              className="w-9 h-9 border flex items-center justify-center -skew-x-12 bg-slate-950/90 border-primary/30 active:bg-primary/20"
+            >
+              <View style={{ transform: [{ skewX: "12deg" }] }}>
+                <Ionicons name="layers" size={16} color="#7C3AED" />
+              </View>
+            </Pressable>
+            <Pressable
+              onPress={handleRecenter}
+              className="w-9 h-9 border flex items-center justify-center -skew-x-12 bg-slate-950/90 border-primary/30 active:bg-primary/20"
+            >
+              <View style={{ transform: [{ skewX: "12deg" }] }}>
+                <Ionicons name="navigate" size={16} color="#7C3AED" />
+              </View>
+            </Pressable>
+          </View>
+        </View>
+
+        {/* Delivery Timeline Logs */}
+        <Text className="mb-4 text-base font-black uppercase italic tracking-tighter text-foreground">
+          {t("delivery_timeline") || "Delivery Timeline"}
+        </Text>
+        <View className="pl-2">
+          {displayData.logs.map((event: any, i: number) => (
+            <View key={i} className="relative mb-6 pl-8">
+              {/* Timeline line */}
+              {i !== displayData.logs.length - 1 && (
+                <View className="absolute bottom-[-24px] left-[3px] top-[14px] w-[1px] bg-white/10" />
+              )}
+              {/* Timeline dot */}
+              <View
+                className={cn(
+                  "absolute left-0 top-1.5 h-2 w-2",
+                  event.active ? "bg-primary shadow-lg" : "bg-white/20",
+                )}
+              />
+              <Text
+                className={cn(
+                  "text-[9px] font-black uppercase tracking-widest",
+                  event.active ? "text-primary" : "text-muted-foreground",
+                )}
+              >
+                {event.time}
+              </Text>
+              <Text
+                className={cn(
+                  "mt-0.5 text-xs font-bold leading-tight",
+                  event.active ? "text-foreground" : "text-muted-foreground",
+                )}
+              >
+                {event.status}
+              </Text>
+              <Text className="text-[9px] font-medium italic text-muted-foreground/60">
+                {event.location}
+              </Text>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+      {ToastHost}
+    </View>
+  );
 }
