@@ -186,20 +186,21 @@ export default function AdminSettingsPage() {
     toast(`Uploading ${file.name}...`, "success");
 
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${key}-${Date.now()}.${fileExt}`;
-      const filePath = `apps/${fileName}`;
+      const formData = new FormData();
+      formData.append("file", file);
 
-      const { error: uploadError } = await supabase.storage
-        .from("assets")
-        .upload(filePath, file, { cacheControl: "3600", upsert: true });
+      const response = await fetch("/api/system/upload", {
+        method: "POST",
+        body: formData,
+      });
 
-      if (uploadError) throw uploadError;
+      const result = await response.json();
 
-      const { data } = supabase.storage.from("assets").getPublicUrl(filePath);
-      if (data?.publicUrl) {
-        setSettings({ [key]: data.publicUrl });
+      if (result.status === "success") {
+        setSettings({ [key]: result.url });
         toast(`${file.name} uploaded successfully!`, "success");
+      } else {
+        throw new Error(result.message || "Upload failed");
       }
     } catch (error) {
       console.error("App upload failed:", error);
