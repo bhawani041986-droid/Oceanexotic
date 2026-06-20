@@ -54,7 +54,8 @@
   },
   "pnpm": {
     "overrides": {
-      "tslib": "1.14.1"
+      "tslib": "1.14.1",
+      "lightningcss": "1.32.0"
     }
   }
 }
