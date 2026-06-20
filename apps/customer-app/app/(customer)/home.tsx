@@ -8,6 +8,8 @@ import {
   ActivityIndicator,
   StyleSheet,
   Dimensions,
+  FlatList,
+  InteractionManager,
 } from "react-native";
 import Svg, { Polygon, Defs, LinearGradient as SvgLinearGradient, Stop, Path, ClipPath, Image as SvgImage } from "react-native-svg";
 import { Image } from "expo-image";
@@ -37,6 +39,16 @@ import { t } from "@/lib/i18n";
 import { useThemeColors } from "@/hooks/useThemeColors";
 
 type BatchFilter = "ALL" | "MORNING" | "AFTERNOON" | "EVENING";
+
+function LazyOceanReelsFeed({ variant }: { variant?: any }) {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const task = InteractionManager.runAfterInteractions(() => setShow(true));
+    return () => task.cancel();
+  }, []);
+  if (!show) return <View className="h-48 w-full bg-secondary/10" />;
+  return <OceanReelsFeed variant={variant} />;
+}
 
 const PREMIUM_SELLERS = [
   { id: "SEL-001", name: "Marine Masters", rating: 4.9, speed: "30 min", image: "🚢", products: ["🍣", "🐟", "🦑"] },
@@ -331,7 +343,7 @@ export default function CustomerHomeScreen() {
         </View>
 
         {/* Ocean Reels Video Feed */}
-        <OceanReelsFeed />
+        <LazyOceanReelsFeed />
 
         {/* Maritime Wave Divider */}
         <MaritimeWaveDivider />
@@ -422,7 +434,7 @@ export default function CustomerHomeScreen() {
                   onOpenCut={() => openCutModal(item)}
                 />
               ))}
-              <OceanReelsFeed variant="grid-card" />
+              <LazyOceanReelsFeed variant="grid-card" />
             </View>
           ) : (
             <View className="h-48 items-center justify-center rounded-none border-2 border-dashed border-white/10 opacity-50">

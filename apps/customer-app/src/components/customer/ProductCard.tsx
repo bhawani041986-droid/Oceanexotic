@@ -9,8 +9,6 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import { t } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 
-import { useImageAspectRatio } from "@/hooks/useImageAspectRatio";
-
 interface ProductCardProps {
   product: Product;
   onAdd?: () => void;
@@ -33,11 +31,7 @@ export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCar
   const outOfStock = (product.stock ?? 1) <= 0 || product.status === "OUT OF STOCK";
   // Subscribe to language — triggers re-render when user switches language
   const language = useSettingsStore((s) => s.language);
-  const { aspectRatio, onLoad } = useImageAspectRatio(uri);
-  const [layout, setLayout] = useState({ width: 0, height: 0 });
-  const w = layout.width;
-  const h = layout.height;
-
+  
   const colors = useThemeColors();
 
   // Dynamic badge: only show when discount_percent > 0
@@ -52,28 +46,20 @@ export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCar
   return (
     <Pressable
       onPress={() => router.push({ pathname: "/product/[id]", params: { id: product.id } })}
-      onLayout={(e) => setLayout(e.nativeEvent.layout)}
       className={`${compact ? "w-[48%]" : "w-full"} relative overflow-hidden`}
-      style={{ minHeight: 250 }}
+      style={{ 
+        minHeight: 250,
+        backgroundColor: colors.card,
+        borderColor: colors.border,
+        borderWidth: 1
+      }}
     >
-      {/* Absolute Svg Custom Card Bevel Shape Background with Border */}
-      {w > 0 && h > 0 ? (
-        <Svg width={w} height={h} style={StyleSheet.absoluteFill}>
-          <Path
-            d={`M16,0 L${w},0 L${w},${h - 16} L${w - 16},${h} L0,${h} L0,16 Z`}
-            fill={colors.card}
-            stroke={colors.border}
-            strokeWidth="1"
-          />
-        </Svg>
-      ) : null}
-
       <View 
         className="relative items-center justify-center overflow-hidden w-full"
         style={{ aspectRatio: 1, backgroundColor: colors.isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.03)" }}
       >
         {uri && (uri.startsWith("http") || uri.startsWith("/") || uri.startsWith("data:")) ? (
-          <Image source={{ uri }} onLoad={onLoad} className="h-full w-full" contentFit="contain" />
+          <Image source={{ uri }} className="h-full w-full" contentFit="cover" />
         ) : (
           <View className="flex-1 items-center justify-center">
             <Text className="text-5xl">🐟</Text>
