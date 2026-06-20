@@ -1749,7 +1749,10 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                   <p className="text-xs md:text-lg text-[var(--c-text-secondary)] font-medium italic opacity-60 max-w-sm">Get our recipes and fresh catch updates right on your phone. Easy ordering, real-time order tracking.</p>
                   
                   <div className="flex flex-row gap-1 justify-center lg:justify-start">
-                     <Button 
+                     <a 
+                        href={settings.iosAppUrl || "#"}
+                        target={settings.iosAppUrl ? "_blank" : undefined}
+                        rel="noopener noreferrer"
                         className="flex-1 h-14 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 gap-3 flex items-center justify-center hover:bg-[var(--c-primary)]/20 transition-all group/btn"
                         style={{ clipPath: 'polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)' }}
                      >
@@ -1758,7 +1761,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                            <p className="text-[7px] font-black text-[var(--foreground)]/40 uppercase">Download</p>
                            <p className="text-[10px] font-black text-[var(--foreground)] italic">APP STORE</p>
                         </div>
-                     </Button>
+                     </a>
                      <a 
                         href={settings.androidAppUrl || "https://expo.dev/artifacts/eas/V0UcN4l7sd_aNIkvVPpv-Px38kc6axrdHBsyeO0AsCc.apk"} 
                         target="_blank"

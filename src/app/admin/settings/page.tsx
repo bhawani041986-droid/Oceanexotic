@@ -25,8 +25,10 @@ import {
   Clock,
   Calendar,
   Eye,
-  EyeOff
+  EyeOff,
+  Upload
 } from "lucide-react";
+import { supabaseFrontend as supabase } from "@/lib/supabase-client";
 import { useTheme, ThemeType } from "@/context/ThemeContext";
 import { useSettingsStore } from "@/store/settingsStore";
 import { cn } from "@/lib/utils";
@@ -144,6 +146,7 @@ export default function AdminSettingsPage() {
     ordersCloseTime, 
     ordersNextOpenText, 
     androidAppUrl,
+    iosAppUrl,
     agentAppUrl,
     sellerAppUrl,
     adminAppUrl,
@@ -151,6 +154,7 @@ export default function AdminSettingsPage() {
     fetchSettings, 
     pushSettings 
   } = useSettingsStore();
+  const [isUploading, setIsUploading] = useState<{ [key: string]: boolean }>({});
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -162,22 +166,46 @@ export default function AdminSettingsPage() {
 
   const handleSave = async () => {
     setIsSaving(true);
+    const success = await pushSettings();
+    setIsSaving(false);
+    
+    if (success) {
+      setSaveSuccess(true);
+      toast("Settings updated and synchronized.", "success");
+      setTimeout(() => setSaveSuccess(false), 3000);
+    } else {
+      toast("Failed to update settings.", "error");
+    }
+  };
+
+  const handleAppUpload = async (event: React.ChangeEvent<HTMLInputElement>, key: 'androidAppUrl' | 'iosAppUrl' | 'agentAppUrl' | 'sellerAppUrl' | 'adminAppUrl') => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(prev => ({ ...prev, [key]: true }));
+    toast(`Uploading ${file.name}...`, "success");
+
     try {
-      // Sync local theme states to store before pushing
-      setSettings({ theme, font, atmosphericGlow: glowIntensity });
-      
-      const success = await pushSettings();
-      if (success) {
-        setSaveSuccess(true);
-        toast("Governance protocols persisted to sovereign vault.", "success");
-        setTimeout(() => setSaveSuccess(false), 3000);
-      } else {
-        toast("Registry synchronization failed.", "error");
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${key}-${Date.now()}.${fileExt}`;
+      const filePath = `apps/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("assets")
+        .upload(filePath, file, { cacheControl: "3600", upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from("assets").getPublicUrl(filePath);
+      if (data?.publicUrl) {
+        setSettings({ [key]: data.publicUrl });
+        toast(`${file.name} uploaded successfully!`, "success");
       }
-    } catch (err) {
-      toast("Connection failure during synchronization.", "error");
+    } catch (error) {
+      console.error("App upload failed:", error);
+      toast("Failed to upload app file.", "error");
     } finally {
-      setIsSaving(false);
+      setIsUploading(prev => ({ ...prev, [key]: false }));
     }
   };
 
@@ -498,14 +526,45 @@ export default function AdminSettingsPage() {
                            <label className="text-[9px] font-black uppercase tracking-widest ml-1 text-text-secondary flex items-center gap-2">
                               <Globe className="w-3 h-3 text-primary" /> Customer App APK URL
                            </label>
-                           <input 
-                              type="text" 
-                              value={androidAppUrl || ""}
-                              onChange={(e) => setSettings({ androidAppUrl: e.target.value })}
-                              placeholder="https://expo.dev/..."
-                              className="w-full h-14 bg-bg-primary/50 border border-[var(--foreground)]/5 rounded-2xl px-6 text-sm font-black text-[var(--foreground)] outline-none focus:border-primary/40 transition-all"
-                           />
+                           <div className="relative">
+                              <input 
+                                 type="text" 
+                                 value={androidAppUrl || ""}
+                                 onChange={(e) => setSettings({ androidAppUrl: e.target.value })}
+                                 placeholder="https://expo.dev/..."
+                                 className="w-full h-14 bg-bg-primary/50 border border-[var(--foreground)]/5 rounded-2xl pl-6 pr-32 text-sm font-black text-[var(--foreground)] outline-none focus:border-primary/40 transition-all"
+                              />
+                              <div className="absolute right-2 top-2 bottom-2">
+                                 <label className="h-full flex items-center justify-center px-4 rounded-xl bg-primary/20 hover:bg-primary/30 text-primary cursor-pointer transition-all border border-primary/20">
+                                    <input type="file" accept=".apk,.aab" className="hidden" onChange={(e) => handleAppUpload(e, 'androidAppUrl')} disabled={isUploading.androidAppUrl} />
+                                    {isUploading.androidAppUrl ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                                    <span className="ml-2 text-[10px] font-black uppercase tracking-widest">{isUploading.androidAppUrl ? "Uploading" : "Upload"}</span>
+                                 </label>
+                              </div>
+                           </div>
                            <p className="text-[7px] font-black text-text-secondary uppercase tracking-widest mt-1">Updates "Google Play" button on Customer Web</p>
+                        </div>
+                        <div className="space-y-2">
+                           <label className="text-[9px] font-black uppercase tracking-widest ml-1 text-text-secondary flex items-center gap-2">
+                              <Globe className="w-3 h-3 text-primary" /> Customer App iOS URL (App Store)
+                           </label>
+                           <div className="relative">
+                              <input 
+                                 type="text" 
+                                 value={iosAppUrl || ""}
+                                 onChange={(e) => setSettings({ iosAppUrl: e.target.value })}
+                                 placeholder="https://expo.dev/..."
+                                 className="w-full h-14 bg-bg-primary/50 border border-[var(--foreground)]/5 rounded-2xl pl-6 pr-32 text-sm font-black text-[var(--foreground)] outline-none focus:border-primary/40 transition-all"
+                              />
+                              <div className="absolute right-2 top-2 bottom-2">
+                                 <label className="h-full flex items-center justify-center px-4 rounded-xl bg-primary/20 hover:bg-primary/30 text-primary cursor-pointer transition-all border border-primary/20">
+                                    <input type="file" accept=".ipa" className="hidden" onChange={(e) => handleAppUpload(e, 'iosAppUrl')} disabled={isUploading.iosAppUrl} />
+                                    {isUploading.iosAppUrl ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                                    <span className="ml-2 text-[10px] font-black uppercase tracking-widest">{isUploading.iosAppUrl ? "Uploading" : "Upload"}</span>
+                                 </label>
+                              </div>
+                           </div>
+                           <p className="text-[7px] font-black text-text-secondary uppercase tracking-widest mt-1">Updates "App Store" button on Customer Web</p>
                         </div>
                         <div className="space-y-2">
                            <label className="text-[9px] font-black uppercase tracking-widest ml-1 text-text-secondary flex items-center gap-2">

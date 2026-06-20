@@ -22,6 +22,7 @@ interface SettingsState {
   
   // Customer Theme Engine
   customerTheme: string;
+  iosAppUrl?: string;
   androidAppUrl?: string;
   agentAppUrl?: string;
   sellerAppUrl?: string;
@@ -82,6 +83,7 @@ export const useSettingsStore = create<SettingsState>()(
       theme: "theme-ocean-neon",
       font: "font-inter",
       customerTheme: "theme-ocean-neon",
+      iosAppUrl: "",
       androidAppUrl: "https://expo.dev/accounts/bhawani-ocean/projects/oceanexotic-customer/builds/current",
       agentAppUrl: "https://expo.dev/accounts/bhawani-ocean/projects/oceanexotic-agent/builds/e9861ee7-d27a-43cf-97d5-83be278d0240",
       sellerAppUrl: "https://expo.dev/accounts/bhawani-ocean/projects/oceanexotic-seller/builds/current",
@@ -161,6 +163,7 @@ export const useSettingsStore = create<SettingsState>()(
             marketplaceName: state.marketplaceName,
             currency: state.currency,
             customerTheme: state.customerTheme,
+            iosAppUrl: state.iosAppUrl,
             androidAppUrl: state.androidAppUrl,
             agentAppUrl: state.agentAppUrl,
             sellerAppUrl: state.sellerAppUrl,
