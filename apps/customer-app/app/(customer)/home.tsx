@@ -40,16 +40,6 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 
 type BatchFilter = "ALL" | "MORNING" | "AFTERNOON" | "EVENING";
 
-function LazyOceanReelsFeed({ variant }: { variant?: any }) {
-  const [show, setShow] = useState(false);
-  useEffect(() => {
-    const task = InteractionManager.runAfterInteractions(() => setShow(true));
-    return () => task.cancel();
-  }, []);
-  if (!show) return <View className="h-48 w-full bg-secondary/10" />;
-  return <OceanReelsFeed variant={variant} />;
-}
-
 const PREMIUM_SELLERS = [
   { id: "SEL-001", name: "Marine Masters", rating: 4.9, speed: "30 min", image: "🚢", products: ["🍣", "🐟", "🦑"] },
   { id: "SEL-002", name: "Deep Sea Fleet", rating: 5.0, speed: "45 min", image: "⚓", products: ["🦞", "🦀", "🦐"] },
@@ -329,8 +319,7 @@ export default function CustomerHomeScreen() {
           </View>
         </View>
 
-        {/* Ocean Reels Video Feed */}
-        <LazyOceanReelsFeed />
+
 
         {/* Maritime Wave Divider */}
         <MaritimeWaveDivider />
@@ -421,7 +410,7 @@ export default function CustomerHomeScreen() {
                   onOpenCut={() => openCutModal(item)}
                 />
               ))}
-              <LazyOceanReelsFeed variant="grid-card" />
+
             </View>
           ) : (
             <View className="h-48 items-center justify-center rounded-none border-2 border-dashed border-white/10 opacity-50">
@@ -693,10 +682,7 @@ export default function CustomerHomeScreen() {
           </Svg>
         </View>
 
-        {/* Ocean Reels Banner */}
-        <View className="px-4 py-2">
-          <OceanReelsFeed variant="banner" />
-        </View>
+
 
         {/* Premium Sellers ("The Fleet Elite") */}
         <View className="px-4 py-8">

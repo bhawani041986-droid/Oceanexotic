@@ -23,6 +23,7 @@ import type { Product } from "@/services/productService";
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
+import { CATEGORIES } from "@/constants/categories";
 
 const TABS = [
   "All Seafood",
@@ -194,11 +195,6 @@ export default function ProductsScreen() {
   }, []);
 
   const showLayers = activeTab === "All Seafood" && !searchQuery.trim();
-  const bestsellers = useMemo(() => displayList.slice(0, 8), [displayList]);
-  const readyToCook = useMemo(() => displayList.filter(p => 
-    p.category?.toLowerCase() === "ready to cook" || 
-    /marinate|grill|fry|masala|ready|spice/i.test((p.name || "") + " " + (p.description || ""))
-  ), [displayList]);
 
   const handleAddAddon = (addon: any) => {
     cart.addItem({
@@ -308,50 +304,55 @@ export default function ProductsScreen() {
           <View>
             {showLayers && (
               <View className="mb-6 space-y-8">
-                {/* LAYER 1: TODAY'S CATCH */}
-                <View className="space-y-3">
-                  <View className="flex-row items-center justify-between">
-                    <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
-                      Today's <Text style={{ color: colors.primary }}>Catch</Text>
-                    </Text>
-                  </View>
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
-                    <View className="flex-row gap-4 pr-8">
-                      {bestsellers.map(p => (
-                        <View key={p.id} className="w-[180px]">
-                          <ProductCard product={p} onSelectCut={() => openCut(p)} />
-                        </View>
-                      ))}
-                    </View>
-                  </ScrollView>
-                </View>
+                {/* DYNAMIC CATEGORY LAYERS */}
+                {CATEGORIES.map(category => {
+                  const categoryProducts = displayList.filter(p => {
+                    const catLower = (p.category ?? "").toLowerCase();
+                    const nameLower = p.name.toLowerCase();
+                    const target = category.name;
+                    
+                    if (target === "Seawater Fish") return catLower.includes("sea") || catLower.includes("reef") || catLower.includes("snapper");
+                    if (target === "Freshwater Fish") return catLower.includes("fresh") || catLower.includes("river") || catLower.includes("rohu");
+                    if (target === "Prawns & Shrimps") return catLower.includes("prawn") || catLower.includes("shrimp");
+                    if (target === "Crabs & Lobsters") return catLower.includes("crab") || catLower.includes("lobster") || catLower.includes("crustacean");
+                    if (target === "Steaks & Fillets") return catLower.includes("steak") || catLower.includes("fillet") || catLower.includes("cut");
+                    if (target === "Exotic Catch") return catLower.includes("exotic") || catLower.includes("premium") || catLower.includes("deep sea") || nameLower.includes("tuna") || nameLower.includes("salmon") || nameLower.includes("lobster");
+                    if (target === "Ready to Cook") return catLower.includes("ready") || catLower.includes("marinated") || catLower.includes("cook") || nameLower.includes("marinated") || nameLower.includes("fry") || nameLower.includes("finger") || nameLower.includes("batter");
+                    if (target === "Coastal Dry Fish") return catLower.includes("dry") || catLower.includes("dried") || nameLower.includes("dry") || nameLower.includes("dried");
+                    return catLower.includes(target.toLowerCase().split(" ")[0]);
+                  });
 
-                {/* LAYER 2: CHEF'S SPECIALS */}
-                {readyToCook.length > 0 && (
-                  <View className="space-y-3">
-                    <View className="flex-row items-center justify-between">
-                      <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
-                        Chef's <Text style={{ color: "#F59E0B" }}>Specials</Text>
-                      </Text>
-                    </View>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
-                      <View className="flex-row gap-4 pr-8">
-                        {readyToCook.map(p => (
-                          <View key={p.id} className="w-[180px]">
-                            <ProductCard product={p} onSelectCut={() => openCut(p)} />
-                          </View>
-                        ))}
+                  if (categoryProducts.length === 0) return null;
+
+                  return (
+                    <View key={category.slug} className="space-y-3">
+                      <View className="flex-row items-center justify-between">
+                        <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
+                          {category.name.split(" ")[0]} <Text style={{ color: category.glowColor }}>{category.name.split(" ").slice(1).join(" ") || ""}</Text>
+                        </Text>
+                        <Pressable onPress={() => setActiveTab(category.name)}>
+                           <Text className="text-[10px] font-black uppercase" style={{ color: colors.primary }}>View All</Text>
+                        </Pressable>
                       </View>
-                    </ScrollView>
-                  </View>
-                )}
+                      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
+                        <View className="flex-row gap-4 pr-8">
+                          {categoryProducts.slice(0, 10).map(p => (
+                            <View key={p.id} className="w-[180px]">
+                              <ProductCard product={p} onSelectCut={() => openCut(p)} />
+                            </View>
+                          ))}
+                        </View>
+                      </ScrollView>
+                    </View>
+                  );
+                })}
 
-                {/* LAYER 3: ADDONS */}
+                {/* LAYER: COOKING EXTRAS (Addons) */}
                 {addons.length > 0 && (
                   <View className="space-y-3">
                     <View className="flex-row items-center justify-between">
                       <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
-                        Culinary <Text style={{ color: "#10B981" }}>Add-ons</Text>
+                        Cooking <Text style={{ color: "#10B981" }}>Extras</Text>
                       </Text>
                     </View>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">

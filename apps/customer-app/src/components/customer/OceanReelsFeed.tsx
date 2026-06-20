@@ -44,6 +44,7 @@ export function OceanReelsFeed({ variant = "feed", videoId }: { variant?: "feed"
   const [loading, setLoading] = useState(true);
   const [activeVideoId, setActiveVideoId] = useState<number | null>(null);
   const [isMuted, setIsMuted] = useState(true);
+  const [isPipVisible, setIsPipVisible] = useState(true);
   
   const colors = useThemeColors();
   const cart = useCartStore();
@@ -93,16 +94,31 @@ export function OceanReelsFeed({ variant = "feed", videoId }: { variant?: "feed"
   if (displayVideos.length === 0) return null;
 
   if (variant === "pip") {
+    if (!isPipVisible) return null;
     const vid = videos.find(v => v.title?.toLowerCase().includes("pip")) || videos[0];
     if (!vid) return null;
+    const product = allProducts?.find((p) => p.id === vid.product_id);
     return (
       <Pressable 
         onPress={() => setActiveVideoId(activeVideoId === vid.id ? null : vid.id)}
-        className="absolute bottom-24 right-4 z-50 rounded-2xl overflow-hidden shadow-2xl"
+        className="absolute bottom-24 right-4 z-[999] rounded-2xl overflow-hidden shadow-2xl"
         style={{ width: 100, height: 160, borderWidth: 2, borderColor: colors.primary, backgroundColor: '#000' }}
       >
         <ActiveReelVideo videoUrl={vid.video_url} isMuted={isMuted} />
         <View className="absolute inset-0 bg-black/10" />
+        
+        {/* Close Button */}
+        <Pressable
+          onPress={(e) => {
+            e.stopPropagation();
+            setIsPipVisible(false);
+          }}
+          className="absolute top-2 left-2 p-1 bg-black/50 rounded-full"
+        >
+          <MaterialCommunityIcons name="close" size={14} color="white" />
+        </Pressable>
+
+        {/* Mute Button */}
         <Pressable
           onPress={(e) => {
             e.stopPropagation();
@@ -112,10 +128,24 @@ export function OceanReelsFeed({ variant = "feed", videoId }: { variant?: "feed"
         >
           <MaterialCommunityIcons name={isMuted ? "volume-mute" : "volume-high"} size={14} color="white" />
         </Pressable>
-        <View className="absolute bottom-2 w-full items-center">
-           <View className="bg-primary/90 px-2 py-0.5 rounded-full">
-              <Text className="text-[8px] font-black uppercase text-white tracking-widest">LIVE FEED</Text>
+
+        <View className="absolute bottom-2 w-full flex-row justify-center items-center gap-2 px-2">
+           <View className="bg-primary/90 px-2 py-0.5 rounded-full flex-1 items-center justify-center">
+              <Text className="text-[8px] font-black uppercase text-white tracking-widest" numberOfLines={1}>LIVE</Text>
            </View>
+           {/* Check/Cart Button */}
+           <Pressable
+             onPress={(e) => {
+               e.stopPropagation();
+               if (product) {
+                 cart.addItem({ id: product.id, name: product.name, price: product.price, image: product.images?.[0] || product.image, quantity: 1, sellerId: product.seller_id || "SEL-000" });
+                 toast(`${product.name} added`, "success");
+               }
+             }}
+             className="bg-emerald-500 rounded-full w-5 h-5 items-center justify-center flex-shrink-0"
+           >
+             <MaterialCommunityIcons name="check" size={12} color="white" />
+           </Pressable>
         </View>
       </Pressable>
     );
