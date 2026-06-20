@@ -1,10 +1,35 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator, Pressable, StyleSheet } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { WebView } from "react-native-webview";
 import api from "@/services/api";
+
+const AGENT_SENTINEL_HTML = (primary: string, glow: string) => `
+  <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+    <div style="position: absolute; width: 50px; height: 50px; border-radius: 50%; background: ${primary}; opacity: 0.2; animation: sentinel-pulse 2s infinite;"></div>
+    <div style="position: relative; color: ${primary}; display: flex; filter: ${glow.length > 20 ? `drop-shadow(0 0 10px ${primary})` : 'none'}; z-index: 2;">
+       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M23 12c-2.5 2.5-5 5-10 5s-8-3-11-5c3-2 6-5 11-5s7.5 2.5 10 5z" stroke="${primary}" />
+          <path d="M23 12l-3-3m0 6l3-3" stroke="${primary}" />
+          <path d="M13 8c-1 1-1 3 0 4" stroke="${primary}" opacity="0.6" />
+          <circle cx="6" cy="12" r="1" fill="${primary}" />
+       </svg>
+    </div>
+    <style>@keyframes sentinel-pulse { 0% { transform: scale(0.5); opacity: 0.8; } 100% { transform: scale(1.8); opacity: 0; } }</style>
+  </div>
+`;
+
+const CUSTOMER_HARBOR_HTML = (primary: string) => `
+  <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+    <div style="position: absolute; width: 50px; height: 50px; border: 2px dashed ${primary}66; border-radius: 50%; animation: harbor-rotate 10s linear infinite;"></div>
+    <div style="width: 28px; height: 28px; background: ${primary}; border: 2px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px ${primary}80; z-index: 2;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: white;"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+    </div>
+    <style>@keyframes harbor-rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }</style>
+  </div>
+`;
 
 export default function OrderTrackingScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -12,6 +37,10 @@ export default function OrderTrackingScreen() {
   const [trackingData, setTrackingData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const webViewRef = useRef<WebView>(null);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  const primaryColor = "#00D1FF";
+  const glowShadow = `drop-shadow(0 0 10px ${primaryColor})`;
 
   const fetchTelemetry = async () => {
     try {
@@ -43,7 +72,6 @@ export default function OrderTrackingScreen() {
   const currentLat = displayData.current_lat || 13.160704;
   const currentLng = displayData.current_lng || 92.946892;
 
-  // Sync telemetry updates back to WebView Leaflet instance
   useEffect(() => {
     if (webViewRef.current && trackingData) {
       const lat = trackingData.current_lat || 13.160704;
@@ -53,106 +81,67 @@ export default function OrderTrackingScreen() {
     }
   }, [currentLat, currentLng]);
 
-  // Leaflet HTML with Google Maps hybrid tiles and custom marker pulsing styles
+  const zoomIn = () => {
+    webViewRef.current?.injectJavaScript(`if(typeof map !== 'undefined') map.zoomIn({animate: true}); true;`);
+  };
+
+  const zoomOut = () => {
+    webViewRef.current?.injectJavaScript(`if(typeof map !== 'undefined') map.zoomOut({animate: true}); true;`);
+  };
+
   const htmlTemplate = `
     <!DOCTYPE html>
     <html>
     <head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
       <style>
-        body, html, #map { margin: 0; padding: 0; width: 100%; height: 100%; background-color: #020617; }
-        @keyframes sentinel-pulse {
-          0% { transform: scale(0.5); opacity: 0.8; }
-          100% { transform: scale(1.8); opacity: 0; }
-        }
-        @keyframes harbor-rotate {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
+        body { padding: 0; margin: 0; background-color: #020617; }
+        html, body, #map { height: 100%; width: 100%; }
+        .leaflet-control-attribution { display: none; }
+        .leaflet-tile {
+          filter: saturate(1.2) brightness(0.65) contrast(1.2) hue-rotate(210deg) !important;
         }
       </style>
     </head>
     <body>
       <div id="map"></div>
-      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
       <script>
-        var map, agentMarker, customerMarker, polylinePath;
-        var customerLat = 13.160704, customerLng = 92.946892;
+        var map = L.map('map', { zoomControl: false, attributionControl: false }).setView([${currentLat}, ${currentLng}], 16);
+        
+        L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+          maxZoom: 19
+        }).addTo(map);
 
-        function initMap(initialLat, initialLng) {
-          map = L.map('map', { zoomControl: false }).setView([initialLat, initialLng], 13);
-          
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
-          L.control.attribution({ position: "bottomright", prefix: "© OSM" }).addTo(map);
+        var agentIcon = L.divIcon({ 
+          className: 'sentinel-marker', 
+          html: \`${AGENT_SENTINEL_HTML(primaryColor, glowShadow)}\`, 
+          iconSize: [40, 40], 
+          iconAnchor: [20, 20] 
+        });
 
-          // Neon Agent Blip
-          var agentIcon = L.divIcon({
-            className: 'sentinel-marker',
-            html: \`
-              <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                <div style="position: absolute; width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(45deg, #00D1FF, #6366F1); opacity: 0.3; animation: sentinel-pulse 2s infinite;"></div>
-                <div style="position: relative; color: white; display: flex; filter: drop-shadow(0 0 10px rgba(0, 209, 255, 0.6)) drop-shadow(0 0 5px rgba(99, 102, 241, 0.4)); z-index: 2;">
-                   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                      <defs>
-                        <linearGradient id="fish-neon-cust" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" style="stop-color:#00D1FF;stop-opacity:1" />
-                          <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
-                        </linearGradient>
-                      </defs>
-                      <path d="M23 12c-2.5 2.5-5 5-10 5s-8-3-11-5c3-2 6-5 11-5s7.5 2.5 10 5z" stroke="url(#fish-neon-cust)" />
-                      <path d="M23 12l-3-3m0 6l3-3" stroke="url(#fish-neon-cust)" />
-                      <path d="M13 8c-1 1-1 3 0 4" stroke="url(#fish-neon-cust)" opacity="0.6" />
-                      <circle cx="6" cy="12" r="1" fill="#00D1FF" />
-                   </svg>
-                </div>
-              </div>
-            \`,
-            iconSize: [40, 40],
-            iconAnchor: [20, 20]
-          });
+        var harborIcon = L.divIcon({ 
+          className: 'harbor-marker', 
+          html: \`${CUSTOMER_HARBOR_HTML(primaryColor)}\`, 
+          iconSize: [40, 40], 
+          iconAnchor: [20, 20] 
+        });
 
-          // Customer Harbor Node Home Icon
-          var customerIcon = L.divIcon({
-            className: 'harbor-marker',
-            html: \`
-              <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                <div style="position: absolute; width: 50px; height: 50px; border: 2px dashed rgba(99, 102, 241, 0.4); border-radius: 50%; animation: harbor-rotate 10s linear infinite;"></div>
-                <div style="width: 28px; height: 28px; background: #6366F1; border: 2px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(99, 102, 241, 0.5); z-index: 2;">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: white;"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                </div>
-              </div>
-            \`,
-            iconSize: [40, 40],
-            iconAnchor: [20, 20]
-          });
+        var agentMarker = L.marker([${currentLat}, ${currentLng}], { icon: agentIcon }).addTo(map);
+        // Fixed dest for demo purposes (Havelock)
+        var custMarker = L.marker([13.160704, 92.946892], { icon: harborIcon }).addTo(map);
 
-          agentMarker = L.marker([initialLat, initialLng], { icon: agentIcon }).addTo(map);
-          customerMarker = L.marker([customerLat, customerLng], { icon: customerIcon }).addTo(map);
-          
-          updateRoute(initialLat, initialLng);
-        }
+        var routeLine = L.polyline([
+          [${currentLat}, ${currentLng}],
+          [13.160704, 92.946892]
+        ], { color: '${primaryColor}', weight: 3, dashArray: '5, 5' }).addTo(map);
 
-        function updateRoute(lat, lng) {
-          var latlngs = [
-            [lat, lng],
-            [customerLat, customerLng]
-          ];
-          if (polylinePath) {
-            polylinePath.setLatLngs(latlngs);
-          } else {
-            polylinePath = L.polyline(latlngs, { color: '#00D1FF', weight: 4, opacity: 0.8, dashArray: '8, 6' }).addTo(map);
-          }
-          map.fitBounds(L.latLngBounds(latlngs), { padding: [40, 40] });
-        }
-
-        function updateTelemetry(lat, lng) {
-          if (agentMarker) {
-            agentMarker.setLatLng([lat, lng]);
-          }
-          updateRoute(lat, lng);
-        }
-
-        initMap(${currentLat}, ${currentLng});
+        window.updateTelemetry = function(lat, lng) {
+          var newLatLng = new L.LatLng(lat, lng);
+          agentMarker.setLatLng(newLatLng);
+          routeLine.setLatLngs([newLatLng, custMarker.getLatLng()]);
+        };
       </script>
     </body>
     </html>
@@ -169,124 +158,169 @@ export default function OrderTrackingScreen() {
     );
   }
 
-  return (
-    <View className="flex-1 bg-background">
-      <ScrollView contentContainerClassName="px-4 pb-24 pt-16">
-        <Button
-          variant="ghost"
-          label="← BACK"
-          onPress={() => router.back()}
-          className="mb-6 self-start px-0"
-        />
-
-        {/* Header */}
-        <View className="mb-6 flex-row items-start justify-between">
-          <View className="flex-1">
-            <View className="flex-row items-center gap-3">
-              <Text className="text-3xl font-black uppercase italic leading-tight text-foreground">
-                Live Tracking
-              </Text>
-            </View>
-            <Text className="mt-1 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-              ID: {id} • VESSEL: {displayData.agent_name}
-            </Text>
-          </View>
-          <View className="rounded-none border border-primary/20 bg-primary/10 p-3">
-            <Text className="text-[8px] font-black uppercase tracking-widest text-foreground">
-              Cold-Chain
-            </Text>
-            <Text className="mt-1 text-base font-black text-primary">
-              {displayData.current_temp}°C
-            </Text>
-          </View>
-        </View>
-        <View className="mb-8 self-start rounded bg-emerald-500/20 px-3 py-1">
-          <Text className="text-[10px] font-black uppercase text-emerald-400">
-            {displayData.status}
+  const MapOverlay = () => (
+    <>
+      <WebView
+        ref={webViewRef}
+        originWhitelist={["*"]}
+        source={{ html: htmlTemplate }}
+        style={{ flex: 1, backgroundColor: "#020617" }}
+        javaScriptEnabled={true}
+        domStorageEnabled={true}
+        scrollEnabled={false}
+      />
+      
+      {/* Agent Skewed HUD Overlay (Top-Left) */}
+      <View style={{ position: 'absolute', top: 12, left: 12, gap: 6, pointerEvents: 'none' }}>
+        <View style={{ backgroundColor: primaryColor, paddingHorizontal: 10, paddingVertical: 3, transform: [{ skewX: '-8deg' }] }}>
+          <Text style={{ fontSize: 8, fontWeight: '900', letterSpacing: 2, textTransform: 'uppercase', color: '#0F172A', fontStyle: 'italic', transform: [{ skewX: '8deg' }] }}>
+            Node: Sentinel-01
           </Text>
         </View>
+        <View style={{
+          flexDirection: 'row', alignItems: 'center', gap: 6,
+          paddingHorizontal: 8, paddingVertical: 3,
+          borderWidth: 1, borderColor: primaryColor + '40',
+          backgroundColor: 'rgba(2,6,23,0.85)',
+          transform: [{ skewX: '-8deg' }]
+        }}>
+          <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: '#10B981', shadowColor: '#10B981', shadowRadius: 4 }} />
+          <Text style={{ fontSize: 7, fontWeight: '700', letterSpacing: 1.5, textTransform: 'uppercase', color: primaryColor, transform: [{ skewX: '8deg' }] }}>
+            Telemetry: Registry Live
+          </Text>
+        </View>
+      </View>
 
-        {/* WebView Map Container */}
-        <View className="mb-8 h-80 overflow-hidden rounded-[32px] border border-white/5 bg-secondary/30 relative">
-          <WebView
-            ref={webViewRef}
-            originWhitelist={["*"]}
-            source={{ html: htmlTemplate }}
-            style={{ flex: 1, backgroundColor: "#020617" }}
-            javaScriptEnabled={true}
-            domStorageEnabled={true}
-            scrollEnabled={false}
-          />
-          
-          <View className="absolute top-3 left-3 z-50 pointer-events-none">
-            <View className="rounded bg-black/60 px-2 py-0.5">
-              <Text className="text-[8px] font-black uppercase tracking-widest text-primary">
-                Live Delivery Map
-              </Text>
-            </View>
+      {/* Grid Coordinates HUD (Bottom-Left) */}
+      <View style={{
+        position: 'absolute', bottom: 12, left: 12,
+        backgroundColor: 'rgba(2,6,23,0.82)',
+        paddingHorizontal: 10, paddingVertical: 6,
+        borderRadius: 10,
+        borderWidth: 1, borderColor: 'rgba(255,255,255,0.06)',
+        pointerEvents: 'none'
+      }}>
+        <Text style={{ fontSize: 6, fontWeight: '900', color: '#475569', textTransform: 'uppercase', letterSpacing: 2 }}>GRID COORDINATES</Text>
+        <Text style={{ fontSize: 8, fontWeight: '700', color: '#CBD5E1', textTransform: 'uppercase', marginTop: 2 }}>
+          {currentLat.toFixed(5)} N · {currentLng.toFixed(5)} E
+        </Text>
+      </View>
+
+      {/* Native Interactivity Controls (Bottom-Right) */}
+      <View className="absolute bottom-3 right-3 items-center gap-2">
+        <Pressable 
+          onPress={zoomIn}
+          className="w-8 h-8 rounded-full bg-black/80 border border-primary/30 items-center justify-center mb-1"
+        >
+          <Text className="text-primary font-black text-lg leading-none">+</Text>
+        </Pressable>
+        <Pressable 
+          onPress={zoomOut}
+          className="w-8 h-8 rounded-full bg-black/80 border border-primary/30 items-center justify-center mb-2"
+        >
+          <Text className="text-primary font-black text-lg leading-none">-</Text>
+        </Pressable>
+        <Pressable 
+          onPress={() => setIsFullScreen(!isFullScreen)}
+          className="px-3 py-1.5 rounded-md bg-primary/20 border border-primary"
+        >
+          <Text className="text-[8px] font-black uppercase text-primary tracking-widest">
+            {isFullScreen ? "SHRINK" : "ENLARGE"}
+          </Text>
+        </Pressable>
+      </View>
+    </>
+  );
+
+  return (
+    <View className="flex-1 bg-background">
+      {isFullScreen ? (
+        <View style={StyleSheet.absoluteFill} className="z-[9999]">
+           <MapOverlay />
+        </View>
+      ) : (
+        <ScrollView contentContainerClassName="px-4 pb-12 pt-6">
+          <View className="flex-row items-center justify-between mb-3">
+             <Button
+                variant="ghost"
+                label="← BACK"
+                onPress={() => router.back()}
+                className="px-0 h-auto"
+             />
+             <View className="rounded bg-emerald-500/20 px-3 py-1">
+                <Text className="text-[10px] font-black uppercase text-emerald-400">
+                  {displayData.status}
+                </Text>
+             </View>
           </View>
 
-          <View className="absolute bottom-3 left-3 right-3 flex-row items-center justify-between rounded-none border border-white/10 bg-background/95 p-3 pointer-events-none">
-            <View>
-              <Text className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">
-                Arrival
+          {/* Compact Header Grid */}
+          <View className="mb-4 flex-row items-start justify-between bg-secondary/10 border border-white/5 rounded-xl p-3">
+            <View className="flex-1">
+              <Text className="text-2xl font-black uppercase italic leading-tight text-foreground">
+                Live Tracking
               </Text>
-              <Text className="text-sm font-black uppercase text-foreground">
-                {displayData.estimated_arrival}
+              <Text className="mt-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+                ID: {id} • VESSEL: {displayData.agent_name}
               </Text>
             </View>
             <View className="items-end">
-              <Text className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">
-                Telemetry
+              <Text className="text-[8px] font-black uppercase tracking-widest text-primary">
+                Cold-Chain
               </Text>
-              <Text className="text-[10px] font-black text-primary opacity-80">
-                {currentLat.toFixed(3)}, {currentLng.toFixed(3)}
+              <Text className="mt-0.5 text-base font-black text-foreground">
+                {displayData.current_temp}°C
               </Text>
             </View>
           </View>
-        </View>
 
-        {/* Delivery Timeline Logs */}
-        <Text className="mb-4 text-base font-black uppercase italic tracking-tighter text-foreground">
-          Delivery Timeline
-        </Text>
-        <View className="pl-2">
-          {displayData.logs.map((event: any, i: number) => (
-            <View key={i} className="relative mb-6 pl-8">
-              {/* Timeline line */}
-              {i !== displayData.logs.length - 1 && (
-                <View className="absolute bottom-[-24px] left-[3px] top-[14px] w-[1px] bg-white/10" />
-              )}
-              {/* Timeline dot */}
-              <View
-                className={cn(
-                  "absolute left-0 top-1.5 h-2 w-2 rounded-none",
-                  event.active ? "bg-primary shadow-lg" : "bg-white/20"
+          {/* Map Container */}
+          <View className="mb-6 h-80 overflow-hidden rounded-[24px] border border-primary/20 relative">
+            <MapOverlay />
+          </View>
+
+          {/* Delivery Timeline Logs */}
+          <Text className="mb-3 text-sm font-black uppercase italic tracking-tighter text-foreground">
+            Delivery Timeline
+          </Text>
+          <View className="pl-2">
+            {displayData.logs.map((event: any, i: number) => (
+              <View key={i} className="relative mb-4 pl-8">
+                {/* Timeline line */}
+                {i !== displayData.logs.length - 1 && (
+                  <View className="absolute bottom-[-16px] left-[3px] top-[14px] w-[1px] bg-white/10" />
                 )}
-              />
-              <Text
-                className={cn(
-                  "text-[9px] font-black uppercase tracking-widest",
-                  event.active ? "text-primary" : "text-muted-foreground"
-                )}
-              >
-                {event.time}
-              </Text>
-              <Text
-                className={cn(
-                  "mt-0.5 text-xs font-bold leading-tight",
-                  event.active ? "text-foreground" : "text-muted-foreground"
-                )}
-              >
-                {event.status}
-              </Text>
-              <Text className="text-[9px] font-medium italic text-muted-foreground/60">
-                {event.location}
-              </Text>
-            </View>
-          ))}
-        </View>
-      </ScrollView>
+                {/* Timeline dot */}
+                <View
+                  className={cn(
+                    "absolute left-0 top-1.5 h-2 w-2 rounded-none",
+                    event.active ? "bg-primary shadow-lg" : "bg-white/20"
+                  )}
+                />
+                <Text
+                  className={cn(
+                    "text-[9px] font-black uppercase tracking-widest",
+                    event.active ? "text-primary" : "text-muted-foreground"
+                  )}
+                >
+                  {event.time}
+                </Text>
+                <Text
+                  className={cn(
+                    "mt-0.5 text-xs font-bold leading-tight",
+                    event.active ? "text-foreground" : "text-muted-foreground"
+                  )}
+                >
+                  {event.status}
+                </Text>
+                <Text className="text-[9px] font-medium italic text-muted-foreground/60">
+                  {event.location}
+                </Text>
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+      )}
     </View>
   );
 }

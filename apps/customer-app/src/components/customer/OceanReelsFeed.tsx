@@ -39,12 +39,14 @@ function ActiveReelVideo({ videoUrl, isMuted }: { videoUrl: string; isMuted: boo
   );
 }
 
+let sessionPipDismissed = false;
+
 export function OceanReelsFeed({ variant = "feed", videoId }: { variant?: "feed" | "grid-card" | "banner" | "pip", videoId?: number }) {
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeVideoId, setActiveVideoId] = useState<number | null>(null);
+  const [isPipVisible, setIsPipVisible] = useState(!sessionPipDismissed);
   const [isMuted, setIsMuted] = useState(true);
-  const [isPipVisible, setIsPipVisible] = useState(true);
   
   const colors = useThemeColors();
   const cart = useCartStore();
@@ -94,7 +96,7 @@ export function OceanReelsFeed({ variant = "feed", videoId }: { variant?: "feed"
   if (displayVideos.length === 0) return null;
 
   if (variant === "pip") {
-    if (!isPipVisible) return null;
+    if (!isPipVisible || sessionPipDismissed) return null;
     const vid = videos.find(v => v.title?.toLowerCase().includes("pip")) || videos[0];
     if (!vid) return null;
     const product = allProducts?.find((p) => p.id === vid.product_id);
@@ -111,6 +113,7 @@ export function OceanReelsFeed({ variant = "feed", videoId }: { variant?: "feed"
         <Pressable
           onPress={(e) => {
             e.stopPropagation();
+            sessionPipDismissed = true;
             setIsPipVisible(false);
           }}
           className="absolute top-2 left-2 p-1 bg-black/50 rounded-full"

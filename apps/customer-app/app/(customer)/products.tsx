@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import { useProductSearch, useProducts } from "@/hooks/useProducts";
 import { ProductCard } from "@/components/customer/ProductCard";
 import { SectionTitle } from "@/components/customer/SectionTitle";
 import { CutSelectionModal } from "@/components/customer/CutSelectionModal";
+import { PromoBannerCard } from "@/components/customer/PromoBannerCard";
 import { useCartStore } from "@/store/cartStore";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useToast } from "@/components/ui/Toast";
@@ -290,7 +291,7 @@ export default function ProductsScreen() {
             );
           })}
         </ScrollView>
-
+        <PromoBannerCard />
         <Text 
           className="mt-4 text-[10px] font-black uppercase tracking-widest"
           style={{ color: colors.textMuted }}
@@ -325,73 +326,71 @@ export default function ProductsScreen() {
                   if (categoryProducts.length === 0) return null;
 
                   return (
-                    <View key={category.slug} className="space-y-3">
-                      <View className="flex-row items-center justify-between">
-                        <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
-                          {category.name.split(" ")[0]} <Text style={{ color: category.glowColor }}>{category.name.split(" ").slice(1).join(" ") || ""}</Text>
-                        </Text>
-                        <Pressable onPress={() => setActiveTab(category.name)}>
-                           <Text className="text-[10px] font-black uppercase" style={{ color: colors.primary }}>View All</Text>
-                        </Pressable>
-                      </View>
-                      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
-                        <View className="flex-row gap-4 pr-8">
-                          {categoryProducts.slice(0, 10).map(p => (
-                            <View key={p.id} className="w-[180px]">
-                              <ProductCard product={p} onSelectCut={() => openCut(p)} />
-                            </View>
-                          ))}
+                    <React.Fragment key={category.slug}>
+                      <View className="space-y-3">
+                        <View className="flex-row items-center justify-between">
+                          <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
+                            {category.name.split(" ")[0]} <Text style={{ color: category.glowColor }}>{category.name.split(" ").slice(1).join(" ") || ""}</Text>
+                          </Text>
+                          <Pressable onPress={() => setActiveTab(category.name)}>
+                             <Text className="text-[10px] font-black uppercase" style={{ color: colors.primary }}>View All</Text>
+                          </Pressable>
                         </View>
-                      </ScrollView>
-                    </View>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
+                          <View className="flex-row gap-4 pr-8">
+                            {categoryProducts.slice(0, 10).map(p => (
+                              <View key={p.id} className="w-[180px]">
+                                <ProductCard product={p} onSelectCut={() => openCut(p)} />
+                              </View>
+                            ))}
+                          </View>
+                        </ScrollView>
+                      </View>
+
+                      {category.name === "Seawater Fish" && addons.length > 0 && (
+                        <View className="space-y-3 mt-6">
+                          <View className="flex-row items-center justify-between">
+                            <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
+                              Cooking <Text style={{ color: "#10B981" }}>Extras</Text>
+                            </Text>
+                          </View>
+                          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
+                            <View className="flex-row gap-3 pr-8">
+                              {addons.map(addon => (
+                                <View key={addon.id} className="w-[180px] rounded-none border p-2" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+                                  <View className="flex-row items-center gap-2">
+                                    <Image source={{ uri: addon.image_url || "https://images.unsplash.com/photo-1596683788737-88981f33f674?q=80&w=500" }} className="h-10 w-10 rounded-none bg-black/10" contentFit="cover" />
+                                    <View className="flex-1">
+                                      <Text className="text-[10px] font-black uppercase leading-tight" style={{ color: colors.text }} numberOfLines={2}>{addon.name}</Text>
+                                      <Text className="text-[8px] italic" style={{ color: colors.textMuted }}>{addon.type || "Add-on"}</Text>
+                                    </View>
+                                  </View>
+                                  <View className="mt-2 flex-row items-center justify-between border-t pt-2" style={{ borderTopColor: colors.border }}>
+                                    <Text className="text-[10px] font-black text-emerald-400">₹{addon.price}</Text>
+                                    <Pressable onPress={() => handleAddAddon(addon)} className="rounded-none px-3 py-1.5" style={{ backgroundColor: colors.primary }}>
+                                      <Text className="text-[8px] font-black uppercase text-white">+ ADD</Text>
+                                    </Pressable>
+                                  </View>
+                                </View>
+                              ))}
+                            </View>
+                          </ScrollView>
+                        </View>
+                      )}
+                    </React.Fragment>
                   );
                 })}
 
-                {/* LAYER: COOKING EXTRAS (Addons) */}
-                {addons.length > 0 && (
-                  <View className="space-y-3">
-                    <View className="flex-row items-center justify-between">
-                      <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
-                        Cooking <Text style={{ color: "#10B981" }}>Extras</Text>
-                      </Text>
-                    </View>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
-                      <View className="flex-row gap-3 pr-8">
-                        {addons.map(addon => (
-                          <View key={addon.id} className="w-[180px] rounded-none border p-2" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-                            <View className="flex-row items-center gap-2">
-                              <Image source={{ uri: addon.image_url || "https://images.unsplash.com/photo-1596683788737-88981f33f674?q=80&w=500" }} className="h-10 w-10 rounded-none bg-black/10" contentFit="cover" />
-                              <View className="flex-1">
-                                <Text className="text-[10px] font-black uppercase leading-tight" style={{ color: colors.text }} numberOfLines={2}>{addon.name}</Text>
-                                <Text className="text-[8px] italic" style={{ color: colors.textMuted }}>{addon.type || "Add-on"}</Text>
-                              </View>
-                            </View>
-                            <View className="mt-2 flex-row items-center justify-between border-t pt-2" style={{ borderTopColor: colors.border }}>
-                              <Text className="text-[10px] font-black text-emerald-400">₹{addon.price}</Text>
-                              <Pressable onPress={() => handleAddAddon(addon)} className="rounded-none px-3 py-1.5" style={{ backgroundColor: colors.primary }}>
-                                <Text className="text-[8px] font-black uppercase text-white">+ ADD</Text>
-                              </Pressable>
-                            </View>
-                          </View>
-                        ))}
-                      </View>
-                    </ScrollView>
-                  </View>
-                )}
-
-                <View className="flex-row items-center gap-4 py-2">
-                  <View className="h-px flex-1" style={{ backgroundColor: colors.border }} />
-                  <Text className="text-[10px] font-black uppercase tracking-widest italic" style={{ color: colors.textMuted }}>Full Catalog</Text>
-                  <View className="h-px flex-1" style={{ backgroundColor: colors.border }} />
-                </View>
               </View>
             )}
 
-            <View className="flex-row flex-wrap justify-between gap-y-3">
-              {displayList.map((p) => (
-                <ProductCard key={p.id} product={p} compact onSelectCut={() => openCut(p)} />
-              ))}
-            </View>
+            {!showLayers && (
+              <View className="flex-row flex-wrap justify-between gap-y-3">
+                {displayList.map((p) => (
+                  <ProductCard key={p.id} product={p} compact onSelectCut={() => openCut(p)} />
+                ))}
+              </View>
+            )}
           </View>
         ) : (
           <View 

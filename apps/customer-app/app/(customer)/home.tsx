@@ -1,4 +1,4 @@
-import { useMemo, useState, useCallback, useEffect } from "react";
+import React, { useMemo, useState, useCallback, useEffect } from "react";
 import {
   View,
   Text,
@@ -28,6 +28,9 @@ import { CutSelectionModal } from "@/components/customer/CutSelectionModal";
 import { MaritimeWaveDivider } from "@/components/customer/MaritimeWaveDivider";
 import { AndamanMaritimeTelemetry } from "@/components/customer/AndamanMaritimeTelemetry";
 import { OceanReelsFeed } from "@/components/customer/OceanReelsFeed";
+import { AnnouncementBar } from "@/components/customer/AnnouncementBar";
+import { LiveTickerMarquee } from "@/components/customer/LiveTickerMarquee";
+import { PromoBannerCard } from "@/components/customer/PromoBannerCard";
 import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
 import { homeService, type CutOption, type TodaysCatchItem } from "@/services/homeService";
@@ -57,7 +60,7 @@ interface TodaysCatchCardProps {
   onOpenCut: () => void;
 }
 
-function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
+function TodaysCatchCardComponent({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
   const uri = resolveMediaUrl(item.catch_image_url || item.image_url);
   const colors = useThemeColors();
 
@@ -163,6 +166,38 @@ function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
   );
 }
 
+const TodaysCatchCard = React.memo(TodaysCatchCardComponent);
+
+// --- ISOLATED TIMER COMPONENT ---
+// This prevents the massive CustomerHomeScreen from re-rendering every 1 second
+function FlashDealCountdown() {
+  const { timeLeft, flashDealActive } = useFlashDealTimer();
+  const colors = useThemeColors();
+
+  if (!flashDealActive) {
+    return (
+      <View className="mt-4 self-center rounded border border-emerald-500/20 bg-emerald-500/10 px-3 py-1">
+        <Text className="text-[9px] font-black uppercase text-emerald-500">
+          PROMO ACTIVE • SECURE HARVEST
+        </Text>
+      </View>
+    );
+  }
+
+  return (
+    <View className="mt-4 flex-row justify-center gap-2">
+      {[timeLeft.hrs, timeLeft.min, timeLeft.sec].map((val, i) => (
+        <View key={i} className="min-w-[56px] rounded-none border px-3 py-2" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+          <Text className="text-center text-xl font-black italic" style={{ color: colors.text }}>{val}</Text>
+          <Text className="text-center text-[7px] font-black uppercase" style={{ color: colors.textMuted }}>
+            {i === 0 ? "HRS" : i === 1 ? "MIN" : "SEC"}
+          </Text>
+        </View>
+      ))}
+    </View>
+  );
+}
+
 export default function CustomerHomeScreen() {
   const { width } = Dimensions.get("window");
   const router = useRouter();
@@ -172,7 +207,6 @@ export default function CustomerHomeScreen() {
   const { toast, ToastHost } = useToast();
   const { cms, territories, todaysCatch } = useHomeData();
   const { data: allProducts } = useProducts();
-  const { timeLeft, flashDealActive } = useFlashDealTimer();
   const featured = (allProducts ?? []).slice(0, 4);
   const promo = cms.data?.find((c) => c.type === "PROMO" && c.status === "PUBLISHED");
 
@@ -260,6 +294,8 @@ export default function CustomerHomeScreen() {
 
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
+      <AnnouncementBar />
+      <LiveTickerMarquee />
       <ScrollView
         className="flex-1"
         contentContainerClassName="pb-28 pt-2"
@@ -282,6 +318,8 @@ export default function CustomerHomeScreen() {
             />
           ) : null}
           <View className="relative z-10 px-4 pb-5 pt-3 flex-1">
+            {/* Pre-Orders widget moved from here */}
+
             <View className="flex-1">
               <View 
                 className="self-start rounded-none border px-2.5 py-1"
@@ -316,10 +354,27 @@ export default function CustomerHomeScreen() {
                 className="h-10 flex-1 border border-white/10 bg-black/40"
               />
             </View>
+
+            {/* Relocated Pre-Orders Widget */}
+            <View className="w-full mt-3 z-30 pointer-events-auto">
+               <View className="p-2.5 rounded-xl border flex-col gap-1.5 w-full" style={{ backgroundColor: '#0b0e14e6', borderColor: 'rgba(245,158,11,0.3)' }}>
+                 <View className="flex-row items-center justify-between w-full">
+                   <View className="flex-row items-center gap-1.5">
+                     <View className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                     <Text className="text-[10px] font-black uppercase italic tracking-wider text-amber-400">PRE-ORDERS</Text>
+                   </View>
+                   <Text className="text-[9px] font-bold text-white uppercase tracking-wider">4:00 AM - 10:00 PM</Text>
+                 </View>
+                 <View className="flex-row items-center justify-between w-full pt-1.5 border-t border-white/10">
+                   <Text className="text-[8px] font-black text-amber-300/90 uppercase tracking-widest">Next Dispatch</Text>
+                   <Text className="text-[8px] font-black text-white uppercase truncate">Tomorrow at 05:30 AM</Text>
+                 </View>
+               </View>
+            </View>
           </View>
         </View>
 
-
+        {/* PromoBannerCard Removed */}
 
         {/* Maritime Wave Divider */}
         <MaritimeWaveDivider />
@@ -535,25 +590,8 @@ export default function CustomerHomeScreen() {
               {promo?.title || "Flash Deals."}
             </Text>
             
-            {/* Render countdown only if flashDealActive is true */}
-            {flashDealActive ? (
-              <View className="mt-4 flex-row justify-center gap-2">
-                {[timeLeft.hrs, timeLeft.min, timeLeft.sec].map((val, i) => (
-                  <View key={i} className="min-w-[56px] rounded-none border px-3 py-2" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-                    <Text className="text-center text-xl font-black italic" style={{ color: colors.text }}>{val}</Text>
-                    <Text className="text-center text-[7px] font-black uppercase" style={{ color: colors.textMuted }}>
-                      {i === 0 ? "HRS" : i === 1 ? "MIN" : "SEC"}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            ) : (
-              <View className="mt-4 self-center rounded border border-emerald-500/20 bg-emerald-500/10 px-3 py-1">
-                <Text className="text-[9px] font-black uppercase text-emerald-500">
-                  PROMO ACTIVE • SECURE HARVEST
-                </Text>
-              </View>
-            )}
+            {/* Render isolated countdown to prevent root re-renders */}
+            <FlashDealCountdown />
             
             <Button label="CLAIM ACCESS NOW" onPress={() => router.push("/products")} className="mt-6" />
 
