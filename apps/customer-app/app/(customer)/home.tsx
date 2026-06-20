@@ -414,7 +414,7 @@ export default function CustomerHomeScreen() {
             <View className="flex-row flex-wrap justify-between gap-y-3">
               {filteredCatch.map((item) => (
                 <TodaysCatchCard
-                  key={item.catch_id}
+                  key={item.id}
                   item={item}
                   onPress={() =>
                     router.push({ pathname: "/product/[id]", params: { id: String(item.product_id) } })
@@ -422,6 +422,7 @@ export default function CustomerHomeScreen() {
                   onOpenCut={() => openCutModal(item)}
                 />
               ))}
+              <OceanReelsFeed variant="grid-card" />
             </View>
           ) : (
             <View className="h-48 items-center justify-center rounded-none border-2 border-dashed border-white/10 opacity-50">
@@ -445,7 +446,7 @@ export default function CustomerHomeScreen() {
             <View className="mt-4 flex-row flex-wrap justify-between gap-y-3">
               {featured.map((p) => (
                 <ProductCard key={p.id} product={p} compact onSelectCut={() => openCutModal({
-                  catch_id: p.id,
+                  id: p.id,
                   product_id: p.id,
                   name: p.name,
                   seller_name: p.seller_name ?? "Verified Fleet",
@@ -693,6 +694,11 @@ export default function CustomerHomeScreen() {
           </Svg>
         </View>
 
+        {/* Ocean Reels Banner */}
+        <View className="px-4 py-2">
+          <OceanReelsFeed variant="banner" />
+        </View>
+
         {/* Premium Sellers ("The Fleet Elite") */}
         <View className="px-4 py-8">
           <SectionTitle title="The Fleet Elite" subtitle="Verified Local Sellers" />
@@ -919,6 +925,9 @@ export default function CustomerHomeScreen() {
         </View>
       </ScrollView>
 
+      {/* Picture-in-Picture Ocean Reels Feed */}
+      <OceanReelsFeed variant="pip" />
+
       <CutSelectionModal
         visible={cutOpen}
         product={cutProduct}
@@ -933,5 +942,4 @@ export default function CustomerHomeScreen() {
     </View>
   );
 }
-
 

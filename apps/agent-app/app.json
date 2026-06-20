@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "scheme": "oceanexotic",
     "userInterfaceStyle": "dark",
-    "newArchEnabled": false,
+    "newArchEnabled": true,
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
@@ -59,14 +59,14 @@
       ]
     ],
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": false
     },
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "2eca7e8e-3e83-4adb-82d9-74878bb49bb3"
+        "projectId": "bff592f5-1373-485d-b557-24533f9ea7be"
       }
     },
-    "owner": "oceanexpo3"
+    "owner": "bhawani_fish"
   }
 }

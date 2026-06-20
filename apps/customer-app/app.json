@@ -1,12 +1,12 @@
 {
   "expo": {
     "name": "OceanExotic Customer",
-    "slug": "ocenexotic",
+    "slug": "oceanexotic",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "oceanexotic",
     "userInterfaceStyle": "dark",
-    "newArchEnabled": false,
+    "newArchEnabled": true,
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
@@ -56,9 +56,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "8e5eebe4-8c44-4ddc-85f8-bab9b6074092"
+        "projectId": "51c1beec-5d13-443a-b0c8-15bdac6e2d63"
       }
     },
-    "owner": "oceanexpo3"
+    "owner": "bhawani_fish"
   }
 }

@@ -39,7 +39,7 @@ function ActiveReelVideo({ videoUrl, isMuted }: { videoUrl: string; isMuted: boo
   );
 }
 
-export function OceanReelsFeed() {
+export function OceanReelsFeed({ variant = "feed", videoId }: { variant?: "feed" | "grid-card" | "banner" | "pip", videoId?: number }) {
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeVideoId, setActiveVideoId] = useState<number | null>(null);
@@ -79,7 +79,7 @@ export function OceanReelsFeed() {
     toast(`${product.name} added from Ocean Reels!`, "success");
   };
 
-  if (loading) {
+  if (loading && variant === "feed") {
     return (
       <View className="py-6 items-center justify-center">
         <ActivityIndicator color={colors.primary} />
@@ -88,6 +88,105 @@ export function OceanReelsFeed() {
   }
 
   if (videos.length === 0) return null;
+
+  const displayVideos = videoId ? videos.filter(v => v.id === videoId) : videos;
+  if (displayVideos.length === 0) return null;
+
+  if (variant === "pip") {
+    const vid = videos.find(v => v.title?.toLowerCase().includes("pip")) || videos[0];
+    if (!vid) return null;
+    return (
+      <Pressable 
+        onPress={() => setActiveVideoId(activeVideoId === vid.id ? null : vid.id)}
+        className="absolute bottom-24 right-4 z-50 rounded-2xl overflow-hidden shadow-2xl"
+        style={{ width: 100, height: 160, borderWidth: 2, borderColor: colors.primary, backgroundColor: '#000' }}
+      >
+        <ActiveReelVideo videoUrl={vid.video_url} isMuted={isMuted} />
+        <View className="absolute inset-0 bg-black/10" />
+        <Pressable
+          onPress={(e) => {
+            e.stopPropagation();
+            setIsMuted(!isMuted);
+          }}
+          className="absolute top-2 right-2 p-1 bg-black/50 rounded-full"
+        >
+          <MaterialCommunityIcons name={isMuted ? "volume-mute" : "volume-high"} size={14} color="white" />
+        </Pressable>
+        <View className="absolute bottom-2 w-full items-center">
+           <View className="bg-primary/90 px-2 py-0.5 rounded-full">
+              <Text className="text-[8px] font-black uppercase text-white tracking-widest">LIVE FEED</Text>
+           </View>
+        </View>
+      </Pressable>
+    );
+  }
+
+  if (variant === "grid-card") {
+    const vid = displayVideos[0];
+    const product = allProducts?.find((p) => p.id === vid.product_id);
+    return (
+      <Pressable
+        onPress={() => setActiveVideoId(activeVideoId === vid.id ? null : vid.id)}
+        className="w-[48%] relative overflow-hidden bg-black shadow-md border"
+        style={{ minHeight: 250, borderColor: "rgba(255,255,255,0.1)" }}
+      >
+        <ActiveReelVideo videoUrl={vid.video_url} isMuted={isMuted} />
+        <View className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/80 pointer-events-none" />
+        <View className="absolute top-2 left-2 rounded bg-primary/90 px-2 py-0.5">
+          <Text className="text-[7px] font-black uppercase text-white">SPONSORED</Text>
+        </View>
+        <Pressable onPress={(e) => { e.stopPropagation(); setIsMuted(!isMuted); }} className="absolute top-2 right-2 p-1 bg-black/50 rounded-full">
+          <MaterialCommunityIcons name={isMuted ? "volume-mute" : "volume-high"} size={14} color="white" />
+        </Pressable>
+        <View className="absolute bottom-0 left-0 right-0 p-3 flex-col justify-end">
+          <Text className="text-white font-bold text-[10px] leading-tight mb-1" numberOfLines={2}>{vid.title}</Text>
+          {product && (
+            <View className="flex-row items-center justify-between mt-1">
+              <Text className="font-black text-[12px]" style={{ color: colors.primary }}>₹{product.price}</Text>
+              <Pressable
+                onPress={(e) => { e.stopPropagation(); handleAddToCart(product); }}
+                className="px-3 py-1.5 rounded-none items-center justify-center shadow-lg"
+                style={{ backgroundColor: colors.primary }}
+              >
+                <Text className="text-[8px] font-black text-white">+ BUY</Text>
+              </Pressable>
+            </View>
+          )}
+        </View>
+      </Pressable>
+    );
+  }
+
+  if (variant === "banner") {
+    const vid = displayVideos[0];
+    const product = allProducts?.find((p) => p.id === vid.product_id);
+    return (
+      <Pressable
+        onPress={() => setActiveVideoId(activeVideoId === vid.id ? null : vid.id)}
+        className="w-full relative overflow-hidden bg-black shadow-md border"
+        style={{ height: 180, borderColor: colors.primary }}
+      >
+        <ActiveReelVideo videoUrl={vid.video_url} isMuted={isMuted} />
+        <View className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent pointer-events-none" />
+        <Pressable onPress={(e) => { e.stopPropagation(); setIsMuted(!isMuted); }} className="absolute top-2 right-2 p-1 bg-black/50 rounded-full">
+          <MaterialCommunityIcons name={isMuted ? "volume-mute" : "volume-high"} size={14} color="white" />
+        </Pressable>
+        <View className="absolute top-0 bottom-0 left-0 p-5 flex-col justify-center w-2/3">
+          <Text className="text-primary font-black text-[10px] uppercase tracking-widest mb-1">FEATURED REEL</Text>
+          <Text className="text-white font-bold text-lg italic leading-tight mb-3" numberOfLines={2}>{vid.title}</Text>
+          {product && (
+            <Pressable
+              onPress={(e) => { e.stopPropagation(); handleAddToCart(product); }}
+              className="px-4 py-2 self-start rounded-none shadow-lg"
+              style={{ backgroundColor: colors.primary }}
+            >
+              <Text className="text-[10px] font-black text-white uppercase tracking-widest">SHOP NOW - ₹{product.price}</Text>
+            </Pressable>
+          )}
+        </View>
+      </Pressable>
+    );
+  }
 
   return (
     <View className="w-full py-6 border-t border-b my-4" style={{ borderColor: `${colors.border}20`, backgroundColor: colors.bg }}>
@@ -110,7 +209,7 @@ export function OceanReelsFeed() {
         contentContainerStyle={{ paddingHorizontal: 16, gap: 12 }}
         className="flex-row"
       >
-        {videos.map((vid) => {
+        {displayVideos.map((vid) => {
           const product = allProducts?.find((p) => p.id === vid.product_id);
           const isActive = activeVideoId === vid.id;
 
@@ -125,57 +224,31 @@ export function OceanReelsFeed() {
                 borderColor: isActive ? colors.primary : "rgba(255,255,255,0.1)",
               }}
             >
-              {/* Video Player or Thumbnail */}
               {isActive ? (
                 <ActiveReelVideo videoUrl={vid.video_url} isMuted={isMuted} />
               ) : (
                 <Image
-                  source={{
-                    uri: vid.thumbnail_url || "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400",
-                  }}
+                  source={{ uri: vid.thumbnail_url || "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400" }}
                   className="w-full h-full"
                   contentFit="cover"
                   style={{ opacity: 0.8 }}
                 />
               )}
-
-              {/* Gradient overlay for text readability */}
               <View className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/80 pointer-events-none" />
-
-              {/* Static Play Icon Overlay */}
               {!isActive && (
                 <View className="absolute inset-0 items-center justify-center pointer-events-none">
-                  <View
-                    className="w-8 h-8 rounded-none items-center justify-center border"
-                    style={{
-                      backgroundColor: "rgba(255, 255, 255, 0.2)",
-                      borderColor: "rgba(255, 255, 255, 0.4)",
-                    }}
-                  >
+                  <View className="w-8 h-8 rounded-none items-center justify-center border" style={{ backgroundColor: "rgba(255, 255, 255, 0.2)", borderColor: "rgba(255, 255, 255, 0.4)" }}>
                     <MaterialCommunityIcons name="play" size={16} color="white" style={{ marginLeft: 2 }} />
                   </View>
                 </View>
               )}
-
-              {/* Bottom text overlays & CTA */}
               <View className="absolute bottom-0 left-0 right-0 p-2 flex-col justify-end">
-                <Text
-                  className="text-white font-bold text-[9px] leading-tight mb-1"
-                  numberOfLines={2}
-                  style={{ textShadowColor: "rgba(0,0,0,0.8)", textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }}
-                >
-                  {vid.title}
-                </Text>
+                <Text className="text-white font-bold text-[9px] leading-tight mb-1" numberOfLines={2} style={{ textShadowColor: "rgba(0,0,0,0.8)", textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }}>{vid.title}</Text>
                 {product && (
                   <View className="flex-row items-center justify-between mt-1">
-                    <Text className="font-black text-[10px]" style={{ color: colors.primary }}>
-                      ₹{product.price}
-                    </Text>
+                    <Text className="font-black text-[10px]" style={{ color: colors.primary }}>₹{product.price}</Text>
                     <Pressable
-                      onPress={(e) => {
-                        e.stopPropagation();
-                        handleAddToCart(product);
-                      }}
+                      onPress={(e) => { e.stopPropagation(); handleAddToCart(product); }}
                       className="h-6 w-6 rounded-none items-center justify-center shadow-lg"
                       style={{ backgroundColor: colors.primary }}
                     >
@@ -184,21 +257,9 @@ export function OceanReelsFeed() {
                   </View>
                 )}
               </View>
-
-              {/* Mute/Unmute Overlay Toggle */}
               {isActive && (
-                <Pressable
-                  onPress={(e) => {
-                    e.stopPropagation();
-                    setIsMuted(!isMuted);
-                  }}
-                  className="absolute top-2 right-2 p-1 bg-black/50 rounded-none"
-                >
-                  <MaterialCommunityIcons
-                    name={isMuted ? "volume-mute" : "volume-high"}
-                    size={14}
-                    color="white"
-                  />
+                <Pressable onPress={(e) => { e.stopPropagation(); setIsMuted(!isMuted); }} className="absolute top-2 right-2 p-1 bg-black/50 rounded-none">
+                  <MaterialCommunityIcons name={isMuted ? "volume-mute" : "volume-high"} size={14} color="white" />
                 </Pressable>
               )}
             </Pressable>

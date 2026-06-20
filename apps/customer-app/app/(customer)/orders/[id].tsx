@@ -51,6 +51,8 @@ export default function OrderDetailsScreen() {
     }
   };
 
+  const [trackingData, setTrackingData] = useState<any>(null);
+
   useEffect(() => {
     const load = async () => {
       if (!id) return;
@@ -59,6 +61,21 @@ export default function OrderDetailsScreen() {
       setLoading(false);
     };
     load();
+  }, [id]);
+
+  useEffect(() => {
+    if (!id) return;
+    const fetchTelemetry = async () => {
+      try {
+        const { data } = await api.get(`/fleet?order_id=${id}`);
+        setTrackingData(data);
+      } catch (error) {
+        console.error("Telemetry Fetch Failed:", error);
+      }
+    };
+    fetchTelemetry();
+    const interval = setInterval(fetchTelemetry, 20000);
+    return () => clearInterval(interval);
   }, [id]);
 
   // Compute OTP from numeric part of order ID
@@ -145,21 +162,38 @@ export default function OrderDetailsScreen() {
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       {ToastHost}
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 56, paddingBottom: 120 }}>
 
-        {/* Header */}
-        <View className="mb-6 flex-row items-center justify-between">
-          <Button variant="ghost" label={"← " + t('all').toUpperCase()} onPress={() => router.back()} className="px-0" />
-          {isInTransit && (
-            <Button
-              label={"🚚 " + t('track_order')}
-              onPress={() =>
-                router.push({ pathname: "/orders/[id]/tracking", params: { id } } as never)
-              }
-              className="h-9 px-4 rounded-none text-[9px]"
-            />
-          )}
-        </View>
+      {/* Sticky Header Layout */}
+      <View className="flex-row items-center justify-between gap-3 px-4 pb-4 pt-12 border-b" style={{ backgroundColor: colors.bg, borderBottomColor: "rgba(255,255,255,0.05)", zIndex: 10 }}>
+        {isInTransit ? (
+          <>
+            <View className="flex-1">
+              <Button 
+                variant="ghost" 
+                label={"← " + t('all').toUpperCase()} 
+                onPress={() => router.back()} 
+                className="px-0 h-10 justify-center rounded-none text-[10px]" 
+                style={{ borderWidth: 1, borderColor: colors.border }}
+              />
+            </View>
+            <View className="flex-1">
+              <Button
+                label={"🚚 " + t('track_order').toUpperCase()}
+                onPress={() =>
+                  router.push({ pathname: "/orders/[id]/tracking", params: { id } } as never)
+                }
+                className="h-10 px-4 rounded-none text-[10px]"
+              />
+            </View>
+          </>
+        ) : (
+          <View className="flex-1">
+            <Button variant="ghost" label={"← " + t('all').toUpperCase()} onPress={() => router.back()} className="px-0 h-10 self-start" />
+          </View>
+        )}
+      </View>
+
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 24, paddingBottom: 120 }}>
 
         {/* Title */}
         <View className="mb-6 border-b pb-6" style={{ borderBottomColor: colors.border }}>
@@ -186,34 +220,74 @@ export default function OrderDetailsScreen() {
           </Text>
         </View>
 
-        {/* 🚚 Live Cold-Chain Delivery Radar */}
+        {/* 🚚 Live Cold-Chain Delivery Radar (Rich Timeline) */}
         <View
-          className="mb-6 rounded-none p-5"
-          style={{ backgroundColor: `${colors.primary}0D`, borderWidth: 1, borderColor: `${colors.primary}33` }}
+          className="mb-6 rounded-[24px] overflow-hidden"
+          style={{ backgroundColor: `${colors.primary}10`, borderWidth: 1, borderColor: `${colors.primary}33` }}
         >
-          <View className="flex-row items-center gap-3">
-            <View
-              className="h-10 w-10 items-center justify-center rounded-none"
-              style={{ backgroundColor: `${colors.primary}33`, borderWidth: 1, borderColor: `${colors.primary}50` }}
-            >
-              <Text className="text-lg">🚚</Text>
+          <View className="p-5 md:p-6 flex-col gap-4 border-b" style={{ borderBottomColor: "rgba(255,255,255,0.1)" }}>
+            <View className="flex-row items-center gap-4">
+              <View className="w-12 h-12 rounded-full items-center justify-center border shadow-lg" style={{ backgroundColor: `${colors.primary}33`, borderColor: `${colors.primary}50` }}>
+                <Text className="text-2xl">🚚</Text>
+              </View>
+              <View className="flex-1">
+                <Text className="text-sm font-black uppercase italic" style={{ color: colors.text }}>
+                  {t('delivery_radar')}
+                </Text>
+                <Text className="text-[10px]" style={{ color: colors.textMuted }}>
+                  {trackingData?.delivery_area ?? trackingData?.stage_label ?? trackingData?.status ?? order?.status ?? "Processing"}
+                </Text>
+              </View>
             </View>
-            <View className="flex-1">
-              <Text className="text-xs font-black uppercase italic" style={{ color: colors.text }}>
-                {t('delivery_radar')}
-              </Text>
-              <Text className="mt-0.5 text-[9px]" style={{ color: colors.textMuted }}>
-                {t('current_node')}: Port Blair Phoenix Bay Hub
-              </Text>
+            <View className="flex-row items-center justify-between mt-2">
+              <View className="flex-row items-center gap-1.5 rounded-full px-3 py-1" style={{ backgroundColor: "rgba(59,130,246,0.1)", borderWidth: 1, borderColor: "rgba(59,130,246,0.3)" }}>
+                <View className="h-2 w-2 rounded-full bg-blue-400" />
+                <Text className="text-[10px] font-black uppercase text-blue-400">{trackingData?.current_temp ?? trackingData?.temp ?? 1.2}°C {t('chilled')}</Text>
+              </View>
+              <View>
+                <Text className="text-[10px] font-black uppercase" style={{ color: colors.textMuted }}>Est. Arrival</Text>
+                <Text className="text-xs font-black text-right" style={{ color: colors.text }}>{trackingData?.minutes_remaining ?? 32} Mins</Text>
+              </View>
             </View>
           </View>
-          <View className="mt-4 flex-row flex-wrap items-center justify-between gap-2 border-t pt-3" style={{ borderTopColor: colors.border }}>
-            <View className="flex-row items-center gap-1.5 rounded-none px-2 py-1" style={{ backgroundColor: "rgba(59,130,246,0.1)", borderWidth: 1, borderColor: "rgba(59,130,246,0.3)" }}>
-              <View className="h-1.5 w-1.5 rounded-none bg-blue-400" />
-              <Text className="text-[9px] font-black uppercase text-blue-400">1.2°C {t('chilled')}</Text>
+          
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 20 }} className="py-6 bg-black/20">
+            <View className="flex-row items-center">
+              {[
+                "Order Placed",
+                "Seller Accepted",
+                "Preparing",
+                "Packed",
+                "Rider Assigned",
+                "Out for Delivery",
+                "Delivered"
+              ].map((stage, idx, arr) => {
+                const currentStatus = (trackingData?.status ?? order?.status ?? "PROCESSING").toUpperCase();
+                const stageIndexMatch = arr.findIndex(s => s.toUpperCase() === currentStatus);
+                const isPassed = stageIndexMatch === -1 ? idx <= 1 : idx <= stageIndexMatch;
+
+                return (
+                  <View key={idx} className="flex-row items-center">
+                    <View className="items-center gap-2">
+                      <View 
+                        className="w-4 h-4 rounded-full border-2"
+                        style={{ 
+                          backgroundColor: isPassed ? colors.primary : "transparent",
+                          borderColor: isPassed ? colors.primary : colors.textMuted
+                        }} 
+                      />
+                      <Text className="text-[8px] font-bold uppercase w-16 text-center" style={{ color: isPassed ? colors.primary : colors.textMuted }}>
+                        {stage}
+                      </Text>
+                    </View>
+                    {idx < arr.length - 1 && (
+                      <View className="w-8 h-0.5 mx-1" style={{ backgroundColor: isPassed ? colors.primary : colors.border, marginBottom: 16 }} />
+                    )}
+                  </View>
+                );
+              })}
             </View>
-            <Text className="text-[10px] font-black" style={{ color: colors.text }}>32 {t('mins_remaining')}</Text>
-          </View>
+          </ScrollView>
         </View>
 
         {/* 🔐 Secure Handoff Protocol */}

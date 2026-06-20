@@ -1,8 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    `${__dirname}/app/**/*.{js,jsx,ts,tsx}`,
-    `${__dirname}/src/**/*.{js,jsx,ts,tsx}`
+    `${__dirname.replace(/\\/g, '/')}/app/**/*.{js,jsx,ts,tsx}`,
+    `${__dirname.replace(/\\/g, '/')}/src/**/*.{js,jsx,ts,tsx}`
   ],
   presets: [require("nativewind/preset")],
   theme: {

@@ -17,6 +17,17 @@ import {
   Layers
 } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
+import dynamic from "next/dynamic";
+
+const PortBlairMap = dynamic(() => import("@/components/ui/PortBlairMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full bg-slate-900 flex flex-col items-center justify-center border-2 border-dashed border-slate-800">
+      <Layers className="w-8 h-8 text-primary/50 animate-pulse mb-3" />
+      <p className="text-[10px] uppercase tracking-widest text-primary/50 font-black">Initializing Nav Grid</p>
+    </div>
+  )
+});
 
 export default function OrderTrackingPage() {
   const { id } = useParams();
@@ -24,11 +35,7 @@ export default function OrderTrackingPage() {
   const { toast } = useToast();
   const [trackingData, setTrackingData] = React.useState<any>(null);
   const [loading, setLoading] = React.useState(true);
-
-  const mapRef = React.useRef<any>(null);
-  const markerRef = React.useRef<any>(null);
-  const customerMarkerRef = React.useRef<any>(null);
-  const routingRef = React.useRef<any>(null);
+  const [recenterTrigger, setRecenterTrigger] = React.useState(0);
 
   const fetchTelemetry = async () => {
     try {
@@ -58,118 +65,6 @@ export default function OrderTrackingPage() {
     current_lng: 92.946892,
     logs: [{ time: "Now", status: "Order Picked Up", location: "Andaman Sector", active: true }]
   };
-
-  const initMapInstance = () => {
-    const L = (window as any).L;
-    const mapContainer = document.getElementById('map');
-    if (!L || !mapContainer || mapRef.current) return;
-
-    mapRef.current = L.map('map', { zoomControl: false }).setView([13.160704, 92.946892], 13);
-    L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-      attribution: '&copy; Google Maps'
-    }).addTo(mapRef.current);
-
-    // --- NEON MODERN AGENT ICON ---
-    const agentIcon = L.divIcon({
-      className: 'sentinel-marker',
-      html: `
-        <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-          <div style="position: absolute; width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(45deg, #00D1FF, #6366F1); opacity: 0.3; animation: sentinel-pulse 2s infinite;"></div>
-          <div style="position: relative; color: white; display: flex; filter: drop-shadow(0 0 10px rgba(0, 209, 255, 0.6)) drop-shadow(0 0 5px rgba(99, 102, 241, 0.4)); z-index: 2;">
-             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <defs>
-                  <linearGradient id="fish-neon-cust" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:#00D1FF;stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
-                  </linearGradient>
-                </defs>
-                <path d="M23 12c-2.5 2.5-5 5-10 5s-8-3-11-5c3-2 6-5 11-5s7.5 2.5 10 5z" stroke="url(#fish-neon-cust)" />
-                <path d="M23 12l-3-3m0 6l3-3" stroke="url(#fish-neon-cust)" />
-                <path d="M13 8c-1 1-1 3 0 4" stroke="url(#fish-neon-cust)" opacity="0.6" />
-                <circle cx="6" cy="12" r="1" fill="#00D1FF" />
-             </svg>
-          </div>
-          <style>
-            @keyframes sentinel-pulse {
-              0% { transform: scale(0.5); opacity: 0.8; }
-              100% { transform: scale(1.8); opacity: 0; }
-            }
-          </style>
-        </div>
-      `,
-      iconSize: [40, 40],
-      iconAnchor: [20, 20]
-    });
-
-    // --- CUSTOMER DELIVERY LOCATION ICON ---
-    const customerIcon = L.divIcon({
-      className: 'harbor-marker',
-      html: `
-        <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-          <div style="position: absolute; width: 50px; height: 50px; border: 2px dashed rgba(99, 102, 241, 0.4); border-radius: 50%; animation: harbor-rotate 10s linear infinite;"></div>
-          <div style="width: 28px; height: 28px; background: #6366F1; border: 2px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(99, 102, 241, 0.5); z-index: 2;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="color: white;"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-          </div>
-          <style>
-            @keyframes harbor-rotate {
-              from { transform: rotate(0deg); }
-              to { transform: rotate(360deg); }
-            }
-          </style>
-        </div>
-      `,
-      iconSize: [40, 40],
-      iconAnchor: [20, 20]
-    });
-
-    markerRef.current = L.marker([displayData.current_lat, displayData.current_lng], { icon: agentIcon }).addTo(mapRef.current);
-    customerMarkerRef.current = L.marker([13.160704, 92.946892], { icon: customerIcon }).addTo(mapRef.current);
-  };
-
-  const updateMapElements = React.useCallback(() => {
-    const L = (window as any).L;
-    if (!L || !mapRef.current || !markerRef.current) return;
-
-    const lat = displayData.current_lat || 13.160704;
-    const lng = displayData.current_lng || 92.946892;
-
-    markerRef.current.setLatLng([lat, lng]);
-
-    if (L.Routing) {
-      if (routingRef.current) {
-        try { routingRef.current.setWaypoints([L.latLng(lat, lng), L.latLng(13.160704, 92.946892)]); } catch (e) {}
-      } else {
-        routingRef.current = L.Routing.control({
-          waypoints: [L.latLng(lat, lng), L.latLng(13.160704, 92.946892)],
-          routeWhileDragging: false, show: false, addWaypoints: false, draggableWaypoints: false, fitSelectedRoutes: false,
-          lineOptions: { styles: [{ color: '#00D1FF', weight: 4, opacity: 0.8, dashArray: '10, 15' }] }
-        }).addTo(mapRef.current);
-        routingRef.current.on('routingerror', () => console.warn("Map Routing Delayed"));
-      }
-    }
-  }, [displayData.current_lat, displayData.current_lng]);
-
-  React.useEffect(() => {
-    const loadLeaflet = () => {
-      if (!(window as any).L) {
-        const link = document.createElement('link'); link.rel = 'stylesheet'; link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; document.head.appendChild(link);
-        const rCss = document.createElement('link'); rCss.rel = 'stylesheet'; rCss.href = 'https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css'; document.head.appendChild(rCss);
-        const script = document.createElement('script'); script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"; script.async = true;
-        script.onload = () => {
-          const rJs = document.createElement('script'); rJs.src = "https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"; rJs.async = true;
-          rJs.onload = initMapInstance; 
-          document.head.appendChild(rJs);
-        };
-        document.head.appendChild(script);
-      } else { 
-        // Small delay to ensure container is ready
-        setTimeout(initMapInstance, 100); 
-      }
-    };
-    loadLeaflet();
-  }, []);
-
-  React.useEffect(() => { updateMapElements(); }, [updateMapElements]);
 
 
 
@@ -230,7 +125,15 @@ export default function OrderTrackingPage() {
                     }
                   `}</style>
 
-                  <div id="map" className="w-full h-full rounded-[22px] lg:rounded-[38px]" />
+                  <PortBlairMap
+                    driverLat={displayData.current_lat || 13.160704}
+                    driverLng={displayData.current_lng || 92.946892}
+                    deliveryLat={13.160704}
+                    deliveryLng={92.946892}
+                    status={displayData.status}
+                    recenterTrigger={recenterTrigger}
+                    className="w-full h-full rounded-[22px] lg:rounded-[38px] z-0"
+                  />
 
                   {/* Radar sweep */}
                   <div className="absolute inset-0 pointer-events-none z-[400] overflow-hidden">
@@ -284,12 +187,8 @@ export default function OrderTrackingPage() {
                     </button>
                     <button
                       onClick={() => {
-                        const lat = displayData.current_lat || 13.160704;
-                        const lng = displayData.current_lng || 92.746892;
-                        if (mapRef.current) {
-                          mapRef.current.panTo([lat, lng]);
-                          toast("Recentered on Driver Signal", "success");
-                        }
+                        setRecenterTrigger(prev => prev + 1);
+                        toast("Recentered on Driver Signal", "success");
                       }}
                       className="w-9 h-9 border flex items-center justify-center -skew-x-12 hover:bg-primary hover:text-white transition-all bg-slate-950/90 border-primary/30 text-primary"
                     >

@@ -912,7 +912,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
         if (res.ok) {
           const data = await res.json();
           if (Array.isArray(data)) {
-            setActiveReels(data.filter((v: any) => v.is_active === 1));
+            setActiveReels(data.filter((v: any) => v.is_active === 1 && v.video_url));
           }
         }
       } catch (err) {

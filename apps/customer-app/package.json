@@ -56,5 +56,15 @@
     "@types/react": "~19.1.0",
     "babel-plugin-module-resolver": "^5.0.3",
     "typescript": "~5.9.2"
+  },
+  "overrides": {
+    "lightningcss": "1.32.0"
+  },
+  "resolutions": {
+    "lightningcss": "1.32.0"
+  },
+  "optionalDependencies": {
+    "lightningcss-linux-x64-gnu": "1.32.0",
+    "lightningcss-win32-x64-msvc": "1.32.0"
   }
 }

@@ -19,9 +19,15 @@ export function OceanReelsFeed({ variant = "feed", videoId }: OceanReelsFeedProp
   const [activeVideoId, setActiveVideoId] = useState<number | null>(null);
   const [isMuted, setIsMuted] = useState(true);
   const [isPipOpen, setIsPipOpen] = useState(false);
+  const [failedVideoIds, setFailedVideoIds] = useState<Record<number, boolean>>({});
   const cart = useCartStore();
   const { toast } = useToast();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const handleVideoError = (vidId: number) => {
+    console.error(`Ocean Reels: Video with ID ${vidId} failed to load or play.`);
+    setFailedVideoIds(prev => ({ ...prev, [vidId]: true }));
+  };
 
   useEffect(() => {
     fetchVideos();
@@ -77,8 +83,14 @@ export function OceanReelsFeed({ variant = "feed", videoId }: OceanReelsFeedProp
   if (variant === "grid-card") {
     const vid = videoId ? videos.find(v => v.id === videoId) : videos[0];
     if (!vid) return null;
+    
+    // Strict Layout Integrity Check: Ensure we don't accidentally load banner format as inline grid-card
+    if (!videoId && (vid.description === 'banner' || vid.description === 'banner-newsletter')) {
+      return null;
+    }
+
     const product = products[vid.product_id];
-    const isActive = activeVideoId === vid.id;
+    const isActive = activeVideoId === vid.id && !failedVideoIds[vid.id];
 
     return (
       <div className="group h-full">
@@ -95,6 +107,7 @@ export function OceanReelsFeed({ variant = "feed", videoId }: OceanReelsFeedProp
                  loop 
                  muted={isMuted}
                  playsInline
+                 onError={() => handleVideoError(vid.id)}
                  className="absolute inset-0 w-full h-full object-cover" 
                />
              ) : (
@@ -161,8 +174,14 @@ export function OceanReelsFeed({ variant = "feed", videoId }: OceanReelsFeedProp
   if (variant === "banner") {
     const vid = videoId ? videos.find(v => v.id === videoId) : videos.find(v => v.description === "banner") || videos[0];
     if (!vid) return null;
+
+    // Strict Layout Integrity Check: Ensure banner layout matches actual banner format configuration
+    if (!videoId && (vid.description !== 'banner' && vid.description !== 'banner-newsletter')) {
+      return null;
+    }
+
     const product = products[vid.product_id];
-    const isActive = activeVideoId === vid.id;
+    const isActive = activeVideoId === vid.id && !failedVideoIds[vid.id];
 
     return (
       <div className="w-full lg:w-[50%] mx-auto my-6 px-[2px] md:px-0">
@@ -180,6 +199,7 @@ export function OceanReelsFeed({ variant = "feed", videoId }: OceanReelsFeedProp
                 loop 
                 muted={isMuted}
                 playsInline
+                onError={() => handleVideoError(vid.id)}
                 className="absolute inset-0 w-full h-full object-cover" 
               />
             ) : (
@@ -257,7 +277,7 @@ export function OceanReelsFeed({ variant = "feed", videoId }: OceanReelsFeedProp
 
   // ── OPTION 2: FLOATING CORNER BUBBLE (WEB) ──────────────────────────────────
   if (variant === "pip") {
-    const vid = videoId ? videos.find(v => v.id === videoId) : videos[0];
+    const vid = videoId ? videos.find(v => v.id === videoId) : videos.find(v => v.description === "pip") || videos[0];
     if (!vid) return null;
     const product = products[vid.product_id];
 
@@ -271,14 +291,22 @@ export function OceanReelsFeed({ variant = "feed", videoId }: OceanReelsFeedProp
               exit={{ opacity: 0, scale: 0.8, y: 50 }}
               className="relative w-[180px] h-[320px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-black mb-3"
             >
-              <video 
-                src={vid.video_url} 
-                autoPlay 
-                loop 
-                muted={isMuted}
-                playsInline
-                className="w-full h-full object-cover"
-              />
+              {!failedVideoIds[vid.id] ? (
+                <video 
+                  src={vid.video_url} 
+                  autoPlay 
+                  loop 
+                  muted={isMuted}
+                  playsInline
+                  onError={() => handleVideoError(vid.id)}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <img 
+                  src={vid.thumbnail_url || "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400"}
+                  className="w-full h-full object-cover opacity-90"
+                />
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20 pointer-events-none" />
               
               {/* Controls */}
@@ -301,8 +329,8 @@ export function OceanReelsFeed({ variant = "feed", videoId }: OceanReelsFeedProp
                   <div className="flex items-center justify-between">
                     <span className="text-[var(--c-primary)] font-black text-xs">₹{product.price}</span>
                     <button
-                      onClick={(e) => handleAddToCart(product, e)}
-                      className="px-2.5 py-1 text-[9px] font-black uppercase tracking-widest bg-[var(--c-primary)] text-white rounded-lg flex items-center justify-center cursor-pointer border-none"
+                       onClick={(e) => handleAddToCart(product, e)}
+                       className="px-2.5 py-1 text-[9px] font-black uppercase tracking-widest bg-[var(--c-primary)] text-white rounded-lg flex items-center justify-center cursor-pointer border-none"
                     >
                       Shop
                     </button>
@@ -320,14 +348,22 @@ export function OceanReelsFeed({ variant = "feed", videoId }: OceanReelsFeedProp
           style={{ animationDuration: '3s' }}
         >
           <div className="w-full h-full rounded-full overflow-hidden relative">
-            <video 
-              src={vid.video_url} 
-              autoPlay 
-              loop 
-              muted 
-              playsInline 
-              className="w-full h-full object-cover opacity-85 group-hover:opacity-100 transition-opacity" 
-            />
+            {!failedVideoIds[vid.id] ? (
+              <video 
+                src={vid.video_url} 
+                autoPlay 
+                loop 
+                muted 
+                playsInline 
+                onError={() => handleVideoError(vid.id)}
+                className="w-full h-full object-cover opacity-85 group-hover:opacity-100 transition-opacity" 
+              />
+            ) : (
+              <img 
+                src={vid.thumbnail_url || "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400"}
+                className="w-full h-full object-cover opacity-85 group-hover:opacity-100 transition-opacity" 
+              />
+            )}
             <div className="absolute inset-0 bg-black/10 flex items-center justify-center">
               <div className="w-6 h-6 bg-[var(--c-primary)]/80 rounded-full flex items-center justify-center">
                 <Play className="w-3.5 h-3.5 text-white ml-0.5 fill-white" />
@@ -367,18 +403,30 @@ export function OceanReelsFeed({ variant = "feed", videoId }: OceanReelsFeedProp
             return (
               <div 
                 key={vid.id}
-                onClick={() => setActiveVideoId(isActive ? null : vid.id)}
+                onClick={() => {
+                  if (!failedVideoIds[vid.id]) {
+                    setActiveVideoId(isActive ? null : vid.id);
+                  }
+                }}
                 className="relative flex-none w-[110px] h-[190px] md:w-[150px] md:h-[260px] rounded-[16px] overflow-hidden snap-center cursor-pointer group bg-black shadow-md border border-white/10 transition-transform duration-300 hover:-translate-y-1"
               >
-                <video 
-                  src={vid.video_url} 
-                  autoPlay={isActive}
-                  loop 
-                  muted={isMuted}
-                  playsInline
-                  className="w-full h-full object-cover transition-opacity duration-300"
-                  style={{ opacity: isActive ? 1 : 0.8 }}
-                />
+                {!failedVideoIds[vid.id] ? (
+                  <video 
+                    src={vid.video_url} 
+                    autoPlay={isActive}
+                    loop 
+                    muted={isMuted}
+                    playsInline
+                    onError={() => handleVideoError(vid.id)}
+                    className="w-full h-full object-cover transition-opacity duration-300"
+                    style={{ opacity: isActive ? 1 : 0.8 }}
+                  />
+                ) : (
+                  <img 
+                    src={vid.thumbnail_url || "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400"}
+                    className="w-full h-full object-cover opacity-90"
+                  />
+                )}
 
                 <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/90 pointer-events-none" />
 

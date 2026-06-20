@@ -60,7 +60,6 @@ export default function OrderTrackingScreen() {
     <head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
       <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-      <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
       <style>
         body, html, #map { margin: 0; padding: 0; width: 100%; height: 100%; background-color: #020617; }
         @keyframes sentinel-pulse {
@@ -76,17 +75,15 @@ export default function OrderTrackingScreen() {
     <body>
       <div id="map"></div>
       <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-      <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
       <script>
-        var map, agentMarker, customerMarker, routingControl;
+        var map, agentMarker, customerMarker, polylinePath;
         var customerLat = 13.160704, customerLng = 92.946892;
 
         function initMap(initialLat, initialLng) {
           map = L.map('map', { zoomControl: false }).setView([initialLat, initialLng], 13);
           
-          L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-            attribution: '&copy; Google Maps'
-          }).addTo(map);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+          L.control.attribution({ position: "bottomright", prefix: "© OSM" }).addTo(map);
 
           // Neon Agent Blip
           var agentIcon = L.divIcon({
@@ -136,15 +133,16 @@ export default function OrderTrackingScreen() {
         }
 
         function updateRoute(lat, lng) {
-          if (routingControl) {
-            try { routingControl.setWaypoints([L.latLng(lat, lng), L.latLng(customerLat, customerLng)]); } catch(e) {}
+          var latlngs = [
+            [lat, lng],
+            [customerLat, customerLng]
+          ];
+          if (polylinePath) {
+            polylinePath.setLatLngs(latlngs);
           } else {
-            routingControl = L.Routing.control({
-              waypoints: [L.latLng(lat, lng), L.latLng(customerLat, customerLng)],
-              routeWhileDragging: false, show: false, addWaypoints: false, draggableWaypoints: false, fitSelectedRoutes: false,
-              lineOptions: { styles: [{ color: '#00D1FF', weight: 4, opacity: 0.8, dashArray: '10, 15' }] }
-            }).addTo(map);
+            polylinePath = L.polyline(latlngs, { color: '#00D1FF', weight: 4, opacity: 0.8, dashArray: '8, 6' }).addTo(map);
           }
+          map.fitBounds(L.latLngBounds(latlngs), { padding: [40, 40] });
         }
 
         function updateTelemetry(lat, lng) {
@@ -152,7 +150,6 @@ export default function OrderTrackingScreen() {
             agentMarker.setLatLng([lat, lng]);
           }
           updateRoute(lat, lng);
-          map.panTo([lat, lng]);
         }
 
         initMap(${currentLat}, ${currentLng});

@@ -76,10 +76,8 @@ export default function PortBlairMap({
       });
       mapInstanceRef.current = map;
 
-      L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-        maxZoom: 19,
-        attribution: '&copy; Google Maps'
-      }).addTo(map);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(map);
+      L.control.attribution({ position: "bottomright", prefix: "© OSM" }).addTo(map);
 
       // Landmark dots
       PORT_BLAIR_LANDMARKS.forEach((lm) => {

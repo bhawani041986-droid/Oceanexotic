@@ -140,7 +140,7 @@ export default function LoginScreen() {
       <Image source={{ uri: BG_IMAGE }} className="absolute inset-0 h-full w-full opacity-20" contentFit="cover" />
       <LinearGradient colors={["rgba(2,6,23,0.3)", "#020617", "#020617"]} className="absolute inset-0" />
 
-      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} className="flex-1">
+      <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={Platform.OS === "android" ? 24 : 0} className="flex-1">
         <ScrollView contentContainerClassName="flex-grow px-6 py-12" keyboardShouldPersistTaps="handled" bounces={false}>
           <View className="mx-auto w-full max-w-[400px] mt-auto mb-auto">
             <View className="mb-10 items-center space-y-4">
