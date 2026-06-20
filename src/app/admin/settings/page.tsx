@@ -183,24 +183,44 @@ export default function AdminSettingsPage() {
     if (!file) return;
 
     setIsUploading(prev => ({ ...prev, [key]: true }));
-    toast(`Uploading ${file.name}...`, "success");
+    toast(`Preparing to upload ${file.name}...`, "success");
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${key}-${Date.now()}.${fileExt}`;
+      const filePath = `apps/${fileName}`;
 
-      const response = await fetch("/api/system/upload", {
+      // 1. Get Signed Upload URL from Backend (Bypasses RLS)
+      const urlResponse = await fetch("/api/system/upload/signed-url", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fileName: filePath }),
       });
 
-      const result = await response.json();
+      const urlResult = await urlResponse.json();
 
-      if (result.status === "success") {
-        setSettings({ [key]: result.url });
-        toast(`${file.name} uploaded successfully!`, "success");
-      } else {
-        throw new Error(result.message || "Upload failed");
+      if (urlResult.status !== "success" || !urlResult.data?.signedUrl) {
+        throw new Error(urlResult.message || "Failed to generate secure upload link.");
+      }
+
+      toast(`Uploading binary directly to cloud...`, "success");
+
+      // 2. Upload file directly to Supabase via Signed URL (Bypasses Vercel 4.5MB Payload limit)
+      const uploadResponse = await fetch(urlResult.data.signedUrl, {
+         method: "PUT",
+         body: file,
+         headers: { "Content-Type": file.type || "application/octet-stream" }
+      });
+
+      if (!uploadResponse.ok) {
+         throw new Error(`Upload failed with status: ${uploadResponse.status}`);
+      }
+
+      // 3. Get Public URL and Save Settings
+      const { data } = supabase.storage.from("assets").getPublicUrl(filePath);
+      if (data?.publicUrl) {
+        setSettings({ [key]: data.publicUrl });
+        toast(`${file.name} successfully deployed!`, "success");
       }
     } catch (error) {
       console.error("App upload failed:", error);
