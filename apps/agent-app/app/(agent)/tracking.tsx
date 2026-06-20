@@ -222,6 +222,9 @@ export default function AgentTrackingScreen() {
   // Radar sweep animation helper
   const [pulseScale, setPulseScale] = useState(1);
 
+  // WebView reference for Native Bridge
+  const webViewRef = useRef<any>(null);
+
   // Scanner states & refs
   const [isScanning, setIsScanning] = useState(false);
   const [scanLog, setScanLog] = useState<string[]>([]);
@@ -392,11 +395,26 @@ export default function AgentTrackingScreen() {
   };
 
   const recenterMap = () => {
-    if (mapRef.current) {
-      mapRef.current.setView([coords.lat, coords.lng], 16);
-      toast("Recalibrating Navigation Node", "success");
+    if (Platform.OS === "web") {
+      if (mapRef.current) {
+        mapRef.current.setView([coords.lat, coords.lng], 16);
+        toast("Recalibrating Navigation Node", "success");
+      }
+    } else {
+      if (webViewRef.current) {
+        webViewRef.current.injectJavaScript(`if (typeof map !== 'undefined') { map.setView([${coords.lat}, ${coords.lng}], 16); } true;`);
+        toast("Recalibrating Navigation Node", "success");
+      }
     }
   };
+
+  // Sync coords to WebView on Native
+  useEffect(() => {
+    if (Platform.OS !== "web" && webViewRef.current) {
+      const js = `if (typeof window.updateTelemetry === 'function') { window.updateTelemetry(${coords.lat}, ${coords.lng}); } true;`;
+      webViewRef.current.injectJavaScript(js);
+    }
+  }, [coords.lat, coords.lng]);
 
   // Fetch Order details and check database telemetry
   const loadOrderDetails = async () => {
@@ -759,6 +777,7 @@ export default function AgentTrackingScreen() {
           {/* Native MapView Replacement */}
           {/* Native WebView Leaflet Map Replacement */}
           <WebView
+            ref={webViewRef}
             originWhitelist={['*']}
             source={{ html: `
 <!DOCTYPE html>
@@ -771,12 +790,29 @@ export default function AgentTrackingScreen() {
     body { padding: 0; margin: 0; background-color: ${isLight ? '#E2E8F0' : '#020617'}; }
     html, body, #map { height: 100%; width: 100%; }
     .leaflet-control-attribution { display: none; }
+    /* Match Web Tactical Zoom Controls */
+    .leaflet-control-zoom { border: none !important; margin: 10px !important; }
+    .leaflet-control-zoom-in, .leaflet-control-zoom-out { 
+        background-color: rgba(0,0,0,0.7) !important; 
+        color: ${mood.primary} !important; 
+        border: 1px solid ${mood.primary}26 !important; 
+        backdrop-filter: blur(10px);
+        font-size: 14px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 28px !important;
+        height: 28px !important;
+    }
+    .leaflet-tile {
+      filter: saturate(1.2) brightness(0.65) contrast(1.2) hue-rotate(210deg) !important;
+    }
   </style>
 </head>
 <body>
   <div id="map"></div>
   <script>
-    var map = L.map('map', { zoomControl: false, attributionControl: false }).setView([${coords.lat}, ${coords.lng}], 16);
+    var map = L.map('map', { zoomControl: true, attributionControl: false }).setView([${coords.lat}, ${coords.lng}], 16);
     
     L.tileLayer('${isLight ? "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}"}', {
       maxZoom: 19
@@ -807,6 +843,12 @@ export default function AgentTrackingScreen() {
       [${coords.lat}, ${coords.lng}],
       [${destLat}, ${destLng}]
     ], { color: '${mood.primary}', weight: 3, dashArray: '5, 5' }).addTo(map);
+
+    window.updateTelemetry = function(lat, lng) {
+      var newLatLng = new L.LatLng(lat, lng);
+      agentMarker.setLatLng(newLatLng);
+      routeLine.setLatLngs([newLatLng, custMarker.getLatLng()]);
+    };
   </script>
 </body>
 </html>

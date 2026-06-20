@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, RefreshControl, TextInput, Pressable, ActivityIndicator } from "react-native";
+import { View, Text, ScrollView, RefreshControl, TextInput, Pressable, ActivityIndicator, Modal } from "react-native";
 import Svg, { Path, Circle, Rect, Line } from "react-native-svg";
 import { useAuthStore } from "@/store/authStore";
 import { useAgentStore, MOODS } from "@/store/agentStore";
@@ -57,6 +57,34 @@ export default function AgentHistoryScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [syncError, setSyncError] = useState<string | null>(null);
+
+  const [selectedLogId, setSelectedLogId] = useState<string | null>(null);
+  const [missionLogs, setMissionLogs] = useState<any[]>([]);
+  const [isLoadingLogs, setIsLoadingLogs] = useState(false);
+
+  useEffect(() => {
+    if (selectedLogId) {
+      setIsLoadingLogs(true);
+      const url = `${FULL_API_URL}/agent/logs?order_id=${selectedLogId}`;
+      axios.get(url)
+        .then(res => {
+           if (res.data?.logs && res.data.logs.length > 0) {
+              setMissionLogs(res.data.logs);
+           } else {
+              setMissionLogs([
+                 { status: "MISSION DISPATCHED", location_name: "Agent assigned and routing calculated.", created_at: new Date().toISOString() }
+              ]);
+           }
+        })
+        .catch(err => {
+           console.error(err);
+           setMissionLogs([{ status: "FETCH_FAILED", location_name: "Failed to securely retrieve logs from server.", created_at: new Date().toISOString() }]);
+        })
+        .finally(() => setIsLoadingLogs(false));
+    } else {
+      setMissionLogs([]);
+    }
+  }, [selectedLogId]);
 
   const fetchMissions = async () => {
     if (!user) return;
@@ -126,6 +154,7 @@ export default function AgentHistoryScreen() {
   }, 0);
 
   return (
+    <>
     <ScrollView
       className="flex-1"
       style={{ backgroundColor: mood.bg }}
@@ -282,8 +311,8 @@ export default function AgentHistoryScreen() {
               </View>
 
               <Pressable
-                onPress={() => {}}
-                className="w-full h-12 rounded-none flex-row items-center justify-center space-x-1.5 mb-4"
+                onPress={() => setSelectedLogId(mission.id)}
+                className="w-full h-12 rounded-none flex-row items-center justify-center space-x-1.5 mb-4 active:scale-95 transition-transform"
                 style={{
                   backgroundColor: mood.primary,
                   shadowColor: mood.primary,
@@ -316,5 +345,74 @@ export default function AgentHistoryScreen() {
         </View>
       )}
     </ScrollView>
+
+    {/* MISSION LOG LEDGER MODAL */}
+    <Modal
+      visible={!!selectedLogId}
+      animationType="slide"
+      transparent={true}
+      onRequestClose={() => setSelectedLogId(null)}
+    >
+      <View style={{ flex: 1, backgroundColor: 'rgba(2, 6, 23, 0.95)', justifyContent: 'flex-end' }}>
+        <View style={{ backgroundColor: isLight ? '#F8FAFC' : '#0F172A', height: '85%', borderTopLeftRadius: 24, borderTopRightRadius: 24, borderWidth: 1, borderColor: mood.border, padding: 20 }}>
+          {/* Modal Header */}
+          <View className="flex-row items-center justify-between mb-6 pb-4 border-b" style={{ borderColor: mood.border }}>
+            <View>
+              <Text className="text-[10px] font-black uppercase tracking-widest text-slate-500">Mission Registry Log</Text>
+              <Text className="text-xl font-black italic mt-1" style={{ color: mood.text }}>{selectedLogId}</Text>
+            </View>
+            <Pressable onPress={() => setSelectedLogId(null)} className="p-2 bg-slate-800 rounded-none border border-slate-700">
+              <Text className="text-white font-bold text-xs uppercase tracking-widest">Close</Text>
+            </Pressable>
+          </View>
+
+          {/* Modal Content */}
+          {isLoadingLogs ? (
+            <View className="flex-1 items-center justify-center">
+              <ActivityIndicator color={mood.primary} size="large" />
+              <Text className="mt-4 text-[10px] font-black text-slate-500 uppercase tracking-widest animate-pulse">Retrieving Archives...</Text>
+            </View>
+          ) : (
+            <ScrollView showsVerticalScrollIndicator={false} className="flex-1 pr-2">
+              <View className="space-y-6 pl-4 border-l border-slate-700 relative pb-10">
+                {missionLogs.map((log: any, idx: number) => {
+                  const isLatest = idx === 0;
+                  return (
+                    <View key={idx} className="relative mb-2">
+                      {/* Timeline Dot */}
+                      <View 
+                        className="absolute -left-[21px] w-3 h-3 rounded-none border-2 z-10"
+                        style={{ backgroundColor: isLatest ? mood.primary : '#1E293B', borderColor: isLight ? '#FFF' : '#0F172A' }}
+                      />
+                      
+                      <View 
+                        className="p-4 rounded-none border" 
+                        style={{ backgroundColor: isLight ? '#FFF' : 'rgba(255,255,255,0.03)', borderColor: isLatest ? mood.primary + '50' : mood.border }}
+                      >
+                        <View className="flex-row items-start justify-between mb-2">
+                          <Text className="text-[12px] font-black uppercase tracking-widest" style={{ color: isLatest ? mood.primary : mood.text }}>
+                            {log.status.replace(/_/g, ' ')}
+                          </Text>
+                          <Text className="text-[9px] font-black uppercase tracking-widest text-slate-500">
+                            {new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </Text>
+                        </View>
+                        <Text className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed">
+                          {log.location_name || "Telemetry updated."}
+                        </Text>
+                        <Text className="text-[9px] font-bold text-slate-600 mt-2">
+                          {new Date(log.created_at).toLocaleDateString([], { month: 'short', day: '2-digit', year: 'numeric' })}
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                })}
+              </View>
+            </ScrollView>
+          )}
+        </View>
+      </View>
+    </Modal>
+    </>
   );
 }
