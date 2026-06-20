@@ -69,40 +69,27 @@ interface TodaysCatchCardProps {
 
 function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
   const uri = resolveMediaUrl(item.catch_image_url || item.image_url);
-  const { aspectRatio, onLoad } = useImageAspectRatio(uri);
-  const [layout, setLayout] = useState({ width: 0, height: 0 });
-  const w = layout.width;
-  const h = layout.height;
-
   const colors = useThemeColors();
 
   return (
     <Pressable
       onPress={onPress}
-      onLayout={(e) => setLayout(e.nativeEvent.layout)}
       className="w-[48%] relative overflow-hidden"
-      style={{ minHeight: 250 }}
+      style={{ 
+        minHeight: 250,
+        backgroundColor: colors.card,
+        borderColor: colors.border,
+        borderWidth: 1
+      }}
     >
-      {/* Absolute Svg Custom Card Bevel Shape Background with Border */}
-      {w > 0 && h > 0 ? (
-        <Svg width={w} height={h} style={StyleSheet.absoluteFill}>
-          <Path
-            d={`M16,0 L${w},0 L${w},${h - 16} L${w - 16},${h} L0,${h} L0,16 Z`}
-            fill={colors.card}
-            stroke={colors.border}
-            strokeWidth="1"
-          />
-        </Svg>
-      ) : null}
       <View 
         className="relative items-center justify-center overflow-hidden w-full"
         style={{ aspectRatio: 1, backgroundColor: colors.isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.03)" }}
       >
         <Image
           source={{ uri }}
-          onLoad={onLoad}
           className="h-full w-full"
-          contentFit="contain"
+          contentFit="cover"
         />
         <LinearGradient
           colors={["transparent", colors.isDark ? "rgba(2,6,23,0.8)" : "rgba(255,255,255,0.8)"]}
