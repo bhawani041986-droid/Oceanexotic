@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { t } from "@/lib/i18n";
+import { ChamferedBox } from "@/components/ui/ChamferedBox";
 
 interface CustomerHeaderProps {
   showSearch?: boolean;
@@ -184,14 +185,14 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
           </View>
         </View>
 
-        {showSearch && pathname !== "/login" ? (
+        {showSearch && pathname !== "/login" && pathname !== "/products" ? (
           <View className="mt-2">
             <View className="relative">
               <TextInput
                 value={search}
                 onChangeText={setSearch}
                 onSubmitEditing={onSearch}
-                placeholder="Search harvests..."
+                placeholder="Search products..."
                 placeholderTextColor={colors.textMuted}
                 returnKeyType="search"
                 className="h-10 rounded-none border px-4 text-xs"
@@ -255,19 +256,19 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                 </Pressable>
               </View>
 
-              <View 
-                className="rounded-none p-3 flex-row items-center gap-2 border"
-                style={{
-                  borderColor: getRgba(primaryColor, 0.2),
-                  backgroundColor: getRgba(primaryColor, 0.05)
-                }}
+              <ChamferedBox 
+                fillColor={getRgba(primaryColor, 0.05)}
+                strokeColor={getRgba(primaryColor, 0.2)}
+                bevelSize={10}
+                style={{ minHeight: 50 }}
+                contentClassName="p-3 flex-row items-center gap-2"
               >
                 <View className="h-2.5 w-2.5 rounded-none bg-emerald-500" />
                 <View className="flex-1">
                   <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>Local Delivery Hub</Text>
                   <Text className="text-[10px] font-bold" style={{ color: colors.text }} numberOfLines={1}>{user?.email ?? "Guest Mode"}</Text>
                 </View>
-              </View>
+              </ChamferedBox>
 
               <View className="gap-2">
                 {[
@@ -280,42 +281,49 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                 ].map((item) => {
                   const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
                   return (
-                    <Pressable 
-                      key={item.href} 
-                      onPress={() => navigateTo(item.href)} 
-                      className="flex-row items-center px-4 py-3 rounded-none border"
-                      style={active ? {
-                        borderColor: getRgba(primaryColor, 0.2),
-                        backgroundColor: getRgba(primaryColor, 0.1)
-                      } : {
-                        borderColor: colors.border,
-                        backgroundColor: colors.card
-                      }}
+                    <ChamferedBox
+                      key={item.href}
+                      fillColor={active ? getRgba(primaryColor, 0.1) : colors.card}
+                      strokeColor={active ? getRgba(primaryColor, 0.2) : colors.border}
+                      bevelSize={10}
+                      style={{ minHeight: 44 }}
                     >
-                      <Text 
-                        className="text-xs font-black uppercase tracking-wider"
-                        style={{ color: active ? primaryColor : colors.text }}
+                      <Pressable 
+                        onPress={() => navigateTo(item.href)} 
+                        className="flex-row items-center px-4 py-3 w-full"
                       >
-                        {item.label}
-                      </Text>
-                    </Pressable>
+                        <Text 
+                          className="text-xs font-black uppercase tracking-wider"
+                          style={{ color: active ? primaryColor : colors.text }}
+                        >
+                          {item.label}
+                        </Text>
+                      </Pressable>
+                    </ChamferedBox>
                   );
                 })}
               </View>
             </View>
 
             <View className="gap-2 pb-6">
-              <Pressable 
-                onPress={() => {
-                  setIsMenuOpen(false);
-                  logout();
-                  router.replace("/login");
-                }}
-                className="w-full py-4 rounded-none border border-red-500/20 bg-red-500/10 items-center active:bg-red-500/20"
+              <ChamferedBox
+                fillColor="rgba(239, 68, 68, 0.1)"
+                strokeColor="rgba(239, 68, 68, 0.2)"
+                bevelSize={12}
+                style={{ minHeight: 48 }}
               >
-                <Text className="text-xs font-black uppercase tracking-widest text-red-500">{t('sign_out')}</Text>
-              </Pressable>
-              <Text className="text-[7px] font-black text-center uppercase tracking-widest" style={{ color: colors.textMuted }}>OceanExotic Mobile App v1.4</Text>
+                <Pressable 
+                  onPress={() => {
+                    setIsMenuOpen(false);
+                    logout();
+                    router.replace("/login");
+                  }}
+                  className="w-full py-3.5 items-center justify-center active:bg-red-500/10"
+                >
+                  <Text className="text-xs font-black uppercase tracking-widest text-red-500">{t('sign_out')}</Text>
+                </Pressable>
+              </ChamferedBox>
+              <Text className="text-[7px] font-black text-center uppercase tracking-widest mt-2" style={{ color: colors.textMuted }}>OceanExotic Mobile App v1.4</Text>
             </View>
           </View>
         </View>

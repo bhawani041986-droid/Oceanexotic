@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { setLanguage } from '@/lib/i18n';
 import { useSettingsStore } from "@/store/settingsStore";
+import { ChamferedBox } from '@/components/ui/ChamferedBox';
 
 const LANGUAGES = [
   { code: 'en', name: 'English' },
@@ -14,7 +15,7 @@ const LANGUAGES = [
   { code: 'mr', name: 'Marathi (मराठी)' },
   { code: 'ml', name: 'Malayalam (മലയാളം)' },
   { code: 'or', name: 'Odia (ଓଡ଼ିଆ)' },
-  { code: 'as', name: 'Assamese (অসমীয়া)' },
+  { code: 'as', name: 'Assamese (অસમীয়া)' },
   { code: 'mni-Mtei', name: 'Manipuri (ꯃꯤꯇꯩꯂꯣꯟ)' },
   { code: 'zh-CN', name: 'Chinese (中文)' },
   { code: 'th', name: 'Thai (ไทย)' },
@@ -37,16 +38,22 @@ export function LanguageSelector() {
 
   return (
     <View className="shrink-0 relative z-50">
-      <Pressable 
-        onPress={() => setModalVisible(true)}
-        className="h-9 min-w-[48px] items-center justify-center rounded-none border flex-row px-2 gap-1 active:opacity-70"
-        style={{ borderColor: colors.border, backgroundColor: colors.card }}
+      <ChamferedBox
+        fillColor={colors.card}
+        strokeColor={colors.border}
+        bevelSize={6}
+        style={{ minHeight: 36, width: 52 }}
       >
-        <Ionicons name="globe-outline" size={14} color={colors.text} />
-        <Text style={{ color: colors.text, fontSize: 10, fontWeight: 'bold' }}>
-          {activeLang.code.toUpperCase()}
-        </Text>
-      </Pressable>
+        <Pressable 
+          onPress={() => setModalVisible(true)}
+          className="h-full w-full items-center justify-center flex-row px-2 gap-1 active:opacity-70"
+        >
+          <Ionicons name="globe-outline" size={14} color={colors.text} />
+          <Text style={{ color: colors.text, fontSize: 10, fontWeight: 'bold' }}>
+            {activeLang.code.toUpperCase()}
+          </Text>
+        </Pressable>
+      </ChamferedBox>
 
       <Modal
         visible={modalVisible}
@@ -55,7 +62,13 @@ export function LanguageSelector() {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, { backgroundColor: colors.card, borderColor: colors.border }]}>
+          <ChamferedBox
+            fillColor={colors.card}
+            strokeColor={colors.border}
+            bevelSize={20}
+            style={{ width: '100%', maxHeight: '80%' }}
+            className="overflow-hidden"
+          >
             <View style={[styles.modalHeader, { borderBottomColor: colors.border }]}>
               <Text style={[styles.modalTitle, { color: colors.text }]}>Select Language</Text>
               <Pressable onPress={() => setModalVisible(false)} className="p-2">
@@ -84,7 +97,7 @@ export function LanguageSelector() {
                 </Pressable>
               )}
             />
-          </View>
+          </ChamferedBox>
         </View>
       </Modal>
     </View>
@@ -98,13 +111,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-  },
-  modalContent: {
-    width: '100%',
-    maxHeight: '80%',
-    borderRadius: 16,
-    borderWidth: 1,
-    overflow: 'hidden',
   },
   modalHeader: {
     flexDirection: 'row',
@@ -126,4 +132,3 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   }
 });
-

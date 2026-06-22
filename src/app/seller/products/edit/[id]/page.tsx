@@ -122,7 +122,13 @@ export default function SellerEditProductPage() {
               is_available: cut.is_available ?? 1
             })),
             is_live_inventory: Number(data.is_live_inventory) || 0,
-            catch_time: data.freshness_timestamp ? data.freshness_timestamp.split(' ')[1].substring(0, 5) : "05:30",
+            catch_time: (() => {
+              if (!data.freshness_timestamp) return "05:30";
+              const parts = data.freshness_timestamp.includes('T') 
+                ? data.freshness_timestamp.split('T') 
+                : data.freshness_timestamp.split(' ');
+              return parts[1] ? parts[1].substring(0, 5) : "05:30";
+            })(),
             batch_label: data.batch_label || "MORNING"
           });
         }

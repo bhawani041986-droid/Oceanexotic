@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, Text, ScrollView, Pressable, ActivityIndicator, RefreshControl } from "react-native";
+import Svg, { Polygon, Path } from "react-native-svg";
 import { useRouter } from "expo-router";
 import { useAuthStore } from "@/store/authStore";
 import { orderService, type CustomerOrder } from "@/services/orderService";
@@ -76,9 +77,17 @@ export default function OrdersScreen() {
             {orders.map((order) => (
               <View 
                 key={order.id} 
-                className="overflow-hidden rounded-none border p-4"
+                className="rounded-none border p-4 relative overflow-hidden"
                 style={{ borderColor: colors.border, backgroundColor: colors.card }}
               >
+                <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                  <Polygon points="0,0 12,0 0,12" fill={colors.bg} />
+                  <Path d="M12,0 L0,12" stroke={colors.border} strokeWidth={1} />
+                </Svg>
+                <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                  <Polygon points="12,12 0,12 12,0" fill={colors.bg} />
+                  <Path d="M0,12 L12,0" stroke={colors.border} strokeWidth={1} />
+                </Svg>
                 <View className="flex-row items-start justify-between">
                   <View className="flex-1">
                     <Text className="text-base font-black uppercase italic" style={{ color: colors.text }}>{order.id}</Text>
@@ -108,8 +117,7 @@ export default function OrdersScreen() {
                     onPress={() =>
                       router.push({ pathname: "/orders/[id]", params: { id: order.id } } as never)
                     }
-                    className="flex-1 h-10 rounded-none"
-                    style={{ borderColor: colors.border, borderWidth: 1 }}
+                    className="flex-1 h-10"
                   />
                   {!["DELIVERED", "CANCELLED"].includes(order.status?.toUpperCase() ?? "") && (
                     <Button
@@ -126,9 +134,11 @@ export default function OrdersScreen() {
           </View>
         ) : (
           <View 
-            className="my-16 items-center rounded-none border border-dashed p-8"
+            className="my-16 items-center rounded-none border border-dashed p-8 relative overflow-hidden"
             style={{ borderColor: colors.border }}
           >
+            <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 12,0 0,12" fill={colors.bg} /></Svg>
+            <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="12,12 0,12 12,0" fill={colors.bg} /></Svg>
             <Text className="text-xs font-black uppercase" style={{ color: colors.textMuted }}>No commissions yet</Text>
             <Button label="BROWSE HARVEST" onPress={() => router.push("/products")} className="mt-6" />
           </View>

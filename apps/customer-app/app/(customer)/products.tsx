@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 import { CATEGORIES } from "@/constants/categories";
+import { ChamferedBox } from "@/components/ui/ChamferedBox";
 
 const TABS = [
   "All Seafood",
@@ -269,25 +270,24 @@ export default function ProductsScreen() {
           {TABS.map((tab) => {
             const active = activeTab === tab;
             return (
-              <Pressable
+              <ChamferedBox
                 key={tab}
-                onPress={() => setActiveTab(tab)}
-                className="mr-2 rounded-none px-4 py-2 border"
-                style={active ? { 
-                  backgroundColor: colors.primary, 
-                  borderColor: colors.primary 
-                } : { 
-                  backgroundColor: colors.card, 
-                  borderColor: colors.border 
-                }}
+                fillColor={active ? colors.primary : colors.card}
+                strokeColor={active ? colors.primary : colors.border}
+                bevelSize={8}
+                style={{ minHeight: 30 }}
+                className="mr-2"
+                contentClassName="w-auto flex-shrink px-4 py-2 justify-center items-center"
               >
-                <Text
-                  className="text-[9px] font-black uppercase"
-                  style={{ color: active ? "#FFFFFF" : colors.textMuted }}
-                >
-                  {tab}
-                </Text>
-              </Pressable>
+                <Pressable onPress={() => setActiveTab(tab)}>
+                  <Text
+                    className="text-[9px] font-black uppercase"
+                    style={{ color: active ? "#FFFFFF" : colors.textMuted }}
+                  >
+                    {tab}
+                  </Text>
+                </Pressable>
+              </ChamferedBox>
             );
           })}
         </ScrollView>

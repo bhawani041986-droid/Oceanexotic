@@ -32,7 +32,8 @@ export default function AdminCategoriesPage() {
   const [formData, setFormData] = useState({
     id: "",
     label: "",
-    iconName: "Fish"
+    iconName: "Fish",
+    status: "ACTIVE"
   });
   const [originalId, setOriginalId] = useState("");
 
@@ -54,13 +55,13 @@ export default function AdminCategoriesPage() {
   }, []);
 
   const handleAdd = () => {
-    setFormData({ id: "", label: "", iconName: "Fish" });
+    setFormData({ id: "", label: "", iconName: "Fish", status: "ACTIVE" });
     setOriginalId("");
     setIsModalOpen(true);
   };
 
   const handleEdit = (cat: any) => {
-    setFormData({ id: cat.id, label: cat.label, iconName: cat.iconName || "Fish" });
+    setFormData({ id: cat.id, label: cat.label, iconName: cat.iconName || "Fish", status: cat.status || "ACTIVE" });
     setOriginalId(cat.id);
     setIsModalOpen(true);
   };
@@ -95,7 +96,7 @@ export default function AdminCategoriesPage() {
         setCategories(updatedCategories);
         toast("Category saved successfully", "success");
         setIsModalOpen(false);
-        setFormData({ id: "", label: "", iconName: "Fish" });
+        setFormData({ id: "", label: "", iconName: "Fish", status: "ACTIVE" });
         setOriginalId("");
       } else {
         toast("Failed to save category", "error");
@@ -214,7 +215,9 @@ export default function AdminCategoriesPage() {
                       </TableCell>
                       <TableCell className="text-[10px] md:text-xs font-black text-text-secondary italic opacity-40">{cat.iconName}</TableCell>
                       <TableCell>
-                        <Badge variant="success" className="italic uppercase text-[8px] md:text-[10px] px-2">ACTIVE</Badge>
+                        <Badge variant={(cat.status || "ACTIVE") === "ACTIVE" ? "success" : "secondary"} className="italic uppercase text-[8px] md:text-[10px] px-2">
+                          {cat.status || "ACTIVE"}
+                        </Badge>
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1 md:gap-2">
@@ -249,7 +252,9 @@ export default function AdminCategoriesPage() {
                       <p className="font-black text-[var(--foreground)] italic text-sm tracking-tighter uppercase">{cat.label}</p>
                       <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">{cat.id} • Icon: {cat.iconName}</p>
                     </div>
-                    <Badge variant="success" className="italic uppercase text-[8px] px-2">ACTIVE</Badge>
+                    <Badge variant={(cat.status || "ACTIVE") === "ACTIVE" ? "success" : "secondary"} className="italic uppercase text-[8px] px-2">
+                      {cat.status || "ACTIVE"}
+                    </Badge>
                   </div>
                   <div className="flex justify-end gap-2 pt-2 border-t border-[var(--foreground)]/5">
                     <button onClick={() => handleEdit(cat)} disabled={isSaving} className="p-2 rounded-lg hover:bg-primary/10 text-primary transition-all border border-[var(--foreground)]/5 disabled:opacity-50">
@@ -300,6 +305,17 @@ export default function AdminCategoriesPage() {
                  <div className="space-y-1.5 md:space-y-2">
                     <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Lucide Icon Name</label>
                     <Input value={formData.iconName} onChange={(e) => setFormData({...formData, iconName: e.target.value})} placeholder="e.g. Anchor, Fish, Star" className="h-11 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 italic rounded-lg md:rounded-xl text-sm" />
+                 </div>
+                 <div className="space-y-1.5 md:space-y-2">
+                    <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Status</label>
+                    <select 
+                      value={formData.status || "ACTIVE"} 
+                      onChange={(e) => setFormData({...formData, status: e.target.value})} 
+                      className="w-full h-11 md:h-14 bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 rounded-lg md:rounded-xl px-4 text-xs font-black uppercase text-[var(--foreground)] outline-none italic cursor-pointer font-black"
+                    >
+                      <option value="ACTIVE" className="bg-bg-secondary text-[var(--foreground)]">ACTIVE</option>
+                      <option value="INACTIVE" className="bg-bg-secondary text-[var(--foreground)]">INACTIVE</option>
+                    </select>
                  </div>
               </div>
               <div className="flex gap-2 md:gap-4 pt-2 md:pt-4">

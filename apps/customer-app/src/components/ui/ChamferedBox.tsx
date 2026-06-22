@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, ViewProps, StyleSheet } from "react-native";
+import { View, ViewProps, StyleSheet, StyleProp, ViewStyle } from "react-native";
 import Svg, { Path } from "react-native-svg";
 import { cn } from "@/lib/utils";
 
@@ -12,6 +12,8 @@ export interface ChamferedBoxProps extends ViewProps {
   borderOnly?: boolean;
   /** Optional neon glow color applied as shadow/elevation */
   glowColor?: string;
+  contentClassName?: string;
+  contentStyle?: StyleProp<ViewStyle>;
 }
 
 export function ChamferedBox({
@@ -21,6 +23,8 @@ export function ChamferedBox({
   bevelSize = 14,
   borderOnly = false,
   glowColor,
+  contentClassName,
+  contentStyle,
   children,
   className,
   style,
@@ -62,7 +66,7 @@ export function ChamferedBox({
         }
       }}
       className={cn("relative overflow-hidden", className)}
-      style={[style, { flexShrink: 1, minHeight: 120 }, glowStyle]}
+      style={[{ flexShrink: 1, minHeight: 120 }, style, glowStyle]}
       {...props}
     >
       {/* Background and Border layer */}
@@ -78,7 +82,13 @@ export function ChamferedBox({
       ) : null}
 
       {/* Content layer */}
-      <View className="relative z-10 w-full flex-shrink">{children}</View>
+      <View
+        className={cn("relative z-10 w-full flex-shrink", contentClassName)}
+        style={contentStyle}
+      >
+        {children}
+      </View>
     </View>
   );
 }
+

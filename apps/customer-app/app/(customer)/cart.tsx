@@ -1,4 +1,5 @@
 import { View, Text, ScrollView, Pressable, TextInput } from "react-native";
+import Svg, { Polygon, Path } from "react-native-svg";
 import { useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { useCartStore } from "@/store/cartStore";
@@ -120,15 +121,37 @@ export default function CartScreen() {
               return (
                 <View
                   key={item.id}
-                  className="mt-4 gap-3 rounded-none border p-3"
+                  className="mt-4 gap-3 rounded-none border p-3 relative overflow-hidden"
                   style={{ borderColor: colors.border, backgroundColor: colors.card }}
                 >
+                  <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                    <Polygon points="0,0 12,0 0,12" fill={colors.bg} />
+                    <Path d="M12,0 L0,12" stroke={colors.border} strokeWidth={1} />
+                  </Svg>
+                  <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                    <Polygon points="12,12 0,12 12,0" fill={colors.bg} />
+                    <Path d="M0,12 L12,0" stroke={colors.border} strokeWidth={1} />
+                  </Svg>
                   <View className="flex-row gap-3">
                     {img ? (
-                      <Image source={{ uri: img }} className="h-20 w-20 rounded-none" contentFit="cover" />
+                      <View className="h-20 w-20 relative overflow-hidden">
+                        <Image source={{ uri: img }} className="h-full w-full rounded-none" contentFit="cover" />
+                        <Svg width={8} height={8} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                          <Polygon points="0,0 8,0 0,8" fill={colors.card} />
+                        </Svg>
+                        <Svg width={8} height={8} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                          <Polygon points="8,8 0,8 8,0" fill={colors.card} />
+                        </Svg>
+                      </View>
                     ) : (
-                      <View className="h-20 w-20 items-center justify-center rounded-none" style={{ backgroundColor: colors.bgAlt }}>
+                      <View className="h-20 w-20 items-center justify-center rounded-none relative overflow-hidden" style={{ backgroundColor: colors.bgAlt }}>
                         <Text className="text-2xl">🐟</Text>
+                        <Svg width={8} height={8} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                          <Polygon points="0,0 8,0 0,8" fill={colors.card} />
+                        </Svg>
+                        <Svg width={8} height={8} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                          <Polygon points="8,8 0,8 8,0" fill={colors.card} />
+                        </Svg>
                       </View>
                     )}
                     <View className="flex-1">
@@ -140,13 +163,19 @@ export default function CartScreen() {
                         <View className="mt-1.5 flex-row items-center gap-2">
                           <Pressable 
                             onPress={() => toggleMarination(item.id)}
-                            className="px-2.5 py-1 rounded-none border"
+                            className="px-2.5 py-1 rounded-none border relative overflow-hidden"
                             style={{ 
                               borderColor: item.isMarinated ? colors.primary : colors.border,
                               backgroundColor: item.isMarinated ? colors.primary + '1F' : 'transparent'
                             }}
                           >
-                            <Text className="text-[9px] font-black uppercase" style={{ color: item.isMarinated ? colors.primary : colors.textMuted }}>
+                            <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                              <Polygon points="0,0 4,0 0,4" fill={colors.card} />
+                            </Svg>
+                            <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                              <Polygon points="4,4 0,4 4,0" fill={colors.card} />
+                            </Svg>
+                            <Text className="text-[9px] font-black uppercase relative z-10" style={{ color: item.isMarinated ? colors.primary : colors.textMuted }}>
                               🌶️ {item.isMarinated ? 'Marinated' : 'Add Marinade (+₹150)'}
                             </Text>
                           </Pressable>
@@ -162,18 +191,22 @@ export default function CartScreen() {
                   <View className="flex-row items-center gap-3 border-t pt-2" style={{ borderTopColor: colors.border + '22' }}>
                     <Pressable
                       onPress={() => updateQuantity(item.id, item.quantity - 1)}
-                      className="h-8 w-8 items-center justify-center rounded-none"
+                      className="h-8 w-8 items-center justify-center rounded-none relative overflow-hidden"
                       style={{ backgroundColor: colors.bgAlt }}
                     >
-                      <Text className="font-bold" style={{ color: colors.text }}>−</Text>
+                      <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={colors.card} /></Svg>
+                      <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill={colors.card} /></Svg>
+                      <Text className="font-bold relative z-10" style={{ color: colors.text }}>−</Text>
                     </Pressable>
                     <Text className="text-sm font-black" style={{ color: colors.text }}>{item.quantity}</Text>
                     <Pressable
                       onPress={() => updateQuantity(item.id, item.quantity + 1)}
-                      className="h-8 w-8 items-center justify-center rounded-none"
+                      className="h-8 w-8 items-center justify-center rounded-none relative overflow-hidden"
                       style={{ backgroundColor: colors.bgAlt }}
                     >
-                      <Text className="font-bold" style={{ color: colors.text }}>+</Text>
+                      <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={colors.card} /></Svg>
+                      <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill={colors.card} /></Svg>
+                      <Text className="font-bold relative z-10" style={{ color: colors.text }}>+</Text>
                     </Pressable>
                     <Pressable onPress={() => removeItem(item.id)} className="ml-auto">
                       <Text className="text-[10px] font-bold text-danger">Remove</Text>
@@ -195,10 +228,16 @@ export default function CartScreen() {
                     return (
                       <View 
                         key={addon.id} 
-                        className="w-32 rounded-none border p-2 mr-3"
+                        className="w-32 rounded-none border p-2 mr-3 relative overflow-hidden"
                         style={{ borderColor: colors.border, backgroundColor: colors.card }}
                       >
-                        <Image source={{ uri: addonImg }} className="h-16 w-full rounded-none" contentFit="cover" />
+                        <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 6,0 0,6" fill={colors.bg} /></Svg>
+                        <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="6,6 0,6 6,0" fill={colors.bg} /></Svg>
+                        <View className="h-16 w-full relative overflow-hidden">
+                          <Image source={{ uri: addonImg }} className="h-full w-full rounded-none" contentFit="cover" />
+                          <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={colors.card} /></Svg>
+                          <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill={colors.card} /></Svg>
+                        </View>
                         <Text className="mt-1 text-[10px] font-black uppercase" style={{ color: colors.text }} numberOfLines={1}>
                           {addon.name}
                         </Text>
@@ -219,10 +258,12 @@ export default function CartScreen() {
                                 sellerId: 'ADDON'
                               });
                             }}
-                            className="px-2 py-0.5 rounded-none"
+                            className="px-2 py-0.5 rounded-none relative overflow-hidden"
                             style={{ backgroundColor: alreadyInCart ? colors.border : colors.primary }}
                           >
-                            <Text className="text-[8px] font-black uppercase" style={{ color: alreadyInCart ? colors.textMuted : colors.bg }}>
+                            <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={colors.card} /></Svg>
+                            <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill={colors.card} /></Svg>
+                            <Text className="text-[8px] font-black uppercase relative z-10" style={{ color: alreadyInCart ? colors.textMuted : colors.bg }}>
                               {alreadyInCart ? 'ADDED' : 'ADD'}
                             </Text>
                           </Pressable>
@@ -247,9 +288,11 @@ export default function CartScreen() {
                           setCouponCodeInput(coupon.code);
                           setCouponError("");
                         }}
-                        className="rounded-xl border p-3 min-w-[140px] mr-3"
+                        className="rounded-none border p-3 min-w-[140px] mr-3 relative overflow-hidden"
                         style={{ borderColor: `${colors.border}`, backgroundColor: colors.card }}
                      >
+                       <Svg width={8} height={8} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill={colors.bg} /></Svg>
+                       <Svg width={8} height={8} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill={colors.bg} /></Svg>
                        <Text className="text-xs font-black uppercase" style={{ color: colors.primary }}>{coupon.code}</Text>
                        <Text className="text-[10px] font-bold mt-1" style={{ color: colors.text }}>
                          {coupon.type === 'PERCENTAGE' ? `${coupon.value}% OFF` : `₹${coupon.value} OFF`}
@@ -263,7 +306,9 @@ export default function CartScreen() {
                )}
 
                {appliedCoupon ? (
-                 <View className="flex-row items-center justify-between p-3 rounded-lg border-2 bg-emerald-500/10 border-emerald-500/30">
+                 <View className="flex-row items-center justify-between p-3 rounded-none border-2 bg-emerald-500/10 border-emerald-500/30 relative overflow-hidden">
+                    <Svg width={8} height={8} style={{ position: 'absolute', top: -2, left: -2, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill={colors.bg} /></Svg>
+                    <Svg width={8} height={8} style={{ position: 'absolute', bottom: -2, right: -2, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill={colors.bg} /></Svg>
                     <View className="flex-row items-center gap-2">
                        <Text className="text-[10px] font-black uppercase text-emerald-500 tracking-widest">{appliedCoupon.code} APPLIED</Text>
                     </View>
@@ -276,14 +321,18 @@ export default function CartScreen() {
                  </View>
                ) : (
                  <View className="flex-row gap-2 relative">
-                    <TextInput 
-                      value={couponCodeInput}
-                      onChangeText={(t: string) => setCouponCodeInput(t.toUpperCase())}
-                      placeholder="ENTER CODE"
-                      placeholderTextColor={colors.textMuted}
-                      className="flex-1 rounded-lg border px-4 py-2 text-xs font-black uppercase tracking-widest"
-                      style={{ borderColor: colors.border, color: colors.text, backgroundColor: colors.card }}
-                    />
+                    <View className="flex-1 relative overflow-hidden">
+                      <TextInput 
+                        value={couponCodeInput}
+                        onChangeText={(t: string) => setCouponCodeInput(t.toUpperCase())}
+                        placeholder="ENTER CODE"
+                        placeholderTextColor={colors.textMuted}
+                        className="h-full rounded-none border px-4 py-2 text-xs font-black uppercase tracking-widest"
+                        style={{ borderColor: colors.border, color: colors.text, backgroundColor: colors.card }}
+                      />
+                      <Svg width={6} height={6} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}><Polygon points="0,0 6,0 0,6" fill={colors.bg} /></Svg>
+                      <Svg width={6} height={6} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}><Polygon points="6,6 0,6 6,0" fill={colors.bg} /></Svg>
+                    </View>
                     <Pressable 
                       onPress={() => {
                         setIsApplyingCoupon(true);
@@ -305,10 +354,12 @@ export default function CartScreen() {
                         setAppliedCoupon({ code: found.code, discountAmount: discount, type: found.type, value: found.value });
                         setIsApplyingCoupon(false);
                       }}
-                      className="rounded-lg px-6 py-2 items-center justify-center"
+                      className="rounded-none px-6 py-2 items-center justify-center relative overflow-hidden"
                       style={{ backgroundColor: couponCodeInput.trim() ? colors.primary : colors.border }}
                     >
-                       <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: couponCodeInput.trim() ? colors.bg : colors.textMuted }}>
+                       <Svg width={6} height={6} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}><Polygon points="0,0 6,0 0,6" fill={colors.bg} /></Svg>
+                       <Svg width={6} height={6} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}><Polygon points="6,6 0,6 6,0" fill={colors.bg} /></Svg>
+                       <Text className="text-[10px] font-black uppercase tracking-widest relative z-10" style={{ color: couponCodeInput.trim() ? colors.bg : colors.textMuted }}>
                          {isApplyingCoupon ? "..." : "APPLY"}
                        </Text>
                     </Pressable>
@@ -324,12 +375,20 @@ export default function CartScreen() {
               const grandTotal = Math.max(0, subtotal - discount + tax);
               return (
                 <View 
-                  className="mt-6 rounded-none border p-5 gap-2"
+                  className="mt-6 rounded-none border p-5 gap-2 relative overflow-hidden"
                   style={{ 
                     borderColor: colors.primary + "33", 
                     backgroundColor: colors.primary + "1A" 
                   }}
                 >
+                  <Svg width={16} height={16} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                    <Polygon points="0,0 16,0 0,16" fill={colors.bg} />
+                    <Path d="M16,0 L0,16" stroke={colors.primary + "33"} strokeWidth={1} />
+                  </Svg>
+                  <Svg width={16} height={16} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                    <Polygon points="16,16 0,16 16,0" fill={colors.bg} />
+                    <Path d="M0,16 L16,0" stroke={colors.primary + "33"} strokeWidth={1} />
+                  </Svg>
                   <View className="flex-row justify-between">
                     <Text className="text-[10px] font-black uppercase" style={{ color: colors.textMuted }}>Subtotal</Text>
                     <Text className="text-[11px] font-bold" style={{ color: colors.text }}>₹{subtotal.toLocaleString()}</Text>

@@ -25,6 +25,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
   const radarRotation = useSharedValue(0);
   const pulseScale = useSharedValue(1);
   const scanPosition = useSharedValue(0);
+  const [mapLayout, setMapLayout] = useState({ width: 0, height: 0 });
 
   const colors = useThemeColors();
   const theme = useSettingsStore((s) => s.theme);
@@ -457,8 +458,12 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
       {/* Cyber Digital Map Interface Container */}
       <View 
         {...panResponder.panHandlers}
-        style={{ height: radarSize * 0.75, width: "100%", overflow: "hidden", borderColor: colors.primary + "33" }} 
-        className="relative items-center justify-center bg-[#0B1120] shadow-2xl border self-center"
+        onLayout={(e) => {
+          const { width: w, height: h } = e.nativeEvent.layout;
+          setMapLayout({ width: w, height: h });
+        }}
+        style={{ height: radarSize * 0.75, width: "100%", overflow: "hidden" }} 
+        className="relative items-center justify-center bg-[#0B1120] shadow-2xl self-center"
       >
         {/* Panning interactive viewport map layer */}
         <View 
@@ -581,15 +586,22 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
           </View>
         </View>
 
-        {/* Custom SVG beveled overlays to shape the container on Native iOS/Android */}
-        <Svg width="30" height="30" style={{ position: "absolute", top: -1, left: -1, zIndex: 40 }}>
-          <Path d="M0,0 L30,0 L0,30 Z" fill={colors.bg} />
-          <Path d="M30,0 L0,30" stroke={colors.primary + "33"} strokeWidth="1.5" />
-        </Svg>
-        <Svg width="30" height="30" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 40 }}>
-          <Path d="M30,30 L0,30 L30,0 Z" fill={colors.bg} />
-          <Path d="M0,30 L30,0" stroke={colors.primary + "33"} strokeWidth="1.5" />
-        </Svg>
+        {/* Custom SVG beveled overlays & outline border to replace rectangular border on Native */}
+        {mapLayout.width > 0 && mapLayout.height > 0 && (
+          <Svg width={mapLayout.width} height={mapLayout.height} style={{ position: "absolute", inset: 0, zIndex: 40 }} pointerEvents="none">
+            {/* Mask Top-Left */}
+            <Path d="M0,0 L30,0 L0,30 Z" fill={colors.bg} />
+            {/* Mask Bottom-Right */}
+            <Path d={`M${mapLayout.width},${mapLayout.height} L${mapLayout.width - 30},${mapLayout.height} L${mapLayout.width},${mapLayout.height - 30} Z`} fill={colors.bg} />
+            {/* Outer Chamfered Border Path */}
+            <Path 
+              d={`M30,0 L${mapLayout.width},0 L${mapLayout.width},${mapLayout.height - 30} L${mapLayout.width - 30},${mapLayout.height} L0,${mapLayout.height} L0,30 Z`} 
+              fill="transparent" 
+              stroke={colors.primary + "33"} 
+              strokeWidth="2" 
+            />
+          </Svg>
+        )}
 
         {/* High-Tech Custom Zoom Controls for Native */}
         <View 

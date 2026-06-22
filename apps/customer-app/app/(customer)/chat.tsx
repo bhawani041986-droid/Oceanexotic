@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, Text, ScrollView, Pressable, TextInput, ActivityIndicator, KeyboardAvoidingView, Platform } from "react-native";
 import { useRouter } from "expo-router";
-import Svg, { Path, Circle } from "react-native-svg";
+import Svg, { Path, Circle, Polygon } from "react-native-svg";
 import api from "@/services/api";
 import { useAuthStore } from "@/store/authStore";
 
@@ -142,15 +142,19 @@ export default function CustomerChatScreen() {
               setMessages([]);
               fetchConversations();
             }} 
-            className="p-2 mr-2 rounded-none bg-white/5 border border-white/5 active:scale-95"
+            className="p-2 mr-2 rounded-none bg-white/5 border border-white/5 active:scale-95 relative overflow-hidden"
           >
+            <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill="#020617" /></Svg>
+            <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill="#020617" /></Svg>
             <BackIcon color="white" />
           </Pressable>
         ) : (
           <Pressable 
             onPress={() => router.back()} 
-            className="p-2 mr-2 rounded-none bg-white/5 border border-white/5 active:scale-95"
+            className="p-2 mr-2 rounded-none bg-white/5 border border-white/5 active:scale-95 relative overflow-hidden"
           >
+            <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill="#020617" /></Svg>
+            <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill="#020617" /></Svg>
             <BackIcon color="white" />
           </Pressable>
         )}
@@ -178,7 +182,9 @@ export default function CustomerChatScreen() {
           {loadingConv ? (
             <ActivityIndicator color={primaryColor} className="py-12" />
           ) : conversations.length === 0 ? (
-            <View className="py-16 items-center justify-center opacity-30 border border-white/5 rounded-none bg-slate-900/20">
+            <View className="py-16 items-center justify-center opacity-30 border border-white/5 rounded-none bg-slate-900/20 relative overflow-hidden">
+              <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 12,0 0,12" fill="#020617" /></Svg>
+              <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="12,12 0,12 12,0" fill="#020617" /></Svg>
               <Text className="text-[10px] font-bold text-white uppercase tracking-widest italic">
                 No active chats found
               </Text>
@@ -188,9 +194,11 @@ export default function CustomerChatScreen() {
               <Pressable
                 key={conv.id}
                 onPress={() => setActiveConv(conv)}
-                className="p-4 rounded-none border mb-3 bg-slate-950/40 flex-row justify-between items-center active:bg-slate-900/50"
+                className="p-4 rounded-none border mb-3 bg-slate-950/40 flex-row justify-between items-center active:bg-slate-900/50 relative overflow-hidden"
                 style={{ borderColor: borderColor }}
               >
+                <Svg width={8} height={8} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill="#020617" /></Svg>
+                <Svg width={8} height={8} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill="#020617" /></Svg>
                 <View className="flex-1 pr-3">
                   <View className="flex-row items-center gap-2 mb-1">
                     <View className="w-2 h-2 rounded-none bg-emerald-500" />
@@ -229,12 +237,14 @@ export default function CustomerChatScreen() {
                 return (
                   <View 
                     key={m.id}
-                    className={`mb-3 max-w-[80%] rounded-none p-3.5 border ${
+                    className={`mb-3 max-w-[80%] rounded-none p-3.5 border relative overflow-hidden ${
                       isMe 
                         ? "align-self-end bg-[#7C3AED]/15 border-[#7C3AED]/35 ml-auto" 
                         : "align-self-start bg-slate-900 border-white/5 mr-auto"
                     }`}
                   >
+                    <Svg width={8} height={8} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill="#020617" /></Svg>
+                    <Svg width={8} height={8} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill="#020617" /></Svg>
                     <Text className="text-[10px] font-medium text-slate-100">
                       {m.message_text}
                     </Text>
@@ -252,20 +262,26 @@ export default function CustomerChatScreen() {
             className="h-16 border-t bg-slate-950 flex-row items-center px-4"
             style={{ borderColor: "rgba(255, 255, 255, 0.05)" }}
           >
-            <TextInput
-              value={msgText}
-              onChangeText={setMsgText}
-              placeholder="Type a message..."
-              placeholderTextColor="rgba(255,255,255,0.2)"
-              onSubmitEditing={handleSendMessage}
-              className="flex-1 h-10 border rounded-none bg-slate-900/50 px-3 text-xs font-bold text-white uppercase tracking-wider"
-              style={{ borderColor: borderColor }}
-            />
+            <View className="flex-1 h-10 relative overflow-hidden">
+              <TextInput
+                value={msgText}
+                onChangeText={setMsgText}
+                placeholder="Type a message..."
+                placeholderTextColor="rgba(255,255,255,0.2)"
+                onSubmitEditing={handleSendMessage}
+                className="w-full h-full border rounded-none bg-slate-900/50 px-3 text-xs font-bold text-white uppercase tracking-wider"
+                style={{ borderColor: borderColor }}
+              />
+              <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 6,0 0,6" fill="#020617" /></Svg>
+              <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="6,6 0,6 6,0" fill="#020617" /></Svg>
+            </View>
             <Pressable
               onPress={handleSendMessage}
               disabled={sending || !msgText.trim()}
-              className="w-10 h-10 rounded-none bg-[#7C3AED] items-center justify-center ml-2.5 active:bg-[#6D28D9]"
+              className="w-10 h-10 rounded-none bg-[#7C3AED] items-center justify-center ml-2.5 active:bg-[#6D28D9] relative overflow-hidden"
             >
+              <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill="#020617" /></Svg>
+              <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill="#020617" /></Svg>
               {sending ? (
                 <ActivityIndicator color="white" size="small" />
               ) : (

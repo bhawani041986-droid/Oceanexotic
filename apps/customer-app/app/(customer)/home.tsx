@@ -35,6 +35,7 @@ import { AnnouncementBar } from "@/components/customer/AnnouncementBar";
 import { LiveTickerMarquee } from "@/components/customer/LiveTickerMarquee";
 import { FlashDealsBanner } from "@/components/customer/FlashDealsBanner";
 import { Button } from "@/components/ui/Button";
+import { ChamferedBox } from "@/components/ui/ChamferedBox";
 import { useToast } from "@/components/ui/Toast";
 import { homeService, type CutOption, type TodaysCatchItem } from "@/services/homeService";
 import { cn } from "@/lib/utils";
@@ -70,101 +71,105 @@ function TodaysCatchCardComponent({ item, onPress, onOpenCut }: TodaysCatchCardP
   return (
     <Pressable
       onPress={onPress}
-      className="w-[48%] relative overflow-hidden"
-      style={{ 
-        minHeight: 250,
-        backgroundColor: colors.card,
-        borderColor: colors.border,
-        borderWidth: 1
-      }}
+      className="w-[48%]"
     >
-      <View 
-        className="relative items-center justify-center overflow-hidden w-full"
-        style={{ aspectRatio: 1, backgroundColor: colors.isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.03)" }}
+      <ChamferedBox
+        fillColor={colors.card}
+        strokeColor={colors.border}
+        bevelSize={16}
+        style={{ minHeight: 250 }}
+        className="w-full relative overflow-hidden"
       >
-        <Image
-          source={{ uri }}
-          className="h-full w-full"
-          contentFit="cover"
-        />
-        <LinearGradient
-          colors={["transparent", colors.isDark ? "rgba(2,6,23,0.8)" : "rgba(255,255,255,0.8)"]}
-          className="absolute inset-0"
-        />
-        <View className="absolute left-2 top-2 rounded bg-emerald-500/80 px-2 py-0.5">
-          <Text className="text-[7px] font-black uppercase text-white">
-            {item.freshness_label}
-          </Text>
-        </View>
-        {/* Offer Badge (Amazon/Licious Style) */}
-        <View className="absolute right-2 top-2 rounded bg-red-500/90 px-2 py-0.5 z-20">
-          <Text className="text-[7px] font-black uppercase text-white">
-            15% OFF
-          </Text>
-        </View>
-        <View className="absolute bottom-2 left-2 rounded-none border border-white/10 bg-black/60 px-2 py-1">
-          <Text className="text-[7px] font-black uppercase text-foreground">
-            {item.harbor_node}
-          </Text>
-        </View>
-        <View className="absolute bottom-2 right-2">
-          <Text className="text-[7px] font-black text-foreground/60 uppercase">
-            {t('stock')}
-          </Text>
-          <Text className="text-[10px] font-black" style={{ color: colors.primary }}>
-            {item.remaining_kg}kg
-          </Text>
-        </View>
-      </View>
-      <View className="gap-2 p-3">
-        <Text className="text-[8px] font-black uppercase text-emerald-500">
-          {t('fresh_catch_of_the_day')}
-        </Text>
-        <Text
-          className="text-sm font-black uppercase italic text-foreground"
-          style={{ color: colors.text }}
-          numberOfLines={1}
+        <View 
+          className="relative items-center justify-center overflow-hidden w-full"
+          style={{ aspectRatio: 1, backgroundColor: colors.isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.03)" }}
         >
-          {item.name}
-        </Text>
-        <Text className="text-[8px] uppercase italic text-muted-foreground" style={{ color: colors.textMuted }}>
-          {t('handled_by')} {item.seller_name}
-        </Text>
-        <View className="flex-row items-center justify-between">
-          <Text className="text-xl font-black italic text-foreground" style={{ color: colors.text }}>
-            ₹{item.price_per_kg}
-            <Text className="text-[10px] opacity-40">/kg</Text>
-          </Text>
-          <Pressable
-            onPress={(e) => {
-              e.stopPropagation();
-              onOpenCut();
-            }}
-            className="rounded-none px-3 py-2 overflow-hidden relative"
-            style={{ backgroundColor: colors.primary }}
-          >
-            <Text className="text-[9px] font-black uppercase text-white relative z-10">
-              + CUT
+          <Image
+            source={{ uri }}
+            className="h-full w-full"
+            contentFit="cover"
+          />
+          <LinearGradient
+            colors={["transparent", colors.isDark ? "rgba(2,6,23,0.8)" : "rgba(255,255,255,0.8)"]}
+            className="absolute inset-0"
+          />
+          <View className="absolute left-2 top-2 rounded-none bg-emerald-500/80 px-2 py-0.5 relative overflow-hidden">
+            <Text className="text-[7px] font-black uppercase text-white relative z-10">
+              {item.freshness_label}
             </Text>
-            <Svg width="8" height="8" style={{ position: "absolute", top: -1, left: -1, zIndex: 20 }}>
-              <Path d="M0,0 L8,0 L0,8 Z" fill={colors.card} />
-            </Svg>
-            <Svg width="8" height="8" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 20 }}>
-              <Path d="M8,8 L0,8 L8,0 Z" fill={colors.card} />
-            </Svg>
-          </Pressable>
+            <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 20 }}><Polygon points="0,0 4,0 0,4" fill={colors.bg} /></Svg>
+            <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 20 }}><Polygon points="4,4 0,4 4,0" fill={colors.bg} /></Svg>
+          </View>
+          {/* Offer Badge (Amazon/Licious Style) */}
+          <View className="absolute right-2 top-2 rounded-none bg-red-500/90 px-2 py-0.5 z-20 relative overflow-hidden">
+            <Text className="text-[7px] font-black uppercase text-white relative z-10">
+              15% OFF
+            </Text>
+            <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 20 }}><Polygon points="0,0 4,0 0,4" fill={colors.bg} /></Svg>
+            <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 20 }}><Polygon points="4,4 0,4 4,0" fill={colors.bg} /></Svg>
+          </View>
+          <View className="absolute bottom-2 left-2 rounded-none border border-white/10 bg-black/60 px-2 py-1">
+            <Text className="text-[7px] font-black uppercase text-foreground">
+              {item.harbor_node}
+            </Text>
+          </View>
+          <View className="absolute bottom-2 right-2">
+            <Text className="text-[7px] font-black text-foreground/60 uppercase">
+              {t('stock')}
+            </Text>
+            <Text className="text-[10px] font-black" style={{ color: colors.primary }}>
+              {item.remaining_kg}kg
+            </Text>
+          </View>
         </View>
-      </View>
+        <View className="gap-2 p-3">
+          <Text className="text-[8px] font-black uppercase text-emerald-500">
+            {t('fresh_catch_of_the_day')}
+          </Text>
+          <Text
+            className="text-sm font-black uppercase italic text-foreground"
+            style={{ color: colors.text }}
+            numberOfLines={1}
+          >
+            {item.name}
+          </Text>
+          <Text className="text-[8px] uppercase italic text-muted-foreground" style={{ color: colors.textMuted }}>
+            {t('handled_by')} {item.seller_name}
+          </Text>
+          <View className="flex-row items-center justify-between">
+            <Text className="text-xl font-black italic text-foreground" style={{ color: colors.text }}>
+              ₹{item.price_per_kg}
+              <Text className="text-[10px] opacity-40">/kg</Text>
+            </Text>
+            <Pressable
+              onPress={(e) => {
+                e.stopPropagation();
+                onOpenCut();
+              }}
+              className="rounded-none px-3 py-2 overflow-hidden relative"
+              style={{ backgroundColor: colors.primary }}
+            >
+              <Text className="text-[9px] font-black uppercase text-white relative z-10">
+                + CUT
+              </Text>
+              <Svg width="8" height="8" style={{ position: "absolute", top: -1, left: -1, zIndex: 20 }}>
+                <Path d="M0,0 L8,0 L0,8 Z" fill={colors.card} />
+              </Svg>
+              <Svg width="8" height="8" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 20 }}>
+                <Path d="M8,8 L0,8 L8,0 Z" fill={colors.card} />
+              </Svg>
+            </Pressable>
+          </View>
+        </View>
 
-      {/* High-Tech Beveled Corner Overlays for Visual Parity */}
-      <Svg width="16" height="16" style={{ position: "absolute", top: -1, left: -1, zIndex: 40 }}>
-        <Path d="M0,0 L16,0 L0,16 Z" fill={colors.bg} />
-        <Path d="M16,0 L0,16" stroke={colors.border} strokeWidth="1" />
-      </Svg>
-      <Svg width="16" height="16" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 40 }}>
-        <Path d="M16,16 L0,16 L16,0 Z" fill={colors.bg} />
-        <Path d="M0,16 L16,0" stroke={colors.border} strokeWidth="1" />
-      </Svg>
+        {/* High-Tech Beveled Corner Overlays for Visual Parity */}
+        <Svg width="16" height="16" style={{ position: "absolute", top: -1, left: -1, zIndex: 40 }}>
+          <Path d="M0,0 L16,0 L0,16 Z" fill={colors.bg} />
+        </Svg>
+        <Svg width="16" height="16" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 40 }}>
+          <Path d="M16,16 L0,16 L16,0 Z" fill={colors.bg} />
+        </Svg>
+      </ChamferedBox>
     </Pressable>
   );
 }
@@ -179,10 +184,12 @@ function FlashDealCountdown() {
 
   if (!flashDealActive) {
     return (
-      <View className="mt-4 self-center rounded border border-emerald-500/20 bg-emerald-500/10 px-3 py-1">
-        <Text className="text-[9px] font-black uppercase text-emerald-500">
+      <View className="mt-4 self-center rounded-none border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 relative overflow-hidden">
+        <Text className="text-[9px] font-black uppercase text-emerald-500 relative z-10">
           PROMO ACTIVE • SECURE HARVEST
         </Text>
+        <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 20 }}><Polygon points="0,0 6,0 0,6" fill={colors.bg} /></Svg>
+        <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 20 }}><Polygon points="6,6 0,6 6,0" fill={colors.bg} /></Svg>
       </View>
     );
   }
@@ -384,17 +391,26 @@ export default function CustomerHomeScreen() {
 
             {/* Relocated Pre-Orders Widget (Absolute Bottom Right) */}
             <View className="absolute bottom-4 right-4 w-[55%] z-30 pointer-events-auto">
-               <View className="p-2.5 rounded-xl border flex-col gap-1.5 w-full shadow-lg" style={{ backgroundColor: '#0b0e14e6', borderColor: 'rgba(245,158,11,0.3)' }}>
-                 <View className="flex-row items-center justify-between w-full">
+               <View className="p-2.5 rounded-none border flex-col gap-1.5 w-full shadow-lg relative overflow-hidden" style={{ backgroundColor: '#0b0e14e6', borderColor: 'rgba(245,158,11,0.3)' }}>
+                 <View className="flex-row items-center justify-between w-full relative z-10">
                    <View className="flex-row items-center gap-1.5">
                      <View className="w-1.5 h-1.5 rounded-full bg-amber-500" />
                      <Text className="text-[9px] font-black uppercase italic tracking-wider text-amber-400">PRE-ORDERS</Text>
                    </View>
                  </View>
-                 <View className="flex-row items-center justify-between w-full pt-1.5 border-t border-white/10">
+                 <View className="flex-row items-center justify-between w-full pt-1.5 border-t border-white/10 relative z-10">
                    <Text className="text-[7px] font-black text-amber-300/90 uppercase tracking-widest">Next Dispatch</Text>
                    <Text className="text-[7px] font-black text-white uppercase truncate">Tomorrow at 05:30 AM</Text>
                  </View>
+                 {/* Beveled overlays for pre-orders widget */}
+                 <Svg width="12" height="12" style={{ position: "absolute", top: -1, left: -1, zIndex: 40 }}>
+                   <Path d="M0,0 L12,0 L0,12 Z" fill={colors.bg} />
+                   <Path d="M12,0 L0,12" stroke="rgba(245,158,11,0.3)" strokeWidth="1" />
+                 </Svg>
+                 <Svg width="12" height="12" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 40 }}>
+                   <Path d="M12,12 L0,12 L12,0 Z" fill={colors.bg} />
+                   <Path d="M0,12 L12,0" stroke="rgba(245,158,11,0.3)" strokeWidth="1" />
+                 </Svg>
                </View>
             </View>
           </View>
@@ -413,31 +429,23 @@ export default function CustomerHomeScreen() {
                 onPress={() =>
                   router.push({ pathname: "/products", params: { category: cat.slug } })
                 }
-                className="w-[23%] items-center"
+                className="w-[18%] items-center"
               >
-                <View
-                  className="w-14 h-14 rounded-none items-center justify-center relative overflow-hidden"
-                  style={{
-                    backgroundColor: colors.isDark ? "rgba(30, 41, 59, 0.4)" : "rgba(241, 245, 249, 0.9)",
-                    borderWidth: 1.5,
-                    borderColor: `${cat.glowColor}50`,
-                  }}
+                <ChamferedBox
+                  fillColor={colors.isDark ? "rgba(30, 41, 59, 0.4)" : "rgba(241, 245, 249, 0.9)"}
+                  strokeColor={`${cat.glowColor}50`}
+                  strokeWidth={1.5}
+                  bevelSize={8}
+                  style={{ minHeight: 56 }}
+                  className="w-14 h-14 relative overflow-hidden"
+                  contentClassName="w-full h-full items-center justify-center"
                 >
                   <Image
                     source={cat.image}
-                    className="h-10 w-10"
+                    className="h-10 w-10 relative z-10"
                     contentFit="contain"
                   />
-                  {/* Cut-corner bevel overlays on category icon */}
-                  <Svg width={8} height={8} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
-                    <Path d="M0,0 L8,0 L0,8 Z" fill={colors.bg} />
-                    <Path d="M8,0 L0,8" stroke={`${cat.glowColor}40`} strokeWidth={1} />
-                  </Svg>
-                  <Svg width={8} height={8} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
-                    <Path d="M8,8 L0,8 L8,0 Z" fill={colors.bg} />
-                    <Path d="M0,8 L8,0" stroke={`${cat.glowColor}40`} strokeWidth={1} />
-                  </Svg>
-                </View>
+                </ChamferedBox>
                 <Text
                   className="mt-1.5 text-center text-[7px] font-black uppercase tracking-widest"
                   numberOfLines={2}
@@ -578,49 +586,55 @@ export default function CustomerHomeScreen() {
                : RECIPES).map((recipe: any) => {
                const meta = recipe.metadata ? (typeof recipe.metadata === 'string' ? JSON.parse(recipe.metadata) : recipe.metadata) : {};
                return (
-              <Pressable 
-                key={recipe.id} 
-                className="relative h-44 overflow-hidden shadow-2xl justify-end"
-                onPress={() => router.push({ pathname: "/recipe/[id]", params: { id: String(recipe.id) } })}
+              <ChamferedBox
+                key={recipe.id}
+                fillColor="transparent"
+                strokeColor="rgba(255,255,255,0.08)"
+                bevelSize={24}
+                style={{ height: 176, minHeight: 176 }}
+                className="relative overflow-hidden shadow-2xl"
               >
-                <Image 
-                  source={{ uri: recipe.image_url || recipe.image }} 
-                  className="absolute inset-0 h-full w-full opacity-60" 
-                  contentFit="cover"
-                />
-                <LinearGradient 
-                  colors={["transparent", "rgba(8,13,25,0.95)"]} 
-                  className="absolute inset-0"
-                />
-                <View className="relative z-10 p-5 gap-2">
-                  <View className="flex-row gap-2">
-                    <View 
-                      className="border px-2 py-0.5 rounded"
-                      style={{
-                        borderColor: getRgba(primaryColor, 0.2),
-                        backgroundColor: getRgba(primaryColor, 0.1)
-                      }}
-                    >
-                      <Text className="text-[8px] font-black uppercase" style={{ color: primaryColor }}>{meta.difficulty || recipe.difficulty || 'Expert'}</Text>
+                <Pressable
+                  className="w-full h-full justify-end"
+                  onPress={() => router.push({ pathname: "/recipe/[id]", params: { id: String(recipe.id) } })}
+                >
+                  <Image 
+                    source={{ uri: recipe.image_url || recipe.image }} 
+                    className="absolute inset-0 h-full w-full opacity-60" 
+                    contentFit="cover"
+                  />
+                  <LinearGradient 
+                    colors={["transparent", "rgba(8,13,25,0.95)"]} 
+                    className="absolute inset-0"
+                  />
+                  <View className="relative z-10 p-5 gap-2">
+                    <View className="flex-row gap-2">
+                      <ChamferedBox 
+                        fillColor={getRgba(primaryColor, 0.1)}
+                        strokeColor={getRgba(primaryColor, 0.2)}
+                        bevelSize={4}
+                        style={{ minHeight: 20 }}
+                        className="flex-shrink"
+                        contentClassName="w-auto flex-shrink px-2 py-0.5"
+                      >
+                        <Text className="text-[8px] font-black uppercase relative z-10" style={{ color: primaryColor }}>{meta.difficulty || recipe.difficulty || 'Expert'}</Text>
+                      </ChamferedBox>
+                      <ChamferedBox
+                        fillColor="rgba(255,255,255,0.05)"
+                        strokeColor="rgba(255,255,255,0.1)"
+                        bevelSize={4}
+                        style={{ minHeight: 20 }}
+                        className="flex-shrink"
+                        contentClassName="w-auto flex-shrink px-2 py-0.5"
+                      >
+                        <Text className="text-[8px] font-black uppercase text-muted-foreground relative z-10">{meta.time || recipe.time || '25m'}</Text>
+                      </ChamferedBox>
                     </View>
-                    <View className="bg-white/5 border border-white/10 px-2 py-0.5 rounded">
-                      <Text className="text-[8px] font-black uppercase text-muted-foreground">{meta.time || recipe.time || '25m'}</Text>
-                    </View>
+                    <Text className="text-xl font-black uppercase italic text-foreground">{recipe.title}</Text>
+                    <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>VIEW RECIPE ➜</Text>
                   </View>
-                  <Text className="text-xl font-black uppercase italic text-foreground">{recipe.title}</Text>
-                  <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>VIEW RECIPE ➜</Text>
-                </View>
-
-                {/* Beveled overlays for culinary recipe cards */}
-                <Svg width="24" height="24" style={{ position: "absolute", top: -1, left: -1, zIndex: 40 }}>
-                  <Path d="M0,0 L24,0 L0,24 Z" fill={colors.bg} />
-                  <Path d="M24,0 L0,24" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-                </Svg>
-                <Svg width="24" height="24" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 40 }}>
-                  <Path d="M24,24 L0,24 L24,0 Z" fill={colors.bg} />
-                  <Path d="M0,24 L24,0" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-                </Svg>
-              </Pressable>
+                </Pressable>
+              </ChamferedBox>
             );
           })}
           </View>
@@ -764,52 +778,62 @@ export default function CustomerHomeScreen() {
               <Pressable
                 key={seller.id}
                 onPress={() => router.push({ pathname: "/products", params: { sellerId: seller.id } })}
-                className="mr-3 w-56 p-4 shadow-xl relative overflow-hidden"
-                style={{ backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1 }}
+                className="mr-3 w-56"
               >
-                <View className="flex-row justify-between items-center mb-2">
-                  <Text className="text-[8px] font-black uppercase" style={{ color: primaryColor }}>{seller.id}</Text>
-                  <View className="flex-row items-center gap-1">
-                    <View className="h-1.5 w-1.5 rounded-none bg-[#00ff88]" />
-                    <Text className="text-[6px] font-black uppercase" style={{ color: colors.textMuted }}>LIVE</Text>
-                  </View>
-                </View>
-                
-                <View className="flex-row items-center gap-3">
-                  <View className="h-10 w-10 rounded-none items-center justify-center border" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
-                    <Text className="text-2xl">{seller.image}</Text>
-                  </View>
-                  <View className="flex-1">
-                    <Text className="text-sm font-black uppercase italic" style={{ color: colors.text }} numberOfLines={1}>
-                      {seller.name}
-                    </Text>
-                    <View className="flex-row items-center gap-2 mt-1">
-                      <Text className="text-[8px] font-black text-warning">★ {seller.rating}</Text>
-                      <Text className="text-[8px] font-black" style={{ color: primaryColor }}>{seller.speed}</Text>
+                <ChamferedBox
+                  fillColor={colors.card}
+                  strokeColor={colors.border}
+                  bevelSize={14}
+                  style={{ minHeight: 140 }}
+                  className="w-full p-4 relative overflow-hidden"
+                >
+                  <View className="flex-row justify-between items-center mb-2">
+                    <Text className="text-[8px] font-black uppercase" style={{ color: primaryColor }}>{seller.id}</Text>
+                    <View className="flex-row items-center gap-1">
+                      <View className="h-1.5 w-1.5 rounded-none bg-[#00ff88]" />
+                      <Text className="text-[6px] font-black uppercase" style={{ color: colors.textMuted }}>LIVE</Text>
                     </View>
                   </View>
-                </View>
-                
-                <View className="flex-row justify-between items-center mt-3 pt-2 border-t" style={{ borderTopColor: colors.border }}>
-                  <View className="flex-row gap-1">
-                    {seller.products.map((p, idx) => (
-                      <View key={idx} className="h-5 w-5 rounded items-center justify-center border" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
-                        <Text className="text-xs">{p}</Text>
+                  
+                  <View className="flex-row items-center gap-3">
+                    <ChamferedBox
+                      fillColor={colors.bgAlt}
+                      strokeColor={colors.border}
+                      bevelSize={6}
+                      style={{ minHeight: 40 }}
+                      className="h-10 w-10 items-center justify-center relative overflow-hidden"
+                    >
+                      <Text className="text-2xl relative z-10">{seller.image}</Text>
+                    </ChamferedBox>
+                    <View className="flex-1">
+                      <Text className="text-sm font-black uppercase italic" style={{ color: colors.text }} numberOfLines={1}>
+                        {seller.name}
+                      </Text>
+                      <View className="flex-row items-center gap-2 mt-1">
+                        <Text className="text-[8px] font-black text-warning">★ {seller.rating}</Text>
+                        <Text className="text-[8px] font-black" style={{ color: primaryColor }}>{seller.speed}</Text>
                       </View>
-                    ))}
+                    </View>
                   </View>
-                  <Text className="text-[8px] font-black uppercase" style={{ color: primaryColor }}>VIEW NODE ➜</Text>
-                </View>
-
-                {/* Beveled overlays for premium sellers */}
-                <Svg width="14" height="14" style={{ position: "absolute", top: -1, left: -1, zIndex: 40 }}>
-                  <Path d="M0,0 L14,0 L0,14 Z" fill={colors.bg} />
-                  <Path d="M14,0 L0,14" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-                </Svg>
-                <Svg width="14" height="14" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 40 }}>
-                  <Path d="M14,14 L0,14 L14,0 Z" fill={colors.bg} />
-                  <Path d="M0,14 L14,0" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-                </Svg>
+                  
+                  <View className="flex-row justify-between items-center mt-3 pt-2 border-t" style={{ borderTopColor: colors.border }}>
+                    <View className="flex-row gap-1">
+                      {seller.products.map((p, idx) => (
+                        <ChamferedBox
+                          key={idx}
+                          fillColor={colors.bgAlt}
+                          strokeColor={colors.border}
+                          bevelSize={3}
+                          style={{ minHeight: 20 }}
+                          className="h-5 w-5 items-center justify-center relative overflow-hidden"
+                        >
+                          <Text className="text-xs relative z-10">{p}</Text>
+                        </ChamferedBox>
+                      ))}
+                    </View>
+                    <Text className="text-[8px] font-black uppercase" style={{ color: primaryColor }}>VIEW NODE ➜</Text>
+                  </View>
+                </ChamferedBox>
               </Pressable>
             ))}
           </ScrollView>
@@ -829,30 +853,28 @@ export default function CustomerHomeScreen() {
               { icon: "❄️", title: "Cold-Chain", subtitle: "0°C Controlled", color: "#00d4ff" }, 
               { icon: "📍", title: "Local Catch", subtitle: "Port Blair Hub", color: "#ef4444" } 
             ].map((item, i) => (
-              <View 
+              <ChamferedBox 
                 key={i} 
-                className="flex-1 items-center justify-center p-3 relative overflow-hidden"
-                style={{ backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1 }}
+                fillColor={colors.card}
+                strokeColor={colors.border}
+                bevelSize={12}
+                style={{ minHeight: 90 }}
+                className="flex-1 relative overflow-hidden"
+                contentClassName="items-center justify-center p-3 w-full"
               >
-                <View 
-                  style={{ backgroundColor: `${item.color}15`, borderColor: `${item.color}30` }} 
-                  className="w-10 h-10 rounded-none items-center justify-center border mb-2 shadow-lg"
+                <ChamferedBox 
+                  fillColor={`${item.color}15`}
+                  strokeColor={`${item.color}30`}
+                  bevelSize={6}
+                  style={{ minHeight: 40 }}
+                  className="w-10 h-10 relative overflow-hidden mb-2 shadow-lg"
+                  contentClassName="w-full h-full items-center justify-center"
                 >
-                  <Text className="text-lg">{item.icon}</Text>
-                </View>
+                  <Text className="text-lg relative z-10">{item.icon}</Text>
+                </ChamferedBox>
                 <Text className="text-[8px] font-black uppercase italic tracking-wider text-center" style={{ color: colors.text }}>{item.title}</Text>
                 <Text className="text-[5.5px] font-bold uppercase text-center mt-0.5" style={{ color: colors.textMuted }}>{item.subtitle}</Text>
-
-                {/* Beveled overlays for trust badges */}
-                <Svg width="12" height="12" style={{ position: "absolute", top: -1, left: -1, zIndex: 40 }}>
-                  <Path d="M0,0 L12,0 L0,12 Z" fill={colors.bg} />
-                  <Path d="M12,0 L0,12" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-                </Svg>
-                <Svg width="12" height="12" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 40 }}>
-                  <Path d="M12,12 L0,12 L12,0 Z" fill={colors.bg} />
-                  <Path d="M0,12 L12,0" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-                </Svg>
-              </View>
+              </ChamferedBox>
             ))}
           </View>
         </View>
@@ -868,27 +890,30 @@ export default function CustomerHomeScreen() {
             { user: "Ananya K.", text: "Best lobster I've had in years. The cold-chain delivery is real.", rating: 5 },
             { user: "Rajesh M.", text: "Professional service and verifiable freshness.", rating: 5 },
           ].map((r) => (
-            <View key={r.user} className="p-4 w-64 relative overflow-hidden" style={{ backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1 }}>
-              <Text className="text-[10px] font-black uppercase" style={{ color: primaryColor }}>★ {r.rating}.0</Text>
-              <Text className="mt-2 text-sm italic" style={{ color: colors.textMuted }}>&ldquo;{r.text}&rdquo;</Text>
-              <Text className="mt-2 text-[10px] font-black uppercase" style={{ color: colors.text }}>— {r.user}</Text>
-
-              {/* Beveled overlays for review testimonials */}
-              <Svg width="14" height="14" style={{ position: "absolute", top: -1, left: -1, zIndex: 40 }}>
-                <Path d="M0,0 L14,0 L0,14 Z" fill={colors.bg} />
-                <Path d="M14,0 L0,14" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-              </Svg>
-              <Svg width="14" height="14" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 40 }}>
-                <Path d="M14,14 L0,14 L14,0 Z" fill={colors.bg} />
-                <Path d="M0,14 L14,0" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-              </Svg>
-            </View>
+            <ChamferedBox 
+              key={r.user} 
+              fillColor={colors.card}
+              strokeColor={colors.border}
+              bevelSize={14}
+              style={{ minHeight: 120 }}
+              className="p-4 w-64 relative overflow-hidden"
+            >
+              <Text className="text-[10px] font-black uppercase relative z-10" style={{ color: primaryColor }}>★ {r.rating}.0</Text>
+              <Text className="mt-2 text-sm italic relative z-10" style={{ color: colors.textMuted }}>&ldquo;{r.text}&rdquo;</Text>
+              <Text className="mt-2 text-[10px] font-black uppercase relative z-10" style={{ color: colors.text }}>— {r.user}</Text>
+            </ChamferedBox>
           ))}
           </ScrollView>
         </View>
 
         {/* Join the Newsletter Panel */}
-        <View className="mx-4 mb-8 p-6 relative overflow-hidden" style={{ backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1 }}>
+        <ChamferedBox
+          fillColor={colors.card}
+          strokeColor={colors.border}
+          bevelSize={24}
+          style={{ minHeight: 280 }}
+          className="mx-4 mb-8 p-6 relative overflow-hidden"
+        >
           <LinearGradient
             colors={["transparent", getRgba(primaryColor, 0.06)]}
             style={StyleSheet.absoluteFill}
@@ -899,7 +924,7 @@ export default function CustomerHomeScreen() {
             end={{ x: 1, y: 0 }}
             className="absolute top-0 left-0 right-0 h-[1px] opacity-30"
           />
-          <View className="space-y-2 items-center text-center">
+          <View className="space-y-2 items-center text-center relative z-10">
             <Text className="text-[7.5px] font-black uppercase tracking-[0.4em]" style={{ color: primaryColor }}>
               Global Dispatch Subscription
             </Text>
@@ -910,7 +935,7 @@ export default function CustomerHomeScreen() {
               Join our newsletter for the latest fresh catches and exclusive offers.
             </Text>
           </View>
-          <View className="mt-5 space-y-2">
+          <View className="mt-5 space-y-2 relative z-10">
             <View 
               onLayout={(e) => setSubEmailLayout(e.nativeEvent.layout)}
               className="px-4 py-3.5 items-center justify-center relative overflow-hidden"
@@ -950,58 +975,42 @@ export default function CustomerHomeScreen() {
             </Pressable>
           </View>
           <View 
-            className="absolute top-2 right-2 w-4 h-4 border-t border-r" 
+            className="absolute top-2 right-2 w-4 h-4 border-t border-r z-10" 
             style={{ borderColor: getRgba(primaryColor, 0.2) }}
           />
           <View 
-            className="absolute bottom-2 left-2 w-4 h-4 border-b border-l" 
+            className="absolute bottom-2 left-2 w-4 h-4 border-b border-l z-10" 
             style={{ borderColor: getRgba(primaryColor, 0.2) }}
           />
-
-          {/* Beveled overlays for subscription panel */}
-          <Svg width="24" height="24" style={{ position: "absolute", top: -1, left: -1, zIndex: 40 }}>
-            <Path d="M0,0 L24,0 L0,24 Z" fill={colors.bg} />
-            <Path d="M24,0 L0,24" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-          </Svg>
-          <Svg width="24" height="24" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 40 }}>
-            <Path d="M24,24 L0,24 L24,0 Z" fill={colors.bg} />
-            <Path d="M0,24 L24,0" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-          </Svg>
-        </View>
+        </ChamferedBox>
 
         {/* Trust strip */}
-        <View className="mx-4 mb-8 flex-row flex-wrap justify-center gap-3 rounded-none border p-4 relative overflow-hidden" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+        <ChamferedBox
+          fillColor={colors.card}
+          strokeColor={colors.border}
+          bevelSize={12}
+          style={{ minHeight: 50 }}
+          className="mx-4 mb-8"
+          contentClassName="flex-row flex-wrap justify-between items-center w-full gap-2 p-3"
+        >
           {["FSSAI AUTH", "ISO 22000", "COLD-CHAIN", "SUSTAINABLE"].map((label) => {
             const isFssai = label === "FSSAI AUTH";
             const badgeColor = isFssai ? "#F97316" : primaryColor;
             return (
-              <View 
+              <ChamferedBox 
                 key={label} 
-                className="rounded-none border px-3 py-1 relative overflow-hidden"
-                style={{
-                  borderColor: getRgba(badgeColor, 0.2),
-                  backgroundColor: getRgba(badgeColor, 0.1)
-                }}
+                fillColor={getRgba(badgeColor, 0.1)}
+                strokeColor={getRgba(badgeColor, 0.2)}
+                bevelSize={4}
+                style={{ minHeight: 22 }}
+                className="flex-shrink"
+                contentClassName="w-auto flex-shrink px-3 py-1"
               >
-                <Text className="text-[8px] font-black uppercase" style={{ color: badgeColor }}>{label}</Text>
-                <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
-                  <Polygon points="0,0 4,0 0,4" fill={colors.card} />
-                </Svg>
-                <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
-                  <Polygon points="4,4 0,4 4,0" fill={colors.card} />
-                </Svg>
-              </View>
+                <Text className="text-[8px] font-black uppercase relative z-10" style={{ color: badgeColor }}>{label}</Text>
+              </ChamferedBox>
             );
           })}
-          <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
-            <Path d="M0,0 L12,0 L0,12 Z" fill={colors.bg} />
-            <Path d="M12,0 L0,12" stroke={colors.border} strokeWidth={1} />
-          </Svg>
-          <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
-            <Path d="M12,12 L0,12 L12,0 Z" fill={colors.bg} />
-            <Path d="M0,12 L12,0" stroke={colors.border} strokeWidth={1} />
-          </Svg>
-        </View>
+        </ChamferedBox>
       </ScrollView>
 
       {/* Picture-in-Picture Ocean Reels Feed */}

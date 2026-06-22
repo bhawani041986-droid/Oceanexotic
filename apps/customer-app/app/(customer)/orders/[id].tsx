@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, Pressable, Modal, TextInput, ActivityIndicator } from "react-native";
+import Svg, { Polygon, Path } from "react-native-svg";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { Button } from "@/components/ui/Button";
@@ -78,7 +79,6 @@ export default function OrderDetailsScreen() {
     return () => clearInterval(interval);
   }, [id]);
 
-  // Compute OTP from numeric part of order ID
   const otpNum = ((parseInt(String(id ?? "").replace(/[^0-9]/g, "") || "123") * 997 + 12345) % 900000) + 100000;
 
   const handleSubmitReview = async () => {
@@ -136,24 +136,19 @@ export default function OrderDetailsScreen() {
     return (
       <View className="flex-1 items-center justify-center p-6" style={{ backgroundColor: colors.bg }}>
         {ToastHost}
-        <Button variant="ghost" label={"← " + t('all').toUpperCase()} onPress={() => router.back()} className="mb-4 self-start px-0" />
+        <Button variant="ghost" label={"← " + t('all').toUpperCase()} onPress={() => router.back()} className="mb-4 self-start px-4 h-10 rounded-none" />
         <View className="flex-1 items-center justify-center">
           <Text className="text-lg font-black uppercase tracking-widest text-red-500 mb-2">
             {t('order_not_found')}
-          </Text>
-          <Text className="text-[10px] uppercase text-muted-foreground text-center mb-6" style={{ color: colors.textMuted }}>
-            {t('order_sync_failed')}
           </Text>
         </View>
       </View>
     );
   }
 
-  // Fallback if order not found (show skeleton with ID)
   const isInTransit = !["DELIVERED", "CANCELLED"].includes(order?.status?.toUpperCase() ?? "");
   const isDelivered = order?.status?.toUpperCase().includes("DELIVERED");
 
-  // Correctly tally: subtotal + shipping + tax = total
   const displaySubtotal = order?.subtotal ?? order?.items?.reduce((s, it) => s + it.price * (it.qty ?? 1), 0) ?? 0;
   const displayShipping = order?.shipping ?? 0;
   const displayTax = order?.tax ?? 0;
@@ -163,7 +158,6 @@ export default function OrderDetailsScreen() {
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       {ToastHost}
 
-      {/* Sticky Header Layout */}
       <View className="flex-row items-center justify-between gap-3 px-4 pb-4 pt-12 border-b" style={{ backgroundColor: colors.bg, borderBottomColor: "rgba(255,255,255,0.05)", zIndex: 10 }}>
         {isInTransit ? (
           <>
@@ -172,12 +166,12 @@ export default function OrderDetailsScreen() {
                 variant="ghost" 
                 label={"← " + t('all').toUpperCase()} 
                 onPress={() => router.back()} 
-                className="px-0 h-10 justify-center rounded-none text-[10px]" 
-                style={{ borderWidth: 1, borderColor: colors.border }}
+                className="px-4 h-10 justify-center rounded-none text-[10px]" 
               />
             </View>
             <View className="flex-1">
               <Button
+                variant="ghost"
                 label={"🚚 " + t('track_order').toUpperCase()}
                 onPress={() =>
                   router.push({ pathname: "/orders/[id]/tracking", params: { id } } as never)
@@ -188,27 +182,28 @@ export default function OrderDetailsScreen() {
           </>
         ) : (
           <View className="flex-1">
-            <Button variant="ghost" label={"← " + t('all').toUpperCase()} onPress={() => router.back()} className="px-0 h-10 self-start" />
+            <Button variant="ghost" label={"← " + t('all').toUpperCase()} onPress={() => router.back()} className="px-4 h-10 self-start rounded-none" />
           </View>
         )}
       </View>
 
       <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 24, paddingBottom: 120 }}>
 
-        {/* Title */}
         <View className="mb-6 border-b pb-6" style={{ borderBottomColor: colors.border }}>
           <View className="flex-row items-center gap-3 flex-wrap">
             <Text className="text-3xl font-black uppercase italic" style={{ color: colors.text }}>
               {id}
             </Text>
             <View
-              className="rounded px-2 py-1"
+              className="rounded-none px-2 py-1 relative overflow-hidden"
               style={{
                 backgroundColor: isDelivered ? "rgba(16,185,129,0.2)" : `${colors.primary}20`,
               }}
             >
+              <Svg width={4} height={4} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={colors.bg} /></Svg>
+              <Svg width={4} height={4} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill={colors.bg} /></Svg>
               <Text
-                className="text-[10px] font-black uppercase"
+                className="text-[10px] font-black uppercase relative z-10"
                 style={{ color: isDelivered ? "#34d399" : colors.primary }}
               >
                 {order?.status ?? "PROCESSING"}
@@ -220,14 +215,23 @@ export default function OrderDetailsScreen() {
           </Text>
         </View>
 
-        {/* 🚚 Live Cold-Chain Delivery Radar (Rich Timeline) */}
         <View
-          className="mb-6 rounded-[24px] overflow-hidden"
+          className="mb-6 rounded-none overflow-hidden relative"
           style={{ backgroundColor: `${colors.primary}10`, borderWidth: 1, borderColor: `${colors.primary}33` }}
         >
+          <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+            <Polygon points="0,0 12,0 0,12" fill={colors.bg} />
+            <Path d="M12,0 L0,12" stroke={`${colors.primary}33`} strokeWidth={1} />
+          </Svg>
+          <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+            <Polygon points="12,12 0,12 12,0" fill={colors.bg} />
+            <Path d="M0,12 L12,0" stroke={`${colors.primary}33`} strokeWidth={1} />
+          </Svg>
           <View className="p-5 md:p-6 flex-col gap-4 border-b" style={{ borderBottomColor: "rgba(255,255,255,0.1)" }}>
             <View className="flex-row items-center gap-4">
-              <View className="w-12 h-12 rounded-full items-center justify-center border shadow-lg" style={{ backgroundColor: `${colors.primary}33`, borderColor: `${colors.primary}50` }}>
+              <View className="w-12 h-12 rounded-none items-center justify-center border shadow-lg relative overflow-hidden" style={{ backgroundColor: `${colors.primary}33`, borderColor: `${colors.primary}50` }}>
+                <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 6,0 0,6" fill={`${colors.primary}10`} /></Svg>
+                <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="6,6 0,6 6,0" fill={`${colors.primary}10`} /></Svg>
                 <Text className="text-2xl">🚚</Text>
               </View>
               <View className="flex-1">
@@ -240,9 +244,11 @@ export default function OrderDetailsScreen() {
               </View>
             </View>
             <View className="flex-row items-center justify-between mt-2">
-              <View className="flex-row items-center gap-1.5 rounded-full px-3 py-1" style={{ backgroundColor: "rgba(59,130,246,0.1)", borderWidth: 1, borderColor: "rgba(59,130,246,0.3)" }}>
-                <View className="h-2 w-2 rounded-full bg-blue-400" />
-                <Text className="text-[10px] font-black uppercase text-blue-400">{trackingData?.current_temp ?? trackingData?.temp ?? 1.2}°C {t('chilled')}</Text>
+              <View className="flex-row items-center gap-1.5 rounded-none px-3 py-1 relative overflow-hidden" style={{ backgroundColor: "rgba(59,130,246,0.1)", borderWidth: 1, borderColor: "rgba(59,130,246,0.3)" }}>
+                <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={`${colors.primary}10`} /></Svg>
+                <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill={`${colors.primary}10`} /></Svg>
+                <View className="h-2 w-2 rounded-none bg-blue-400" />
+                <Text className="text-[10px] font-black uppercase text-blue-400 relative z-10">{trackingData?.current_temp ?? trackingData?.temp ?? 1.2}°C {t('chilled')}</Text>
               </View>
               <View>
                 <Text className="text-[10px] font-black uppercase" style={{ color: colors.textMuted }}>Est. Arrival</Text>
@@ -270,7 +276,7 @@ export default function OrderDetailsScreen() {
                   <View key={idx} className="flex-row items-center">
                     <View className="items-center gap-2">
                       <View 
-                        className="w-4 h-4 rounded-full border-2"
+                        className="w-4 h-4 rounded-none border-2"
                         style={{ 
                           backgroundColor: isPassed ? colors.primary : "transparent",
                           borderColor: isPassed ? colors.primary : colors.textMuted
@@ -290,16 +296,19 @@ export default function OrderDetailsScreen() {
           </ScrollView>
         </View>
 
-        {/* 🔐 Secure Handoff Protocol */}
-        <View
-          className="mb-6 rounded-none p-5"
+        <View 
+          className="mb-6 rounded-none p-5 relative overflow-hidden"
           style={{ backgroundColor: "rgba(59,130,246,0.05)", borderWidth: 1, borderColor: "rgba(59,130,246,0.2)" }}
         >
-          <View className="flex-row items-center gap-3">
-            <View
-              className="h-10 w-10 items-center justify-center rounded-none"
+          <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 12,0 0,12" fill={colors.bg} /><Path d="M12,0 L0,12" stroke="rgba(59,130,246,0.2)" strokeWidth={1} /></Svg>
+          <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="12,12 0,12 12,0" fill={colors.bg} /><Path d="M0,12 L12,0" stroke="rgba(59,130,246,0.2)" strokeWidth={1} /></Svg>
+          <View className="flex-row items-center gap-4 border-b pb-4 mb-4" style={{ borderBottomColor: "rgba(59,130,246,0.1)" }}>
+            <View 
+              className="h-10 w-10 items-center justify-center rounded-none relative overflow-hidden"
               style={{ backgroundColor: "rgba(59,130,246,0.2)", borderWidth: 1, borderColor: "rgba(59,130,246,0.3)" }}
             >
+              <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill="rgba(59,130,246,0.05)" /></Svg>
+              <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill="rgba(59,130,246,0.05)" /></Svg>
               <Text className="text-lg">🔐</Text>
             </View>
             <View className="flex-1">
@@ -311,12 +320,12 @@ export default function OrderDetailsScreen() {
               </Text>
             </View>
           </View>
-          <View className="mt-4 items-center justify-center border-t pt-4" style={{ borderTopColor: colors.border }}>
+          <View className="mt-4 items-center justify-center pt-2">
             <Image
               source={{
                 uri: `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`https://oceanexotic.com/agent/confirm/${id}?otp=${otpNum}`)}`,
               }}
-              style={{ width: 160, height: 160, borderRadius: 12, backgroundColor: "white", padding: 8 }}
+              style={{ width: 160, height: 160, borderRadius: 0, backgroundColor: "white", padding: 8 }}
               contentFit="contain"
             />
             <Text className="mt-4 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
@@ -328,7 +337,6 @@ export default function OrderDetailsScreen() {
           </View>
         </View>
 
-        {/* Manifest Items */}
         <Text className="mb-4 text-xs font-black uppercase tracking-widest" style={{ color: colors.text }}>
           {t('manifest_items')}
         </Text>
@@ -342,7 +350,7 @@ export default function OrderDetailsScreen() {
               <View className="flex-row gap-4">
                 <Image
                   source={{ uri: item.image ?? "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400" }}
-                  style={{ width: 64, height: 64, borderRadius: 12 }}
+                  style={{ width: 64, height: 64, borderRadius: 0 }}
                   contentFit="cover"
                 />
                 <View className="flex-1 justify-center">
@@ -356,13 +364,18 @@ export default function OrderDetailsScreen() {
                 </View>
               </View>
               {isDelivered && (
-                <View className="mt-4 flex-row border-t pt-4" style={{ borderTopColor: colors.border }}>
-                  <Button
-                    variant="ghost"
-                    label={t('rate_product')}
-                    onPress={() => setReviewItem(item)}
-                    className="flex-1"
-                    style={{ borderWidth: 1, borderColor: colors.border }}
+                <View className="mt-4 flex-row gap-2">
+                  <Button 
+                    label={t('rate_product')} 
+                    variant="ghost" 
+                    onPress={() => setReviewItem(item)} 
+                    className="flex-1 h-10 rounded-none text-[10px]" 
+                  />
+                  <Button 
+                    label={"📞 " + t('contact').toUpperCase()} 
+                    variant="ghost" 
+                    onPress={() => alert("Calling Harbor Control...")} 
+                    className="flex-1 h-10 rounded-none text-[10px]" 
                   />
                 </View>
               )}
@@ -370,11 +383,12 @@ export default function OrderDetailsScreen() {
           ))}
         </View>
 
-        {/* 🔄 Reorder Hub */}
-        <View
-          className="mb-6 rounded-none p-5"
+        <View 
+          className="rounded-none p-4 relative overflow-hidden"
           style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
         >
+          <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 12,0 0,12" fill={colors.bg} /><Path d="M12,0 L0,12" stroke={colors.border} strokeWidth={1} /></Svg>
+          <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="12,12 0,12 12,0" fill={colors.bg} /><Path d="M0,12 L12,0" stroke={colors.border} strokeWidth={1} /></Svg>
           <View className="flex-row items-center gap-3">
             <Text className="text-xl">🐟</Text>
             <View className="flex-1">
@@ -383,17 +397,19 @@ export default function OrderDetailsScreen() {
             </View>
           </View>
           <Button
+            variant="ghost"
             label={t('catch_again')}
             onPress={() => toast(t('adding_to_cart'), "success")}
-            className="mt-4 w-full"
+            className="mt-4 w-full rounded-none"
           />
         </View>
 
-        {/* Manifest Summary — correct tally */}
         <View
-          className="mb-6 rounded-none p-5"
+          className="my-6 rounded-none p-5 relative overflow-hidden"
           style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
         >
+          <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 12,0 0,12" fill={colors.bg} /><Path d="M12,0 L0,12" stroke={colors.border} strokeWidth={1} /></Svg>
+          <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="12,12 0,12 12,0" fill={colors.bg} /><Path d="M0,12 L12,0" stroke={colors.border} strokeWidth={1} /></Svg>
           <Text className="mb-4 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
             {t('manifest_summary')}
           </Text>
@@ -425,11 +441,12 @@ export default function OrderDetailsScreen() {
           </View>
         </View>
 
-        {/* Port of Destination */}
-        <View
-          className="rounded-none p-5"
+        <View 
+          className="rounded-none p-5 relative overflow-hidden"
           style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
         >
+          <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 12,0 0,12" fill={colors.bg} /><Path d="M12,0 L0,12" stroke={colors.border} strokeWidth={1} /></Svg>
+          <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="12,12 0,12 12,0" fill={colors.bg} /><Path d="M0,12 L12,0" stroke={colors.border} strokeWidth={1} /></Svg>
           <Text className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
             {t('destination_port')}
           </Text>
@@ -443,11 +460,12 @@ export default function OrderDetailsScreen() {
           </Text>
         </View>
 
-        {/* Culinary Prep & Storage */}
         <View
-          className="mt-6 rounded-none p-5"
+          className="mt-6 rounded-none p-5 relative overflow-hidden"
           style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
         >
+          <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 12,0 0,12" fill={colors.bg} /><Path d="M12,0 L0,12" stroke={colors.border} strokeWidth={1} /></Svg>
+          <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="12,12 0,12 12,0" fill={colors.bg} /><Path d="M0,12 L12,0" stroke={colors.border} strokeWidth={1} /></Svg>
           <Text className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
             🍳 {t('culinary_ledger')}
           </Text>
@@ -469,11 +487,12 @@ export default function OrderDetailsScreen() {
           </View>
         </View>
 
-        {/* Fleet Sustainability */}
         <View
-          className="mt-6 rounded-none p-5"
+          className="mt-6 rounded-none p-5 relative overflow-hidden"
           style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
         >
+          <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 12,0 0,12" fill={colors.bg} /><Path d="M12,0 L0,12" stroke={colors.border} strokeWidth={1} /></Svg>
+          <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="12,12 0,12 12,0" fill={colors.bg} /><Path d="M0,12 L12,0" stroke={colors.border} strokeWidth={1} /></Svg>
           <Text className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
             ⚓ {t('fleet_sustainability')}
           </Text>
@@ -491,7 +510,6 @@ export default function OrderDetailsScreen() {
         </View>
       </ScrollView>
 
-      {/* Review Modal */}
       <Modal
         visible={!!reviewItem}
         transparent
@@ -502,31 +520,37 @@ export default function OrderDetailsScreen() {
           className="flex-1 justify-end px-4 pb-12 pt-20"
           style={{ backgroundColor: `${colors.bg}E6` }}
         >
-          <View
-            className="rounded-none p-6 shadow-2xl"
+          <View 
+            className="rounded-none p-6 shadow-2xl relative overflow-hidden"
             style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
           >
+            <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 12,0 0,12" fill={colors.bg} /><Path d="M12,0 L0,12" stroke={colors.border} strokeWidth={1} /></Svg>
+            <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="12,12 0,12 12,0" fill={colors.bg} /><Path d="M0,12 L12,0" stroke={colors.border} strokeWidth={1} /></Svg>
             <View className="mb-6 flex-row items-center justify-between">
               <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
                 {t('rate_harvest')}
               </Text>
-              <Pressable
+              <Pressable 
                 onPress={() => setReviewItem(null)}
-                className="rounded-none p-2"
-                style={{ backgroundColor: colors.bg }}
+                className="rounded-none p-2 relative overflow-hidden"
+                style={{ backgroundColor: `${colors.primary}15` }}
               >
+                <Svg width={4} height={4} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={colors.card} /></Svg>
+                <Svg width={4} height={4} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill={colors.card} /></Svg>
                 <Text className="text-xs font-black" style={{ color: colors.text }}>✕</Text>
               </Pressable>
             </View>
 
             {reviewItem && (
-              <View
-                className="mb-6 flex-row items-center gap-4 rounded-none p-3"
+              <View 
+                className="mb-6 flex-row items-center gap-4 rounded-none p-3 relative overflow-hidden"
                 style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: `${colors.bg}80` }}
               >
+                <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 6,0 0,6" fill={colors.card} /><Path d="M6,0 L0,6" stroke={colors.border} strokeWidth={1} /></Svg>
+                <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="6,6 0,6 6,0" fill={colors.card} /><Path d="M0,6 L6,0" stroke={colors.border} strokeWidth={1} /></Svg>
                 <Image
                   source={{ uri: reviewItem.image ?? "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400" }}
-                  style={{ width: 48, height: 48, borderRadius: 12 }}
+                  style={{ width: 48, height: 48, borderRadius: 0 }}
                   contentFit="cover"
                 />
                 <View className="flex-1">
@@ -553,7 +577,7 @@ export default function OrderDetailsScreen() {
               </View>
             </View>
 
-            <View className="mb-6">
+            <View className="mb-6 relative overflow-hidden">
               <Text className="mb-2 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
                 {t('harvest_notes')}
               </Text>
@@ -564,14 +588,15 @@ export default function OrderDetailsScreen() {
                 onChangeText={setComment}
                 multiline
                 style={{
-                  height: 96, borderRadius: 16, borderWidth: 1,
-                  borderColor: colors.border, backgroundColor: `${colors.bg}80`,
+                  height: 96, borderRadius: 0, borderWidth: 1,
+                  borderColor: colors.border, backgroundColor: colors.bg,
                   padding: 16, fontSize: 14, color: colors.text, textAlignVertical: "top",
                 }}
               />
+              <Svg width={8} height={8} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill={colors.card} /><Path d="M8,0 L0,8" stroke={colors.border} strokeWidth={1} /></Svg>
+              <Svg width={8} height={8} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill={colors.card} /><Path d="M0,8 L8,0" stroke={colors.border} strokeWidth={1} /></Svg>
             </View>
 
-            {/* Evidence Picker */}
             <View className="mb-6">
               <Text className="mb-2 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
                 {t('evidence_gallery')}
@@ -580,11 +605,15 @@ export default function OrderDetailsScreen() {
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }} className="flex-row mb-3">
                   {images.map((img, idx) => (
                     <View key={idx} className="relative w-16 h-16 rounded-none overflow-hidden border" style={{ borderColor: colors.border }}>
+                      <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={colors.card} /><Path d="M4,0 L0,4" stroke={colors.border} strokeWidth={1} /></Svg>
+                      <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill={colors.card} /><Path d="M0,4 L4,0" stroke={colors.border} strokeWidth={1} /></Svg>
                       <Image source={{ uri: img }} style={{ width: "100%", height: "100%" }} contentFit="cover" />
                       <Pressable
                         onPress={() => setImages(prev => prev.filter((_, i) => i !== idx))}
-                        className="absolute right-1 top-1 bg-black/60 rounded-none w-5 h-5 items-center justify-center"
+                        className="absolute right-1 top-1 bg-black/60 rounded-none w-5 h-5 items-center justify-center relative overflow-hidden"
                       >
+                        <Svg width={3} height={3} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}><Polygon points="0,0 3,0 0,3" fill={colors.card} /></Svg>
+                        <Svg width={3} height={3} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}><Polygon points="3,3 0,3 3,0" fill={colors.card} /></Svg>
                         <Text className="text-white text-[8px] font-black">✕</Text>
                       </Pressable>
                     </View>
@@ -595,7 +624,6 @@ export default function OrderDetailsScreen() {
                 variant="ghost"
                 label={pickingImage ? t('selecting') : "➕ " + t('add_photo_evidence')}
                 onPress={handlePickImage}
-                style={{ borderStyle: "dashed", borderWidth: 1, borderColor: colors.border }}
                 className="w-full h-10 rounded-none"
               />
             </View>
@@ -603,7 +631,7 @@ export default function OrderDetailsScreen() {
             <Button
               label={submitting ? t('submitting') : t('submit_review')}
               onPress={handleSubmitReview}
-              className="w-full"
+              className="w-full rounded-none"
             />
           </View>
         </View>

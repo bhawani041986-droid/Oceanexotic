@@ -9,6 +9,7 @@ import Svg, { Path, Circle } from 'react-native-svg';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useHomeData } from '@/hooks/useHomeData';
 import { RECIPES_DB } from '@/constants/recipes';
+import { ChamferedBox } from '@/components/ui/ChamferedBox';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const HEADER_HEIGHT = SCREEN_HEIGHT * 0.42;
@@ -245,55 +246,62 @@ export default function RecipeDetailsScreen() {
               <Text className="text-sm font-black uppercase text-foreground tracking-widest">Efficiency Telemetry</Text>
             </View>
             
-            <LinearGradient
-              colors={['rgba(30, 41, 59, 0.4)', 'rgba(15, 23, 42, 0.65)']}
-              className="rounded-[20px] p-5 border relative overflow-hidden"
-              style={{ borderColor: 'rgba(255, 255, 255, 0.08)' }}
+            <ChamferedBox
+              fillColor="transparent"
+              strokeColor="rgba(255, 255, 255, 0.08)"
+              bevelSize={16}
+              className="relative overflow-hidden"
+              style={{ minHeight: 180 }}
             >
-              <View className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-500 via-blue-500 to-transparent" />
-              
-              <View className="flex-row justify-between items-center mb-4">
-                <View>
-                  <Text className="text-[10px] font-black uppercase text-slate-400">Omega-3 Concentration</Text>
-                  <Text className="text-lg font-black text-white italic mt-0.5">High Density (94%)</Text>
+              <LinearGradient
+                colors={['rgba(30, 41, 59, 0.4)', 'rgba(15, 23, 42, 0.65)']}
+                className="p-5 w-full"
+              >
+                <View className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-500 via-blue-500 to-transparent" />
+                
+                <View className="flex-row justify-between items-center mb-4">
+                  <View>
+                    <Text className="text-[10px] font-black uppercase text-slate-400">Omega-3 Concentration</Text>
+                    <Text className="text-lg font-black text-white italic mt-0.5">High Density (94%)</Text>
+                  </View>
+                  <View className="w-10 h-10 rounded-none items-center justify-center bg-cyan-500/10 border border-cyan-500/20">
+                    <MaterialCommunityIcons name="water-percent" size={20} color="#00d4ff" />
+                  </View>
                 </View>
-                <View className="w-10 h-10 rounded-none items-center justify-center bg-cyan-500/10 border border-cyan-500/20">
-                  <MaterialCommunityIcons name="water-percent" size={20} color="#00d4ff" />
-                </View>
-              </View>
 
-              {/* Efficiency Progress Bar */}
-              <View className="space-y-2">
-                <View className="flex-row justify-between text-[9px] font-black uppercase tracking-wider text-slate-400">
-                  <Text>Bio-absorption Index</Text>
-                  <Text>98% Optimal</Text>
+                {/* Efficiency Progress Bar */}
+                <View className="space-y-2">
+                  <View className="flex-row justify-between text-[9px] font-black uppercase tracking-wider text-slate-400">
+                    <Text>Bio-absorption Index</Text>
+                    <Text>98% Optimal</Text>
+                  </View>
+                  <View className="h-2 w-full bg-slate-800 rounded-none overflow-hidden">
+                    <LinearGradient
+                      colors={['#00d4ff', '#00ffaa']}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
+                      className="h-full rounded-none"
+                      style={{ width: '98%' }}
+                    />
+                  </View>
                 </View>
-                <View className="h-2 w-full bg-slate-800 rounded-none overflow-hidden">
-                  <LinearGradient
-                    colors={['#00d4ff', '#00ffaa']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
-                    className="h-full rounded-none"
-                    style={{ width: '98%' }}
-                  />
-                </View>
-              </View>
 
-              <View className="flex-row justify-between mt-5 pt-4 border-t border-white/5">
-                <View className="items-center flex-1">
-                  <Text className="text-[9px] font-black text-slate-500 uppercase">Protein</Text>
-                  <Text className="text-sm font-black text-emerald-400 mt-0.5">34g</Text>
+                <View className="flex-row justify-between mt-5 pt-4 border-t border-white/5">
+                  <View className="items-center flex-1">
+                    <Text className="text-[9px] font-black text-slate-500 uppercase">Protein</Text>
+                    <Text className="text-sm font-black text-emerald-400 mt-0.5">34g</Text>
+                  </View>
+                  <View className="items-center flex-1 border-x border-white/5">
+                    <Text className="text-[9px] font-black text-slate-500 uppercase">Calories</Text>
+                    <Text className="text-sm font-black text-cyan-400 mt-0.5">320 kcal</Text>
+                  </View>
+                  <View className="items-center flex-1">
+                    <Text className="text-[9px] font-black text-slate-500 uppercase">Prep Level</Text>
+                    <Text className="text-sm font-black text-amber-400 mt-0.5">Medium</Text>
+                  </View>
                 </View>
-                <View className="items-center flex-1 border-x border-white/5">
-                  <Text className="text-[9px] font-black text-slate-500 uppercase">Calories</Text>
-                  <Text className="text-sm font-black text-cyan-400 mt-0.5">320 kcal</Text>
-                </View>
-                <View className="items-center flex-1">
-                  <Text className="text-[9px] font-black text-slate-500 uppercase">Prep Level</Text>
-                  <Text className="text-sm font-black text-amber-400 mt-0.5">Medium</Text>
-                </View>
-              </View>
-            </LinearGradient>
+              </LinearGradient>
+            </ChamferedBox>
           </View>
           
           {/* Ingredients Section */}
@@ -303,29 +311,36 @@ export default function RecipeDetailsScreen() {
               <Text className="text-sm font-black uppercase text-foreground tracking-widest">Required Elements</Text>
             </View>
             
-            <LinearGradient
-              colors={['rgba(30, 41, 59, 0.4)', 'rgba(15, 23, 42, 0.65)']}
-              className="rounded-[20px] p-5 border relative overflow-hidden space-y-3.5"
-              style={{ borderColor: 'rgba(255, 255, 255, 0.08)' }}
+            <ChamferedBox
+              fillColor="transparent"
+              strokeColor="rgba(255, 255, 255, 0.08)"
+              bevelSize={16}
+              className="relative overflow-hidden"
+              style={{ minHeight: 120 }}
             >
-              <View className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500 via-cyan-500 to-transparent" />
-              
-              {(ingredients as string[]).map((ing: string, i: number) => (
-                <View key={i} className="flex-row items-center gap-3.5">
-                  {/* Premium fish bullet icon */}
-                  <View 
-                    className="w-7 h-7 rounded-none items-center justify-center border"
-                    style={{
-                      backgroundColor: 'rgba(16, 185, 129, 0.08)',
-                      borderColor: 'rgba(16, 185, 129, 0.25)',
-                    }}
-                  >
-                    <MaterialCommunityIcons name="fish" size={14} color="#10b981" />
+              <LinearGradient
+                colors={['rgba(30, 41, 59, 0.4)', 'rgba(15, 23, 42, 0.65)']}
+                className="p-5 w-full space-y-3.5"
+              >
+                <View className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500 via-cyan-500 to-transparent" />
+                
+                {(ingredients as string[]).map((ing: string, i: number) => (
+                  <View key={i} className="flex-row items-center gap-3.5">
+                    {/* Premium fish bullet icon */}
+                    <View 
+                      className="w-7 h-7 rounded-none items-center justify-center border"
+                      style={{
+                        backgroundColor: 'rgba(16, 185, 129, 0.08)',
+                        borderColor: 'rgba(16, 185, 129, 0.25)',
+                      }}
+                    >
+                      <MaterialCommunityIcons name="fish" size={14} color="#10b981" />
+                    </View>
+                    <Text className="text-sm text-foreground/80 flex-1 leading-relaxed font-medium">{ing}</Text>
                   </View>
-                  <Text className="text-sm text-foreground/80 flex-1 leading-relaxed font-medium">{ing}</Text>
-                </View>
-              ))}
-            </LinearGradient>
+                ))}
+              </LinearGradient>
+            </ChamferedBox>
           </View>
 
           {/* Execution Protocol */}
@@ -337,29 +352,36 @@ export default function RecipeDetailsScreen() {
             
             <View className="space-y-4">
               {(steps as string[]).map((step: string, i: number) => (
-                <LinearGradient
+                <ChamferedBox
                   key={i}
-                  colors={['rgba(30, 41, 59, 0.3)', 'rgba(15, 23, 42, 0.5)']}
-                  className="flex-row items-start gap-4 rounded-none p-4 border relative overflow-hidden"
-                  style={{ borderColor: 'rgba(255, 255, 255, 0.06)' }}
+                  fillColor="transparent"
+                  strokeColor="rgba(255, 255, 255, 0.06)"
+                  bevelSize={10}
+                  style={{ minHeight: 60 }}
+                  className="relative overflow-hidden"
                 >
-                  {/* Left neon indicator border */}
-                  <View className="absolute left-0 top-0 bottom-0 w-[3px]" style={{ backgroundColor: colors.primary }} />
-                  
-                  <View 
-                    className="w-6 h-6 rounded-none items-center justify-center border" 
-                    style={{ 
-                      borderColor: colors.primary, 
-                      backgroundColor: 'rgba(255,255,255,0.03)',
-                      shadowColor: colors.primary,
-                      shadowOpacity: 0.15,
-                      shadowRadius: 3
-                    }}
+                  <LinearGradient
+                    colors={['rgba(30, 41, 59, 0.3)', 'rgba(15, 23, 42, 0.5)']}
+                    className="flex-row items-start gap-4 p-4 w-full"
                   >
-                    <Text className="text-[10px] font-black" style={{ color: colors.primary }}>{i + 1}</Text>
-                  </View>
-                  <Text className="text-sm text-foreground/90 flex-1 leading-relaxed pt-0.5 font-medium">{step}</Text>
-                </LinearGradient>
+                    {/* Left neon indicator border */}
+                    <View className="absolute left-0 top-0 bottom-0 w-[3px]" style={{ backgroundColor: colors.primary }} />
+                    
+                    <View 
+                      className="w-6 h-6 rounded-none items-center justify-center border" 
+                      style={{ 
+                        borderColor: colors.primary, 
+                        backgroundColor: 'rgba(255,255,255,0.03)',
+                        shadowColor: colors.primary,
+                        shadowOpacity: 0.15,
+                        shadowRadius: 3
+                      }}
+                    >
+                      <Text className="text-[10px] font-black" style={{ color: colors.primary }}>{i + 1}</Text>
+                    </View>
+                    <Text className="text-sm text-foreground/90 flex-1 leading-relaxed pt-0.5 font-medium">{step}</Text>
+                  </LinearGradient>
+                </ChamferedBox>
               ))}
             </View>
           </View>

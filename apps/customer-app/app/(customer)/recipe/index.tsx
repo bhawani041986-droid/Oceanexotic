@@ -8,6 +8,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Svg, { Path, Circle } from 'react-native-svg';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { RECIPES_DB, Recipe } from '@/constants/recipes';
+import { ChamferedBox } from '@/components/ui/ChamferedBox';
 
 // Premium stylized outline fish SVG decorator
 const FishDecoratorSVG = ({ style, color }: { style?: any; color: string }) => (
@@ -197,71 +198,77 @@ export default function RecipesListScreen() {
 
           {filteredRecipes.length > 0 ? (
             filteredRecipes.map((recipe) => (
-              <Pressable
+              <ChamferedBox
                 key={recipe.id}
-                onPress={() => router.push({ pathname: "/recipe/[id]", params: { id: recipe.id } })}
-                className="relative h-48 overflow-hidden rounded-[20px] border shadow-xl justify-end"
-                style={{ borderColor: colors.border }}
+                fillColor="transparent"
+                strokeColor={colors.border}
+                bevelSize={16}
+                style={{ height: 192, minHeight: 192 }}
+                className="relative overflow-hidden shadow-xl"
               >
-                <Image
-                  source={{ uri: recipe.image }}
-                  className="absolute inset-0 h-full w-full opacity-60"
-                  contentFit="cover"
-                />
-                <LinearGradient
-                  colors={['transparent', 'rgba(8,13,25,0.98)']}
-                  className="absolute inset-0"
-                />
+                <Pressable
+                  onPress={() => router.push({ pathname: "/recipe/[id]", params: { id: recipe.id } })}
+                  className="w-full h-full justify-end"
+                >
+                  <Image
+                    source={{ uri: recipe.image }}
+                    className="absolute inset-0 h-full w-full opacity-60"
+                    contentFit="cover"
+                  />
+                  <LinearGradient
+                    colors={['transparent', 'rgba(8,13,25,0.98)']}
+                    className="absolute inset-0"
+                  />
 
-                <View className="relative z-10 p-5 gap-2">
-                  <View className="flex-row gap-2 flex-wrap">
-                    <View 
-                      className="border px-2 py-0.5 rounded"
-                      style={{
-                        backgroundColor: 'rgba(16,185,129,0.1)',
-                        borderColor: 'rgba(16,185,129,0.3)'
-                      }}
-                    >
-                      <Text className="text-[8px] font-black uppercase text-emerald-400">{recipe.region}</Text>
+                  <View className="relative z-10 p-5 gap-2">
+                    <View className="flex-row gap-2 flex-wrap">
+                      <ChamferedBox 
+                        fillColor="rgba(16,185,129,0.1)"
+                        strokeColor="rgba(16,185,129,0.3)"
+                        bevelSize={4}
+                        style={{ minHeight: 20 }}
+                        className="flex-shrink"
+                        contentClassName="w-auto flex-shrink px-2 py-0.5"
+                      >
+                        <Text className="text-[8px] font-black uppercase text-emerald-400">{recipe.region}</Text>
+                      </ChamferedBox>
+                      <ChamferedBox 
+                        fillColor="rgba(6,182,212,0.1)"
+                        strokeColor="rgba(6,182,212,0.3)"
+                        bevelSize={4}
+                        style={{ minHeight: 20 }}
+                        className="flex-shrink"
+                        contentClassName="w-auto flex-shrink px-2 py-0.5"
+                      >
+                        <Text className="text-[8px] font-black uppercase text-cyan-400">{recipe.prepType}</Text>
+                      </ChamferedBox>
+                      <ChamferedBox 
+                        fillColor="rgba(255,255,255,0.05)"
+                        strokeColor="rgba(255,255,255,0.1)"
+                        bevelSize={4}
+                        style={{ minHeight: 20 }}
+                        className="flex-shrink"
+                        contentClassName="w-auto flex-shrink px-2 py-0.5"
+                      >
+                        <Text className="text-[8px] font-black uppercase text-slate-400">{recipe.time}</Text>
+                      </ChamferedBox>
                     </View>
-                    <View 
-                      className="border px-2 py-0.5 rounded"
-                      style={{
-                        backgroundColor: 'rgba(6,182,212,0.1)',
-                        borderColor: 'rgba(6,182,212,0.3)'
-                      }}
-                    >
-                      <Text className="text-[8px] font-black uppercase text-cyan-400">{recipe.prepType}</Text>
-                    </View>
-                    <View className="bg-white/5 border border-white/10 px-2 py-0.5 rounded">
-                      <Text className="text-[8px] font-black uppercase text-slate-400">{recipe.time}</Text>
+
+                    <Text className="text-lg font-black uppercase italic text-white leading-tight">
+                      {recipe.title}
+                    </Text>
+                    
+                    <View className="flex-row justify-between items-center mt-1">
+                      <Text className="text-[9px] font-black text-slate-400 uppercase">
+                        Seafood: <Text style={{ color: colors.primary }}>{recipe.fishType}</Text>
+                      </Text>
+                      <Text className="text-[9px] font-black uppercase tracking-widest text-primary">
+                        VIEW RECIPE ➜
+                      </Text>
                     </View>
                   </View>
-
-                  <Text className="text-lg font-black uppercase italic text-white leading-tight">
-                    {recipe.title}
-                  </Text>
-                  
-                  <View className="flex-row justify-between items-center mt-1">
-                    <Text className="text-[9px] font-black text-slate-400 uppercase">
-                      Seafood: <Text style={{ color: colors.primary }}>{recipe.fishType}</Text>
-                    </Text>
-                    <Text className="text-[9px] font-black uppercase tracking-widest text-primary">
-                      VIEW RECIPE ➜
-                    </Text>
-                  </View>
-                </View>
-
-                {/* Cybernetic corners overlay */}
-                <Svg width="16" height="16" style={{ position: "absolute", top: -1, left: -1, zIndex: 40 }}>
-                  <Path d="M0,0 L16,0 L0,16 Z" fill={colors.bg} />
-                  <Path d="M16,0 L0,16" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-                </Svg>
-                <Svg width="16" height="16" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 40 }}>
-                  <Path d="M16,16 L0,16 L16,0 Z" fill={colors.bg} />
-                  <Path d="M0,16 L16,0" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-                </Svg>
-              </Pressable>
+                </Pressable>
+              </ChamferedBox>
             ))
           ) : (
             <View className="py-16 items-center justify-center border-2 border-dashed border-white/5 rounded-none opacity-50">

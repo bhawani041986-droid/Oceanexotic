@@ -14,6 +14,8 @@ const IMG_MACKEREL: ImageRequireSource = require("../../assets/ICONS/mackerel.we
 const IMG_PRAWNS: ImageRequireSource = require("../../assets/ICONS/tiger-prawns.webp");
 const IMG_CRAB: ImageRequireSource = require("../../assets/ICONS/mud-cram.webp");
 const IMG_LOBSTER: ImageRequireSource = require("../../assets/ICONS/spiny-lobster.webp");
+const IMG_MUTTON: ImageRequireSource = require("../../assets/ICONS/mutton.png");
+const IMG_CHICKEN: ImageRequireSource = require("../../assets/ICONS/chicken.png");
 
 export interface Category {
   name: string;
@@ -31,4 +33,6 @@ export const CATEGORIES: Category[] = [
   { name: "Exotic Catch",    image: IMG_LOBSTER,  slug: "exotic",     glowColor: "#b91c1c" },
   { name: "Ready to Cook",   image: IMG_GROUPER,  slug: "ready-to-cook", glowColor: "#92400e" },
   { name: "Coastal Dry Fish",image: IMG_POMFRET,  slug: "dry-fish",   glowColor: "#cbd5e1" },
+  { name: "Mutton",          image: IMG_MUTTON,   slug: "mutton",     glowColor: "#f43f5e" },
+  { name: "Chicken",         image: IMG_CHICKEN,  slug: "chicken",    glowColor: "#fbbf24" },
 ];

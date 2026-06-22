@@ -245,7 +245,8 @@ const FilterSection = ({ title, options }: { title: string, options: string[] })
 import { Suspense } from "react";
 
 function ProductListingContent() {
-  const { categories: PRODUCT_CATEGORIES } = useCategories();
+  const { categories: ALL_CATEGORIES } = useCategories();
+  const PRODUCT_CATEGORIES = ALL_CATEGORIES.filter(c => (c.status || "ACTIVE") === "ACTIVE");
   const CATEGORIES = ["All Seafood", ...PRODUCT_CATEGORIES.map(c => c.label)];
 
   const router = useRouter();

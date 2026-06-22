@@ -31,11 +31,14 @@ const CATEGORY_UI_MAPPING: Record<string, { desc: string, icon: string, color: s
   'STEAKS & FILLETS': { icon: "🥩", color: "from-rose-500/20", desc: "Premium cuts, steaks, and fillets for culinary excellence." },
   'FROZEN': { icon: "❄️", color: "from-sky-500/20", desc: "Flash-frozen maritime assets preserving maximum freshness." },
   'DRY FISH': { icon: "🐡", color: "from-amber-500/20", desc: "Coastal dry fish and preserved delicacies." },
-  'READY TO COOK': { icon: "🍳", color: "from-emerald-500/20", desc: "Marinated, prepped, and ready-to-cook selections." }
+  'READY TO COOK': { icon: "🍳", color: "from-emerald-500/20", desc: "Marinated, prepped, and ready-to-cook selections." },
+  'MUTTON': { icon: "🥩", color: "from-red-500/20", desc: "Fresh premium mutton cuts, ribs, and minced meat." },
+  'CHICKEN': { icon: "🍗", color: "from-yellow-500/20", desc: "High-quality chicken, breast cuts, drumsticks, and wings." }
 };
 
 export default function CustomerCategoriesPage() {
-  const { categories: PRODUCT_CATEGORIES } = useCategories();
+  const { categories: ALL_CATEGORIES } = useCategories();
+  const PRODUCT_CATEGORIES = ALL_CATEGORIES.filter(cat => (cat.status || "ACTIVE") === "ACTIVE");
   
   const CATEGORIES = PRODUCT_CATEGORIES.map(cat => ({
      id: cat.id,
