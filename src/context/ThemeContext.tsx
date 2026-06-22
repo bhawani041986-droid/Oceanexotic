@@ -4,6 +4,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { useSettingsStore } from "@/store/settingsStore";
 
 export type ThemeType = 
+  | "theme-ocean-global"
+  | "theme-ocean-global-light"
   | "theme-ocean-neon"
   | "theme-midnight-executive"
   | "theme-aqua-glass"

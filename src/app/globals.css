@@ -98,16 +98,56 @@ body { top: 0px !important; margin-top: 0px !important; }
 .font-kanit { font-family: 'Kanit', sans-serif; font-weight: 800; }
 .font-cinzel { font-family: 'Cinzel', serif; font-weight: 900; letter-spacing: -0.02em; }
 
-/* THEME 1 — OCEAN NEON (Default is Ocean Neon) */
-.theme-ocean-neon {
-  --primary: #7C3AED;
-  --primary-light: #A78BFA;
-  --accent: #3B82F6;
-  --accent-light: #06B6D4;
-  --background: #020617;
-  --secondary: #0F172A;
-  --card: #1E293B;
-  --shadow-glow: 0 0 24px rgba(124, 58, 237, 0.4);
+/* THEME 1 — OCEAN GLOBAL DARK */
+.theme-ocean-global {
+  --foreground: #F7FBFC;
+  --background: #061826;
+  --primary: #00A6B6;
+  --primary-foreground: #FFFFFF;
+  --secondary: #FF6B6B;
+  --secondary-foreground: #FFFFFF;
+  --accent: #00E5FF;
+  --accent-foreground: #000000;
+  --destructive: #FF6B6B;
+  --destructive-foreground: #FFFFFF;
+  --muted: #0B1F33;
+  --muted-foreground: #CBD5E1;
+  --card: #0F2D3F;
+  --card-foreground: #F7FBFC;
+  --popover: #0F2D3F;
+  --popover-foreground: #F7FBFC;
+  --border: rgba(220, 231, 236, 0.1);
+  --input: rgba(220, 231, 236, 0.1);
+  --ring: #00A6B6;
+  --shadow-glow: 0 0 24px rgba(0, 166, 182, 0.28);
+  --shadow-glow-secondary: 0 0 24px rgba(0, 229, 255, 0.28);
+  --glass-bg: rgba(15, 45, 63, 0.7);
+}
+
+/* THEME 1B — OCEAN GLOBAL LIGHT */
+.theme-ocean-global-light {
+  --foreground: #0B1F33;
+  --background: #FFFFFF;
+  --primary: #00A6B6;
+  --primary-foreground: #FFFFFF;
+  --secondary: #FF6B6B;
+  --secondary-foreground: #FFFFFF;
+  --accent: #00E5FF;
+  --accent-foreground: #000000;
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  --muted: #F8FAFC;
+  --muted-foreground: #64748B;
+  --card: #F7FBFC;
+  --card-foreground: #0B1F33;
+  --popover: #FFFFFF;
+  --popover-foreground: #0B1F33;
+  --border: rgba(0, 59, 92, 0.1);
+  --input: rgba(0, 59, 92, 0.1);
+  --ring: #00A6B6;
+  --shadow-glow: 0 0 24px rgba(0, 166, 182, 0.15);
+  --shadow-glow-secondary: 0 0 24px rgba(0, 229, 255, 0.15);
+  --glass-bg: rgba(255, 255, 255, 0.8);
 }
 
 /* THEME 2 — MIDNIGHT EXECUTIVE */

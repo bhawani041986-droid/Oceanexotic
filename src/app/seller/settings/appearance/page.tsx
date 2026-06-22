@@ -30,13 +30,22 @@ import { useToast } from "@/components/ui/Toast";
 
 const THEMES: { id: ThemeType; name: string; description: string; colors: string[]; style: string; accent: string; gradient: string }[] = [
   { 
-    id: "theme-ocean-neon", 
-    name: "Ocean Neon", 
-    description: "Cyberpunk maritime node with electric violet flows.", 
-    colors: ["#7C3AED", "#3B82F6", "#06B6D4"],
-    style: "bg-[#0B1120]",
-    accent: "bg-primary shadow-glow-purple",
-    gradient: "from-[#7C3AED] via-[#3B82F6] to-[#06B6D4]"
+    id: "theme-ocean-global", 
+    name: "Ocean Global (Dark)", 
+    description: "Premium Deep Ocean aesthetic with Neon Coral and Cyan highlights.", 
+    colors: ["#00A6B6", "#FF6B6B", "#00E5FF"],
+    style: "bg-[#061826]",
+    accent: "bg-[#00A6B6] shadow-glow-blue",
+    gradient: "from-[#00A6B6] via-[#006D77] to-[#00E5FF]"
+  },
+  { 
+    id: "theme-ocean-global-light", 
+    name: "Ocean Global (Light)", 
+    description: "Pristine white backdrop retaining premium aquatic accents.", 
+    colors: ["#00A6B6", "#FF6B6B", "#0B1F33"],
+    style: "bg-white",
+    accent: "bg-[#00A6B6] shadow-glow-blue",
+    gradient: "from-[#00A6B6] to-[#00E5FF]"
   },
   { 
     id: "theme-midnight-executive", 

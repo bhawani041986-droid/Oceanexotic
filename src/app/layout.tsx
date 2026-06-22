@@ -133,13 +133,13 @@ export default function RootLayout({
                 }
                 if (theme) {
                    document.documentElement.classList.add(theme);
-                   var lightThemes = ['theme-light-sovereign', 'theme-swiggy-vibrant', 'theme-zomato-passion'];
+                   var lightThemes = ['theme-light-sovereign', 'theme-swiggy-vibrant', 'theme-zomato-passion', 'theme-ocean-global-light'];
                    if (lightThemes.includes(theme)) {
                      document.documentElement.classList.remove('dark');
                      document.documentElement.classList.add('light');
                    }
                 } else {
-                   document.documentElement.classList.add('theme-ocean-neon');
+                   document.documentElement.classList.add('theme-ocean-global');
                 }
                 
                 if (font) {

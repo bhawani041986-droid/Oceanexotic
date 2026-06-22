@@ -167,7 +167,20 @@ export function useThemeColors(): ThemeColors {
         border: "rgba(255, 255, 255, 0.08)",
         isDark: true,
       };
-    case "theme-ocean-neon":
+    case "theme-ocean-global-light":
+      return {
+        primary: "#00A6B6",
+        secondary: "#FF6B6B",
+        accent: "#00E5FF",
+        bg: "#FFFFFF",
+        bgAlt: "#F7FBFC",
+        card: "#F7FBFC",
+        text: "#0B1F33",
+        textMuted: "#64748B",
+        border: "rgba(0, 59, 92, 0.1)",
+        isDark: false,
+      };
+    case "theme-ocean-global":
     default:
       return {
         primary: "#00A6B6",
