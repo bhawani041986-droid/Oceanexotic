@@ -13,7 +13,10 @@ import {
 } from "react-native";
 import Svg, { Polygon, Defs, LinearGradient as SvgLinearGradient, Stop, Path, ClipPath, Image as SvgImage } from "react-native-svg";
 import { Image } from "expo-image";
+import Animated, { FadeIn, FadeOut, FadeInDown } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
+
+const AnimatedImage = Animated.createAnimatedComponent(Image);
 import { useRouter } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useHomeData } from "@/hooks/useHomeData";
@@ -223,7 +226,27 @@ export default function CustomerHomeScreen() {
   const titleParts = banner?.title?.split(":") ?? [];
   const heroTitle = titleParts[0] || "Maritime";
   const heroAccent = titleParts[1]?.trim() || "Redefined.";
-  const heroImage = resolveMediaUrl(settings.customerAssets.hero);
+  
+  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+
+  const heroSlides = useMemo(() => {
+    const fallbackHero2 = "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?auto=format&fit=crop&q=80"; 
+    const fallbackHero3 = "https://images.unsplash.com/photo-1599084993091-1cb5c0721cc6?auto=format&fit=crop&q=80";
+    return [
+      resolveMediaUrl(settings.customerAssets.hero), 
+      resolveMediaUrl((settings.customerAssets as any).hero2) || fallbackHero2, 
+      resolveMediaUrl((settings.customerAssets as any).hero3) || fallbackHero3
+    ].filter(Boolean) as string[];
+  }, [settings.customerAssets]);
+
+  useEffect(() => {
+    if (heroSlides.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [heroSlides.length]);
+
   const promoImage =
     resolveMediaUrl(banner?.image_url) || resolveMediaUrl(settings.customerAssets.promo);
 
@@ -309,18 +332,19 @@ export default function CustomerHomeScreen() {
       >
         {/* Hero */}
         <View className="relative min-h-[224px] overflow-hidden">
-          {heroImage ? (
-            <Image
-              source={{ uri: heroImage }}
-              className="absolute inset-0 h-full w-full"
+          {heroSlides.length > 0 ? (
+            <AnimatedImage
+              key={currentHeroIndex} // Key forces re-render for entering/exiting animations
+              entering={FadeIn.duration(1000)}
+              exiting={FadeOut.duration(1000)}
+              source={{ uri: heroSlides[currentHeroIndex] }}
+              className="absolute inset-0 h-full w-full opacity-60"
               contentFit="cover"
               priority="high"
             />
           ) : null}
           <View className="relative z-10 px-4 pb-5 pt-3 flex-1">
-            {/* Pre-Orders widget moved from here */}
-
-            <View className="flex-1">
+            <Animated.View entering={FadeInDown.duration(800).delay(200)} className="flex-1">
               <View 
                 className="self-start rounded-none border px-2.5 py-1"
                 style={{
@@ -328,46 +352,48 @@ export default function CustomerHomeScreen() {
                   backgroundColor: getRgba(primaryColor, 0.1)
                 }}
               >
-                <Text className="text-[8px] font-black uppercase tracking-[0.2em]" style={{ color: primaryColor }}>
-                  {banner?.sector || "Local"} Market Sync: Active
+                <Text numberOfLines={1} ellipsizeMode="tail" className="text-[8px] font-black uppercase tracking-[0.2em]" style={{ color: primaryColor }}>
+                  {banner?.sector || "Premium"} Seafood Market
                 </Text>
               </View>
               <Text className="mt-2 text-2xl font-black uppercase italic leading-tight" style={{ color: colors.text }}>
-                {heroTitle}
-                {"\n"}
-                <Text style={{ color: primaryColor }}>{heroAccent}</Text>
+                {heroTitle} <Text style={{ color: primaryColor }}>{heroAccent}</Text>
               </Text>
-              <Text className="mt-1.5 text-xs font-medium italic" style={{ color: colors.textMuted }}>
-                Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers.
+              <Text className="mt-1.5 text-xs font-medium italic drop-shadow-md" style={{ color: colors.text }}>
+                {settings.customerAssets?.heroSubtitle || "Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers."}
               </Text>
-            </View>
-            <View className="mt-auto pt-3 flex-row gap-2">
-              <Button
-                label="SHOP FRESH"
-                onPress={() => router.push("/products")}
-                className="h-10 flex-1 shadow-[0_0_15px_rgba(0,0,0,0.8)]"
-              />
-              <Button
-                label="CATEGORIES"
-                variant="ghost"
-                onPress={() => router.push("/products")}
-                className="h-10 flex-1 border border-white/10 bg-black/40"
-              />
-            </View>
+            </Animated.View>
 
-            {/* Relocated Pre-Orders Widget */}
-            <View className="w-full mt-3 z-30 pointer-events-auto">
-               <View className="p-2.5 rounded-xl border flex-col gap-1.5 w-full" style={{ backgroundColor: '#0b0e14e6', borderColor: 'rgba(245,158,11,0.3)' }}>
+            {/* Pagination Fish Icons (Absolute Bottom Left) */}
+            {heroSlides.length > 1 && (
+              <View className="absolute bottom-4 left-4 flex-row items-center gap-1.5 z-30">
+                {heroSlides.map((_, idx) => (
+                  <Pressable
+                    key={idx}
+                    onPress={() => setCurrentHeroIndex(idx)}
+                  >
+                    <MaterialCommunityIcons 
+                      name="fish" 
+                      size={currentHeroIndex === idx ? 24 : 18} 
+                      color={currentHeroIndex === idx ? primaryColor : "rgba(255,255,255,0.5)"} 
+                    />
+                  </Pressable>
+                ))}
+              </View>
+            )}
+
+            {/* Relocated Pre-Orders Widget (Absolute Bottom Right) */}
+            <View className="absolute bottom-4 right-4 w-[55%] z-30 pointer-events-auto">
+               <View className="p-2.5 rounded-xl border flex-col gap-1.5 w-full shadow-lg" style={{ backgroundColor: '#0b0e14e6', borderColor: 'rgba(245,158,11,0.3)' }}>
                  <View className="flex-row items-center justify-between w-full">
                    <View className="flex-row items-center gap-1.5">
                      <View className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                     <Text className="text-[10px] font-black uppercase italic tracking-wider text-amber-400">PRE-ORDERS</Text>
+                     <Text className="text-[9px] font-black uppercase italic tracking-wider text-amber-400">PRE-ORDERS</Text>
                    </View>
-                   <Text className="text-[9px] font-bold text-white uppercase tracking-wider">4:00 AM - 10:00 PM</Text>
                  </View>
                  <View className="flex-row items-center justify-between w-full pt-1.5 border-t border-white/10">
-                   <Text className="text-[8px] font-black text-amber-300/90 uppercase tracking-widest">Next Dispatch</Text>
-                   <Text className="text-[8px] font-black text-white uppercase truncate">Tomorrow at 05:30 AM</Text>
+                   <Text className="text-[7px] font-black text-amber-300/90 uppercase tracking-widest">Next Dispatch</Text>
+                   <Text className="text-[7px] font-black text-white uppercase truncate">Tomorrow at 05:30 AM</Text>
                  </View>
                </View>
             </View>
