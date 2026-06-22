@@ -533,29 +533,44 @@ const MaritimeWaveDivider = () => {
   );
 };
 
-const SectionTitle = ({ title, subtitle, centered = false }: { title: string, subtitle?: string, centered?: boolean }) => (
-  <div className={cn("mb-2 space-y-0.5 px-4 md:px-0", centered && "text-center")}>
-    <motion.h2 
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="text-2xl md:text-5xl font-black text-[var(--c-text-primary)] tracking-tight uppercase italic"
-    >
-      {title}
-    </motion.h2>
-    {subtitle && (
-      <motion.p 
+const SectionTitle = ({ title, subtitle, centered = false }: { title: string, subtitle?: string, centered?: boolean }) => {
+  const words = title.split(" ");
+  const firstWord = words[0];
+  const restWords = words.slice(1).join(" ");
+  return (
+    <div className={cn("mb-2 space-y-0.5 px-4 md:px-0", centered && "text-center")}>
+      <motion.h2
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ delay: 0.1 }}
-        className="text-[9px] md:text-[11px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] italic"
+        className="text-xl md:text-3xl font-black tracking-tight uppercase italic leading-tight"
       >
-        {subtitle}
-      </motion.p>
-    )}
-  </div>
-);
+        <span style={{ color: 'var(--c-primary)' }}>{firstWord}</span>
+        {restWords && <span className="text-[var(--c-text-primary)]"> {restWords}</span>}
+      </motion.h2>
+      {/* Gradient underline */}
+      <div className="mt-1.5 mb-3.5 h-[2px] w-16 rounded-full overflow-hidden">
+        <div
+          style={{
+            height: '100%',
+            background: 'linear-gradient(to right, var(--c-primary), var(--c-text-primary))'
+          }}
+        />
+      </div>
+      {subtitle && (
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="text-[9px] md:text-[11px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] italic"
+        >
+          {subtitle}
+        </motion.p>
+      )}
+    </div>
+  );
+};
 
 // --- Mock Data ---
 

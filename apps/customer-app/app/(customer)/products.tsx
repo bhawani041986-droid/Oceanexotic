@@ -407,9 +407,19 @@ export default function ProductsScreen() {
                       {category.name === "Seawater Fish" && addons.length > 0 && (
                         <View className="space-y-3 mt-6">
                           <View className="flex-row items-center justify-between">
-                            <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
-                              Cooking <Text style={{ color: "#10B981" }}>Extras</Text>
-                            </Text>
+                            <View>
+                              <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }} numberOfLines={1}>
+                                Cooking <Text style={{ color: "#10B981" }}>Extras</Text>
+                              </Text>
+                              <View className="mt-1.5 mb-2.5" style={{ height: 2, width: 64, borderRadius: 999, overflow: 'hidden' }}>
+                                <LinearGradient
+                                  colors={[colors.text, "#10B981"]}
+                                  start={{ x: 0, y: 0 }}
+                                  end={{ x: 1, y: 0 }}
+                                  style={{ flex: 1 }}
+                                />
+                              </View>
+                            </View>
                           </View>
                           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
                             <View className="flex-row gap-3 pr-8">
