@@ -29,9 +29,12 @@ interface SettingsState {
   adminAppUrl?: string;
   atmosphericGlow: number;
   flashDealActive: boolean;
+  flashDealStart: string;
   flashDealEnd: string;
   flashDealTitle: string;
   flashDealSector: string;
+  flashDealFont: string;
+  flashDealCarousel: { image_url: string; product_link: string }[];
   customerAssets: {
     logo: string;
     hero: string;
@@ -92,9 +95,16 @@ export const useSettingsStore = create<SettingsState>()(
       adminAppUrl: "https://expo.dev/accounts/bhawani-ocean/projects/oceanexotic-admin/builds/db18e872-65d2-417d-9d9a-28d6e75e654d",
       atmosphericGlow: 15,
       flashDealActive: true,
+      flashDealStart: new Date().toISOString(), // Now
       flashDealEnd: new Date(Date.now() + 1000 * 60 * 60 * 3).toISOString(), // 3 hours from now
       flashDealTitle: "Flash Deals.",
       flashDealSector: "Flash Product",
+      flashDealFont: "font-inter",
+      flashDealCarousel: [
+        { image_url: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80", product_link: "#" },
+        { image_url: "https://images.unsplash.com/photo-1599084993091-1cb5c0721cc6?auto=format&fit=crop&q=80", product_link: "#" },
+        { image_url: "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?auto=format&fit=crop&q=80", product_link: "#" }
+      ],
       customerAssets: {
         logo: "",
         hero: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80",

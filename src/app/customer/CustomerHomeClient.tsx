@@ -824,6 +824,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
   const [currentHeroIndex, setCurrentHeroIndex] = React.useState(0);
   const [footerAccordion, setFooterAccordion] = React.useState<string | null>(null);
   const [timeLeft, setTimeLeft] = React.useState({ hrs: "00", min: "00", sec: "00" });
+  const [timerStatus, setTimerStatus] = React.useState<'STARTS_IN' | 'ENDS_IN'>('ENDS_IN');
   const [cmsContent, setCmsContent] = React.useState<any[]>([]);
   const [territories, setTerritories] = React.useState<any[]>([]);
   const [todaysCatch, setTodaysCatch] = React.useState<any[]>([]);
@@ -932,8 +933,19 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
 
     const timer = setInterval(() => {
       const now = new Date().getTime();
+      const start = new Date(settings.flashDealStart || new Date()).getTime();
       const end = new Date(settings.flashDealEnd).getTime();
-      const distance = end - now;
+      
+      let distance = 0;
+      let status: 'STARTS_IN' | 'ENDS_IN' = 'ENDS_IN';
+
+      if (now < start) {
+         distance = start - now;
+         status = 'STARTS_IN';
+      } else {
+         distance = end - now;
+         status = 'ENDS_IN';
+      }
 
       if (distance < 0) {
         clearInterval(timer);
@@ -950,10 +962,11 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
         min: min.toString().padStart(2, '0'),
         sec: sec.toString().padStart(2, '0')
       });
+      setTimerStatus(status);
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [settings.flashDealActive, settings.flashDealEnd]);
+  }, [settings.flashDealActive, settings.flashDealStart, settings.flashDealEnd]);
   // 2. Absolute Hydration Delivery
   React.useEffect(() => {
     setMounted(true);
@@ -1506,36 +1519,50 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
             className="py-4 container mx-auto px-4 md:px-10"
           >
              <Card 
-                className="p-6 md:p-12 bg-gradient-to-br from-[var(--c-primary)] via-[var(--c-accent)] to-[var(--c-bg)] overflow-hidden relative shadow-[var(--c-shadow-glow)] group text-center lg:text-left"
-                style={{ clipPath: 'polygon(40px 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%, 0 40px)' }}
+                className="bg-gradient-to-br from-[var(--c-primary)] via-[var(--c-accent)] to-[var(--c-bg)] overflow-hidden relative shadow-[var(--c-shadow-glow)] group text-center rounded-3xl md:rounded-[40px]"
              >
                 <AtmosphericGlow />
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center relative z-10">
-                   <div className="space-y-4 md:space-y-6">
-                      <Badge className="bg-[var(--foreground)]/20 text-[8px] md:text-[10px] font-black tracking-[0.3em] px-4 md:px-6 py-2 border-[var(--foreground)]/20 uppercase">
-                        {settings.flashDealSector || 'Flash Product'} Live
-                      </Badge>
-                      <h2 className="text-4xl md:text-8xl font-black text-[var(--foreground)] uppercase italic leading-[0.9] md:leading-[0.85]">
-                        {settings.flashDealTitle || 'Flash Deals.'}
-                      </h2>
-                      <div className="flex gap-2 md:gap-4 justify-center lg:justify-start">
-                         {[timeLeft.hrs, timeLeft.min, timeLeft.sec].map((val, i) => (
-                            <div key={i} className="p-3 md:p-6 rounded-xl md:rounded-2xl bg-[var(--foreground)]/10 backdrop-blur-md border border-[var(--foreground)]/20 text-center min-w-[60px] md:min-w-[90px]">
-                               <p className="text-xl md:text-5xl font-black text-[var(--foreground)] italic">{val}</p>
-                               <p className="text-[7px] md:text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest mt-1">{i === 0 ? 'HRS' : i === 1 ? 'MIN' : 'SEC'}</p>
-                            </div>
-                         ))}
-                      </div>
-                      <div className="pt-2 md:pt-4">
-                         <Button className="h-14 md:h-16 px-8 md:px-12 bg-white text-[var(--c-primary)] text-[10px] md:text-[12px] font-black uppercase rounded-[var(--c-radius-btn)] w-full lg:w-auto hover:bg-[var(--foreground)]/90 shadow-xl">CLAIM ACCESS NOW</Button>
-                      </div>
+                
+                {/* Upper Half: Text & Timer */}
+                <div className="p-6 md:p-12 pb-4 relative z-10 flex flex-col items-center">
+                   <Badge className="bg-[var(--foreground)]/20 text-[8px] md:text-[10px] font-black tracking-[0.3em] px-4 md:px-6 py-2 border-[var(--foreground)]/20 uppercase mb-4 md:mb-6">
+                     {settings.flashDealSector || 'Flash Product'} Live
+                   </Badge>
+                   <h2 className={cn("text-4xl md:text-7xl lg:text-8xl font-black text-[var(--foreground)] uppercase leading-[0.9] md:leading-[0.85] text-center mb-6", settings.flashDealFont)}>
+                     {settings.flashDealTitle || 'Flash Deals.'}
+                   </h2>
+                   
+                   <p className="text-[10px] md:text-xs font-black text-[var(--foreground)] uppercase tracking-[0.3em] mb-4 opacity-80">
+                      {timerStatus === 'STARTS_IN' ? 'STARTS IN' : 'ENDS IN'}
+                   </p>
+                   <div className="flex gap-2 md:gap-4 justify-center">
+                      {[timeLeft.hrs, timeLeft.min, timeLeft.sec].map((val, i) => (
+                         <div key={i} className="p-3 md:p-6 rounded-xl md:rounded-2xl bg-black/30 backdrop-blur-md border border-[var(--foreground)]/20 text-center min-w-[60px] md:min-w-[90px] shadow-2xl">
+                            <p className="text-2xl md:text-5xl font-black text-white italic">{val}</p>
+                            <p className="text-[7px] md:text-[10px] font-black text-white/60 uppercase tracking-widest mt-1">{i === 0 ? 'HRS' : i === 1 ? 'MIN' : 'SEC'}</p>
+                         </div>
+                      ))}
                    </div>
-                   <div className="hidden lg:block relative">
-                      {settings.customerAssets?.promo ? (
-                        <img src={settings.customerAssets.promo} className="w-full h-full object-cover rounded-3xl opacity-80" />
-                      ) : (
-                        <div className="text-[250px] animate-float opacity-40">🦞</div>
-                      )}
+                </div>
+
+                {/* Lower Half: Carousel */}
+                <div className="relative z-10 mt-6 md:mt-10 overflow-hidden pb-8 px-4 md:px-8">
+                   <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 hide-scrollbar">
+                      {settings.flashDealCarousel?.map((item, idx) => {
+                         if (!item.image_url) return null;
+                         return (
+                            <div key={idx} className="min-w-[280px] md:min-w-[400px] h-[200px] md:h-[300px] snap-center shrink-0 relative rounded-2xl overflow-hidden group/carousel border border-[var(--foreground)]/10">
+                               <img src={item.image_url} className="w-full h-full object-cover group-hover/carousel:scale-105 transition-transform duration-700" />
+                               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end justify-center pb-6">
+                                  <Link href={item.product_link || "#"}>
+                                     <Button className="h-10 md:h-12 px-6 md:px-8 bg-primary text-black text-[10px] md:text-[12px] font-black uppercase tracking-widest rounded-full hover:scale-105 transition-transform shadow-xl">
+                                        View Details
+                                     </Button>
+                                  </Link>
+                               </div>
+                            </div>
+                         );
+                      })}
                    </div>
                 </div>
              </Card>

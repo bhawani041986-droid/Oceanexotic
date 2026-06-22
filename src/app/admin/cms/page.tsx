@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
 import { useSettingsStore } from "@/store/settingsStore";
+import { GlobalPromoEngine } from "@/components/admin/GlobalPromoEngine";
 import { cn } from "@/lib/utils";
 import { 
   FileText, ImageIcon, Layout, Plus, Search, Edit3, Trash2, 
@@ -18,15 +19,7 @@ import { FULL_API_URL as API_BASE_URL } from "@/config/api";
 
 export default function AdminCMSPage() {
   const router = useRouter();
-  const { flashDealActive, flashDealEnd, flashDealTitle, flashDealSector, customerAssets, atmosphericGlow, setSettings, pushSettings } = useSettingsStore();
   const { toast } = useToast();
-
-  const toLocalDatetimeLocal = (utcIsoString: string) => {
-    if (!utcIsoString) return "";
-    const d = new Date(utcIsoString);
-    const tzOffset = d.getTimezoneOffset() * 60000;
-    return new Date(d.getTime() - tzOffset).toISOString().slice(0, 16);
-  };
   
   const [content, setContent] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -326,90 +319,7 @@ export default function AdminCMSPage() {
       </div>
 
       {/* 1.5 GLOBAL PROMO ENGINE */}
-      <Card className="p-4 md:p-6 rounded-[24px] bg-bg-secondary/20 border-[var(--foreground)]/5 shadow-premium mb-6 md:mb-0">
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 border-b border-[var(--foreground)]/10 pb-6">
-          <div className="space-y-1">
-            <h3 className="text-base md:text-lg font-black text-[var(--foreground)] tracking-tighter uppercase italic flex items-center gap-2">
-              <Clock className="w-4 h-4 text-primary" /> Global Promo Engine
-            </h3>
-            <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Master Controls for Flash Deals</p>
-          </div>
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="flex items-center gap-3">
-              <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-text-secondary">Flash Deal:</span>
-              <button 
-                onClick={() => { setSettings({ flashDealActive: !flashDealActive }); pushSettings(); toast(`Flash Deal ${!flashDealActive ? 'Activated' : 'Deactivated'}`, "success"); }}
-                className={cn("w-12 h-6 rounded-full p-1 transition-colors relative flex items-center shadow-inner", flashDealActive ? "bg-primary" : "bg-black border border-[var(--foreground)]/20")}
-              >
-                 <span className={cn("absolute text-[6px] font-black uppercase", flashDealActive ? "left-1.5 text-black" : "right-1.5 text-text-secondary")}>
-                   {flashDealActive ? "ON" : "OFF"}
-                 </span>
-                 <div className={cn("w-4 h-4 rounded-full bg-white transition-transform z-10", flashDealActive ? "translate-x-6" : "translate-x-0")} />
-              </button>
-            </div>
-            <div className="flex items-center gap-2 border-l border-[var(--foreground)]/10 pl-4">
-              <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-text-secondary">Timer Ends:</span>
-              <Input 
-                type="datetime-local" 
-                value={toLocalDatetimeLocal(flashDealEnd)} 
-                onChange={(e) => { 
-                   if (!e.target.value) return;
-                   setSettings({ flashDealEnd: new Date(e.target.value).toISOString() }); 
-                   pushSettings(); 
-                   toast("Timer target updated", "info"); 
-                }}
-                className="h-8 md:h-10 text-[10px] font-black uppercase bg-black/50 border-[var(--foreground)]/10 text-[var(--foreground)] w-[180px]"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Promo Content Editor */}
-        <div className="pt-6 grid grid-cols-1 md:grid-cols-2 gap-8">
-           <div className="space-y-6">
-             <div className="space-y-2">
-                <label className="text-[10px] font-black text-text-secondary uppercase tracking-widest italic">Promo Title (e.g. Flash Deals)</label>
-                <Input 
-                   value={flashDealTitle || ""}
-                   onChange={(e) => setSettings({ flashDealTitle: e.target.value })}
-                   onBlur={() => pushSettings()}
-                   className="bg-black/50 border-[var(--foreground)]/10 text-[var(--foreground)]"
-                />
-             </div>
-             <div className="space-y-2">
-                <label className="text-[10px] font-black text-text-secondary uppercase tracking-widest italic">Target Sector (Badge)</label>
-                <Input 
-                   value={flashDealSector || ""}
-                   onChange={(e) => setSettings({ flashDealSector: e.target.value })}
-                   onBlur={() => pushSettings()}
-                   className="bg-black/50 border-[var(--foreground)]/10 text-[var(--foreground)]"
-                />
-             </div>
-           </div>
-           
-           <div className="space-y-2">
-              <label className="text-[10px] font-black text-text-secondary uppercase tracking-widest italic">Promo Cover Image</label>
-              <div className="flex gap-2">
-                <Input 
-                   value={customerAssets?.promo || ""}
-                   onChange={(e) => setSettings({ customerAssets: { ...customerAssets, promo: e.target.value } })}
-                   onBlur={() => pushSettings()}
-                   placeholder="Image URL"
-                   className="bg-black/50 border-[var(--foreground)]/10 text-[var(--foreground)]"
-                />
-              </div>
-              {customerAssets?.promo ? (
-                 <div className="h-32 w-full rounded-xl bg-black border border-[var(--foreground)]/10 overflow-hidden mt-3 relative">
-                    <img src={customerAssets.promo} className="w-full h-full object-cover opacity-80" />
-                 </div>
-              ) : (
-                 <div className="h-32 w-full rounded-xl bg-black/30 border border-dashed border-[var(--foreground)]/20 mt-3 flex items-center justify-center text-slate-500 text-[10px] font-black uppercase tracking-widest">
-                    No Image Set
-                 </div>
-              )}
-           </div>
-        </div>
-      </Card>
+      <GlobalPromoEngine />
 
       {/* 2. REGISTRY TABLE */}
       <Card className="p-1 rounded-[24px] md:rounded-[40px] bg-bg-secondary/20 border-[var(--foreground)]/5 shadow-premium overflow-hidden">
