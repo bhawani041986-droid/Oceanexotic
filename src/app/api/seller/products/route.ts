@@ -51,7 +51,10 @@ export async function GET(request: NextRequest) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { id, name, category, price, stock, status, image_url, gallery, description, seller_id } = body;
+    const { 
+      id, name, category, price, stock, status, image_url, gallery, description, seller_id,
+      is_live_inventory, catch_time, batch_label, harbor_node
+    } = body;
 
     if (!id || !name || !price) {
       return NextResponse.json({ error: "Missing Product Identity Nodes" }, { status: 400 });
@@ -74,6 +77,30 @@ export async function POST(request: Request) {
 
     if (error) throw error;
 
+    // --- SYNCHRONIZE WITH LIVE HARBOR INVENTORY ---
+    if (is_live_inventory) {
+      const todayDate = new Date().toISOString().split('T')[0];
+      const timeStr = catch_time || "05:30";
+      const freshnessDate = new Date(`${todayDate}T${timeStr}:00.000Z`);
+      const expiryDate = new Date(freshnessDate.getTime() + 24 * 60 * 60 * 1000);
+
+      await supabase.from('todays_catch').insert({
+        id: `CTH-${id}-${Date.now().toString().slice(-4)}`,
+        product_id: id,
+        seller_id: resolvedSellerId,
+        catch_date: todayDate,
+        harbor_node: harbor_node || 'Phoenix Bay Harbor',
+        quantity_kg: stock || 50,
+        remaining_kg: stock || 50,
+        price_per_kg: price || 0,
+        freshness_timestamp: freshnessDate.toISOString(),
+        expires_at: expiryDate.toISOString(),
+        catch_image_url: image_url || '',
+        batch_label: batch_label || 'MORNING',
+        status: 'FRESH'
+      });
+    }
+
     return NextResponse.json({ success: true, message: "Harvest commissioned in System Registry" });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -85,7 +112,10 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const body = await request.json();
-    const { id, name, category, price, stock, status, image_url, gallery, description } = body;
+    const { 
+      id, name, category, price, stock, status, image_url, gallery, description,
+      seller_id, is_live_inventory, catch_time, batch_label, harbor_node
+    } = body;
 
     if (!id) return NextResponse.json({ error: "Missing Asset ID" }, { status: 400 });
 
@@ -94,6 +124,55 @@ export async function PUT(request: Request) {
     }).eq('id', id);
 
     if (error) throw error;
+
+    // --- SYNCHRONIZE WITH LIVE HARBOR INVENTORY ---
+    if (is_live_inventory) {
+      // Calculate freshness timestamp combining today's date and the given catch_time
+      const todayDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+      const timeStr = catch_time || "05:30";
+      const freshnessDate = new Date(`${todayDate}T${timeStr}:00.000Z`);
+      
+      // Expire exactly 24 hours after catch
+      const expiryDate = new Date(freshnessDate.getTime() + 24 * 60 * 60 * 1000);
+
+      // Generate a unique Catch ID if needed, or upsert by product_id
+      // We will check if there's already an active catch for this product today
+      const { data: existingCatch } = await supabase
+        .from('todays_catch')
+        .select('id')
+        .eq('product_id', id)
+        .eq('catch_date', todayDate)
+        .single();
+
+      const catchPayload = {
+        product_id: id,
+        seller_id: seller_id || 'SEL-001',
+        catch_date: todayDate,
+        harbor_node: harbor_node || 'Phoenix Bay Harbor',
+        quantity_kg: stock || 50,
+        remaining_kg: stock || 50,
+        price_per_kg: price || 0,
+        freshness_timestamp: freshnessDate.toISOString(),
+        expires_at: expiryDate.toISOString(),
+        catch_image_url: image_url || '',
+        batch_label: batch_label || 'MORNING',
+        status: 'FRESH'
+      };
+
+      if (existingCatch) {
+        await supabase.from('todays_catch').update(catchPayload).eq('id', existingCatch.id);
+      } else {
+        await supabase.from('todays_catch').insert({
+          id: `CTH-${id}-${Date.now().toString().slice(-4)}`,
+          ...catchPayload
+        });
+      }
+    } else {
+      // If turned off, pull it from live inventory
+      await supabase.from('todays_catch')
+        .update({ status: 'ARCHIVED' })
+        .eq('product_id', id);
+    }
 
     return NextResponse.json({ success: true, message: "Asset Node Synchronized" });
   } catch (error: any) {
