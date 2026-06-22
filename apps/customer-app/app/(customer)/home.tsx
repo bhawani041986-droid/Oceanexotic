@@ -357,7 +357,7 @@ export default function CustomerHomeScreen() {
                 </Text>
               </View>
               <Text className="mt-2 text-2xl font-black uppercase italic leading-tight" style={{ color: colors.text }}>
-                {heroTitle} <Text style={{ color: primaryColor }}>{heroAccent}</Text>
+                {heroTitle} <Text style={{ color: colors.accent }}>{heroAccent}</Text>
               </Text>
               <Text className="mt-1.5 text-xs font-medium italic drop-shadow-md" style={{ color: colors.text }}>
                 {settings.customerAssets?.heroSubtitle || "Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers."}

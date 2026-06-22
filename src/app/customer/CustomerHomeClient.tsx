@@ -1171,7 +1171,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                   </Badge>
                 )}
                 <h1 className="text-3xl md:text-5xl lg:text-7xl font-black text-[var(--c-text-primary)] uppercase italic leading-[1] md:leading-[0.85] text-center drop-shadow-2xl">
-                   {assets?.heroTitle1 || 'Seafood'} <span className="text-[var(--c-primary)]">{assets?.heroTitle2 || 'Redefined.'}</span>
+                   {assets?.heroTitle1 || 'Seafood'} <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--c-primary)] to-[var(--c-accent)]">{assets?.heroTitle2 || 'Redefined.'}</span>
                 </h1>
              </div>
              {assets?.heroSubtitle && (

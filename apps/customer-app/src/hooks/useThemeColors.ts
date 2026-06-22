@@ -170,15 +170,15 @@ export function useThemeColors(): ThemeColors {
     case "theme-ocean-neon":
     default:
       return {
-        primary: "#7C3AED",
-        secondary: "#06B6D4",
-        accent: "#A78BFA",
-        bg: "#020617",
-        bgAlt: "#0F172A",
-        card: "#0f172a",
-        text: "#F8FAFC",
-        textMuted: "#94A3B8",
-        border: "rgba(255, 255, 255, 0.08)",
+        primary: "#00A6B6",
+        secondary: "#FF6B6B",
+        accent: "#00E5FF",
+        bg: "#061826",
+        bgAlt: "#0F2D3F",
+        card: "#0F2D3F",
+        text: "#F7FBFC",
+        textMuted: "#64748B",
+        border: "rgba(220, 231, 236, 0.1)",
         isDark: true,
       };
   }
