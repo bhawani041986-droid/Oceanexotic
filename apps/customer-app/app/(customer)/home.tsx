@@ -560,6 +560,9 @@ export default function CustomerHomeScreen() {
           )}
         </View>
 
+        {/* Flame-Sea Diagonal Promo Banner — Flash Deals Section */}
+        <FlashDealsBanner />
+
         {/* Chef's Recipes */}
         <View className="px-4 py-8">
           <View className="flex-row justify-between items-end mb-4">
@@ -1011,8 +1014,6 @@ export default function CustomerHomeScreen() {
           })}
         </ChamferedBox>
 
-        {/* Flame-Sea Diagonal Promo Banner — Flash Deals Section */}
-        <FlashDealsBanner />
       </ScrollView>
 
       {/* Picture-in-Picture Ocean Reels Feed */}
