@@ -152,7 +152,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
               <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
             <Link href="/customer" className="flex items-center gap-2 group">
-              <Logo size="lg" className="!w-[125px] !h-[33px] min-[375px]:!w-[145px] min-[375px]:!h-[38px] min-[420px]:!w-[165px] min-[420px]:!h-[44px] sm:!w-[200px] sm:!h-[53px] md:!w-[220px] md:!h-[58px] xl:!w-[240px] xl:!h-[64px]" />
+              <Logo size="lg" className="!h-[48px] !w-[144px] min-[375px]:!h-[51px] min-[375px]:!w-[153px] min-[420px]:!h-[54px] min-[420px]:!w-[162px] sm:!h-[54px] sm:!w-[162px] md:!h-[68px] md:!w-[204px] xl:!h-[72px] xl:!w-[216px]" />
             </Link>
 
             <nav className="hidden xl:flex items-center gap-6 ml-6">

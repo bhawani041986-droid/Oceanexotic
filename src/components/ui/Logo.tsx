@@ -50,7 +50,7 @@ export const Logo: React.FC<LogoProps> = ({
         }
       `}</style>
 
-      <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full" preserveAspectRatio="xMinYMid meet">
+      <svg viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full" preserveAspectRatio="xMinYMid meet">
         <defs>
           <linearGradient id={`neonGradient-${id}`} x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#00D1FF">

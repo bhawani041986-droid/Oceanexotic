@@ -104,7 +104,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               </Svg>
             </Pressable>
             <Pressable onPress={() => router.push("/home")} className="justify-center">
-              <Logo size="sm" style={{ width: 128, height: 32 }} />
+              <Logo size="sm" style={{ width: 160, height: 40 }} />
             </Pressable>
           </View>
           <View className="flex-row items-center gap-2">
@@ -243,7 +243,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
           >
             <View className="gap-6">
               <View className="flex-row items-center justify-between">
-                <Logo size="sm" style={{ width: 128, height: 32 }} />
+                <Logo size="sm" style={{ width: 160, height: 40 }} />
                 <Pressable 
                   onPress={() => setIsMenuOpen(false)} 
                   className="h-7 w-7 rounded-none border items-center justify-center active:opacity-70"
