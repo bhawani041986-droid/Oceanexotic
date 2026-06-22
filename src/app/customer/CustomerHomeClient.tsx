@@ -1565,7 +1565,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                          ))}
                       </div>
 
-                      <div className="relative z-30 max-w-[70%]">
+                      <div className="relative z-30 max-w-[85%] md:max-w-[70%]">
                         <motion.div 
                             initial={{ opacity: 0, x: -20 }}
                             whileInView={{ opacity: 1, x: 0 }}
@@ -1595,64 +1595,37 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                       </div>
                    </div>
 
-                   {/* PANEL B (Bottom/Right Diagonal): Image Carousel & Cover */}
+                   {/* PANEL B (Bottom/Right Diagonal): Image Cover Only */}
                    <div 
-                      className="absolute inset-0 z-10 flex flex-col justify-end items-end p-4 md:p-16 transition-all duration-500 bg-[#020617] bg-cover bg-center"
+                      className="absolute inset-0 z-10 flex flex-col justify-end items-end p-6 md:p-16 transition-all duration-500 bg-[#020617] bg-cover bg-center"
                       style={{ 
                          clipPath: 'polygon(100% 0px, 100% 100%, 0px 100%)',
                          backgroundImage: settings.customerAssets?.promo ? `url(${settings.customerAssets.promo})` : 'none',
                       }}
                    >
-                      {/* Dark overlay to ensure carousel is visible over the cover image */}
-                      <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
-
-                      <div className="relative z-30 w-full md:w-[80%] max-w-[600px] mt-auto">
-                         <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-2 md:pb-4 hide-scrollbar justify-start md:justify-end pr-4 md:pr-0">
-                            {settings.flashDealCarousel?.map((item, idx) => {
-                               if (!item.image_url) return null;
-                               return (
-                                  <div key={idx} className="w-[160px] h-[100px] md:w-[320px] md:h-[220px] snap-center shrink-0 relative group/carousel ml-auto md:ml-0 flex-col flex items-center">
-                                     
-                                     {/* EXACT CUT CORNER BORDER WRAPPER */}
-                                     <div 
-                                        className="w-full h-full p-[1px] bg-[var(--c-primary)] shadow-2xl group-hover/carousel:bg-[var(--foreground)] transition-colors duration-500"
-                                        style={{ clipPath: 'polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)' }}
-                                     >
-                                         <div 
-                                            className="w-full h-full bg-black relative overflow-hidden"
-                                            style={{ clipPath: 'polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)' }}
-                                         >
-                                            <img src={item.image_url} className="w-full h-full object-cover group-hover/carousel:scale-105 transition-transform duration-700 opacity-90" />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end justify-center pb-2 md:pb-4">
-                                               <Link href={item.product_link || "#"}>
-                                                  <Button 
-                                                     className="h-6 md:h-10 px-4 md:px-8 bg-white text-[var(--c-primary)] text-[8px] md:text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-transform shadow-xl"
-                                                     style={{ clipPath: 'polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)' }}
-                                                  >
-                                                     View Details
-                                                  </Button>
-                                               </Link>
-                                            </div>
-                                         </div>
-                                     </div>
-                                  </div>
-                               );
-                            })}
-                         </div>
-
-                         {/* Fish Neon Glow Navigation Indicators */}
-                         <div className="flex items-center justify-center md:justify-end gap-3 pt-2">
-                             {settings.flashDealCarousel?.map((item, idx) => {
-                                 if (!item.image_url) return null;
-                                 return (
-                                     <div key={`nav-${idx}`} className="text-[var(--c-primary)] opacity-70 hover:opacity-100 transition-opacity drop-shadow-[0_0_8px_var(--c-primary)]">
-                                         <Fish className="w-4 h-4 md:w-5 md:h-5" />
-                                     </div>
-                                 )
-                             })}
-                         </div>
-
+                      <div className="relative z-30 mt-auto">
+                         <Link href={settings.flashDealCarousel?.[0]?.product_link || "#"}>
+                            <Button 
+                               className="h-10 md:h-14 px-6 md:px-10 bg-[var(--c-primary)] text-black text-[10px] md:text-sm font-black uppercase tracking-[0.2em] hover:scale-105 hover:bg-white hover:text-[var(--c-primary)] transition-all duration-500 shadow-[0_0_20px_var(--c-primary)]"
+                               style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}
+                            >
+                               View Details
+                            </Button>
+                         </Link>
                       </div>
+                   </div>
+
+                   {/* NEON OAR / BAITHA DIVIDER */}
+                   <div className="absolute inset-0 pointer-events-none z-40 opacity-90 drop-shadow-[0_0_10px_var(--c-primary)]">
+                      {/* The Shaft */}
+                      <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
+                         <line x1="100%" y1="0%" x2="0%" y2="100%" stroke="var(--c-primary)" strokeWidth="3" />
+                         <line x1="100%" y1="0%" x2="0%" y2="100%" stroke="white" strokeWidth="1" opacity="0.5" />
+                      </svg>
+                      {/* Paddle Handle (Top Right) */}
+                      <div className="absolute top-0 right-0 w-8 h-8 md:w-12 md:h-12 bg-[var(--c-primary)] shadow-[0_0_15px_var(--c-primary)]" style={{ clipPath: 'polygon(100% 0, 100% 100%, 0 0)', borderBottomLeftRadius: '100%' }}></div>
+                      {/* Paddle Blade (Bottom Left) */}
+                      <div className="absolute bottom-0 left-0 w-16 h-16 md:w-28 md:h-28 bg-[var(--c-primary)] shadow-[0_0_20px_var(--c-primary)]" style={{ clipPath: 'polygon(0 100%, 100% 100%, 0 0)', borderTopRightRadius: '100%' }}></div>
                    </div>
                 </div>
                 
