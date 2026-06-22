@@ -580,23 +580,23 @@ export default function CustomerHomeScreen() {
               </Svg>
             </Pressable>
           </View>
-          <View className="gap-4">
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
             {((cms.data?.filter(c => c.type === 'RECIPE' && c.status === 'PUBLISHED')?.length || 0) > 0
                ? cms.data!.filter(c => c.type === 'RECIPE' && c.status === 'PUBLISHED')
                : RECIPES).map((recipe: any) => {
                const meta = recipe.metadata ? (typeof recipe.metadata === 'string' ? JSON.parse(recipe.metadata) : recipe.metadata) : {};
                return (
-              <ChamferedBox
+              <Pressable
                 key={recipe.id}
-                fillColor="transparent"
-                strokeColor="rgba(255,255,255,0.08)"
-                bevelSize={24}
-                style={{ height: 176, minHeight: 176 }}
-                className="relative overflow-hidden shadow-2xl"
+                onPress={() => router.push({ pathname: "/recipe/[id]", params: { id: String(recipe.id) } })}
+                className="mr-3 w-56"
               >
-                <Pressable
-                  className="w-full h-full justify-end"
-                  onPress={() => router.push({ pathname: "/recipe/[id]", params: { id: String(recipe.id) } })}
+                <ChamferedBox
+                  fillColor="transparent"
+                  strokeColor="rgba(255,255,255,0.08)"
+                  bevelSize={16}
+                  style={{ height: 176, minHeight: 176 }}
+                  className="w-full relative overflow-hidden shadow-2xl"
                 >
                   <Image 
                     source={{ uri: recipe.image_url || recipe.image }} 
@@ -607,7 +607,7 @@ export default function CustomerHomeScreen() {
                     colors={["transparent", "rgba(8,13,25,0.95)"]} 
                     className="absolute inset-0"
                   />
-                  <View className="relative z-10 p-5 gap-2">
+                  <View className="relative z-10 p-4 gap-2 h-full justify-end">
                     <View className="flex-row gap-2">
                       <ChamferedBox 
                         fillColor={getRgba(primaryColor, 0.1)}
@@ -630,14 +630,14 @@ export default function CustomerHomeScreen() {
                         <Text className="text-[8px] font-black uppercase text-muted-foreground relative z-10">{meta.time || recipe.time || '25m'}</Text>
                       </ChamferedBox>
                     </View>
-                    <Text className="text-xl font-black uppercase italic text-foreground">{recipe.title}</Text>
+                    <Text className="text-sm font-black uppercase italic text-foreground" numberOfLines={2}>{recipe.title}</Text>
                     <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>VIEW RECIPE ➜</Text>
                   </View>
-                </Pressable>
-              </ChamferedBox>
+                </ChamferedBox>
+              </Pressable>
             );
           })}
-          </View>
+          </ScrollView>
         </View>
 
         {/* Flame-Sea Diagonal Promo Banner — Flash Deals Section */}
