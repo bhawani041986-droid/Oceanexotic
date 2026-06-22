@@ -98,11 +98,11 @@ export function FlashDealsBanner() {
         source={require('../../../assets/paddle.png')} 
         style={{
           position: 'absolute',
-          width: 32,
-          height: 380,
+          width: 24,
+          height: 440,
           left: '50%',
-          marginLeft: -16,
-          top: (280 - 380) / 2,
+          marginLeft: -12,
+          top: (280 - 440) / 2,
           transform: [{ rotate: rotationAngle }],
           zIndex: 3,
         }}
@@ -214,13 +214,21 @@ export function FlashDealsBanner() {
       </View>
 
       {/* High-Tech Beveled Corner Overlays for Visual Parity */}
-      <Svg width="24" height="24" style={{ position: "absolute", top: -1, left: -1, zIndex: 10 }}>
+      <Svg width="24" height="24" style={{ position: "absolute", top: 0, left: 0, zIndex: 10 }} pointerEvents="none">
         <Polygon points="0,0 24,0 0,24" fill={colors.bg} />
-        <Line x1="24" y1="0" x2="0" y2="24" stroke={colors.border} strokeWidth={1.5} />
       </Svg>
-      <Svg width="24" height="24" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 10 }}>
+      <Svg width="24" height="24" style={{ position: "absolute", bottom: 0, right: 0, zIndex: 10 }} pointerEvents="none">
         <Polygon points="24,24 0,24 24,0" fill={colors.bg} />
-        <Line x1="0" y1="24" x2="24" y2="0" stroke={colors.border} strokeWidth={1.5} />
+      </Svg>
+
+      {/* High-Tech Chamfered Border Overlay */}
+      <Svg style={StyleSheet.absoluteFill} width={containerWidth} height={280} pointerEvents="none">
+        <Path 
+          d={`M24,0 L${containerWidth},0 L${containerWidth},256 L${containerWidth - 24},280 L0,280 L0,24 Z`} 
+          fill="none" 
+          stroke={colors.border} 
+          strokeWidth={1} 
+        />
       </Svg>
 
     </View>
@@ -234,7 +242,7 @@ const styles = StyleSheet.create({
     marginVertical: 12,
     borderRadius: 0,
     overflow: 'hidden',
-    borderWidth: 1,
+    borderWidth: 0,
     elevation: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
