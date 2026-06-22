@@ -50,9 +50,9 @@ export function FlashDealsBanner() {
   const router = useRouter();
 
   const { width } = Dimensions.get('window');
-  const containerWidth = width - 32;
+  const containerWidth = width;
   const angle = Math.atan2(280, containerWidth) * 180 / Math.PI;
-  const rotationAngle = `-${90 - angle}deg`;
+  const rotationAngle = `${90 - angle}deg`;
 
   if (!settings.flashDealActive) return null;
 
@@ -160,19 +160,19 @@ export function FlashDealsBanner() {
 
       {/* Panel B Content (Bottom-Right Carousel) */}
       <View style={styles.panelBContent} pointerEvents="box-none">
-        <View style={{ width: 160, alignItems: 'flex-end', marginTop: 'auto', marginBottom: 10 }}>
+        <View style={{ width: 180, alignItems: 'flex-end', marginTop: 'auto', marginBottom: 2 }}>
           
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             pagingEnabled
-            snapToInterval={160}
+            snapToInterval={180}
             decelerationRate="fast"
             onMomentumScrollEnd={handleScroll}
             contentContainerStyle={{ gap: 10, paddingRight: 0 }}
           >
             {carouselData.map((item, idx) => (
-              <View key={idx} style={{ width: 150, height: 90, justifyContent: 'flex-end' }}>
+              <View key={idx} style={{ width: 170, height: 100, justifyContent: 'flex-end' }}>
                 <View style={[styles.carouselCardWrap, { backgroundColor: colors.primary, shadowColor: colors.primary }]}>
                   <View style={styles.carouselCardInner}>
                     <Image source={{ uri: item.image_url }} style={[StyleSheet.absoluteFillObject, { opacity: 0.9 }]} contentFit="cover" />
@@ -230,7 +230,7 @@ export function FlashDealsBanner() {
 const styles = StyleSheet.create({
   container: {
     height: 280,
-    marginHorizontal: 16,
+    marginHorizontal: 0,
     marginVertical: 12,
     borderRadius: 0,
     overflow: 'hidden',
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
   },
   panelBContent: {
     ...StyleSheet.absoluteFillObject,
-    padding: 20,
+    padding: 12,
     zIndex: 5,
     justifyContent: 'flex-end',
     alignItems: 'flex-end',

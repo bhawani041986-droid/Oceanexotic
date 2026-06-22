@@ -640,8 +640,7 @@ export default function CustomerHomeScreen() {
           </ScrollView>
         </View>
 
-        {/* Flame-Sea Diagonal Promo Banner — Flash Deals Section */}
-        <FlashDealsBanner />
+
 
         {/* Split Promo: Maritime Grill & Flame-Sea Collections */}
         <View className="mx-4 my-6 bg-[#070b13] shadow-2xl relative overflow-hidden" style={{ height: 200 }}>
@@ -1011,6 +1010,9 @@ export default function CustomerHomeScreen() {
             );
           })}
         </ChamferedBox>
+
+        {/* Flame-Sea Diagonal Promo Banner — Flash Deals Section */}
+        <FlashDealsBanner />
       </ScrollView>
 
       {/* Picture-in-Picture Ocean Reels Feed */}
