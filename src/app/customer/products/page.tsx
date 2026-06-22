@@ -60,10 +60,7 @@ import { useCategories } from "@/hooks/useCategories";
 import { authService } from "@/services/authService";
 import dynamic from 'next/dynamic';
 
-const OceanReelsFeed = dynamic(
-  () => import('@/components/video/OceanReelsFeed').then((mod) => mod.OceanReelsFeed),
-  { ssr: false, loading: () => <div className="w-full h-[250px] bg-[var(--c-bg)] animate-pulse my-4 border-y border-[var(--foreground)]/5" /> }
-);
+
 
 // --- BUSINESS INTELLIGENCE DATA ---
 const TICKER_ITEMS = [
@@ -613,8 +610,6 @@ function ProductListingContent() {
          </div>
       </section>
 
-      {/* 3.2 OCEAN REELS VIDEO SHOWCASE */}
-      <OceanReelsFeed />
 
       {/* 4. MAIN EXPLORER REGISTRY */}
       <section className="pb-8 md:pb-16">
@@ -670,7 +665,10 @@ function ProductListingContent() {
                        {/* LAYER 1: BESTSELLERS */}
                        <div className="space-y-4">
                           <div className="flex items-center justify-between">
-                             <h3 className="text-xl md:text-3xl font-black text-[var(--c-text-primary)] uppercase italic">Today's <span className="text-[var(--c-primary)]">Catch</span></h3>
+                             <div>
+                               <h3 className="text-xl md:text-3xl font-black text-[var(--c-text-primary)] uppercase italic">Today's <span className="text-[var(--c-primary)]">Catch</span></h3>
+                               <div className="h-[2px] w-16 bg-gradient-to-r from-[var(--c-text-primary)] to-[var(--c-primary)] mt-1 rounded-full" />
+                             </div>
                              <button onClick={() => setActiveTab("Fresh Fish")} className="text-[10px] font-black uppercase text-[var(--c-primary)] flex items-center gap-1 group">View All <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" /></button>
                           </div>
                           <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 snap-x">
@@ -708,7 +706,10 @@ function ProductListingContent() {
                        {readyToCook.length > 0 && (
                          <div className="space-y-4">
                             <div className="flex items-center justify-between">
+                             <div>
                                <h3 className="text-xl md:text-3xl font-black text-[var(--c-text-primary)] uppercase italic">Chef's <span className="text-amber-500">Specials</span></h3>
+                               <div className="h-[2px] w-16 bg-gradient-to-r from-[var(--c-text-primary)] to-amber-500 mt-1 rounded-full" />
+                             </div>
                             </div>
                             <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 snap-x">
                                {readyToCook.map(product => (
@@ -724,7 +725,10 @@ function ProductListingContent() {
                        {addons.length > 0 && (
                          <div className="space-y-4">
                              <div className="flex items-center justify-between">
+                             <div>
                                 <h3 className="text-xl md:text-2xl font-black text-[var(--c-text-primary)] uppercase italic">Extras & <span className="text-emerald-500">Add-ons</span></h3>
+                                <div className="h-[2px] w-16 bg-gradient-to-r from-[var(--c-text-primary)] to-emerald-500 mt-1 rounded-full" />
+                             </div>
                              </div>
                             <div className="flex gap-3 overflow-x-auto no-scrollbar pb-4 snap-x">
                                {addons.map(addon => (
@@ -755,7 +759,12 @@ function ProductListingContent() {
                             return (
                               <div key={category.id} className="space-y-4">
                                  <div className="flex items-center justify-between">
-                                    <h3 className="text-xl md:text-2xl font-black text-[var(--c-text-primary)] uppercase italic">{category.label}</h3>
+                                     <div>
+                                        <h3 className="text-xl md:text-2xl font-black text-[var(--c-text-primary)] uppercase italic">
+                                           {category.label.split(" ")[0]} <span className="text-[var(--c-primary)]">{category.label.split(" ").slice(1).join(" ")}</span>
+                                        </h3>
+                                        <div className="h-[2px] w-16 bg-gradient-to-r from-[var(--c-text-primary)] to-[var(--c-primary)] mt-1 rounded-full" />
+                                     </div>
                                     <button onClick={() => setActiveTab(category.label)} className="text-[10px] font-black uppercase text-[var(--c-primary)] flex items-center gap-1 group">View All <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" /></button>
                                  </div>
                                  <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4 snap-x">
