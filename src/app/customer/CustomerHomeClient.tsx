@@ -1171,8 +1171,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                   </Badge>
                 )}
                 <h1 className="text-3xl md:text-5xl lg:text-7xl font-black text-[var(--c-text-primary)] uppercase italic leading-[1] md:leading-[0.85] text-center drop-shadow-2xl">
-                   {assets?.heroTitle1 || 'Seafood'} <br /> 
-                   <span className="text-[var(--c-primary)]">{assets?.heroTitle2 || 'Redefined.'}</span>
+                   {assets?.heroTitle1 || 'Seafood'} <span className="text-[var(--c-primary)]">{assets?.heroTitle2 || 'Redefined.'}</span>
                 </h1>
              </div>
              {assets?.heroSubtitle && (
@@ -1183,20 +1182,24 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
           </motion.div>
         </div>
 
-        {/* Carousel Pagination Dots */}
+        {/* Carousel Pagination Fish Icons */}
         {heroSlides.length > 1 && (
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2">
+          <div className="absolute bottom-6 left-6 z-30 flex items-center gap-3">
             {heroSlides.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentHeroIndex(idx)}
-                className={cn(
-                  "h-1.5 lg:h-2 rounded-full transition-all duration-500",
-                  currentHeroIndex === idx 
-                    ? "w-6 lg:w-8 bg-[var(--c-primary)] shadow-[0_0_10px_var(--c-primary)]" 
-                    : "w-1.5 lg:w-2 bg-white/50 hover:bg-white/80"
-                )}
-              />
+                className="group transition-all duration-500"
+              >
+                <Fish 
+                  className={cn(
+                    "transition-all duration-500",
+                    currentHeroIndex === idx 
+                      ? "text-[var(--c-primary)] w-7 h-7 drop-shadow-[0_0_10px_var(--c-primary)] scale-110" 
+                      : "text-white/60 w-5 h-5 group-hover:text-white group-hover:scale-105"
+                  )} 
+                />
+              </button>
             ))}
           </div>
         )}
