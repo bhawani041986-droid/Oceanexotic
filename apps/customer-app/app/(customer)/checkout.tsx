@@ -451,7 +451,7 @@ export default function CheckoutScreen() {
               Confirm Delivery Address
             </Text>
             <Text className="text-[10px] text-muted-foreground italic text-center leading-relaxed">
-              By finalizing, you authorize the secure delivery of fresh seafood to your address.
+              By finalizing, you confirm the secure delivery of fresh seafood to your address.
             </Text>
             <Button
               label={isPlacing ? "PROCESSING..." : "PLACE ORDER"}

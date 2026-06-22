@@ -316,7 +316,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
             </View>
             <View className="flex-1">
               <Text className="text-[8px] font-black text-rose-500 uppercase tracking-[0.1em]">DONE</Text>
-              <Text className="text-xs font-black text-foreground uppercase italic">Fleet Auth</Text>
+              <Text className="text-xs font-black text-foreground uppercase italic">Quality Check</Text>
             </View>
           </View>
 
@@ -326,7 +326,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
             </View>
             <View className="flex-1">
               <Text className="text-[8px] font-black text-rose-500 uppercase tracking-[0.1em]">ACTIVE</Text>
-              <Text className="text-xs font-black text-foreground uppercase italic">Routing</Text>
+              <Text className="text-xs font-black text-foreground uppercase italic">Out for Delivery</Text>
             </View>
           </View>
         </View>
@@ -439,7 +439,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
           </View>
           <View className="flex-1">
             <Text className="text-[8px] font-black text-rose-500 uppercase tracking-[0.1em]">DONE</Text>
-            <Text className="text-xs font-black text-foreground uppercase italic">Fleet Auth</Text>
+            <Text className="text-xs font-black text-foreground uppercase italic">Quality Check</Text>
           </View>
         </View>
 
@@ -449,7 +449,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
           </View>
           <View className="flex-1">
             <Text className="text-[8px] font-black text-rose-500 uppercase tracking-[0.1em]">ACTIVE</Text>
-            <Text className="text-xs font-black text-foreground uppercase italic">Routing</Text>
+            <Text className="text-xs font-black text-foreground uppercase italic">Out for Delivery</Text>
           </View>
         </View>
       </View>

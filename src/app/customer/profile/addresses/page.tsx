@@ -98,7 +98,7 @@ export default function CustomerAddressesPage() {
             <Ship className="w-6 h-6 md:w-7 md:h-7" />
          </div>
          <div className="space-y-0.5 md:space-y-1">
-            <h4 className="text-xs md:text-sm font-black text-[var(--foreground)] uppercase italic tracking-tight">Cold-Chain Logistics Routing</h4>
+            <h4 className="text-xs md:text-sm font-black text-[var(--foreground)] uppercase italic tracking-tight">Delivery Routing</h4>
             <p className="text-[10px] md:text-xs text-text-secondary font-medium leading-relaxed italic">
                Saved addresses are used to calculate the most efficient delivery route to your address.
             </p>

@@ -748,9 +748,9 @@ export default function CustomerHomeScreen() {
 
 
 
-        {/* Premium Sellers ("The Fleet Elite") */}
+        {/* Premium Sellers */}
         <View className="px-4 py-8">
-          <SectionTitle title="The Fleet Elite" subtitle="Verified Local Sellers" />
+          <SectionTitle title="Premium Sellers" subtitle="Top Rated Sellers" />
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
             {PREMIUM_SELLERS.map((seller) => (
               <Pressable
@@ -816,10 +816,10 @@ export default function CustomerHomeScreen() {
         <View className="px-4 py-4" style={{ borderBottomColor: colors.border, borderBottomWidth: 1 }}>
           <View className="flex-row justify-between gap-2">
             {[ 
-              { icon: "🛡️", title: "Authorized", subtitle: "Fleet Verified", color: "#00ff88" }, 
+              { icon: "🛡️", title: "Quality Checked", subtitle: "Verified Seller", color: "#00ff88" }, 
               { icon: "⚡", title: "Instant", subtitle: "90 Min Dispatch", color: "#eab308" }, 
               { icon: "❄️", title: "Cold-Chain", subtitle: "0°C Controlled", color: "#00d4ff" }, 
-              { icon: "📍", title: "Local Nodes", subtitle: "Port Blair Hub", color: "#ef4444" } 
+              { icon: "📍", title: "Local Catch", subtitle: "Port Blair Hub", color: "#ef4444" } 
             ].map((item, i) => (
               <View 
                 key={i} 
@@ -850,14 +850,17 @@ export default function CustomerHomeScreen() {
         </View>
 
         {/* Customer Reviews */}
-        <View className="px-4 pb-8">
-          <SectionTitle title="Fleet Testimonials" subtitle="Verified Citizen Feedback" />
+        <View className="pb-8">
+          <View className="px-4">
+            <SectionTitle title="Customer Reviews" subtitle="Verified Buyer Reviews" />
+          </View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, gap: 12 }} className="mt-3">
           {[
             { user: "Vikram S.", text: "The Bluefin Tuna was absolutely pristine. Delivered in 40 minutes.", rating: 5 },
             { user: "Ananya K.", text: "Best lobster I've had in years. The cold-chain delivery is real.", rating: 5 },
             { user: "Rajesh M.", text: "Professional service and verifiable freshness.", rating: 5 },
           ].map((r) => (
-            <View key={r.user} className="mt-3 p-4 relative overflow-hidden" style={{ backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1 }}>
+            <View key={r.user} className="p-4 w-64 relative overflow-hidden" style={{ backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1 }}>
               <Text className="text-[10px] font-black uppercase" style={{ color: primaryColor }}>★ {r.rating}.0</Text>
               <Text className="mt-2 text-sm italic" style={{ color: colors.textMuted }}>&ldquo;{r.text}&rdquo;</Text>
               <Text className="mt-2 text-[10px] font-black uppercase" style={{ color: colors.text }}>— {r.user}</Text>
@@ -873,9 +876,10 @@ export default function CustomerHomeScreen() {
               </Svg>
             </View>
           ))}
+          </ScrollView>
         </View>
 
-        {/* Join the Fleet - Subscription Newsletter Panel */}
+        {/* Join the Newsletter Panel */}
         <View className="mx-4 mb-8 p-6 relative overflow-hidden" style={{ backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1 }}>
           <LinearGradient
             colors={["transparent", getRgba(primaryColor, 0.06)]}
@@ -892,7 +896,7 @@ export default function CustomerHomeScreen() {
               Global Dispatch Subscription
             </Text>
             <Text className="text-2xl font-black uppercase italic text-center" style={{ color: colors.text }}>
-              Join the Fleet.
+              Join Our Newsletter.
             </Text>
             <Text className="text-[9px] text-center italic max-w-[280px]" style={{ color: colors.textMuted }}>
               Join our newsletter for the latest fresh catches and exclusive offers.
@@ -959,18 +963,22 @@ export default function CustomerHomeScreen() {
 
         {/* Trust strip */}
         <View className="mx-4 mb-8 flex-row flex-wrap justify-center gap-3 rounded-none border p-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-          {["FSSAI AUTH", "ISO 22000", "COLD-CHAIN", "SUSTAINABLE"].map((label) => (
-            <View 
-              key={label} 
-              className="rounded-none border px-3 py-1"
-              style={{
-                borderColor: getRgba(primaryColor, 0.2),
-                backgroundColor: getRgba(primaryColor, 0.1)
-              }}
-            >
-              <Text className="text-[8px] font-black uppercase" style={{ color: primaryColor }}>{label}</Text>
-            </View>
-          ))}
+          {["FSSAI AUTH", "ISO 22000", "COLD-CHAIN", "SUSTAINABLE"].map((label) => {
+            const isFssai = label === "FSSAI AUTH";
+            const badgeColor = isFssai ? "#F97316" : primaryColor;
+            return (
+              <View 
+                key={label} 
+                className="rounded-none border px-3 py-1"
+                style={{
+                  borderColor: getRgba(badgeColor, 0.2),
+                  backgroundColor: getRgba(badgeColor, 0.1)
+                }}
+              >
+                <Text className="text-[8px] font-black uppercase" style={{ color: badgeColor }}>{label}</Text>
+              </View>
+            );
+          })}
         </View>
       </ScrollView>
 
