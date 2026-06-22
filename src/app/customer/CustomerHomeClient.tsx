@@ -51,7 +51,12 @@ import {
   Gauge,
   Timer,
   Wind,
-  Activity
+  Activity,
+  Sparkles,
+  Gift,
+  PartyPopper,
+  Crown,
+  Rocket
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -1518,54 +1523,111 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
             viewport={{ once: true }}
             className="py-4 container mx-auto px-4 md:px-10"
           >
-             <Card 
-                className="bg-gradient-to-br from-[var(--c-primary)] via-[var(--c-accent)] to-[var(--c-bg)] overflow-hidden relative shadow-[var(--c-shadow-glow)] group text-center rounded-3xl md:rounded-[40px]"
-             >
-                <AtmosphericGlow />
-                
-                {/* Upper Half: Text & Timer */}
-                <div className="p-6 md:p-12 pb-4 relative z-10 flex flex-col items-center">
-                   <Badge className="bg-[var(--foreground)]/20 text-[8px] md:text-[10px] font-black tracking-[0.3em] px-4 md:px-6 py-2 border-[var(--foreground)]/20 uppercase mb-4 md:mb-6">
-                     {settings.flashDealSector || 'Flash Product'} Live
-                   </Badge>
-                   <h2 className={cn("text-4xl md:text-7xl lg:text-8xl font-black text-[var(--foreground)] uppercase leading-[0.9] md:leading-[0.85] text-center mb-6", settings.flashDealFont)}>
-                     {settings.flashDealTitle || 'Flash Deals.'}
-                   </h2>
-                   
-                   <p className="text-[10px] md:text-xs font-black text-[var(--foreground)] uppercase tracking-[0.3em] mb-4 opacity-80">
-                      {timerStatus === 'STARTS_IN' ? 'STARTS IN' : 'ENDS IN'}
-                   </p>
-                   <div className="flex gap-2 md:gap-4 justify-center">
-                      {[timeLeft.hrs, timeLeft.min, timeLeft.sec].map((val, i) => (
-                         <div key={i} className="p-3 md:p-6 rounded-xl md:rounded-2xl bg-black/30 backdrop-blur-md border border-[var(--foreground)]/20 text-center min-w-[60px] md:min-w-[90px] shadow-2xl">
-                            <p className="text-2xl md:text-5xl font-black text-white italic">{val}</p>
-                            <p className="text-[7px] md:text-[10px] font-black text-white/60 uppercase tracking-widest mt-1">{i === 0 ? 'HRS' : i === 1 ? 'MIN' : 'SEC'}</p>
-                         </div>
-                      ))}
-                   </div>
-                </div>
+             <div className="relative min-h-[230px] md:min-h-[500px] bg-[var(--c-bg-alt)] border border-[var(--foreground)]/5 overflow-hidden shadow-2xl rounded-3xl md:rounded-[40px]">
+                <div className="absolute inset-0">
+                   {/* PANEL A (Top/Left Diagonal): Promo Title & Timer */}
+                   <div 
+                      className="absolute inset-0 z-20 p-4 md:p-16 flex flex-col justify-start items-start transition-all duration-500" 
+                      style={{ 
+                         clipPath: 'polygon(0px 0px, 100% 0px, 0px 100%)', 
+                         background: 'linear-gradient(135deg, rgba(var(--c-bg-alt-rgb), 0.98) 0%, transparent 100%)' 
+                      }}
+                   >
+                      {/* Festive Floating HUD Icons */}
+                      <div className="absolute inset-0 pointer-events-none opacity-60">
+                         {[
+                            { Icon: PartyPopper, top: '2%', left: '75%', color: 'text-danger', delay: 0.2, size: 'w-6 h-6 md:w-16 md:h-16' },
+                            { Icon: Gift, top: '20%', left: '55%', color: 'text-[var(--c-primary)]', delay: 0.5, size: 'w-6 h-6 md:w-12 md:h-12' },
+                            { Icon: Crown, top: '40%', left: '35%', color: 'text-[var(--c-primary)]', delay: 1.0, size: 'w-10 h-10 md:w-20 md:h-20', rotate: -15 },
+                            { Icon: Sparkles, top: '60%', left: '15%', color: 'text-[var(--foreground)]', delay: 1.5, size: 'w-4 h-4 md:w-10 md:h-10' },
+                            { Icon: Timer, top: '10%', left: '45%', color: 'text-success', delay: 0.8, size: 'w-4 h-4 md:w-8 md:h-8' },
+                            { Icon: Rocket, top: '35%', left: '70%', color: 'text-danger', delay: 1.2, size: 'w-5 h-5 md:w-10 md:h-10' },
+                            { Icon: Star, top: '5%', left: '90%', color: 'text-warning', delay: 0.4, size: 'w-4 h-4 md:w-8 md:h-8' }
+                         ].map((item, i) => (
+                            <motion.div
+                               key={i}
+                               className={cn("absolute", item.color, item.size)}
+                               style={{ top: item.top, left: item.left }}
+                               initial={{ opacity: 0, y: 10, rotate: item.rotate || 0 }}
+                               animate={{ 
+                                  y: [0, -15, 0],
+                                  rotate: [item.rotate || 0, (item.rotate || 0) + 10, item.rotate || 0],
+                                  opacity: [0.4, 1, 0.4]
+                               }}
+                               transition={{ 
+                                  y: { duration: 4 + i, repeat: Infinity, ease: "easeInOut", delay: item.delay },
+                                  rotate: { duration: 6 + i, repeat: Infinity, ease: "easeInOut", delay: item.delay },
+                                  opacity: { duration: 3 + i, repeat: Infinity, ease: "easeInOut", delay: item.delay }
+                               }}
+                            >
+                               <item.Icon className="w-full h-full" />
+                            </motion.div>
+                         ))}
+                      </div>
 
-                {/* Lower Half: Carousel */}
-                <div className="relative z-10 mt-6 md:mt-10 overflow-hidden pb-8 px-4 md:px-8">
-                   <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-4 hide-scrollbar">
-                      {settings.flashDealCarousel?.map((item, idx) => {
-                         if (!item.image_url) return null;
-                         return (
-                            <div key={idx} className="min-w-[280px] md:min-w-[400px] h-[200px] md:h-[300px] snap-center shrink-0 relative rounded-2xl overflow-hidden group/carousel border border-[var(--foreground)]/10">
-                               <img src={item.image_url} className="w-full h-full object-cover group-hover/carousel:scale-105 transition-transform duration-700" />
-                               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end justify-center pb-6">
-                                  <Link href={item.product_link || "#"}>
-                                     <Button className="h-10 md:h-12 px-6 md:px-8 bg-primary text-black text-[10px] md:text-[12px] font-black uppercase tracking-widest rounded-full hover:scale-105 transition-transform shadow-xl">
-                                        View Details
-                                     </Button>
-                                  </Link>
-                               </div>
-                            </div>
-                         );
-                      })}
+                      <div className="relative z-30 max-w-[70%]">
+                        <motion.div 
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            className="inline-flex items-center gap-1 text-[var(--c-primary)] mb-2 md:mb-4"
+                        >
+                          <Zap className="w-2.5 h-2.5 md:w-4 md:h-4 animate-pulse" />
+                          <span className="text-[6px] md:text-[8px] font-black uppercase tracking-[0.3em]">{settings.flashDealSector || 'Flash Product'} Live</span>
+                        </motion.div>
+                        
+                        <div className="space-y-0.5 md:space-y-1 mb-4 md:mb-8">
+                           <h3 className={cn("text-3xl md:text-5xl lg:text-7xl font-black text-[var(--c-text-primary)] uppercase leading-[0.85] tracking-tighter", settings.flashDealFont)}>
+                              {settings.flashDealTitle || 'Flash Deals.'}
+                           </h3>
+                           <p className="text-[8px] md:text-xs text-[var(--c-text-secondary)] font-medium italic opacity-80 leading-tight tracking-[0.3em] mt-2">
+                              {timerStatus === 'STARTS_IN' ? 'STARTS IN' : 'ENDS IN'}
+                           </p>
+                        </div>
+
+                        <div className="flex gap-2 md:gap-4 justify-start">
+                           {[timeLeft.hrs, timeLeft.min, timeLeft.sec].map((val, i) => (
+                              <div key={i} className="p-2 md:p-4 rounded-xl md:rounded-2xl bg-black/40 backdrop-blur-md border border-[var(--c-primary)]/20 text-center min-w-[50px] md:min-w-[80px] shadow-2xl">
+                                 <p className="text-xl md:text-4xl font-black text-[var(--c-primary)] italic">{val}</p>
+                                 <p className="text-[6px] md:text-[10px] font-black text-[var(--foreground)]/60 uppercase tracking-widest mt-1">{i === 0 ? 'HRS' : i === 1 ? 'MIN' : 'SEC'}</p>
+                              </div>
+                           ))}
+                        </div>
+                      </div>
+                   </div>
+
+                   {/* PANEL B (Bottom/Right Diagonal): Image Carousel */}
+                   <div 
+                      className="absolute inset-0 z-10 flex flex-col justify-end items-end p-4 md:p-16 transition-all duration-500 bg-[#020617]"
+                      style={{ 
+                         clipPath: 'polygon(100% 0px, 100% 100%, 0px 100%)'
+                      }}
+                   >
+                      <div className="relative z-30 w-full md:w-[80%] max-w-[600px] mt-auto">
+                         <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-2 md:pb-4 hide-scrollbar justify-start md:justify-end pr-4 md:pr-0">
+                            {settings.flashDealCarousel?.map((item, idx) => {
+                               if (!item.image_url) return null;
+                               return (
+                                  <div key={idx} className="w-[160px] h-[100px] md:w-[320px] md:h-[220px] snap-center shrink-0 relative rounded-2xl overflow-hidden group/carousel border border-[var(--foreground)]/10 shadow-2xl ml-auto md:ml-0">
+                                     <img src={item.image_url} className="w-full h-full object-cover group-hover/carousel:scale-105 transition-transform duration-700" />
+                                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end justify-center pb-2 md:pb-4">
+                                        <Link href={item.product_link || "#"}>
+                                           <Button className="h-6 md:h-10 px-4 md:px-8 bg-white text-[var(--c-primary)] text-[8px] md:text-[10px] font-black uppercase tracking-widest rounded-full hover:scale-105 transition-transform shadow-xl">
+                                              View Details
+                                           </Button>
+                                        </Link>
+                                     </div>
+                                  </div>
+                               );
+                            })}
+                         </div>
+                      </div>
                    </div>
                 </div>
-             </Card>
+                
+                {/* Decorative Borders */}
+                <div className="absolute top-2 right-2 w-6 h-6 border-t border-r border-[var(--c-primary)] opacity-40"></div>
+                <div className="absolute bottom-2 left-2 w-6 h-6 border-b border-l border-[var(--c-primary)] opacity-40"></div>
+             </div>
           </motion.section>
         )}
       </AnimatePresence>
