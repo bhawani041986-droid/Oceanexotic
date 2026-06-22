@@ -84,7 +84,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
   return (
     <SafeAreaView edges={["top"]} className="border-b" style={{ backgroundColor: colors.bg, borderBottomColor: colors.border }}>
       <View className="px-3 pb-2 pt-1">
-        <View className="flex-row items-center justify-between h-11">
+        <View className="flex-row items-center justify-between h-[54px]">
           <View className="flex-row items-center gap-2.5">
             <Pressable 
               onPress={() => setIsMenuOpen(true)} 
@@ -104,7 +104,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               </Svg>
             </Pressable>
             <Pressable onPress={() => router.push("/home")} className="justify-center">
-              <Logo size="sm" style={{ width: 160, height: 40 }} />
+              <Logo size="sm" style={{ width: 196, height: 48 }} />
             </Pressable>
           </View>
           <View className="flex-row items-center gap-2">
@@ -243,7 +243,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
           >
             <View className="gap-6">
               <View className="flex-row items-center justify-between">
-                <Logo size="sm" style={{ width: 160, height: 40 }} />
+                <Logo size="sm" style={{ width: 196, height: 48 }} />
                 <Pressable 
                   onPress={() => setIsMenuOpen(false)} 
                   className="h-7 w-7 rounded-none border items-center justify-center active:opacity-70"
