@@ -42,7 +42,7 @@ export function LanguageSelector() {
         fillColor={colors.card}
         strokeColor={colors.border}
         bevelSize={6}
-        style={{ height: 36, width: 36 }}
+        style={{ height: 36, width: 36, minHeight: 36 }}
       >
         <Pressable 
           onPress={() => setModalVisible(true)}
