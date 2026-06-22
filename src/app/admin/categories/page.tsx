@@ -34,6 +34,7 @@ export default function AdminCategoriesPage() {
     label: "",
     iconName: "Fish"
   });
+  const [originalId, setOriginalId] = useState("");
 
   const fetchCategories = async () => {
     setIsLoading(true);
@@ -42,7 +43,7 @@ export default function AdminCategoriesPage() {
       const data = await res.json();
       setCategories(data);
     } catch (err) {
-      toast("Failed to sync global taxonomy", "error");
+      toast("Failed to sync categories", "error");
     } finally {
       setIsLoading(false);
     }
@@ -52,15 +53,38 @@ export default function AdminCategoriesPage() {
     fetchCategories();
   }, []);
 
+  const handleAdd = () => {
+    setFormData({ id: "", label: "", iconName: "Fish" });
+    setOriginalId("");
+    setIsModalOpen(true);
+  };
+
+  const handleEdit = (cat: any) => {
+    setFormData({ id: cat.id, label: cat.label, iconName: cat.iconName || "Fish" });
+    setOriginalId(cat.id);
+    setIsModalOpen(true);
+  };
+
   const handleSave = async () => {
     if (!formData.label || !formData.id) {
-      toast("Identity nodes missing", "error");
+      toast("Please fill all required fields", "error");
       return;
     }
     
     setIsSaving(true);
     try {
-      const updatedCategories = [...categories, formData];
+      let updatedCategories;
+      if (originalId) {
+        updatedCategories = categories.map(c => c.id === originalId ? formData : c);
+      } else {
+        if (categories.find(c => c.id === formData.id)) {
+          toast("Category ID already exists", "error");
+          setIsSaving(false);
+          return;
+        }
+        updatedCategories = [...categories, formData];
+      }
+
       const res = await fetch('/api/categories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -69,14 +93,15 @@ export default function AdminCategoriesPage() {
       
       if (res.ok) {
         setCategories(updatedCategories);
-        toast("Category commissioned successfully.", "success");
+        toast("Category saved successfully", "success");
         setIsModalOpen(false);
         setFormData({ id: "", label: "", iconName: "Fish" });
+        setOriginalId("");
       } else {
-        toast("Handshake failed", "error");
+        toast("Failed to save category", "error");
       }
     } catch (err) {
-      toast("Network protocol error", "error");
+      toast("Network error", "error");
     } finally {
       setIsSaving(false);
     }
@@ -94,10 +119,10 @@ export default function AdminCategoriesPage() {
       
       if (res.ok) {
         setCategories(updatedCategories);
-        toast("Node decommissioned", "success");
+        toast("Category deleted", "success");
       }
     } catch (err) {
-      toast("Decommissioning failed", "error");
+      toast("Failed to delete category", "error");
     } finally {
       setIsSaving(false);
     }
@@ -108,13 +133,13 @@ export default function AdminCategoriesPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-[10px] md:gap-6 md:border-b md:border-[var(--foreground)]/5 md:pb-10">
         <div className="space-y-1 text-center md:text-left">
-          <h2 className="text-xl md:text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic shadow-glow-purple/5">Taxonomy Command</h2>
-          <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest leading-relaxed italic opacity-60">Governing the Global Species Classifications and Trade Sectors</p>
+          <h2 className="text-xl md:text-3xl font-black text-[var(--foreground)] tracking-tighter uppercase italic shadow-glow-purple/5">Category Management</h2>
+          <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest leading-relaxed italic opacity-60">Manage Product Categories and Market Sections</p>
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-2 md:gap-4">
           <div className="relative group w-full md:w-80">
             <Input 
-              placeholder="SEARCH TAXONOMY NODES..." 
+              placeholder="SEARCH CATEGORIES..." 
               className="h-10 md:h-12 pl-10 md:pl-12 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 focus:border-primary/50 transition-all text-[8px] md:text-[9px] font-black tracking-widest uppercase italic rounded-lg md:rounded-xl" 
             />
             <Search className="absolute left-3.5 md:left-4 top-1/2 -translate-y-1/2 w-3.5 md:w-4 h-3.5 md:h-4 text-text-secondary opacity-40 group-focus-within:opacity-100 transition-opacity" />
@@ -122,9 +147,9 @@ export default function AdminCategoriesPage() {
           <Button 
             variant="primary" 
             className="h-10 md:h-12 px-6 md:px-8 text-[9px] md:text-[10px] font-black tracking-widest uppercase shadow-glow-purple flex items-center justify-center gap-2 md:gap-3 rounded-lg md:rounded-xl italic"
-            onClick={() => setIsModalOpen(true)}
+            onClick={handleAdd}
           >
-            <Plus className="w-3.5 md:w-4 h-3.5 md:h-4" /> COMMISSION CATEGORY
+            <Plus className="w-3.5 md:w-4 h-3.5 md:h-4" /> ADD CATEGORY
           </Button>
         </div>
       </div>
@@ -132,8 +157,8 @@ export default function AdminCategoriesPage() {
       {/* Category Intelligence Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[10px] md:gap-8">
         {[
-          { label: "Active Classifications", value: `${categories.length} Sectors`, icon: <Layers />, trend: "OPTIMAL" },
-          { label: "Species Cataloged", value: "84 Varieties", icon: <Fish />, trend: "+12%" },
+          { label: "Active Categories", value: `${categories.length} Total`, icon: <Layers />, trend: "OPTIMAL" },
+          { label: "Total Products", value: "84 Products", icon: <Fish />, trend: "+12%" },
           { label: "Market Circulation", value: "₹158M", icon: <Activity />, trend: "STABLE" },
         ].map((stat) => (
           <Card key={stat.label} className="p-[10px] md:p-6 space-y-3 md:space-y-6 bg-bg-secondary/20 border-[var(--foreground)]/5 hover:border-primary/20 transition-all group rounded-[24px] md:rounded-[40px] shadow-premium">
@@ -154,8 +179,8 @@ export default function AdminCategoriesPage() {
       <Card className="p-1 rounded-[24px] md:rounded-[40px] overflow-hidden bg-bg-secondary/20 shadow-premium border-[var(--foreground)]/5">
         <div className="p-[10px] md:p-6 border-b border-[var(--foreground)]/5 flex flex-col md:flex-row md:items-center justify-between gap-[10px] md:gap-6">
            <div className="space-y-0.5 md:space-y-1 text-center md:text-left">
-              <h3 className="text-base md:text-lg font-black text-[var(--foreground)] tracking-tighter uppercase italic">Macro-Taxonomy Ledger</h3>
-              <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Authorized Trade Nodes by Maritime Sector</p>
+              <h3 className="text-base md:text-lg font-black text-[var(--foreground)] tracking-tighter uppercase italic">Category List</h3>
+              <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">List of all active categories</p>
            </div>
            <Button variant="outline" size="sm" className="h-9 md:h-10 px-4 md:px-6 flex items-center gap-2 md:gap-3 text-[8px] md:text-[9px] font-black uppercase border-[var(--foreground)]/5 rounded-lg md:rounded-xl italic">
               <Filter className="w-3.5 md:w-4 h-3.5 md:h-4" /> FILTERS
@@ -172,10 +197,10 @@ export default function AdminCategoriesPage() {
               <Table>
                 <TableHeader>
                   <TableRow className="border-[var(--foreground)]/5">
-                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Category Identity</TableHead>
-                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">UI Icon</TableHead>
-                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Registry Status</TableHead>
-                    <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Governance</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Category Details</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Icon</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Status</TableHead>
+                    <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -193,6 +218,13 @@ export default function AdminCategoriesPage() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1 md:gap-2">
+                          <button 
+                            disabled={isSaving}
+                            onClick={() => handleEdit(cat)}
+                            className="p-2 md:p-2.5 rounded-lg hover:bg-primary/10 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5 disabled:opacity-50"
+                          >
+                            <Edit3 className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                          </button>
                           <button 
                             disabled={isSaving}
                             onClick={() => handleDelete(cat.id)}
@@ -219,7 +251,10 @@ export default function AdminCategoriesPage() {
                     </div>
                     <Badge variant="success" className="italic uppercase text-[8px] px-2">ACTIVE</Badge>
                   </div>
-                  <div className="flex justify-end pt-2 border-t border-[var(--foreground)]/5">
+                  <div className="flex justify-end gap-2 pt-2 border-t border-[var(--foreground)]/5">
+                    <button onClick={() => handleEdit(cat)} disabled={isSaving} className="p-2 rounded-lg hover:bg-primary/10 text-primary transition-all border border-[var(--foreground)]/5 disabled:opacity-50">
+                      <Edit3 className="w-3.5 h-3.5" />
+                    </button>
                     <button onClick={() => handleDelete(cat.id)} disabled={isSaving} className="p-2 rounded-lg hover:bg-danger/10 text-danger transition-all border border-danger/20 disabled:opacity-50">
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -235,12 +270,12 @@ export default function AdminCategoriesPage() {
       <div className="flex items-center justify-center gap-10 opacity-30 pt-10">
          <div className="flex items-center gap-3">
             <Globe className="w-4 h-4 text-primary animate-spin" style={{ animationDuration: '8s' }} />
-            <span className="text-[9px] font-black text-[var(--foreground)] uppercase tracking-widest italic">Global Taxonomy Sync Active</span>
+            <span className="text-[9px] font-black text-[var(--foreground)] uppercase tracking-widest italic">Global Category Sync Active</span>
          </div>
          <div className="w-1 h-1 rounded-full bg-[var(--foreground)]/20" />
          <div className="flex items-center gap-3">
             <BarChart3 className="w-4 h-4 text-success" />
-            <span className="text-[9px] font-black text-[var(--foreground)] uppercase tracking-widest italic">Market Yield Integrity Verified</span>
+            <span className="text-[9px] font-black text-[var(--foreground)] uppercase tracking-widest italic">System Integrity Verified</span>
          </div>
       </div>
 
@@ -250,16 +285,16 @@ export default function AdminCategoriesPage() {
            <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={() => setIsModalOpen(false)} />
            <Card className="relative z-10 w-full max-w-sm md:max-w-lg p-6 md:p-10 bg-bg-secondary border-[var(--foreground)]/5 space-y-6 md:space-y-8 animate-in zoom-in-95 duration-300 rounded-[24px] md:rounded-[48px] shadow-glow-purple/20">
               <div className="space-y-1 border-b border-[var(--foreground)]/5 pb-4 md:pb-6">
-                 <h3 className="text-lg md:text-xl font-black text-[var(--foreground)] uppercase italic tracking-tighter">Commission Sector</h3>
-                 <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Defining a New Node in the Global Maritime Taxonomy</p>
+                 <h3 className="text-lg md:text-xl font-black text-[var(--foreground)] uppercase italic tracking-tighter">{originalId ? "Edit Category" : "Add Category"}</h3>
+                 <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Create or modify a category for the marketplace</p>
               </div>
               <div className="space-y-4 md:space-y-6">
                  <div className="space-y-1.5 md:space-y-2">
-                    <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Sector ID</label>
-                    <Input value={formData.id} onChange={(e) => setFormData({...formData, id: e.target.value})} placeholder="e.g. EXOTIC_FISH" className="h-11 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 italic rounded-lg md:rounded-xl uppercase font-black text-sm" />
+                    <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Category ID</label>
+                    <Input value={formData.id} onChange={(e) => setFormData({...formData, id: e.target.value})} disabled={!!originalId} placeholder="e.g. EXOTIC_FISH" className="h-11 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 italic rounded-lg md:rounded-xl uppercase font-black text-sm disabled:opacity-50" />
                  </div>
                  <div className="space-y-1.5 md:space-y-2">
-                    <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Sector Nomenclature</label>
+                    <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Category Name</label>
                     <Input value={formData.label} onChange={(e) => setFormData({...formData, label: e.target.value})} placeholder="e.g. Exotic Fish" className="h-11 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 italic rounded-lg md:rounded-xl text-sm" />
                  </div>
                  <div className="space-y-1.5 md:space-y-2">
@@ -268,9 +303,9 @@ export default function AdminCategoriesPage() {
                  </div>
               </div>
               <div className="flex gap-2 md:gap-4 pt-2 md:pt-4">
-                 <Button variant="ghost" className="flex-1 h-11 md:h-12 uppercase text-[9px] md:text-[10px] font-black italic" onClick={() => setIsModalOpen(false)}>ABORT</Button>
+                 <Button variant="ghost" className="flex-1 h-11 md:h-12 uppercase text-[9px] md:text-[10px] font-black italic" onClick={() => setIsModalOpen(false)}>CANCEL</Button>
                  <Button disabled={isSaving} className="flex-1 h-11 md:h-12 uppercase text-[9px] md:text-[10px] font-black shadow-glow-purple italic rounded-lg md:rounded-xl" onClick={handleSave}>
-                    {isSaving ? <RefreshCw className="w-4 h-4 animate-spin" /> : 'COMMISSION NODE'}
+                    {isSaving ? <RefreshCw className="w-4 h-4 animate-spin" /> : 'SAVE CATEGORY'}
                  </Button>
               </div>
            </Card>
