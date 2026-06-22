@@ -2,7 +2,7 @@ import { useState } from "react";
 import { View, Text, Pressable, TextInput, Modal } from "react-native";
 import { useRouter, usePathname } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Svg, { Path, Circle } from "react-native-svg";
+import Svg, { Path, Circle, Polygon } from "react-native-svg";
 import { Image } from "expo-image";
 import { Logo } from "@/components/ui/Logo";
 import { useAuthStore } from "@/store/authStore";
@@ -94,6 +94,13 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               }}
             >
               <MenuIcon color={primaryColor} />
+              {/* Cut-corner bevel overlays */}
+              <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                <Polygon points="0,0 6,0 0,6" fill={colors.bg} />
+              </Svg>
+              <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                <Polygon points="6,6 0,6 6,0" fill={colors.bg} />
+              </Svg>
             </Pressable>
             <Pressable onPress={() => router.push("/home")} className="justify-center">
               <Logo size="sm" style={{ width: 128, height: 32 }} />
@@ -118,6 +125,13 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                   borderColor: colors.card
                 }} 
               />
+              {/* Cut-corner bevel overlays */}
+              <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                <Polygon points="0,0 6,0 0,6" fill={colors.bg} />
+              </Svg>
+              <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                <Polygon points="6,6 0,6 6,0" fill={colors.bg} />
+              </Svg>
             </Pressable>
 
             <Pressable
@@ -137,6 +151,13 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                   <Text className="text-center text-[8px] font-black text-white">{cartCount}</Text>
                 </View>
               ) : null}
+              {/* Cut-corner bevel overlays */}
+              <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                <Polygon points="0,0 6,0 0,6" fill={colors.bg} />
+              </Svg>
+              <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                <Polygon points="6,6 0,6 6,0" fill={colors.bg} />
+              </Svg>
             </Pressable>
 
             <Pressable
@@ -152,26 +173,42 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                 className="h-full w-full rounded-none"
                 contentFit="cover"
               />
+              {/* Cut-corner bevel overlays (rendered above image) */}
+              <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                <Polygon points="0,0 6,0 0,6" fill={colors.bg} />
+              </Svg>
+              <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                <Polygon points="6,6 0,6 6,0" fill={colors.bg} />
+              </Svg>
             </Pressable>
           </View>
         </View>
 
         {showSearch && pathname !== "/login" ? (
           <View className="mt-2">
-            <TextInput
-              value={search}
-              onChangeText={setSearch}
-              onSubmitEditing={onSearch}
-              placeholder="Search harvests..."
-              placeholderTextColor={colors.textMuted}
-              returnKeyType="search"
-              className="h-10 rounded-none border px-4 text-xs"
-              style={{
-                borderColor: colors.border,
-                backgroundColor: colors.card,
-                color: colors.text
-              }}
-            />
+            <View className="relative">
+              <TextInput
+                value={search}
+                onChangeText={setSearch}
+                onSubmitEditing={onSearch}
+                placeholder="Search harvests..."
+                placeholderTextColor={colors.textMuted}
+                returnKeyType="search"
+                className="h-10 rounded-none border px-4 text-xs"
+                style={{
+                  borderColor: colors.border,
+                  backgroundColor: colors.card,
+                  color: colors.text
+                }}
+              />
+              {/* Cut-corner bevel overlays on search bar */}
+              <Svg width={8} height={8} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                <Polygon points="0,0 8,0 0,8" fill={colors.bg} />
+              </Svg>
+              <Svg width={8} height={8} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                <Polygon points="8,8 0,8 8,0" fill={colors.bg} />
+              </Svg>
+            </View>
             <Text 
               className="mt-1 text-[8px] font-black uppercase tracking-widest"
               style={{ color: colors.textMuted }}

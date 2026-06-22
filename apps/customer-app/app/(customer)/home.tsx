@@ -428,6 +428,15 @@ export default function CustomerHomeScreen() {
                     className="h-10 w-10"
                     contentFit="contain"
                   />
+                  {/* Cut-corner bevel overlays on category icon */}
+                  <Svg width={8} height={8} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                    <Path d="M0,0 L8,0 L0,8 Z" fill={colors.bg} />
+                    <Path d="M8,0 L0,8" stroke={`${cat.glowColor}40`} strokeWidth={1} />
+                  </Svg>
+                  <Svg width={8} height={8} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                    <Path d="M8,8 L0,8 L8,0 Z" fill={colors.bg} />
+                    <Path d="M0,8 L8,0" stroke={`${cat.glowColor}40`} strokeWidth={1} />
+                  </Svg>
                 </View>
                 <Text
                   className="mt-1.5 text-center text-[7px] font-black uppercase tracking-widest"
@@ -453,7 +462,7 @@ export default function CustomerHomeScreen() {
                 <Pressable
                   key={batch}
                   onPress={() => setActiveBatch(batch)}
-                  className="rounded-none px-3 py-2"
+                  className="rounded-none px-3 py-2 relative overflow-hidden"
                   style={activeBatch === batch ? { backgroundColor: primaryColor } : undefined}
                 >
                   <Text
@@ -464,6 +473,17 @@ export default function CustomerHomeScreen() {
                   >
                     {t(batch.toLowerCase())}
                   </Text>
+                  {/* Cut-corner bevel overlays on active filter tab */}
+                  {activeBatch === batch && (
+                    <>
+                      <Svg width={5} height={5} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                        <Path d="M0,0 L5,0 L0,5 Z" fill={colors.bg} />
+                      </Svg>
+                      <Svg width={5} height={5} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                        <Path d="M5,5 L0,5 L5,0 Z" fill={colors.bg} />
+                      </Svg>
+                    </>
+                  )}
                 </Pressable>
               ))}
             </View>

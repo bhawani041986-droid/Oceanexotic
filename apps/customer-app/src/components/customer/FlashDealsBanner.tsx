@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { Image } from 'expo-image';
-import Svg, { Polygon, Line } from 'react-native-svg';
+import Svg, { Polygon, Line, Path } from 'react-native-svg';
 import { useRouter } from 'expo-router';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useThemeColors } from '@/hooks/useThemeColors';
@@ -152,6 +152,15 @@ export function FlashDealsBanner() {
               <View key={i} style={[styles.timerBox, { borderColor: `${colors.primary}33` }]}>
                 <Text style={[styles.timerVal, { color: colors.primary }]}>{val}</Text>
                 <Text style={styles.timerLabel}>{i === 0 ? 'HRS' : i === 1 ? 'MIN' : 'SEC'}</Text>
+                {/* Cut-corner bevel overlays on timer box */}
+                <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 5 }}>
+                  <Path d="M0,0 L6,0 L0,6 Z" fill={'rgba(0,0,0,0.5)'} />
+                  <Path d="M6,0 L0,6" stroke={`${colors.primary}55`} strokeWidth={0.8} />
+                </Svg>
+                <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 5 }}>
+                  <Path d="M6,6 L0,6 L6,0 Z" fill={'rgba(0,0,0,0.5)'} />
+                  <Path d="M0,6 L6,0" stroke={`${colors.primary}55`} strokeWidth={0.8} />
+                </Svg>
               </View>
             ))}
           </View>
@@ -297,10 +306,12 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 8,
     backgroundColor: 'rgba(0,0,0,0.4)',
-    borderRadius: 12,
+    borderRadius: 0,
     borderWidth: 1,
     minWidth: 45,
     alignItems: 'center',
+    overflow: 'visible',
+    position: 'relative',
   },
   timerVal: {
     fontSize: 18,

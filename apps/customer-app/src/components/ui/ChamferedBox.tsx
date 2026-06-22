@@ -8,6 +8,10 @@ export interface ChamferedBoxProps extends ViewProps {
   strokeColor?: string;
   strokeWidth?: number;
   bevelSize?: number;
+  /** When true, the fill is transparent — only the stroke (border) is drawn */
+  borderOnly?: boolean;
+  /** Optional neon glow color applied as shadow/elevation */
+  glowColor?: string;
 }
 
 export function ChamferedBox({
@@ -15,6 +19,8 @@ export function ChamferedBox({
   strokeColor = "rgba(255, 255, 255, 0.15)",
   strokeWidth = 1,
   bevelSize = 14,
+  borderOnly = false,
+  glowColor,
   children,
   className,
   style,
@@ -32,6 +38,18 @@ export function ChamferedBox({
       ? `M${b},0 L${w},0 L${w},${h - b} L${w - b},${h} L0,${h} L0,${b} Z`
       : "";
 
+  const resolvedFill = borderOnly ? "transparent" : fillColor;
+
+  const glowStyle = glowColor
+    ? {
+        shadowColor: glowColor,
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.7,
+        shadowRadius: 8,
+        elevation: 6,
+      }
+    : {};
+
   return (
     <View
       onLayout={(e) => {
@@ -44,7 +62,7 @@ export function ChamferedBox({
         }
       }}
       className={cn("relative overflow-hidden", className)}
-      style={[style, { flexShrink: 1, minHeight: 120 }]}
+      style={[style, { flexShrink: 1, minHeight: 120 }, glowStyle]}
       {...props}
     >
       {/* Background and Border layer */}
@@ -52,7 +70,7 @@ export function ChamferedBox({
         <Svg width={w} height={h} style={StyleSheet.absoluteFill}>
           <Path
             d={pathD}
-            fill={fillColor}
+            fill={resolvedFill}
             stroke={strokeColor}
             strokeWidth={strokeWidth}
           />
