@@ -18,8 +18,15 @@ import { FULL_API_URL as API_BASE_URL } from "@/config/api";
 
 export default function AdminCMSPage() {
   const router = useRouter();
-  const { flashDealActive, flashDealEnd, atmosphericGlow, setSettings, pushSettings } = useSettingsStore();
+  const { flashDealActive, flashDealEnd, flashDealTitle, flashDealSector, customerAssets, atmosphericGlow, setSettings, pushSettings } = useSettingsStore();
   const { toast } = useToast();
+
+  const toLocalDatetimeLocal = (utcIsoString: string) => {
+    if (!utcIsoString) return "";
+    const d = new Date(utcIsoString);
+    const tzOffset = d.getTimezoneOffset() * 60000;
+    return new Date(d.getTime() - tzOffset).toISOString().slice(0, 16);
+  };
   
   const [content, setContent] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -320,15 +327,15 @@ export default function AdminCMSPage() {
 
       {/* 1.5 GLOBAL PROMO ENGINE */}
       <Card className="p-4 md:p-6 rounded-[24px] bg-bg-secondary/20 border-[var(--foreground)]/5 shadow-premium mb-6 md:mb-0">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 border-b border-[var(--foreground)]/10 pb-6">
           <div className="space-y-1">
             <h3 className="text-base md:text-lg font-black text-[var(--foreground)] tracking-tighter uppercase italic flex items-center gap-2">
               <Clock className="w-4 h-4 text-primary" /> Global Promo Engine
             </h3>
-            <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Control Flash Deals & Active Timers</p>
+            <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Master Controls for Flash Deals</p>
           </div>
-          <div className="flex flex-col sm:flex-row items-center gap-4 border-t sm:border-t-0 sm:border-l border-[var(--foreground)]/10 pt-4 sm:pt-0 sm:pl-6">
-            <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="flex items-center gap-3">
               <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-text-secondary">Flash Deal:</span>
               <button 
                 onClick={() => { setSettings({ flashDealActive: !flashDealActive }); pushSettings(); toast(`Flash Deal ${!flashDealActive ? 'Activated' : 'Deactivated'}`, "success"); }}
@@ -340,16 +347,67 @@ export default function AdminCMSPage() {
                  <div className={cn("w-4 h-4 rounded-full bg-white transition-transform z-10", flashDealActive ? "translate-x-6" : "translate-x-0")} />
               </button>
             </div>
-            <div className="flex items-center gap-2 w-full sm:w-auto border-t sm:border-t-0 sm:border-l border-[var(--foreground)]/10 pt-4 sm:pt-0 sm:pl-4">
+            <div className="flex items-center gap-2 border-l border-[var(--foreground)]/10 pl-4">
               <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-text-secondary">Timer Ends:</span>
               <Input 
                 type="datetime-local" 
-                value={flashDealEnd.slice(0,16)} 
-                onChange={(e) => { setSettings({ flashDealEnd: new Date(e.target.value).toISOString() }); pushSettings(); toast("Timer target updated", "info"); }}
+                value={toLocalDatetimeLocal(flashDealEnd)} 
+                onChange={(e) => { 
+                   if (!e.target.value) return;
+                   setSettings({ flashDealEnd: new Date(e.target.value).toISOString() }); 
+                   pushSettings(); 
+                   toast("Timer target updated", "info"); 
+                }}
                 className="h-8 md:h-10 text-[10px] font-black uppercase bg-black/50 border-[var(--foreground)]/10 text-[var(--foreground)] w-[180px]"
               />
             </div>
           </div>
+        </div>
+
+        {/* Promo Content Editor */}
+        <div className="pt-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+           <div className="space-y-6">
+             <div className="space-y-2">
+                <label className="text-[10px] font-black text-text-secondary uppercase tracking-widest italic">Promo Title (e.g. Flash Deals)</label>
+                <Input 
+                   value={flashDealTitle || ""}
+                   onChange={(e) => setSettings({ flashDealTitle: e.target.value })}
+                   onBlur={() => pushSettings()}
+                   className="bg-black/50 border-[var(--foreground)]/10 text-[var(--foreground)]"
+                />
+             </div>
+             <div className="space-y-2">
+                <label className="text-[10px] font-black text-text-secondary uppercase tracking-widest italic">Target Sector (Badge)</label>
+                <Input 
+                   value={flashDealSector || ""}
+                   onChange={(e) => setSettings({ flashDealSector: e.target.value })}
+                   onBlur={() => pushSettings()}
+                   className="bg-black/50 border-[var(--foreground)]/10 text-[var(--foreground)]"
+                />
+             </div>
+           </div>
+           
+           <div className="space-y-2">
+              <label className="text-[10px] font-black text-text-secondary uppercase tracking-widest italic">Promo Cover Image</label>
+              <div className="flex gap-2">
+                <Input 
+                   value={customerAssets?.promo || ""}
+                   onChange={(e) => setSettings({ customerAssets: { ...customerAssets, promo: e.target.value } })}
+                   onBlur={() => pushSettings()}
+                   placeholder="Image URL"
+                   className="bg-black/50 border-[var(--foreground)]/10 text-[var(--foreground)]"
+                />
+              </div>
+              {customerAssets?.promo ? (
+                 <div className="h-32 w-full rounded-xl bg-black border border-[var(--foreground)]/10 overflow-hidden mt-3 relative">
+                    <img src={customerAssets.promo} className="w-full h-full object-cover opacity-80" />
+                 </div>
+              ) : (
+                 <div className="h-32 w-full rounded-xl bg-black/30 border border-dashed border-[var(--foreground)]/20 mt-3 flex items-center justify-center text-slate-500 text-[10px] font-black uppercase tracking-widest">
+                    No Image Set
+                 </div>
+              )}
+           </div>
         </div>
       </Card>
 
@@ -378,9 +436,9 @@ export default function AdminCMSPage() {
             <TableBody>
               {isLoading ? (
                   <TableRow><TableCell colSpan={5} className="h-40 text-center"><div className="w-8 h-8 mx-auto border-2 border-primary/20 border-t-primary rounded-full animate-spin" /> </TableCell></TableRow>
-              ) : content.length === 0 ? (
+              ) : content.filter((item: any) => item.type !== 'PROMO').length === 0 ? (
                   <TableRow><TableCell colSpan={5} className="h-40 text-center opacity-40 italic font-black uppercase tracking-widest text-xs">No active content streams.</TableCell></TableRow>
-              ) : content.map((item) => (
+              ) : content.filter((item: any) => item.type !== 'PROMO').map((item) => (
                   <TableRow key={item.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
                     <TableCell>
                       <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl overflow-hidden bg-black border border-[var(--foreground)]/10 flex items-center justify-center">
@@ -461,7 +519,6 @@ export default function AdminCMSPage() {
                           <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Asset Class</label>
                           <select disabled={viewOnly || isSaving} value={formData.type} onChange={(e) => setFormData({...formData, type: e.target.value})} className="w-full h-14 bg-black/50 border border-[var(--foreground)]/10 rounded-xl px-4 text-xs font-black uppercase text-[var(--foreground)] outline-none italic cursor-pointer">
                              <option value="BANNER">BANNER (Hero)</option>
-                             <option value="PROMO">PROMO (Deals)</option>
                              <option value="RECIPE">RECIPE (Editorial)</option>
                              <option value="STORY">STORY (Dispatch)</option>
                           </select>

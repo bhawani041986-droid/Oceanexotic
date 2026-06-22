@@ -1513,10 +1513,10 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center relative z-10">
                    <div className="space-y-4 md:space-y-6">
                       <Badge className="bg-[var(--foreground)]/20 text-[8px] md:text-[10px] font-black tracking-[0.3em] px-4 md:px-6 py-2 border-[var(--foreground)]/20 uppercase">
-                        {cmsContent.find(c => c.type === 'PROMO' && c.status === 'PUBLISHED')?.sector || 'Flash Product'} Live
+                        {settings.flashDealSector || 'Flash Product'} Live
                       </Badge>
                       <h2 className="text-4xl md:text-8xl font-black text-[var(--foreground)] uppercase italic leading-[0.9] md:leading-[0.85]">
-                        {cmsContent.find(c => c.type === 'PROMO' && c.status === 'PUBLISHED')?.title || 'Flash Deals.'}
+                        {settings.flashDealTitle || 'Flash Deals.'}
                       </h2>
                       <div className="flex gap-2 md:gap-4 justify-center lg:justify-start">
                          {[timeLeft.hrs, timeLeft.min, timeLeft.sec].map((val, i) => (
@@ -1531,8 +1531,8 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                       </div>
                    </div>
                    <div className="hidden lg:block relative">
-                      {cmsContent.find(c => c.type === 'PROMO' && c.status === 'PUBLISHED')?.image_url ? (
-                        <img src={cmsContent.find(c => c.type === 'PROMO' && c.status === 'PUBLISHED')?.image_url} className="w-full h-full object-cover rounded-3xl opacity-80" />
+                      {settings.customerAssets?.promo ? (
+                        <img src={settings.customerAssets.promo} className="w-full h-full object-cover rounded-3xl opacity-80" />
                       ) : (
                         <div className="text-[250px] animate-float opacity-40">🦞</div>
                       )}

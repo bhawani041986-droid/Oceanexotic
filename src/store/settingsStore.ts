@@ -30,6 +30,8 @@ interface SettingsState {
   atmosphericGlow: number;
   flashDealActive: boolean;
   flashDealEnd: string;
+  flashDealTitle: string;
+  flashDealSector: string;
   customerAssets: {
     logo: string;
     hero: string;
@@ -91,6 +93,8 @@ export const useSettingsStore = create<SettingsState>()(
       atmosphericGlow: 15,
       flashDealActive: true,
       flashDealEnd: new Date(Date.now() + 1000 * 60 * 60 * 3).toISOString(), // 3 hours from now
+      flashDealTitle: "Flash Deals.",
+      flashDealSector: "Flash Product",
       customerAssets: {
         logo: "",
         hero: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80",
