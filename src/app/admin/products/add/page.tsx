@@ -313,10 +313,13 @@ export default function AdminAddProductPage() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 lg:gap-6">
                 <div className="space-y-1 lg:space-y-2">
-                  <label className="text-[8px] lg:text-[10px] font-black uppercase tracking-widest ml-1">Category Registry</label>
-                  <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} className="w-full h-[44px] lg:h-[52px] border rounded-[12px] lg:rounded-[16px] px-3 lg:px-4 text-[9px] lg:text-[10px] font-black uppercase tracking-widest outline-none focus:border-primary/50 transition-all" style={{ backgroundColor: 'var(--agent-bg)', borderColor: 'var(--agent-border)', color: 'var(--agent-text)' }}>
+                  <div className="flex items-center justify-between">
+                    <label className="text-[8px] lg:text-[10px] font-black uppercase tracking-widest ml-1">Category Registry</label>
+                    <a href="/admin/categories" className="text-[7px] lg:text-[9px] font-black uppercase text-primary hover:underline italic">Manage Categories</a>
+                  </div>
+                  <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} className="w-full h-[44px] lg:h-[52px] border rounded-[12px] lg:rounded-[16px] px-3 lg:px-4 text-[9px] lg:text-[10px] font-black uppercase tracking-widest outline-none focus:border-primary/50 bg-bg-secondary text-[var(--foreground)] border-[var(--foreground)]/10">
                      {PRODUCT_CATEGORIES.map(cat => (
-                        <option key={cat.id} value={cat.id}>{cat.id}</option>
+                        <option key={cat.id} value={cat.id} className="bg-bg-primary text-[var(--foreground)]">{cat.id}</option>
                      ))}
                   </select>
                 </div>

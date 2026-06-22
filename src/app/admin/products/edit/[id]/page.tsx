@@ -114,10 +114,19 @@ export default function AdminEditProductPage() {
         const res = await fetch(`/api/seller/products?id=${params.id}`);
         const data = await res.json();
         
+        if (!res.ok || data.error) {
+           throw new Error(data.error || "Failed to fetch product");
+        }
+        
         // Handle nested JSON fields
-        const nutrition = data.nutrition ? (typeof data.nutrition === 'string' ? JSON.parse(data.nutrition) : data.nutrition) : {
-          protein: "20g", omega3: "300mg", calories: "100 kcal", fat: "2g"
-        };
+        let nutrition = { protein: "20g", omega3: "300mg", calories: "100 kcal", fat: "2g" };
+        if (data.nutrition) {
+          if (typeof data.nutrition === 'string' && data.nutrition.trim() !== '') {
+            try { nutrition = JSON.parse(data.nutrition); } catch(e) {}
+          } else if (typeof data.nutrition === 'object') {
+            nutrition = data.nutrition;
+          }
+        }
         
         const dbOverrides = data.location_overrides || [];
         const mergedOverrides = activeTerrs.map((t: any) => {
@@ -358,10 +367,13 @@ export default function AdminEditProductPage() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest ml-1">Category Registry</label>
-                  <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} className="w-full h-[52px] border rounded-[16px] px-4 text-[10px] font-black uppercase tracking-widest outline-none focus:border-primary/50" style={{ backgroundColor: 'var(--agent-bg)', borderColor: 'var(--agent-border)', color: 'var(--agent-text)' }}>
+                  <div className="flex items-center justify-between">
+                    <label className="text-[10px] font-black uppercase tracking-widest ml-1">Category Registry</label>
+                    <a href="/admin/categories" className="text-[9px] font-black uppercase text-primary hover:underline italic">Manage Categories</a>
+                  </div>
+                  <select value={formData.category} onChange={(e) => setFormData({...formData, category: e.target.value})} className="w-full h-[52px] border rounded-[16px] px-4 text-[10px] font-black uppercase tracking-widest outline-none focus:border-primary/50 bg-bg-secondary text-[var(--foreground)] border-[var(--foreground)]/10">
                      {PRODUCT_CATEGORIES.map(cat => (
-                        <option key={cat.id} value={cat.id}>{cat.id}</option>
+                        <option key={cat.id} value={cat.id} className="bg-bg-primary text-[var(--foreground)]">{cat.id}</option>
                      ))}
                   </select>
                 </div>
