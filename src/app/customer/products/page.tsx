@@ -56,7 +56,7 @@ import { useToast } from "@/components/ui/Toast";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useCartStore } from "@/store/cartStore";
 import { MASTER_PRODUCT_REGISTRY } from "@/constants/products";
-import { PRODUCT_CATEGORIES } from "@/constants/categories";
+import { useCategories } from "@/hooks/useCategories";
 import { authService } from "@/services/authService";
 import dynamic from 'next/dynamic';
 
@@ -245,10 +245,12 @@ const FilterSection = ({ title, options }: { title: string, options: string[] })
   </div>
 );
 
-const CATEGORIES = ["All Seafood", ...PRODUCT_CATEGORIES.map(c => c.label)];
 import { Suspense } from "react";
 
 function ProductListingContent() {
+  const { categories: PRODUCT_CATEGORIES } = useCategories();
+  const CATEGORIES = ["All Seafood", ...PRODUCT_CATEGORIES.map(c => c.label)];
+
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

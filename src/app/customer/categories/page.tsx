@@ -20,7 +20,7 @@ const OceanReelsFeed = dynamic(
 );
 import Link from "next/link";
 
-import { PRODUCT_CATEGORIES } from "@/constants/categories";
+import { useCategories } from "@/hooks/useCategories";
 import { MASTER_PRODUCT_REGISTRY } from "@/constants/products";
 
 const CATEGORY_UI_MAPPING: Record<string, { desc: string, icon: string, color: string }> = {
@@ -34,16 +34,17 @@ const CATEGORY_UI_MAPPING: Record<string, { desc: string, icon: string, color: s
   'READY TO COOK': { icon: "🍳", color: "from-emerald-500/20", desc: "Marinated, prepped, and ready-to-cook selections." }
 };
 
-const CATEGORIES = PRODUCT_CATEGORIES.map(cat => ({
-   id: cat.id,
-   name: cat.label,
-   count: MASTER_PRODUCT_REGISTRY.filter(p => p.category === cat.id).length,
-   icon: CATEGORY_UI_MAPPING[cat.id]?.icon || "🐟",
-   desc: CATEGORY_UI_MAPPING[cat.id]?.desc || "Premium maritime product.",
-   color: CATEGORY_UI_MAPPING[cat.id]?.color || "from-blue-500/20"
-}));
-
 export default function CustomerCategoriesPage() {
+  const { categories: PRODUCT_CATEGORIES } = useCategories();
+  
+  const CATEGORIES = PRODUCT_CATEGORIES.map(cat => ({
+     id: cat.id,
+     name: cat.label,
+     count: MASTER_PRODUCT_REGISTRY.filter(p => p.category === cat.id).length,
+     icon: CATEGORY_UI_MAPPING[cat.id]?.icon || "🐟",
+     desc: CATEGORY_UI_MAPPING[cat.id]?.desc || "Premium maritime product.",
+     color: CATEGORY_UI_MAPPING[cat.id]?.color || "from-blue-500/20"
+  }));
   return (
 
     <div className="space-y-[10px] md:space-y-16 pt-4 md:pt-10 pb-10 animate-fade-in px-4 md:px-0">

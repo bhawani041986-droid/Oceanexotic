@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Table, TableHeader, TableBody, TableHead, TableRow, TableCell } from "@/components/ui/Table";
@@ -17,56 +17,93 @@ import {
   Activity,
   Filter,
   BarChart3,
-  Globe
+  Globe,
+  RefreshCw
 } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 
-const MOCK_CATEGORIES = [
-  { id: "CAT-001", name: "Premium Saku", species: "Bluefin, Bigeye", products: 24, status: "ACTIVE", volume: "₹42,400,000" },
-  { id: "CAT-002", name: "Wild Shellfish", species: "Scallops, Oysters", products: 18, status: "ACTIVE", volume: "₹18,200,000" },
-  { id: "CAT-003", name: "Deep Sea Crustaceans", species: "King Crab, Lobster", products: 12, status: "ACTIVE", volume: "₹85,000,000" },
-  { id: "CAT-004", name: "Arctic Whitefish", species: "Cod, Halibut", products: 42, status: "ARCHIVED", volume: "₹12,400,000" },
-];
-
 export default function AdminCategoriesPage() {
-  const { toast } = useToast(
-  );
-  const [isModalOpen, setIsModalOpen] = React.useState(false
-  );
-  const [formData, setFormData] = React.useState({
-    name: "",
-    species: "",
-    image_url: ""
-  }
-  );
-  const fileInputRef = React.useRef<HTMLInputElement>(null
-  );
+  const { toast } = useToast();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [categories, setCategories] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  
+  const [formData, setFormData] = useState({
+    id: "",
+    label: "",
+    iconName: "Fish"
+  });
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const uploadData = new FormData(
-  );
-      uploadData.append("file", file
-  );
-      const res = await fetch("/api/upload", { method: "POST", body: uploadData }
-  );
-      const data = await res.json(
-  );
-      setFormData({ ...formData, image_url: data.url }
-  );
+  const fetchCategories = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch('/api/categories');
+      const data = await res.json();
+      setCategories(data);
+    } catch (err) {
+      toast("Failed to sync global taxonomy", "error");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleSave = () => {
-    toast("Category commissioned successfully.", "success"
-  );
-    setIsModalOpen(false
-  );
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const handleSave = async () => {
+    if (!formData.label || !formData.id) {
+      toast("Identity nodes missing", "error");
+      return;
+    }
+    
+    setIsSaving(true);
+    try {
+      const updatedCategories = [...categories, formData];
+      const res = await fetch('/api/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedCategories)
+      });
+      
+      if (res.ok) {
+        setCategories(updatedCategories);
+        toast("Category commissioned successfully.", "success");
+        setIsModalOpen(false);
+        setFormData({ id: "", label: "", iconName: "Fish" });
+      } else {
+        toast("Handshake failed", "error");
+      }
+    } catch (err) {
+      toast("Network protocol error", "error");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    setIsSaving(true);
+    try {
+      const updatedCategories = categories.filter(c => c.id !== id);
+      const res = await fetch('/api/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedCategories)
+      });
+      
+      if (res.ok) {
+        setCategories(updatedCategories);
+        toast("Node decommissioned", "success");
+      }
+    } catch (err) {
+      toast("Decommissioning failed", "error");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
-
     <div className="space-y-[10px] md:space-y-10 pt-4 md:pt-10 pb-20 px-4 md:px-0 animate-fade-in">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-[10px] md:gap-6 md:border-b md:border-[var(--foreground)]/5 md:pb-10">
@@ -95,7 +132,7 @@ export default function AdminCategoriesPage() {
       {/* Category Intelligence Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[10px] md:gap-8">
         {[
-          { label: "Active Classifications", value: "3 Sectors", icon: <Layers />, trend: "OPTIMAL" },
+          { label: "Active Classifications", value: `${categories.length} Sectors`, icon: <Layers />, trend: "OPTIMAL" },
           { label: "Species Cataloged", value: "84 Varieties", icon: <Fish />, trend: "+12%" },
           { label: "Market Circulation", value: "₹158M", icon: <Activity />, trend: "STABLE" },
         ].map((stat) => (
@@ -124,82 +161,74 @@ export default function AdminCategoriesPage() {
               <Filter className="w-3.5 md:w-4 h-3.5 md:h-4" /> FILTERS
            </Button>
         </div>
-        <div className="hidden lg:block">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-[var(--foreground)]/5">
-                <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Category Identity</TableHead>
-                <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Cataloged Species</TableHead>
-                <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Product Density</TableHead>
-                <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Trade Volume</TableHead>
-                <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Registry Status</TableHead>
-                <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Governance</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {MOCK_CATEGORIES.map((cat) => (
-                <TableRow key={cat.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
-                  <TableCell>
-                    <div className="space-y-0.5 md:space-y-1">
-                      <p className="font-black text-[var(--foreground)] text-xs md:text-sm uppercase tracking-tighter group-hover/row:text-primary transition-colors italic">{cat.name}</p>
-                      <p className="text-[7px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">ID: {cat.id}</p>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-[10px] md:text-xs font-black text-text-secondary italic opacity-40">via {cat.species}</TableCell>
-                  <TableCell className="font-black text-[var(--foreground)] italic text-[11px] md:text-sm">{cat.products} NODES</TableCell>
-                  <TableCell className="font-black text-primary italic text-[11px] md:text-sm">{cat.volume}</TableCell>
-                  <TableCell>
-                    <Badge variant={cat.status === "ACTIVE" ? "success" : "secondary"} className="italic uppercase text-[8px] md:text-[10px] px-2">
-                      {cat.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-1 md:gap-2">
-                      <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
-                        <Edit3 className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                      </button>
-                      <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5">
-                        <Trash2 className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                      </button>
-                      <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5">
-                        <MoreVertical className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                      </button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-
-        {/* Mobile card list */}
-        <div className="lg:hidden space-y-3 p-4">
-          {MOCK_CATEGORIES.map((cat) => (
-            <div key={cat.id} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
-              <div className="flex items-start justify-between">
-                <div className="space-y-0.5">
-                  <p className="font-black text-[var(--foreground)] italic text-sm tracking-tighter uppercase">{cat.name}</p>
-                  <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">{cat.id} • via {cat.species}</p>
-                </div>
-                <Badge variant={cat.status === "ACTIVE" ? "success" : "secondary"} className="italic uppercase text-[8px] px-2">{cat.status}</Badge>
-              </div>
-              <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5">
-                <div className="space-y-0">
-                  <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Products</p>
-                  <p className="text-xs font-black text-[var(--foreground)] italic">{cat.products} Nodes</p>
-                </div>
-                <div className="text-right space-y-0">
-                  <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Volume</p>
-                  <p className="text-xs font-black text-primary italic">{cat.volume}</p>
-                </div>
-                <div className="flex gap-2">
-                  <button className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5"><Edit3 className="w-3.5 h-3.5" /></button>
-                  <button className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5"><Trash2 className="w-3.5 h-3.5" /></button>
-                </div>
-              </div>
+        
+        {isLoading ? (
+           <div className="h-64 flex items-center justify-center">
+              <RefreshCw className="w-8 h-8 animate-spin text-primary opacity-50" />
+           </div>
+        ) : (
+          <>
+            <div className="hidden lg:block">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-[var(--foreground)]/5">
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Category Identity</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">UI Icon</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Registry Status</TableHead>
+                    <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Governance</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {categories.map((cat) => (
+                    <TableRow key={cat.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
+                      <TableCell>
+                        <div className="space-y-0.5 md:space-y-1">
+                          <p className="font-black text-[var(--foreground)] text-xs md:text-sm uppercase tracking-tighter group-hover/row:text-primary transition-colors italic">{cat.label}</p>
+                          <p className="text-[7px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">ID: {cat.id}</p>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-[10px] md:text-xs font-black text-text-secondary italic opacity-40">{cat.iconName}</TableCell>
+                      <TableCell>
+                        <Badge variant="success" className="italic uppercase text-[8px] md:text-[10px] px-2">ACTIVE</Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-1 md:gap-2">
+                          <button 
+                            disabled={isSaving}
+                            onClick={() => handleDelete(cat.id)}
+                            className="p-2 md:p-2.5 rounded-lg hover:bg-danger/10 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5 disabled:opacity-50"
+                          >
+                            <Trash2 className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                          </button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
-          ))}
-        </div>
+
+            {/* Mobile card list */}
+            <div className="lg:hidden space-y-3 p-4">
+              {categories.map((cat) => (
+                <div key={cat.id} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-0.5">
+                      <p className="font-black text-[var(--foreground)] italic text-sm tracking-tighter uppercase">{cat.label}</p>
+                      <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">{cat.id} • Icon: {cat.iconName}</p>
+                    </div>
+                    <Badge variant="success" className="italic uppercase text-[8px] px-2">ACTIVE</Badge>
+                  </div>
+                  <div className="flex justify-end pt-2 border-t border-[var(--foreground)]/5">
+                    <button onClick={() => handleDelete(cat.id)} disabled={isSaving} className="p-2 rounded-lg hover:bg-danger/10 text-danger transition-all border border-danger/20 disabled:opacity-50">
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </Card>
 
       {/* Global Intelligence Handshake */}
@@ -226,32 +255,27 @@ export default function AdminCategoriesPage() {
               </div>
               <div className="space-y-4 md:space-y-6">
                  <div className="space-y-1.5 md:space-y-2">
-                    <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Sector Nomenclature</label>
-                    <Input value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} placeholder="e.g. Premium Saku" className="h-11 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 italic rounded-lg md:rounded-xl" />
+                    <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Sector ID</label>
+                    <Input value={formData.id} onChange={(e) => setFormData({...formData, id: e.target.value})} placeholder="e.g. EXOTIC_FISH" className="h-11 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 italic rounded-lg md:rounded-xl uppercase font-black text-sm" />
                  </div>
                  <div className="space-y-1.5 md:space-y-2">
-                    <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Species Mapping</label>
-                    <Input value={formData.species} onChange={(e) => setFormData({...formData, species: e.target.value})} placeholder="e.g. Bluefin, Bigeye" className="h-11 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 italic rounded-lg md:rounded-xl" />
+                    <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Sector Nomenclature</label>
+                    <Input value={formData.label} onChange={(e) => setFormData({...formData, label: e.target.value})} placeholder="e.g. Exotic Fish" className="h-11 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 italic rounded-lg md:rounded-xl text-sm" />
                  </div>
-                 <div className="space-y-3 md:space-y-4">
-                    <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Sector Visual (Icon/Image)</label>
-                    <div 
-                      onClick={() => fileInputRef.current?.click()}
-                      className="h-24 w-24 md:h-32 md:w-32 rounded-2xl md:rounded-[24px] bg-[var(--foreground)]/5 border-2 border-dashed border-[var(--foreground)]/10 flex items-center justify-center cursor-pointer hover:border-primary/50 transition-all overflow-hidden"
-                    >
-                       {formData.image_url ? <img src={formData.image_url} className="w-full h-full object-cover" /> : <Plus className="w-6 h-6 md:w-8 md:h-8 opacity-20" />}
-                    </div>
-                    <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageUpload} />
+                 <div className="space-y-1.5 md:space-y-2">
+                    <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Lucide Icon Name</label>
+                    <Input value={formData.iconName} onChange={(e) => setFormData({...formData, iconName: e.target.value})} placeholder="e.g. Anchor, Fish, Star" className="h-11 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 italic rounded-lg md:rounded-xl text-sm" />
                  </div>
               </div>
               <div className="flex gap-2 md:gap-4 pt-2 md:pt-4">
                  <Button variant="ghost" className="flex-1 h-11 md:h-12 uppercase text-[9px] md:text-[10px] font-black italic" onClick={() => setIsModalOpen(false)}>ABORT</Button>
-                 <Button className="flex-1 h-11 md:h-12 uppercase text-[9px] md:text-[10px] font-black shadow-glow-purple italic rounded-lg md:rounded-xl" onClick={handleSave}>COMMISSION NODE</Button>
+                 <Button disabled={isSaving} className="flex-1 h-11 md:h-12 uppercase text-[9px] md:text-[10px] font-black shadow-glow-purple italic rounded-lg md:rounded-xl" onClick={handleSave}>
+                    {isSaving ? <RefreshCw className="w-4 h-4 animate-spin" /> : 'COMMISSION NODE'}
+                 </Button>
               </div>
            </Card>
         </div>
       )}
     </div>
-  
   );
 }

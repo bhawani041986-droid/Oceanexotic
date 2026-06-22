@@ -33,7 +33,7 @@ import Link from "next/link";
 import { useToast } from "@/components/ui/Toast";
 import { useRouter, useParams } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { PRODUCT_CATEGORIES } from "@/constants/categories";
+import { useCategories } from "@/hooks/useCategories";
 
 const CUT_TYPES = [
   { id: 'WHOLE', label: 'Whole Fish' },
@@ -52,6 +52,7 @@ export default function AdminEditProductPage() {
   const { toast } = useToast();
   const router = useRouter();
   const params = useParams();
+  const { categories: PRODUCT_CATEGORIES } = useCategories();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [sellers, setSellers] = useState<any[]>([]);
