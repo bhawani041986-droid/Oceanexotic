@@ -42,16 +42,13 @@ export function LanguageSelector() {
         fillColor={colors.card}
         strokeColor={colors.border}
         bevelSize={6}
-        style={{ minHeight: 36, width: 52 }}
+        style={{ height: 36, width: 36 }}
       >
         <Pressable 
           onPress={() => setModalVisible(true)}
-          className="h-full w-full items-center justify-center flex-row px-2 gap-1 active:opacity-70"
+          className="h-full w-full items-center justify-center active:opacity-70"
         >
-          <Ionicons name="globe-outline" size={14} color={colors.text} />
-          <Text style={{ color: colors.text, fontSize: 10, fontWeight: 'bold' }}>
-            {activeLang.code.toUpperCase()}
-          </Text>
+          <Ionicons name="globe-outline" size={18} color={colors.text} />
         </Pressable>
       </ChamferedBox>
 

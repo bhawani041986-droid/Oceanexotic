@@ -104,10 +104,10 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               </Svg>
             </Pressable>
             <Pressable onPress={() => router.push("/home")} className="justify-center">
-              <Logo size="sm" style={{ width: 196, height: 48 }} />
+              <Logo size="sm" iconOnly style={{ width: 36, height: 36 }} />
             </Pressable>
           </View>
-          <View className="flex-row items-center gap-2">
+          <View className="flex-row items-center gap-[6px]">
             <LanguageSelector />
             <Pressable
               onPress={handleNotificationPress}
