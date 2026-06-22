@@ -145,7 +145,7 @@ export function Logo({ size = "md", className, style, iconOnly }: LogoProps) {
 
   return (
     <View className={cn("overflow-hidden", className)} style={[{ width: dims.width, height: dims.height }, style]}>
-      <Svg width="100%" height="100%" viewBox="20 20 545 150" preserveAspectRatio="xMidYMid meet">
+      <Svg width="100%" height="100%" viewBox="10 10 555 160" preserveAspectRatio="xMidYMid meet">
         <Defs>
           <LinearGradient id={`neonGrad-${uid}`} x1="0%" y1="0%" x2="100%" y2="0%">
             <Stop offset="0%" stopColor={accentCyan} />
