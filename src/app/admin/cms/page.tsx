@@ -318,6 +318,41 @@ export default function AdminCMSPage() {
         </div>
       </div>
 
+      {/* 1.5 GLOBAL PROMO ENGINE */}
+      <Card className="p-4 md:p-6 rounded-[24px] bg-bg-secondary/20 border-[var(--foreground)]/5 shadow-premium mb-6 md:mb-0">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <h3 className="text-base md:text-lg font-black text-[var(--foreground)] tracking-tighter uppercase italic flex items-center gap-2">
+              <Clock className="w-4 h-4 text-primary" /> Global Promo Engine
+            </h3>
+            <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Control Flash Deals & Active Timers</p>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center gap-4 border-t sm:border-t-0 sm:border-l border-[var(--foreground)]/10 pt-4 sm:pt-0 sm:pl-6">
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-text-secondary">Flash Deal:</span>
+              <button 
+                onClick={() => { setSettings({ flashDealActive: !flashDealActive }); pushSettings(); toast(`Flash Deal ${!flashDealActive ? 'Activated' : 'Deactivated'}`, "success"); }}
+                className={cn("w-12 h-6 rounded-full p-1 transition-colors relative flex items-center shadow-inner", flashDealActive ? "bg-primary" : "bg-black border border-[var(--foreground)]/20")}
+              >
+                 <span className={cn("absolute text-[6px] font-black uppercase", flashDealActive ? "left-1.5 text-black" : "right-1.5 text-text-secondary")}>
+                   {flashDealActive ? "ON" : "OFF"}
+                 </span>
+                 <div className={cn("w-4 h-4 rounded-full bg-white transition-transform z-10", flashDealActive ? "translate-x-6" : "translate-x-0")} />
+              </button>
+            </div>
+            <div className="flex items-center gap-2 w-full sm:w-auto border-t sm:border-t-0 sm:border-l border-[var(--foreground)]/10 pt-4 sm:pt-0 sm:pl-4">
+              <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-text-secondary">Timer Ends:</span>
+              <Input 
+                type="datetime-local" 
+                value={flashDealEnd.slice(0,16)} 
+                onChange={(e) => { setSettings({ flashDealEnd: new Date(e.target.value).toISOString() }); pushSettings(); toast("Timer target updated", "info"); }}
+                className="h-8 md:h-10 text-[10px] font-black uppercase bg-black/50 border-[var(--foreground)]/10 text-[var(--foreground)] w-[180px]"
+              />
+            </div>
+          </div>
+        </div>
+      </Card>
+
       {/* 2. REGISTRY TABLE */}
       <Card className="p-1 rounded-[24px] md:rounded-[40px] bg-bg-secondary/20 border-[var(--foreground)]/5 shadow-premium overflow-hidden">
         <div className="p-[10px] md:p-6 border-b border-[var(--foreground)]/5 flex flex-col md:flex-row md:items-center justify-between gap-[10px] md:gap-6">

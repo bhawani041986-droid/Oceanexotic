@@ -62,6 +62,7 @@ import { useCartStore } from "@/store/cartStore";
 import { useToast } from "@/components/ui/Toast";
 import { Logo } from "@/components/ui/Logo";
 import dynamic from 'next/dynamic';
+import { AtmosphericGlow } from "@/components/ui/AtmosphericGlow";
 const OceanReelsFeed = dynamic(
   () => import('@/components/video/OceanReelsFeed').then((mod) => mod.OceanReelsFeed),
   { ssr: false, loading: () => <div className="w-full h-[250px] bg-[var(--c-bg)] animate-pulse my-4 border-y border-[var(--foreground)]/5" /> }
@@ -1508,10 +1509,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                 className="p-6 md:p-12 bg-gradient-to-br from-[var(--c-primary)] via-[var(--c-accent)] to-[var(--c-bg)] overflow-hidden relative shadow-[var(--c-shadow-glow)] group text-center lg:text-left"
                 style={{ clipPath: 'polygon(40px 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%, 0 40px)' }}
              >
-                <div 
-                   className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.15),transparent_70%)] md:bg-[radial-gradient(circle_at_70%_30%,rgba(255,255,255,0.1),transparent_50%)]" 
-                   style={{ opacity: (settings.atmosphericGlow || 15) / 100 }}
-                />
+                <AtmosphericGlow />
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center relative z-10">
                    <div className="space-y-4 md:space-y-6">
                       <Badge className="bg-[var(--foreground)]/20 text-[8px] md:text-[10px] font-black tracking-[0.3em] px-4 md:px-6 py-2 border-[var(--foreground)]/20 uppercase">
