@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Pressable, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { Image } from 'expo-image';
 import Svg, { Polygon, Line } from 'react-native-svg';
 import { useRouter } from 'expo-router';
@@ -55,18 +55,33 @@ export function FlashDealsBanner() {
     ? settings.customerAssets.promo 
     : "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80";
 
-  const productLink = "/";
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const carouselData = settings.flashDealCarousel && settings.flashDealCarousel.length > 0
+    ? settings.flashDealCarousel
+    : [
+        { image_url: promoImageUrl, product_link: "/" },
+        { image_url: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2", product_link: "/" }
+      ];
+
+  const handleScroll = (e: any) => {
+    const x = e.nativeEvent.contentOffset.x;
+    const index = Math.round(x / 160);
+    setActiveIndex(index);
+  };
 
   return (
     <View style={[styles.container, { borderColor: colors.border, backgroundColor: colors.bgAlt }]}>
       
-      {/* 1. BACKGROUND IMAGE (Panel B Cover) */}
+      {/* 1. Base Dark Background */}
+      <View style={[StyleSheet.absoluteFillObject, { backgroundColor: '#020617' }]} />
+
       <Image 
-        source={{ uri: promoImageUrl }} 
-        style={StyleSheet.absoluteFill} 
-        contentFit="cover" 
+        source={{ uri: carouselData[0].image_url }} 
+        style={[StyleSheet.absoluteFillObject, { opacity: 0.3 }]}
+        contentFit="cover"
       />
-      <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0,0,0,0.4)' }]} />
+      <View style={[StyleSheet.absoluteFillObject, { backgroundColor: 'rgba(0,0,0,0.4)' }]} />
 
       {/* 2. PANEL A (Top-Left Diagonal Mask) */}
       <Svg style={StyleSheet.absoluteFill} viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -143,20 +158,59 @@ export function FlashDealsBanner() {
         </View>
       </View>
 
-      {/* Panel B Content (Bottom-Right) */}
+      {/* Panel B Content (Bottom-Right Carousel) */}
       <View style={styles.panelBContent} pointerEvents="box-none">
-        <Pressable 
-           onPress={() => router.push(productLink as any)}
-           style={{ alignSelf: 'flex-end', marginTop: 'auto' }}
-        >
-          {/* Custom Cut-Corner SVG Button */}
-          <View style={{ width: 140, height: 44, justifyContent: 'center', alignItems: 'center' }}>
-            <Svg style={StyleSheet.absoluteFill} viewBox="0 0 140 44" preserveAspectRatio="none">
-              <Polygon points="8,0 140,0 140,36 132,44 0,44 0,8" fill={colors.primary} />
-            </Svg>
-            <Text style={styles.btnText}>VIEW DETAILS</Text>
+        <View style={{ width: 170, alignItems: 'flex-end', marginTop: 'auto' }}>
+          
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled
+            snapToInterval={170}
+            decelerationRate="fast"
+            onMomentumScrollEnd={handleScroll}
+            contentContainerStyle={{ gap: 10, paddingRight: 0 }}
+          >
+            {carouselData.map((item, idx) => (
+              <View key={idx} style={{ width: 160, height: 110, justifyContent: 'flex-end' }}>
+                <View style={[styles.carouselCardWrap, { backgroundColor: colors.primary, shadowColor: colors.primary }]}>
+                  <View style={styles.carouselCardInner}>
+                    <Image source={{ uri: item.image_url }} style={[StyleSheet.absoluteFillObject, { opacity: 0.9 }]} contentFit="cover" />
+                    
+                    {/* Gradient Overlay for button contrast */}
+                    <View style={styles.carouselGradient} />
+
+                    <Pressable 
+                      onPress={() => router.push(item.product_link as any)}
+                      style={{ position: 'absolute', bottom: 10, alignSelf: 'center' }}
+                    >
+                      <View style={{ width: 100, height: 30, justifyContent: 'center', alignItems: 'center' }}>
+                        <Svg style={StyleSheet.absoluteFill} viewBox="0 0 100 30" preserveAspectRatio="none">
+                          <Polygon points="6,0 100,0 100,24 94,30 0,30 0,6" fill="#FFFFFF" />
+                        </Svg>
+                        <Text style={[styles.btnText, { color: colors.primary, fontSize: 8 }]}>VIEW DETAILS</Text>
+                      </View>
+                    </Pressable>
+                  </View>
+                </View>
+              </View>
+            ))}
+          </ScrollView>
+
+          {/* Fish Neon Glow Navigation Indicators */}
+          <View style={{ flexDirection: 'row', gap: 6, marginTop: 8, justifyContent: 'center', width: '100%' }}>
+            {carouselData.map((_, idx) => (
+              <MaterialCommunityIcons 
+                key={idx} 
+                name="fish" 
+                size={14} 
+                color={idx === activeIndex ? colors.primary : 'rgba(255,255,255,0.4)'} 
+                style={idx === activeIndex ? { shadowColor: colors.primary, shadowOffset: { width:0, height:0 }, shadowOpacity: 0.8, shadowRadius: 6, elevation: 4 } : {}}
+              />
+            ))}
           </View>
-        </Pressable>
+
+        </View>
       </View>
 
     </View>
@@ -266,5 +320,24 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Black',
     textTransform: 'uppercase',
     letterSpacing: 1.5,
+  },
+  carouselCardWrap: {
+    width: '100%' as any,
+    height: '100%' as any,
+    padding: 1,
+    elevation: 6,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 6,
+  },
+  carouselCardInner: {
+    width: '100%' as any,
+    height: '100%' as any,
+    backgroundColor: '#000',
+    overflow: 'hidden' as const,
+  },
+  carouselGradient: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.4)',
   }
 });

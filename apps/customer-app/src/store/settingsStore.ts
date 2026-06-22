@@ -25,6 +25,7 @@ interface SettingsState {
   marketplaceName: string;
   flashDealActive: boolean;
   flashDealEnd: string;
+  flashDealCarousel?: { image_url: string; product_link: string }[];
   theme: string;
   /** Current UI language code (e.g. 'en', 'hi', 'bn', 'ta') */
   language: string;
@@ -59,6 +60,10 @@ export const useSettingsStore = create<SettingsState>()(
       marketplaceName: "OceanExotic Global",
       flashDealActive: true,
       flashDealEnd: new Date(Date.now() + 1000 * 60 * 60 * 3).toISOString(),
+      flashDealCarousel: [
+        { image_url: "https://images.unsplash.com/photo-1544551763-46a013bb70d5", product_link: "/products" },
+        { image_url: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2", product_link: "/products" }
+      ],
       theme: "theme-ocean-neon",
       language: "en",
       settings: { language: "en" },
@@ -93,6 +98,7 @@ export const useSettingsStore = create<SettingsState>()(
                 ? Boolean(settings.flashDealActive)
                 : get().flashDealActive,
             flashDealEnd: (settings.flashDealEnd as string) || get().flashDealEnd,
+            flashDealCarousel: (settings.flashDealCarousel as any) || get().flashDealCarousel,
             theme: (settings.customerTheme as string) || (settings.theme as string) || get().theme,
             customerAssets: sanitized,
           });

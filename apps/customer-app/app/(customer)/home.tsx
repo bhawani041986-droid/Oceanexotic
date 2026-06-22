@@ -400,8 +400,6 @@ export default function CustomerHomeScreen() {
           </View>
         </View>
 
-        {/* Flame-Sea Diagonal Promo Banner */}
-        <FlashDealsBanner />
 
         {/* Maritime Wave Divider */}
         <MaritimeWaveDivider />
@@ -600,39 +598,8 @@ export default function CustomerHomeScreen() {
           </View>
         </View>
 
-        {/* Flash Deals */}
-        {promo ? (
-          <View 
-            className="mx-4 my-6 p-6 relative overflow-hidden"
-            style={{
-              backgroundColor: getRgba(primaryColor, 0.2),
-              borderColor: colors.border,
-              borderWidth: 1
-            }}
-          >
-            <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>
-              {promo?.sector || "Flash Harvest"} Protocol
-            </Text>
-            <Text className="mt-2 text-3xl font-black uppercase italic" style={{ color: colors.text }}>
-              {promo?.title || "Flash Deals."}
-            </Text>
-            
-            {/* Render isolated countdown to prevent root re-renders */}
-            <FlashDealCountdown />
-            
-            <Button label="CLAIM ACCESS NOW" onPress={() => router.push("/products")} className="mt-6" />
-
-            {/* Beveled overlays for flash deals */}
-            <Svg width="24" height="24" style={{ position: "absolute", top: -1, left: -1, zIndex: 40 }}>
-              <Path d="M0,0 L24,0 L0,24 Z" fill={colors.bg} />
-              <Path d="M24,0 L0,24" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-            </Svg>
-            <Svg width="24" height="24" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 40 }}>
-              <Path d="M24,24 L0,24 L24,0 Z" fill={colors.bg} />
-              <Path d="M0,24 L24,0" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-            </Svg>
-          </View>
-        ) : null}
+        {/* Flame-Sea Diagonal Promo Banner — Flash Deals Section */}
+        <FlashDealsBanner />
 
         {/* Split Promo: Maritime Grill & Flame-Sea Collections */}
         <View className="mx-4 my-6 bg-[#070b13] shadow-2xl relative overflow-hidden" style={{ height: 200 }}>
