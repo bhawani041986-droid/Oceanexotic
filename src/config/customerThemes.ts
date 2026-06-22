@@ -26,6 +26,56 @@ export interface CustomerTheme {
 
 export const CUSTOMER_THEMES: CustomerTheme[] = [
   {
+    id: 'theme-ocean-global',
+    name: 'Ocean Global (Dark)',
+    desc: 'Premium Deep Ocean aesthetic with Neon Coral and Cyan highlights.',
+    fontFamily: 'var(--font-inter)',
+    colors: {
+      primary: '#00A6B6',
+      primaryLight: '#38BDF8',
+      secondary: '#FF6B6B',
+      accent: '#00E5FF',
+      bg: '#061826',
+      bgAlt: '#0F2D3F',
+      card: '#0F2D3F',
+      textPrimary: '#F7FBFC',
+      textSecondary: '#64748B',
+    },
+    visuals: {
+      radiusBtn: '16px',
+      radiusCard: '24px',
+      shadowGlow: '0 0 24px rgba(0, 166, 182, 0.28)',
+      gradientHero: 'linear-gradient(135deg, #001F3F 0%, #006D77 50%, #00E5FF 100%)',
+      glassOpacity: '0.7',
+      glassBlur: '12px',
+    }
+  },
+  {
+    id: 'theme-ocean-global-light',
+    name: 'Ocean Global (Light)',
+    desc: 'Pristine white backdrop retaining premium aquatic accents.',
+    fontFamily: 'var(--font-inter)',
+    colors: {
+      primary: '#00A6B6',
+      primaryLight: '#38BDF8',
+      secondary: '#FF6B6B',
+      accent: '#00E5FF',
+      bg: '#FFFFFF',
+      bgAlt: '#F7FBFC',
+      card: '#F7FBFC',
+      textPrimary: '#0B1F33',
+      textSecondary: '#64748B',
+    },
+    visuals: {
+      radiusBtn: '16px',
+      radiusCard: '24px',
+      shadowGlow: '0 0 24px rgba(0, 166, 182, 0.15)',
+      gradientHero: 'linear-gradient(135deg, #F7FBFC 0%, #E0F2FE 100%)',
+      glassOpacity: '0.8',
+      glassBlur: '12px',
+    }
+  },
+  {
     id: 'theme-midnight-deep',
     name: 'Midnight Deep',
     desc: 'Futuristic neon oceanic experience',
