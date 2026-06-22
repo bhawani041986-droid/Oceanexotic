@@ -99,10 +99,10 @@ export function FlashDealsBanner() {
         source={require('../../../assets/paddle.png')} 
         style={{
           position: 'absolute',
-          width: 36,
+          width: 28,
           height: diagonalLength,
           left: '50%',
-          marginLeft: -18,
+          marginLeft: -14,
           top: (280 - diagonalLength) / 2,
           transform: [{ rotate: rotationAngle }],
           zIndex: 3,
