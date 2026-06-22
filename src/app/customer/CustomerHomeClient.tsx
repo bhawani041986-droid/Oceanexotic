@@ -1689,6 +1689,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
       <section className="py-1 container mx-auto px-0 md:px-10 relative">
          <div className="mb-3 space-y-0.5 px-[2px] md:px-0">
             <h2 className="text-xl md:text-5xl font-black text-[var(--c-text-primary)] tracking-tight uppercase italic">Top Sellers</h2>
+            <div className="h-[2px] w-16 bg-gradient-to-r from-[var(--c-text-primary)] to-[var(--c-primary)] mt-1.5 mb-2 rounded-full" />
             <p className="text-[9px] md:text-[11px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] italic opacity-60">Verified Sellers</p>
          </div>
          
@@ -1764,6 +1765,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
             <div className="space-y-12">
                <div className="mb-2 space-y-0.5 px-[2px] md:px-0">
                   <h2 className="text-xl md:text-5xl font-black text-[var(--c-text-primary)] tracking-tight uppercase italic">Live Delivery Coverage</h2>
+                  <div className="h-[2px] w-16 bg-gradient-to-r from-[var(--c-text-primary)] to-[var(--c-primary)] mt-1.5 mb-2 rounded-full" />
                   <p className="text-[9px] md:text-[11px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] italic opacity-60">Real-Time Delivery Hub Mapping</p>
                </div>
                <div className="flex flex-row gap-4">
@@ -1823,6 +1825,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
       <section className="py-1 container mx-auto px-0 md:px-10">
          <div className="mb-4 space-y-0.5 px-[2px] md:px-0">
             <h2 className="text-xl md:text-5xl font-black text-[var(--c-text-primary)] tracking-tight uppercase italic">Customer Reviews</h2>
+            <div className="h-[2px] w-16 bg-gradient-to-r from-[var(--c-text-primary)] to-[var(--c-primary)] mt-1.5 mb-2 rounded-full" />
             <p className="text-[9px] md:text-[11px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] italic opacity-60">Verified Reviews</p>
          </div>
          
@@ -1861,6 +1864,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
          <div className="mb-4 flex justify-between items-end px-[2px] md:px-0">
             <div>
                <h2 className="text-xl md:text-5xl font-black text-[var(--c-text-primary)] tracking-tight uppercase italic">Chef's Recipes</h2>
+               <div className="h-[2px] w-16 bg-gradient-to-r from-[var(--c-text-primary)] to-[var(--c-primary)] mt-1.5 mb-2 rounded-full" />
                <p className="text-[9px] md:text-[11px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.3em] italic opacity-60">Verified Recipes</p>
             </div>
             <button 

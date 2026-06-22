@@ -9,6 +9,7 @@ import {
   RefreshControl,
 } from "react-native";
 import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
 import api from "@/services/api";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useProductSearch, useProducts } from "@/hooks/useProducts";
@@ -328,10 +329,20 @@ export default function ProductsScreen() {
                   return (
                     <React.Fragment key={category.slug}>
                       <View className="space-y-3">
-                        <View className="flex-row items-center justify-between">
-                          <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
-                            {category.name.split(" ")[0]} <Text style={{ color: category.glowColor }}>{category.name.split(" ").slice(1).join(" ") || ""}</Text>
-                          </Text>
+                         <View className="flex-row items-center justify-between">
+                          <View>
+                            <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
+                              {category.name.split(" ")[0]} <Text style={{ color: category.glowColor }}>{category.name.split(" ").slice(1).join(" ") || ""}</Text>
+                            </Text>
+                            <View className="mt-1.5" style={{ height: 2, width: 64, borderRadius: 999, overflow: 'hidden' }}>
+                              <LinearGradient
+                                colors={[colors.text, category.glowColor]}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 0 }}
+                                style={{ flex: 1 }}
+                              />
+                            </View>
+                          </View>
                           <Pressable onPress={() => setActiveTab(category.name)}>
                              <Text className="text-[10px] font-black uppercase" style={{ color: colors.primary }}>View All</Text>
                           </Pressable>
