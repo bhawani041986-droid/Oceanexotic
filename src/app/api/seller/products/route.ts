@@ -9,6 +9,19 @@ export async function GET(request: NextRequest) {
     const id = searchParams.get('id');
     const targetLang = request.headers.get('Accept-Language');
 
+    // Get live harbor inventory
+    const todayDate = new Date().toISOString().split('T')[0];
+    const { data: catches } = await supabase
+      .from('todays_catch')
+      .select('product_id, batch_label, freshness_timestamp, harbor_node')
+      .eq('status', 'FRESH')
+      .eq('catch_date', todayDate);
+
+    const liveCatchMap = new Map();
+    if (catches) {
+      catches.forEach(c => liveCatchMap.set(c.product_id, c));
+    }
+
     if (id) {
       const { data: productData, error } = await supabase
         .from('products')
@@ -19,7 +32,16 @@ export async function GET(request: NextRequest) {
       if (error && error.code !== 'PGRST116') throw error;
       if (!productData) return NextResponse.json({ error: "Asset Not Found" }, { status: 404 });
       
-      let product = { ...productData, seller_name: '' };
+      const liveData = liveCatchMap.get(id);
+      let product = { 
+        ...productData, 
+        seller_name: '',
+        is_live_inventory: liveData ? 1 : 0,
+        batch_label: liveData?.batch_label,
+        freshness_timestamp: liveData?.freshness_timestamp,
+        harbor_node: liveData?.harbor_node || productData.harbor_node
+      };
+      
       if (targetLang && !targetLang.toLowerCase().startsWith("en")) {
         product = await translateObject(product, ['name', 'description', 'category', 'tagline'], targetLang);
       }
@@ -33,10 +55,17 @@ export async function GET(request: NextRequest) {
       
     if (error) throw error;
     
-    let products = (productsData || []).map((p: any) => ({
-      ...p,
-      seller_name: ''
-    }));
+    let products = (productsData || []).map((p: any) => {
+      const liveData = liveCatchMap.get(p.id);
+      return {
+        ...p,
+        seller_name: '',
+        is_live_catch: !!liveData,
+        harbor_node: liveData?.harbor_node || p.harbor_node,
+        catch_date: todayDate,
+        batch_label: liveData?.batch_label
+      };
+    });
 
     if (targetLang && !targetLang.toLowerCase().startsWith("en")) {
       products = await translateArray(products, ['name', 'description', 'category', 'tagline'], targetLang);

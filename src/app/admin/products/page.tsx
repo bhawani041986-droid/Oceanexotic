@@ -330,7 +330,7 @@ export default function AdminProductsPage() {
                         <TableCell className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest italic">{prd.category}</TableCell>
                         <TableCell>
                             <div className="flex flex-col gap-1">
-                                {prd.is_live_inventory == 1 ? (
+                                {prd.is_live_catch ? (
                                     <>
                                         <div className="flex items-center gap-2">
                                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-glow-success" />
@@ -340,7 +340,7 @@ export default function AdminProductsPage() {
                                             <Anchor className="w-2.5 h-2.5 text-primary" />
                                             <span className="text-[8px] font-black text-primary uppercase">{prd.harbor_node || 'UNLINKED'}</span>
                                         </div>
-                                        <span className="text-[7px] font-bold text-text-secondary uppercase opacity-40 italic">{prd.catch_date || 'RECENT'}</span>
+                                        <span className="text-[7px] font-bold text-text-secondary uppercase opacity-40 italic">{prd.batch_label || prd.catch_date}</span>
                                     </>
                                 ) : (
                                     <span className="text-[8px] font-black text-text-secondary uppercase opacity-40 italic">STATIC CATALOG</span>
@@ -356,7 +356,7 @@ export default function AdminProductsPage() {
                                 } className="text-[7px] md:text-[9px] italic px-2 uppercase font-black tracking-widest w-fit">
                                 {prd.status}
                                 </Badge>
-                                {prd.is_live_inventory == 1 && (
+                                {prd.is_live_catch && (
                                     <span className="text-[7px] font-black text-emerald-400 uppercase tracking-widest animate-pulse">● LIVE HARBOR</span>
                                 )}
                             </div>
@@ -424,7 +424,7 @@ export default function AdminProductsPage() {
                   <div className="space-y-1">
                     <p className="text-[7px] font-black text-text-secondary uppercase tracking-widest italic opacity-40">Live Status / Harbor</p>
                     <div className="flex flex-col gap-0.5">
-                      {prd.is_live_inventory == 1 ? (
+                      {prd.is_live_catch ? (
                         <>
                           <div className="flex items-center gap-1.5">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-glow-success" />
