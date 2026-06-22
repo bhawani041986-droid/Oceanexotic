@@ -53,6 +53,7 @@ export function FlashDealsBanner() {
   const containerWidth = width;
   const angle = Math.atan2(280, containerWidth) * 180 / Math.PI;
   const rotationAngle = `${90 - angle}deg`;
+  const diagonalLength = Math.sqrt(280 * 280 + containerWidth * containerWidth);
 
   if (!settings.flashDealActive) return null;
 
@@ -99,10 +100,10 @@ export function FlashDealsBanner() {
         style={{
           position: 'absolute',
           width: 24,
-          height: 440,
+          height: diagonalLength,
           left: '50%',
           marginLeft: -12,
-          top: (280 - 440) / 2,
+          top: (280 - diagonalLength) / 2,
           transform: [{ rotate: rotationAngle }],
           zIndex: 3,
         }}
