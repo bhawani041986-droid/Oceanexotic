@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, Pressable, StyleSheet, ActivityIndicator } from "react-native";
 import { Image } from "expo-image";
+import Svg, { Path } from "react-native-svg";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useVideoPlayer, VideoView } from "expo-video";
 import { useCartStore } from "@/store/cartStore";
@@ -163,6 +164,15 @@ export function OceanReelsFeed({ variant = "feed", videoId }: { variant?: "feed"
         className="w-[48%] relative overflow-hidden bg-black shadow-md border"
         style={{ minHeight: 250, borderColor: "rgba(255,255,255,0.1)" }}
       >
+        {/* Cut-corner overlays for grid-card */}
+        <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+          <Path d="M0,0 L12,0 L0,12 Z" fill={colors.bg} />
+          <Path d="M12,0 L0,12" stroke="rgba(255,255,255,0.1)" strokeWidth={1} />
+        </Svg>
+        <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+          <Path d="M12,12 L0,12 L12,0 Z" fill={colors.bg} />
+          <Path d="M0,12 L12,0" stroke="rgba(255,255,255,0.1)" strokeWidth={1} />
+        </Svg>
         <ActiveReelVideo videoUrl={vid.video_url} isMuted={isMuted} />
         <View className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/80 pointer-events-none" />
         <View className="absolute top-2 left-2 rounded bg-primary/90 px-2 py-0.5">
@@ -178,10 +188,17 @@ export function OceanReelsFeed({ variant = "feed", videoId }: { variant?: "feed"
               <Text className="font-black text-[12px]" style={{ color: colors.primary }}>₹{product.price}</Text>
               <Pressable
                 onPress={(e) => { e.stopPropagation(); handleAddToCart(product); }}
-                className="px-3 py-1.5 rounded-none items-center justify-center shadow-lg"
+                className="px-3 py-1.5 rounded-none items-center justify-center shadow-lg relative overflow-hidden"
                 style={{ backgroundColor: colors.primary }}
               >
                 <Text className="text-[8px] font-black text-white">+ BUY</Text>
+                {/* Cut-corner overlays */}
+                <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                  <Path d="M0,0 L6,0 L0,6 Z" fill="#000" />
+                </Svg>
+                <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                  <Path d="M6,6 L0,6 L6,0 Z" fill="#000" />
+                </Svg>
               </Pressable>
             </View>
           )}
@@ -199,6 +216,15 @@ export function OceanReelsFeed({ variant = "feed", videoId }: { variant?: "feed"
         className="w-full relative overflow-hidden bg-black shadow-md border"
         style={{ height: 180, borderColor: colors.primary }}
       >
+        {/* Cut-corner overlays for banner */}
+        <Svg width={16} height={16} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+          <Path d="M0,0 L16,0 L0,16 Z" fill={colors.bg} />
+          <Path d="M16,0 L0,16" stroke={colors.primary} strokeWidth={1} />
+        </Svg>
+        <Svg width={16} height={16} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+          <Path d="M16,16 L0,16 L16,0 Z" fill={colors.bg} />
+          <Path d="M0,16 L16,0" stroke={colors.primary} strokeWidth={1} />
+        </Svg>
         <ActiveReelVideo videoUrl={vid.video_url} isMuted={isMuted} />
         <View className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent pointer-events-none" />
         <Pressable onPress={(e) => { e.stopPropagation(); setIsMuted(!isMuted); }} className="absolute top-2 right-2 p-1 bg-black/50 rounded-full">
@@ -210,10 +236,17 @@ export function OceanReelsFeed({ variant = "feed", videoId }: { variant?: "feed"
           {product && (
             <Pressable
               onPress={(e) => { e.stopPropagation(); handleAddToCart(product); }}
-              className="px-4 py-2 self-start rounded-none shadow-lg"
+              className="px-4 py-2 self-start rounded-none shadow-lg relative overflow-hidden"
               style={{ backgroundColor: colors.primary }}
             >
               <Text className="text-[10px] font-black text-white uppercase tracking-widest">SHOP NOW - ₹{product.price}</Text>
+              {/* Cut-corner overlays */}
+              <Svg width={8} height={8} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                <Path d="M0,0 L8,0 L0,8 Z" fill="#000" />
+              </Svg>
+              <Svg width={8} height={8} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                <Path d="M8,8 L0,8 L8,0 Z" fill="#000" />
+              </Svg>
             </Pressable>
           )}
         </View>
@@ -270,8 +303,14 @@ export function OceanReelsFeed({ variant = "feed", videoId }: { variant?: "feed"
               <View className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/80 pointer-events-none" />
               {!isActive && (
                 <View className="absolute inset-0 items-center justify-center pointer-events-none">
-                  <View className="w-8 h-8 rounded-none items-center justify-center border" style={{ backgroundColor: "rgba(255, 255, 255, 0.2)", borderColor: "rgba(255, 255, 255, 0.4)" }}>
+                  <View className="w-8 h-8 rounded-none items-center justify-center border relative overflow-hidden" style={{ backgroundColor: "rgba(255, 255, 255, 0.2)", borderColor: "rgba(255, 255, 255, 0.4)" }}>
                     <MaterialCommunityIcons name="play" size={16} color="white" style={{ marginLeft: 2 }} />
+                    <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                      <Path d="M0,0 L6,0 L0,6 Z" fill="rgba(0,0,0,0.5)" />
+                    </Svg>
+                    <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                      <Path d="M6,6 L0,6 L6,0 Z" fill="rgba(0,0,0,0.5)" />
+                    </Svg>
                   </View>
                 </View>
               )}
@@ -282,10 +321,16 @@ export function OceanReelsFeed({ variant = "feed", videoId }: { variant?: "feed"
                     <Text className="font-black text-[10px]" style={{ color: colors.primary }}>₹{product.price}</Text>
                     <Pressable
                       onPress={(e) => { e.stopPropagation(); handleAddToCart(product); }}
-                      className="h-6 w-6 rounded-none items-center justify-center shadow-lg"
+                      className="h-6 w-6 rounded-none items-center justify-center shadow-lg relative overflow-hidden"
                       style={{ backgroundColor: colors.primary }}
                     >
                       <MaterialCommunityIcons name="cart-plus" size={12} color="white" />
+                      <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                        <Path d="M0,0 L4,0 L0,4 Z" fill="#000" />
+                      </Svg>
+                      <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                        <Path d="M4,4 L0,4 L4,0 Z" fill="#000" />
+                      </Svg>
                     </Pressable>
                   </View>
                 )}

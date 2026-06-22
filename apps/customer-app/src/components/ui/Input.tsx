@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { TextInput, TextInputProps, View, Text, Pressable } from "react-native";
 import { cn } from "@/lib/utils";
-import Svg, { Path, Circle, Line } from "react-native-svg";
+import Svg, { Path, Circle, Line, Polygon } from "react-native-svg";
 
 export interface InputProps extends TextInputProps {
   error?: string;
@@ -28,6 +28,13 @@ export function Input({ className, error, isPassword, secureTextEntry, ...props 
           secureTextEntry={isSecure}
           {...props}
         />
+        {/* Cut-corner overlays for Input */}
+        <Svg width={8} height={8} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}>
+          <Polygon points="0,0 8,0 0,8" fill="#020817" />
+        </Svg>
+        <Svg width={8} height={8} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}>
+          <Polygon points="8,8 0,8 8,0" fill="#020817" />
+        </Svg>
         {isPassword && (
           <Pressable
             onPress={() => setShowPassword(!showPassword)}

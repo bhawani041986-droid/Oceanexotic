@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
+import Svg, { Path, Polygon } from "react-native-svg";
 import { useState, useEffect } from "react";
 import type { CutOption, TodaysCatchItem } from "@/services/homeService";
 import { Button } from "@/components/ui/Button";
@@ -63,7 +64,7 @@ export function CutSelectionModal({
                   key={cut.cut_type}
                   onPress={() => onSelect(cut)}
                   className={cn(
-                    "mb-2 flex-row items-center justify-between rounded-none border px-4 py-3",
+                    "mb-2 flex-row items-center justify-between rounded-none border px-4 py-3 relative overflow-hidden",
                     selected?.cut_type === cut.cut_type
                       ? "border-primary bg-primary/20"
                       : "border-white/10 bg-background/50"
@@ -71,6 +72,13 @@ export function CutSelectionModal({
                 >
                   <Text className="text-sm font-bold uppercase text-foreground">{cut.label}</Text>
                   <Text className="text-sm font-black italic text-primary">₹{cut.final_price}</Text>
+                  {/* Cut-corner overlays */}
+                  <Svg width={8} height={8} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                    <Polygon points="0,0 8,0 0,8" fill="#020817" />
+                  </Svg>
+                  <Svg width={8} height={8} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                    <Polygon points="8,8 0,8 8,0" fill="#020817" />
+                  </Svg>
                 </Pressable>
               ))}
               {options.length === 0 ? (
@@ -83,17 +91,38 @@ export function CutSelectionModal({
 
           {/* Weight Selector UI */}
           {!loading && options.length > 0 && (
-            <View className="mt-2 mb-4 flex-row items-center justify-between rounded-none border border-white/10 bg-background/50 px-4 py-3">
+            <View className="mt-2 mb-4 flex-row items-center justify-between rounded-none border border-white/10 bg-background/50 px-4 py-3 relative overflow-hidden">
               <Text className="text-sm font-bold uppercase text-foreground">Weight</Text>
               <View className="flex-row items-center gap-4">
-                <TouchableOpacity onPress={handleDecrease} className="h-8 w-8 items-center justify-center rounded-none bg-white/10">
+                <TouchableOpacity onPress={handleDecrease} className="h-8 w-8 items-center justify-center rounded-none bg-white/10 relative overflow-hidden">
                   <Text className="text-white text-lg">-</Text>
+                  {/* Cut-corner overlays for Decrease */}
+                  <Svg width={6} height={6} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}>
+                    <Polygon points="0,0 6,0 0,6" fill="#020817" />
+                  </Svg>
+                  <Svg width={6} height={6} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}>
+                    <Polygon points="6,6 0,6 6,0" fill="#020817" />
+                  </Svg>
                 </TouchableOpacity>
                 <Text className="text-base font-black text-foreground w-12 text-center">{weight} KG</Text>
-                <TouchableOpacity onPress={handleIncrease} className="h-8 w-8 items-center justify-center rounded-none bg-primary/20 border border-primary">
+                <TouchableOpacity onPress={handleIncrease} className="h-8 w-8 items-center justify-center rounded-none bg-primary/20 border border-primary relative overflow-hidden">
                   <Text className="text-primary text-lg">+</Text>
+                  {/* Cut-corner overlays for Increase */}
+                  <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                    <Polygon points="0,0 6,0 0,6" fill="#020817" />
+                  </Svg>
+                  <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                    <Polygon points="6,6 0,6 6,0" fill="#020817" />
+                  </Svg>
                 </TouchableOpacity>
               </View>
+              {/* Cut-corner overlays for Weight Row */}
+              <Svg width={10} height={10} style={{ position: 'absolute', top: -1, left: -1, zIndex: 5 }}>
+                <Polygon points="0,0 10,0 0,10" fill="#020817" />
+              </Svg>
+              <Svg width={10} height={10} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 5 }}>
+                <Polygon points="10,10 0,10 10,0" fill="#020817" />
+              </Svg>
             </View>
           )}
 

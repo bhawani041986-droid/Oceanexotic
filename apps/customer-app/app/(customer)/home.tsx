@@ -558,10 +558,18 @@ export default function CustomerHomeScreen() {
             <SectionTitle title="Chef's Recipes" subtitle="Chef Tested Recipes" />
             <Pressable 
               onPress={() => router.push("/recipe")}
-              className="px-3 py-1.5 rounded-none border"
+              className="px-3 py-1.5 rounded-none border relative overflow-hidden"
               style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderColor: colors.border }}
             >
               <Text className="text-[9px] font-black uppercase tracking-widest text-primary">VIEW ALL ➜</Text>
+              <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                <Path d="M0,0 L6,0 L0,6 Z" fill={colors.bg} />
+                <Path d="M6,0 L0,6" stroke={colors.border} strokeWidth={1} />
+              </Svg>
+              <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                <Path d="M6,6 L0,6 L6,0 Z" fill={colors.bg} />
+                <Path d="M0,6 L6,0" stroke={colors.border} strokeWidth={1} />
+              </Svg>
             </Pressable>
           </View>
           <View className="gap-4">
@@ -687,10 +695,16 @@ export default function CustomerHomeScreen() {
             <Text className="mt-1.5 text-[8px] font-bold text-white/70 uppercase">Fresh Catches</Text>
             <Pressable
               onPress={() => router.push("/products")}
-              className="mt-3 self-start rounded-none bg-white px-3 py-1.5 active:bg-white/90"
+              className="mt-3 self-start rounded-none bg-white px-3 py-1.5 active:bg-white/90 relative overflow-hidden"
               style={{ shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 3 }}
             >
               <Text className="text-[7.5px] font-black uppercase text-black tracking-wider">EXPLORE</Text>
+              <Svg width={6} height={6} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}>
+                <Polygon points="0,0 6,0 0,6" fill="rgba(0,0,0,0.5)" />
+              </Svg>
+              <Svg width={6} height={6} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}>
+                <Polygon points="6,6 0,6 6,0" fill="rgba(0,0,0,0.5)" />
+              </Svg>
             </Pressable>
           </View>
 
@@ -713,9 +727,15 @@ export default function CustomerHomeScreen() {
             <Text className="mt-1.5 text-[8px] font-bold text-white/70 uppercase text-right">Prime Seasteak</Text>
             <Pressable
               onPress={() => router.push("/products")}
-              className="mt-3 rounded-none border border-white/20 bg-black/40 px-3 py-1.5 active:bg-black/60"
+              className="mt-3 rounded-none border border-white/20 bg-black/40 px-3 py-1.5 active:bg-black/60 relative overflow-hidden"
             >
               <Text className="text-[7.5px] font-black uppercase text-white tracking-wider">VIEW ALL</Text>
+              <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                <Polygon points="0,0 6,0 0,6" fill="rgba(0,0,0,0.5)" />
+              </Svg>
+              <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                <Polygon points="6,6 0,6 6,0" fill="rgba(0,0,0,0.5)" />
+              </Svg>
             </Pressable>
           </View>
 
@@ -950,23 +970,37 @@ export default function CustomerHomeScreen() {
         </View>
 
         {/* Trust strip */}
-        <View className="mx-4 mb-8 flex-row flex-wrap justify-center gap-3 rounded-none border p-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+        <View className="mx-4 mb-8 flex-row flex-wrap justify-center gap-3 rounded-none border p-4 relative overflow-hidden" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
           {["FSSAI AUTH", "ISO 22000", "COLD-CHAIN", "SUSTAINABLE"].map((label) => {
             const isFssai = label === "FSSAI AUTH";
             const badgeColor = isFssai ? "#F97316" : primaryColor;
             return (
               <View 
                 key={label} 
-                className="rounded-none border px-3 py-1"
+                className="rounded-none border px-3 py-1 relative overflow-hidden"
                 style={{
                   borderColor: getRgba(badgeColor, 0.2),
                   backgroundColor: getRgba(badgeColor, 0.1)
                 }}
               >
                 <Text className="text-[8px] font-black uppercase" style={{ color: badgeColor }}>{label}</Text>
+                <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                  <Polygon points="0,0 4,0 0,4" fill={colors.card} />
+                </Svg>
+                <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                  <Polygon points="4,4 0,4 4,0" fill={colors.card} />
+                </Svg>
               </View>
             );
           })}
+          <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+            <Path d="M0,0 L12,0 L0,12 Z" fill={colors.bg} />
+            <Path d="M12,0 L0,12" stroke={colors.border} strokeWidth={1} />
+          </Svg>
+          <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+            <Path d="M12,12 L0,12 L12,0 Z" fill={colors.bg} />
+            <Path d="M0,12 L12,0" stroke={colors.border} strokeWidth={1} />
+          </Svg>
         </View>
       </ScrollView>
 
