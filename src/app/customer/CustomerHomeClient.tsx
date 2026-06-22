@@ -1584,11 +1584,11 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                            </p>
                         </div>
 
-                        <div className="flex gap-2 md:gap-4 justify-start">
+                        <div className="flex gap-1 md:gap-4 justify-start">
                            {[timeLeft.hrs, timeLeft.min, timeLeft.sec].map((val, i) => (
-                              <div key={i} className="p-2 md:p-4 rounded-xl md:rounded-2xl bg-black/40 backdrop-blur-md border border-[var(--c-primary)]/20 text-center min-w-[50px] md:min-w-[80px] shadow-2xl">
-                                 <p className="text-xl md:text-4xl font-black text-[var(--c-primary)] italic">{val}</p>
-                                 <p className="text-[6px] md:text-[10px] font-black text-[var(--foreground)]/60 uppercase tracking-widest mt-1">{i === 0 ? 'HRS' : i === 1 ? 'MIN' : 'SEC'}</p>
+                              <div key={i} className="p-1.5 md:p-4 rounded-xl md:rounded-2xl bg-black/40 backdrop-blur-md border border-[var(--c-primary)]/20 text-center min-w-[45px] md:min-w-[80px] shadow-2xl">
+                                 <p className="text-lg md:text-4xl font-black text-[var(--c-primary)] italic">{val}</p>
+                                 <p className="text-[5px] md:text-[10px] font-black text-[var(--foreground)]/60 uppercase tracking-widest mt-0.5 md:mt-1">{i === 0 ? 'HRS' : i === 1 ? 'MIN' : 'SEC'}</p>
                               </div>
                            ))}
                         </div>
@@ -1600,7 +1600,9 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                       className="absolute inset-0 z-10 flex flex-col justify-end items-end p-6 md:p-16 transition-all duration-500 bg-[#020617] bg-cover bg-center"
                       style={{ 
                          clipPath: 'polygon(100% 0px, 100% 100%, 0px 100%)',
-                         backgroundImage: settings.customerAssets?.promo ? `url(${settings.customerAssets.promo})` : 'none',
+                         backgroundImage: settings.customerAssets?.promo 
+                            ? `url("${settings.customerAssets.promo}")` 
+                            : `url("https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80")`,
                       }}
                    >
                       <div className="relative z-30 mt-auto">
