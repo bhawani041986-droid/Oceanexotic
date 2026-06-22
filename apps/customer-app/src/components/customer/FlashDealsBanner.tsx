@@ -49,6 +49,11 @@ export function FlashDealsBanner() {
   const { timeLeft } = useFlashDealTimer();
   const router = useRouter();
 
+  const { width } = Dimensions.get('window');
+  const containerWidth = width - 32;
+  const angle = Math.atan2(280, containerWidth) * 180 / Math.PI;
+  const rotationAngle = `-${90 - angle}deg`;
+
   if (!settings.flashDealActive) return null;
 
   const promoImageUrl = settings.customerAssets?.promo 
@@ -88,35 +93,21 @@ export function FlashDealsBanner() {
         <Polygon points="0,0 100,0 0,100" fill={colors.bgAlt} />
       </Svg>
 
-      {/* 3. NEON OAR DIVIDER (The Diagonal Cut Line) */}
-      <Svg style={[StyleSheet.absoluteFill, { zIndex: 3 }]} viewBox="0 0 100 100" preserveAspectRatio="none">
-        <Line 
-           x1="100" y1="0" x2="0" y2="100" 
-           stroke={colors.primary} 
-           strokeWidth="2" 
-           vectorEffect="non-scaling-stroke" 
-        />
-        {/* Subtle white core for neon effect */}
-        <Line 
-           x1="100" y1="0" x2="0" y2="100" 
-           stroke="#ffffff" 
-           strokeWidth="0.5" 
-           strokeOpacity="0.5"
-           vectorEffect="non-scaling-stroke" 
-        />
-      </Svg>
-
-      {/* Oar Handle (Top Right) */}
-      <View style={[
-        styles.oarHandle, 
-        { backgroundColor: colors.primary, shadowColor: colors.primary, elevation: 10 }
-      ]} />
-
-      {/* Oar Blade (Bottom Left) */}
-      <View style={[
-        styles.oarBlade, 
-        { backgroundColor: colors.primary, shadowColor: colors.primary, elevation: 15 }
-      ]} />
+      {/* 3. PADDLE DIVIDER */}
+      <Image 
+        source={require('../../../../assets/paddle.png')} 
+        style={{
+          position: 'absolute',
+          width: 32,
+          height: 380,
+          left: '50%',
+          marginLeft: -16,
+          top: (280 - 380) / 2,
+          transform: [{ rotate: rotationAngle }],
+          zIndex: 3,
+        }}
+        contentFit="contain"
+      />
 
       {/* 4. CONTENT WRAPPERS */}
 
@@ -169,19 +160,19 @@ export function FlashDealsBanner() {
 
       {/* Panel B Content (Bottom-Right Carousel) */}
       <View style={styles.panelBContent} pointerEvents="box-none">
-        <View style={{ width: 170, alignItems: 'flex-end', marginTop: 'auto' }}>
+        <View style={{ width: 160, alignItems: 'flex-end', marginTop: 'auto', marginBottom: 10 }}>
           
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             pagingEnabled
-            snapToInterval={170}
+            snapToInterval={160}
             decelerationRate="fast"
             onMomentumScrollEnd={handleScroll}
             contentContainerStyle={{ gap: 10, paddingRight: 0 }}
           >
             {carouselData.map((item, idx) => (
-              <View key={idx} style={{ width: 160, height: 110, justifyContent: 'flex-end' }}>
+              <View key={idx} style={{ width: 150, height: 90, justifyContent: 'flex-end' }}>
                 <View style={[styles.carouselCardWrap, { backgroundColor: colors.primary, shadowColor: colors.primary }]}>
                   <View style={styles.carouselCardInner}>
                     <Image source={{ uri: item.image_url }} style={[StyleSheet.absoluteFillObject, { opacity: 0.9 }]} contentFit="cover" />
@@ -191,13 +182,13 @@ export function FlashDealsBanner() {
 
                     <Pressable 
                       onPress={() => router.push(item.product_link as any)}
-                      style={{ position: 'absolute', bottom: 10, alignSelf: 'center' }}
+                      style={{ position: 'absolute', bottom: 6, alignSelf: 'center' }}
                     >
-                      <View style={{ width: 100, height: 30, justifyContent: 'center', alignItems: 'center' }}>
-                        <Svg style={StyleSheet.absoluteFill} viewBox="0 0 100 30" preserveAspectRatio="none">
-                          <Polygon points="6,0 100,0 100,24 94,30 0,30 0,6" fill="#FFFFFF" />
+                      <View style={{ width: 90, height: 26, justifyContent: 'center', alignItems: 'center' }}>
+                        <Svg style={StyleSheet.absoluteFill} viewBox="0 0 90 26" preserveAspectRatio="none">
+                          <Polygon points="6,0 90,0 90,20 84,26 0,26 0,6" fill="#FFFFFF" />
                         </Svg>
-                        <Text style={[styles.btnText, { color: colors.primary, fontSize: 8 }]}>VIEW DETAILS</Text>
+                        <Text style={[styles.btnText, { color: colors.primary, fontSize: 7 }]}>VIEW DETAILS</Text>
                       </View>
                     </Pressable>
                   </View>
@@ -222,6 +213,16 @@ export function FlashDealsBanner() {
         </View>
       </View>
 
+      {/* High-Tech Beveled Corner Overlays for Visual Parity */}
+      <Svg width="24" height="24" style={{ position: "absolute", top: -1, left: -1, zIndex: 10 }}>
+        <Polygon points="0,0 24,0 0,24" fill={colors.bg} />
+        <Line x1="24" y1="0" x2="0" y2="24" stroke={colors.border} strokeWidth={1.5} />
+      </Svg>
+      <Svg width="24" height="24" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 10 }}>
+        <Polygon points="24,24 0,24 24,0" fill={colors.bg} />
+        <Line x1="0" y1="24" x2="24" y2="0" stroke={colors.border} strokeWidth={1.5} />
+      </Svg>
+
     </View>
   );
 }
@@ -231,7 +232,7 @@ const styles = StyleSheet.create({
     height: 280,
     marginHorizontal: 16,
     marginVertical: 12,
-    borderRadius: 24,
+    borderRadius: 0,
     overflow: 'hidden',
     borderWidth: 1,
     elevation: 8,
@@ -239,24 +240,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
-  },
-  oarHandle: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    width: 24,
-    height: 24,
-    borderBottomLeftRadius: 24,
-    zIndex: 4,
-  },
-  oarBlade: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    width: 48,
-    height: 48,
-    borderTopRightRadius: 48,
-    zIndex: 4,
   },
   panelAContent: {
     ...StyleSheet.absoluteFillObject,
@@ -303,26 +286,26 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   timerBox: {
-    paddingVertical: 6,
-    paddingHorizontal: 8,
+    paddingVertical: 4,
+    paddingHorizontal: 6,
     backgroundColor: 'rgba(0,0,0,0.4)',
     borderRadius: 0,
     borderWidth: 1,
-    minWidth: 45,
+    minWidth: 38,
     alignItems: 'center',
     overflow: 'visible',
     position: 'relative',
   },
   timerVal: {
-    fontSize: 18,
+    fontSize: 14,
     fontFamily: 'Inter-Black',
     fontStyle: 'italic',
   },
   timerLabel: {
-    fontSize: 8,
+    fontSize: 7,
     fontFamily: 'Inter-Black',
     color: 'rgba(255,255,255,0.6)',
-    marginTop: 4,
+    marginTop: 2,
     letterSpacing: 1,
   },
   btnText: {
