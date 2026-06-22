@@ -820,6 +820,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
   const assets = settings.customerAssets?.heroTitle1 ? settings.customerAssets : (initialAssets || settings.customerAssets);
   
   const [mounted, setMounted] = React.useState(false);
+  const [currentHeroIndex, setCurrentHeroIndex] = React.useState(0);
   const [footerAccordion, setFooterAccordion] = React.useState<string | null>(null);
   const [timeLeft, setTimeLeft] = React.useState({ hrs: "00", min: "00", sec: "00" });
   const [cmsContent, setCmsContent] = React.useState<any[]>([]);
@@ -957,6 +958,26 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
     setMounted(true);
   }, []);
 
+  const heroSlides = React.useMemo(() => {
+    // Inject premium seafood fallbacks if the admin hasn't uploaded Hero2 and Hero3 yet
+    const fallbackHero2 = "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?auto=format&fit=crop&q=80"; 
+    const fallbackHero3 = "https://images.unsplash.com/photo-1599084993091-1cb5c0721cc6?auto=format&fit=crop&q=80";
+
+    return [
+      assets.hero, 
+      (assets as any).hero2 || fallbackHero2, 
+      (assets as any).hero3 || fallbackHero3
+    ].filter(Boolean) as string[];
+  }, [assets]);
+
+  React.useEffect(() => {
+    if (heroSlides.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [heroSlides.length]);
+
   if (!mounted) {
     return (
       <div className="bg-[var(--c-bg)] min-h-screen flex items-center justify-center">
@@ -1030,67 +1051,78 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
       {/* 3. HERO SECTION - THEME AWARE IMAGE & ATMOSPHERE */}
       <section className="relative min-h-[40vh] lg:min-h-[80vh] flex items-center justify-center overflow-hidden pt-8 pb-8 lg:py-0">
         <div className="absolute inset-0 z-0 bg-[#0b0e14]">
-          {/* Desktop Background */}
-          {assets.hero && (
-            <Image 
-              src={assets.hero} 
-              priority
-              fill
-              className="hidden lg:block object-cover scale-110 opacity-50 grayscale-[10%] object-center z-0" 
-              alt="OceanExotic Seafood Hero" 
-            />
-          )}
+          <AnimatePresence mode="popLayout">
+            {heroSlides.length > 0 && (
+              <motion.div
+                key={currentHeroIndex}
+                initial={{ opacity: 0, scale: 1.05 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1.5, ease: "easeInOut" }}
+                className="absolute inset-0 z-0"
+              >
+                {/* Desktop Background */}
+                <Image 
+                  src={heroSlides[currentHeroIndex]} 
+                  priority
+                  fill
+                  className="hidden lg:block object-cover opacity-50 grayscale-[10%] object-center" 
+                  alt="OceanExotic Seafood Hero" 
+                />
 
-          {/* Mobile Blurred Background (Fallback for wide images) */}
-          {!assets.mobileHero && assets.hero && (
-            <Image 
-              src={assets.hero} 
-              priority
-              fill
-              className="lg:hidden object-cover blur-2xl opacity-30 grayscale-[30%] object-center" 
-              alt="" 
-            />
-          )}
+                {/* Mobile Blurred Background (Fallback for wide images) */}
+                {!assets.mobileHero && (
+                  <Image 
+                    src={heroSlides[currentHeroIndex]} 
+                    priority
+                    fill
+                    className="lg:hidden object-cover blur-2xl opacity-30 grayscale-[30%] object-center" 
+                    alt="" 
+                  />
+                )}
 
-          {/* Mobile Foreground */}
-          {(assets.mobileHero || assets.hero) && (
-            <Image 
-              src={assets.mobileHero || assets.hero} 
-              priority
-              fill
-              className={cn(
-                 "lg:hidden opacity-50 grayscale-[10%] object-center z-0",
-                 assets.mobileHero ? "object-cover" : "object-contain"
-              )} 
-              alt="OceanExotic Seafood Hero" 
-            />
-          )}
+                {/* Mobile Foreground */}
+                {(assets.mobileHero || heroSlides[currentHeroIndex]) && (
+                  <Image 
+                    src={currentHeroIndex === 0 && assets.mobileHero ? assets.mobileHero : heroSlides[currentHeroIndex]} 
+                    priority
+                    fill
+                    className={cn(
+                       "lg:hidden opacity-50 grayscale-[10%] object-center z-0",
+                       (currentHeroIndex === 0 && assets.mobileHero) ? "object-cover" : "object-contain"
+                    )} 
+                    alt="OceanExotic Seafood Hero" 
+                  />
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
           <div className="absolute inset-0 bg-[var(--c-gradient-hero)] z-10" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,var(--c-primary),transparent_50%)] opacity-10 hidden lg:block z-10" />
         </div>
 
-        {/* Floating Dynamic Timing Card (Desktop Only - Top Right) */}
-        <div className="hidden lg:block absolute top-8 right-8 z-30 pointer-events-auto">
+        {/* Floating Dynamic Timing Card (Desktop Only - Bottom Right 50% width) */}
+        <div className="hidden lg:block absolute bottom-8 right-8 z-30 pointer-events-auto">
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
             className={cn(
-              "p-5 rounded-[24px] bg-[#0b0e14]/90 backdrop-blur-xl border flex flex-col gap-3 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl shadow-premium max-w-[280px]",
+              "p-3 rounded-[20px] bg-[#0b0e14]/90 backdrop-blur-xl border flex flex-col gap-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl shadow-premium max-w-[200px]",
               isStoreOpen && settings.ordersEnabled
                 ? "border-emerald-500/30 hover:border-emerald-500/50 hover:shadow-emerald-500/10 shadow-[0_0_20px_rgba(16,185,129,0.1)]"
                 : "border-amber-500/30 hover:border-amber-500/50 hover:shadow-amber-500/10 shadow-[0_0_20px_rgba(245,158,11,0.1)]"
             )}
           >
             {/* Header / Subtitle */}
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center gap-2">
-                <Clock className={cn("w-3.5 h-3.5 animate-pulse", 
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5">
+                <Clock className={cn("w-3 h-3 animate-pulse", 
                   isStoreOpen && settings.ordersEnabled ? "text-emerald-400" : "text-amber-400"
                 )} />
-                <span className="text-[9px] font-black uppercase tracking-[0.25em] text-[var(--c-text-secondary)] opacity-80">Delivery Schedule</span>
+                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-[var(--c-text-secondary)] opacity-80">Delivery Status</span>
               </div>
-              <span className={cn("w-2 h-2 rounded-full",
+              <span className={cn("w-1.5 h-1.5 rounded-full",
                 isStoreOpen && settings.ordersEnabled ? "bg-emerald-500 animate-ping" : "bg-amber-500 animate-pulse"
               )} />
             </div>
@@ -1099,69 +1131,75 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
             <div className="space-y-0.5">
               {isStoreOpen && settings.ordersEnabled ? (
                 <>
-                  <p className="text-sm font-black text-emerald-400 uppercase italic tracking-tighter leading-none">● DELIVERY OPEN</p>
-                  <p className="text-[9px] text-emerald-100/90 font-bold uppercase tracking-wider">Fastest cold-chain delivery</p>
+                  <p className="text-xs font-black text-emerald-400 uppercase italic tracking-tighter leading-none">● OPEN</p>
+                  <p className="text-[8px] text-emerald-100/90 font-bold uppercase tracking-wider">Fastest cold-chain</p>
                 </>
               ) : (
                 <>
-                  <p className="text-sm font-black text-amber-400 uppercase italic tracking-tighter leading-none">● PRE-ORDERS ACTIVE</p>
-                  <p className="text-[9px] text-amber-100/90 font-bold uppercase tracking-wider">Immediate delivery closed</p>
+                  <p className="text-xs font-black text-amber-400 uppercase italic tracking-tighter leading-none">● PRE-ORDERS</p>
+                  <p className="text-[8px] text-amber-100/90 font-bold uppercase tracking-wider">Immediate closed</p>
                 </>
               )}
-            </div>
-
-            {/* Available Delivery Slots */}
-            <div className="p-2 rounded-xl bg-white/[0.04] border border-white/[0.06] space-y-1.5">
-              <div className="flex justify-between items-center text-[10px] font-bold text-white/70 uppercase gap-4">
-                <span>Hours</span>
-                <span className="text-white font-black text-right whitespace-nowrap">
-                  {formatTime12h(settings.ordersOpenTime || "09:00")} - {formatTime12h(settings.ordersCloseTime || "22:00")}
-                </span>
-              </div>
-              
-              {!isStoreOpen || !settings.ordersEnabled ? (
-                <div className="pt-1.5 border-t border-white/[0.08] flex flex-col gap-0.5">
-                  <span className="text-[7px] font-black text-amber-300/90 uppercase tracking-widest leading-none">Next Dispatch</span>
-                  <span className="text-[10px] font-black text-white uppercase truncate">
-                    {settings.ordersNextOpenText || "Tomorrow at 09:00 AM"}
-                  </span>
-                </div>
-              ) : null}
             </div>
           </motion.div>
         </div>
 
+        {/* Carousel Navigation Arrows */}
+        {heroSlides.length > 1 && (
+          <>
+            <button 
+              onClick={() => setCurrentHeroIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)}
+              className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-40 p-2 lg:p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white opacity-0 hover:opacity-100 lg:group-hover:opacity-100 transition-opacity hidden lg:flex"
+            >
+              <ChevronDown className="w-6 h-6 rotate-90" />
+            </button>
+            <button 
+              onClick={() => setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length)}
+              className="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-40 p-2 lg:p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white opacity-0 hover:opacity-100 lg:group-hover:opacity-100 transition-opacity hidden lg:flex"
+            >
+              <ChevronDown className="w-6 h-6 -rotate-90" />
+            </button>
+          </>
+        )}
+
         <div className="container mx-auto px-4 lg:px-6 relative z-20 flex flex-col items-center justify-center lg:min-h-[70vh]">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-1.5 lg:space-y-6 text-center max-w-4xl mx-auto flex flex-col items-center w-full">
              <div className="space-y-1.5 lg:space-y-6 flex flex-col items-center">
-                <Badge variant="outline" className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] text-[9px] md:text-[12px] font-black tracking-[0.4em] px-3 md:px-6 py-1 md:py-2 border-[var(--c-primary)]/20 uppercase shadow-[0_0_15px_rgba(var(--c-primary-rgb),0.1)]">
-                   {assets?.heroBadge || "Premium Seafood Market"}
-                </Badge>
-                <h1 className="text-3xl md:text-5xl lg:text-7xl font-black text-[var(--c-text-primary)] uppercase italic leading-[1] md:leading-[0.85] text-center">
+                {assets?.heroBadge && (
+                  <Badge variant="outline" className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] text-[9px] md:text-[12px] font-black tracking-[0.4em] px-3 md:px-6 py-1 md:py-2 border-[var(--c-primary)]/20 uppercase shadow-[0_0_15px_rgba(var(--c-primary-rgb),0.1)]">
+                     {assets.heroBadge}
+                  </Badge>
+                )}
+                <h1 className="text-3xl md:text-5xl lg:text-7xl font-black text-[var(--c-text-primary)] uppercase italic leading-[1] md:leading-[0.85] text-center drop-shadow-2xl">
                    {assets?.heroTitle1 || 'Seafood'} <br /> 
                    <span className="text-[var(--c-primary)]">{assets?.heroTitle2 || 'Redefined.'}</span>
                 </h1>
              </div>
-             <p className="text-[10px] md:text-2xl text-white/90 font-medium italic max-w-2xl mx-auto leading-relaxed px-1 md:px-4 drop-shadow-md">
-                {assets?.heroSubtitle || "Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers."}
-             </p>
-             
-            <div className="flex flex-row gap-2 md:gap-4 justify-center pt-2 md:pt-6 w-full sm:w-auto">
-               <Button 
-                  className="w-1/2 sm:w-auto h-10 md:h-16 px-1 md:px-12 bg-[var(--c-primary)] hover:bg-[var(--c-primary-light)] text-[var(--foreground)] text-[8px] md:text-[12px] font-black uppercase tracking-wider md:tracking-widest shadow-[var(--c-shadow-glow)]"
-                  style={{ clipPath: 'polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)' }}
-                  onClick={() => router.push('/customer/products')}
-               >
-                  SHOP FRESH
-               </Button>
-               <Button 
-                  className="w-1/2 sm:w-auto h-10 md:h-16 px-1 md:px-12 text-[8px] md:text-[12px] font-black uppercase tracking-wider md:tracking-widest bg-black/60 hover:bg-black/80 border border-white/20 text-white backdrop-blur-xl shadow-xl transition-all"
-                  style={{ clipPath: 'polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)' }}
-                  onClick={() => router.push('/customer/categories')}
-               >
-                  CATEGORIES
-               </Button>
-            </div>
+             {assets?.heroSubtitle && (
+               <p className="text-[10px] md:text-2xl text-white font-medium italic max-w-2xl mx-auto leading-relaxed px-1 md:px-4 drop-shadow-2xl text-shadow-glow">
+                  {assets.heroSubtitle}
+               </p>
+             )}
+          </motion.div>
+        </div>
+
+        {/* Carousel Pagination Dots */}
+        {heroSlides.length > 1 && (
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2">
+            {heroSlides.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentHeroIndex(idx)}
+                className={cn(
+                  "h-1.5 lg:h-2 rounded-full transition-all duration-500",
+                  currentHeroIndex === idx 
+                    ? "w-6 lg:w-8 bg-[var(--c-primary)] shadow-[0_0_10px_var(--c-primary)]" 
+                    : "w-1.5 lg:w-2 bg-white/50 hover:bg-white/80"
+                )}
+              />
+            ))}
+          </div>
+        )}
 
             {/* Embedded Timing Card (Mobile Only - Slim Banner at Bottom) */}
             <div className="block lg:hidden w-full max-w-[340px] mt-3 z-30 pointer-events-auto">
@@ -1210,9 +1248,6 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                 </div>
               </motion.div>
             </div>
-
-          </motion.div>
-        </div>
       </section>
 
       {/* MARITIME WAVE DIVIDER - MOBILE SPACED */}
