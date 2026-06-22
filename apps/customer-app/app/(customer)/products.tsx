@@ -25,6 +25,7 @@ import type { Product } from "@/services/productService";
 import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
+import { useHomeData } from "@/hooks/useHomeData";
 import { CATEGORIES } from "@/constants/categories";
 import { ChamferedBox } from "@/components/ui/ChamferedBox";
 
@@ -64,6 +65,7 @@ export default function ProductsScreen() {
   });
 
   const registry = useProducts();
+  const { todaysCatch } = useHomeData();
   const search = useProductSearch(searchQuery, "");
 
   const [cutProduct, setCutProduct] = useState<Product | null>(null);
@@ -304,9 +306,53 @@ export default function ProductsScreen() {
           <ActivityIndicator className="my-12" color={colors.primary} size="large" />
         ) : displayList.length > 0 ? (
           <View>
-            {showLayers && (
-              <View className="mb-6 space-y-8">
-                {/* DYNAMIC CATEGORY LAYERS */}
+             {showLayers && (
+               <View className="mb-6 space-y-8">
+                 {/* TODAY'S CATCH LAYER */}
+                 {todaysCatch.data && todaysCatch.data.length > 0 && (
+                   <View className="space-y-3 mb-6">
+                     <View className="flex-row items-center justify-between">
+                       <View>
+                         <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }} numberOfLines={1}>
+                           Today's <Text style={{ color: colors.primary }}>Catch</Text>
+                         </Text>
+                         <View className="mt-1.5 mb-2.5" style={{ height: 2, width: 64, borderRadius: 999, overflow: 'hidden' }}>
+                           <LinearGradient
+                             colors={[colors.text, colors.primary]}
+                             start={{ x: 0, y: 0 }}
+                             end={{ x: 1, y: 0 }}
+                             style={{ flex: 1 }}
+                           />
+                         </View>
+                       </View>
+                       <Pressable onPress={() => setActiveTab("Seawater Fish")}>
+                          <Text className="text-[10px] font-black uppercase" style={{ color: colors.primary }}>View All</Text>
+                       </Pressable>
+                     </View>
+                     <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
+                       <View className="flex-row gap-4 pr-8">
+                         {todaysCatch.data.slice(0, 10).map(item => {
+                           const mappedProduct: Product = {
+                             id: item.product_id,
+                             name: item.name,
+                             price: item.price_per_kg,
+                             image_url: item.catch_image_url || item.image_url,
+                             seller_name: item.seller_name,
+                             stock: item.remaining_kg || 10,
+                             status: "LIVE"
+                           };
+                           return (
+                             <View key={item.id} className="w-[180px]">
+                               <ProductCard product={mappedProduct} onSelectCut={() => openCut(mappedProduct)} />
+                             </View>
+                           );
+                         })}
+                       </View>
+                     </ScrollView>
+                   </View>
+                 )}
+
+                 {/* DYNAMIC CATEGORY LAYERS */}
                 {CATEGORIES.map(category => {
                   const categoryProducts = displayList.filter(p => {
                     const catLower = (p.category ?? "").toLowerCase();
@@ -331,10 +377,10 @@ export default function ProductsScreen() {
                       <View className="space-y-3">
                          <View className="flex-row items-center justify-between">
                           <View>
-                            <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
+                            <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }} numberOfLines={1}>
                               {category.name.split(" ")[0]} <Text style={{ color: category.glowColor }}>{category.name.split(" ").slice(1).join(" ") || ""}</Text>
                             </Text>
-                            <View className="mt-1.5" style={{ height: 2, width: 64, borderRadius: 999, overflow: 'hidden' }}>
+                            <View className="mt-1.5 mb-2.5" style={{ height: 2, width: 64, borderRadius: 999, overflow: 'hidden' }}>
                               <LinearGradient
                                 colors={[colors.text, category.glowColor]}
                                 start={{ x: 0, y: 0 }}

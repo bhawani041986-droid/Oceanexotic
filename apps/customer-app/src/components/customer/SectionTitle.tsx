@@ -7,8 +7,8 @@ export function SectionTitle({ title, subtitle }: { title: string; subtitle: str
   return (
     <View className="gap-1">
       <View>
-        <Text className="text-2xl font-black uppercase italic" style={{ color: colors.text }}>{title}</Text>
-        <View className="mt-1.5 mb-1" style={{ height: 2, width: 64, borderRadius: 999, overflow: 'hidden' }}>
+        <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>{title}</Text>
+        <View className="mt-1.5 mb-3" style={{ height: 2, width: 64, borderRadius: 999, overflow: 'hidden' }}>
           <LinearGradient
             colors={[colors.text, colors.primary]}
             start={{ x: 0, y: 0 }}
