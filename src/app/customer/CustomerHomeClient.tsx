@@ -1166,7 +1166,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-1.5 lg:space-y-6 text-center max-w-4xl mx-auto flex flex-col items-center w-full">
              <div className="space-y-1.5 lg:space-y-6 flex flex-col items-center">
                 {assets?.heroBadge && (
-                  <Badge variant="outline" className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] text-[9px] md:text-[12px] font-black tracking-[0.4em] px-3 md:px-6 py-1 md:py-2 border-[var(--c-primary)]/20 uppercase shadow-[0_0_15px_rgba(var(--c-primary-rgb),0.1)]">
+                  <Badge variant="outline" className="whitespace-nowrap bg-[var(--c-primary)]/10 text-[var(--c-primary)] text-[9px] md:text-[12px] font-black tracking-[0.4em] px-3 md:px-6 py-1 md:py-2 border-[var(--c-primary)]/20 uppercase shadow-[0_0_15px_rgba(var(--c-primary-rgb),0.1)]">
                      {assets.heroBadge}
                   </Badge>
                 )}
@@ -1201,8 +1201,8 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
           </div>
         )}
 
-            {/* Embedded Timing Card (Mobile Only - Slim Banner at Bottom) */}
-            <div className="block lg:hidden w-full max-w-[340px] mt-3 z-30 pointer-events-auto">
+            {/* Embedded Timing Card (Mobile Only - Slim Banner at Bottom Right) */}
+            <div className="block lg:hidden absolute bottom-4 right-4 z-40 w-auto max-w-[200px] pointer-events-auto">
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
