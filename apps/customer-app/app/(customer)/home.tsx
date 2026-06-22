@@ -33,7 +33,7 @@ import { AndamanMaritimeTelemetry } from "@/components/customer/AndamanMaritimeT
 import { OceanReelsFeed } from "@/components/customer/OceanReelsFeed";
 import { AnnouncementBar } from "@/components/customer/AnnouncementBar";
 import { LiveTickerMarquee } from "@/components/customer/LiveTickerMarquee";
-import { PromoBannerCard } from "@/components/customer/PromoBannerCard";
+import { FlashDealsBanner } from "@/components/customer/FlashDealsBanner";
 import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/ui/Toast";
 import { homeService, type CutOption, type TodaysCatchItem } from "@/services/homeService";
@@ -400,7 +400,8 @@ export default function CustomerHomeScreen() {
           </View>
         </View>
 
-        {/* PromoBannerCard Removed */}
+        {/* Flame-Sea Diagonal Promo Banner */}
+        <FlashDealsBanner />
 
         {/* Maritime Wave Divider */}
         <MaritimeWaveDivider />
