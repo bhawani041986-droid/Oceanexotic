@@ -95,7 +95,7 @@ export function FlashDealsBanner() {
 
       {/* 3. PADDLE DIVIDER */}
       <Image 
-        source={require('../../../../assets/paddle.png')} 
+        source={require('../../../assets/paddle.png')} 
         style={{
           position: 'absolute',
           width: 32,
