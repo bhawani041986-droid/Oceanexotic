@@ -1162,7 +1162,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
           </>
         )}
 
-        <div className="container mx-auto px-4 lg:px-6 relative z-20 flex flex-col items-center justify-center lg:min-h-[70vh]">
+        <div className="container mx-auto px-4 lg:px-6 relative z-20 flex flex-col items-center justify-center lg:min-h-[70vh] pb-24 lg:pb-0">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-1.5 lg:space-y-6 text-center max-w-4xl mx-auto flex flex-col items-center w-full">
              <div className="space-y-1.5 lg:space-y-6 flex flex-col items-center">
                 {assets?.heroBadge && (
