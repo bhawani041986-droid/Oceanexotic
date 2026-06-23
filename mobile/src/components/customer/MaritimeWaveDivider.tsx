@@ -5,6 +5,7 @@ import Svg, { Path, Circle, Line } from "react-native-svg";
 import { Image } from "expo-image";
 import { CATEGORIES } from "@/constants/categories";
 import api from "@/services/api";
+import { FULL_API_URL } from "@/config/api";
 
 const { width } = Dimensions.get("window");
 
@@ -403,6 +404,15 @@ function FloatingBubble({ index }: { index: number }) {
   );
 }
 
+const getFishImageUrl = (imagePath: string) => {
+  if (!imagePath) return "";
+  if (imagePath.startsWith("http://") || imagePath.startsWith("https://") || imagePath.startsWith("data:")) {
+    return imagePath;
+  }
+  const baseUrl = FULL_API_URL.replace(/\/api\/?$/, "");
+  return `${baseUrl}${imagePath}`;
+};
+
 function SwimmingFish({ fish, index }: { fish: any; index: number }) {
   const animValue = useRef(new Animated.Value(0)).current;
   const swimY = 1 + (index * 7) % 16; 
@@ -457,7 +467,7 @@ function SwimmingFish({ fish, index }: { fish: any; index: number }) {
       ]}
     >
       <Image
-        source={fish.image}
+        source={{ uri: getFishImageUrl(fish.image) }}
         style={{ width: 34, height: 34 }}
         contentFit="contain"
       />
