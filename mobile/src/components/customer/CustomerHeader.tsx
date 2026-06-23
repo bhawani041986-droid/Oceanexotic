@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, Text, Pressable, TextInput, Modal } from "react-native";
 import { useRouter, usePathname } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,6 +13,9 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import { cn } from "@/lib/utils";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { useNotificationStore } from "@/store/notificationStore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FULL_API_URL } from "@/config/api";
 
 import i18n from "@/lib/i18n";
 
@@ -56,8 +59,27 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
   const cartCount = useCartStore((s) => s.itemCount());
   const { theme, language } = useSettingsStore();
   const { toast, ToastHost } = useToast();
+  const { unreadCount, setUnreadCount } = useNotificationStore();
   const [search, setSearch] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      const userId = user?.id || "USR-1001";
+      try {
+        const res = await fetch(`${FULL_API_URL}/api/customer/notifications?userId=${userId}`);
+        const data = await res.json();
+        if (data.status === 'success') {
+          const readBroadcastsStr = await AsyncStorage.getItem('ocean_read_broadcasts');
+          const readBroadcasts = readBroadcastsStr ? JSON.parse(readBroadcastsStr) : [];
+          setUnreadCount(data.data.filter((n: any) => !n.read && !readBroadcasts.includes(n.id)).length);
+        }
+      } catch (error) {
+        console.warn("Failed to fetch notifications:", error);
+      }
+    };
+    fetchNotifications();
+  }, [user?.id, setUnreadCount]);
 
   const colors = useThemeColors();
   const primaryColor = colors.primary;
@@ -129,8 +151,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               }}
             >
               <NotificationIcon color={colors.text} />
-              {/* Only show beacon if there are unread notifications. Defaulting to 0 for now. */}
-              {false && (
+              {unreadCount > 0 && (
                 <View 
                   className="absolute right-2 top-2 h-2 w-2 rounded-full border" 
                   style={{ 
