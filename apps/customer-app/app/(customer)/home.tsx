@@ -47,11 +47,6 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 
 type BatchFilter = "ALL" | "MORNING" | "AFTERNOON" | "EVENING";
 
-const PREMIUM_SELLERS = [
-  { id: "SEL-001", name: "Marine Masters", rating: 4.9, speed: "30 min", image: "🚢", products: ["🍣", "🐟", "🦑"] },
-  { id: "SEL-002", name: "Deep Sea Fleet", rating: 5.0, speed: "45 min", image: "⚓", products: ["🦞", "🦀", "🦐"] },
-  { id: "SEL-003", name: "Arctic Harvest", rating: 4.8, speed: "60 min", image: "❄️", products: ["🥩", "🐟", "🦀"] },
-];
 
 const RECIPES = [
   { id: "REC-1", title: "Pan-Seared King Salmon", time: "20 min", difficulty: "Easy", image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&q=80" },
@@ -776,7 +771,7 @@ export default function CustomerHomeScreen() {
         <View className="px-4 py-8">
           <SectionTitle title="Premium Sellers" subtitle="Top Rated Sellers" />
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
-            {PREMIUM_SELLERS.map((seller) => (
+            {(settings.topSellers || []).map((seller) => (
               <Pressable
                 key={seller.id}
                 onPress={() => router.push({ pathname: "/products", params: { sellerId: seller.id } })}

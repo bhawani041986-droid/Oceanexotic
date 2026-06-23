@@ -107,9 +107,10 @@ export const useSettingsStore = create<SettingsState>()(
         { image_url: "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?auto=format&fit=crop&q=80", product_link: "#" }
       ],
       topSellers: [
-        { id: "SEL-001", name: "Marine Masters", rating: 4.9, speed: "30 min", image: "🚢", products: ["🍣", "🐟", "🦑"] },
-        { id: "SEL-002", name: "Deep Sea Delivery", rating: 5.0, speed: "45 min", image: "⚓", products: ["🦞", "🦀", "🦐"] },
-        { id: "SEL-003", name: "Arctic Product", rating: 4.8, speed: "60 min", image: "❄️", products: ["🥩", "🐟", "🦀"] },
+        { id: "SEL-002", name: "Devansh Fish Hub", rating: 4.6, speed: "45 min", image: "⚓", products: ["🦞", "🦀", "🦐"] },
+        { id: "SEL-003", name: "Deep Fishing", rating: 5.0, speed: "60 min", image: "❄️", products: ["🥩", "🐟", "🦀"] },
+        { id: "SEL-2002", name: "Deep Sea Catch", rating: 4.8, speed: "45 min", image: "⚓", products: ["🦞", "🦀", "🦐"] },
+        { id: "SEL-004", name: "Rig Fishing", rating: 4.8, speed: "45 min", image: "🚢", products: ["🦞", "🦀", "🦐"] },
       ],
       customerAssets: {
         logo: "",

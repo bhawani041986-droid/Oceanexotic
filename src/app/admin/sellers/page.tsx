@@ -219,6 +219,21 @@ export default function AdminSellersPage() {
     settings.fetchSettings();
   }, []);
 
+  useEffect(() => {
+    if (sellers.length > 0 && settings.topSellers && settings.topSellers.length > 0) {
+      const activeIds = new Set(sellers.map(s => s.id));
+      const cleanedFeatured = settings.topSellers.filter(ts => activeIds.has(ts.id));
+      if (cleanedFeatured.length !== settings.topSellers.length) {
+        settings.setSettings({ topSellers: cleanedFeatured });
+        settings.pushSettings().then(success => {
+          if (success) {
+            console.log("Automatically pruned non-existent sellers from Top Sellers registry.");
+          }
+        });
+      }
+    }
+  }, [sellers, settings.topSellers]);
+
   if (!mounted) return (
 
     <div className="min-h-screen bg-bg-primary flex items-center justify-center">

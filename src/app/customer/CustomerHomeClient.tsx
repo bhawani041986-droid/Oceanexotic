@@ -807,17 +807,12 @@ const CATEGORIES: {
 ];
 
 const FEATURED_PRODUCTS = [
-  { id: "PRD-101", name: "Saku Grade Bluefin Tuna", price: 2450, rating: 4.9, delivery: "45 min", sellerId: "SEL-001", sellerName: "Marine Masters", image: "🍣" },
-  { id: "PRD-102", name: "Andaman King Lobster", price: 3800, rating: 5.0, delivery: "60 min", sellerId: "SEL-002", sellerName: "Deep Sea Delivery", image: "🦞" },
-  { id: "PRD-103", name: "Arctic Snow Crab Legs", price: 5200, rating: 4.8, delivery: "90 min", sellerId: "SEL-003", sellerName: "Arctic Product", image: "🦀" },
-  { id: "PRD-104", name: "Wild Tiger Prawns", price: 1250, rating: 4.7, delivery: "30 min", sellerId: "SEL-004", sellerName: "Coastal Scout", image: "🦐" },
+  { id: "PRD-101", name: "Saku Grade Bluefin Tuna", price: 2450, rating: 4.9, delivery: "45 min", sellerId: "SEL-2001", sellerName: "Andaman Fish Co", image: "🍣" },
+  { id: "PRD-102", name: "Andaman King Lobster", price: 3800, rating: 5.0, delivery: "60 min", sellerId: "SEL-002", sellerName: "Devansh Fish Hub", image: "🦞" },
+  { id: "PRD-103", name: "Arctic Snow Crab Legs", price: 5200, rating: 4.8, delivery: "90 min", sellerId: "SEL-003", sellerName: "Deep Fishing", image: "🦀" },
+  { id: "PRD-104", name: "Wild Tiger Prawns", price: 1250, rating: 4.7, delivery: "30 min", sellerId: "SEL-004", sellerName: "Rig Fishing", image: "🦐" },
 ];
 
-const PREMIUM_SELLERS = [
-  { id: "SEL-001", name: "Marine Masters", rating: 4.9, speed: "30 min", image: "🚢", banner: "bg-blue-600/10", products: ["🍣", "🐟", "🦑"] },
-  { id: "SEL-002", name: "Deep Sea Delivery", rating: 5.0, speed: "45 min", image: "⚓", banner: "bg-purple-600/10", products: ["🦞", "🦀", "🦐"] },
-  { id: "SEL-003", name: "Arctic Product", rating: 4.8, speed: "60 min", image: "❄️", banner: "bg-cyan-600/10", products: ["🥩", "🐟", "🦀"] },
-];
 
 const REVIEWS = [
   { id: "REV-1", user: "Vikram S.", text: "The Bluefin Tuna was absolutely pristine. Delivered in 40 minutes.", rating: 5, image: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80" },
@@ -1011,9 +1006,10 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
 
     return () => clearInterval(timer);
   }, [settings.flashDealActive, settings.flashDealStart, settings.flashDealEnd]);
-  // 2. Absolute Hydration Delivery
+  // 2. Absolute Hydration Delivery & Settings Sync
   React.useEffect(() => {
     setMounted(true);
+    settings.fetchSettings();
   }, []);
 
   const heroSlides = React.useMemo(() => {
@@ -1751,7 +1747,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
          </div>
          
          <div className="flex lg:grid lg:grid-cols-3 overflow-x-auto lg:overflow-visible gap-[3px] md:gap-6 no-scrollbar pb-4 px-[2px] md:px-2 snap-x snap-mandatory scroll-pl-[2px] touch-pan-x">
-            {PREMIUM_SELLERS.map((seller) => (
+            {(settings.topSellers || []).map((seller) => (
                <Link 
                   key={seller.id} 
                   href={`/customer/products?sellerId=${seller.id}`}

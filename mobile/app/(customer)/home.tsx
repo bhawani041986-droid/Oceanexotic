@@ -38,9 +38,10 @@ import i18n from "@/lib/i18n";
 type BatchFilter = "ALL" | "MORNING" | "AFTERNOON" | "EVENING";
 
 const PREMIUM_SELLERS = [
-  { id: "SEL-001", name: "Marine Masters", rating: 4.9, speed: "30 min", image: "🚢", products: ["🍣", "🐟", "🦑"] },
-  { id: "SEL-002", name: "Deep Sea Fleet", rating: 5.0, speed: "45 min", image: "⚓", products: ["🦞", "🦀", "🦐"] },
-  { id: "SEL-003", name: "Arctic Harvest", rating: 4.8, speed: "60 min", image: "❄️", products: ["🥩", "🐟", "🦀"] },
+  { id: "SEL-002", name: "Devansh Fish Hub", rating: 4.6, speed: "45 min", image: "⚓", products: ["🦞", "🦀", "🦐"] },
+  { id: "SEL-003", name: "Deep Fishing", rating: 5.0, speed: "60 min", image: "❄️", products: ["🥩", "🐟", "🦀"] },
+  { id: "SEL-2002", name: "Deep Sea Catch", rating: 4.8, speed: "45 min", image: "⚓", products: ["🦞", "🦀", "🦐"] },
+  { id: "SEL-004", name: "Rig Fishing", rating: 4.8, speed: "45 min", image: "🚢", products: ["🦞", "🦀", "🦐"] },
 ];
 
 const RECIPES = [
@@ -678,7 +679,7 @@ export default function CustomerHomeScreen() {
         <View className="px-4 py-8">
           <SectionTitle title="The Fleet Elite" subtitle="Verified Maritime Sellers" />
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
-            {PREMIUM_SELLERS.map((seller) => (
+            {((settings.topSellers && settings.topSellers.length > 0) ? settings.topSellers : PREMIUM_SELLERS).map((seller: any) => (
               <Pressable
                 key={seller.id}
                 onPress={() => router.push({ pathname: "/products", params: { sellerId: seller.id } })}
@@ -710,7 +711,7 @@ export default function CustomerHomeScreen() {
                 
                 <View className="flex-row justify-between items-center mt-3 pt-2 border-t" style={{ borderTopColor: colors.border }}>
                   <View className="flex-row gap-1">
-                    {seller.products.map((p, idx) => (
+                    {seller.products.map((p: any, idx: number) => (
                       <View key={idx} className="h-5 w-5 rounded items-center justify-center border" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
                         <Text className="text-xs">{p}</Text>
                       </View>

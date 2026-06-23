@@ -22,7 +22,7 @@ const staticFallback = [
 
 export default function CartScreen() {
   const router = useRouter();
-  const { items, updateQuantity, removeItem, getTotal, clearCart, toggleMarination } = useCartStore();
+  const { items, updateQuantity, removeItem, getTotal, toggleMarination } = useCartStore();
   const colors = useThemeColors();
   const { user } = useAuthStore();
   const currentLanguage = useSettingsStore((s) => s.language); // force re-render
@@ -94,7 +94,7 @@ export default function CartScreen() {
 
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
-      <ScrollView contentContainerClassName="px-4 pb-28 pt-2">
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 112, paddingTop: 8 }}>
         <Text className="text-2xl font-black uppercase italic" style={{ color: colors.text }}>{t('active_cart') || "Active Cart"}</Text>
         <Text 
           className="mt-1 text-[10px] font-black uppercase tracking-widest" 
@@ -220,7 +220,7 @@ export default function CartScreen() {
             {addons.length > 0 && (
               <View className="mt-8">
                 <Text className="text-sm font-black uppercase italic" style={{ color: colors.text }}>Complete Your BBQ</Text>
-                <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-3 flex-row gap-3">
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-3" contentContainerStyle={{ flexDirection: 'row' }}>
                   {addons.map((addon) => {
                     const alreadyInCart = items.some(i => i.id === addon.id);
                     const addonImg = addon.image_url || addon.image || 'https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=200&q=80';
@@ -278,92 +278,135 @@ export default function CartScreen() {
             {/* COUPONS SECTION */}
             <View className="mt-8">
                <Text className="text-sm font-black uppercase italic mb-3" style={{ color: colors.text }}>Promo Codes</Text>
-               
+
+               {/* Coupon chip cards — only render when ACTIVE coupons exist */}
                {activeCoupons.length > 0 && (
-                 <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mb-4 flex-row gap-3">
+                 <ScrollView
+                   horizontal
+                   showsHorizontalScrollIndicator={false}
+                   style={{ marginBottom: 12 }}
+                   contentContainerStyle={{ flexDirection: 'row' }}
+                 >
                    {activeCoupons.map(coupon => (
-                     <Pressable 
-                        key={coupon.id} 
-                        onPress={() => {
-                          setCouponCodeInput(coupon.code);
-                          setCouponError("");
-                        }}
-                        className="rounded-none border p-3 min-w-[140px] mr-3 relative overflow-hidden"
-                        style={{ borderColor: `${colors.border}`, backgroundColor: colors.card }}
+                     <Pressable
+                       key={coupon.id}
+                       onPress={() => {
+                         setCouponCodeInput(coupon.code);
+                         setCouponError("");
+                       }}
+                       style={{
+                         borderWidth: 1,
+                         borderColor: colors.border,
+                         backgroundColor: colors.card,
+                         padding: 12,
+                         minWidth: 140,
+                         marginRight: 12,
+                         overflow: 'hidden',
+                         position: 'relative'
+                       }}
                      >
                        <Svg width={8} height={8} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill={colors.bg} /></Svg>
                        <Svg width={8} height={8} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill={colors.bg} /></Svg>
-                       <Text className="text-xs font-black uppercase" style={{ color: colors.primary }}>{coupon.code}</Text>
-                       <Text className="text-[10px] font-bold mt-1" style={{ color: colors.text }}>
+                       <Text style={{ color: colors.primary, fontSize: 12, fontWeight: '900', textTransform: 'uppercase' }}>{coupon.code}</Text>
+                       <Text style={{ color: colors.text, fontSize: 10, fontWeight: '700', marginTop: 4 }}>
                          {coupon.type === 'PERCENTAGE' ? `${coupon.value}% OFF` : `₹${coupon.value} OFF`}
                        </Text>
                        {coupon.min_purchase > 0 && (
-                         <Text className="text-[8px] mt-1" style={{ color: colors.textMuted }}>Min ₹{coupon.min_purchase}</Text>
+                         <Text style={{ color: colors.textMuted, fontSize: 8, marginTop: 4 }}>Min ₹{coupon.min_purchase}</Text>
                        )}
                      </Pressable>
                    ))}
                  </ScrollView>
                )}
 
+               {/* Applied coupon banner OR manual entry input */}
                {appliedCoupon ? (
-                 <View className="flex-row items-center justify-between p-3 rounded-none border-2 bg-emerald-500/10 border-emerald-500/30 relative overflow-hidden">
-                    <Svg width={8} height={8} style={{ position: 'absolute', top: -2, left: -2, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill={colors.bg} /></Svg>
-                    <Svg width={8} height={8} style={{ position: 'absolute', bottom: -2, right: -2, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill={colors.bg} /></Svg>
-                    <View className="flex-row items-center gap-2">
-                       <Text className="text-[10px] font-black uppercase text-emerald-500 tracking-widest">{appliedCoupon.code} APPLIED</Text>
-                    </View>
-                    <Pressable onPress={() => {
-                       setAppliedCoupon(null);
-                       setCouponCodeInput("");
-                    }}>
-                       <Text className="text-[10px] font-bold text-danger">REMOVE</Text>
-                    </Pressable>
+                 <View
+                   style={{
+                     flexDirection: 'row',
+                     alignItems: 'center',
+                     justifyContent: 'space-between',
+                     padding: 12,
+                     borderWidth: 2,
+                     borderColor: 'rgba(16,185,129,0.3)',
+                     backgroundColor: 'rgba(16,185,129,0.1)',
+                     overflow: 'hidden',
+                     position: 'relative'
+                   }}
+                 >
+                   <Svg width={8} height={8} style={{ position: 'absolute', top: -2, left: -2, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill={colors.bg} /></Svg>
+                   <Svg width={8} height={8} style={{ position: 'absolute', bottom: -2, right: -2, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill={colors.bg} /></Svg>
+                   <Text style={{ color: '#10B981', fontSize: 10, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 1.5 }}>{appliedCoupon.code} APPLIED</Text>
+                   <Pressable onPress={() => { setAppliedCoupon(null); setCouponCodeInput(""); }}>
+                     <Text style={{ color: '#EF4444', fontSize: 10, fontWeight: '700' }}>REMOVE</Text>
+                   </Pressable>
                  </View>
                ) : (
-                 <View className="flex-row gap-2 relative">
-                    <View className="flex-1 relative overflow-hidden">
-                      <TextInput 
-                        value={couponCodeInput}
-                        onChangeText={(t: string) => setCouponCodeInput(t.toUpperCase())}
-                        placeholder="ENTER CODE"
-                        placeholderTextColor={colors.textMuted}
-                        className="h-full rounded-none border px-4 py-2 text-xs font-black uppercase tracking-widest"
-                        style={{ borderColor: colors.border, color: colors.text, backgroundColor: colors.card }}
-                      />
-                      <Svg width={6} height={6} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}><Polygon points="0,0 6,0 0,6" fill={colors.bg} /></Svg>
-                      <Svg width={6} height={6} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}><Polygon points="6,6 0,6 6,0" fill={colors.bg} /></Svg>
-                    </View>
-                    <Pressable 
-                      onPress={() => {
-                        setIsApplyingCoupon(true);
-                        setCouponError("");
-                        const found = activeCoupons.find(c => c.code.toUpperCase() === couponCodeInput.trim().toUpperCase());
-                        if (!found) {
-                          setCouponError("Invalid code");
-                          setIsApplyingCoupon(false);
-                          return;
-                        }
-                        const sub = getTotal();
-                        if (found.min_purchase && sub < found.min_purchase) {
-                          setCouponError(`Min purchase ₹${found.min_purchase}`);
-                          setIsApplyingCoupon(false);
-                          return;
-                        }
-                        let discount = found.type === "PERCENTAGE" ? (sub * found.value) / 100 : found.value;
-                        if (found.max_discount && discount > found.max_discount) discount = found.max_discount;
-                        setAppliedCoupon({ code: found.code, discountAmount: discount, type: found.type, value: found.value });
-                        setIsApplyingCoupon(false);
-                      }}
-                      className="rounded-none px-6 py-2 items-center justify-center relative overflow-hidden"
-                      style={{ backgroundColor: couponCodeInput.trim() ? colors.primary : colors.border }}
-                    >
+                 <View style={{ gap: 6 }}>
+                   <View style={{ flexDirection: 'row', gap: 8 }}>
+                     <View style={{ flex: 1, height: 44, position: 'relative', overflow: 'hidden' }}>
+                       <TextInput
+                         value={couponCodeInput}
+                         onChangeText={(val: string) => setCouponCodeInput(val.toUpperCase())}
+                         placeholder="ENTER CODE"
+                         placeholderTextColor={colors.textMuted}
+                         style={{
+                           height: 44,
+                           borderWidth: 1,
+                           borderColor: colors.border,
+                           color: colors.text,
+                           backgroundColor: colors.card,
+                           paddingHorizontal: 16,
+                           fontSize: 12,
+                           fontWeight: '900',
+                           textTransform: 'uppercase',
+                           letterSpacing: 2
+                         }}
+                       />
                        <Svg width={6} height={6} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}><Polygon points="0,0 6,0 0,6" fill={colors.bg} /></Svg>
                        <Svg width={6} height={6} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}><Polygon points="6,6 0,6 6,0" fill={colors.bg} /></Svg>
-                       <Text className="text-[10px] font-black uppercase tracking-widest relative z-10" style={{ color: couponCodeInput.trim() ? colors.bg : colors.textMuted }}>
-                         {isApplyingCoupon ? "..." : "APPLY"}
+                     </View>
+                     <Pressable
+                       onPress={() => {
+                         setIsApplyingCoupon(true);
+                         setCouponError("");
+                         const found = activeCoupons.find(c => c.code.toUpperCase() === couponCodeInput.trim().toUpperCase());
+                         if (!found) {
+                           setCouponError("Invalid code");
+                           setIsApplyingCoupon(false);
+                           return;
+                         }
+                         const sub = getTotal();
+                         if (found.min_purchase && sub < found.min_purchase) {
+                           setCouponError(`Min purchase ₹${found.min_purchase}`);
+                           setIsApplyingCoupon(false);
+                           return;
+                         }
+                         let discount = found.type === "PERCENTAGE" ? (sub * found.value) / 100 : found.value;
+                         if (found.max_discount && discount > found.max_discount) discount = found.max_discount;
+                         setAppliedCoupon({ code: found.code, discountAmount: discount, type: found.type, value: found.value });
+                         setIsApplyingCoupon(false);
+                       }}
+                       style={{
+                         height: 44,
+                         paddingHorizontal: 24,
+                         alignItems: 'center',
+                         justifyContent: 'center',
+                         overflow: 'hidden',
+                         position: 'relative',
+                         backgroundColor: couponCodeInput.trim() ? colors.primary : colors.border
+                       }}
+                     >
+                       <Svg width={6} height={6} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}><Polygon points="0,0 6,0 0,6" fill={colors.bg} /></Svg>
+                       <Svg width={6} height={6} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}><Polygon points="6,6 0,6 6,0" fill={colors.bg} /></Svg>
+                       <Text style={{ color: couponCodeInput.trim() ? colors.bg : colors.textMuted, fontSize: 10, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 2 }}>
+                         {isApplyingCoupon ? '...' : 'APPLY'}
                        </Text>
-                    </Pressable>
-                    {couponError ? <Text className="absolute -bottom-5 left-1 text-[8px] font-bold text-danger uppercase">{couponError}</Text> : null}
+                     </Pressable>
+                   </View>
+                   {couponError ? (
+                     <Text style={{ color: '#EF4444', fontSize: 9, fontWeight: '700', textTransform: 'uppercase', marginTop: 2 }}>{couponError}</Text>
+                   ) : null}
                  </View>
                )}
             </View>
@@ -416,7 +459,7 @@ export default function CartScreen() {
               onPress={() => router.push("/checkout" as never)}
               className="mt-4"
             />
-            <Button label="CLEAR CART" variant="ghost" onPress={clearCart} className="mt-3" />
+            <Button label="← CONTINUE SHOPPING" variant="ghost" onPress={() => router.push("/products" as never)} className="mt-3" />
           </>
         )}
       </ScrollView>

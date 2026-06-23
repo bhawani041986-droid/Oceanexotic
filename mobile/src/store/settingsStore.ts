@@ -21,6 +21,7 @@ interface SettingsState {
   flashDealEnd: string;
   theme: string;
   customerAssets: CustomerAssets;
+  topSellers?: { id: string; name: string; rating: number; speed: string; image: string; products: string[] }[];
   fetchSettings: () => Promise<void>;
   setSettings: (partial: Partial<SettingsState>) => void;
 }
@@ -45,6 +46,12 @@ export const useSettingsStore = create<SettingsState>()(
       flashDealEnd: new Date(Date.now() + 1000 * 60 * 60 * 3).toISOString(),
       theme: "theme-zomato-passion",
       customerAssets: { ...defaultAssets },
+      topSellers: [
+        { id: "SEL-002", name: "Devansh Fish Hub", rating: 4.6, speed: "45 min", image: "⚓", products: ["🦞", "🦀", "🦐"] },
+        { id: "SEL-003", name: "Deep Fishing", rating: 5.0, speed: "60 min", image: "❄️", products: ["🥩", "🐟", "🦀"] },
+        { id: "SEL-2002", name: "Deep Sea Catch", rating: 4.8, speed: "45 min", image: "⚓", products: ["🦞", "🦀", "🦐"] },
+        { id: "SEL-004", name: "Rig Fishing", rating: 4.8, speed: "45 min", image: "🚢", products: ["🦞", "🦀", "🦐"] },
+      ],
 
       setSettings: (partial) => set((s) => ({ ...s, ...partial })),
 
@@ -71,6 +78,7 @@ export const useSettingsStore = create<SettingsState>()(
             flashDealEnd: (settings.flashDealEnd as string) || get().flashDealEnd,
             theme: (settings.customerTheme as string) || (settings.theme as string) || get().theme,
             customerAssets: sanitized,
+            topSellers: (settings.topSellers as any) || get().topSellers,
           });
         } catch {
           /* keep persisted defaults */
