@@ -87,14 +87,23 @@ export default function TerritoryManagementPage() {
   const handleAddArea = async () => {
     if (!newArea.name) return;
     try {
-      const coords = newArea.type === 'AREA' && newArea.lat && newArea.lng ? `${newArea.lat}, ${newArea.lng}` : null;
+      const coords = ['AREA', 'WARD', 'JETTY'].includes(newArea.type) && newArea.lat && newArea.lng ? `${newArea.lat}, ${newArea.lng}` : null;
+      
+      let finalParentId = newArea.parentId || null;
+      if (newArea.type === 'COUNTRY' || newArea.type === 'ISLAND') {
+        finalParentId = null;
+      } else if (!finalParentId) {
+        alert(`Please explicitly select a valid Parent Registry for the new ${newArea.type}.`);
+        return;
+      }
+
       const res = await fetch(`${API_BASE_URL}/system/add_territory`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: newArea.name,
           zone_type: newArea.type,
-          parent_id: newArea.parentId || territories.find(t => t.name === activeIsland)?.id || null,
+          parent_id: finalParentId,
           coordinates: coords,
           status: "ACTIVE"
         })
