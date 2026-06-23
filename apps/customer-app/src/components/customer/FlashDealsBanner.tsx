@@ -67,12 +67,13 @@ export function FlashDealsBanner() {
     ? settings.flashDealCarousel
     : [
         { image_url: promoImageUrl, product_link: "/" },
-        { image_url: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2", product_link: "/" }
+        { image_url: "https://images.unsplash.com/photo-1599084993091-1cb5c0721cc6?auto=format&fit=crop&q=80", product_link: "/" },
+        { image_url: "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?auto=format&fit=crop&q=80", product_link: "/" }
       ];
 
   const handleScroll = (e: any) => {
     const x = e.nativeEvent.contentOffset.x;
-    const index = Math.round(x / 160);
+    const index = Math.round(x / 180);
     setActiveIndex(index);
   };
 
@@ -127,12 +128,12 @@ export function FlashDealsBanner() {
           <View style={styles.liveBadge}>
             <MaterialCommunityIcons name="lightning-bolt" size={12} color={colors.primary} />
             <Text style={[styles.liveText, { color: colors.primary }]}>
-              FLASH PRODUCT LIVE
+              {settings.flashDealSector ? `${settings.flashDealSector.toUpperCase()} LIVE` : 'FLASH PRODUCT LIVE'}
             </Text>
           </View>
           
           <Text style={[styles.title, { color: colors.text }]}>
-            FLASH DEALS.
+            {settings.flashDealTitle || 'FLASH DEALS.'}
           </Text>
           
           <Text style={[styles.timerStatus, { color: colors.textMuted }]}>

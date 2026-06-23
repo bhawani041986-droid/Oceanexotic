@@ -24,7 +24,11 @@ export interface CustomerAssets {
 interface SettingsState {
   marketplaceName: string;
   flashDealActive: boolean;
+  flashDealStart: string;
   flashDealEnd: string;
+  flashDealTitle: string;
+  flashDealSector: string;
+  flashDealFont: string;
   flashDealCarousel?: { image_url: string; product_link: string }[];
   theme: string;
   /** Current UI language code (e.g. 'en', 'hi', 'bn', 'ta') */
@@ -59,10 +63,15 @@ export const useSettingsStore = create<SettingsState>()(
     (set, get) => ({
       marketplaceName: "OceanExotic Global",
       flashDealActive: true,
+      flashDealStart: new Date().toISOString(),
       flashDealEnd: new Date(Date.now() + 1000 * 60 * 60 * 3).toISOString(),
+      flashDealTitle: "Flash Deals.",
+      flashDealSector: "Flash Product",
+      flashDealFont: "font-inter",
       flashDealCarousel: [
-        { image_url: "https://images.unsplash.com/photo-1544551763-46a013bb70d5", product_link: "/products" },
-        { image_url: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2", product_link: "/products" }
+        { image_url: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80", product_link: "/products" },
+        { image_url: "https://images.unsplash.com/photo-1599084993091-1cb5c0721cc6?auto=format&fit=crop&q=80", product_link: "/products" },
+        { image_url: "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?auto=format&fit=crop&q=80", product_link: "/products" }
       ],
       theme: "theme-ocean-neon",
       language: "en",
@@ -97,7 +106,11 @@ export const useSettingsStore = create<SettingsState>()(
               settings.flashDealActive !== undefined
                 ? Boolean(settings.flashDealActive)
                 : get().flashDealActive,
+            flashDealStart: (settings.flashDealStart as string) || get().flashDealStart,
             flashDealEnd: (settings.flashDealEnd as string) || get().flashDealEnd,
+            flashDealTitle: (settings.flashDealTitle as string) || get().flashDealTitle,
+            flashDealSector: (settings.flashDealSector as string) || get().flashDealSector,
+            flashDealFont: (settings.flashDealFont as string) || get().flashDealFont,
             flashDealCarousel: (settings.flashDealCarousel as any) || get().flashDealCarousel,
             theme: (settings.customerTheme as string) || (settings.theme as string) || get().theme,
             customerAssets: sanitized,
@@ -114,7 +127,12 @@ export const useSettingsStore = create<SettingsState>()(
       partialize: (state) => ({
         marketplaceName: state.marketplaceName,
         flashDealActive: state.flashDealActive,
+        flashDealStart: state.flashDealStart,
         flashDealEnd: state.flashDealEnd,
+        flashDealTitle: state.flashDealTitle,
+        flashDealSector: state.flashDealSector,
+        flashDealFont: state.flashDealFont,
+        flashDealCarousel: state.flashDealCarousel,
         theme: state.theme,
         language: state.language,
         customerAssets: state.customerAssets,
