@@ -316,8 +316,8 @@ export default function MarketplaceThemeControl() {
                         <h4 className="text-xs font-black text-[var(--foreground)] uppercase tracking-widest italic">Hero Badge</h4>
                         <input 
                           type="color" 
-                          value={(tempAssets as any).heroAccentColor || "#3b82f6"} 
-                          onChange={(e) => setTempAssets(prev => ({ ...prev, heroAccentColor: e.target.value }))}
+                          value={(tempAssets as any).heroBadgeColor || "#3b82f6"} 
+                          onChange={(e) => setTempAssets(prev => ({ ...prev, heroBadgeColor: e.target.value }))}
                           className="w-5 h-5 bg-transparent border-0 cursor-pointer p-0"
                           title="Badge Color"
                         />
@@ -336,8 +336,8 @@ export default function MarketplaceThemeControl() {
                           <h4 className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest italic">Title Part 1</h4>
                           <input 
                             type="color" 
-                            value={(tempAssets as any).heroTextColor || "#ffffff"} 
-                            onChange={(e) => setTempAssets(prev => ({ ...prev, heroTextColor: e.target.value }))}
+                            value={(tempAssets as any).heroTitle1Color || "#ffffff"} 
+                            onChange={(e) => setTempAssets(prev => ({ ...prev, heroTitle1Color: e.target.value }))}
                             className="w-4 h-4 bg-transparent border-0 cursor-pointer p-0"
                             title="Text Color"
                           />
@@ -355,8 +355,8 @@ export default function MarketplaceThemeControl() {
                           <h4 className="text-[10px] font-black text-primary uppercase tracking-widest italic">Title Part 2</h4>
                           <input 
                             type="color" 
-                            value={(tempAssets as any).heroAccentColor || "#3b82f6"} 
-                            onChange={(e) => setTempAssets(prev => ({ ...prev, heroAccentColor: e.target.value }))}
+                            value={(tempAssets as any).heroTitle2Color || "#3b82f6"} 
+                            onChange={(e) => setTempAssets(prev => ({ ...prev, heroTitle2Color: e.target.value }))}
                             className="w-4 h-4 bg-transparent border-0 cursor-pointer p-0"
                             title="Accent Color"
                           />
@@ -375,8 +375,8 @@ export default function MarketplaceThemeControl() {
                         <h4 className="text-xs font-black text-[var(--foreground)] uppercase tracking-widest italic">Hero Subtitle</h4>
                         <input 
                           type="color" 
-                          value={(tempAssets as any).heroTextColor || "#ffffff"} 
-                          onChange={(e) => setTempAssets(prev => ({ ...prev, heroTextColor: e.target.value }))}
+                          value={(tempAssets as any).heroSubtitleColor || "#ffffff"} 
+                          onChange={(e) => setTempAssets(prev => ({ ...prev, heroSubtitleColor: e.target.value }))}
                           className="w-5 h-5 bg-transparent border-0 cursor-pointer p-0"
                           title="Text Color"
                         />
