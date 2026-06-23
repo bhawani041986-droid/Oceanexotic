@@ -341,7 +341,16 @@ export default function CustomerHomeScreen() {
     });
     toast(`${cutProduct.name} [${selectedCut.label}] added to cart`, "success");
     setCutOpen(false);
+    setCutOpen(false);
   };
+
+  const rawOpacity = settings.customerAssets?.heroOverlayOpacity;
+  const imageOpacity = rawOpacity !== undefined ? 1 - (rawOpacity / 100) : 0.6;
+  
+  const heroBadgeColor = settings.customerAssets?.heroBadgeColor || primaryColor;
+  const heroTitle1Color = settings.customerAssets?.heroTitle1Color || colors.text;
+  const heroTitle2Color = settings.customerAssets?.heroTitle2Color || colors.accent;
+  const heroSubtitleColor = settings.customerAssets?.heroSubtitleColor || colors.text;
 
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
@@ -366,7 +375,8 @@ export default function CustomerHomeScreen() {
               entering={FadeIn.duration(1000)}
               exiting={FadeOut.duration(1000)}
               source={{ uri: heroSlides[currentHeroIndex] }}
-              className="absolute inset-0 h-full w-full opacity-60"
+              className="absolute inset-0 h-full w-full"
+              style={{ opacity: imageOpacity }}
               contentFit="cover"
               priority="high"
             />
@@ -376,18 +386,18 @@ export default function CustomerHomeScreen() {
               <View 
                 className="self-start rounded-none border px-2.5 py-1"
                 style={{
-                  borderColor: getRgba(primaryColor, 0.2),
-                  backgroundColor: getRgba(primaryColor, 0.1)
+                  borderColor: getRgba(heroBadgeColor, 0.2),
+                  backgroundColor: getRgba(heroBadgeColor, 0.1)
                 }}
               >
-                <Text numberOfLines={1} ellipsizeMode="tail" className="text-[8px] font-black uppercase tracking-[0.2em]" style={{ color: primaryColor }}>
-                  {banner?.sector || "Premium"} Seafood Market
+                <Text numberOfLines={1} ellipsizeMode="tail" className="text-[8px] font-black uppercase tracking-[0.2em]" style={{ color: heroBadgeColor }}>
+                  {settings.customerAssets?.heroBadge || (banner?.sector ? `${banner.sector} Seafood Market` : "Premium Seafood Market")}
                 </Text>
               </View>
-              <Text className="mt-2 text-2xl font-black uppercase italic leading-tight" style={{ color: colors.text }}>
-                {heroTitle} <Text style={{ color: colors.accent }}>{heroAccent}</Text>
+              <Text className="mt-2 text-2xl font-black uppercase italic leading-tight" style={{ color: heroTitle1Color }}>
+                {settings.customerAssets?.heroTitle1 || heroTitle} <Text style={{ color: heroTitle2Color }}>{settings.customerAssets?.heroTitle2 || heroAccent}</Text>
               </Text>
-              <Text className="mt-1.5 text-xs font-medium italic drop-shadow-md" style={{ color: colors.text }}>
+              <Text className="mt-1.5 text-xs font-medium italic drop-shadow-md" style={{ color: heroSubtitleColor }}>
                 {settings.customerAssets?.heroSubtitle || "Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers."}
               </Text>
             </Animated.View>

@@ -6,6 +6,11 @@ import { settingsService } from "@/services/settingsService";
 export interface CustomerAssets {
   logo: string;
   hero: string;
+  heroOverlayOpacity?: number;
+  heroBadgeColor?: string;
+  heroTitle1Color?: string;
+  heroTitle2Color?: string;
+  heroSubtitleColor?: string;
   favicon: string;
   appleIcon: string;
   promo: string;
@@ -54,9 +59,9 @@ export const useSettingsStore = create<SettingsState>()(
           const assets = (settings.customerAssets as CustomerAssets) || get().customerAssets;
           const sanitized = { ...defaultAssets, ...assets };
           Object.keys(sanitized).forEach((key) => {
-            const val = (sanitized as Record<string, string>)[key];
+            const val = (sanitized as any)[key];
             if (typeof val === "string" && val.startsWith("blob:")) {
-              (sanitized as Record<string, string>)[key] = "";
+              (sanitized as any)[key] = "";
             }
           });
 

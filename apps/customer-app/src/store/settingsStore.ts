@@ -13,6 +13,11 @@ export interface CustomerAssets {
   heroSubtitle?: string;
   hero2?: string;
   hero3?: string;
+  heroOverlayOpacity?: number;
+  heroBadgeColor?: string;
+  heroTitle1Color?: string;
+  heroTitle2Color?: string;
+  heroSubtitleColor?: string;
   favicon: string;
   appleIcon: string;
   promo: string;
@@ -51,7 +56,12 @@ const defaultAssets: CustomerAssets = {
   heroSubtitle: "Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers.",
   hero2: "",
   hero3: "",
-  favicon: "/logo-icon.svg",
+  heroOverlayOpacity: 60,
+  heroBadgeColor: "",
+  heroTitle1Color: "",
+  heroTitle2Color: "",
+  heroSubtitleColor: "",
+  favicon: "/favicon.ico",
   appleIcon: "/logo-icon.svg",
   promo: "https://images.unsplash.com/photo-1551970634-747846a548cb?auto=format&fit=crop&q=80",
   promoSecondary: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80",
@@ -101,9 +111,9 @@ export const useSettingsStore = create<SettingsState>()(
           const assets = (settings.customerAssets as CustomerAssets) || get().customerAssets;
           const sanitized = { ...defaultAssets, ...assets };
           Object.keys(sanitized).forEach((key) => {
-            const val = (sanitized as Record<string, string>)[key];
+            const val = (sanitized as any)[key];
             if (typeof val === "string" && val.startsWith("blob:")) {
-              (sanitized as Record<string, string>)[key] = "";
+              (sanitized as any)[key] = "";
             }
           });
 
