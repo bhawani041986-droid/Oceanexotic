@@ -56,8 +56,41 @@ export async function POST(request: Request) {
       throw error;
     }
 
+    // Generate a random session token
+    const tokenArray = new Uint8Array(32);
+    crypto.getRandomValues(tokenArray);
+    const token = Array.from(tokenArray, dec => dec.toString(16).padStart(2, '0')).join('');
+
+    // Attempt to send Welcome Email if SMTP is configured
+    try {
+      const nodemailer = require('nodemailer');
+      if (process.env.SMTP_HOST && process.env.SMTP_USER) {
+        const transporter = nodemailer.createTransport({
+          host: process.env.SMTP_HOST,
+          port: parseInt(process.env.SMTP_PORT || '587'),
+          secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
+          auth: {
+            user: process.env.SMTP_USER,
+            pass: process.env.SMTP_PASS,
+          },
+        });
+
+        const mailOptions = {
+          from: `"OceanExotic Team" <${process.env.SMTP_USER}>`,
+          to: email,
+          subject: 'Welcome to OceanExotic - Your Account Details',
+          text: `Hello ${name},\n\nWelcome to the OceanExotic fleet! Your account has been successfully commissioned.\n\nYour Login Details:\nEmail: ${email}\nPassword: ${password}\n\nPlease keep this information secure.\n\nRegards,\nOceanExotic Team`,
+        };
+
+        await transporter.sendMail(mailOptions);
+      }
+    } catch (mailError) {
+      console.warn("Failed to send welcome email:", mailError);
+    }
+
     return NextResponse.json({
-      status: "success",
+      success: true,
+      token: token,
       user: {
         id: newUser.id,
         name: newUser.name,

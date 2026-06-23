@@ -1,4 +1,7 @@
 <?php
+// Start output buffering to prevent any PHP warnings/errors from corrupting the JSON output
+ob_start();
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
@@ -25,11 +28,13 @@ try {
         // Verify user status
         if ($user['status'] === 'PENDING') {
             http_response_code(403);
+            ob_clean();
             echo json_encode(['success' => false, 'message' => 'Access Denied: Agent account is pending administrative approval.']);
             exit;
         }
         if ($user['status'] === 'INACTIVE') {
             http_response_code(403);
+            ob_clean();
             echo json_encode(['success' => false, 'message' => 'Access Denied: Account has been suspended.']);
             exit;
         }
@@ -37,6 +42,7 @@ try {
         // High-Integrity Token Commissioning (Mocking for Demo)
         $token = bin2hex(random_bytes(32));
         
+        ob_clean();
         echo json_encode([
             'success' => true,
             'token' => $token,
@@ -49,10 +55,12 @@ try {
         ]);
     } else {
         http_response_code(401);
+        ob_clean();
         echo json_encode(['success' => false, 'message' => 'Invalid credentials in maritime registry']);
     }
 } catch (Exception $e) {
     http_response_code(500);
+    ob_clean();
     echo json_encode(['success' => false, 'message' => 'Registry handshake failure']);
 }
 ?>
