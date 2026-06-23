@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, Text, Pressable, TextInput, Modal } from "react-native";
 import { useRouter, usePathname } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,6 +15,9 @@ import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { t } from "@/lib/i18n";
 import { ChamferedBox } from "@/components/ui/ChamferedBox";
+import { useNotificationStore } from "@/store/notificationStore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FULL_API_URL } from "@/config/api";
 
 interface CustomerHeaderProps {
   showSearch?: boolean;
@@ -52,6 +55,25 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
   const { toast, ToastHost } = useToast();
   const [search, setSearch] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { unreadCount, setUnreadCount } = useNotificationStore();
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      const userId = user?.id || "USR-1001";
+      try {
+        const res = await fetch(`${FULL_API_URL}/api/customer/notifications?userId=${userId}`);
+        const data = await res.json();
+        if (data.status === 'success') {
+          const readBroadcastsStr = await AsyncStorage.getItem('ocean_read_broadcasts');
+          const readBroadcasts = readBroadcastsStr ? JSON.parse(readBroadcastsStr) : [];
+          setUnreadCount(data.data.filter((n: any) => !n.read && !readBroadcasts.includes(n.id)).length);
+        }
+      } catch (error) {
+        console.warn("Failed to fetch notifications:", error);
+      }
+    };
+    fetchNotifications();
+  }, [user?.id, setUnreadCount]);
 
   const colors = useThemeColors();
   const primaryColor = colors.primary;
@@ -118,14 +140,16 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               }}
             >
               <NotificationIcon color={colors.text} />
-              {/* Subtle active notification beacon */}
-              <View 
-                className="absolute right-2.5 top-2.5 h-2 w-2 rounded-none border" 
-                style={{ 
-                  backgroundColor: primaryColor,
-                  borderColor: colors.card
-                }} 
-              />
+              {/* Active notification beacon */}
+              {unreadCount > 0 && (
+                <View 
+                  className="absolute right-2.5 top-2.5 h-2 w-2 rounded-none border" 
+                  style={{ 
+                    backgroundColor: primaryColor,
+                    borderColor: colors.card
+                  }} 
+                />
+              )}
               {/* Cut-corner bevel overlays */}
               <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
                 <Polygon points="0,0 6,0 0,6" fill={colors.bg} />
