@@ -312,7 +312,16 @@ export default function MarketplaceThemeControl() {
 
                  <div className="space-y-4 pt-4 border-t border-[var(--foreground)]/5">
                     <div className="flex flex-col gap-2">
-                      <h4 className="text-xs font-black text-[var(--foreground)] uppercase tracking-widest italic">Hero Badge</h4>
+                      <div className="flex justify-between items-center">
+                        <h4 className="text-xs font-black text-[var(--foreground)] uppercase tracking-widest italic">Hero Badge</h4>
+                        <input 
+                          type="color" 
+                          value={(tempAssets as any).heroAccentColor || "#3b82f6"} 
+                          onChange={(e) => setTempAssets(prev => ({ ...prev, heroAccentColor: e.target.value }))}
+                          className="w-5 h-5 bg-transparent border-0 cursor-pointer p-0"
+                          title="Badge Color"
+                        />
+                      </div>
                       <input 
                         type="text" 
                         value={(tempAssets as any).heroBadge || ""}
@@ -323,7 +332,16 @@ export default function MarketplaceThemeControl() {
                     </div>
                     <div className="flex gap-2">
                       <div className="flex flex-col gap-2 w-1/2">
-                        <h4 className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest italic">Title Part 1</h4>
+                        <div className="flex justify-between items-center">
+                          <h4 className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest italic">Title Part 1</h4>
+                          <input 
+                            type="color" 
+                            value={(tempAssets as any).heroTextColor || "#ffffff"} 
+                            onChange={(e) => setTempAssets(prev => ({ ...prev, heroTextColor: e.target.value }))}
+                            className="w-4 h-4 bg-transparent border-0 cursor-pointer p-0"
+                            title="Text Color"
+                          />
+                        </div>
                         <input 
                           type="text" 
                           value={(tempAssets as any).heroTitle1 || ""}
@@ -333,7 +351,16 @@ export default function MarketplaceThemeControl() {
                         />
                       </div>
                       <div className="flex flex-col gap-2 w-1/2">
-                        <h4 className="text-[10px] font-black text-primary uppercase tracking-widest italic">Title Part 2</h4>
+                        <div className="flex justify-between items-center">
+                          <h4 className="text-[10px] font-black text-primary uppercase tracking-widest italic">Title Part 2</h4>
+                          <input 
+                            type="color" 
+                            value={(tempAssets as any).heroAccentColor || "#3b82f6"} 
+                            onChange={(e) => setTempAssets(prev => ({ ...prev, heroAccentColor: e.target.value }))}
+                            className="w-4 h-4 bg-transparent border-0 cursor-pointer p-0"
+                            title="Accent Color"
+                          />
+                        </div>
                         <input 
                           type="text" 
                           value={(tempAssets as any).heroTitle2 || ""}
@@ -344,7 +371,16 @@ export default function MarketplaceThemeControl() {
                       </div>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <h4 className="text-xs font-black text-[var(--foreground)] uppercase tracking-widest italic">Hero Subtitle</h4>
+                      <div className="flex justify-between items-center">
+                        <h4 className="text-xs font-black text-[var(--foreground)] uppercase tracking-widest italic">Hero Subtitle</h4>
+                        <input 
+                          type="color" 
+                          value={(tempAssets as any).heroTextColor || "#ffffff"} 
+                          onChange={(e) => setTempAssets(prev => ({ ...prev, heroTextColor: e.target.value }))}
+                          className="w-5 h-5 bg-transparent border-0 cursor-pointer p-0"
+                          title="Text Color"
+                        />
+                      </div>
                       <textarea 
                         value={(tempAssets as any).heroSubtitle || ""}
                         onChange={(e) => setTempAssets(prev => ({ ...prev, heroSubtitle: e.target.value }))}

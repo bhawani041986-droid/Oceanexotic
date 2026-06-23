@@ -44,6 +44,8 @@ interface SettingsState {
     heroTitle1?: string;
     heroTitle2?: string;
     heroSubtitle?: string;
+    heroTextColor?: string;
+    heroAccentColor?: string;
     hero2?: string;
     hero3?: string;
     favicon: string;
@@ -122,6 +124,8 @@ export const useSettingsStore = create<SettingsState>()(
         heroTitle1: "Seafood",
         heroTitle2: "Redefined.",
         heroSubtitle: "Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers.",
+        heroTextColor: "",
+        heroAccentColor: "",
         hero2: "",
         hero3: "",
         favicon: "/logo-icon.svg",
