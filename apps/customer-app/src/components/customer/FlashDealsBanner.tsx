@@ -46,7 +46,7 @@ const FloatingIcon = ({ Icon, top, left, color, delay, size, rotate = '0deg' }: 
 export function FlashDealsBanner() {
   const settings = useSettingsStore();
   const colors = useThemeColors();
-  const { timeLeft } = useFlashDealTimer();
+  const { timeLeft, timerStatus } = useFlashDealTimer();
   const router = useRouter();
 
   const { width } = Dimensions.get('window');
@@ -137,7 +137,7 @@ export function FlashDealsBanner() {
           </Text>
           
           <Text style={[styles.timerStatus, { color: colors.textMuted }]}>
-            ENDS IN
+            {timerStatus === 'STARTS_IN' ? 'STARTS IN' : 'ENDS IN'}
           </Text>
 
           <View style={styles.timerRow}>
