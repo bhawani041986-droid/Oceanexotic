@@ -1,14 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase";
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
     const { data, error } = await supabase
       .from('marketplace_settings')
       .select('setting_key, setting_value');
@@ -51,10 +47,6 @@ export async function POST(req: NextRequest) {
     if (!settings || typeof settings !== 'object') {
       return NextResponse.json({ status: "error", message: "Invalid payload" }, { status: 400 });
     }
-
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Convert object to rows
     const rowsToUpsert = Object.entries(settings).map(([key, value]) => ({
