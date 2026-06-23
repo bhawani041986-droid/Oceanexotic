@@ -1165,7 +1165,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                   src={heroSlides[currentHeroIndex]} 
                   priority
                   fill
-                  className="hidden lg:block object-cover opacity-50 grayscale-[10%] object-center" 
+                  className="hidden lg:block object-cover object-center" 
                   alt="OceanExotic Seafood Hero" 
                 />
 
@@ -1187,7 +1187,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                     priority
                     fill
                     className={cn(
-                       "lg:hidden opacity-50 grayscale-[10%] object-center z-0",
+                       "lg:hidden object-center z-0",
                        (currentHeroIndex === 0 && assets.mobileHero) ? "object-cover" : "object-contain"
                     )} 
                     alt="OceanExotic Seafood Hero" 
