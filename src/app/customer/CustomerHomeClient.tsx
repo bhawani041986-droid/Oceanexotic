@@ -860,6 +860,30 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
   const [featuredProducts, setFeaturedProducts] = React.useState<any[]>([]);
   const [activeReels, setActiveReels] = React.useState<any[]>([]);
 
+  // Flash Deals Banner ref and size for responsive diagonal paddle alignment
+  const bannerRef = React.useRef<HTMLDivElement>(null);
+  const [bannerSize, setBannerSize] = React.useState({ width: 0, height: 0 });
+
+  React.useEffect(() => {
+    if (typeof window === 'undefined' || typeof ResizeObserver === 'undefined' || !bannerRef.current) return;
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setBannerSize({
+          width: entry.contentRect.width,
+          height: entry.contentRect.height
+        });
+      }
+    });
+    resizeObserver.observe(bannerRef.current);
+    return () => resizeObserver.disconnect();
+  }, [mounted, settings.flashDealActive]);
+
+  const w = bannerSize.width;
+  const h = bannerSize.height || 500;
+  const diagonalLength = Math.sqrt(h * h + w * w);
+  const angle = Math.atan2(h, w) * 180 / Math.PI;
+  const rotationAngle = `${90 - angle}deg`;
+
   const formatTime12h = React.useCallback((timeStr: string) => {
     if (!timeStr) return "";
     const [hoursStr, minutesStr] = timeStr.split(":");
@@ -1538,8 +1562,16 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
             viewport={{ once: true }}
             className="py-4 container mx-auto px-4 md:px-10"
           >
-             <div className="relative min-h-[230px] md:min-h-[500px] bg-[var(--c-bg-alt)] border border-[var(--foreground)]/5 overflow-hidden shadow-2xl rounded-3xl md:rounded-[40px]">
-                <div className="absolute inset-0">
+             {/* CHAMFERED CONTAINER WRAPPER FOR WEB */}
+             <div 
+                ref={bannerRef}
+                className="relative min-h-[230px] md:min-h-[500px] bg-[var(--foreground)]/10 p-[1px] overflow-hidden shadow-2xl transition-all duration-300"
+                style={{ clipPath: 'polygon(40px 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%, 0 40px)' }}
+             >
+                <div 
+                   className="w-full h-full min-h-[228px] md:min-h-[498px] bg-[var(--c-bg-alt)] relative overflow-hidden"
+                   style={{ clipPath: 'polygon(40px 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%, 0 40px)' }}
+                >
                    {/* PANEL A (Top/Left Diagonal): Promo Title & Timer */}
                    <div 
                       className="absolute inset-0 z-20 p-4 md:p-16 flex flex-col justify-start items-start transition-all duration-500" 
@@ -1671,20 +1703,30 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                       </div>
                    </div>
 
-                   {/* NEON OAR / BAITHA DIVIDER */}
-                   <div className="absolute inset-0 pointer-events-none z-40 opacity-90 drop-shadow-[0_0_10px_var(--c-primary)]">
-                      {/* The Shaft */}
-                      <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
-                         <line x1="100%" y1="0%" x2="0%" y2="100%" stroke="var(--c-primary)" strokeWidth="3" />
-                         <line x1="100%" y1="0%" x2="0%" y2="100%" stroke="white" strokeWidth="1" opacity="0.5" />
-                      </svg>
-                      {/* Paddle Handle (Top Right) */}
-                      <div className="absolute top-0 right-0 w-8 h-8 md:w-12 md:h-12 bg-[var(--c-primary)] shadow-[0_0_15px_var(--c-primary)]" style={{ clipPath: 'polygon(100% 0, 100% 100%, 0 0)', borderBottomLeftRadius: '100%' }}></div>
-                      {/* Paddle Blade (Bottom Left) */}
-                      <div className="absolute bottom-0 left-0 w-16 h-16 md:w-28 md:h-28 bg-[var(--c-primary)] shadow-[0_0_20px_var(--c-primary)]" style={{ clipPath: 'polygon(0 100%, 100% 100%, 0 0)', borderTopRightRadius: '100%' }}></div>
-                   </div>
+                   {/* DYNAMIC PADDLE DIVIDER WITH FEATHER EFFECT */}
+                   {bannerSize.width > 0 && (
+                      <img 
+                         src="/paddle.png" 
+                         alt="Paddle Divider"
+                         style={{
+                           position: 'absolute',
+                           width: '32px',
+                           height: `${diagonalLength}px`,
+                           left: '50%',
+                           marginLeft: '-16px',
+                           top: `${(h - diagonalLength) / 2}px`,
+                           transform: `rotate(${rotationAngle})`,
+                           transformOrigin: 'center center',
+                           zIndex: 40,
+                           pointerEvents: 'none',
+                           objectFit: 'fill',
+                           filter: 'drop-shadow(0 0 8px rgba(0,0,0,0.55))',
+                           opacity: 0.95
+                         }}
+                      />
+                   )}
                 </div>
-                
+
                 {/* Decorative Borders */}
                 <div className="absolute top-2 right-2 w-6 h-6 border-t border-r border-[var(--c-primary)] opacity-40"></div>
                 <div className="absolute bottom-2 left-2 w-6 h-6 border-b border-l border-[var(--c-primary)] opacity-40"></div>
