@@ -142,23 +142,51 @@ export default function LoginScreen() {
       if (isExpoGo || !GoogleSignin) {
         // FALLBACK: Use WebBrowser if running inside Expo Go (sandbox) to prevent native crashes
         const redirectUrl = Linking.createURL("oauth-callback");
-        const authUrl = `https://kyqmhibffbwoqlpdplfu.supabase.co/auth/v1/authorize?provider=google&redirect_to=https://oceanexotic.com/api/auth/callback?platform=mobile&redirect_uri=${encodeURIComponent(redirectUrl)}`;
+        // Redirect directly back to the mobile deep link. Supabase will append #access_token=...
+        const authUrl = `https://kyqmhibffbwoqlpdplfu.supabase.co/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(redirectUrl)}`;
         
         const result = await WebBrowser.openAuthSessionAsync(authUrl, redirectUrl);
         
         if (result.type === "success" && result.url) {
-          const parsedUrl = Linking.parse(result.url);
-          const { token, user } = parsedUrl.queryParams || {};
-          
-          if (token && user) {
-            const parsedUser = JSON.parse(decodeURIComponent(user as string));
-            const authUser = toAuthUser(parsedUser);
+          // The URL will have a hash fragment like #access_token=XYZ&...
+          const hashIndex = result.url.indexOf('#');
+          if (hashIndex !== -1) {
+            const hash = result.url.substring(hashIndex + 1);
+            const params = new URLSearchParams(hash);
+            const accessToken = params.get('access_token');
             
-            await setAuthToken(token as string);
-            await setAuthUser(authUser);
-            login(authUser);
-            router.replace("/home");
-            toast(`Welcome back, ${authUser.name}!`, "success");
+            if (accessToken) {
+              // Send the Supabase access_token to our backend to generate our custom JWT and user object
+              const syncResult = await api.post("/auth/sync-oauth", { access_token: accessToken });
+              
+              if (syncResult.data.success && syncResult.data.token && syncResult.data.user) {
+                const parsedUser = syncResult.data.user;
+                const authUser = toAuthUser(parsedUser);
+                
+                await setAuthToken(syncResult.data.token);
+                await setAuthUser(authUser);
+                login(authUser);
+                router.replace("/home");
+                toast(`Welcome back, ${authUser.name}!`, "success");
+              } else {
+                toast(syncResult.data.message || "Failed to sync OAuth token.", "error");
+              }
+            } else {
+               toast("Google sign-in completed but no access token received.", "error");
+            }
+          } else {
+             // In case it comes as a query param
+             const parsedUrl = Linking.parse(result.url);
+             const { token, user } = parsedUrl.queryParams || {};
+             if (token && user) {
+               const parsedUser = JSON.parse(decodeURIComponent(user as string));
+               const authUser = toAuthUser(parsedUser);
+               await setAuthToken(token as string);
+               await setAuthUser(authUser);
+               login(authUser);
+               router.replace("/home");
+               toast(`Welcome back, ${authUser.name}!`, "success");
+             }
           }
         }
         return;
