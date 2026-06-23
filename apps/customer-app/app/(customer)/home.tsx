@@ -44,6 +44,7 @@ import { useImageAspectRatio } from "@/hooks/useImageAspectRatio";
 import { t } from "@/lib/i18n";
 
 import { useThemeColors } from "@/hooks/useThemeColors";
+import api from "@/services/api";
 
 type BatchFilter = "ALL" | "MORNING" | "AFTERNOON" | "EVENING";
 
@@ -51,6 +52,12 @@ type BatchFilter = "ALL" | "MORNING" | "AFTERNOON" | "EVENING";
 const RECIPES = [
   { id: "REC-1", title: "Pan-Seared King Salmon", time: "20 min", difficulty: "Easy", image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&q=80" },
   { id: "REC-2", title: "Spicy Garlic Tiger Prawns", time: "15 min", difficulty: "Medium", image: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80" },
+];
+
+const FALLBACK_REVIEWS = [
+  { id: "REV-1", user_name: "Arjun Das", comment: "Incredible quality. Arrived perfectly chilled.", rating: 5 },
+  { id: "REV-2", user_name: "Priya Sharma", comment: "Delivery was prompt and the fish was super fresh!", rating: 4 },
+  { id: "REV-3", user_name: "Rahul K.", comment: "Great cuts, perfectly portioned for sushi. The packaging was excellent.", rating: 4 },
 ];
 
 interface TodaysCatchCardProps {
@@ -223,6 +230,7 @@ export default function CustomerHomeScreen() {
   const [cutOpen, setCutOpen] = useState(false);
   const [subEmailLayout, setSubEmailLayout] = useState({ width: 0, height: 0 });
   const [subBtnLayout, setSubBtnLayout] = useState({ width: 0, height: 0 });
+  const [liveReviews, setLiveReviews] = useState<any[]>([]);
 
   const banner = cms.data?.find((c) => c.type === "BANNER" && c.status === "PUBLISHED");
   const titleParts = banner?.title?.split(":") ?? [];
@@ -266,6 +274,24 @@ export default function CustomerHomeScreen() {
   useEffect(() => {
     settings.fetchSettings();
   }, [settings.fetchSettings]);
+
+  useEffect(() => {
+    const fetchApprovedReviews = async () => {
+      try {
+        const res = await api.get('/reviews/all');
+        const data = res.data;
+        if (Array.isArray(data)) {
+          const approved = data
+            .filter((r: any) => (r.status || '').toUpperCase() === 'APPROVED')
+            .slice(0, 6);
+          if (approved.length > 0) setLiveReviews(approved);
+        }
+      } catch (err) {
+        // Silently fall back to FALLBACK_REVIEWS
+      }
+    };
+    fetchApprovedReviews();
+  }, []);
 
   const filteredCatch = useMemo(() => {
     const items = todaysCatch.data ?? [];
@@ -882,24 +908,26 @@ export default function CustomerHomeScreen() {
             <SectionTitle title="Customer Reviews" subtitle="Verified Buyer Reviews" />
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, gap: 12 }} className="mt-3">
-          {[
-            { user: "Vikram S.", text: "The Bluefin Tuna was absolutely pristine. Delivered in 40 minutes.", rating: 5 },
-            { user: "Ananya K.", text: "Best lobster I've had in years. The cold-chain delivery is real.", rating: 5 },
-            { user: "Rajesh M.", text: "Professional service and verifiable freshness.", rating: 5 },
-          ].map((r) => (
+          {(liveReviews.length > 0 ? liveReviews : FALLBACK_REVIEWS).map((r: any) => {
+            const displayName = r.user_name || r.user || 'Customer';
+            const displayText = r.comment || r.text || '';
+            const initials = displayName.split(' ').map((n: string) => n[0] || '').join('').slice(0, 2).toUpperCase();
+            const ratingNum = parseFloat(r.rating) || 5;
+            return (
             <ChamferedBox 
-              key={r.user} 
+              key={r.id} 
               fillColor={colors.card}
               strokeColor={colors.border}
               bevelSize={14}
               style={{ minHeight: 120 }}
               className="p-4 w-64 relative overflow-hidden"
             >
-              <Text className="text-[10px] font-black uppercase relative z-10" style={{ color: primaryColor }}>★ {r.rating}.0</Text>
-              <Text className="mt-2 text-sm italic relative z-10" style={{ color: colors.textMuted }}>&ldquo;{r.text}&rdquo;</Text>
-              <Text className="mt-2 text-[10px] font-black uppercase relative z-10" style={{ color: colors.text }}>— {r.user}</Text>
+              <Text className="text-[10px] font-black uppercase relative z-10" style={{ color: primaryColor }}>★ {ratingNum % 1 === 0 ? ratingNum + '.0' : ratingNum}</Text>
+              <Text className="mt-2 text-sm italic relative z-10" style={{ color: colors.textMuted }}>&ldquo;{displayText}&rdquo;</Text>
+              <Text className="mt-2 text-[10px] font-black uppercase relative z-10" style={{ color: colors.text }}>— {displayName}</Text>
             </ChamferedBox>
-          ))}
+            );
+          })}
           </ScrollView>
         </View>
 
