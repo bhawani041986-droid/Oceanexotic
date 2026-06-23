@@ -20,13 +20,24 @@ try {
         exit;
     }
 
-    $stmt = $pdo->prepare("UPDATE maritime_territories SET name = ?, zone_type = ?, parent_id = ? WHERE id = ?");
-    $stmt->execute([
-        $data['name'],
-        $data['zone_type'],
-        $data['parent_id'] ?: null,
-        $data['id']
-    ]);
+    if (isset($data['coordinates'])) {
+        $stmt = $pdo->prepare("UPDATE maritime_territories SET name = ?, zone_type = ?, parent_id = ?, coordinates = ? WHERE id = ?");
+        $stmt->execute([
+            $data['name'],
+            $data['zone_type'],
+            $data['parent_id'] ?: null,
+            $data['coordinates'] ?: null,
+            $data['id']
+        ]);
+    } else {
+        $stmt = $pdo->prepare("UPDATE maritime_territories SET name = ?, zone_type = ?, parent_id = ? WHERE id = ?");
+        $stmt->execute([
+            $data['name'],
+            $data['zone_type'],
+            $data['parent_id'] ?: null,
+            $data['id']
+        ]);
+    }
 
     echo json_encode([
         "status" => "success", 

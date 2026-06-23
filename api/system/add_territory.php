@@ -20,11 +20,12 @@ try {
         exit;
     }
 
-    $stmt = $pdo->prepare("INSERT INTO maritime_territories (name, zone_type, parent_id, status) VALUES (?, ?, ?, ?)");
+    $stmt = $pdo->prepare("INSERT INTO maritime_territories (name, zone_type, parent_id, coordinates, status) VALUES (?, ?, ?, ?, ?)");
     $stmt->execute([
         $data['name'],
         $data['zone_type'],
         $data['parent_id'] ?? null,
+        $data['coordinates'] ?? null,
         $data['status'] ?? 'ACTIVE'
     ]);
 

@@ -7,18 +7,27 @@ try {
     $pdo = getDB();
     $island = $_GET['island'] ?? null;
     
-    $query = "SELECT t.*, p.name as parent_name, 
-              (SELECT COUNT(*) FROM maritime_territories WHERE parent_id = t.id) as sub_nodes
-              FROM maritime_territories t 
-              LEFT JOIN maritime_territories p ON t.parent_id = p.id";
-    
-    $params = [];
     if ($island) {
-        $query .= " WHERE t.name = ? OR p.name = ? OR p.parent_id IN (SELECT id FROM maritime_territories WHERE name = ?)";
-        $params = [$island, $island, $island];
+        $query = "WITH RECURSIVE territory_tree AS (
+                      SELECT * FROM maritime_territories WHERE name = ?
+                      UNION ALL
+                      SELECT mt.* FROM maritime_territories mt
+                      INNER JOIN territory_tree tt ON mt.parent_id = tt.id
+                  )
+                  SELECT t.*, p.name as parent_name, 
+                  (SELECT COUNT(*) FROM maritime_territories WHERE parent_id = t.id) as sub_nodes
+                  FROM territory_tree t 
+                  LEFT JOIN maritime_territories p ON t.parent_id = p.id
+                  ORDER BY t.zone_type ASC, t.name ASC";
+        $params = [$island];
+    } else {
+        $query = "SELECT t.*, p.name as parent_name, 
+                  (SELECT COUNT(*) FROM maritime_territories WHERE parent_id = t.id) as sub_nodes
+                  FROM maritime_territories t 
+                  LEFT JOIN maritime_territories p ON t.parent_id = p.id
+                  ORDER BY t.zone_type ASC, t.name ASC";
+        $params = [];
     }
-    
-    $query .= " ORDER BY t.zone_type ASC, t.name ASC";
     
     $stmt = $pdo->prepare($query);
     $stmt->execute($params);

@@ -35,17 +35,20 @@ export default function TerritoryManagementPage() {
   );
   const [isLoading, setIsLoading] = React.useState(true);
   const [showAddModal, setShowAddModal] = React.useState(false);
-  const [newArea, setNewArea] = React.useState({ name: "", type: "JETTY", parentId: "" });
+  const [newArea, setNewArea] = React.useState({ name: "", type: "CITY", parentId: "", lat: "", lng: "" });
   const [showEditModal, setShowEditModal] = React.useState(false);
   const [editingArea, setEditingArea] = React.useState<any>(null);
 
   const fetchTerritories = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/system/get_territories?island=${encodeURIComponent(activeIsland)}`);
-      const data = await res.json(
-  );
-      setTerritories(data
-  );
+      // Fetch all territories to allow dynamic hierarchy parsing
+      const res = await fetch(`${API_BASE_URL}/system/get_territories`);
+      const data = await res.json();
+      setTerritories(data);
+      if (data.length > 0 && activeIsland === "South Andaman") {
+        const rootNodes = data.filter((t: any) => !t.parent_id);
+        if (rootNodes.length > 0) setActiveIsland(rootNodes[0].name);
+      }
     } catch (error) {
       console.error("Failed to fetch territories", error
   );
@@ -84,6 +87,7 @@ export default function TerritoryManagementPage() {
   const handleAddArea = async () => {
     if (!newArea.name) return;
     try {
+      const coords = newArea.type === 'AREA' && newArea.lat && newArea.lng ? `${newArea.lat}, ${newArea.lng}` : null;
       const res = await fetch(`${API_BASE_URL}/system/add_territory`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -91,6 +95,7 @@ export default function TerritoryManagementPage() {
           name: newArea.name,
           zone_type: newArea.type,
           parent_id: newArea.parentId || territories.find(t => t.name === activeIsland)?.id || null,
+          coordinates: coords,
           status: "ACTIVE"
         })
       });
@@ -98,7 +103,7 @@ export default function TerritoryManagementPage() {
       if (data.status === "success") {
         fetchTerritories();
         setShowAddModal(false);
-        setNewArea({ name: "", type: "JETTY", parentId: "" });
+        setNewArea({ name: "", type: "CITY", parentId: "", lat: "", lng: "" });
       }
     } catch (error) {
       console.error("Failed to add territory", error);
@@ -106,11 +111,22 @@ export default function TerritoryManagementPage() {
   };
 
   const handleEditClick = (area: any) => {
+    let lat = "";
+    let lng = "";
+    if (area.coordinates) {
+      const parts = area.coordinates.split(",");
+      if (parts.length === 2) {
+        lat = parts[0].trim();
+        lng = parts[1].trim();
+      }
+    }
     setEditingArea({
       id: area.id,
       name: area.name,
       type: area.zone_type,
-      parentId: area.parent_id || ""
+      parentId: area.parent_id || "",
+      lat,
+      lng
     });
     setShowEditModal(true);
   };
@@ -118,6 +134,7 @@ export default function TerritoryManagementPage() {
   const handleEditArea = async () => {
     if (!editingArea.name) return;
     try {
+      const coords = editingArea.type === 'AREA' && editingArea.lat && editingArea.lng ? `${editingArea.lat}, ${editingArea.lng}` : null;
       const res = await fetch(`${API_BASE_URL}/system/edit_territory`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -125,6 +142,7 @@ export default function TerritoryManagementPage() {
           id: editingArea.id,
           name: editingArea.name,
           zone_type: editingArea.type,
+          coordinates: coords,
           parent_id: editingArea.parentId || null
         })
       });
@@ -156,10 +174,32 @@ export default function TerritoryManagementPage() {
     }
   };
 
+  const buildHierarchyIds = (rootName: string): number[] => {
+    const root = territories.find(t => t.name === rootName);
+    if (!root) return [];
+    
+    let ids: number[] = [root.id];
+    let queue: number[] = [root.id];
+    
+    while(queue.length > 0) {
+      const currentId = queue.shift()!;
+      const children = territories.filter(t => t.parent_id === currentId);
+      children.forEach(c => {
+        ids.push(c.id);
+        queue.push(c.id);
+      });
+    }
+    return ids;
+  };
+
+  const activeHierarchyIds = buildHierarchyIds(activeIsland);
+
   const filteredTerritories = territories.filter(t => 
+    activeHierarchyIds.includes(t.id) &&
     t.name.toLowerCase().includes(searchQuery.toLowerCase())
-  
   );
+
+  const rootTerritories = territories.filter(t => !t.parent_id);
 
   return (
 
@@ -171,9 +211,9 @@ export default function TerritoryManagementPage() {
             <Link href="/admin/logistics" className="text-[var(--foreground)]/40 hover:text-primary transition-colors">
               <ArrowLeft className="w-4 h-4" />
             </Link>
-            <h1 className="text-xl md:text-3xl font-black text-[var(--foreground)] uppercase italic tracking-tighter">Maritime Territory Registry</h1>
+            <h1 className="text-xl md:text-3xl font-black text-[var(--foreground)] uppercase italic tracking-tighter">Global Logistics Registry</h1>
           </div>
-          <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] opacity-60">Logistics Infrastructure Node & Geographic Governance</p>
+          <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] opacity-60">Logistics Infrastructure Nodes & Geographic Governance</p>
         </div>
         <Button 
           onClick={() => setShowAddModal(true)}
@@ -210,6 +250,11 @@ export default function TerritoryManagementPage() {
                     onChange={(e) => setNewArea({...newArea, type: e.target.value})}
                     className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
                  >
+                    <option value="COUNTRY">COUNTRY</option>
+                    <option value="STATE">STATE / PROVINCE</option>
+                    <option value="CITY">CITY</option>
+                    <option value="AREA">AREA (Delivery Hub)</option>
+                    <option disabled>──────────</option>
                     <option value="ISLAND">ISLAND</option>
                     <option value="PORT">PORT</option>
                     <option value="JETTY">JETTY</option>
@@ -223,13 +268,38 @@ export default function TerritoryManagementPage() {
                     onChange={(e) => setNewArea({...newArea, parentId: e.target.value})}
                     className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
                  >
-                    <option value="">(Selected Island)</option>
-                    {territories.filter(t => t.zone_type !== 'WARD').map(t => (
+                    <option value="">(Selected Domain)</option>
+                    {territories.filter(t => t.zone_type !== 'WARD' && t.zone_type !== 'AREA').map(t => (
                        <option key={t.id} value={t.id}>{t.name}</option>
                     ))}
                  </select>
               </div>
            </div>
+           
+           {newArea.type === 'AREA' && (
+             <div className="grid grid-cols-2 gap-4 animate-fade-in mt-4">
+                <div className="space-y-1.5">
+                   <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Geo-Tag Latitude</label>
+                   <input 
+                      type="text" 
+                      placeholder="e.g. 11.6234"
+                      value={newArea.lat}
+                      onChange={(e) => setNewArea({...newArea, lat: e.target.value})}
+                      className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
+                   />
+                </div>
+                <div className="space-y-1.5">
+                   <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Geo-Tag Longitude</label>
+                   <input 
+                      type="text" 
+                      placeholder="e.g. 92.7265"
+                      value={newArea.lng}
+                      onChange={(e) => setNewArea({...newArea, lng: e.target.value})}
+                      className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
+                   />
+                </div>
+             </div>
+           )}
            <Button onClick={handleAddArea} className="w-full bg-primary py-4 text-[11px] font-black uppercase tracking-widest shadow-glow-purple mt-4">
               AUTHORIZE COMMISSION
            </Button>
@@ -263,6 +333,11 @@ export default function TerritoryManagementPage() {
                     onChange={(e) => setEditingArea({...editingArea, type: e.target.value})}
                     className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
                  >
+                    <option value="COUNTRY">COUNTRY</option>
+                    <option value="STATE">STATE / PROVINCE</option>
+                    <option value="CITY">CITY</option>
+                    <option value="AREA">AREA (Delivery Hub)</option>
+                    <option disabled>──────────</option>
                     <option value="ISLAND">ISLAND</option>
                     <option value="PORT">PORT</option>
                     <option value="JETTY">JETTY</option>
@@ -276,13 +351,38 @@ export default function TerritoryManagementPage() {
                     onChange={(e) => setEditingArea({...editingArea, parentId: e.target.value})}
                     className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
                  >
-                    <option value="">(Selected Island)</option>
-                    {territories.filter(t => t.zone_type !== 'WARD' && t.id !== editingArea?.id).map(t => (
+                    <option value="">(Selected Domain)</option>
+                    {territories.filter(t => t.zone_type !== 'WARD' && t.zone_type !== 'AREA' && t.id !== editingArea?.id).map(t => (
                        <option key={t.id} value={t.id}>{t.name}</option>
                     ))}
                  </select>
               </div>
            </div>
+           
+           {editingArea?.type === 'AREA' && (
+             <div className="grid grid-cols-2 gap-4 animate-fade-in mt-4">
+                <div className="space-y-1.5">
+                   <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Geo-Tag Latitude</label>
+                   <input 
+                      type="text" 
+                      placeholder="e.g. 11.6234"
+                      value={editingArea.lat}
+                      onChange={(e) => setEditingArea({...editingArea, lat: e.target.value})}
+                      className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
+                   />
+                </div>
+                <div className="space-y-1.5">
+                   <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Geo-Tag Longitude</label>
+                   <input 
+                      type="text" 
+                      placeholder="e.g. 92.7265"
+                      value={editingArea.lng}
+                      onChange={(e) => setEditingArea({...editingArea, lng: e.target.value})}
+                      className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
+                   />
+                </div>
+             </div>
+           )}
            <Button onClick={handleEditArea} className="w-full bg-primary py-4 text-[11px] font-black uppercase tracking-widest shadow-glow-purple mt-4">
               SAVE CHANGES
            </Button>
@@ -293,9 +393,9 @@ export default function TerritoryManagementPage() {
         {/* Territory Analytics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {[
-            { label: "Active Islands", value: "3", icon: Globe, color: "text-primary" },
-            { label: "Port Hubs", value: "1", icon: Ship, color: "text-success" },
-            { label: "Jetty Nodes", value: "12", icon: Anchor, color: "text-warning" },
+            { label: "Primary Domains", value: rootTerritories.length.toString(), icon: Globe, color: "text-primary" },
+            { label: "State Hubs", value: territories.filter(t => ['STATE', 'PORT'].includes(t.zone_type)).length.toString(), icon: Ship, color: "text-success" },
+            { label: "City Nodes", value: territories.filter(t => ['CITY', 'JETTY'].includes(t.zone_type)).length.toString(), icon: Anchor, color: "text-warning" },
             { label: "Coverage", value: "98%", icon: Activity, color: "text-info" }
           ].map((stat, i) => (
             <Card key={i} className="p-6 bg-bg-secondary/40 border-[var(--foreground)]/5 group hover:border-primary/20 transition-all">
@@ -316,23 +416,25 @@ export default function TerritoryManagementPage() {
           {/* Sidebar Filter */}
           <div className="lg:col-span-3 space-y-6">
             <div className="space-y-4">
-              <p className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest px-2">Primary Islands</p>
+              <p className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest px-2">Primary Domains</p>
               <div className="space-y-1">
-                {["South Andaman", "Havelock Island", "Neil Island", "Little Andaman"].map((island) => (
+                {rootTerritories.length > 0 ? rootTerritories.map((root) => (
                   <button
-                    key={island}
-                    onClick={() => setActiveIsland(island)}
+                    key={root.id}
+                    onClick={() => setActiveIsland(root.name)}
                     className={cn(
                       "w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all border",
-                      activeIsland === island 
+                      activeIsland === root.name 
                         ? "bg-primary/10 border-primary/20 text-primary shadow-glow-purple-sm" 
                         : "bg-[var(--foreground)]/5 border-transparent text-[var(--foreground)]/60 hover:bg-[var(--foreground)]/10"
                     )}
                   >
-                    <span className="text-[10px] font-black uppercase tracking-widest">{island}</span>
-                    <ChevronRight className={cn("w-4 h-4", activeIsland === island ? "opacity-100" : "opacity-0")} />
+                    <span className="text-[10px] font-black uppercase tracking-widest">{root.name}</span>
+                    <ChevronRight className={cn("w-4 h-4", activeIsland === root.name ? "opacity-100" : "opacity-0")} />
                   </button>
-                ))}
+                )) : (
+                  <p className="text-[10px] text-[var(--foreground)]/40 px-2 italic">No Root Domains Configured</p>
+                )}
               </div>
             </div>
 
