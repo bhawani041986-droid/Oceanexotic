@@ -1196,7 +1196,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
               </motion.div>
             )}
           </AnimatePresence>
-          <div className="absolute inset-0 bg-[var(--c-gradient-hero)] z-10" />
+          <div className="absolute inset-0 bg-[var(--c-gradient-hero)] z-10" style={{ opacity: (settings.heroOverlayOpacity ?? 80) / 100 }} />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,var(--c-primary),transparent_50%)] opacity-10 hidden lg:block z-10" />
         </div>
 

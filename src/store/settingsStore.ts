@@ -28,6 +28,7 @@ interface SettingsState {
   sellerAppUrl?: string;
   adminAppUrl?: string;
   atmosphericGlow: number;
+  heroOverlayOpacity: number;
   flashDealActive: boolean;
   flashDealStart: string;
   flashDealEnd: string;
@@ -95,6 +96,7 @@ export const useSettingsStore = create<SettingsState>()(
       sellerAppUrl: "https://expo.dev/accounts/bhawani-ocean/projects/oceanexotic-seller/builds/current",
       adminAppUrl: "https://expo.dev/accounts/bhawani-ocean/projects/oceanexotic-admin/builds/db18e872-65d2-417d-9d9a-28d6e75e654d",
       atmosphericGlow: 15,
+      heroOverlayOpacity: 80,
       flashDealActive: true,
       flashDealStart: new Date().toISOString(), // Now
       flashDealEnd: new Date(Date.now() + 1000 * 60 * 60 * 3).toISOString(), // 3 hours from now

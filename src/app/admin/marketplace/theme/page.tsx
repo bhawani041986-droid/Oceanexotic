@@ -31,11 +31,12 @@ import { useToast } from "@/components/ui/Toast";
 import { Logo } from "@/components/ui/Logo";
 
 export default function MarketplaceThemeControl() {
-  const { customerTheme, atmosphericGlow, customerAssets, setSettings, pushSettings, fetchSettings } = useSettingsStore();
+  const { customerTheme, atmosphericGlow, heroOverlayOpacity, customerAssets, setSettings, pushSettings, fetchSettings } = useSettingsStore();
   const { toast } = useToast();
   const [selectedThemeId, setSelectedThemeId] = useState(customerTheme);
   const [tempAssets, setTempAssets] = useState(customerAssets);
   const [tempGlow, setTempGlow] = useState(atmosphericGlow);
+  const [tempHeroOpacity, setTempHeroOpacity] = useState(heroOverlayOpacity ?? 80);
   const [isCommitting, setIsCommitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [activeStation, setActiveStation] = useState<string | null>(null);
@@ -50,10 +51,12 @@ export default function MarketplaceThemeControl() {
     setTempAssets(customerAssets);
     setSelectedThemeId(customerTheme);
     setTempGlow(atmosphericGlow);
-  }, [customerAssets, customerTheme, atmosphericGlow]);
+    setTempHeroOpacity(heroOverlayOpacity ?? 80);
+  }, [customerAssets, customerTheme, atmosphericGlow, heroOverlayOpacity]);
 
   const isDirty = selectedThemeId !== customerTheme || 
                   tempGlow !== atmosphericGlow || 
+                  tempHeroOpacity !== (heroOverlayOpacity ?? 80) ||
                   JSON.stringify(tempAssets) !== JSON.stringify(customerAssets
   );
 
@@ -108,7 +111,8 @@ export default function MarketplaceThemeControl() {
     setSettings({
       customerTheme: selectedThemeId,
       customerAssets: tempAssets,
-      atmosphericGlow: tempGlow
+      atmosphericGlow: tempGlow,
+      heroOverlayOpacity: tempHeroOpacity
     }
   );
     const success = await pushSettings(
@@ -287,6 +291,21 @@ export default function MarketplaceThemeControl() {
                     <input 
                       type="range" min="0" max="100" value={tempGlow} 
                       onChange={(e) => setTempGlow(parseInt(e.target.value))}
+                      className="w-full h-1.5 bg-[var(--foreground)]/5 rounded-lg appearance-none cursor-pointer accent-primary" 
+                    />
+                 </div>
+
+                 <div className="space-y-4 pt-4 border-t border-[var(--foreground)]/5">
+                    <div className="flex justify-between items-center">
+                      <div className="flex flex-col">
+                        <h4 className="text-xs font-black text-[var(--foreground)] uppercase tracking-widest italic">Hero Overlay</h4>
+                        <span className="text-[8px] opacity-40 uppercase tracking-widest">0% = Fully Clear Image</span>
+                      </div>
+                      <Badge variant="glass" className="text-[9px] font-black border-primary/20 text-primary">{tempHeroOpacity}%</Badge>
+                    </div>
+                    <input 
+                      type="range" min="0" max="100" value={tempHeroOpacity} 
+                      onChange={(e) => setTempHeroOpacity(parseInt(e.target.value))}
                       className="w-full h-1.5 bg-[var(--foreground)]/5 rounded-lg appearance-none cursor-pointer accent-primary" 
                     />
                  </div>
