@@ -35,16 +35,15 @@ import { useToast } from "@/components/ui/Toast";
 import { cn } from "@/lib/utils";
 import { FULL_API_URL as API_BASE_URL, PHP_SERVER_URL } from "@/config/api";
 import { Modal } from "@/components/ui/Modal";
+import { useSettingsStore } from "@/store/settingsStore";
 
 
 
 export default function AdminSellersPage() {
-  const router = useRouter(
-  );
-  const { toast } = useToast(
-  );
-  const [mounted, setMounted] = useState(false
-  );
+  const router = useRouter();
+  const { toast } = useToast();
+  const settings = useSettingsStore();
+  const [mounted, setMounted] = useState(false);
   const [sellers, setSellers] = useState<any[]>([]
   );
   const [loading, setLoading] = useState(true
@@ -163,13 +162,62 @@ export default function AdminSellersPage() {
     }
   };
 
+  const handleToggleFeatured = async (seller: any) => {
+    let nextFeatured = [...(settings.topSellers || [])];
+    const exists = nextFeatured.some(ts => ts.id === seller.id);
+    
+    if (exists) {
+      nextFeatured = nextFeatured.filter(ts => ts.id !== seller.id);
+    } else {
+      let speed = "30 min";
+      let image = "🚢";
+      let products = ["🍣", "🐟", "🦑"];
+      
+      if (seller.id === "SEL-001" || seller.id === "SEL-2001") {
+        speed = "30 min";
+        image = "🚢";
+        products = ["🍣", "🐟", "🦑"];
+      } else if (seller.id === "SEL-002" || seller.id === "SEL-2002") {
+        speed = "45 min";
+        image = "⚓";
+        products = ["🦞", "🦀", "🦐"];
+      } else if (seller.id === "SEL-003") {
+        speed = "60 min";
+        image = "❄️";
+        products = ["🥩", "🐟", "🦀"];
+      } else {
+        const defaultImages = ["🚢", "⚓", "❄️", "🌊"];
+        const defaultProducts = [["🍣", "🐟", "🦑"], ["🦞", "🦀", "🦐"], ["🥩", "🐟", "🦀"]];
+        const index = Math.abs(parseInt(seller.id.replace(/\D/g, '')) || 0);
+        image = defaultImages[index % defaultImages.length];
+        products = defaultProducts[index % defaultProducts.length];
+        speed = `${((index % 3) + 2) * 15} min`;
+      }
+      
+      nextFeatured.push({
+        id: seller.id,
+        name: seller.name,
+        rating: parseFloat(seller.rating) || 4.8,
+        speed,
+        image,
+        products
+      });
+    }
+    
+    settings.setSettings({ topSellers: nextFeatured });
+    const success = await settings.pushSettings();
+    if (success) {
+      toast(exists ? "Removed from Top Sellers" : "Added to Top Sellers", "success");
+    } else {
+      toast("Failed to update Top Sellers settings", "error");
+    }
+  };
+
   useEffect(() => {
-    setMounted(true
-  );
-    fetchSellers(
-  );
-  }, []
-  );
+    setMounted(true);
+    fetchSellers();
+    settings.fetchSettings();
+  }, []);
 
   if (!mounted) return (
 
@@ -266,22 +314,25 @@ export default function AdminSellersPage() {
                   <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Performance</TableHead>
                   <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Fleet Health</TableHead>
                   <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Revenue Node</TableHead>
+                  <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Top Featured</TableHead>
                   <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Governance</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {loading ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-20">
+                    <TableCell colSpan={7} className="text-center py-20">
                       <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto opacity-20" />
                     </TableCell>
                   </TableRow>
                 ) : filteredSellers.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-20 opacity-20 italic text-xs uppercase tracking-widest">No merchant nodes registered in the registry.</TableCell>
+                    <TableCell colSpan={7} className="text-center py-20 opacity-20 italic text-xs uppercase tracking-widest">No merchant nodes registered in the registry.</TableCell>
                   </TableRow>
-                ) : filteredSellers.map((seller) => (
-                  <TableRow key={seller.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
+                ) : filteredSellers.map((seller) => {
+                  const isFeatured = (settings.topSellers || []).some(ts => ts.id === seller.id);
+                  return (
+                    <TableRow key={seller.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
                     <TableCell>
                       <div className="flex items-center gap-2 md:gap-4">
                         <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-[16px] bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 flex items-center justify-center text-primary font-black group-hover/row:border-primary/50 transition-all text-sm md:text-base italic">
@@ -326,6 +377,20 @@ export default function AdminSellersPage() {
                           <p className="font-black text-[var(--foreground)] text-xs md:text-sm italic tracking-tighter">{seller.revenue}</p>
                           <p className="text-[7px] md:text-[9px] font-black text-primary uppercase tracking-widest italic opacity-60">Comm: {seller.commission}</p>
                        </div>
+                    </TableCell>
+                    <TableCell>
+                      <button
+                        title={isFeatured ? "Remove from Top Sellers" : "Add to Top Sellers"}
+                        onClick={() => handleToggleFeatured(seller)}
+                        className={cn(
+                          "px-3 py-1.5 rounded-lg border text-[8px] font-black tracking-widest uppercase italic transition-all",
+                          isFeatured 
+                            ? "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20" 
+                            : "bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10"
+                        )}
+                      >
+                        {isFeatured ? "★ FEATURED" : "☆ FEATURE"}
+                      </button>
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1 md:gap-2">
@@ -380,7 +445,8 @@ export default function AdminSellersPage() {
                       </div>
                     </TableCell>
                   </TableRow>
-                ))}
+                  );
+                })}
               </TableBody>
             </Table>
           </div>
@@ -396,9 +462,11 @@ export default function AdminSellersPage() {
                 No merchant nodes registered in the registry.
               </div>
             ) : (
-              filteredSellers.map((seller) => (
-                <div 
-                  key={seller.id} 
+              filteredSellers.map((seller) => {
+                const isFeatured = (settings.topSellers || []).some(ts => ts.id === seller.id);
+                return (
+                  <div 
+                    key={seller.id} 
                   className="p-4 rounded-xl bg-bg-card/40 border border-[var(--foreground)]/5 space-y-3 shadow-md"
                 >
                   <div className="flex items-start justify-between">
@@ -471,6 +539,18 @@ export default function AdminSellersPage() {
                         <Zap className="w-3.5 h-3.5" />
                       </button>
                       <button 
+                        title={isFeatured ? "Remove from Top Sellers" : "Add to Top Sellers"}
+                        onClick={() => handleToggleFeatured(seller)}
+                        className={cn(
+                          "p-2 rounded-lg transition-all border",
+                          isFeatured 
+                            ? "bg-primary/10 text-primary border-primary/20" 
+                            : "hover:bg-[var(--foreground)]/5 text-text-secondary border-[var(--foreground)]/5"
+                        )}
+                      >
+                        <Award className="w-3.5 h-3.5" />
+                      </button>
+                      <button 
                         title="Direct Signal Hub"
                         onClick={() => router.push(`/admin/support?seller=${seller.id}`)}
                         className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5"
@@ -495,7 +575,8 @@ export default function AdminSellersPage() {
                     </div>
                   </div>
                 </div>
-              ))
+                );
+              })
             )}
           </div>
         </Card>

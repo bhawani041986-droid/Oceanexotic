@@ -69,6 +69,7 @@ interface SettingsState {
   ordersOpenTime: string;       // HH:MM format e.g. "09:00"
   ordersCloseTime: string;      // HH:MM format e.g. "22:00"
   ordersNextOpenText: string;   // Human-readable label shown to customers
+  topSellers?: { id: string; name: string; rating: number; speed: string; image: string; products: string[] }[];
 
   setSettings: (settings: Partial<SettingsState>) => void;
   authorizeMultiSig: () => void;
@@ -104,6 +105,11 @@ export const useSettingsStore = create<SettingsState>()(
         { image_url: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80", product_link: "#" },
         { image_url: "https://images.unsplash.com/photo-1599084993091-1cb5c0721cc6?auto=format&fit=crop&q=80", product_link: "#" },
         { image_url: "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?auto=format&fit=crop&q=80", product_link: "#" }
+      ],
+      topSellers: [
+        { id: "SEL-001", name: "Marine Masters", rating: 4.9, speed: "30 min", image: "🚢", products: ["🍣", "🐟", "🦑"] },
+        { id: "SEL-002", name: "Deep Sea Delivery", rating: 5.0, speed: "45 min", image: "⚓", products: ["🦞", "🦀", "🦐"] },
+        { id: "SEL-003", name: "Arctic Product", rating: 4.8, speed: "60 min", image: "❄️", products: ["🥩", "🐟", "🦀"] },
       ],
       customerAssets: {
         logo: "",
@@ -202,7 +208,8 @@ export const useSettingsStore = create<SettingsState>()(
             ordersEnabled: state.ordersEnabled,
             ordersOpenTime: state.ordersOpenTime,
             ordersCloseTime: state.ordersCloseTime,
-            ordersNextOpenText: state.ordersNextOpenText
+            ordersNextOpenText: state.ordersNextOpenText,
+            topSellers: state.topSellers
           };
 
           const response = await fetch(`${API_BASE_URL}/system/settings`, {

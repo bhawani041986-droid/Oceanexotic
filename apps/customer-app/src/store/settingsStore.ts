@@ -36,6 +36,7 @@ interface SettingsState {
   /** Convenience alias so components can read `settings.language` */
   settings: { language: string };
   customerAssets: CustomerAssets;
+  topSellers?: { id: string; name: string; rating: number; speed: string; image: string; products: string[] }[];
   fetchSettings: () => Promise<void>;
   setSettings: (partial: Partial<Omit<SettingsState, 'settings'>>) => void;
 }
@@ -77,6 +78,11 @@ export const useSettingsStore = create<SettingsState>()(
       language: "en",
       settings: { language: "en" },
       customerAssets: { ...defaultAssets },
+      topSellers: [
+        { id: "SEL-001", name: "Marine Masters", rating: 4.9, speed: "30 min", image: "🚢", products: ["🍣", "🐟", "🦑"] },
+        { id: "SEL-002", name: "Deep Sea Delivery", rating: 5.0, speed: "45 min", image: "⚓", products: ["🦞", "🦀", "🦐"] },
+        { id: "SEL-003", name: "Arctic Product", rating: 4.8, speed: "60 min", image: "❄️", products: ["🥩", "🐟", "🦀"] },
+      ],
 
       setSettings: (partial) =>
         set((s) => {
@@ -114,6 +120,7 @@ export const useSettingsStore = create<SettingsState>()(
             flashDealCarousel: (settings.flashDealCarousel as any) || get().flashDealCarousel,
             theme: (settings.customerTheme as string) || (settings.theme as string) || get().theme,
             customerAssets: sanitized,
+            topSellers: (settings.topSellers as any) || get().topSellers,
           });
         } catch {
           /* keep persisted defaults */
@@ -136,6 +143,7 @@ export const useSettingsStore = create<SettingsState>()(
         theme: state.theme,
         language: state.language,
         customerAssets: state.customerAssets,
+        topSellers: state.topSellers,
       }),
       onRehydrateStorage: () => (state) => {
         if (state) {
