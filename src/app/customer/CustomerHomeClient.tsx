@@ -827,8 +827,8 @@ const CATEGORIES: {
   { name: "Spiny Lobster", image: "/ICONS/spiny-lobster.webp", color: "from-red-700/40 to-red-950/60", glowColor: "#b91c1c", slug: "lobster", isFlipped: true, swimRight: -1, swimLeft: 1 },
 
   // MEAT & POULTRY SECTOR
-  { name: "Mutton", image: "/ICONS/mutton.webp", color: "from-red-800/40 to-stone-900/60", glowColor: "#b91c1c", slug: "mutton", isTransparent: true, swimRight: -1, swimLeft: 1 },
-  { name: "Chicken", image: "/ICONS/chicken.webp", color: "from-amber-600/40 to-stone-900/60", glowColor: "#d97706", slug: "chicken", isTransparent: true, swimRight: -1, swimLeft: 1 },
+  { name: "Mutton", image: "/ICONS/mutton.png", color: "from-red-800/40 to-stone-900/60", glowColor: "#b91c1c", slug: "mutton", isTransparent: true, swimRight: -1, swimLeft: 1 },
+  { name: "Chicken", image: "/ICONS/chicken.png", color: "from-amber-600/40 to-stone-900/60", glowColor: "#d97706", slug: "chicken", isTransparent: true, swimRight: -1, swimLeft: 1 },
 ];
 
 const FEATURED_PRODUCTS = [
