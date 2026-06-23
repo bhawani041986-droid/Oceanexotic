@@ -404,8 +404,8 @@ function FloatingBubble({ index }: { index: number }) {
   );
 }
 
-const getFishImageUrl = (imagePath: string) => {
-  if (!imagePath) return "";
+const getFishImageUrl = (imagePath: any) => {
+  if (typeof imagePath !== "string") return "";
   if (imagePath.startsWith("http://") || imagePath.startsWith("https://") || imagePath.startsWith("data:")) {
     return imagePath;
   }
@@ -452,6 +452,9 @@ function SwimmingFish({ fish, index }: { fish: any; index: number }) {
 
   const scale = 0.6 + (index * 0.06);
 
+  const isLocalAsset = typeof fish.image === "number";
+  const imageSource = isLocalAsset ? fish.image : { uri: getFishImageUrl(fish.image) };
+
   return (
     <Animated.View
       style={[
@@ -467,7 +470,7 @@ function SwimmingFish({ fish, index }: { fish: any; index: number }) {
       ]}
     >
       <Image
-        source={{ uri: getFishImageUrl(fish.image) }}
+        source={imageSource}
         style={{ width: 34, height: 34 }}
         contentFit="contain"
       />
