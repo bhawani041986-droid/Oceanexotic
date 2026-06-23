@@ -96,7 +96,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
         .then(res => res.json())
         .then(data => {
           if (data.status === 'success') {
-            setUnreadCount(data.data.filter((n: any) => !n.read).length);
+            const readBroadcasts = JSON.parse(localStorage.getItem('ocean_read_broadcasts') || '[]');
+            setUnreadCount(data.data.filter((n: any) => !n.read && !readBroadcasts.includes(n.id)).length);
           }
         })
         .catch(console.error);

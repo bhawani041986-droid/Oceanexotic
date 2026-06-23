@@ -46,7 +46,15 @@ export default function NotificationsPage() {
         const res = await fetch(`/api/customer/notifications?userId=${userId}`);
         const result = await res.json();
         if (result.status === "success") {
-          setNotifications(result.data);
+          const readBroadcasts = JSON.parse(localStorage.getItem('ocean_read_broadcasts') || '[]');
+          const deletedBroadcasts = JSON.parse(localStorage.getItem('ocean_deleted_broadcasts') || '[]');
+          
+          const filtered = result.data.filter((n: any) => !deletedBroadcasts.includes(n.id));
+          const withLocalReadState = filtered.map((n: any) => 
+            n.id.startsWith('SIG-') && readBroadcasts.includes(n.id) ? { ...n, read: true } : n
+          );
+          
+          setNotifications(withLocalReadState);
         }
       } catch (error) {
         console.error("Failed to fetch notifications:", error);
@@ -66,6 +74,14 @@ export default function NotificationsPage() {
 
   const markAllRead = async () => {
     const userId = user?.id || "USR-1001";
+    
+    // Local storage tracking for broadcasts
+    const readBroadcasts = JSON.parse(localStorage.getItem('ocean_read_broadcasts') || '[]');
+    const newBroadcasts = notifications.filter(n => n.id.startsWith('SIG-') && !n.read).map(n => n.id);
+    if (newBroadcasts.length > 0) {
+      localStorage.setItem('ocean_read_broadcasts', JSON.stringify(Array.from(new Set([...readBroadcasts, ...newBroadcasts]))));
+    }
+
     // Optimistic UI update
     setNotifications(notifications.map(n => ({ ...n, read: true })));
     
@@ -92,6 +108,11 @@ export default function NotificationsPage() {
 
     // DB Update if it wasn't read
     if (!isAlreadyRead) {
+      if (id.startsWith('SIG-')) {
+        const readBroadcasts = JSON.parse(localStorage.getItem('ocean_read_broadcasts') || '[]');
+        localStorage.setItem('ocean_read_broadcasts', JSON.stringify(Array.from(new Set([...readBroadcasts, id]))));
+      }
+
       try {
         await fetch('/api/customer/notifications', {
           method: 'POST',
@@ -108,7 +129,12 @@ export default function NotificationsPage() {
     setNotifications(notifications.filter(n => n.id !== id));
     if (expandedId === id) setExpandedId(null);
 
-    // DB Update
+    // DB Update & Local Storage
+    if (id.startsWith('SIG-')) {
+      const deletedBroadcasts = JSON.parse(localStorage.getItem('ocean_deleted_broadcasts') || '[]');
+      localStorage.setItem('ocean_deleted_broadcasts', JSON.stringify(Array.from(new Set([...deletedBroadcasts, id]))));
+    }
+
     try {
       await fetch('/api/customer/notifications', {
         method: 'POST',

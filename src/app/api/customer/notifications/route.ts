@@ -15,27 +15,46 @@ export async function GET(request: Request) {
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    const { data, error } = await supabase
+    const { data: userData, error: userError } = await supabase
       .from('notifications')
       .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
+      .eq('user_id', userId);
 
-    if (error) {
-      return NextResponse.json({ status: "error", message: error.message }, { status: 500 });
+    if (userError) {
+      return NextResponse.json({ status: "error", message: userError.message }, { status: 500 });
     }
 
-    // Map database fields to the UI fields expected
-    const mappedData = data.map((n: any) => ({
+    const { data: sysData, error: sysError } = await supabase
+      .from('system_broadcasts')
+      .select('*')
+      .in('channel', ['GLOBAL', 'ALL'])
+      .eq('status', 'SENT');
+
+    // It's okay if sysError exists (e.g., table not created yet), we just fallback to empty array
+    const mappedUserData = (userData || []).map((n: any) => ({
       id: n.id,
       type: n.type,
       title: n.title,
       message: n.message,
       read: n.is_read,
-      time: new Date(n.created_at).toLocaleDateString() + ' ' + new Date(n.created_at).toLocaleTimeString()
+      time: new Date(n.created_at).toLocaleDateString() + ' ' + new Date(n.created_at).toLocaleTimeString(),
+      timestamp: new Date(n.created_at).getTime()
     }));
 
-    return NextResponse.json({ status: "success", data: mappedData });
+    const mappedSysData = (sysData || []).map((b: any) => ({
+      id: b.id,
+      type: b.type,
+      title: b.title,
+      message: b.content,
+      read: false, // Handled locally
+      time: new Date(b.created_at).toLocaleDateString() + ' ' + new Date(b.created_at).toLocaleTimeString(),
+      timestamp: new Date(b.created_at).getTime()
+    }));
+
+    const combinedData = [...mappedUserData, ...mappedSysData].sort((a, b) => b.timestamp - a.timestamp);
+    combinedData.forEach(d => { delete (d as any).timestamp; });
+
+    return NextResponse.json({ status: "success", data: combinedData });
   } catch (error: any) {
     return NextResponse.json({ status: "error", message: error.message }, { status: 500 });
   }
@@ -62,6 +81,9 @@ export async function POST(request: Request) {
     } 
     
     if (action === 'MARK_READ' && notificationId) {
+      if (notificationId.startsWith('SIG-')) {
+         return NextResponse.json({ status: "success", message: "Marked read locally" });
+      }
       const { error } = await supabase
         .from('notifications')
         .update({ is_read: true })
@@ -72,6 +94,9 @@ export async function POST(request: Request) {
     }
 
     if (action === 'DELETE' && notificationId) {
+      if (notificationId.startsWith('SIG-')) {
+         return NextResponse.json({ status: "success", message: "Deleted locally" });
+      }
       const { error } = await supabase
         .from('notifications')
         .delete()
