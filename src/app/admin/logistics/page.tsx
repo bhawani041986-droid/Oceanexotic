@@ -23,55 +23,54 @@ import {
 import { useToast } from "@/components/ui/Toast";
 import Link from "next/link";
 
-const INITIAL_AREAS = [
-  { id: "LOC-001", name: "Miami Harbor Hub", sector: "Florida South", coverage: "50km", status: "ACTIVE", fee: "₹12.00" },
-  { id: "LOC-002", name: "New York Port Terminal", sector: "Tri-State Area", coverage: "30km", status: "ACTIVE", fee: "₹25.00" },
-  { id: "LOC-003", name: "Seattle Cold-Chain Node", sector: "Pacific NW", coverage: "45km", status: "MAINTENANCE", fee: "₹18.00" },
-];
+import { FULL_API_URL as API_BASE_URL } from "@/config/api";
 
 export default function AdminLogisticsPage() {
-  const [areas, setAreas] = useState(INITIAL_AREAS
-  );
-  const [showAddForm, setShowAddForm] = useState(false
-  );
-  const [newArea, setNewArea] = useState({ name: "", sector: "", coverage: "", fee: "" }
-  );
-  const { toast } = useToast(
-  );
+  const [areas, setAreas] = useState<any[]>([]);
+  const [stats, setStats] = useState({ active: 0, total: 0 });
+  const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
 
-  const [editingAreaId, setEditingAreaId] = useState<string | null>(null);
+  React.useEffect(() => {
+    fetchTerritories();
+  }, []);
 
-  const handleSaveArea = () => {
-    if (!newArea.name || !newArea.sector) {
-      toast("Manifest incomplete. Name and Sector required.", "error");
-      return;
+  const fetchTerritories = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/system/get_territories`);
+      const data = await res.json();
+      
+      // Filter for actionable nodes (Areas, Cities, Wards)
+      const leafNodes = data.filter((t: any) => !['COUNTRY', 'STATE', 'ISLAND'].includes(t.zone_type));
+      setAreas(leafNodes);
+      
+      setStats({
+        active: data.filter((t: any) => t.status === 'ACTIVE').length,
+        total: data.length
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
-    
-    if (editingAreaId) {
-      setAreas(areas.map(a => a.id === editingAreaId ? { ...a, ...newArea } : a));
-      toast(`Logistics node ${newArea.name} directives updated.`, "success");
-    } else {
-      const id = `LOC-00${areas.length + 1}`;
-      setAreas([...areas, { ...newArea, id, status: "ACTIVE" }]);
-      toast(`Logistics node ${newArea.name} commissioned.`, "success");
-    }
-    
-    setShowAddForm(false);
-    setEditingAreaId(null);
-    setNewArea({ name: "", sector: "", coverage: "", fee: "" });
   };
 
-  const handleEditArea = (area: any) => {
-    setEditingAreaId(area.id);
-    setNewArea({ name: area.name, sector: area.sector, coverage: area.coverage, fee: area.fee });
-    setShowAddForm(true);
-  };
-
-  const handleDeleteArea = (id: string) => {
-    setAreas(areas.filter(a => a.id !== id)
-  );
-    toast(`Logistics node decommissioned: ${id}`, "info"
-  );
+  const handleDeleteArea = async (id: number) => {
+    if (!confirm('Are you sure you want to decommission this node?')) return;
+    try {
+      const res = await fetch(`${API_BASE_URL}/system/delete_territory`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id })
+      });
+      const data = await res.json();
+      if (data.status === "success") {
+        toast(`Logistics node decommissioned`, "info");
+        fetchTerritories();
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -92,16 +91,11 @@ export default function AdminLogisticsPage() {
               <Globe className="w-3.5 md:w-4 h-3.5 md:h-4 text-primary" /> MARITIME REGISTRY
             </Button>
           </Link>
-          <Button 
-            onClick={() => {
-              setEditingAreaId(null);
-              setNewArea({ name: "", sector: "", coverage: "", fee: "" });
-              setShowAddForm(true);
-            }}
-            className="h-10 md:h-14 px-6 md:px-10 text-[9px] md:text-[11px] font-black tracking-widest uppercase shadow-glow-purple flex items-center justify-center gap-2 md:gap-3 rounded-lg md:rounded-xl italic"
-          >
-            <Plus className="w-3.5 md:w-4 h-3.5 md:h-4" /> COMMISSION NEW SECTOR
-          </Button>
+          <Link href="/admin/logistics/territories">
+            <Button className="h-10 md:h-14 px-6 md:px-10 text-[9px] md:text-[11px] font-black tracking-widest uppercase shadow-glow-purple flex items-center justify-center gap-2 md:gap-3 rounded-lg md:rounded-xl italic">
+              <Plus className="w-3.5 md:w-4 h-3.5 md:h-4" /> COMMISSION NEW SECTOR
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -140,9 +134,9 @@ export default function AdminLogisticsPage() {
                                 <p className="text-[7px] md:text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">ID: {area.id}</p>
                              </div>
                           </TableCell>
-                          <TableCell className="text-[9px] md:text-xs font-black text-text-secondary uppercase italic opacity-40">{area.sector}</TableCell>
-                          <TableCell className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest italic opacity-60">{area.coverage}</TableCell>
-                          <TableCell className="font-black text-primary italic text-[11px] md:text-sm tracking-tighter shadow-glow-purple/20">{area.fee}</TableCell>
+                          <TableCell className="text-[9px] md:text-xs font-black text-[var(--foreground)] uppercase italic opacity-80">{area.parent_name || 'ROOT'}</TableCell>
+                          <TableCell className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">{area.zone_type}</TableCell>
+                          <TableCell className="font-black text-primary italic text-[11px] md:text-sm tracking-tighter shadow-glow-purple/20">{area.coordinates ? `📍 ${area.coordinates}` : 'N/A'}</TableCell>
                           <TableCell>
                              <Badge variant={area.status === "ACTIVE" ? "success" : "warning"} className="uppercase text-[8px] md:text-[10px] italic px-2 shadow-glow-purple/10">
                                 {area.status}
@@ -150,9 +144,11 @@ export default function AdminLogisticsPage() {
                           </TableCell>
                           <TableCell className="text-right">
                              <div className="flex justify-end gap-1 md:gap-2">
-                                <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5" onClick={() => handleEditArea(area)}>
-                                   <Edit3 className="w-3.5 md:w-4 h-3.5 md:h-4" />
-                                </button>
+                                <Link href="/admin/logistics/territories">
+                                  <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
+                                     <Edit3 className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                                  </button>
+                                </Link>
                                 <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5" onClick={() => handleDeleteArea(area.id)}>
                                    <Trash2 className="w-3.5 md:w-4 h-3.5 md:h-4" />
                                 </button>
@@ -179,21 +175,23 @@ export default function AdminLogisticsPage() {
                      </div>
                      <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5">
                         <div className="space-y-0">
-                           <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Sector</p>
-                           <p className="text-[10px] font-black text-[var(--foreground)] italic uppercase">{area.sector}</p>
+                           <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Parent</p>
+                           <p className="text-[10px] font-black text-[var(--foreground)] italic uppercase">{area.parent_name || 'ROOT'}</p>
                         </div>
                         <div className="space-y-0">
-                           <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Coverage</p>
-                           <p className="text-[10px] font-black text-[var(--foreground)] italic">{area.coverage}</p>
+                           <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Type</p>
+                           <p className="text-[10px] font-black text-[var(--foreground)] italic">{area.zone_type}</p>
                         </div>
                         <div className="space-y-0">
-                           <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Transit Fee</p>
-                           <p className="text-xs font-black text-primary italic">{area.fee}</p>
+                           <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Geo-Tag</p>
+                           <p className="text-xs font-black text-primary italic">{area.coordinates || 'N/A'}</p>
                         </div>
                         <div className="flex gap-1">
-                           <button className="p-1.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5" onClick={() => handleEditArea(area)}>
-                              <Edit3 className="w-3.5 h-3.5" />
-                           </button>
+                           <Link href="/admin/logistics/territories">
+                             <button className="p-1.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
+                                <Edit3 className="w-3.5 h-3.5" />
+                             </button>
+                           </Link>
                            <button className="p-1.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-danger transition-all border border-[var(--foreground)]/5" onClick={() => handleDeleteArea(area.id)}>
                               <Trash2 className="w-3.5 h-3.5" />
                            </button>
@@ -206,57 +204,6 @@ export default function AdminLogisticsPage() {
 
          {/* Sector Directives & Stats */}
          <div className="space-y-[10px] md:space-y-8">
-             {showAddForm && (
-                <Card className="p-[10px] md:p-6 space-y-6 md:space-y-8 bg-bg-secondary/20 border-primary/30 animate-in slide-in-from-top-4 duration-500 rounded-[24px] md:rounded-[40px] shadow-glow-purple/10">
-                   <div className="flex items-center justify-between border-b border-[var(--foreground)]/5 pb-4 md:pb-6">
-                      <h3 className="text-base md:text-lg font-black text-[var(--foreground)] tracking-tighter uppercase italic">{editingAreaId ? "Update Sector Directives" : "Commission Sector"}</h3>
-                      <Button variant="ghost" size="sm" onClick={() => setShowAddForm(false)} className="w-8 h-8 p-0 rounded-lg"><X className="w-4 h-4" /></Button>
-                   </div>
-                  <div className="space-y-4 md:space-y-6">
-                     <div className="space-y-1.5 md:space-y-2">
-                        <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest italic opacity-60 ml-1">Sector Name</label>
-                        <Input 
-                          placeholder="e.g. San Francisco Bay Hub" 
-                          value={newArea.name}
-                          onChange={(e) => setNewArea({...newArea, name: e.target.value})}
-                          className="h-11 md:h-12 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 text-[11px] md:text-sm italic rounded-lg md:rounded-xl" 
-                        />
-                     </div>
-                     <div className="space-y-1.5 md:space-y-2">
-                        <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest italic opacity-60 ml-1">Geographic Region</label>
-                        <Input 
-                          placeholder="e.g. Pacific West" 
-                          value={newArea.sector}
-                          onChange={(e) => setNewArea({...newArea, sector: e.target.value})}
-                          className="h-11 md:h-12 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 text-[11px] md:text-sm italic rounded-lg md:rounded-xl" 
-                        />
-                     </div>
-                     <div className="grid grid-cols-2 gap-4 md:gap-6">
-                        <div className="space-y-1.5 md:space-y-2">
-                           <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest italic opacity-60 ml-1">Coverage Reach</label>
-                           <Input 
-                             placeholder="e.g. 25km" 
-                             value={newArea.coverage}
-                             onChange={(e) => setNewArea({...newArea, coverage: e.target.value})}
-                             className="h-11 md:h-12 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 text-[11px] md:text-sm italic rounded-lg md:rounded-xl" 
-                           />
-                        </div>
-                        <div className="space-y-1.5 md:space-y-2">
-                           <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest italic opacity-60 ml-1">Transit Fee</label>
-                           <Input 
-                             placeholder="e.g. ₹15.00" 
-                             value={newArea.fee}
-                             onChange={(e) => setNewArea({...newArea, fee: e.target.value})}
-                             className="h-11 md:h-12 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 text-[11px] md:text-sm italic rounded-lg md:rounded-xl" 
-                           />
-                        </div>
-                     </div>
-                     <Button onClick={handleSaveArea} className="w-full h-12 md:h-14 text-[9px] md:text-[11px] font-black tracking-widest uppercase shadow-glow-purple rounded-lg md:rounded-xl italic">
-                        {editingAreaId ? "UPDATE DIRECTIVES" : "AUTHORIZE COMMISSION"}
-                     </Button>
-                  </div>
-               </Card>
-            )}
 
             <Card className="p-[10px] md:p-6 space-y-6 md:space-y-8 bg-bg-secondary/20 border-[var(--foreground)]/5 rounded-[24px] md:rounded-[48px] shadow-premium">
                <div className="flex items-center gap-3 md:gap-4 border-b border-[var(--foreground)]/5 pb-4 md:pb-6">
@@ -265,8 +212,8 @@ export default function AdminLogisticsPage() {
                </div>
                <div className="space-y-[10px] md:space-y-8">
                   {[
-                    { label: "Active Nodes", value: "42", icon: <MapPin className="text-primary" /> },
-                    { label: "Transit Integrity", value: "99.9%", icon: <ShieldCheck className="text-success" /> },
+                    { label: "Total Nodes", value: stats.total.toString(), icon: <MapPin className="text-primary" /> },
+                    { label: "Active Nodes", value: stats.active.toString(), icon: <ShieldCheck className="text-success" /> },
                     { label: "Avg. Latency", value: "1.2h", icon: <Globe className="text-warning" /> },
                   ].map((stat) => (
                     <div key={stat.label} className="flex items-center justify-between p-3 md:p-0 rounded-xl bg-[var(--foreground)]/5 md:bg-transparent border border-[var(--foreground)]/5 md:border-0">
@@ -290,7 +237,7 @@ export default function AdminLogisticsPage() {
                </div>
                <div className="space-y-0.5 md:space-y-1 relative z-10">
                   <p className="text-lg md:text-2xl font-black text-[var(--foreground)] uppercase tracking-tighter italic">GLOBAL REACH</p>
-                  <p className="text-[8px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest leading-relaxed italic opacity-60">Your distribution network currently covers 84 active maritime sectors.</p>
+                  <p className="text-[8px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest leading-relaxed italic opacity-60">Your distribution network currently monitors {stats.total} live geographic regions and delivery hubs.</p>
                </div>
             </Card>
          </div>
