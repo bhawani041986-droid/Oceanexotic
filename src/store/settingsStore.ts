@@ -196,6 +196,7 @@ export const useSettingsStore = create<SettingsState>()(
             sellerAppUrl: state.sellerAppUrl,
             adminAppUrl: state.adminAppUrl,
             atmosphericGlow: state.atmosphericGlow,
+            heroOverlayOpacity: state.heroOverlayOpacity,
             flashDealActive: state.flashDealActive,
             flashDealStart: state.flashDealStart,
             flashDealEnd: state.flashDealEnd,
