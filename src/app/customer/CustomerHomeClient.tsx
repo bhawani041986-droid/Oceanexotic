@@ -839,10 +839,11 @@ const FEATURED_PRODUCTS = [
 ];
 
 
-const REVIEWS = [
-  { id: "REV-1", user: "Vikram S.", text: "The Bluefin Tuna was absolutely pristine. Delivered in 40 minutes.", rating: 5, image: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80" },
-  { id: "REV-2", user: "Ananya K.", text: "Best lobster I've had in years. The cold-chain delivery is real.", rating: 5, image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80" },
-  { id: "REV-3", user: "Rajesh M.", text: "Professional service and verifyable freshness. OceanExotic Global is the future.", rating: 4.9, image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80" },
+// Static fallback — shown only if no approved reviews exist in DB yet
+const FALLBACK_REVIEWS = [
+  { id: "REV-1", user_name: "Vikram S.", comment: "The Bluefin Tuna was absolutely pristine. Delivered in 40 minutes.", rating: 5 },
+  { id: "REV-2", user_name: "Ananya K.", comment: "Best lobster I've had in years. The cold-chain delivery is real.", rating: 5 },
+  { id: "REV-3", user_name: "Rajesh M.", comment: "Professional service and verifiable freshness. OceanExotic Global is the future.", rating: 4.9 },
 ];
 
 const RECIPES = [
@@ -879,6 +880,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
   const [selectedCut, setSelectedCut] = React.useState<any>(null);
   const [featuredProducts, setFeaturedProducts] = React.useState<any[]>([]);
   const [activeReels, setActiveReels] = React.useState<any[]>([]);
+  const [liveReviews, setLiveReviews] = React.useState<any[]>([]);
 
   // Flash Deals Banner ref and size for responsive diagonal paddle alignment
   const bannerRef = React.useRef<HTMLDivElement>(null);
@@ -987,11 +989,29 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
       }
     };
 
+    const fetchApprovedReviews = async () => {
+      try {
+        const res = await fetch('/api/reviews/all');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data)) {
+            const approved = data
+              .filter((r: any) => (r.status || '').toUpperCase() === 'APPROVED')
+              .slice(0, 6);
+            setLiveReviews(approved);
+          }
+        }
+      } catch (err) {
+        console.warn('Review Sync Failed (Silenced)');
+      }
+    };
+
     fetchCMS();
     fetchTerritories();
     fetchTodaysCatch();
     fetchFeatured();
     fetchReels();
+    fetchApprovedReviews();
 
     if (!settings.flashDealActive) return;
 
@@ -1908,7 +1928,11 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
          </div>
          
          <div className="flex lg:grid lg:grid-cols-3 overflow-x-auto lg:overflow-visible gap-1 md:gap-8 no-scrollbar pb-4 px-[2px] md:px-2 snap-x snap-mandatory scroll-pl-[2px] touch-pan-x">
-            {REVIEWS.map((rev) => (
+            {(liveReviews.length > 0 ? liveReviews : FALLBACK_REVIEWS).map((rev: any) => {
+               const displayName = rev.user_name || rev.user || 'Customer';
+               const displayText = rev.comment || rev.text || '';
+               const initials = displayName.split(' ').map((n: string) => n[0] || '').join('').slice(0, 2).toUpperCase();
+               return (
                <div key={rev.id} className="relative flex-shrink-0 w-[240px] md:w-full group snap-start">
                   {/* Polygonal Background */}
                   <div 
@@ -1918,22 +1942,29 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                   <div className="relative z-10 p-4 space-y-3">
                      <div className="flex items-center gap-3">
                         <div 
-                           className="w-10 h-10 border border-[var(--c-primary)]/20 overflow-hidden group-hover:border-[var(--c-primary)] transition-all"
+                           className="w-10 h-10 border border-[var(--c-primary)]/20 overflow-hidden group-hover:border-[var(--c-primary)] transition-all flex-shrink-0"
                            style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}
                         >
-                           <img src={rev.image} className="w-full h-full object-cover" />
+                           {rev.image ? (
+                             <img src={rev.image} className="w-full h-full object-cover" alt={displayName} />
+                           ) : (
+                             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[var(--c-primary)]/30 to-[var(--c-primary)]/10">
+                               <span className="text-[10px] font-black text-[var(--c-primary)]">{initials}</span>
+                             </div>
+                           )}
                         </div>
                         <div>
-                           <p className="text-sm font-black text-[var(--c-text-primary)] italic leading-none">{rev.user}</p>
+                           <p className="text-sm font-black text-[var(--c-text-primary)] italic leading-none">{displayName}</p>
                            <div className="flex gap-0.5 mt-1">
                               {[...Array(5)].map((_, j) => <Star key={j} className="w-2.5 h-2.5 fill-warning text-warning animate-pulse" />)}
                            </div>
                         </div>
                      </div>
-                     <p className="text-xs text-[var(--c-text-secondary)] font-medium leading-relaxed italic opacity-80 line-clamp-3">"{rev.text}"</p>
+                     <p className="text-xs text-[var(--c-text-secondary)] font-medium leading-relaxed italic opacity-80 line-clamp-3">"{displayText}"</p>
                   </div>
                </div>
-            ))}
+               );
+            })}
          </div>
       </section>
 
