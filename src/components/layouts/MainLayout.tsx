@@ -49,6 +49,8 @@ const CATEGORIES = [
   { name: "Bluefin Tuna", slug: "tuna" },
   { name: "Frozen", slug: "frozen" },
   { name: "Collections", slug: "premium" },
+  { name: "Mutton", slug: "mutton" },
+  { name: "Chicken", slug: "chicken" },
 ];
 
 export default function MainLayout({ children }: MainLayoutProps) {

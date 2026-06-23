@@ -38,6 +38,8 @@ const CATEGORIES = [
   { name: "Bluefin Tuna", image: "🐋", color: "from-blue-800/20 to-indigo-900/20", slug: "tuna" },
   { name: "Frozen", image: "❄️", color: "from-cyan-600/20 to-blue-600/20", slug: "frozen" },
   { name: "Collections", image: "💎", color: "from-purple-600/20 to-indigo-600/20", slug: "premium" },
+  { name: "Mutton", image: "🥩", color: "from-red-600/20 to-stone-900/20", slug: "mutton" },
+  { name: "Chicken", image: "🍗", color: "from-amber-600/20 to-yellow-600/20", slug: "chicken" },
 ];
 
 export default function HomeClientWrapper({ children }: { children: React.ReactNode }) {

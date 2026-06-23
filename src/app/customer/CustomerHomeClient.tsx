@@ -825,6 +825,10 @@ const CATEGORIES: {
   { name: "Tiger Prawns", image: "/ICONS/tiger-prawns.webp", color: "from-orange-500/40 to-orange-800/60", glowColor: "#f97316", slug: "prawns", isFlipped: true, swimRight: -1, swimLeft: 1 },
   { name: "Mud Crab", image: "/ICONS/mud-cram.webp", color: "from-emerald-800/40 to-emerald-950/60", glowColor: "#065f46", slug: "crab", isFlipped: false, swimRight: 1, swimLeft: -1 },
   { name: "Spiny Lobster", image: "/ICONS/spiny-lobster.webp", color: "from-red-700/40 to-red-950/60", glowColor: "#b91c1c", slug: "lobster", isFlipped: true, swimRight: -1, swimLeft: 1 },
+
+  // MEAT & POULTRY SECTOR
+  { name: "Mutton", image: "/ICONS/mutton.webp", color: "from-red-800/40 to-stone-900/60", glowColor: "#b91c1c", slug: "mutton", isTransparent: true, swimRight: -1, swimLeft: 1 },
+  { name: "Chicken", image: "/ICONS/chicken.webp", color: "from-amber-600/40 to-stone-900/60", glowColor: "#d97706", slug: "chicken", isTransparent: true, swimRight: -1, swimLeft: 1 },
 ];
 
 const FEATURED_PRODUCTS = [
@@ -1336,7 +1340,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
 
       {/* 4. CATEGORY VAULT (RIBBON TYPE) */}
       <section className="py-2 container mx-auto px-0 md:px-10">
-         <div className="grid grid-cols-8 gap-0 border-y border-[var(--foreground)]/5 overflow-hidden">
+         <div className="grid grid-cols-5 md:grid-cols-10 gap-0 border-y border-[var(--foreground)]/5 overflow-hidden">
             {CATEGORIES.map((cat) => (
               <Link key={cat.name} href={`/customer/products?category=${cat.slug}`} className="w-full">
                 <div 
@@ -1361,7 +1365,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                         alt={cat.name} 
                         className="w-12 h-12 md:w-24 md:h-24 object-contain" 
                         style={{ 
-                          filter: `${cat.blendMode === 'screen' ? '' : 'invert(1) '}brightness(1.2) contrast(1.1) drop-shadow(0 0 10px ${cat.glowColor}) drop-shadow(0 0 25px ${cat.glowColor}70)`,
+                          filter: `${cat.blendMode === 'screen' || cat.isTransparent ? '' : 'invert(1) '}brightness(1.2) contrast(1.1) drop-shadow(0 0 10px ${cat.glowColor}) drop-shadow(0 0 25px ${cat.glowColor}70)`,
                           transform: cat.isFlipped ? 'scaleX(-1)' : 'none'
                         }}
                       />
