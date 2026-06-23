@@ -1267,22 +1267,25 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                 {assets?.heroBadge && (
                   <Badge 
                     variant="outline" 
-                    className="whitespace-nowrap text-[9px] md:text-[12px] font-black tracking-[0.4em] px-3 md:px-6 py-1 md:py-2 uppercase shadow-[0_0_15px_rgba(var(--c-primary-rgb),0.1)]"
-                    style={{ 
-                      color: (assets as any).heroAccentColor || 'var(--c-primary)', 
-                      borderColor: (assets as any).heroAccentColor ? `${(assets as any).heroAccentColor}40` : 'rgba(var(--c-primary-rgb), 0.2)', 
-                      backgroundColor: (assets as any).heroAccentColor ? `${(assets as any).heroAccentColor}1A` : 'rgba(var(--c-primary-rgb), 0.1)' 
-                    }}
+                    className={cn(
+                      "whitespace-nowrap text-[9px] md:text-[12px] font-black tracking-[0.4em] px-3 md:px-6 py-1 md:py-2 uppercase shadow-[0_0_15px_rgba(var(--c-primary-rgb),0.1)]",
+                      !(assets as any).heroAccentColor && "bg-[var(--c-primary)]/10 text-[var(--c-primary)] border-[var(--c-primary)]/20"
+                    )}
+                    style={(assets as any).heroAccentColor ? { 
+                      color: (assets as any).heroAccentColor, 
+                      borderColor: `${(assets as any).heroAccentColor}40`, 
+                      backgroundColor: `${(assets as any).heroAccentColor}1A` 
+                    } : undefined}
                   >
                      {assets.heroBadge}
                   </Badge>
                 )}
-                <h1 className="text-3xl md:text-5xl lg:text-7xl font-black uppercase italic leading-[1] md:leading-[0.85] text-center drop-shadow-2xl" style={{ color: (assets as any).heroTextColor || 'var(--c-text-primary)' }}>
-                   {assets?.heroTitle1 || 'Seafood'} <span className={cn("text-transparent bg-clip-text bg-gradient-to-r from-[var(--c-primary)] to-[var(--c-accent)]", (assets as any).heroAccentColor && "bg-none !text-current")} style={{ color: (assets as any).heroAccentColor }}>{assets?.heroTitle2 || 'Redefined.'}</span>
+                <h1 className={cn("text-3xl md:text-5xl lg:text-7xl font-black uppercase italic leading-[1] md:leading-[0.85] text-center drop-shadow-2xl", !(assets as any).heroTextColor && "text-[var(--c-text-primary)]")} style={(assets as any).heroTextColor ? { color: (assets as any).heroTextColor } : undefined}>
+                   {assets?.heroTitle1 || 'Seafood'} <span className={(assets as any).heroAccentColor ? "" : "text-transparent bg-clip-text bg-gradient-to-r from-[var(--c-primary)] to-[var(--c-accent)]"} style={(assets as any).heroAccentColor ? { color: (assets as any).heroAccentColor } : undefined}>{assets?.heroTitle2 || 'Redefined.'}</span>
                 </h1>
              </div>
              {assets?.heroSubtitle && (
-               <p className="text-[10px] md:text-2xl font-medium italic max-w-2xl mx-auto leading-relaxed px-1 md:px-4 drop-shadow-2xl text-shadow-glow" style={{ color: (assets as any).heroTextColor || 'white' }}>
+               <p className={cn("text-[10px] md:text-2xl font-medium italic max-w-2xl mx-auto leading-relaxed px-1 md:px-4 drop-shadow-2xl text-shadow-glow", !(assets as any).heroTextColor && "text-white")} style={(assets as any).heroTextColor ? { color: (assets as any).heroTextColor } : undefined}>
                   {assets.heroSubtitle}
                </p>
              )}
