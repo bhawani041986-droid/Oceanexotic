@@ -32,6 +32,7 @@ import {
   Sliders,
   Link2,
   Target,
+  Waves,
   Navigation as NavigationIcon
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -82,6 +83,7 @@ export const AdminMobileTopNav = ({ title }: { title: string }) => {
     { label: "Reports & Analytics", icon: <Activity className="w-5 h-5" />, href: "/admin/analytics", color: "#6366F1" },
     { label: "Media Library", icon: <ImageIcon className="w-5 h-5" />, href: "/admin/media", color: "#EC4899" },
     { label: "Recipes & Banners", icon: <FileText className="w-5 h-5" />, href: "/admin/cms", color: "#84CC16" },
+    { label: "Aquarium Fleet", icon: <Waves className="w-5 h-5" />, href: "/admin/aquarium", color: "#00f5d4" },
     { label: "Coupons & Offers", icon: <Zap className="w-5 h-5" />, href: "/admin/coupons", color: "#FACC15" },
     { label: "Push Notifications", icon: <Bell className="w-5 h-5" />, href: "/admin/notifications", color: "#0EA5E9" },
     { label: "Logs & History", icon: <FileText className="w-5 h-5" />, href: "/admin/logs", color: "#64748B" },

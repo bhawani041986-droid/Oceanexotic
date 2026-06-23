@@ -354,7 +354,28 @@ const SakuSVG = () => (
 );
 
 const MaritimeWaveDivider = () => {
-  const finFish = CATEGORIES.slice(0, 5); 
+  const [finFish, setFinFish] = React.useState<any[]>([
+    { name: "Red Snapper", image: "/ICONS/Red-snapper.webp", swimRight: -1, swimLeft: 1 },
+    { name: "Kingfish", image: "/ICONS/kingfish.webp", swimRight: -1, swimLeft: 1 },
+    { name: "White Pomfret", image: "/ICONS/white-pomfret.webp", swimRight: -1, swimLeft: 1 },
+    { name: "Grouper", image: "/ICONS/grouper.webp", swimRight: -1, swimLeft: 1 },
+    { name: "Mackerel", image: "/ICONS/mackerel.webp", swimRight: -1, swimLeft: 1 }
+  ]);
+
+  React.useEffect(() => {
+    let active = true;
+    fetch('/api/aquarium-fish')
+      .then(res => res.json())
+      .then(data => {
+        if (active && Array.isArray(data)) {
+          setFinFish(data);
+        }
+      })
+      .catch(err => console.warn("Failed to load aquarium fish:", err));
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     <div className="relative h-12 overflow-hidden bg-gradient-to-r from-[#002147] via-[#00509d] to-[#002147] border-y border-[var(--c-primary)]/50 shadow-[inset_0_0_25px_rgba(0,0,0,0.5)] group/tank">

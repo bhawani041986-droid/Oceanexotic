@@ -1,9 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { View, StyleSheet, Dimensions, Animated, Easing, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Path, Circle, Line } from "react-native-svg";
 import { Image } from "expo-image";
 import { CATEGORIES } from "@/constants/categories";
+import api from "@/services/api";
 
 const { width } = Dimensions.get("window");
 
@@ -504,7 +505,23 @@ export function MaritimeWaveDivider() {
   });
 
   const wavePath = `M 0 20 C 150 5, 300 35, 450 20 C 600 5, 750 35, 900 20 C 1050 5, 1200 35, 1350 20 L 1350 50 L 0 50 Z`;
-  const finFish = CATEGORIES.slice(0, 5);
+  const [finFish, setFinFish] = useState<any[]>(CATEGORIES.slice(0, 5));
+
+  useEffect(() => {
+    let active = true;
+    api.get("/aquarium-fish")
+      .then(res => {
+        if (active && res.data && Array.isArray(res.data)) {
+          setFinFish(res.data);
+        }
+      })
+      .catch(err => {
+        console.warn("Failed to load aquarium fleet:", err);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
