@@ -37,7 +37,7 @@ export function Logo({ size = "md", className, style, iconOnly }: LogoProps) {
   const uid = useMemo(() => `logo${Math.random().toString(36).slice(2, 9)}`, []);
   const dims = SIZES[size];
   const colors = useThemeColors();
-  const textFill = "#F8FAFC";
+  const textFill = colors.text;
 
   const primaryFill = colors.primary;
   const accentCyan = colors.secondary;
