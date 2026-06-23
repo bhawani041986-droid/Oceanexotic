@@ -201,6 +201,20 @@ export default function TerritoryManagementPage() {
 
   const rootTerritories = territories.filter(t => !t.parent_id);
 
+  const getValidParentTypes = (type: string) => {
+    switch(type) {
+      case 'STATE': return ['COUNTRY'];
+      case 'CITY': return ['STATE', 'ISLAND'];
+      case 'AREA': return ['CITY', 'JETTY', 'PORT'];
+      case 'WARD': return ['CITY', 'ISLAND'];
+      case 'JETTY': return ['ISLAND', 'CITY'];
+      case 'PORT': return ['ISLAND', 'STATE'];
+      case 'ISLAND': return ['COUNTRY'];
+      case 'COUNTRY': return [];
+      default: return [];
+    }
+  };
+
   return (
 
     <div className="space-y-8 pb-20 animate-fade-in">
@@ -267,16 +281,17 @@ export default function TerritoryManagementPage() {
                     value={newArea.parentId}
                     onChange={(e) => setNewArea({...newArea, parentId: e.target.value})}
                     className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
+                    disabled={newArea.type === 'COUNTRY'}
                  >
-                    <option value="">(Selected Domain)</option>
-                    {territories.filter(t => t.zone_type !== 'WARD' && t.zone_type !== 'AREA').map(t => (
-                       <option key={t.id} value={t.id}>{t.name}</option>
+                    <option value="">{newArea.type === 'COUNTRY' ? '(Root Level)' : '(Selected Domain)'}</option>
+                    {territories.filter(t => getValidParentTypes(newArea.type).includes(t.zone_type)).map(t => (
+                       <option key={t.id} value={t.id}>{t.name} ({t.zone_type})</option>
                     ))}
                  </select>
               </div>
            </div>
            
-           {newArea.type === 'AREA' && (
+           {['AREA', 'WARD', 'JETTY'].includes(newArea.type) && (
              <div className="grid grid-cols-2 gap-4 animate-fade-in mt-4">
                 <div className="space-y-1.5">
                    <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Geo-Tag Latitude</label>
@@ -350,16 +365,17 @@ export default function TerritoryManagementPage() {
                     value={editingArea?.parentId || ""}
                     onChange={(e) => setEditingArea({...editingArea, parentId: e.target.value})}
                     className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
+                    disabled={editingArea?.type === 'COUNTRY'}
                  >
-                    <option value="">(Selected Domain)</option>
-                    {territories.filter(t => t.zone_type !== 'WARD' && t.zone_type !== 'AREA' && t.id !== editingArea?.id).map(t => (
-                       <option key={t.id} value={t.id}>{t.name}</option>
+                    <option value="">{editingArea?.type === 'COUNTRY' ? '(Root Level)' : '(Selected Domain)'}</option>
+                    {territories.filter(t => getValidParentTypes(editingArea?.type || 'JETTY').includes(t.zone_type) && t.id !== editingArea?.id).map(t => (
+                       <option key={t.id} value={t.id}>{t.name} ({t.zone_type})</option>
                     ))}
                  </select>
               </div>
            </div>
            
-           {editingArea?.type === 'AREA' && (
+           {['AREA', 'WARD', 'JETTY'].includes(editingArea?.type) && (
              <div className="grid grid-cols-2 gap-4 animate-fade-in mt-4">
                 <div className="space-y-1.5">
                    <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Geo-Tag Latitude</label>
