@@ -52,6 +52,7 @@ export default function ProductDetailScreen() {
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isFullScreenVisible, setIsFullScreenVisible] = useState(false);
+  const [isReviewModalVisible, setIsReviewModalVisible] = useState(false);
   const screenWidth = Dimensions.get("window").width;
   const flatListRef = useRef<FlatList>(null);
 
@@ -693,7 +694,7 @@ export default function ProductDetailScreen() {
               </View>
             ))}
           </View>
-          <Button label="SUBMIT FEEDBACK" variant="ghost" className="mt-4 border border-white/10" />
+          <Button label="SUBMIT FEEDBACK" variant="ghost" className="mt-4 border" style={{ borderColor: colors.border }} onPress={() => setIsReviewModalVisible(true)} />
         </View>
 
         {/* --- LAYER 6: SIMILAR PRODUCTS --- */}
@@ -787,6 +788,46 @@ export default function ProductDetailScreen() {
             <Text className="text-white/50 text-[10px] uppercase font-bold mt-1">
               Swipe left / right to navigate
             </Text>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Review Modal */}
+      <Modal visible={isReviewModalVisible} animationType="slide" transparent>
+        <View className="flex-1 justify-end" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <View className="p-6 rounded-t-3xl border-t" style={{ backgroundColor: colors.background, borderColor: colors.border }}>
+            <View className="flex-row justify-between items-center mb-6">
+              <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>Submit Feedback</Text>
+              <Pressable onPress={() => setIsReviewModalVisible(false)} className="p-2">
+                <MaterialCommunityIcons name="close" size={24} color={colors.text} />
+              </Pressable>
+            </View>
+
+            <View className="items-center mb-6">
+              <Text className="text-[10px] font-black uppercase tracking-widest mb-4" style={{ color: colors.textMuted }}>Rate Your Experience</Text>
+              <View className="flex-row gap-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Pressable key={star}>
+                    <MaterialCommunityIcons name="star-outline" size={32} color={colors.primary} />
+                  </Pressable>
+                ))}
+              </View>
+            </View>
+
+            <View className="border rounded-xl p-4 mb-6" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+              <TextInput
+                multiline
+                numberOfLines={4}
+                placeholder="Share your experience with this product..."
+                placeholderTextColor={colors.textMuted}
+                style={{ color: colors.text, minHeight: 80, textAlignVertical: 'top' }}
+              />
+            </View>
+
+            <Button label="SUBMIT REVIEW" onPress={() => {
+              setIsReviewModalVisible(false);
+              toast("Review submitted successfully!", "success");
+            }} />
           </View>
         </View>
       </Modal>

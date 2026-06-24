@@ -18,7 +18,7 @@ try {
     if ($method === 'GET') {
         $id = $_GET['id'] ?? null;
         if ($id) {
-            $stmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
+            $stmt = $pdo->prepare("SELECT p.*, s.name as seller_name FROM products p LEFT JOIN sellers s ON p.seller_id = s.id WHERE p.id = ?");
             $stmt->execute([$id]);
             $product = $stmt->fetch(PDO::FETCH_ASSOC);
             
@@ -110,8 +110,8 @@ try {
         $is_live = isset($data['is_live_inventory']) ? (int)$data['is_live_inventory'] : 0;
 
         if ($method === 'POST') {
-            $sql = "INSERT INTO products (id, seller_id, name, category, price, stock, status, image_url, gallery, description, unit, is_live_inventory, harbor_node, catch_date, nutrition, quality_rank) 
-                    VALUES (:id, :seller_id, :name, :category, :price, :stock, :status, :image_url, :gallery, :description, :unit, :is_live, :harbor, :catch_date, :nutrition, :quality_rank)";
+            $sql = "INSERT INTO products (id, seller_id, name, category, price, stock, status, image_url, gallery, description, unit, is_live_inventory, harbor_node, catch_date, nutrition, quality_rank, discount_percent, landed_at) 
+                    VALUES (:id, :seller_id, :name, :category, :price, :stock, :status, :image_url, :gallery, :description, :unit, :is_live, :harbor, :catch_date, :nutrition, :quality_rank, :discount_percent, :landed_at)";
         } else {
             $sql = "UPDATE products SET 
                         seller_id = :seller_id,
@@ -128,7 +128,9 @@ try {
                         harbor_node = :harbor,
                         catch_date = :catch_date,
                         nutrition = :nutrition,
-                        quality_rank = :quality_rank
+                        quality_rank = :quality_rank,
+                        discount_percent = :discount_percent,
+                        landed_at = :landed_at
                     WHERE id = :id";
         }
 
@@ -149,7 +151,9 @@ try {
             'harbor' => $data['harbor_node'] ?? 'NA',
             'catch_date' => $data['catch_date'] ?? date('Y-m-d'),
             'nutrition' => isset($data['nutrition']) ? (is_string($data['nutrition']) ? $data['nutrition'] : json_encode($data['nutrition'])) : null,
-            'quality_rank' => $data['quality_rank'] ?? 'VERIFIED'
+            'quality_rank' => $data['quality_rank'] ?? 'VERIFIED',
+            'discount_percent' => isset($data['discount_percent']) ? (int)$data['discount_percent'] : 0,
+            'landed_at' => !empty($data['landed_at']) ? $data['landed_at'] : date('Y-m-d H:i:s')
         ]);
 
         // --- Synchronize with todays_catch table ---

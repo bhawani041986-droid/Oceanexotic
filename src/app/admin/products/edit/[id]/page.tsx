@@ -75,6 +75,8 @@ export default function AdminEditProductPage() {
     catch_date: "",
     batch_label: "MORNING",
     catch_time: "05:30",
+    discount_percent: 0,
+    landed_at: "",
     nutrition: {
       protein: "20g",
       omega3: "300mg",
@@ -175,6 +177,8 @@ export default function AdminEditProductPage() {
           quality_rank: data.quality_rank || "VERIFIED",
           harbor_node: data.harbor_node || "Phoenix Bay Harbor",
           catch_date: data.catch_date || "",
+          discount_percent: data.discount_percent || 0,
+          landed_at: data.landed_at ? data.landed_at.replace(" ", "T").substring(0, 16) : "",
           nutrition: {
             protein: nutrition.protein || "",
             omega3: nutrition.omega3 || "",
@@ -371,7 +375,7 @@ export default function AdminEditProductPage() {
                   </select>
                 </div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <label className="text-[10px] font-black uppercase tracking-widest ml-1">Category Registry</label>
@@ -386,6 +390,10 @@ export default function AdminEditProductPage() {
                 <div className="space-y-2">
                   <label className="text-[10px] font-black uppercase tracking-widest ml-1">Base Price (/kg)</label>
                   <Input value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} type="number" className="h-[52px] rounded-[16px]" style={{ backgroundColor: 'var(--agent-bg)', borderColor: 'var(--agent-border)', color: 'var(--agent-text)' }} />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-red-500">% Off (Discount)</label>
+                  <Input value={formData.discount_percent} onChange={(e) => setFormData({...formData, discount_percent: parseInt(e.target.value) || 0})} type="number" className="h-[52px] rounded-[16px] border-red-500/20" style={{ backgroundColor: 'var(--agent-bg)', color: 'var(--agent-text)' }} />
                 </div>
               </div>
             </div>
@@ -461,7 +469,7 @@ export default function AdminEditProductPage() {
 
               {Number(formData.is_live_inventory) === 1 && (
                 <div className="space-y-6 animate-in fade-in slide-in-from-top-2">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div className="space-y-2">
                       <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-primary flex items-center gap-2">
                          <Anchor className="w-3 h-3" /> Harbor Node Registry
@@ -472,6 +480,16 @@ export default function AdminEditProductPage() {
                          <option value="Haddo Wharf">Haddo Wharf</option>
                          <option value="Junglighat Pier">Junglighat Pier</option>
                       </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-primary">Landed Time</label>
+                      <input 
+                        type="datetime-local" 
+                        value={formData.landed_at} 
+                        onChange={(e) => setFormData({...formData, landed_at: e.target.value})} 
+                        className="w-full h-[52px] border rounded-[16px] px-4 text-[10px] font-black uppercase tracking-widest outline-none border-primary/30" 
+                        style={{ backgroundColor: 'var(--agent-bg)', color: 'var(--agent-text)' }}
+                      />
                     </div>
                     <div className="space-y-2">
                       <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-primary">Harvest Batch</label>
