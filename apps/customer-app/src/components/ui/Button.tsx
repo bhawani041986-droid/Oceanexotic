@@ -46,8 +46,8 @@ export function Button({
         <Svg width={w} height={h} style={StyleSheet.absoluteFill}>
           <Path
             d={pathD}
-            fill={variant === "primary" ? primaryBgColor : "rgba(2, 6, 23, 0.4)"}
-            stroke={variant === "ghost" ? "rgba(255, 255, 255, 0.15)" : "transparent"}
+            fill={variant === "primary" ? primaryBgColor : "#dc2626"}
+            stroke="transparent"
             strokeWidth="1.5"
           />
         </Svg>
@@ -59,7 +59,7 @@ export function Button({
         <Text
           className={cn(
             "text-xs font-black tracking-[0.2em] uppercase relative z-10",
-            variant === "primary" ? "text-foreground" : "text-muted-foreground"
+            variant === "primary" ? "text-foreground" : "text-white"
           )}
         >
           {label}
