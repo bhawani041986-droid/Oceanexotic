@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function MobileAuth() {
+function MobileAuthComponent() {
   const searchParams = useSearchParams();
   const expoUrl = searchParams.get("expoUrl");
   const [status, setStatus] = useState("Authenticating...");
@@ -11,7 +11,6 @@ export default function MobileAuth() {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Supabase places the access token inside the URL hash (e.g. #access_token=XYZ)
     const hash = window.location.hash;
 
     if (!expoUrl) {
@@ -24,11 +23,9 @@ export default function MobileAuth() {
       return;
     }
 
-    // Redirect the mobile browser directly back to the Expo app with the token
     const deepLink = `${expoUrl}${hash}`;
     setStatus(`Redirecting back to app...`);
     
-    // Give a short delay to ensure UI updates, then redirect
     setTimeout(() => {
       window.location.href = deepLink;
     }, 500);
@@ -43,5 +40,13 @@ export default function MobileAuth() {
         <p className="text-sm text-gray-400">Please wait, you will be redirected shortly.</p>
       </div>
     </div>
+  );
+}
+
+export default function MobileAuth() {
+  return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center bg-[#050B18] text-white">Loading proxy...</div>}>
+      <MobileAuthComponent />
+    </Suspense>
   );
 }
