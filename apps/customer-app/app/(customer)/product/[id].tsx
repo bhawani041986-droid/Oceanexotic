@@ -690,7 +690,7 @@ export default function ProductDetailScreen() {
                   {String(p.seller_name ?? "Verified Seller")}
                 </Text>
                 <Text className="text-[9px] font-black uppercase tracking-widest mt-1" style={{ color: colors.primary }}>
-                  Verified Seller • {String(p.seller_location ?? "Port Blair, Andaman")}
+                  {String(p.seller_name ?? "Verified Seller")} • {String(p.seller_location ?? "Port Blair, Andaman")}
                 </Text>
              </View>
           </View>
