@@ -859,15 +859,15 @@ export default function CustomerHomeScreen() {
               <View 
                 key={label} 
                 className={`rounded-full border px-3 ${isFssai ? 'py-0' : 'py-1'} items-center justify-center`} 
-                style={{ borderColor: getRgba(badgeColor, 0.2), backgroundColor: getRgba(badgeColor, 0.1), height: 22 }}
+                style={{ borderColor: getRgba(badgeColor, 0.2), backgroundColor: getRgba(badgeColor, 0.1), minHeight: 22 }}
               >
                 {isFssai ? (
                   <View className="items-center justify-center relative z-10">
                     <View className="flex-row items-baseline">
-                      <Text className="text-[10px] italic leading-tight" style={{ color: "#0c3f87", fontWeight: '800', fontFamily: 'serif', letterSpacing: -0.5 }}>fssa</Text>
-                      <Text className="text-[10px] italic leading-tight" style={{ color: "#F97316", fontWeight: '800', fontFamily: 'serif' }}>i</Text>
+                      <Text className="text-[10px] italic leading-none" style={{ color: "#0c3f87", fontWeight: '800', fontFamily: 'serif', letterSpacing: -0.5 }}>fssa</Text>
+                      <Text className="text-[10px] italic leading-none" style={{ color: "#F97316", fontWeight: '800', fontFamily: 'serif' }}>i</Text>
                     </View>
-                    <Text className="text-[4px] font-black" style={{ color: badgeColor }} numberOfLines={1}>
+                    <Text className="text-[4px] font-black leading-none" style={{ color: badgeColor }} numberOfLines={1}>
                       Reg. No. 22926204000077
                     </Text>
                   </View>
