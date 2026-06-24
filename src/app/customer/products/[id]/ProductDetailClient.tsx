@@ -213,6 +213,32 @@ export default function ProductDetailPage({
     toast(`${product.name} commissioned to cart.`, "success");
   };
 
+  const handleBuyNowWholefish = () => {
+    if (!product) return;
+    const prepAdd = selectedPrepOption ? parseFloat(selectedPrepOption.price_flat_add) : 0;
+    addItem({
+      id: `${product.id}-whole${selectedPrepOption ? '-' + selectedPrepOption.prep_type : ''}`,
+      name: selectedPrepOption 
+        ? `${product.name} – Whole Fish (${selectedPrepOption.name})`
+        : `${product.name} – Whole Fish`,
+      price: (product.live_price || product.price || 0) + prepAdd,
+      image: product.images?.[0] || product.image,
+      quantity,
+      sellerId: product.seller_id || product.sellerId || "SEL-000",
+      metadata: {
+        cut_type: "WHOLE",
+        prep_option: selectedPrepOption ? {
+          id: selectedPrepOption.id,
+          prep_type: selectedPrepOption.prep_type,
+          name: selectedPrepOption.name,
+          price_flat_add: selectedPrepOption.price_flat_add
+        } : null
+      }
+    });
+    toast(`${product.name} – Whole Fish ready for checkout.`, "success");
+    router.push("/customer/checkout");
+  };
+
   const handleAddAddonToCart = (addon: any) => {
     addItem({
       id: addon.id,
@@ -503,7 +529,7 @@ export default function ProductDetailPage({
           {/* Identity Hub - PERSISTENT ON DESKTOP */}
           <div className="lg:col-span-5 lg:sticky lg:top-[80px] lg:h-fit space-y-[4px] md:space-y-[10px]">
             <div className="space-y-[2px] md:space-y-[4px]">
-              <h1 className="text-xl md:text-5xl font-black text-[var(--c-text-primary)] uppercase italic leading-[0.9] tracking-tighter underline decoration-[var(--c-primary)] decoration-2 md:decoration-4 underline-offset-[6px] md:underline-offset-[12px]">{product.name}</h1>
+              <h1 className="text-xl md:text-5xl font-black text-[var(--c-primary)] uppercase italic leading-[0.9] tracking-tighter underline decoration-[var(--c-primary)] decoration-2 md:decoration-4 underline-offset-[6px] md:underline-offset-[12px]">{product.name}</h1>
               <p className="text-[var(--c-text-secondary)] text-[10px] md:text-sm italic font-medium leading-relaxed text-justify mt-1.5 md:mt-3">{product.description}</p>
             </div>
 
@@ -667,7 +693,16 @@ export default function ProductDetailPage({
                     >
                        {isComingSoon ? "COMING SOON" : <><ShoppingCart className="w-3.5 h-3.5 md:w-4 md:h-4" /> ADD TO CART</>}
                     </button>
-                  </div>       </div>
+                  </div>
+                  {!isComingSoon && (
+                    <button 
+                       onClick={handleBuyNowWholefish}
+                       className="mt-[4px] md:mt-[10px] w-full transition-all duration-200 active:scale-[0.98] hover:opacity-90 px-6 py-2 h-10 md:h-12 rounded-lg md:rounded-xl text-[8px] md:text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-[4px] bg-transparent border border-[var(--c-primary)]/30 text-[var(--c-primary)] hover:bg-[var(--c-primary)]/10 shadow-sm"
+                    >
+                       <Zap className="w-3.5 h-3.5 md:w-4 md:h-4" /> BUY NOW
+                    </button>
+                  )}
+               </div>
                
                 {/* Yield & Culinary Cut Visualizer */}
                 <div className="p-4 bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 rounded-[20px] space-y-3 mt-4">
