@@ -858,12 +858,12 @@ export default function CustomerHomeScreen() {
             return (
               <View 
                 key={label} 
-                className={`rounded-full border px-3 ${isFssai ? 'py-0' : 'py-1'} items-center justify-center`} 
+                className="rounded-full border px-3 py-1 justify-center" 
                 style={{ borderColor: getRgba(badgeColor, 0.2), backgroundColor: getRgba(badgeColor, 0.1), minHeight: 22 }}
               >
                 {isFssai ? (
-                  <View className="items-center justify-center relative z-10">
-                    <View className="flex-row items-baseline">
+                  <View className="items-center justify-center">
+                    <View className="flex-row items-baseline -mt-[2px]">
                       <Text className="text-[10px] italic leading-none" style={{ color: "#0c3f87", fontWeight: '800', fontFamily: 'serif', letterSpacing: -0.5 }}>fssa</Text>
                       <Text className="text-[10px] italic leading-none" style={{ color: "#F97316", fontWeight: '800', fontFamily: 'serif' }}>i</Text>
                     </View>
@@ -872,7 +872,7 @@ export default function CustomerHomeScreen() {
                     </Text>
                   </View>
                 ) : (
-                  <Text className="text-[8px] font-black uppercase relative z-10" style={{ color: badgeColor }}>{label}</Text>
+                  <Text className="text-[8px] font-black uppercase text-center" style={{ color: badgeColor }}>{label}</Text>
                 )}
               </View>
             );

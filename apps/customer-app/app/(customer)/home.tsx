@@ -1039,11 +1039,11 @@ export default function CustomerHomeScreen() {
                 bevelSize={4}
                 style={{ minHeight: 22 }}
                 className="flex-shrink"
-                contentClassName={`w-auto flex-shrink px-3 ${isFssai ? 'py-0' : 'py-1'} items-center justify-center`}
+                contentClassName="w-auto flex-shrink px-3 py-1"
               >
                 {isFssai ? (
-                  <View className="items-center justify-center relative z-10">
-                    <View className="flex-row items-baseline">
+                  <View className="items-center justify-center">
+                    <View className="flex-row items-baseline -mt-[2px]">
                       <Text className="text-[10px] italic leading-none" style={{ color: "#0c3f87", fontWeight: '800', fontFamily: 'serif', letterSpacing: -0.5 }}>fssa</Text>
                       <Text className="text-[10px] italic leading-none" style={{ color: "#F97316", fontWeight: '800', fontFamily: 'serif' }}>i</Text>
                     </View>
@@ -1052,7 +1052,7 @@ export default function CustomerHomeScreen() {
                     </Text>
                   </View>
                 ) : (
-                  <Text className="text-[8px] font-black uppercase relative z-10" style={{ color: badgeColor }}>{label}</Text>
+                  <Text className="text-[8px] font-black uppercase text-center" style={{ color: badgeColor }}>{label}</Text>
                 )}
               </ChamferedBox>
             );
