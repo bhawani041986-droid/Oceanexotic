@@ -155,7 +155,7 @@ try {
             'nutrition' => isset($data['nutrition']) ? (is_string($data['nutrition']) ? $data['nutrition'] : json_encode($data['nutrition'])) : null,
             'quality_rank' => $data['quality_rank'] ?? 'VERIFIED',
             'discount_percent' => isset($data['discount_percent']) ? (int)$data['discount_percent'] : 0,
-            'landed_at' => !empty($data['landed_at']) ? $data['landed_at'] : date('Y-m-d H:i:s'),
+            'landed_at' => !empty($data['landed_at']) ? str_replace('T', ' ', $data['landed_at']) : date('Y-m-d H:i:s'),
             'storage_temp' => isset($data['storage_temp']) ? (float)$data['storage_temp'] : -18.2,
             'recipes' => isset($data['recipes']) ? (is_string($data['recipes']) ? $data['recipes'] : json_encode($data['recipes'])) : null
         ]);

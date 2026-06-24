@@ -412,24 +412,32 @@ export default function ProductDetailScreen() {
             <View className="flex-row items-center gap-2">
               <MaterialCommunityIcons name="clock-outline" size={16} color={colors.primary} />
               <View>
-                {(() => {
-                  const landedAt = product.landed_at ? new Date(String(product.landed_at)) : new Date(Date.now() - 4 * 60 * 60 * 1000 - 12 * 60 * 1000);
-                  const diffMs = Math.max(0, Date.now() - landedAt.getTime());
-                  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-                  const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-                  const freshPercent = Math.max(85, 100 - Math.floor(diffHours * 0.8));
-                  return (
-                    <>
-                      <Text className="text-[10px] font-black uppercase" style={{ color: colors.text }}>Landed: {diffHours}h {diffMins}m ago</Text>
-                      <Text className="text-[8px] font-bold uppercase mt-0.5" style={{ color: colors.textMuted }}>Prime Quality Index (A+)</Text>
-                    </>
-                  );
-                })()}
+              {(() => {
+                let landedAt = new Date(Date.now() - 4 * 60 * 60 * 1000 - 12 * 60 * 1000);
+                if (product.landed_at) {
+                  const d = new Date(String(product.landed_at).replace(" ", "T"));
+                  if (!isNaN(d.getTime())) landedAt = d;
+                }
+                const diffMs = Math.max(0, Date.now() - landedAt.getTime());
+                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                const freshPercent = Math.max(85, 100 - Math.floor(diffHours * 0.8));
+                return (
+                  <>
+                    <Text className="text-[10px] font-black uppercase" style={{ color: colors.text }}>Landed: {diffHours}h {diffMins}m ago</Text>
+                    <Text className="text-[8px] font-bold uppercase mt-0.5" style={{ color: colors.textMuted }}>Prime Quality Index (A+)</Text>
+                  </>
+                );
+              })()}
               </View>
             </View>
             <View className="rounded-none px-2 py-1 border" style={{ backgroundColor: `${colors.primary}15`, borderColor: `${colors.primary}30` }}>
               {(() => {
-                const landedAt = product.landed_at ? new Date(String(product.landed_at)) : new Date(Date.now() - 4 * 60 * 60 * 1000 - 12 * 60 * 1000);
+                let landedAt = new Date(Date.now() - 4 * 60 * 60 * 1000 - 12 * 60 * 1000);
+                if (product.landed_at) {
+                  const d = new Date(String(product.landed_at).replace(" ", "T"));
+                  if (!isNaN(d.getTime())) landedAt = d;
+                }
                 const diffMs = Math.max(0, Date.now() - landedAt.getTime());
                 const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
                 const freshPercent = Math.max(85, 100 - Math.floor(diffHours * 0.8));

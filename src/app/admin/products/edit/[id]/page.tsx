@@ -479,7 +479,7 @@ export default function AdminEditProductPage() {
 
               {Number(formData.is_live_inventory) === 1 && (
                 <div className="space-y-6 animate-in fade-in slide-in-from-top-2">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-2">
                       <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-primary flex items-center gap-2">
                          <Anchor className="w-3 h-3" /> Harbor Node Registry
@@ -490,16 +490,6 @@ export default function AdminEditProductPage() {
                          <option value="Haddo Wharf">Haddo Wharf</option>
                          <option value="Junglighat Pier">Junglighat Pier</option>
                       </select>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-primary">Landed Time</label>
-                      <input 
-                        type="datetime-local" 
-                        value={formData.landed_at} 
-                        onChange={(e) => setFormData({...formData, landed_at: e.target.value})} 
-                        className="w-full h-[52px] border rounded-[16px] px-4 text-[10px] font-black uppercase tracking-widest outline-none border-primary/30" 
-                        style={{ backgroundColor: 'var(--agent-bg)', color: 'var(--agent-text)' }}
-                      />
                     </div>
                     <div className="space-y-2">
                       <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-primary">Harvest Batch</label>
@@ -616,7 +606,17 @@ export default function AdminEditProductPage() {
             </div>
             
             <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-primary">Landed Time</label>
+                  <input 
+                    type="datetime-local" 
+                    value={formData.landed_at} 
+                    onChange={(e) => setFormData({...formData, landed_at: e.target.value})} 
+                    className="w-full h-[52px] border rounded-[16px] px-4 text-[10px] font-black uppercase tracking-widest outline-none border-primary/30" 
+                    style={{ backgroundColor: 'var(--agent-bg)', color: 'var(--agent-text)' }}
+                  />
+                </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-primary">Continuous Cold-Chain Target (°C)</label>
                   <Input type="number" step="0.1" value={formData.storage_temp} onChange={(e) => setFormData({...formData, storage_temp: parseFloat(e.target.value)})} className="h-[52px] rounded-[16px] border-primary/30" style={{ backgroundColor: 'var(--agent-bg)', color: 'var(--agent-text)' }} />
