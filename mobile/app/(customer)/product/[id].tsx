@@ -377,27 +377,33 @@ export default function ProductDetailScreen() {
             <View className="flex-row items-center gap-2">
               <MaterialCommunityIcons name="clock-outline" size={16} color={colors.primary} />
               <View>
-                <Text className="text-[10px] font-black uppercase" style={{ color: colors.text }}>Landed: 4h 12m ago</Text>
+                {(() => {
+                  const landedAt = product.landed_at ? new Date(product.landed_at) : new Date(Date.now() - 4 * 60 * 60 * 1000 - 12 * 60 * 1000);
+                  const diffMs = Math.max(0, Date.now() - landedAt.getTime());
+                  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                  const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                  return <Text className="text-[10px] font-black uppercase" style={{ color: colors.text }}>Landed: {diffHours}h {diffMins}m ago</Text>;
+                })()}
                 <Text className="text-[8px] font-bold uppercase" style={{ color: colors.textMuted }}>Prime Quality Index (A+)</Text>
               </View>
             </View>
-            <View className="rounded-full bg-emerald-500/10 px-2 py-1 border border-emerald-500/20">
-              <Text className="text-[8px] font-black text-emerald-500 uppercase">98% FRESH</Text>
+            <View className="rounded-full px-2 py-1 border" style={{ backgroundColor: `${colors.primary}15`, borderColor: `${colors.primary}30` }}>
+              <Text className="text-[8px] font-black uppercase" style={{ color: colors.primary }}>98% FRESH</Text>
             </View>
           </View>
 
           {/* Licious-Style Smart Add-ons Cross-Sell Engine */}
           {p.addons && p.addons.length > 0 ? (
-            <View className="mt-6 p-4 rounded-[20px] border" style={{ backgroundColor: 'rgba(16, 185, 129, 0.03)', borderColor: 'rgba(16, 185, 129, 0.15)' }}>
+            <View className="mt-6 p-4 rounded-[20px] border" style={{ backgroundColor: `${colors.primary}05`, borderColor: `${colors.primary}15` }}>
               <View className="flex-row items-center justify-between mb-2">
                 <View className="flex-row items-center gap-1">
-                  <MaterialCommunityIcons name="plus" size={14} color="#10B981" />
-                  <Text className="text-[10px] font-black uppercase tracking-wider text-emerald-400">
+                  <MaterialCommunityIcons name="plus" size={14} color={colors.primary} />
+                  <Text className="text-[10px] font-black uppercase tracking-wider" style={{ color: colors.primary }}>
                     Complete Your Recipe
                   </Text>
                 </View>
-                <View className="rounded bg-emerald-500/10 px-1.5 py-0.5 border border-emerald-500/20">
-                  <Text className="text-[6px] font-black text-emerald-400 uppercase tracking-widest">
+                <View className="rounded px-1.5 py-0.5 border" style={{ backgroundColor: `${colors.primary}10`, borderColor: `${colors.primary}20` }}>
+                  <Text className="text-[6px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>
                     RECOMMENDED PAIRING
                   </Text>
                 </View>
@@ -427,16 +433,17 @@ export default function ProductDetailScreen() {
                           <Text className="text-[8px] text-muted-foreground mt-0.5" numberOfLines={1}>
                             {addon.description || "Fresh pairing."}
                           </Text>
-                          <Text className="text-[10px] font-black text-emerald-400 mt-0.5">₹{addon.price}</Text>
+                          <Text className="text-[10px] font-black mt-0.5" style={{ color: colors.primary }}>₹{addon.price}</Text>
                         </View>
                       </View>
                       
                       <Pressable
                         onPress={() => handleToggleAddon(addon)}
-                        className={`px-3 py-1.5 rounded-lg flex-row items-center justify-center gap-1 border ${
-                          inCart ? 'bg-emerald-600 border-emerald-600' : 'bg-transparent'
-                        }`}
-                        style={{ borderColor: inCart ? '#059669' : colors.primary }}
+                        className="px-3 py-1.5 rounded-lg flex-row items-center justify-center gap-1 border"
+                        style={{ 
+                          backgroundColor: inCart ? colors.primary : 'transparent',
+                          borderColor: colors.primary 
+                        }}
                       >
                         {inCart ? (
                           <>
@@ -454,10 +461,10 @@ export default function ProductDetailScreen() {
               {p.addons.length > 3 && (
                 <Pressable
                   onPress={() => setShowAllAddons(!showAllAddons)}
-                  className="mt-3 py-2 items-center justify-center border rounded-lg bg-emerald-500/10"
-                  style={{ borderColor: 'rgba(16, 185, 129, 0.2)' }}
+                  className="mt-3 py-2 items-center justify-center border rounded-lg"
+                  style={{ backgroundColor: `${colors.primary}10`, borderColor: `${colors.primary}20` }}
                 >
-                  <Text className="text-[10px] font-black uppercase tracking-widest text-emerald-500">
+                  <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>
                     {showAllAddons ? "View Less ↑" : `View ${p.addons.length - 3} More Add-ons ↓`}
                   </Text>
                 </Pressable>
@@ -508,8 +515,8 @@ export default function ProductDetailScreen() {
 
           {isComingSoon ? (
             <View className="mt-8">
-              <View className="bg-amber-500/20 border border-amber-500/30 rounded-xl py-4 items-center">
-                <Text className="text-amber-500 font-black uppercase tracking-widest text-center">
+              <View className="border rounded-xl py-4 items-center" style={{ backgroundColor: `${colors.primary}15`, borderColor: `${colors.primary}30` }}>
+                <Text className="font-black uppercase tracking-widest text-center" style={{ color: colors.primary }}>
                   🚢 COMING SOON - NOT YET HARVESTED IN THIS SECTOR
                 </Text>
               </View>
@@ -568,32 +575,32 @@ export default function ProductDetailScreen() {
           </View>
         </View>
 
-        {/* --- LAYER 2: INTELLIGENCE MATRIX --- */}
+        {/* --- LAYER 2: NUTRITIONAL INFORMATION --- */}
         <View className="px-4 py-6 border-t" style={{ borderColor: colors.border }}>
-          <SectionTitle title="Scientific Intelligence" subtitle="ALPHA-v1.1" />
+          <SectionTitle title="Nutritional Information" subtitle="Per 100g Serving" />
           <View className="flex-row flex-wrap gap-2 mt-4">
             {[
-              { label: "Protein", value: p?.nutrition?.protein || "20g", icon: "fire", color: colors.primary },
-              { label: "Omega-3", value: p?.nutrition?.omega3 || "300mg", icon: "heart", color: "#3b82f6" },
-              { label: "Calories", value: p?.nutrition?.calories || "100 kcal", icon: "lightning-bolt", color: "#f59e0b" },
-              { label: "Fat", value: p?.nutrition?.fat || "2g", icon: "snowflake", color: "#06b6d4" }
+              { label: "Protein", value: p?.nutrition?.protein || "20g", icon: "fire" },
+              { label: "Omega-3", value: p?.nutrition?.omega3 || "300mg", icon: "heart" },
+              { label: "Calories", value: p?.nutrition?.calories || "100 kcal", icon: "lightning-bolt" },
+              { label: "Fat", value: p?.nutrition?.fat || "2g", icon: "snowflake" }
             ].map((fact, idx) => (
               <View 
                 key={idx} 
                 className="w-[48%] p-3 items-center justify-center border" 
                 style={{ backgroundColor: colors.card, borderColor: colors.border }}
               >
-                <MaterialCommunityIcons name={fact.icon as any} size={16} color={fact.color} />
+                <MaterialCommunityIcons name={fact.icon as any} size={16} color={colors.primary} />
                 <Text className="text-[10px] font-black uppercase mt-1" style={{ color: colors.textMuted }}>{fact.label}</Text>
                 <Text className="text-sm font-black italic mt-1" style={{ color: colors.text }}>{fact.value}</Text>
               </View>
             ))}
           </View>
 
-          {/* --- COLD-CHAIN TELEMETRY GUARD --- */}
+          {/* --- FRESHNESS GUARANTEE --- */}
           <View className="mt-4 p-4 border" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
             <Text className="text-[10px] font-black uppercase tracking-widest mb-3" style={{ color: colors.primary }}>
-              ❄️ Cold-Chain Telemetry Guard
+              ❄️ Temperature Control
             </Text>
             <View className="flex-row justify-between items-center">
               <View>
@@ -602,30 +609,34 @@ export default function ProductDetailScreen() {
               </View>
               <View className="flex-row gap-1">
                 {[-18.0, -18.2, -18.1, -18.2].map((t, idx) => (
-                  <View key={idx} className="bg-blue-500/10 px-1.5 py-1 border border-blue-500/20 rounded">
-                    <Text className="text-[8px] font-black text-blue-500">{t}°C</Text>
+                  <View key={idx} className="px-1.5 py-1 border rounded" style={{ backgroundColor: `${colors.primary}10`, borderColor: `${colors.primary}20` }}>
+                    <Text className="text-[8px] font-black" style={{ color: colors.primary }}>{t}°C</Text>
                   </View>
                 ))}
               </View>
             </View>
           </View>
 
-          <View className="mt-4 p-4 border flex-row items-center gap-4" style={{ backgroundColor: "rgba(34,197,94,0.1)", borderColor: "rgba(34,197,94,0.3)" }}>
-            <MaterialCommunityIcons name="check-decagram" size={24} color="#22c55e" />
+          <View className="mt-4 p-4 border flex-row items-center gap-4" style={{ backgroundColor: `${colors.primary}10`, borderColor: `${colors.primary}30` }}>
+            <MaterialCommunityIcons name="check-decagram" size={24} color={colors.primary} />
             <View>
-              <Text className="text-[10px] font-black uppercase tracking-widest text-emerald-500">Sovereign Lab Verified</Text>
-              <Text className="text-[10px] uppercase font-bold text-emerald-500/70 mt-1">Registry #SPL-998 • 100% Clean</Text>
+              <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>Quality Tested & Freshness Certified</Text>
+              <Text className="text-[10px] uppercase font-bold mt-1" style={{ color: colors.primary, opacity: 0.7 }}>Certified Fresh • 100% Safe</Text>
             </View>
           </View>
         </View>
 
         {/* --- LAYER 3: CULINARY INTELLIGENCE --- */}
         <View className="px-4 py-6 border-t" style={{ borderColor: colors.border }}>
-          <SectionTitle title="Chef Recipes" subtitle="Verified Maritime Protocols" />
+          <SectionTitle title="Chef Recipes" subtitle="Chef Recommended Preparations" />
           <View className="mt-4 gap-3">
-            {(p.recipes || MOCK_RECIPES).map((recipe: any, i: number) => (
+            {((p.recipes && p.recipes.length > 0) ? p.recipes : [
+              { id: 1, title: "Traditional Catla Fish Curry", time: "30 Mins", difficulty: "Medium" },
+              { id: 2, title: "Pan-Seared Boneless Cuts", time: "15 Mins", difficulty: "Easy" }
+            ]).map((recipe: any, i: number) => (
               <Pressable 
                 key={i} 
+                onPress={() => router.push({ pathname: "/recipe/[id]", params: { id: String(recipe.id || 1) } })}
                 className="p-4 border flex-row items-center justify-between"
                 style={{ backgroundColor: colors.card, borderColor: colors.border }}
               >
@@ -642,48 +653,27 @@ export default function ProductDetailScreen() {
           </View>
         </View>
 
-        {/* --- LAYER 4: AUTHORITY REGISTRY --- */}
+        {/* --- LAYER 4: SELLER INFORMATION --- */}
         <View className="px-4 py-6 border-t" style={{ borderColor: colors.border }}>
-          <SectionTitle title="Authority Registry" subtitle="Fleet Certification" />
+          <SectionTitle title="Seller Information" subtitle="Seller Verification" />
           <View className="p-4 mt-4 border flex-row items-center gap-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
              <View className="w-12 h-12 rounded-full items-center justify-center border" style={{ backgroundColor: `${colors.primary}20`, borderColor: `${colors.primary}40` }}>
                 <Text className="text-xl">⚓</Text>
              </View>
              <View>
                 <Text className="text-sm font-black uppercase italic" style={{ color: colors.text }}>
-                  {String(p.seller_name ?? "Verified Fleet")}
+                  {String(p.seller_name ?? "Verified Seller")}
                 </Text>
-                <Text className="text-[9px] font-black uppercase tracking-widest text-emerald-500 mt-1">
-                  Fleet Certified Agent
+                <Text className="text-[9px] font-black uppercase tracking-widest mt-1" style={{ color: colors.primary }}>
+                  Verified Seller • {String(p.seller_location ?? "Port Blair, Andaman")}
                 </Text>
              </View>
           </View>
-
-          {/* --- LIVE VESSEL & TRACEABILITY REGISTRY --- */}
-          <View className="p-4 mt-3 border" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-            <Text className="text-[10px] font-black uppercase tracking-widest mb-3" style={{ color: colors.primary }}>
-              🚢 Live Vessel & Traceability Registry
-            </Text>
-            <View className="gap-2">
-              <View className="flex-row justify-between">
-                <Text className="text-[10px] font-black uppercase text-muted-foreground">Vessel ID</Text>
-                <Text className="text-[10px] font-black uppercase text-foreground">M.V. Samudra-III</Text>
-              </View>
-              <View className="flex-row justify-between">
-                <Text className="text-[10px] font-black uppercase text-muted-foreground">Gear Used</Text>
-                <Text className="text-[10px] font-black uppercase text-foreground">Handline / Line-Caught</Text>
-              </View>
-              <View className="flex-row justify-between">
-                <Text className="text-[10px] font-black uppercase text-muted-foreground">Captain</Text>
-                <Text className="text-[10px] font-black uppercase text-foreground">Capt. Anand Shekhar</Text>
-              </View>
-            </View>
-          </View>
         </View>
 
-        {/* --- LAYER 5: CUSTOMER INTELLIGENCE --- */}
+        {/* --- LAYER 5: CUSTOMER REVIEWS --- */}
         <View className="px-4 py-6 border-t" style={{ borderColor: colors.border }}>
-          <SectionTitle title="Customer Intelligence" subtitle="Reputation Ledger" />
+          <SectionTitle title="Customer Reviews" subtitle="Ratings & Feedback" />
           <View className="mt-4 gap-3">
             {(p.customerReviews || MOCK_REVIEWS).map((review: any, i: number) => (
               <View key={i} className="p-4 border" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
@@ -697,7 +687,7 @@ export default function ProductDetailScreen() {
                       <Text className="text-[8px] font-bold uppercase" style={{ color: colors.textMuted }}>{review.date}</Text>
                     </View>
                   </View>
-                  <Text className="text-[10px] font-black" style={{ color: "#f59e0b" }}>★ {review.rating}</Text>
+                  <Text className="text-[10px] font-black" style={{ color: colors.primary }}>★ {review.rating}</Text>
                 </View>
                 <Text className="text-xs italic" style={{ color: colors.textMuted }}>"{review.comment}"</Text>
               </View>
@@ -706,9 +696,9 @@ export default function ProductDetailScreen() {
           <Button label="SUBMIT FEEDBACK" variant="ghost" className="mt-4 border border-white/10" />
         </View>
 
-        {/* --- LAYER 6: SIMILAR FLEET ASSETS --- */}
+        {/* --- LAYER 6: SIMILAR PRODUCTS --- */}
         <View className="px-4 py-6 border-t" style={{ borderColor: colors.border }}>
-          <SectionTitle title="Similar Fleet Assets" subtitle="Explore Alternatives" />
+          <SectionTitle title="Similar Products" subtitle="Explore Alternatives" />
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
             {similarProducts.map((p) => (
               <View key={p.id} className="mr-3 w-48">
