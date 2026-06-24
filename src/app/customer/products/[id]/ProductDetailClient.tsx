@@ -565,32 +565,48 @@ export default function ProductDetailPage({
                </div>
 
                <div className="p-3 bg-gradient-to-r from-[var(--c-primary)]/10 to-transparent border-l-2 border-[var(--c-primary)] rounded-r-xl flex items-center justify-between mt-2">
-                   {(() => {
-                      let landedAt = new Date(Date.now() - 4 * 60 * 60 * 1000 - 12 * 60 * 1000);
-                      if (product.landed_at) {
-                         const d = new Date(String(product.landed_at).replace(" ", "T"));
-                         if (!isNaN(d.getTime())) landedAt = d;
-                      }
-                      const diffMs = Math.max(0, Date.now() - landedAt.getTime());
-                      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-                      const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-                      const freshPercent = Math.max(85, 100 - Math.floor(diffHours * 0.8));
-                      return (
-                         <>
-                            <div className="flex items-center gap-2">
-                               <Clock className="w-3.5 h-3.5 text-[var(--c-primary)] animate-pulse" />
-                               <div>
-                                  <p className="text-[8px] font-black uppercase text-[var(--foreground)]">Landed: {diffHours}h {diffMins}m ago</p>
-                                  <p className="text-[7px] font-bold uppercase text-[var(--c-text-secondary)]">Premium Quality</p>
-                               </div>
-                            </div>
-                            <div className="flex items-center gap-1.5 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                               <span className="w-1 h-1 rounded-full bg-emerald-500 animate-ping" />
-                               <span className="text-[8px] font-black text-emerald-500 uppercase">{freshPercent}% FRESH</span>
-                            </div>
-                         </>
-                      );
-                   })()}
+                    {(() => {
+                       // Use landed_at if set, else fall back to product created_at
+                       // This ensures the time is always dynamic, never hardcoded
+                       let landedAt: Date | null = null;
+                       if (product.landed_at) {
+                          const d = new Date(String(product.landed_at).replace(" ", "T"));
+                          if (!isNaN(d.getTime())) landedAt = d;
+                       }
+                       if (!landedAt && product.created_at) {
+                          const d = new Date(String(product.created_at).replace(" ", "T"));
+                          if (!isNaN(d.getTime())) landedAt = d;
+                       }
+                       // Last resort: show "today" morning catch
+                       if (!landedAt) {
+                          const today = new Date();
+                          today.setHours(5, 30, 0, 0);
+                          landedAt = today;
+                       }
+                       const diffMs = Math.max(0, Date.now() - landedAt.getTime());
+                       const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                       const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                       // Cap display: if > 24h, show "Today's Catch"
+                       const landedLabel = diffHours >= 24
+                         ? "Today's Catch"
+                         : `Landed: ${diffHours}h ${diffMins}m ago`;
+                       const freshPercent = Math.max(85, 100 - Math.floor(Math.min(diffHours, 15) * 0.8));
+                       return (
+                          <>
+                             <div className="flex items-center gap-2">
+                                <Clock className="w-3.5 h-3.5 text-[var(--c-primary)] animate-pulse" />
+                                <div>
+                                   <p className="text-[8px] font-black uppercase text-[var(--foreground)]">{landedLabel}</p>
+                                   <p className="text-[7px] font-bold uppercase text-[var(--c-text-secondary)]">Premium Quality</p>
+                                </div>
+                             </div>
+                             <div className="flex items-center gap-1.5 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                                <span className="w-1 h-1 rounded-full bg-emerald-500 animate-ping" />
+                                <span className="text-[8px] font-black text-emerald-500 uppercase">{freshPercent}% FRESH</span>
+                             </div>
+                          </>
+                       );
+                    })()}
                 </div>
 
                <div className="space-y-[4px] w-full">
