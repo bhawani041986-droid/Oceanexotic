@@ -33,12 +33,13 @@ export async function POST(req: NextRequest) {
     }
 
     // Get the public URL
-    const { data: publicUrlData } = supabase.storage.from("assets").getPublicUrl(fileName);
-    const publicUrl = publicUrlData.publicUrl;
+    let publicUrlData = supabase.storage.from("assets").getPublicUrl(fileName).data;
+    // Proxy through Cloudflare CDN
+    let publicUrl = publicUrlData.publicUrl.replace('https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets', 'https://oceanexotic.com/storage');
 
     console.log(`✅ Asset Uploaded to Supabase Cloud: ${publicUrl}`);
 
-    return NextResponse.json({ url: publicUrl });
+    return NextResponse.json({ url: publicUrl }, { status: 200 });
   } catch (error) {
     console.error("❌ Maritime Asset Pipeline Error:", error);
     return NextResponse.json({ error: "Failed to upload asset" }, { status: 500 });

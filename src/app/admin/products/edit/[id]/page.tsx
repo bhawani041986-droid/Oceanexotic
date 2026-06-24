@@ -27,7 +27,8 @@ import {
   Plus,
   Clock,
   Package,
-  GripVertical
+  GripVertical,
+  ChefHat
 } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/components/ui/Toast";
@@ -77,6 +78,8 @@ export default function AdminEditProductPage() {
     catch_time: "05:30",
     discount_percent: 0,
     landed_at: "",
+    storage_temp: -18.2,
+    recipes: [],
     nutrition: {
       protein: "20g",
       omega3: "300mg",
@@ -120,13 +123,21 @@ export default function AdminEditProductPage() {
            throw new Error(data.error || "Failed to fetch product");
         }
         
-        // Handle nested JSON fields
         let nutrition = { protein: "20g", omega3: "300mg", calories: "100 kcal", fat: "2g" };
         if (data.nutrition) {
           if (typeof data.nutrition === 'string' && data.nutrition.trim() !== '') {
             try { nutrition = JSON.parse(data.nutrition); } catch(e) {}
           } else if (typeof data.nutrition === 'object') {
             nutrition = data.nutrition;
+          }
+        }
+
+        let recipes = [];
+        if (data.recipes) {
+          if (typeof data.recipes === 'string' && data.recipes.trim() !== '') {
+            try { recipes = JSON.parse(data.recipes); } catch(e) {}
+          } else if (typeof data.recipes === 'object') {
+            recipes = data.recipes;
           }
         }
         
@@ -177,14 +188,13 @@ export default function AdminEditProductPage() {
           quality_rank: data.quality_rank || "VERIFIED",
           harbor_node: data.harbor_node || "Phoenix Bay Harbor",
           catch_date: data.catch_date || "",
+          catch_time: data.catch_time || "05:30",
+          batch_label: data.batch_label || "MORNING",
           discount_percent: data.discount_percent || 0,
           landed_at: data.landed_at ? data.landed_at.replace(" ", "T").substring(0, 16) : "",
-          nutrition: {
-            protein: nutrition.protein || "",
-            omega3: nutrition.omega3 || "",
-            calories: nutrition.calories || "",
-            fat: nutrition.fat || ""
-          },
+          storage_temp: data.storage_temp !== null && data.storage_temp !== undefined ? data.storage_temp : -18.2,
+          recipes: recipes,
+          nutrition: nutrition,
           cut_options: (data.cut_options || []).map((cut: any) => ({
             ...cut,
             cut_type: cut.cut_type || "WHOLE",
@@ -597,10 +607,137 @@ export default function AdminEditProductPage() {
             </div>
           </Card>
 
-          {/* STEP 04: LOCATION OVERRIDE REGISTRY */}
+          {/* STEP 04: QUALITY & NUTRITION METRICS */}
           <Card className="p-10 space-y-8 border" style={{ backgroundColor: 'var(--agent-card-bg)', borderColor: 'var(--agent-border)' }}>
             <div className="flex items-center gap-2 border-b pb-6" style={{ borderColor: 'var(--agent-border)' }}>
               <div className="w-6 h-6 lg:w-8 lg:h-8 rounded-full flex items-center justify-center text-[10px] lg:text-xs font-black" style={{ backgroundColor: 'var(--agent-primary)30', color: 'var(--agent-primary)' }}>04</div>
+              <ShieldCheck className="w-4 h-4 text-[var(--agent-primary)]" />
+              <h3 className="text-lg font-bold tracking-tight uppercase">Quality & Nutrition Matrix</h3>
+            </div>
+            
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-primary">Continuous Cold-Chain Target (°C)</label>
+                  <Input type="number" step="0.1" value={formData.storage_temp} onChange={(e) => setFormData({...formData, storage_temp: parseFloat(e.target.value)})} className="h-[52px] rounded-[16px] border-primary/30" style={{ backgroundColor: 'var(--agent-bg)', color: 'var(--agent-text)' }} />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest ml-1 text-primary">Quality Rank</label>
+                  <select value={formData.quality_rank} onChange={(e) => setFormData({...formData, quality_rank: e.target.value})} className="w-full h-[52px] rounded-[16px] border px-4 border-primary/30 outline-none" style={{ backgroundColor: 'var(--agent-bg)', color: 'var(--agent-text)' }}>
+                    <option value="VERIFIED">VERIFIED</option>
+                    <option value="PREMIUM">PREMIUM</option>
+                    <option value="STANDARD">STANDARD</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <h4 className="text-xs font-black uppercase tracking-widest text-primary">Nutritional Factsheet (Per 100g)</h4>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-[8px] font-bold uppercase text-primary">Protein</label>
+                    <Input type="text" value={formData.nutrition.protein} onChange={(e) => setFormData({...formData, nutrition: {...formData.nutrition, protein: e.target.value}})} className="h-10 text-xs" style={{ backgroundColor: 'var(--agent-bg)', color: 'var(--agent-text)' }} />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[8px] font-bold uppercase text-primary">Omega-3</label>
+                    <Input type="text" value={formData.nutrition.omega3} onChange={(e) => setFormData({...formData, nutrition: {...formData.nutrition, omega3: e.target.value}})} className="h-10 text-xs" style={{ backgroundColor: 'var(--agent-bg)', color: 'var(--agent-text)' }} />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[8px] font-bold uppercase text-primary">Calories</label>
+                    <Input type="text" value={formData.nutrition.calories} onChange={(e) => setFormData({...formData, nutrition: {...formData.nutrition, calories: e.target.value}})} className="h-10 text-xs" style={{ backgroundColor: 'var(--agent-bg)', color: 'var(--agent-text)' }} />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-[8px] font-bold uppercase text-primary">Fat</label>
+                    <Input type="text" value={formData.nutrition.fat} onChange={(e) => setFormData({...formData, nutrition: {...formData.nutrition, fat: e.target.value}})} className="h-10 text-xs" style={{ backgroundColor: 'var(--agent-bg)', color: 'var(--agent-text)' }} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* STEP 05: CULINARY CHEF RECIPES */}
+          <Card className="p-10 space-y-8 border" style={{ backgroundColor: 'var(--agent-card-bg)', borderColor: 'var(--agent-border)' }}>
+            <div className="flex items-center justify-between border-b pb-6" style={{ borderColor: 'var(--agent-border)' }}>
+              <div className="flex items-center gap-3">
+                <div className="w-6 h-6 lg:w-8 lg:h-8 rounded-full flex items-center justify-center text-[10px] lg:text-xs font-black" style={{ backgroundColor: 'var(--agent-primary)30', color: 'var(--agent-primary)' }}>05</div>
+                <ChefHat className="w-5 h-5 text-[var(--agent-primary)]" />
+                <h3 className="text-lg font-bold tracking-tight uppercase">Chef Recommended Recipes</h3>
+              </div>
+              <Button 
+                onClick={(e) => {
+                  e.preventDefault();
+                  setFormData({...formData, recipes: [...(formData.recipes || []), { title: '', time: '30 Mins', difficulty: 'Medium' }]});
+                }} 
+                variant="ghost" 
+                className="text-[10px] font-black text-primary border border-primary/20 h-10"
+              >
+                <Plus className="w-4 h-4 mr-2" /> ADD RECIPE
+              </Button>
+            </div>
+            
+            <div className="space-y-4">
+              {(formData.recipes || []).map((recipe: any, idx: number) => (
+                <div key={idx} className="flex flex-col md:flex-row gap-4 items-center p-4 bg-bg-primary/40 border border-[var(--agent-border)] rounded-xl">
+                  <div className="flex-1 w-full">
+                    <Input 
+                      type="text" 
+                      placeholder="Recipe Title (e.g. Traditional Catla Fish Curry)"
+                      value={recipe.title} 
+                      onChange={(e) => {
+                        const newRecipes = [...formData.recipes];
+                        newRecipes[idx].title = e.target.value;
+                        setFormData({...formData, recipes: newRecipes});
+                      }}
+                      className="w-full h-12 text-xs font-black" 
+                    />
+                  </div>
+                  <div className="flex items-center gap-4 w-full md:w-auto">
+                    <Input 
+                      type="text" 
+                      placeholder="Time (e.g. 30 Mins)"
+                      value={recipe.time} 
+                      onChange={(e) => {
+                        const newRecipes = [...formData.recipes];
+                        newRecipes[idx].time = e.target.value;
+                        setFormData({...formData, recipes: newRecipes});
+                      }}
+                      className="w-32 h-12 text-xs font-black" 
+                    />
+                    <select 
+                      value={recipe.difficulty}
+                      onChange={(e) => {
+                        const newRecipes = [...formData.recipes];
+                        newRecipes[idx].difficulty = e.target.value;
+                        setFormData({...formData, recipes: newRecipes});
+                      }}
+                      className="w-32 h-12 border rounded-xl px-3 text-xs font-black uppercase outline-none"
+                      style={{ backgroundColor: 'var(--agent-bg)', borderColor: 'var(--agent-border)', color: 'var(--agent-text)' }}
+                    >
+                      <option value="Easy">Easy</option>
+                      <option value="Medium">Medium</option>
+                      <option value="Hard">Hard</option>
+                    </select>
+                    <button onClick={(e) => {
+                      e.preventDefault();
+                      const newRecipes = [...formData.recipes];
+                      newRecipes.splice(idx, 1);
+                      setFormData({...formData, recipes: newRecipes});
+                    }} className="p-3 text-danger hover:bg-danger/10 rounded-xl transition-all">
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+              {(!formData.recipes || formData.recipes.length === 0) && (
+                <p className="text-xs font-black uppercase opacity-40 italic text-center">No chef recipes added for this product.</p>
+              )}
+            </div>
+          </Card>
+
+          {/* STEP 06: LOCATION OVERRIDE REGISTRY */}
+          <Card className="p-10 space-y-8 border" style={{ backgroundColor: 'var(--agent-card-bg)', borderColor: 'var(--agent-border)' }}>
+            <div className="flex items-center gap-2 border-b pb-6" style={{ borderColor: 'var(--agent-border)' }}>
+              <div className="w-6 h-6 lg:w-8 lg:h-8 rounded-full flex items-center justify-center text-[10px] lg:text-xs font-black" style={{ backgroundColor: 'var(--agent-primary)30', color: 'var(--agent-primary)' }}>06</div>
               <Anchor className="w-4 h-4 text-[var(--agent-primary)]" />
               <h3 className="text-lg font-bold tracking-tight uppercase">Location Override Registry</h3>
             </div>
@@ -685,10 +822,10 @@ export default function AdminEditProductPage() {
             </div>
           </Card>
 
-          {/* STEP 05: PREPARATION & CUSTOMIZATION SERVICES */}
+          {/* STEP 07: PREPARATION & CUSTOMIZATION SERVICES */}
           <Card className="p-10 space-y-8 border" style={{ backgroundColor: 'var(--agent-card-bg)', borderColor: 'var(--agent-border)' }}>
             <div className="flex items-center gap-2 border-b pb-6" style={{ borderColor: 'var(--agent-border)' }}>
-              <div className="w-6 h-6 lg:w-8 lg:h-8 rounded-full flex items-center justify-center text-[10px] lg:text-xs font-black" style={{ backgroundColor: 'var(--agent-primary)30', color: 'var(--agent-primary)' }}>05</div>
+              <div className="w-6 h-6 lg:w-8 lg:h-8 rounded-full flex items-center justify-center text-[10px] lg:text-xs font-black" style={{ backgroundColor: 'var(--agent-primary)30', color: 'var(--agent-primary)' }}>07</div>
               <Fish className="w-4 h-4 text-[var(--agent-primary)]" />
               <h3 className="text-lg font-bold tracking-tight uppercase">Preparation & Cooking Customizations</h3>
             </div>

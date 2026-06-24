@@ -110,8 +110,8 @@ try {
         $is_live = isset($data['is_live_inventory']) ? (int)$data['is_live_inventory'] : 0;
 
         if ($method === 'POST') {
-            $sql = "INSERT INTO products (id, seller_id, name, category, price, stock, status, image_url, gallery, description, unit, is_live_inventory, harbor_node, catch_date, nutrition, quality_rank, discount_percent, landed_at) 
-                    VALUES (:id, :seller_id, :name, :category, :price, :stock, :status, :image_url, :gallery, :description, :unit, :is_live, :harbor, :catch_date, :nutrition, :quality_rank, :discount_percent, :landed_at)";
+            $sql = "INSERT INTO products (id, seller_id, name, category, price, stock, status, image_url, gallery, description, unit, is_live_inventory, harbor_node, catch_date, nutrition, quality_rank, discount_percent, landed_at, storage_temp, recipes) 
+                    VALUES (:id, :seller_id, :name, :category, :price, :stock, :status, :image_url, :gallery, :description, :unit, :is_live, :harbor, :catch_date, :nutrition, :quality_rank, :discount_percent, :landed_at, :storage_temp, :recipes)";
         } else {
             $sql = "UPDATE products SET 
                         seller_id = :seller_id,
@@ -130,7 +130,9 @@ try {
                         nutrition = :nutrition,
                         quality_rank = :quality_rank,
                         discount_percent = :discount_percent,
-                        landed_at = :landed_at
+                        landed_at = :landed_at,
+                        storage_temp = :storage_temp,
+                        recipes = :recipes
                     WHERE id = :id";
         }
 
@@ -153,7 +155,9 @@ try {
             'nutrition' => isset($data['nutrition']) ? (is_string($data['nutrition']) ? $data['nutrition'] : json_encode($data['nutrition'])) : null,
             'quality_rank' => $data['quality_rank'] ?? 'VERIFIED',
             'discount_percent' => isset($data['discount_percent']) ? (int)$data['discount_percent'] : 0,
-            'landed_at' => !empty($data['landed_at']) ? $data['landed_at'] : date('Y-m-d H:i:s')
+            'landed_at' => !empty($data['landed_at']) ? $data['landed_at'] : date('Y-m-d H:i:s'),
+            'storage_temp' => isset($data['storage_temp']) ? (float)$data['storage_temp'] : -18.2,
+            'recipes' => isset($data['recipes']) ? (is_string($data['recipes']) ? $data['recipes'] : json_encode($data['recipes'])) : null
         ]);
 
         // --- Synchronize with todays_catch table ---

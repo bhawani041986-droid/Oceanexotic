@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { View, Text, ScrollView, ActivityIndicator, Pressable, FlatList, Dimensions, Modal } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator, Pressable, FlatList, Dimensions, Modal, TextInput } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { productService } from "@/services/productService";
@@ -622,13 +622,18 @@ export default function ProductDetailScreen() {
             </Text>
             <View className="flex-row justify-between items-center">
               <View>
-                <Text className="text-xs font-black" style={{ color: colors.text }}>Stable -18.2°C</Text>
+                <Text className="text-xs font-black" style={{ color: colors.text }}>Stable {p?.storage_temp || -18.2}°C</Text>
                 <Text className="text-[8px] font-bold uppercase mt-0.5" style={{ color: colors.textMuted }}>Continuous Cold-Chain Active</Text>
               </View>
               <View className="flex-row gap-1">
-                {[-18.0, -18.2, -18.1, -18.2].map((t, idx) => (
+                {[
+                  Number(p?.storage_temp || -18.2) + 0.2, 
+                  Number(p?.storage_temp || -18.2), 
+                  Number(p?.storage_temp || -18.2) + 0.1, 
+                  Number(p?.storage_temp || -18.2)
+                ].map((t, idx) => (
                   <View key={idx} className="px-1.5 py-1 border rounded" style={{ backgroundColor: `${colors.primary}10`, borderColor: `${colors.primary}20` }}>
-                    <Text className="text-[8px] font-black" style={{ color: colors.primary }}>{t}°C</Text>
+                    <Text className="text-[8px] font-black" style={{ color: colors.primary }}>{t.toFixed(1)}°C</Text>
                   </View>
                 ))}
               </View>
@@ -689,20 +694,20 @@ export default function ProductDetailScreen() {
           </View>
         </View>
 
-        {/* --- LAYER 5: CUSTOMER REVIEWS --- */}
+        {/* --- LAYER 5: COMMUNITY & REVIEWS --- */}
         <View className="px-4 py-6 border-t" style={{ borderColor: colors.border }}>
-          <SectionTitle title="Customer Reviews" subtitle="Ratings & Feedback" />
+          <SectionTitle title="Customer Reviews" subtitle="Verified Buyer Feedback" />
           <View className="mt-4 gap-3">
-            {(p.customerReviews || MOCK_REVIEWS).map((review: any, i: number) => (
-              <View key={i} className="p-4 border" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+            {(p.customerReviews && p.customerReviews.length > 0 ? p.customerReviews : []).map((review: any, i: number) => (
+              <View key={i} className="p-4 border rounded-xl" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
                 <View className="flex-row justify-between items-start mb-2">
-                  <View className="flex-row items-center gap-2">
+                  <View className="flex-row items-center gap-3">
                     <View className="w-8 h-8 rounded-none items-center justify-center" style={{ backgroundColor: `${colors.primary}20` }}>
-                      <Text className="font-black" style={{ color: colors.primary }}>{review.name.charAt(0)}</Text>
+                      <Text className="font-black" style={{ color: colors.primary }}>{review.user_name ? review.user_name.charAt(0) : 'U'}</Text>
                     </View>
                     <View>
-                      <Text className="text-[10px] font-black uppercase" style={{ color: colors.text }}>{review.name}</Text>
-                      <Text className="text-[8px] font-bold uppercase" style={{ color: colors.textMuted }}>{review.date}</Text>
+                      <Text className="text-[10px] font-black uppercase" style={{ color: colors.text }}>{review.user_name || "Unknown User"}</Text>
+                      <Text className="text-[8px] font-bold uppercase" style={{ color: colors.textMuted }}>{review.created_at ? new Date(review.created_at).toLocaleDateString() : "Recent"}</Text>
                     </View>
                   </View>
                   <Text className="text-[10px] font-black" style={{ color: colors.primary }}>★ {review.rating}</Text>
@@ -710,6 +715,9 @@ export default function ProductDetailScreen() {
                 <Text className="text-xs italic" style={{ color: colors.textMuted }}>"{review.comment}"</Text>
               </View>
             ))}
+            {(!p.customerReviews || p.customerReviews.length === 0) && (
+              <Text className="text-xs font-black uppercase opacity-40 italic text-center">No reviews yet for this catch.</Text>
+            )}
           </View>
           <Button label="SUBMIT FEEDBACK" variant="ghost" className="mt-4 border" style={{ borderColor: colors.border }} onPress={() => setIsReviewModalVisible(true)} />
         </View>

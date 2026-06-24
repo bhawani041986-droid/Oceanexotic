@@ -46,7 +46,9 @@ export async function POST(req: NextRequest) {
         throw uploadResult.error;
     }
 
-    const publicUrl = supabase.storage.from("assets").getPublicUrl(finalFilename).data.publicUrl;
+    let publicUrl = supabase.storage.from("assets").getPublicUrl(finalFilename).data.publicUrl;
+    // Proxy through Cloudflare CDN
+    publicUrl = publicUrl.replace('https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets', 'https://oceanexotic.com/storage');
 
     return NextResponse.json({ status: "success", url: publicUrl });
   } catch (error: any) {

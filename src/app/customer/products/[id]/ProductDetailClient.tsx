@@ -36,6 +36,7 @@ import {
 
 import Link from "next/link";
 import CutOptionsSelector from "@/components/marketplace/CutOptionsSelector";
+import { Modal } from "@/components/ui/Modal";
 import { SocialShare } from "@/components/ui/SocialShare";
 
 import { Card } from "@/components/ui/Card";
@@ -50,25 +51,6 @@ import { MASTER_PRODUCT_REGISTRY, MASTER_ADDONS_REGISTRY } from "@/constants/pro
 import { reviewService } from "@/services/reviewService";
 import { Schema, generateProductSchema } from "@/components/seo/Schema";
 import { authService } from "@/services/authService";
-const UNKNOWN_PRODUCT_FALLBACK = (id: string) => ({
-  id, name: `Seafood Product ${id}`, tagline: "Premium Seafood",
-  price: 999, originalPrice: 1200, rating: 4.5, reviews: 0,
-  sellerName: "OceanExotic Global Seller", sellerId: "SEL-000", delivery: "45-60 min",
-  availability: "In Stock", stock: 10, badge: "FRESH CATCH",
-  description: "A premium seafood product from OceanExotic.",
-  images: ["https://images.unsplash.com/photo-1534422298391-e4f8c170db06?q=80&w=2000"],
-  variants: [
-    { id: "v1", label: "1/2 KG PACK", price: 999, status: "Available" },
-    { id: "v2", label: "1 KG PACK", price: 1800, status: "Available" }
-  ],
-  nutrition: { protein: "20g", omega3: "300mg", calories: "100 kcal", fat: "2g" },
-  trustBadges: ["Fresh Catch", "Hygienic"],
-  recipes: [{ title: "Simple Steam", time: "15 min", difficulty: "Easy" }],
-  customerReviews: [
-    { name: "John D.", rating: 5, date: "2 days ago", comment: "Exceptional quality. The freshness was undeniable." },
-    { name: "Sarah M.", rating: 4, date: "1 week ago", comment: "Very good, though delivery took slightly longer than expected." }
-  ]
-});
 
 export default function ProductDetailPage({ 
   initialProduct, 
@@ -92,6 +74,9 @@ export default function ProductDetailPage({
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [reviews, setReviews] = useState<any[]>([]);
+  const [isCutModalOpen, setIsCutModalOpen] = useState(false);
+
+  // Initialize selected cuts properly
   const [selectedCuts, setSelectedCuts] = useState<any>(null);
   const [currentPrice, setCurrentPrice] = useState(product?.price || 0);
 
@@ -193,15 +178,28 @@ export default function ProductDetailPage({
 
   const handleAddToCart = () => {
     if (!product) return;
+    
+    // Check if cuts are required but not selected
+    if (initialCutOptions && initialCutOptions.length > 0 && !selectedCuts?.primary) {
+      toast("Please select a cut type.", "error");
+      return;
+    }
+
+    const cutSuffix = selectedCuts?.primary ? `-${selectedCuts.primary}` : '';
+    const prepSuffix = selectedPrepOption ? `-${selectedPrepOption.prep_type}` : '';
+    const cutName = selectedCuts?.primary ? ` (${selectedCuts.primary})` : '';
+    const prepName = selectedPrepOption ? ` - ${selectedPrepOption.name}` : '';
+
     addItem({
-      id: product.id,
-      name: selectedPrepOption ? `${product.name} (${selectedPrepOption.name})` : product.name,
+      id: `${product.id}${cutSuffix}${prepSuffix}`,
+      name: `${product.name}${cutName}${prepName}`,
       price: currentPrice,
       image: product.images?.[0] || product.image,
       quantity,
       sellerId: product.seller_id || product.sellerId || "SEL-000",
       metadata: {
         ...selectedCuts,
+        cut_type: selectedCuts?.primary || "WHOLE",
         prep_option: selectedPrepOption ? {
           id: selectedPrepOption.id,
           prep_type: selectedPrepOption.prep_type,
@@ -210,7 +208,19 @@ export default function ProductDetailPage({
         } : null
       }
     });
+    
+    setIsCutModalOpen(false);
     toast(`${product.name} commissioned to cart.`, "success");
+  };
+
+  const openCutSelection = () => {
+    if (!product) return;
+    if (initialCutOptions && initialCutOptions.length > 0) {
+      setIsCutModalOpen(true);
+    } else {
+      // If no cut options, just add directly
+      handleAddToCart();
+    }
   };
 
   const handleBuyNowWholefish = () => {
@@ -223,7 +233,7 @@ export default function ProductDetailPage({
         : `${product.name} – Whole Fish`,
       price: (product.live_price || product.price || 0) + prepAdd,
       image: product.images?.[0] || product.image,
-      quantity,
+      quantity: 1, // Whole fish buy now forces quantity 1 as in mobile
       sellerId: product.seller_id || product.sellerId || "SEL-000",
       metadata: {
         cut_type: "WHOLE",
@@ -569,16 +579,7 @@ export default function ProductDetailPage({
                </div>
 
                <div className="space-y-[4px] w-full">
-                  {initialCutOptions && initialCutOptions.length > 0 ? (
-                    <CutOptionsSelector 
-                      cutOptions={initialCutOptions} 
-                      basePrice={product.price} 
-                      onSelectionChange={(cuts, price) => {
-                        setSelectedCuts(cuts);
-                        setBaseSelectedPrice(price);
-                      }}
-                    />
-                  ) : (
+                  {!initialCutOptions || initialCutOptions.length === 0 ? (
                     <div className="space-y-[4px]">
                       <p className="text-[8px] font-black text-[var(--c-text-secondary)] uppercase tracking-widest">Select Variant</p>
                       <div className="grid grid-cols-2 gap-[2px]">
@@ -601,7 +602,7 @@ export default function ProductDetailPage({
                          ))}
                       </div>
                     </div>
-                  )}
+                  ) : null}
 
                   {/* Preparation & Cooking Customizations */}
                   {product.prep_options && product.prep_options.length > 0 && (
@@ -675,23 +676,18 @@ export default function ProductDetailPage({
                     </div>
                   )}
 
-                  <div className="flex gap-[4px] md:gap-[10px]">
-                    <div className="flex items-center bg-[var(--foreground)]/5 rounded-lg md:rounded-xl border border-[var(--foreground)]/10 overflow-hidden h-10 md:h-12 w-20 md:w-24">
-                       <button onClick={() => setQuantity(q => Math.max(1, q - 1))} className="flex-1 h-full flex items-center justify-center hover:bg-[var(--foreground)]/10 text-[var(--foreground)]"><Minus className="w-2.5 h-2.5 md:w-3 md:h-3" /></button>
-                       <span className="w-6 md:w-8 text-center font-black text-[var(--c-primary)] text-xs md:text-sm">{quantity}</span>
-                       <button onClick={() => setQuantity(q => q + 1)} className="flex-1 h-full flex items-center justify-center hover:bg-[var(--foreground)]/10 text-[var(--foreground)]"><Plus className="w-2.5 h-2.5 md:w-3 md:h-3" /></button>
-                    </div>
+                  <div className="flex flex-col gap-[4px] md:gap-[10px] mt-2">
                     <button 
                        disabled={isComingSoon} 
-                       onClick={handleAddToCart} 
+                       onClick={openCutSelection} 
                        className={cn(
-                          "whitespace-nowrap transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] hover:opacity-90 px-6 md:px-8 py-2 flex-1 h-10 md:h-12 rounded-lg md:rounded-xl text-[8px] md:text-[9px] font-black uppercase tracking-widest flex items-center justify-center gap-[4px]",
+                          "w-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] hover:opacity-90 px-6 md:px-8 py-3 md:py-4 rounded-lg md:rounded-xl text-[10px] md:text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-[6px]",
                           isComingSoon 
                             ? "bg-amber-500/20 text-amber-500 border border-amber-500/30" 
                             : "bg-[var(--c-primary)] text-[var(--foreground)] shadow-[var(--c-shadow-glow)]"
                        )}
                     >
-                       {isComingSoon ? "COMING SOON" : <><ShoppingCart className="w-3.5 h-3.5 md:w-4 md:h-4" /> ADD TO CART</>}
+                       {isComingSoon ? "COMING SOON" : <><ShoppingCart className="w-4 h-4 md:w-5 md:h-5" /> SELECT CUT & ADD</>}
                     </button>
                   </div>
                   {!isComingSoon && (

@@ -30,8 +30,12 @@ export async function GET() {
     }
 
     const assets = (data || []).filter(file => file.name !== '.emptyFolderPlaceholder').map(file => {
-      const publicUrl = supabase.storage.from('assets').getPublicUrl(`optimized/${file.name}`).data.publicUrl;
+      let publicUrl = supabase.storage.from('assets').getPublicUrl(`optimized/${file.name}`).data.publicUrl;
+      // Proxy through Cloudflare CDN
+      publicUrl = publicUrl.replace('https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets', 'https://oceanexotic.com/storage');
+      
       return {
+        id: file.id,
         name: file.name,
         size_kb: Math.round((file.metadata?.size || 0) / 1024),
         url: publicUrl,

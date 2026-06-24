@@ -41,7 +41,7 @@ export const useSettingsStore = create<SettingsState>()(
       marketplaceName: "OceanExotic Global",
       flashDealActive: true,
       flashDealEnd: new Date(Date.now() + 1000 * 60 * 60 * 3).toISOString(),
-      theme: "theme-ocean-neon",
+      theme: "theme-ocean-global-light",
       customerAssets: { ...defaultAssets },
 
       setSettings: (partial) => set((s) => ({ ...s, ...partial })),

@@ -84,7 +84,7 @@ export const useSettingsStore = create<SettingsState>()(
         { image_url: "https://images.unsplash.com/photo-1599084993091-1cb5c0721cc6?auto=format&fit=crop&q=80", product_link: "/products" },
         { image_url: "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?auto=format&fit=crop&q=80", product_link: "/products" }
       ],
-      theme: "theme-ocean-neon",
+      theme: "theme-ocean-global-light",
       language: "en",
       settings: { language: "en" },
       customerAssets: { ...defaultAssets },

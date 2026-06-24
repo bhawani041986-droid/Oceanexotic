@@ -630,7 +630,7 @@ export function MaritimeWaveDivider() {
 
       {/* Swimming Category Fish Assets */}
       {finFish.map((fish, idx) => (
-        <SwimmingFish key={fish.slug} fish={fish} index={idx} />
+        <SwimmingFish key={fish?.id || fish?.slug || `fish-${idx}`} fish={fish} index={idx} />
       ))}
 
       {/* Wave Layer 1 */}

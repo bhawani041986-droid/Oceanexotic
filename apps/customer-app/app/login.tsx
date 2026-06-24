@@ -15,37 +15,19 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Link, useRouter } from "expo-router";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as WebBrowser from "expo-web-browser";
-import * as Linking from "expo-linking";
-import Constants, { ExecutionEnvironment } from "expo-constants";
-
-WebBrowser.maybeCompleteAuthSession();
-
-// Conditionally require GoogleSignin so Expo Go does not crash
-let GoogleSignin: any = null;
-const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
-
-if (!isExpoGo) {
-  try {
-    GoogleSignin = require("@react-native-google-signin/google-signin").GoogleSignin;
-    GoogleSignin.configure({
-      webClientId: "843916088941-9kbsr70p54u5ob8spu816grl17bq3enq.apps.googleusercontent.com",
-    });
-  } catch (e) {
-    console.warn("GoogleSignin native module not found");
-  }
-}
+import api from "@/services/api";
+import { setAuthToken, setAuthUser } from "@/lib/storage";
 
 import { loginSchema, type LoginFormValues } from "@/lib/validation/loginSchema";
 import { useAuthStore } from "@/store/authStore";
+import { FULL_PHP_BASE_URL } from "@/config/api";
 import { useLogin } from "@/hooks/useLogin";
 import { getPostLoginRoute, toAuthUser } from "@/lib/auth/roles";
 import { useToast } from "@/components/ui/Toast";
 import { FULL_API_URL } from "@/config/api";
 import { useSettingsStore } from "@/store/settingsStore";
 import { LanguageSelector } from "@/components/LanguageSelector";
-import { setAuthToken, setAuthUser } from "@/lib/storage";
-import api from "@/services/api";
+import { useGoogleAuth } from "@/hooks/useGoogleAuth";
 import { Ionicons } from "@expo/vector-icons";
 import Svg, { Path } from "react-native-svg";
 import { Logo } from "@/components/ui/Logo";
@@ -65,6 +47,7 @@ export default function LoginScreen() {
   const { login } = useAuthStore();
   const loginMutation = useLogin();
   const { toast, ToastHost } = useToast();
+  const { handleGoogleSignIn } = useGoogleAuth();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   
@@ -137,95 +120,8 @@ export default function LoginScreen() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      if (isExpoGo || !GoogleSignin) {
-        // FALLBACK: Use WebBrowser if running inside Expo Go (sandbox) to prevent native crashes
-        const redirectUrl = Linking.createURL("oauth-callback");
-        // We use a proxy route on our web app because Supabase has strict whitelist rules for redirect_to.
-        // The web proxy reads the token and forces the browser to redirect to the Expo deep link.
-        const proxyUrl = `https://oceanexotic.com/mobile-auth?expoUrl=${encodeURIComponent(redirectUrl)}`;
-        const authUrl = `https://kyqmhibffbwoqlpdplfu.supabase.co/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(proxyUrl)}`;
-        
-        const result = await WebBrowser.openAuthSessionAsync(authUrl, redirectUrl);
-        
-        if (result.type === "success" && result.url) {
-          // The URL will have a hash fragment like #access_token=XYZ&...
-          const hashIndex = result.url.indexOf('#');
-          if (hashIndex !== -1) {
-            const hash = result.url.substring(hashIndex + 1);
-            const params = new URLSearchParams(hash);
-            const accessToken = params.get('access_token');
-            
-            if (accessToken) {
-              // Send the Supabase access_token to our backend to generate our custom JWT and user object
-              const syncResult = await api.post("/auth/sync-oauth", { access_token: accessToken });
-              
-              if (syncResult.data.success && syncResult.data.token && syncResult.data.user) {
-                const parsedUser = syncResult.data.user;
-                const authUser = toAuthUser(parsedUser);
-                
-                await setAuthToken(syncResult.data.token);
-                await setAuthUser(authUser);
-                login(authUser);
-                router.replace("/home");
-                toast(`Welcome back, ${authUser.name}!`, "success");
-              } else {
-                toast(syncResult.data.message || "Failed to sync OAuth token.", "error");
-              }
-            } else {
-               toast("Google sign-in completed but no access token received.", "error");
-            }
-          } else {
-             // In case it comes as a query param
-             const parsedUrl = Linking.parse(result.url);
-             const { token, user } = parsedUrl.queryParams || {};
-             if (token && user) {
-               const parsedUser = JSON.parse(decodeURIComponent(user as string));
-               const authUser = toAuthUser(parsedUser);
-               await setAuthToken(token as string);
-               await setAuthUser(authUser);
-               login(authUser);
-               router.replace("/home");
-               toast(`Welcome back, ${authUser.name}!`, "success");
-             }
-          }
-        }
-        return;
-      }
-
-      // NATIVE FLOW: Use True Native Google Sign-In SDK
-      await GoogleSignin.hasPlayServices();
-      const response = await GoogleSignin.signIn();
-      const idToken = response.data?.idToken;
-
-      if (idToken) {
-        // Send the idToken to backend to verify and authenticate
-        const result = await api.post("/auth/google.php", {
-          idToken,
-          role: "CUSTOMER",
-        });
-
-        if (result.data.success && result.data.user && result.data.token) {
-          const authUser = toAuthUser(result.data.user);
-          await setAuthToken(result.data.token);
-          await setAuthUser(authUser);
-          login(authUser);
-          router.replace("/home");
-          toast(`Welcome back, ${authUser.name}!`, "success");
-        } else {
-          toast(result.data.message || "Google authentication failed", "error");
-        }
-      }
-    } catch (err: any) {
-      console.error("Google login failed:", err);
-      toast(err?.message || "Google login failed. Try again.", "error");
-    }
-  };
-
   return (
     <View className="flex-1 bg-[#020B14]">
-      {/* Absolute Language Switcher */}
       <View className="absolute top-12 right-4 z-50">
         <LanguageSelector showText={true} />
       </View>

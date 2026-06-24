@@ -107,9 +107,15 @@ try {
         ];
     }, $prepOptions);
 
-    // Fetch location-filtered active addons
-    $addonsStmt = $pdo->query("SELECT * FROM addons WHERE is_active = 1 ORDER BY id ASC");
+    // Fetch addons
+    $addonsStmt = $pdo->query("SELECT * FROM addons WHERE status = 'ACTIVE'");
     $allAddons = $addonsStmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Fetch customer reviews
+    $revStmt = $pdo->prepare("SELECT * FROM reviews WHERE product_id = ? AND status = 'APPROVED' ORDER BY created_at DESC");
+    $revStmt->execute([$id]);
+    $customerReviews = $revStmt->fetchAll(PDO::FETCH_ASSOC);
+
     $currentTime = date('H:i:s');
     $filteredAddons = [];
     foreach ($allAddons as $addon) {
@@ -162,9 +168,12 @@ try {
         "images" => $product['image_url'] ? [$product['image_url']] : [],
         "gallery" => $product['gallery'] ? json_decode($product['gallery']) : [],
         "badge" => $status,
-        "rating" => 4.8, // Mocked for now
-        "reviews" => 12, // Mocked for now
+        "rating" => 4.8, // Overall rating logic can go here later
+        "reviews" => count($customerReviews), 
+        "customerReviews" => $customerReviews,
         "freshness" => 100,
+        "storage_temp" => $product['storage_temp'] !== null ? $product['storage_temp'] : -18.2,
+        "recipes" => $product['recipes'] ? json_decode($product['recipes'], true) : [],
         "nutrition" => $product['nutrition'] ? json_decode($product['nutrition'], true) : [
             "protein" => "20g",
             "omega3" => "300mg",

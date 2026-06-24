@@ -90,7 +90,9 @@ export async function GET() {
            throw uploadResult.error;
         }
 
-        const publicUrl = supabase.storage.from('assets').getPublicUrl(`optimized/${finalFilename}`).data.publicUrl;
+        let publicUrl = supabase.storage.from('assets').getPublicUrl(`optimized/${finalFilename}`).data.publicUrl;
+        // Proxy through Cloudflare CDN
+        publicUrl = publicUrl.replace('https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets', 'https://oceanexotic.com/storage');
 
         logs.push({
            status: "success",

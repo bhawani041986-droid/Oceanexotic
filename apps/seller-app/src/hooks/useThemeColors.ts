@@ -14,7 +14,7 @@ export interface ThemeColors {
 }
 
 export function useThemeColors(): ThemeColors {
-  const theme = useSettingsStore((s) => s.theme) || "theme-ocean-neon";
+  const theme = useSettingsStore((s) => s.theme) || "theme-ocean-global-light";
 
   switch (theme) {
     case "theme-zomato-passion":
@@ -167,18 +167,31 @@ export function useThemeColors(): ThemeColors {
         border: "rgba(255, 255, 255, 0.08)",
         isDark: true,
       };
-    case "theme-ocean-neon":
+    case "theme-ocean-global-light":
+      return {
+        primary: "#00A6B6",
+        secondary: "#FF6B6B",
+        accent: "#00E5FF",
+        bg: "#FFFFFF",
+        bgAlt: "#F7FBFC",
+        card: "#F7FBFC",
+        text: "#0B1F33",
+        textMuted: "#64748B",
+        border: "rgba(0, 59, 92, 0.1)",
+        isDark: false,
+      };
+    case "theme-ocean-global":
     default:
       return {
-        primary: "#7C3AED",
-        secondary: "#06B6D4",
-        accent: "#A78BFA",
-        bg: "#020617",
-        bgAlt: "#0F172A",
-        card: "#0f172a",
-        text: "#F8FAFC",
-        textMuted: "#94A3B8",
-        border: "rgba(255, 255, 255, 0.08)",
+        primary: "#00A6B6",
+        secondary: "#FF6B6B",
+        accent: "#00E5FF",
+        bg: "#061826",
+        bgAlt: "#0F2D3F",
+        card: "#0F2D3F",
+        text: "#F7FBFC",
+        textMuted: "#64748B",
+        border: "rgba(220, 231, 236, 0.1)",
         isDark: true,
       };
   }

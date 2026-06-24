@@ -22,7 +22,11 @@ const LANGUAGES = [
   { code: 'tl', name: 'Filipino' },
 ];
 
-export function LanguageSelector() {
+interface LanguageSelectorProps {
+  showText?: boolean;
+}
+
+export function LanguageSelector({ showText = false }: LanguageSelectorProps) {
   const colors = useThemeColors();
   // Subscribe directly to the `language` field — re-renders on every change
   const language = useSettingsStore((s) => s.language);
@@ -38,19 +42,36 @@ export function LanguageSelector() {
 
   return (
     <View className="shrink-0 relative z-50">
-      <ChamferedBox
-        fillColor={colors.card}
-        strokeColor={colors.border}
-        bevelSize={6}
-        style={{ height: 36, width: 36, minHeight: 36 }}
-      >
+      {showText ? (
         <Pressable 
           onPress={() => setModalVisible(true)}
-          className="h-full w-full items-center justify-center active:opacity-70"
+          className="flex-row items-center gap-2 active:opacity-70 px-3 py-1.5 rounded-full border"
+          style={{ 
+            borderColor: colors.border,
+            backgroundColor: colors.card + '80'
+          }}
         >
-          <Ionicons name="globe-outline" size={18} color={colors.text} />
+          <Text style={{ fontSize: 14 }}>🌐</Text>
+          <Text style={{ color: colors.text, fontSize: 13, fontWeight: '700' }}>
+            {activeLang.name.split(' ')[0]}
+          </Text>
+          <Text style={{ color: colors.text, fontSize: 10, marginLeft: 2 }}>▼</Text>
         </Pressable>
-      </ChamferedBox>
+      ) : (
+        <ChamferedBox
+          fillColor={colors.card}
+          strokeColor={colors.border}
+          bevelSize={6}
+          style={{ height: 36, width: 36, minHeight: 36 }}
+        >
+          <Pressable 
+            onPress={() => setModalVisible(true)}
+            className="h-full w-full items-center justify-center active:opacity-70"
+          >
+            <Ionicons name="globe-outline" size={18} color={colors.text} />
+          </Pressable>
+        </ChamferedBox>
+      )}
 
       <Modal
         visible={modalVisible}

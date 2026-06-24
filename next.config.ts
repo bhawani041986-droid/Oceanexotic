@@ -24,6 +24,10 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
+        source: '/storage/:path*',
+        destination: 'https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/:path*',
+      },
+      {
         source: '/api/:path*.php',
         destination: '/api/:path*',
       },
