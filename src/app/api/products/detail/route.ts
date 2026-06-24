@@ -13,10 +13,15 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Missing product id" }, { status: 400 });
     }
 
-    // 1. Fetch Product
+    // 1. Fetch Product joined with seller name
     const { data: product, error } = await supabase
       .from('products')
-      .select('*')
+      .select(`
+        *,
+        sellers (
+          name
+        )
+      `)
       .eq('id', id)
       .single();
 
@@ -24,6 +29,37 @@ export async function GET(request: NextRequest) {
       if (error.code === 'PGRST116') return NextResponse.json({ error: "Product not found" }, { status: 404 });
       throw error;
     }
+
+    // Add seller name mappings
+    const sellerObj = (product as any).sellers;
+    product.seller_name = sellerObj?.name || 'OceanExotic Seller';
+    product.sellerName = sellerObj?.name || 'OceanExotic Seller';
+
+    // 1.2 Fetch Seller Location from users & territories
+    let sellerLocation = 'Port Blair, Andaman';
+    try {
+      const sellerId = product.seller_id;
+      const cleanId = sellerId ? sellerId.replace('SEL-', '') : '';
+      const { data: sellerUser } = await supabase
+        .from('users')
+        .select(`
+          territory_id,
+          maritime_territories:territory_id (
+            name
+          )
+        `)
+        .or(`id.eq.${sellerId},id.eq.${cleanId}`)
+        .maybeSingle();
+
+      if (sellerUser && (sellerUser as any).maritime_territories) {
+        sellerLocation = (sellerUser as any).maritime_territories.name || sellerLocation;
+      }
+    } catch (locErr) {
+      console.error("Error fetching seller location in API:", locErr);
+    }
+    
+    product.seller_location = sellerLocation || product.harbor_node || 'Port Blair, Andaman';
+    product.sellerLocation = sellerLocation || product.harbor_node || 'Port Blair, Andaman';
 
     // 2. Fetch Cut Options
     const { data: cutOptions } = await supabase

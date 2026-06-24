@@ -25,7 +25,12 @@ export async function GET(request: NextRequest) {
     if (id) {
       const { data: productData, error } = await supabase
         .from('products')
-        .select('*')
+        .select(`
+          *,
+          sellers (
+            name
+          )
+        `)
         .eq('id', id)
         .single();
         
@@ -33,9 +38,37 @@ export async function GET(request: NextRequest) {
       if (!productData) return NextResponse.json({ error: "Asset Not Found" }, { status: 404 });
       
       const liveData = liveCatchMap.get(id);
+      const sellerObj = (productData as any).sellers;
+      const sellerName = sellerObj?.name || 'OceanExotic Seller';
+
+      let sellerLocation = 'Port Blair, Andaman';
+      try {
+        const sellerId = productData.seller_id;
+        const cleanId = sellerId ? sellerId.replace('SEL-', '') : '';
+        const { data: sellerUser } = await supabase
+          .from('users')
+          .select(`
+            territory_id,
+            maritime_territories:territory_id (
+              name
+            )
+          `)
+          .or(`id.eq.${sellerId},id.eq.${cleanId}`)
+          .maybeSingle();
+
+        if (sellerUser && (sellerUser as any).maritime_territories) {
+          sellerLocation = (sellerUser as any).maritime_territories.name || sellerLocation;
+        }
+      } catch (locErr) {
+        console.error("Error fetching seller location in API:", locErr);
+      }
+
       let product = { 
         ...productData, 
-        seller_name: '',
+        seller_name: sellerName,
+        sellerName: sellerName,
+        seller_location: sellerLocation || liveData?.harbor_node || productData.harbor_node || 'Port Blair, Andaman',
+        sellerLocation: sellerLocation || liveData?.harbor_node || productData.harbor_node || 'Port Blair, Andaman',
         is_live_inventory: liveData ? 1 : 0,
         batch_label: liveData?.batch_label,
         freshness_timestamp: liveData?.freshness_timestamp,
@@ -50,16 +83,58 @@ export async function GET(request: NextRequest) {
 
     const { data: productsData, error } = await supabase
       .from('products')
-      .select('*')
+      .select(`
+        *,
+        sellers (
+          name
+        )
+      `)
       .order('created_at', { ascending: false });
       
-    if (error) throw error;
+      if (error) throw error;
+      
+    const userIds = Array.from(new Set((productsData || []).map((p: any) => p.seller_id).filter(Boolean)));
+    const cleanUserIds = userIds.map(id => id.replace('SEL-', ''));
+    const allIds = [...userIds, ...cleanUserIds];
     
+    let locationMap = new Map();
+    if (allIds.length > 0) {
+      try {
+        const { data: sellerUsers } = await supabase
+          .from('users')
+          .select(`
+            id,
+            territory_id,
+            maritime_territories:territory_id (
+              name
+            )
+          `)
+          .in('id', allIds);
+          
+        if (sellerUsers) {
+          sellerUsers.forEach((su: any) => {
+            if (su.maritime_territories?.name) {
+              locationMap.set(su.id, su.maritime_territories.name);
+            }
+          });
+        }
+      } catch (locErr) {
+        console.error("Error fetching batched seller locations:", locErr);
+      }
+    }
+
     let products = (productsData || []).map((p: any) => {
       const liveData = liveCatchMap.get(p.id);
+      const sellerId = p.seller_id;
+      const cleanId = sellerId ? sellerId.replace('SEL-', '') : '';
+      const loc = locationMap.get(sellerId) || locationMap.get(cleanId) || p.harbor_node || 'Port Blair, Andaman';
+      const sellerName = p.sellers?.name || 'OceanExotic Seller';
       return {
         ...p,
-        seller_name: '',
+        seller_name: sellerName,
+        sellerName: sellerName,
+        seller_location: loc,
+        sellerLocation: loc,
         is_live_catch: !!liveData,
         harbor_node: liveData?.harbor_node || p.harbor_node,
         catch_date: todayDate,
@@ -101,7 +176,16 @@ export async function POST(request: Request) {
       status: status || 'ACTIVE',
       image_url: image_url || '',
       gallery: gallery || '[]',
-      description: description || ''
+      description: description || '',
+      landed_at: body.landed_at || null,
+      storage_temp: body.storage_temp !== undefined && body.storage_temp !== '' ? Number(body.storage_temp) : null,
+      recipes: typeof body.recipes === 'string' ? body.recipes : JSON.stringify(body.recipes || []),
+      nutrition: typeof body.nutrition === 'string' ? body.nutrition : JSON.stringify(body.nutrition || {}),
+      harbor_node: harbor_node || 'Phoenix Bay Harbor',
+      is_live_inventory: !!is_live_inventory,
+      quality_rank: body.quality_rank || 'VERIFIED',
+      discount_percent: body.discount_percent !== undefined && body.discount_percent !== '' ? Number(body.discount_percent) : 0,
+      unit: body.unit || 'kg'
     }]);
 
     if (error) throw error;
@@ -149,7 +233,16 @@ export async function PUT(request: Request) {
     if (!id) return NextResponse.json({ error: "Missing Asset ID" }, { status: 400 });
 
     const { error } = await supabase.from('products').update({
-      name, category, price, stock, status, image_url, gallery, description
+      name, category, price, stock, status, image_url, gallery, description,
+      landed_at: body.landed_at || null,
+      storage_temp: body.storage_temp !== undefined && body.storage_temp !== '' ? Number(body.storage_temp) : null,
+      recipes: typeof body.recipes === 'string' ? body.recipes : JSON.stringify(body.recipes || []),
+      nutrition: typeof body.nutrition === 'string' ? body.nutrition : JSON.stringify(body.nutrition || {}),
+      harbor_node: harbor_node || 'Phoenix Bay Harbor',
+      is_live_inventory: !!is_live_inventory,
+      quality_rank: body.quality_rank || 'VERIFIED',
+      discount_percent: body.discount_percent !== undefined && body.discount_percent !== '' ? Number(body.discount_percent) : 0,
+      unit: body.unit || 'kg'
     }).eq('id', id);
 
     if (error) throw error;
