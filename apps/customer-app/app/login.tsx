@@ -142,8 +142,10 @@ export default function LoginScreen() {
       if (isExpoGo || !GoogleSignin) {
         // FALLBACK: Use WebBrowser if running inside Expo Go (sandbox) to prevent native crashes
         const redirectUrl = Linking.createURL("oauth-callback");
-        // Redirect directly back to the mobile deep link. Supabase will append #access_token=...
-        const authUrl = `https://kyqmhibffbwoqlpdplfu.supabase.co/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(redirectUrl)}`;
+        // We use a proxy route on our web app because Supabase has strict whitelist rules for redirect_to.
+        // The web proxy reads the token and forces the browser to redirect to the Expo deep link.
+        const proxyUrl = `https://oceanexotic.com/mobile-auth?expoUrl=${encodeURIComponent(redirectUrl)}`;
+        const authUrl = `https://kyqmhibffbwoqlpdplfu.supabase.co/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(proxyUrl)}`;
         
         const result = await WebBrowser.openAuthSessionAsync(authUrl, redirectUrl);
         
