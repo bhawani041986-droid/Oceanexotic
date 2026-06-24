@@ -394,7 +394,7 @@ export default function ProductDetailScreen() {
               <MaterialCommunityIcons name="clock-outline" size={16} color={colors.primary} />
               <View>
                 {(() => {
-                  const landedAt = product.landed_at ? new Date(product.landed_at) : new Date(Date.now() - 4 * 60 * 60 * 1000 - 12 * 60 * 1000);
+                  const landedAt = product.landed_at ? new Date(String(product.landed_at)) : new Date(Date.now() - 4 * 60 * 60 * 1000 - 12 * 60 * 1000);
                   const diffMs = Math.max(0, Date.now() - landedAt.getTime());
                   const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
                   const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
@@ -659,7 +659,9 @@ export default function ProductDetailScreen() {
             ]).map((recipe: any, i: number) => (
               <Pressable 
                 key={i} 
-                onPress={() => router.push({ pathname: "/recipe/[id]", params: { id: String(recipe.id || 1) } })}
+                onPress={() => {
+                  router.push(`/(customer)/recipe/${recipe.id || 1}` as any);
+                }}
                 className="p-4 border flex-row items-center justify-between"
                 style={{ backgroundColor: colors.card, borderColor: colors.border }}
               >
@@ -820,7 +822,7 @@ export default function ProductDetailScreen() {
       {/* Review Modal */}
       <Modal visible={isReviewModalVisible} animationType="slide" transparent>
         <View className="flex-1 justify-end" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <View className="p-6 rounded-t-3xl border-t" style={{ backgroundColor: colors.background, borderColor: colors.border }}>
+          <View className="p-6 rounded-t-3xl border-t" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
             <View className="flex-row justify-between items-center mb-6">
               <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>Submit Feedback</Text>
               <Pressable onPress={() => setIsReviewModalVisible(false)} className="p-2">
