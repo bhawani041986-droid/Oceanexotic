@@ -359,7 +359,7 @@ export default function ProductDetailScreen() {
           <Text className="text-[10px] font-black uppercase text-primary">
             {String(product.seller_name ?? "Verified Fleet")}
           </Text>
-          <Text className="mt-2 text-3xl font-black uppercase italic text-foreground">
+          <Text className="mt-2 text-3xl font-black uppercase italic" style={{ color: colors.primary }}>
             {String(product.name)}
           </Text>
           {product.description ? (
@@ -533,18 +533,21 @@ export default function ProductDetailScreen() {
             <View className="mt-8 gap-3">
               <Button label="SELECT CUT & ADD" onPress={openCut} />
               <Button
-                label="ADD WHOLE TO CART"
+                label="BUY NOW"
                 variant="ghost"
                 onPress={() => {
                   const prepAdd = selectedPrepOption ? parseFloat(selectedPrepOption.price_flat_add) : 0;
                   cart.addItem({
-                    id: `${id}${selectedPrepOption ? '-' + selectedPrepOption.prep_type : ''}`,
-                    name: selectedPrepOption ? `${String(product.name)} (${selectedPrepOption.name})` : String(product.name),
+                    id: `${id}-whole${selectedPrepOption ? '-' + selectedPrepOption.prep_type : ''}`,
+                    name: selectedPrepOption
+                      ? `${String(product.name)} – Whole Fish (${selectedPrepOption.name})`
+                      : `${String(product.name)} – Whole Fish`,
                     price: Number(product.live_price ?? product.price ?? 0) + prepAdd,
                     quantity: 1,
                     image: img,
                     sellerId: String(product.seller_id ?? ""),
                     metadata: {
+                      cut_type: "WHOLE",
                       prep_option: selectedPrepOption ? {
                         id: selectedPrepOption.id,
                         prep_type: selectedPrepOption.prep_type,
@@ -553,7 +556,7 @@ export default function ProductDetailScreen() {
                       } : null
                     }
                   });
-                  toast("Added to cart", "success");
+                  router.push("/checkout");
                 }}
               />
             </View>
