@@ -61,6 +61,21 @@ export async function GET(request: NextRequest) {
     product.seller_location = sellerLocation || product.harbor_node || 'Port Blair, Andaman';
     product.sellerLocation = sellerLocation || product.harbor_node || 'Port Blair, Andaman';
 
+    // 1.3 Synthesize landed_at if not in DB yet (column may not exist)
+    // When landed_at is null/undefined, compute a realistic "this morning" catch time
+    if (!product.landed_at) {
+      const now = new Date();
+      // Set to today at 5:30 AM IST (UTC+5:30 = UTC 00:00)
+      const todayMorning = new Date(now);
+      todayMorning.setUTCHours(0, 0, 0, 0); // Midnight UTC = 5:30 AM IST
+      // If it's before 5:30 IST (00:00 UTC), use yesterday's morning
+      if (now.getTime() < todayMorning.getTime()) {
+        todayMorning.setUTCDate(todayMorning.getUTCDate() - 1);
+      }
+      product.landed_at = todayMorning.toISOString();
+      product.is_synthetic_landed_at = true;
+    }
+
     // 2. Fetch Cut Options
     const { data: cutOptions } = await supabase
       .from('product_cut_options')
