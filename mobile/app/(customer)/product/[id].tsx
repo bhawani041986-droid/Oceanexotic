@@ -356,7 +356,7 @@ export default function ProductDetailScreen() {
           <Text className="text-[10px] font-black uppercase text-primary">
             {String(product.seller_name ?? "Verified Fleet")}
           </Text>
-          <Text className="mt-2 text-3xl font-black uppercase italic text-foreground">
+          <Text className="mt-2 text-3xl font-black uppercase italic text-primary">
             {String(product.name)}
           </Text>
           {product.description ? (
@@ -518,7 +518,7 @@ export default function ProductDetailScreen() {
             <View className="mt-8 gap-3">
               <Button label="SELECT CUT & ADD" onPress={openCut} />
               <Button
-                label="ADD WHOLE TO CART"
+                label="CHECK OUT"
                 variant="ghost"
                 onPress={() => {
                   const prepAdd = selectedPrepOption ? parseFloat(selectedPrepOption.price_flat_add) : 0;
@@ -538,7 +538,8 @@ export default function ProductDetailScreen() {
                       } : null
                     }
                   });
-                  toast("Added to cart", "success");
+                  toast("Proceeding to checkout...", "success");
+                  router.push("/checkout");
                 }}
               />
             </View>
