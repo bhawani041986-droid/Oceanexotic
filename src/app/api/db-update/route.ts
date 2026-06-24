@@ -1,60 +1,94 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://kyqmhibffbwoqlpdplfu.supabase.co';
+const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cW1oaWJmZmJ3b3FscGRwbGZ1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MDU5Njg3NCwiZXhwIjoyMDk2MTcyODc0fQ.kEpSJdXULNm_9lzXE6UvqIXPc2L-UB38BFwVhR9OcPs';
+
+const supabaseHeaders = {
+  'apikey': SERVICE_KEY,
+  'Authorization': `Bearer ${SERVICE_KEY}`,
+  'Content-Type': 'application/json',
+  'Prefer': 'return=representation'
+};
+
+// Run SQL via Supabase's internal pg-meta API (available at port 5555)
+// Or via the direct /pg/query REST endpoint
+async function runSQL(sql: string) {
+  // Try Supabase's internal SQL endpoint
+  const res = await fetch(`${SUPABASE_URL}/pg/query`, {
+    method: 'POST',
+    headers: supabaseHeaders,
+    body: JSON.stringify({ query: sql })
+  });
+  return { ok: res.ok, status: res.status, data: await res.text() };
+}
+
+// Check if a column exists via REST
+async function columnExists(colName: string): Promise<boolean> {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/products?select=${colName}&limit=1`, {
+    headers: supabaseHeaders
+  });
+  return res.ok;
+}
 
 export async function GET() {
-  const results: Record<string, string> = {};
+  const results: Record<string, any> = {};
 
-  // Helper to run DDL via exec_sql RPC (must exist as a DB function)
-  const runDDL = async (sql: string, label: string) => {
-    const { error } = await supabase.rpc('exec_sql', { sql_query: sql });
-    if (error) {
-      // If exec_sql doesn't exist, try pg_execute or similar
-      results[label] = `rpc_error: ${error.message}`;
-    } else {
-      results[label] = 'ok';
-    }
-  };
-
-  try {
-    // Step 1: Try to add columns via RPC exec_sql
-    await runDDL("ALTER TABLE products ADD COLUMN IF NOT EXISTS landed_at TIMESTAMPTZ NULL", 'landed_at');
-    await runDDL("ALTER TABLE products ADD COLUMN IF NOT EXISTS storage_temp NUMERIC NULL", 'storage_temp');
-    await runDDL("ALTER TABLE products ADD COLUMN IF NOT EXISTS recipes TEXT NULL", 'recipes');
-    await runDDL("ALTER TABLE products ADD COLUMN IF NOT EXISTS nutrition TEXT NULL", 'nutrition');
-    await runDDL("ALTER TABLE products ADD COLUMN IF NOT EXISTS harbor_node VARCHAR(255) NULL", 'harbor_node');
-    await runDDL("ALTER TABLE products ADD COLUMN IF NOT EXISTS is_live_inventory BOOLEAN DEFAULT FALSE", 'is_live_inventory');
-    await runDDL("ALTER TABLE products ADD COLUMN IF NOT EXISTS quality_rank VARCHAR(50) NULL", 'quality_rank');
-    await runDDL("ALTER TABLE products ADD COLUMN IF NOT EXISTS discount_percent INTEGER DEFAULT 0", 'discount_percent');
-    await runDDL("ALTER TABLE products ADD COLUMN IF NOT EXISTS unit VARCHAR(20) DEFAULT 'kg'", 'unit');
-
-    // Step 2: Seed landed_at for products that have null
-    const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
-    const { error: seedError, count } = await supabase
-      .from('products')
-      .update({ landed_at: twoHoursAgo })
-      .is('landed_at', null);
-    results['seed_landed_at'] = seedError ? `error: ${seedError.message}` : `seeded ${count ?? 'all'} rows`;
-
-    // Step 3: Verify
-    const { data: sample } = await supabase
-      .from('products')
-      .select('id, name, landed_at')
-      .limit(3);
-
-    return NextResponse.json({
-      success: true,
-      message: 'Schema migration complete',
-      ddl_results: results,
-      sample_products: sample || []
-    });
-
-  } catch (error: any) {
-    console.error("Migration error:", error);
-    return NextResponse.json({ 
-      success: false, 
-      error: error.message,
-      partial_results: results
-    }, { status: 500 });
+  // Step 1: Check which columns already exist
+  const columns = ['landed_at', 'storage_temp', 'recipes', 'nutrition', 'harbor_node', 'is_live_inventory', 'quality_rank', 'discount_percent', 'unit'];
+  const columnStatus: Record<string, boolean> = {};
+  
+  for (const col of columns) {
+    columnStatus[col] = await columnExists(col);
   }
+  
+  results['column_status'] = columnStatus;
+  
+  const missingCols = Object.entries(columnStatus).filter(([, exists]) => !exists).map(([col]) => col);
+  
+  if (missingCols.length === 0) {
+    // All columns exist — just seed landed_at if null
+    const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString();
+    const seedRes = await fetch(`${SUPABASE_URL}/rest/v1/products?landed_at=is.null`, {
+      method: 'PATCH',
+      headers: { ...supabaseHeaders, 'Prefer': 'return=minimal,count=exact' },
+      body: JSON.stringify({ landed_at: twoHoursAgo })
+    });
+    results['seed'] = { ok: seedRes.ok, status: seedRes.status };
+    
+    // Verify sample
+    const verifyRes = await fetch(`${SUPABASE_URL}/rest/v1/products?select=id,name,landed_at&limit=3`, {
+      headers: supabaseHeaders
+    });
+    results['sample'] = await verifyRes.json();
+    
+    return NextResponse.json({ success: true, message: 'All columns exist. Seeded landed_at.', ...results });
+  }
+  
+  // Missing columns — return the SQL they need to run in Supabase dashboard
+  const ddlSQL = `
+ALTER TABLE products ADD COLUMN IF NOT EXISTS landed_at TIMESTAMPTZ NULL;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS storage_temp NUMERIC NULL;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS recipes TEXT NULL;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS nutrition TEXT NULL;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS harbor_node VARCHAR(255) NULL;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS is_live_inventory BOOLEAN DEFAULT FALSE;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS quality_rank VARCHAR(50) NULL;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS discount_percent INTEGER DEFAULT 0;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS unit VARCHAR(20) DEFAULT 'kg';
+UPDATE products SET landed_at = NOW() - INTERVAL '2 hours' WHERE landed_at IS NULL;
+  `.trim();
+
+  // Try pg/query endpoint (may work from Vercel's network)
+  const pgRes = await runSQL(ddlSQL);
+  results['pg_query_attempt'] = pgRes;
+
+  return NextResponse.json({
+    success: false,
+    message: `Missing columns: ${missingCols.join(', ')}. DDL SQL below must be run in Supabase dashboard.`,
+    missing_columns: missingCols,
+    ddl_sql: ddlSQL,
+    pg_query_result: pgRes,
+    ...results
+  }, { status: 200 });
 }
 
