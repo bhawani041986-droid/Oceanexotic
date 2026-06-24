@@ -863,12 +863,10 @@ export default function CustomerHomeScreen() {
               >
                 {isFssai ? (
                   <View className="items-center justify-center relative z-10">
-                    <Image 
-                      source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/FSSAI_logo.svg/512px-FSSAI_logo.svg.png" }} 
-                      style={{ height: 10, width: 30 }} 
-                      contentFit="contain" 
-                      tintColor={badgeColor}
-                    />
+                    <View className="flex-row items-baseline">
+                      <Text className="text-[12px] font-serif italic" style={{ color: "#000080", fontWeight: '900' }}>fssa</Text>
+                      <Text className="text-[12px] font-serif italic" style={{ color: "#F97316", fontWeight: '900' }}>i</Text>
+                    </View>
                     <Text className="text-[5px] mt-[1px] font-black" style={{ color: badgeColor }} numberOfLines={1}>
                       Reg. No. 22926204000077
                     </Text>
