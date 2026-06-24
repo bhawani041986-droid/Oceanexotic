@@ -42,24 +42,25 @@ export async function GET(request: NextRequest) {
     product.seller_name = sellerName;
     product.sellerName = sellerName;
 
-    // 1.2 Fetch Seller Location from users & territories
+    // 1.2 Fetch Seller Location - two-step (no FK constraint between users and maritime_territories)
     let sellerLocation = 'Port Blair, Andaman';
     try {
       const sellerId = product.seller_id;
       const cleanId = sellerId ? sellerId.replace('SEL-', '') : '';
+      // Step A: get territory_id from users
       const { data: sellerUser } = await supabase
         .from('users')
-        .select(`
-          territory_id,
-          maritime_territories:territory_id (
-            name
-          )
-        `)
+        .select('id, territory_id')
         .or(`id.eq.${sellerId},id.eq.${cleanId}`)
         .maybeSingle();
-
-      if (sellerUser && (sellerUser as any).maritime_territories) {
-        sellerLocation = (sellerUser as any).maritime_territories.name || sellerLocation;
+      // Step B: look up territory name
+      if (sellerUser?.territory_id) {
+        const { data: territory } = await supabase
+          .from('maritime_territories')
+          .select('name')
+          .eq('id', sellerUser.territory_id)
+          .maybeSingle();
+        if (territory?.name) sellerLocation = territory.name;
       }
     } catch (locErr) {
       console.error("Error fetching seller location in API:", locErr);

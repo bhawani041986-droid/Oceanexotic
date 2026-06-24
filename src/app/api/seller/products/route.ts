@@ -46,19 +46,19 @@ export async function GET(request: NextRequest) {
       try {
         const sellerId = productData.seller_id;
         const cleanId = sellerId ? sellerId.replace('SEL-', '') : '';
+        // Two-step: no FK constraint between users.territory_id and maritime_territories
         const { data: sellerUser } = await supabase
           .from('users')
-          .select(`
-            territory_id,
-            maritime_territories:territory_id (
-              name
-            )
-          `)
+          .select('id, territory_id')
           .or(`id.eq.${sellerId},id.eq.${cleanId}`)
           .maybeSingle();
-
-        if (sellerUser && (sellerUser as any).maritime_territories) {
-          sellerLocation = (sellerUser as any).maritime_territories.name || sellerLocation;
+        if (sellerUser?.territory_id) {
+          const { data: territory } = await supabase
+            .from('maritime_territories')
+            .select('name')
+            .eq('id', sellerUser.territory_id)
+            .maybeSingle();
+          if (territory?.name) sellerLocation = territory.name;
         }
       } catch (locErr) {
         console.error("Error fetching seller location in API:", locErr);
@@ -103,24 +103,31 @@ export async function GET(request: NextRequest) {
     const cleanUserIds = userIds.map((id: string) => id.replace('SEL-', ''));
     const allIds = [...userIds, ...cleanUserIds];
     
-    let locationMap = new Map();
+    let locationMap = new Map<string, string>();
     if (allIds.length > 0) {
       try {
+        // Two-step location lookup (no FK between users.territory_id and maritime_territories)
         const { data: sellerUsers } = await supabase
           .from('users')
-          .select(`
-            id,
-            territory_id,
-            maritime_territories:territory_id (
-              name
-            )
-          `)
+          .select('id, territory_id')
           .in('id', allIds);
-          
+
         if (sellerUsers) {
+          // Get all unique territory IDs
+          const territoryIds = Array.from(new Set(
+            sellerUsers.map((su: any) => su.territory_id).filter(Boolean)
+          ));
+          let territoryNameMap = new Map<number, string>();
+          if (territoryIds.length > 0) {
+            const { data: territories } = await supabase
+              .from('maritime_territories')
+              .select('id, name')
+              .in('id', territoryIds);
+            if (territories) territories.forEach((t: any) => territoryNameMap.set(t.id, t.name));
+          }
           sellerUsers.forEach((su: any) => {
-            if (su.maritime_territories?.name) {
-              locationMap.set(su.id, su.maritime_territories.name);
+            if (su.territory_id && territoryNameMap.has(su.territory_id)) {
+              locationMap.set(su.id, territoryNameMap.get(su.territory_id)!);
             }
           });
         }
