@@ -18,14 +18,17 @@ try {
         exit;
     }
 
-    // Verify Purchase Integrity
-    $checkOrder = $pdo->prepare("SELECT id FROM verified_orders WHERE order_ref = ? AND user_id = ? AND product_id = ? AND seller_id = ? AND status IN ('SHIPPED', 'DELIVERED') LIMIT 1");
-    $checkOrder->execute([$data['order_id'] ?? '', $data['user_id'], $data['product_id'], $data['seller_id']]);
-    $order = $checkOrder->fetch();
+    // Verify Purchase Integrity if order_id is provided
+    $order = null;
+    if (!empty($data['order_id'])) {
+        $checkOrder = $pdo->prepare("SELECT id FROM verified_orders WHERE order_ref = ? AND user_id = ? AND product_id = ? AND seller_id = ? AND status IN ('SHIPPED', 'DELIVERED') LIMIT 1");
+        $checkOrder->execute([$data['order_id'], $data['user_id'], $data['product_id'], $data['seller_id']]);
+        $order = $checkOrder->fetch();
+    }
 
-    if (!$order) {
+    if (!$order && !empty($data['order_id'])) {
         http_response_code(403);
-        echo json_encode(["status" => "error", "message" => "Purchase Verification Failed. Only customers with valid maritime transactions can leave feedback."]);
+        echo json_encode(["status" => "error", "message" => "Purchase Verification Failed. Invalid maritime transaction."]);
         exit;
     }
 
@@ -39,7 +42,7 @@ try {
         $data['rating'],
         $data['comment'] ?? '',
         $data['photos'] ?? null,
-        $order['id']
+        $order ? $order['id'] : null
     ]);
 
     echo json_encode(["status" => "success", "message" => "Review Registry Synchronized.", "id" => $pdo->lastInsertId()]);

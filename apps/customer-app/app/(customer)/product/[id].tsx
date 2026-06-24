@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { View, Text, ScrollView, ActivityIndicator, Pressable, FlatList, Dimensions, Modal, TextInput } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Image } from "expo-image";
+import api from "@/services/api";
 import { productService } from "@/services/productService";
 import { homeService, type CutOption } from "@/services/homeService";
 import { CutSelectionModal } from "@/components/customer/CutSelectionModal";
@@ -70,14 +71,26 @@ export default function ProductDetailScreen() {
       toast("Please write a review", "error");
       return;
     }
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      setLoading(true);
+      await api.post("/reviews/create", {
+        product_id: id,
+        product_name: product?.name || "Fleet Asset",
+        seller_id: product?.seller_id || "SEL-001",
+        user_id: user?.id || "GUEST",
+        user_name: user?.name || "Citizen",
+        rating: rating,
+        comment: reviewText
+      });
       setIsReviewModalVisible(false);
-      toast("Review submitted successfully", "success");
+      toast("Review submitted to Moderation", "success");
       setRating(0);
       setReviewText("");
-    }, 1000);
+    } catch (e: any) {
+      toast(e?.response?.data?.message || "Failed to submit review", "error");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getProductGallery = (prod: any): string[] => {
