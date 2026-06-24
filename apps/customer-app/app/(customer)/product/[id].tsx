@@ -533,7 +533,7 @@ export default function ProductDetailScreen() {
             <View className="mt-8 gap-3">
               <Button label="SELECT CUT & ADD" onPress={openCut} />
               <Button
-                label="BUY NOW"
+                label="CHECK OUT"
                 variant="ghost"
                 onPress={() => {
                   const prepAdd = selectedPrepOption ? parseFloat(selectedPrepOption.price_flat_add) : 0;
