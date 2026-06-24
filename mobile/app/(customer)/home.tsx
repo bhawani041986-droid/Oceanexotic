@@ -852,11 +852,33 @@ export default function CustomerHomeScreen() {
 
         {/* Trust strip */}
         <View className="mx-4 mb-8 flex-row flex-wrap justify-center gap-3 rounded-2xl border p-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-          {["FSSAI AUTH", "ISO 22000", "COLD-CHAIN", "SUSTAINABLE"].map((label) => (
-            <View key={label} className="rounded-full border px-3 py-1" style={{ borderColor: getRgba(primaryColor, 0.2), backgroundColor: getRgba(primaryColor, 0.1) }}>
-              <Text className="text-[8px] font-black uppercase" style={{ color: primaryColor }}>{label}</Text>
-            </View>
-          ))}
+          {["FSSAI AUTH", "ISO 22000", "COLD-CHAIN", "SUSTAINABLE"].map((label) => {
+            const isFssai = label === "FSSAI AUTH";
+            const badgeColor = isFssai ? "#F97316" : primaryColor;
+            return (
+              <View 
+                key={label} 
+                className="rounded-full border px-3 py-1 items-center justify-center" 
+                style={{ borderColor: getRgba(badgeColor, 0.2), backgroundColor: getRgba(badgeColor, 0.1), minHeight: 22 }}
+              >
+                {isFssai ? (
+                  <View className="items-center justify-center relative z-10">
+                    <Image 
+                      source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/FSSAI_logo.svg/512px-FSSAI_logo.svg.png" }} 
+                      style={{ height: 10, width: 30 }} 
+                      contentFit="contain" 
+                      tintColor={badgeColor}
+                    />
+                    <Text className="text-[5px] mt-[1px] font-black" style={{ color: badgeColor }} numberOfLines={1}>
+                      Reg. No. 22926204000077
+                    </Text>
+                  </View>
+                ) : (
+                  <Text className="text-[8px] font-black uppercase relative z-10" style={{ color: badgeColor }}>{label}</Text>
+                )}
+              </View>
+            );
+          })}
         </View>
 
         {/* Ocean Reels Video Feed */}

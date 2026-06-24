@@ -1039,9 +1039,23 @@ export default function CustomerHomeScreen() {
                 bevelSize={4}
                 style={{ minHeight: 22 }}
                 className="flex-shrink"
-                contentClassName="w-auto flex-shrink px-3 py-1"
+                contentClassName="w-auto flex-shrink px-3 py-1 items-center justify-center"
               >
-                <Text className="text-[8px] font-black uppercase relative z-10" style={{ color: badgeColor }}>{label}</Text>
+                {isFssai ? (
+                  <View className="items-center justify-center relative z-10">
+                    <Image 
+                      source={{ uri: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/FSSAI_logo.svg/512px-FSSAI_logo.svg.png" }} 
+                      style={{ height: 10, width: 30 }} 
+                      contentFit="contain" 
+                      tintColor={badgeColor}
+                    />
+                    <Text className="text-[5px] mt-[1px] font-black" style={{ color: badgeColor }} numberOfLines={1}>
+                      Reg. No. 22926204000077
+                    </Text>
+                  </View>
+                ) : (
+                  <Text className="text-[8px] font-black uppercase relative z-10" style={{ color: badgeColor }}>{label}</Text>
+                )}
               </ChamferedBox>
             );
           })}
