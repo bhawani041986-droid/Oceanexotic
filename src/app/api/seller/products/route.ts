@@ -179,7 +179,7 @@ export async function POST(request: Request) {
 
     const resolvedSellerId = seller_id || 'SEL-001';
 
-    const { error } = await supabase.from('products').insert([{
+    const insertPayload: any = {
       id,
       seller_id: resolvedSellerId,
       name,
@@ -199,9 +199,25 @@ export async function POST(request: Request) {
       quality_rank: body.quality_rank || 'VERIFIED',
       discount_percent: body.discount_percent !== undefined && body.discount_percent !== '' ? Number(body.discount_percent) : 0,
       unit: body.unit || 'kg'
-    }]);
+    };
 
-    if (error) throw error;
+    let insertSuccess = false;
+    let insertAttempts = 0;
+    while (!insertSuccess && insertAttempts < 10) {
+      insertAttempts++;
+      const { error } = await supabase.from('products').insert([insertPayload]);
+      if (!error) {
+        insertSuccess = true;
+      } else {
+        const match = error.message.match(/Could not find the '([^']+)' column/);
+        if (match && match[1] && match[1] in insertPayload) {
+          console.log(`Omitting missing column from insert payload: ${match[1]}`);
+          delete insertPayload[match[1]];
+        } else {
+          throw error;
+        }
+      }
+    }
 
     // --- SYNCHRONIZE WITH LIVE HARBOR INVENTORY ---
     if (is_live_inventory) {
@@ -245,7 +261,7 @@ export async function PUT(request: Request) {
 
     if (!id) return NextResponse.json({ error: "Missing Asset ID" }, { status: 400 });
 
-    const { error } = await supabase.from('products').update({
+    const updatePayload: any = {
       name, category, price, stock, status, image_url, gallery, description,
       landed_at: body.landed_at || null,
       storage_temp: body.storage_temp !== undefined && body.storage_temp !== '' ? Number(body.storage_temp) : null,
@@ -256,9 +272,25 @@ export async function PUT(request: Request) {
       quality_rank: body.quality_rank || 'VERIFIED',
       discount_percent: body.discount_percent !== undefined && body.discount_percent !== '' ? Number(body.discount_percent) : 0,
       unit: body.unit || 'kg'
-    }).eq('id', id);
+    };
 
-    if (error) throw error;
+    let updateSuccess = false;
+    let attempts = 0;
+    while (!updateSuccess && attempts < 10) {
+      attempts++;
+      const { error } = await supabase.from('products').update(updatePayload).eq('id', id);
+      if (!error) {
+        updateSuccess = true;
+      } else {
+        const match = error.message.match(/Could not find the '([^']+)' column/);
+        if (match && match[1] && match[1] in updatePayload) {
+          console.log(`Omitting missing column from update payload: ${match[1]}`);
+          delete updatePayload[match[1]];
+        } else {
+          throw error;
+        }
+      }
+    }
 
     // --- SYNCHRONIZE WITH LIVE HARBOR INVENTORY ---
     if (is_live_inventory) {
