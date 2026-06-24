@@ -53,8 +53,29 @@ export default function ProductDetailScreen() {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isFullScreenVisible, setIsFullScreenVisible] = useState(false);
   const [isReviewModalVisible, setIsReviewModalVisible] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [reviewText, setReviewText] = useState("");
   const screenWidth = Dimensions.get("window").width;
   const flatListRef = useRef<FlatList>(null);
+
+  const submitReview = async () => {
+    if (rating === 0) {
+      toast("Please select a rating", "error");
+      return;
+    }
+    if (!reviewText.trim()) {
+      toast("Please write a review", "error");
+      return;
+    }
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setIsReviewModalVisible(false);
+      toast("Review submitted successfully", "success");
+      setRating(0);
+      setReviewText("");
+    }, 1000);
+  };
 
   const getProductGallery = (prod: any): string[] => {
     if (!prod) return [];
@@ -383,13 +404,24 @@ export default function ProductDetailScreen() {
                   const diffMs = Math.max(0, Date.now() - landedAt.getTime());
                   const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
                   const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-                  return <Text className="text-[10px] font-black uppercase" style={{ color: colors.text }}>Landed: {diffHours}h {diffMins}m ago</Text>;
+                  const freshPercent = Math.max(85, 100 - Math.floor(diffHours * 0.8));
+                  return (
+                    <>
+                      <Text className="text-[10px] font-black uppercase" style={{ color: colors.text }}>Landed: {diffHours}h {diffMins}m ago</Text>
+                      <Text className="text-[8px] font-bold uppercase mt-0.5" style={{ color: colors.textMuted }}>Prime Quality Index (A+)</Text>
+                    </>
+                  );
                 })()}
-                <Text className="text-[8px] font-bold uppercase" style={{ color: colors.textMuted }}>Prime Quality Index (A+)</Text>
               </View>
             </View>
-            <View className="rounded-full px-2 py-1 border" style={{ backgroundColor: `${colors.primary}15`, borderColor: `${colors.primary}30` }}>
-              <Text className="text-[8px] font-black uppercase" style={{ color: colors.primary }}>98% FRESH</Text>
+            <View className="rounded-none px-2 py-1 border" style={{ backgroundColor: `${colors.primary}15`, borderColor: `${colors.primary}30` }}>
+              {(() => {
+                const landedAt = product.landed_at ? new Date(String(product.landed_at)) : new Date(Date.now() - 4 * 60 * 60 * 1000 - 12 * 60 * 1000);
+                const diffMs = Math.max(0, Date.now() - landedAt.getTime());
+                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                const freshPercent = Math.max(85, 100 - Math.floor(diffHours * 0.8));
+                return <Text className="text-[8px] font-black uppercase" style={{ color: colors.primary }}>{freshPercent}% FRESH</Text>;
+              })()}
             </View>
           </View>
 
@@ -818,8 +850,8 @@ export default function ProductDetailScreen() {
               <Text className="text-[10px] font-black uppercase tracking-widest mb-4" style={{ color: colors.textMuted }}>Rate Your Experience</Text>
               <View className="flex-row gap-2">
                 {[1, 2, 3, 4, 5].map((star) => (
-                  <Pressable key={star}>
-                    <MaterialCommunityIcons name="star-outline" size={32} color={colors.primary} />
+                  <Pressable key={star} onPress={() => setRating(star)}>
+                    <MaterialCommunityIcons name={star <= rating ? "star" : "star-outline"} size={32} color={colors.primary} />
                   </Pressable>
                 ))}
               </View>
@@ -829,16 +861,19 @@ export default function ProductDetailScreen() {
               <TextInput
                 multiline
                 numberOfLines={4}
+                value={reviewText}
+                onChangeText={setReviewText}
                 placeholder="Share your experience with this product..."
                 placeholderTextColor={colors.textMuted}
                 style={{ color: colors.text, minHeight: 80, textAlignVertical: 'top' }}
               />
             </View>
 
-            <Button label="SUBMIT REVIEW" onPress={() => {
-              setIsReviewModalVisible(false);
-              toast("Review submitted successfully!", "success");
-            }} />
+            <Button 
+              onPress={submitReview} 
+              className="w-full h-14 rounded-xl"
+              label="SUBMIT PROTOCOL"
+            />
           </View>
         </View>
       </Modal>

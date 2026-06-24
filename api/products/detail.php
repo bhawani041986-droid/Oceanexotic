@@ -172,6 +172,7 @@ try {
         "reviews" => count($customerReviews), 
         "customerReviews" => $customerReviews,
         "freshness" => 100,
+        "landed_at" => $product['landed_at'],
         "storage_temp" => $product['storage_temp'] !== null ? $product['storage_temp'] : -18.2,
         "recipes" => $product['recipes'] ? json_decode($product['recipes'], true) : [],
         "nutrition" => $product['nutrition'] ? json_decode($product['nutrition'], true) : [
