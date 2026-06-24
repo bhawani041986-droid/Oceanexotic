@@ -13,15 +13,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Missing product id" }, { status: 400 });
     }
 
-    // 1. Fetch Product joined with seller name
+    // 1. Fetch Product (no join - sellers FK may not be in schema cache)
     const { data: product, error } = await supabase
       .from('products')
-      .select(`
-        *,
-        sellers (
-          name
-        )
-      `)
+      .select('*')
       .eq('id', id)
       .single();
 
@@ -30,10 +25,22 @@ export async function GET(request: NextRequest) {
       throw error;
     }
 
-    // Add seller name mappings
-    const sellerObj = (product as any).sellers;
-    product.seller_name = sellerObj?.name || 'OceanExotic Seller';
-    product.sellerName = sellerObj?.name || 'OceanExotic Seller';
+    // 1.1 Fetch seller name separately (safe separate query)
+    let sellerName = 'OceanExotic Seller';
+    try {
+      if (product.seller_id) {
+        const { data: sellerRow } = await supabase
+          .from('sellers')
+          .select('name')
+          .eq('id', product.seller_id)
+          .maybeSingle();
+        if (sellerRow?.name) sellerName = sellerRow.name;
+      }
+    } catch (sellerErr) {
+      console.error("Error fetching seller name:", sellerErr);
+    }
+    product.seller_name = sellerName;
+    product.sellerName = sellerName;
 
     // 1.2 Fetch Seller Location from users & territories
     let sellerLocation = 'Port Blair, Andaman';
@@ -65,10 +72,10 @@ export async function GET(request: NextRequest) {
     // When landed_at is null/undefined, compute a realistic "this morning" catch time
     if (!product.landed_at) {
       const now = new Date();
-      // Set to today at 5:30 AM IST (UTC+5:30 = UTC 00:00)
+      // Set to today at midnight UTC (= 5:30 AM IST)
       const todayMorning = new Date(now);
-      todayMorning.setUTCHours(0, 0, 0, 0); // Midnight UTC = 5:30 AM IST
-      // If it's before 5:30 IST (00:00 UTC), use yesterday's morning
+      todayMorning.setUTCHours(0, 0, 0, 0);
+      // If current time is before midnight UTC, use yesterday morning
       if (now.getTime() < todayMorning.getTime()) {
         todayMorning.setUTCDate(todayMorning.getUTCDate() - 1);
       }

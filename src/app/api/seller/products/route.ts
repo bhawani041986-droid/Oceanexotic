@@ -25,12 +25,7 @@ export async function GET(request: NextRequest) {
     if (id) {
       const { data: productData, error } = await supabase
         .from('products')
-        .select(`
-          *,
-          sellers (
-            name
-          )
-        `)
+        .select('*')
         .eq('id', id)
         .single();
         
@@ -38,8 +33,14 @@ export async function GET(request: NextRequest) {
       if (!productData) return NextResponse.json({ error: "Asset Not Found" }, { status: 404 });
       
       const liveData = liveCatchMap.get(id);
-      const sellerObj = (productData as any).sellers;
-      const sellerName = sellerObj?.name || 'OceanExotic Seller';
+      // Fetch seller name separately (no FK join needed)
+      let sellerName = 'OceanExotic Seller';
+      try {
+        if (productData.seller_id) {
+          const { data: sellerRow } = await supabase.from('sellers').select('name').eq('id', productData.seller_id).maybeSingle();
+          if (sellerRow?.name) sellerName = sellerRow.name;
+        }
+      } catch (_) {}
 
       let sellerLocation = 'Port Blair, Andaman';
       try {
@@ -83,18 +84,23 @@ export async function GET(request: NextRequest) {
 
     const { data: productsData, error } = await supabase
       .from('products')
-      .select(`
-        *,
-        sellers (
-          name
-        )
-      `)
+      .select('*')
       .order('created_at', { ascending: false });
       
       if (error) throw error;
       
+    // Batch-fetch seller names from sellers table
+    const sellerIds = Array.from(new Set((productsData || []).map((p: any) => p.seller_id).filter(Boolean)));
+    let sellerNameMap = new Map<string, string>();
+    try {
+      if (sellerIds.length > 0) {
+        const { data: sellerRows } = await supabase.from('sellers').select('id, name').in('id', sellerIds);
+        if (sellerRows) sellerRows.forEach((s: any) => sellerNameMap.set(s.id, s.name));
+      }
+    } catch (_) {}
+
     const userIds = Array.from(new Set((productsData || []).map((p: any) => p.seller_id).filter(Boolean)));
-    const cleanUserIds = userIds.map(id => id.replace('SEL-', ''));
+    const cleanUserIds = userIds.map((id: string) => id.replace('SEL-', ''));
     const allIds = [...userIds, ...cleanUserIds];
     
     let locationMap = new Map();
@@ -128,7 +134,7 @@ export async function GET(request: NextRequest) {
       const sellerId = p.seller_id;
       const cleanId = sellerId ? sellerId.replace('SEL-', '') : '';
       const loc = locationMap.get(sellerId) || locationMap.get(cleanId) || p.harbor_node || 'Port Blair, Andaman';
-      const sellerName = p.sellers?.name || 'OceanExotic Seller';
+      const sellerName = sellerNameMap.get(sellerId) || 'OceanExotic Seller';
       return {
         ...p,
         seller_name: sellerName,
