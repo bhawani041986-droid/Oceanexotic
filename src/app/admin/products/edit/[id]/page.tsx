@@ -188,8 +188,6 @@ export default function AdminEditProductPage() {
           quality_rank: data.quality_rank || "VERIFIED",
           harbor_node: data.harbor_node || "Phoenix Bay Harbor",
           catch_date: data.catch_date || "",
-          catch_time: data.catch_time || "05:30",
-          batch_label: data.batch_label || "MORNING",
           discount_percent: data.discount_percent || 0,
           landed_at: data.landed_at ? data.landed_at.replace(" ", "T").substring(0, 16) : "",
           storage_temp: data.storage_temp !== null && data.storage_temp !== undefined ? data.storage_temp : -18.2,

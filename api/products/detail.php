@@ -22,6 +22,7 @@ try {
         SELECT 
             p.*,
             s.name as seller_name,
+            t.name as seller_location,
             tc.price_per_kg as live_price,
             tc.remaining_kg as live_stock,
             tc.harbor_node as live_harbor,
@@ -30,6 +31,8 @@ try {
             tc.status as catch_status
         FROM products p
         LEFT JOIN sellers s ON p.seller_id = s.id
+        LEFT JOIN users u ON (u.id = s.id OR u.id = REPLACE(s.id, 'SEL-', ''))
+        LEFT JOIN maritime_territories t ON u.territory_id = t.id
         LEFT JOIN todays_catch tc ON p.id = tc.product_id
             AND tc.catch_date = CURDATE()
             AND tc.status != 'ARCHIVED'
@@ -108,7 +111,7 @@ try {
     }, $prepOptions);
 
     // Fetch addons
-    $addonsStmt = $pdo->query("SELECT * FROM addons WHERE status = 'ACTIVE'");
+    $addonsStmt = $pdo->query("SELECT * FROM addons WHERE is_active = 1");
     $allAddons = $addonsStmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Fetch customer reviews
@@ -161,6 +164,8 @@ try {
         "seller_name" => $product['seller_name'] ?? 'OceanExotic Seller',
         "sellerId" => $product['seller_id'],
         "seller_id" => $product['seller_id'],
+        "sellerLocation" => $product['seller_location'] ?? $product['live_harbor'] ?? $product['harbor_node'] ?? 'Port Blair, Andaman',
+        "seller_location" => $product['seller_location'] ?? $product['live_harbor'] ?? $product['harbor_node'] ?? 'Port Blair, Andaman',
         "origin" => $product['live_harbor'] ?? $product['harbor_node'],
         "stock" => $stock,
         "availability" => $availability,

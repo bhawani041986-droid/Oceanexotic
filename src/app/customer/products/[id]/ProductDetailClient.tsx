@@ -565,18 +565,33 @@ export default function ProductDetailPage({
                </div>
 
                <div className="p-3 bg-gradient-to-r from-[var(--c-primary)]/10 to-transparent border-l-2 border-[var(--c-primary)] rounded-r-xl flex items-center justify-between mt-2">
-                  <div className="flex items-center gap-2">
-                     <Clock className="w-3.5 h-3.5 text-[var(--c-primary)] animate-pulse" />
-                     <div>
-                        <p className="text-[8px] font-black uppercase text-[var(--foreground)]">Landed: 4h 12m ago</p>
-                        <p className="text-[7px] font-bold uppercase text-[var(--c-text-secondary)]">Premium Quality</p>
-                     </div>
-                  </div>
-                  <div className="flex items-center gap-1.5 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                     <span className="w-1 h-1 rounded-full bg-emerald-500 animate-ping" />
-                     <span className="text-[8px] font-black text-emerald-500 uppercase">98% FRESH</span>
-                  </div>
-               </div>
+                   {(() => {
+                      let landedAt = new Date(Date.now() - 4 * 60 * 60 * 1000 - 12 * 60 * 1000);
+                      if (product.landed_at) {
+                         const d = new Date(String(product.landed_at).replace(" ", "T"));
+                         if (!isNaN(d.getTime())) landedAt = d;
+                      }
+                      const diffMs = Math.max(0, Date.now() - landedAt.getTime());
+                      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+                      const diffMins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                      const freshPercent = Math.max(85, 100 - Math.floor(diffHours * 0.8));
+                      return (
+                         <>
+                            <div className="flex items-center gap-2">
+                               <Clock className="w-3.5 h-3.5 text-[var(--c-primary)] animate-pulse" />
+                               <div>
+                                  <p className="text-[8px] font-black uppercase text-[var(--foreground)]">Landed: {diffHours}h {diffMins}m ago</p>
+                                  <p className="text-[7px] font-bold uppercase text-[var(--c-text-secondary)]">Premium Quality</p>
+                               </div>
+                            </div>
+                            <div className="flex items-center gap-1.5 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                               <span className="w-1 h-1 rounded-full bg-emerald-500 animate-ping" />
+                               <span className="text-[8px] font-black text-emerald-500 uppercase">{freshPercent}% FRESH</span>
+                            </div>
+                         </>
+                      );
+                   })()}
+                </div>
 
                <div className="space-y-[4px] w-full">
                   {!initialCutOptions || initialCutOptions.length === 0 ? (
@@ -868,19 +883,19 @@ export default function ProductDetailPage({
                     <div className="flex items-center gap-4">
                        <div className="w-12 h-12 rounded-full bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/20 flex items-center justify-center text-xl rotate-12">⚓</div>
                        <div>
-                          <h4 className="text-sm font-black text-[var(--foreground)] uppercase italic tracking-tighter flex items-center gap-1">{product.seller} <Verified className="w-3 h-3 text-blue-500" /></h4>
+                          <h4 className="text-sm font-black text-[var(--foreground)] uppercase italic tracking-tighter flex items-center gap-1">{product.seller_name || product.sellerName || product.seller || "Verified Seller"} <Verified className="w-3 h-3 text-blue-500" /></h4>
                           <p className="text-[8px] font-black text-success uppercase tracking-widest italic">Certified Seller</p>
                        </div>
                     </div>
                     <div className="space-y-2 pt-2 border-t border-[var(--foreground)]/5">
-                       <div className="flex items-center justify-between text-[9px] font-black uppercase text-[var(--c-text-secondary)]">
-                          <span>Seller ID</span>
-                          <span className="text-[var(--foreground)]">SEL-{product.sellerId}</span>
-                       </div>
-                       <div className="flex items-center justify-between text-[9px] font-black uppercase text-[var(--c-text-secondary)]">
-                          <span>Location</span>
-                          <span className="text-[var(--foreground)]">Atlantic S4</span>
-                       </div>
+                        <div className="flex items-center justify-between text-[9px] font-black uppercase text-[var(--c-text-secondary)]">
+                           <span>Seller ID</span>
+                           <span className="text-[var(--foreground)]">{String(product.sellerId || product.seller_id || '').startsWith('SEL-') ? (product.sellerId || product.seller_id) : `SEL-${product.sellerId || product.seller_id}`}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-[9px] font-black uppercase text-[var(--c-text-secondary)]">
+                           <span>Location</span>
+                           <span className="text-[var(--foreground)]">{product.seller_location || product.sellerLocation || "Port Blair, Andaman"}</span>
+                        </div>
                     </div>
 
                     {/* Live Source & Traceability Catalog */}

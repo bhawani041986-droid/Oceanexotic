@@ -18,11 +18,15 @@ try {
     if ($method === 'GET') {
         $id = $_GET['id'] ?? null;
         if ($id) {
-            $stmt = $pdo->prepare("SELECT p.*, s.name as seller_name FROM products p LEFT JOIN sellers s ON p.seller_id = s.id WHERE p.id = ?");
+            $stmt = $pdo->prepare("SELECT p.*, s.name as seller_name, t.name as seller_location FROM products p LEFT JOIN sellers s ON p.seller_id = s.id LEFT JOIN users u ON (u.id = s.id OR u.id = REPLACE(s.id, 'SEL-', '')) LEFT JOIN maritime_territories t ON u.territory_id = t.id WHERE p.id = ?");
             $stmt->execute([$id]);
             $product = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if ($product) {
+                if (empty($product['seller_location'])) {
+                    $product['seller_location'] = $product['harbor_node'] ?? 'Port Blair, Andaman';
+                }
+                $product['sellerLocation'] = $product['seller_location'];
                 // Fetch cut options
                 $cutStmt = $pdo->prepare("SELECT * FROM product_cut_options WHERE product_id = ? ORDER BY sort_order ASC");
                 $cutStmt->execute([$id]);
@@ -44,9 +48,11 @@ try {
             $area = $_GET['area'] ?? '';
             // Join sellers to get seller_name for badge display
             $stmt = $pdo->query("
-                SELECT p.*, s.name as seller_name
+                SELECT p.*, s.name as seller_name, t.name as seller_location
                 FROM products p
                 LEFT JOIN sellers s ON p.seller_id = s.id
+                LEFT JOIN users u ON (u.id = s.id OR u.id = REPLACE(s.id, 'SEL-', ''))
+                LEFT JOIN maritime_territories t ON u.territory_id = t.id
                 ORDER BY p.created_at DESC
             ");
             $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -92,6 +98,10 @@ try {
                 $p['original_price'] = $origPrice;
                 $p['price'] = $price;
                 $p['stock'] = (float)($p['stock'] ?? 0);
+                if (empty($p['seller_location'])) {
+                    $p['seller_location'] = $p['harbor_node'] ?? 'Port Blair, Andaman';
+                }
+                $p['sellerLocation'] = $p['seller_location'];
                 return $p;
             }, $products);
 
