@@ -55,13 +55,13 @@ export function FlashDealsBanner() {
   const rotationAngle = `${90 - angle}deg`;
   const diagonalLength = Math.sqrt(280 * 280 + containerWidth * containerWidth);
 
+  const [activeIndex, setActiveIndex] = useState(0);
+
   if (!settings.flashDealActive) return null;
 
   const promoImageUrl = settings.customerAssets?.promo 
     ? settings.customerAssets.promo 
     : "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80";
-
-  const [activeIndex, setActiveIndex] = useState(0);
 
   const carouselData = settings.flashDealCarousel && settings.flashDealCarousel.length > 0
     ? settings.flashDealCarousel
