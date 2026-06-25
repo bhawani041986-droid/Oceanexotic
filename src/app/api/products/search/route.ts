@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     if (process.env.NODE_ENV === 'production') {
       let query = supabase
         .from('products')
-        .select('id, name, category, price, image_url, seller_id, description, status, discount_percent')
+        .select('*')
         .order('created_at', { ascending: false });
 
       if (q) {
@@ -42,10 +42,10 @@ export async function GET(request: NextRequest) {
         price: Number(p.price) || 0,
         image: p.image_url ?? '',
         rating: 4.5,
-        seller: 'Verified Fleet',
+        seller: p.seller_name ?? 'Verified Fleet',
         is_live: false,
         harbor: null,
-        stock: null,
+        stock: p.stock ?? null,
         batch: null,
         tag: 'FRESH CATCH',
       }));
