@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { View, Text, Animated, Easing, Dimensions } from "react-native";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import api from "@/services/api";
+import { t } from "@/lib/i18n";
 
 export function LiveTickerMarquee() {
   const colors = useThemeColors();
@@ -70,9 +71,13 @@ export function LiveTickerMarquee() {
         }}
       >
         {[...coupons, ...coupons].map((coupon, index) => {
-          const discountText = coupon.type === "PERCENTAGE" ? `${coupon.value}% OFF` : `₹${coupon.value} OFF`;
-          const minPurchaseText = coupon.min_purchase > 0 ? `(Min ₹${coupon.min_purchase})` : "";
-          const msg = `🔥 USE CODE ${coupon.code} FOR ${discountText}! ${minPurchaseText}`;
+          const discountText = coupon.type === "PERCENTAGE" 
+            ? `${coupon.value}% ${t("off_text") || "OFF"}` 
+            : `₹${coupon.value} ${t("off_text") || "OFF"}`;
+          const minPurchaseText = coupon.min_purchase > 0 
+            ? `(${t("min_text") || "Min"} ₹${coupon.min_purchase})` 
+            : "";
+          const msg = `🔥 ${t("use_code") || "USE CODE"} ${coupon.code} ${t("for_text") || "FOR"} ${discountText}! ${minPurchaseText}`;
           return (
             <View key={`${coupon.id}-${index}`} className="flex-row items-center gap-2">
               <View className="w-1 h-1 rounded-full bg-white opacity-80" />

@@ -31,7 +31,6 @@ import { CutSelectionModal } from "@/components/customer/CutSelectionModal";
 import { MaritimeWaveDivider } from "@/components/customer/MaritimeWaveDivider";
 import { AndamanMaritimeTelemetry } from "@/components/customer/AndamanMaritimeTelemetry";
 import { OceanReelsFeed } from "@/components/customer/OceanReelsFeed";
-import { AnnouncementBar } from "@/components/customer/AnnouncementBar";
 import { LiveTickerMarquee } from "@/components/customer/LiveTickerMarquee";
 import { FlashDealsBanner } from "@/components/customer/FlashDealsBanner";
 import { Button } from "@/components/ui/Button";

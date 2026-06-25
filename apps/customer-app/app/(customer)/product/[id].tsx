@@ -19,13 +19,13 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import { SectionTitle } from "@/components/customer/SectionTitle";
 import Svg, { Path } from "react-native-svg";
 import { useProducts } from "@/hooks/useProducts";
-import { useReviews } from "@/hooks/useReviews";
-import { ChamferedBox } from "@/components/ui/ChamferedBox";
 import { ProductCard } from "@/components/customer/ProductCard";
 import { useAuthStore } from "@/store/authStore";
 import { checkoutService } from "@/services/checkoutService";
 import { t } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
+import { useReviews } from "@/hooks/useReviews";
+import { useQueryClient } from "@tanstack/react-query";
 
 const MOCK_RECIPES = [
   { title: "Simple Steam", time: "15 min", difficulty: "Easy" },
@@ -46,6 +46,8 @@ export default function ProductDetailScreen() {
   const currentLanguage = useSettingsStore((s) => s.language); // force re-render
 
   const wishlist = useWishlistStore();
+  const queryClient = useQueryClient();
+  const { data: reviews = [], isLoading: reviewsLoading } = useReviews(id);
   const isFavorited = useWishlistStore(state => state.items.some(item => item.id === id));
 
   const handleToggleWishlist = () => {
@@ -138,6 +140,7 @@ export default function ProductDetailScreen() {
         rating: rating,
         comment: reviewText
       });
+      queryClient.invalidateQueries({ queryKey: ["reviews", id] });
       setIsReviewModalVisible(false);
       toast("Review submitted to Moderation", "success");
       setRating(0);
@@ -172,15 +175,14 @@ export default function ProductDetailScreen() {
 
   const hasThumbnails = allImages.length > 1;
   const paddingLeft = hasThumbnails ? 0 : 16;
-  const paddingRight = 0;
-  const thumbnailWidth = hasThumbnails ? 54 : 0;
-  const gapWidth = hasThumbnails ? 8 : 0;
+  const paddingRight = 16;
+  const thumbnailWidth = hasThumbnails ? 72 : 0;
+  const gapWidth = hasThumbnails ? 10 : 0;
   const viewWidth = screenWidth - paddingLeft - paddingRight - thumbnailWidth - gapWidth;
 
   const img = allImages[0] ?? "";
   const colors = useThemeColors();
   const { data: allProducts } = useProducts();
-  const { data: reviews = [], isLoading: reviewsLoading } = useReviews(id);
   const similarProducts = (allProducts ?? []).filter(p => p.id !== id).slice(0, 4);
 
   useEffect(() => {
@@ -314,9 +316,11 @@ export default function ProductDetailScreen() {
   const p = product as any;
 
   const averageRating = reviews.length > 0
-    ? (reviews.reduce((acc: number, r) => acc + Number(r.rating), 0) / reviews.length).toFixed(1)
-    : (p?.rating ?? "4.5");
-  const totalReviews = reviews.length > 0 ? reviews.length : (p?.reviews ?? 0);
+    ? (reviews.reduce((acc: number, r: any) => acc + Number(r.rating), 0) / reviews.length).toFixed(1)
+    : String(p?.rating ?? "4.5");
+  const totalReviews = reviews.length > 0 
+    ? reviews.length 
+    : 0;
 
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
@@ -325,7 +329,7 @@ export default function ProductDetailScreen() {
           {/* Left-side Thumbnails */}
           {allImages.length > 1 && (
             <ScrollView 
-              style={{ width: 54, height: '100%' }} 
+              style={{ width: 72, height: '100%' }} 
               showsVerticalScrollIndicator={false}
             >
               {allImages.map((imgUrl, i) => {
@@ -338,9 +342,9 @@ export default function ProductDetailScreen() {
                       setActiveImageIndex(i);
                     }}
                     style={{ 
-                      width: 54, 
-                      height: 54, 
-                      marginBottom: 5, 
+                      width: 72, 
+                      height: 72, 
+                      marginBottom: 6, 
                       borderWidth: 2, 
                       borderRadius: 8,
                       borderColor: isActive ? colors.primary : 'transparent',
@@ -362,14 +366,16 @@ export default function ProductDetailScreen() {
             </ScrollView>
           )}
 
-          <ChamferedBox 
-            fillColor={colors.card}
-            strokeColor={colors.border}
-            bevelSize={24}
+          <View 
             style={{ 
               width: viewWidth, 
               height: viewWidth, 
               position: 'relative', 
+              backgroundColor: colors.card, 
+              borderRadius: 12, 
+              borderWidth: 1, 
+              borderColor: colors.border,
+              overflow: 'hidden',
               marginLeft: gapWidth
             }}
           >
@@ -424,8 +430,8 @@ export default function ProductDetailScreen() {
             <View 
               style={{
                 position: 'absolute',
-                bottom: 6,
-                right: 6,
+                bottom: 12,
+                right: 12,
                 flexDirection: 'row',
                 alignItems: 'center',
                 zIndex: 20
@@ -436,10 +442,10 @@ export default function ProductDetailScreen() {
                   flexDirection: 'row', 
                   alignItems: 'center', 
                   backgroundColor: 'rgba(0, 0, 0, 0.5)', 
-                  borderRadius: 12, 
-                  paddingHorizontal: 6, 
-                  paddingVertical: 4,
-                  gap: 8,
+                  borderRadius: 22, 
+                  paddingHorizontal: 10, 
+                  paddingVertical: 6,
+                  gap: 12,
                   borderWidth: 1,
                   borderColor: 'rgba(255, 255, 255, 0.1)'
                 }}
@@ -451,7 +457,7 @@ export default function ProductDetailScreen() {
                     opacity: pressed ? 0.7 : 1,
                   })}
                 >
-                  <MaterialCommunityIcons name="share-variant" size={12} color="#FFFFFF" />
+                  <MaterialCommunityIcons name="share-variant" size={16} color="#FFFFFF" />
                 </Pressable>
 
                 {/* WhatsApp Button */}
@@ -461,7 +467,7 @@ export default function ProductDetailScreen() {
                     opacity: pressed ? 0.7 : 1,
                   })}
                 >
-                  <MaterialCommunityIcons name="whatsapp" size={14} color="#25D366" />
+                  <MaterialCommunityIcons name="whatsapp" size={18} color="#25D366" />
                 </Pressable>
 
                 {/* Copy Link Button */}
@@ -471,26 +477,37 @@ export default function ProductDetailScreen() {
                     opacity: pressed ? 0.7 : 1,
                   })}
                 >
-                  <MaterialCommunityIcons name="link-variant" size={12} color="#FFFFFF" />
-                </Pressable>
-
-                {/* Vertical Divider */}
-                <View style={{ width: 1, height: 10, backgroundColor: 'rgba(255,255,255,0.2)' }} />
-
-                {/* Heart Button */}
-                <Pressable
-                  onPress={handleToggleWishlist}
-                  style={({ pressed }) => ({
-                    opacity: pressed ? 0.7 : 1,
-                  })}
-                >
-                  <MaterialCommunityIcons 
-                    name={isFavorited ? "heart" : "heart-outline"} 
-                    size={14} 
-                    color={isFavorited ? "#EF4444" : "#FFFFFF"} 
-                  />
+                  <MaterialCommunityIcons name="link-variant" size={16} color="#FFFFFF" />
                 </Pressable>
               </View>
+
+              {/* Heart Button */}
+              <Pressable
+                onPress={handleToggleWishlist}
+                style={({ pressed }) => ({
+                  opacity: pressed ? 0.7 : 1,
+                  width: 36,
+                  height: 36,
+                  borderRadius: 18,
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  borderWidth: 1,
+                  borderColor: 'rgba(255, 255, 255, 0.15)',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginLeft: 8,
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 3,
+                  elevation: 4
+                })}
+              >
+                <MaterialCommunityIcons 
+                  name={isFavorited ? "heart" : "heart-outline"} 
+                  size={18} 
+                  color={isFavorited ? "#EF4444" : "#FFFFFF"} 
+                />
+              </Pressable>
             </View>
 
             {/* Tap overlay info */}
@@ -501,12 +518,8 @@ export default function ProductDetailScreen() {
               </View>
             )}
 
-            {/* Top-Right Review/Rating Pill — only when real approved reviews exist */}
-            {reviewsLoading ? (
-              <View className="absolute top-3 right-3 z-20 bg-black/60 px-3 py-1.5 rounded-full border border-white/10" style={{ elevation: 6 }}>
-                <ActivityIndicator size="small" color="#FBBF24" />
-              </View>
-            ) : reviews.length > 0 ? (
+            {/* Top-Right Review/Rating Pill */}
+            {allImages.length > 0 && (
               <Pressable
                 onPress={() => {
                   scrollViewRef.current?.scrollToEnd({ animated: true });
@@ -528,8 +541,8 @@ export default function ProductDetailScreen() {
                   </View>
                 </View>
               </Pressable>
-            ) : null}
-          </ChamferedBox>
+            )}
+          </View>
         </View>
 
         {/* Dynamic Pagination Dots (Amazon Style Dynamic Pills) */}
