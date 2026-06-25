@@ -142,14 +142,13 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
                       <path d="M0 0 L24 0 L12 16 Z" />
                     </svg>
                   </div>
-                  <div class="absolute bottom-[10px] left-1/2 -translate-x-1/2 bg-black/95 border-b-2 px-2.5 py-1 flex flex-col items-center shadow-[0_0_20px_rgba(0,0,0,0.6)] rounded whitespace-nowrap" 
+                  <div class="absolute bottom-[10px] left-1/2 -translate-x-1/2 bg-black/95 border-b-2 px-3 py-1.5 flex flex-col items-center shadow-[0_0_20px_rgba(0,0,0,0.6)] rounded whitespace-nowrap" 
                        style="border-bottom-color: ${color}; transform: translateX(-50%); pointer-events: none; width: max-content;">
-                       <div class="flex items-center gap-1">
-                         <span class="text-[5.5px] font-black text-white/40 uppercase tracking-tighter">NODE REG: 0${i + 1}</span>
-                         <div class="w-1 h-1 rounded-none bg-emerald-500 animate-pulse"></div>
+                       <div class="flex items-center gap-1.5">
+                         <span class="text-[10px] font-black text-white/40 uppercase tracking-tighter">NODE REG: 0${i + 1}</span>
+                         <div class="w-1.5 h-1.5 rounded-none bg-emerald-500 animate-pulse"></div>
                        </div>
-                       <span class="text-[9px] font-black text-white uppercase tracking-wider">${t.name}</span>
-                       <span class="text-[5px] font-mono opacity-80" style="color: ${color}">${t.coordinates}</span>
+                       <span class="text-xs font-black text-white uppercase tracking-wider">${t.name}</span>
                   </div>
               </div>`,
             iconSize: [20, 20],
@@ -197,14 +196,13 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
                     <path d="M0 0 L24 0 L12 16 Z" />
                   </svg>
                 </div>
-                <div class="absolute bottom-[10px] left-1/2 -translate-x-1/2 bg-black/95 border-b-2 px-2.5 py-1 flex flex-col items-center shadow-[0_0_20px_rgba(0,0,0,0.6)] rounded whitespace-nowrap" 
+                <div class="absolute bottom-[10px] left-1/2 -translate-x-1/2 bg-black/95 border-b-2 px-3 py-1.5 flex flex-col items-center shadow-[0_0_20px_rgba(0,0,0,0.6)] rounded whitespace-nowrap" 
                      style="border-bottom-color: ${color}; transform: translateX(-50%); pointer-events: none; width: max-content;">
-                     <div class="flex items-center gap-1">
-                       <span class="text-[5.5px] font-black text-white/40 uppercase tracking-tighter">NODE REG: 0${i + 1}</span>
-                       <div class="w-1 h-1 bg-emerald-500 animate-pulse" style="border-radius: 50%;"></div>
+                     <div class="flex items-center gap-1.5">
+                       <span class="text-[10px] font-black text-white/40 uppercase tracking-tighter">NODE REG: 0${i + 1}</span>
+                       <div class="w-1.5 h-1.5 bg-emerald-500 animate-pulse" style="border-radius: 50%;"></div>
                      </div>
-                     <span class="text-[9px] font-black text-white uppercase tracking-wider">${t.name}</span>
-                     <span class="text-[5px] font-mono opacity-80" style="color: ${color}">${t.coordinates}</span>
+                     <span class="text-xs font-black text-white uppercase tracking-wider">${t.name}</span>
                 </div>
             </div>\`,
           iconSize: [20, 20],
