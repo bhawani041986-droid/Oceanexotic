@@ -20,6 +20,7 @@ import { SectionTitle } from "@/components/customer/SectionTitle";
 import Svg, { Path } from "react-native-svg";
 import { useProducts } from "@/hooks/useProducts";
 import { useReviews } from "@/hooks/useReviews";
+import { ChamferedBox } from "@/components/ui/ChamferedBox";
 import { ProductCard } from "@/components/customer/ProductCard";
 import { useAuthStore } from "@/store/authStore";
 import { checkoutService } from "@/services/checkoutService";
@@ -171,7 +172,7 @@ export default function ProductDetailScreen() {
 
   const hasThumbnails = allImages.length > 1;
   const paddingLeft = hasThumbnails ? 0 : 16;
-  const paddingRight = 16;
+  const paddingRight = 0;
   const thumbnailWidth = hasThumbnails ? 54 : 0;
   const gapWidth = hasThumbnails ? 8 : 0;
   const viewWidth = screenWidth - paddingLeft - paddingRight - thumbnailWidth - gapWidth;
@@ -361,16 +362,14 @@ export default function ProductDetailScreen() {
             </ScrollView>
           )}
 
-          <View 
+          <ChamferedBox 
+            fillColor={colors.card}
+            strokeColor={colors.border}
+            bevelSize={24}
             style={{ 
               width: viewWidth, 
               height: viewWidth, 
               position: 'relative', 
-              backgroundColor: colors.card, 
-              borderRadius: 12, 
-              borderWidth: 1, 
-              borderColor: colors.border,
-              overflow: 'hidden',
               marginLeft: gapWidth
             }}
           >
@@ -425,8 +424,8 @@ export default function ProductDetailScreen() {
             <View 
               style={{
                 position: 'absolute',
-                bottom: 12,
-                right: 12,
+                bottom: 6,
+                right: 6,
                 flexDirection: 'row',
                 alignItems: 'center',
                 zIndex: 20
@@ -541,7 +540,7 @@ export default function ProductDetailScreen() {
                 </View>
               </Pressable>
             ) : null}
-          </View>
+          </ChamferedBox>
         </View>
 
         {/* Dynamic Pagination Dots (Amazon Style Dynamic Pills) */}
