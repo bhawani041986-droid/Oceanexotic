@@ -6,9 +6,8 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     const { data: sellers, error } = await supabase
-      .from('users')
-      .select('id, name, email, status, created_at')
-      .ilike('role', 'seller')
+      .from('sellers')
+      .select('id, name, email, status, created_at, rating')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -21,9 +20,9 @@ export async function GET() {
         id: String(seller.id),
         name: seller.name,
         lead: seller.name, // using name as lead since we don't have a lead field
-        email: seller.email,
+        email: seller.email || '',
         status: seller.status,
-        rating: (Math.random() * (5.0 - 4.5) + 4.5).toFixed(1), // Random rating between 4.5 and 5.0
+        rating: seller.rating ? String(seller.rating) : (Math.random() * (5.0 - 4.5) + 4.5).toFixed(1),
         products: Math.floor(Math.random() * 50) + 5,
         health: seller.status === 'VERIFIED' || seller.status === 'ACTIVE' ? 'OPTIMAL' : seller.status === 'PENDING' ? 'PENDING' : 'CRITICAL',
         revenue: `₹${(Math.random() * 90 + 10).toFixed(1)}K`, // Random revenue between 10K and 100K
