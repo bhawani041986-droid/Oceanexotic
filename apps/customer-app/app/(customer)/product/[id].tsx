@@ -115,6 +115,7 @@ export default function ProductDetailScreen() {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isFullScreenVisible, setIsFullScreenVisible] = useState(false);
   const [isReviewModalVisible, setIsReviewModalVisible] = useState(false);
+  const [isAllReviewsVisible, setIsAllReviewsVisible] = useState(false);
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const screenWidth = Dimensions.get("window").width;
@@ -919,7 +920,7 @@ export default function ProductDetailScreen() {
             {reviewsLoading && (
               <ActivityIndicator size="small" color={colors.primary} style={{ marginVertical: 16 }} />
             )}
-            {!reviewsLoading && reviews.map((review, i) => (
+            {!reviewsLoading && reviews.slice(0, 3).map((review, i) => (
               <View key={review.id ?? i} className="p-4 border rounded-xl" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
                 <View className="flex-row justify-between items-start mb-2">
                   <View className="flex-row items-center gap-3">
@@ -938,6 +939,15 @@ export default function ProductDetailScreen() {
             ))}
             {!reviewsLoading && reviews.length === 0 && (
               <Text className="text-xs font-black uppercase opacity-40 italic text-center">No reviews yet for this catch.</Text>
+            )}
+            {reviews.length > 3 && (
+              <Button 
+                label={`VIEW ALL ${reviews.length} REVIEWS`} 
+                variant="ghost" 
+                className="mt-2 border" 
+                style={{ borderColor: colors.border }} 
+                onPress={() => setIsAllReviewsVisible(true)} 
+              />
             )}
           </View>
           <Button label="SUBMIT FEEDBACK" variant="ghost" className="mt-4 border" style={{ borderColor: colors.border }} onPress={() => setIsReviewModalVisible(true)} />
@@ -1078,6 +1088,54 @@ export default function ProductDetailScreen() {
               label="SUBMIT PROTOCOL"
             />
           </View>
+        </View>
+      </Modal>
+
+      {/* View All Reviews Modal */}
+      <Modal
+        visible={isAllReviewsVisible}
+        animationType="slide"
+        onRequestClose={() => setIsAllReviewsVisible(false)}
+      >
+        <View style={{ flex: 1, backgroundColor: colors.bg, paddingTop: 48 }}>
+          {/* Header */}
+          <View className="px-4 py-4 border-b flex-row justify-between items-center" style={{ borderColor: colors.border }}>
+            <Pressable onPress={() => setIsAllReviewsVisible(false)} className="p-2">
+              <MaterialCommunityIcons name="arrow-left" size={24} color={colors.text} />
+            </Pressable>
+            <Text className="text-sm font-black uppercase italic" style={{ color: colors.text }}>
+              ALL REVIEWS ({reviews.length})
+            </Text>
+            <View style={{ width: 40 }} />
+          </View>
+
+          {/* List */}
+          <FlatList
+            data={reviews}
+            keyExtractor={(item, index) => item.id ? String(item.id) : String(index)}
+            contentContainerStyle={{ padding: 16, gap: 12, paddingBottom: 60 }}
+            renderItem={({ item: review }) => (
+              <View className="p-4 border rounded-xl" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+                <View className="flex-row justify-between items-start mb-2">
+                  <View className="flex-row items-center gap-3">
+                    <View className="w-8 h-8 rounded-none items-center justify-center" style={{ backgroundColor: `${colors.primary}20` }}>
+                      <Text className="font-black" style={{ color: colors.primary }}>
+                        {review.user_name ? review.user_name.charAt(0).toUpperCase() : 'U'}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text className="text-[10px] font-black uppercase" style={{ color: colors.text }}>{review.user_name || "Unknown User"}</Text>
+                      <Text className="text-[8px] font-bold uppercase" style={{ color: colors.textMuted }}>
+                        {review.created_at ? new Date(review.created_at).toLocaleDateString() : "Recent"}
+                      </Text>
+                    </View>
+                  </View>
+                  <Text className="text-[10px] font-black" style={{ color: colors.primary }}>★ {review.rating}</Text>
+                </View>
+                <Text className="text-xs italic" style={{ color: colors.textMuted }}>"{review.comment}"</Text>
+              </View>
+            )}
+          />
         </View>
       </Modal>
 
