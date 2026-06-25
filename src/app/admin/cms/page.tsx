@@ -300,15 +300,20 @@ export default function AdminCMSPage() {
   const toggleStatus = async (item: any) => {
     const newStatus = item.status === 'PUBLISHED' ? 'DRAFT' : 'PUBLISHED';
     try {
-      await fetch(`${API_BASE_URL}/system/cms`, {
-        method: 'POST',
+      const response = await fetch(`${API_BASE_URL}/system/cms`, {
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...item, status: newStatus })
+        body: JSON.stringify({ id: item.id, status: newStatus })
       });
+      const data = await response.json();
+      if (data.status !== 'success') {
+        toast(data.message || "Status toggle failed.", "error");
+        return;
+      }
       toast(`Content status changed to ${newStatus}.`, "success");
       fetchContent();
     } catch (error) {
-      toast("Status toggle failed.", "error");
+      toast("Status toggle failed. Check your connection.", "error");
     }
   };
 

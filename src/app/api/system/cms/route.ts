@@ -71,3 +71,30 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ status: "error", message: error.message }, { status: 500 });
   }
 }
+
+export async function PATCH(req: NextRequest) {
+  try {
+    const supabase = getSupabase();
+    if (!supabase) return NextResponse.json({ status: "error", message: "Supabase configuration missing" }, { status: 500 });
+
+    const body = await req.json();
+    const { id, status } = body;
+
+    if (!id) return NextResponse.json({ status: "error", message: "Missing id" }, { status: 400 });
+    if (!status || !['PUBLISHED', 'DRAFT'].includes(status)) {
+      return NextResponse.json({ status: "error", message: "Invalid status value" }, { status: 400 });
+    }
+
+    const { error } = await supabase
+      .from('cms_content')
+      .update({ status, updated_at: new Date().toISOString() })
+      .eq('id', id);
+
+    if (error) throw error;
+
+    return NextResponse.json({ status: "success" });
+  } catch (error: any) {
+    return NextResponse.json({ status: "error", message: error.message }, { status: 500 });
+  }
+}
+
