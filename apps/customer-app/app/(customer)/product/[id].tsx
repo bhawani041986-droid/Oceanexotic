@@ -171,8 +171,8 @@ export default function ProductDetailScreen() {
   const hasThumbnails = allImages.length > 1;
   const paddingLeft = hasThumbnails ? 0 : 16;
   const paddingRight = 16;
-  const thumbnailWidth = hasThumbnails ? 72 : 0;
-  const gapWidth = hasThumbnails ? 10 : 0;
+  const thumbnailWidth = hasThumbnails ? 54 : 0;
+  const gapWidth = hasThumbnails ? 8 : 0;
   const viewWidth = screenWidth - paddingLeft - paddingRight - thumbnailWidth - gapWidth;
 
   const img = allImages[0] ?? "";
@@ -324,7 +324,7 @@ export default function ProductDetailScreen() {
           {/* Left-side Thumbnails */}
           {allImages.length > 1 && (
             <ScrollView 
-              style={{ width: 72, height: '100%' }} 
+              style={{ width: 54, height: '100%' }} 
               showsVerticalScrollIndicator={false}
             >
               {allImages.map((imgUrl, i) => {
@@ -337,9 +337,9 @@ export default function ProductDetailScreen() {
                       setActiveImageIndex(i);
                     }}
                     style={{ 
-                      width: 72, 
-                      height: 72, 
-                      marginBottom: 6, 
+                      width: 54, 
+                      height: 54, 
+                      marginBottom: 5, 
                       borderWidth: 2, 
                       borderRadius: 8,
                       borderColor: isActive ? colors.primary : 'transparent',
