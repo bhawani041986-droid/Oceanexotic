@@ -1017,17 +1017,22 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
 
     const timer = setInterval(() => {
       const now = new Date().getTime();
-      const start = new Date(settings.flashDealStart || new Date()).getTime();
-      const end = new Date(settings.flashDealEnd).getTime();
+      const startVal = settings.flashDealStart ? new Date(settings.flashDealStart).getTime() : 0;
+      const endVal = settings.flashDealEnd ? new Date(settings.flashDealEnd).getTime() : 0;
       
+      if (isNaN(startVal) || isNaN(endVal) || endVal === 0) {
+         setTimeLeft({ hrs: "00", min: "00", sec: "00" });
+         return;
+      }
+
       let distance = 0;
       let status: 'STARTS_IN' | 'ENDS_IN' = 'ENDS_IN';
 
-      if (now < start) {
-         distance = start - now;
+      if (now < startVal) {
+         distance = startVal - now;
          status = 'STARTS_IN';
       } else {
-         distance = end - now;
+         distance = endVal - now;
          status = 'ENDS_IN';
       }
 
@@ -1037,7 +1042,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
         return;
       }
 
-      const hrs = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const hrs = Math.floor(distance / (1000 * 60 * 60));
       const min = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const sec = Math.floor((distance % (1000 * 60)) / 1000);
 
