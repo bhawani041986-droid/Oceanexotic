@@ -75,6 +75,17 @@ export async function GET(request: NextRequest) {
         freshness_timestamp: liveData?.freshness_timestamp,
         harbor_node: liveData?.harbor_node || productData.harbor_node
       };
+
+      // Extract metadata comment from description
+      let parsedDesc = productData.description || '';
+      const matchMeta = parsedDesc.match(/<!--METADATA-([\s\S]*?)-METADATA-->/);
+      if (matchMeta && matchMeta[1]) {
+        try {
+          const meta = JSON.parse(matchMeta[1]);
+          Object.assign(product, meta);
+          product.description = parsedDesc.replace(/<!--METADATA-[\s\S]*?-METADATA-->/g, '').trim();
+        } catch (_) {}
+      }
       
       if (targetLang && !targetLang.toLowerCase().startsWith("en")) {
         product = await translateObject(product, ['name', 'description', 'category', 'tagline'], targetLang);
@@ -142,7 +153,8 @@ export async function GET(request: NextRequest) {
       const cleanId = sellerId ? sellerId.replace('SEL-', '') : '';
       const loc = locationMap.get(sellerId) || locationMap.get(cleanId) || p.harbor_node || 'Port Blair, Andaman';
       const sellerName = sellerNameMap.get(sellerId) || 'OceanExotic Seller';
-      return {
+      
+      let productObj = {
         ...p,
         seller_name: sellerName,
         sellerName: sellerName,
@@ -153,6 +165,18 @@ export async function GET(request: NextRequest) {
         catch_date: todayDate,
         batch_label: liveData?.batch_label
       };
+
+      let parsedDesc = p.description || '';
+      const matchMeta = parsedDesc.match(/<!--METADATA-([\s\S]*?)-METADATA-->/);
+      if (matchMeta && matchMeta[1]) {
+        try {
+          const meta = JSON.parse(matchMeta[1]);
+          Object.assign(productObj, meta);
+          productObj.description = parsedDesc.replace(/<!--METADATA-[\s\S]*?-METADATA-->/g, '').trim();
+        } catch (_) {}
+      }
+
+      return productObj;
     });
 
     if (targetLang && !targetLang.toLowerCase().startsWith("en")) {
@@ -179,6 +203,21 @@ export async function POST(request: Request) {
 
     const resolvedSellerId = seller_id || 'SEL-001';
 
+    const metadata = {
+      landed_at: body.landed_at || null,
+      storage_temp: body.storage_temp !== undefined && body.storage_temp !== '' ? Number(body.storage_temp) : null,
+      recipes: body.recipes || [],
+      nutrition: body.nutrition || {},
+      harbor_node: harbor_node || 'Phoenix Bay Harbor',
+      is_live_inventory: !!is_live_inventory,
+      quality_rank: body.quality_rank || 'VERIFIED',
+      discount_percent: body.discount_percent !== undefined && body.discount_percent !== '' ? Number(body.discount_percent) : 0,
+      unit: body.unit || 'kg'
+    };
+
+    const cleanDescription = (description || '').replace(/<!--METADATA-[\s\S]*?-METADATA-->/g, '').trim();
+    const finalDescription = `${cleanDescription}\n<!--METADATA-${JSON.stringify(metadata)}-METADATA-->`;
+
     const insertPayload: any = {
       id,
       seller_id: resolvedSellerId,
@@ -189,7 +228,7 @@ export async function POST(request: Request) {
       status: status || 'ACTIVE',
       image_url: image_url || '',
       gallery: gallery || '[]',
-      description: description || '',
+      description: finalDescription,
       landed_at: body.landed_at || null,
       storage_temp: body.storage_temp !== undefined && body.storage_temp !== '' ? Number(body.storage_temp) : null,
       recipes: typeof body.recipes === 'string' ? body.recipes : JSON.stringify(body.recipes || []),
@@ -261,8 +300,23 @@ export async function PUT(request: Request) {
 
     if (!id) return NextResponse.json({ error: "Missing Asset ID" }, { status: 400 });
 
+    const metadata = {
+      landed_at: body.landed_at || null,
+      storage_temp: body.storage_temp !== undefined && body.storage_temp !== '' ? Number(body.storage_temp) : null,
+      recipes: body.recipes || [],
+      nutrition: body.nutrition || {},
+      harbor_node: harbor_node || 'Phoenix Bay Harbor',
+      is_live_inventory: !!is_live_inventory,
+      quality_rank: body.quality_rank || 'VERIFIED',
+      discount_percent: body.discount_percent !== undefined && body.discount_percent !== '' ? Number(body.discount_percent) : 0,
+      unit: body.unit || 'kg'
+    };
+
+    const cleanDescription = (description || '').replace(/<!--METADATA-[\s\S]*?-METADATA-->/g, '').trim();
+    const finalDescription = `${cleanDescription}\n<!--METADATA-${JSON.stringify(metadata)}-METADATA-->`;
+
     const updatePayload: any = {
-      name, category, price, stock, status, image_url, gallery, description,
+      name, category, price, stock, status, image_url, gallery, description: finalDescription,
       landed_at: body.landed_at || null,
       storage_temp: body.storage_temp !== undefined && body.storage_temp !== '' ? Number(body.storage_temp) : null,
       recipes: typeof body.recipes === 'string' ? body.recipes : JSON.stringify(body.recipes || []),

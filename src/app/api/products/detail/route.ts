@@ -25,6 +25,17 @@ export async function GET(request: NextRequest) {
       throw error;
     }
 
+    // Extract metadata comment from description
+    let parsedDesc = product.description || '';
+    const matchMeta = parsedDesc.match(/<!--METADATA-([\s\S]*?)-METADATA-->/);
+    if (matchMeta && matchMeta[1]) {
+      try {
+        const meta = JSON.parse(matchMeta[1]);
+        Object.assign(product, meta);
+        product.description = parsedDesc.replace(/<!--METADATA-[\s\S]*?-METADATA-->/g, '').trim();
+      } catch (_) {}
+    }
+
     // 1.1 Fetch seller name separately (safe separate query)
     let sellerName = 'OceanExotic Seller';
     try {
