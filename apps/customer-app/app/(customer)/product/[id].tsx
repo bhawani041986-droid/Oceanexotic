@@ -19,6 +19,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import { SectionTitle } from "@/components/customer/SectionTitle";
 import Svg, { Path } from "react-native-svg";
 import { useProducts } from "@/hooks/useProducts";
+import { useReviews } from "@/hooks/useReviews";
 import { ProductCard } from "@/components/customer/ProductCard";
 import { useAuthStore } from "@/store/authStore";
 import { checkoutService } from "@/services/checkoutService";
@@ -178,6 +179,7 @@ export default function ProductDetailScreen() {
   const img = allImages[0] ?? "";
   const colors = useThemeColors();
   const { data: allProducts } = useProducts();
+  const { data: reviews = [], isLoading: reviewsLoading } = useReviews(id);
   const similarProducts = (allProducts ?? []).filter(p => p.id !== id).slice(0, 4);
 
   useEffect(() => {
@@ -310,12 +312,10 @@ export default function ProductDetailScreen() {
 
   const p = product as any;
 
-  const averageRating = p?.rating ?? (p?.customerReviews && p.customerReviews.length > 0
-    ? (p.customerReviews.reduce((acc: number, r: any) => acc + Number(r.rating), 0) / p.customerReviews.length).toFixed(1)
-    : "4.5");
-  const totalReviews = p?.customerReviews && p.customerReviews.length > 0 
-    ? p.customerReviews.length 
-    : (p?.reviews ?? 12);
+  const averageRating = reviews.length > 0
+    ? (reviews.reduce((acc: number, r) => acc + Number(r.rating), 0) / reviews.length).toFixed(1)
+    : (p?.rating ?? "4.5");
+  const totalReviews = reviews.length > 0 ? reviews.length : (p?.reviews ?? 0);
 
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
@@ -923,12 +923,15 @@ export default function ProductDetailScreen() {
         <View className="px-4 py-6 border-t" style={{ borderColor: colors.border }}>
           <SectionTitle title="Customer Reviews" subtitle="Verified Buyer Feedback" />
           <View className="mt-4 gap-3">
-            {(p.customerReviews && p.customerReviews.length > 0 ? p.customerReviews : []).map((review: any, i: number) => (
-              <View key={i} className="p-4 border rounded-xl" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+            {reviewsLoading && (
+              <ActivityIndicator size="small" color={colors.primary} style={{ marginVertical: 16 }} />
+            )}
+            {!reviewsLoading && reviews.map((review, i) => (
+              <View key={review.id ?? i} className="p-4 border rounded-xl" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
                 <View className="flex-row justify-between items-start mb-2">
                   <View className="flex-row items-center gap-3">
                     <View className="w-8 h-8 rounded-none items-center justify-center" style={{ backgroundColor: `${colors.primary}20` }}>
-                      <Text className="font-black" style={{ color: colors.primary }}>{review.user_name ? review.user_name.charAt(0) : 'U'}</Text>
+                      <Text className="font-black" style={{ color: colors.primary }}>{review.user_name ? review.user_name.charAt(0).toUpperCase() : 'U'}</Text>
                     </View>
                     <View>
                       <Text className="text-[10px] font-black uppercase" style={{ color: colors.text }}>{review.user_name || "Unknown User"}</Text>
@@ -940,7 +943,7 @@ export default function ProductDetailScreen() {
                 <Text className="text-xs italic" style={{ color: colors.textMuted }}>"{review.comment}"</Text>
               </View>
             ))}
-            {(!p.customerReviews || p.customerReviews.length === 0) && (
+            {!reviewsLoading && reviews.length === 0 && (
               <Text className="text-xs font-black uppercase opacity-40 italic text-center">No reviews yet for this catch.</Text>
             )}
           </View>
