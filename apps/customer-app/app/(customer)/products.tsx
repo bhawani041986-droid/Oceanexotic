@@ -491,10 +491,24 @@ export default function ProductsScreen() {
             className="my-12 items-center rounded-none border border-dashed p-8"
             style={{ borderColor: colors.border }}
           >
-            <Text className="text-xs font-black uppercase" style={{ color: colors.textMuted }}>No harvest in this sector</Text>
-            <Pressable onPress={() => router.replace("/home")} className="mt-4">
-              <Text className="text-[10px] font-bold" style={{ color: colors.primary }}>Return to Harbor Home</Text>
-            </Pressable>
+            <Text style={{ fontSize: 32 }}>🔍</Text>
+            <Text className="mt-3 text-sm font-black uppercase" style={{ color: colors.text }}>
+              {searchText.trim() ? 'No products found' : 'No products available'}
+            </Text>
+            <Text className="mt-1 text-[10px] font-semibold text-center" style={{ color: colors.textMuted }}>
+              {searchText.trim()
+                ? `We couldn't find anything matching "${searchText.trim()}". Try a different keyword.`
+                : `No products are listed in this category right now. Check back soon!`}
+            </Text>
+            {searchText.trim() ? (
+              <Pressable onPress={() => setSearchText('')} className="mt-4 px-4 py-2" style={{ backgroundColor: colors.primary, borderRadius: 4 }}>
+                <Text className="text-[10px] font-black uppercase" style={{ color: '#FFFFFF' }}>Clear Search</Text>
+              </Pressable>
+            ) : (
+              <Pressable onPress={() => router.replace("/home")} className="mt-4">
+                <Text className="text-[10px] font-bold" style={{ color: colors.primary }}>Back to Home</Text>
+              </Pressable>
+            )}
           </View>
         )}
       </ScrollView>
