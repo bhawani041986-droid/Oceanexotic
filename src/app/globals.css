@@ -88,6 +88,12 @@ body { top: 0px !important; margin-top: 0px !important; }
   --c-radius-btn: var(--radius-button);
   --c-radius-card: var(--radius-card);
   --c-shadow-glow: var(--shadow-glow);
+
+  /* Agent Theme Variables Fallback (resolves styling issues outside /agent layout) */
+  --agent-primary: var(--primary);
+  --agent-glow: var(--shadow-glow);
+  --agent-text: var(--foreground);
+  --agent-border: var(--border);
 }
 
 /* Typography Registry */
