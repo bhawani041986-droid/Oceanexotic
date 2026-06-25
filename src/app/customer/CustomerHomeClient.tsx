@@ -118,8 +118,8 @@ const AndamanMaritimeMap = ({ territories, mapId = 'andaman-maritime-map' }: { t
 
       L.control.zoom({ position: 'bottomright' }).addTo(mapRef.current);
 
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png', {
-        maxZoom: 20
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19
       }).addTo(mapRef.current);
 
       setIsMapInit(true);

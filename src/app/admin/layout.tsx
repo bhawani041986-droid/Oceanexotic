@@ -48,6 +48,7 @@ const ADMIN_NAV = [
   { label: "Security & Fraud", icon: <ShieldAlert className="w-5 h-5" />, href: "/admin/security", color: "#EF4444" },
   { label: "Payouts Control", icon: <CreditCard className="w-5 h-5" />, href: "/admin/revenue", color: "#14B8A6" },
   { label: "Delivery Settings", icon: <Truck className="w-5 h-5" />, href: "/admin/logistics", color: "#06B6D4" },
+  { label: "Delivery Map Nodes", icon: <NavigationIcon className="w-5 h-5" />, href: "/admin/logistics/territories", color: "#3B82F6" },
   { label: "Delivery Drivers & Fleet", icon: <NavigationIcon className="w-5 h-5" />, href: "/admin/fleet", color: "#8B5CF6" },
   { label: "Ratings & Reviews", icon: <Scale className="w-5 h-5" />, href: "/admin/moderation", color: "#EAB308" },
   { label: "Reports & Analytics", icon: <Activity className="w-5 h-5" />, href: "/admin/analytics", color: "#6366F1" },

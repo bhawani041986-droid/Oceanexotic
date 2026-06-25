@@ -116,8 +116,8 @@ const OrderTelemetryMap = ({ orders, onSelectOrder }: { orders: any[]; onSelectO
         scrollWheelZoom: false,
       }).setView([11.6667, 92.7500], 10);
 
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png', {
-        maxZoom: 20
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19
       }).addTo(mapRef.current);
 
       markersGroupRef.current = L.featureGroup().addTo(mapRef.current);
