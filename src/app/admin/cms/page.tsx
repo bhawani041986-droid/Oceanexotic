@@ -739,7 +739,7 @@ export default function AdminCMSPage() {
                  <div className="space-y-4">
                     <h4 className="text-xs font-black uppercase text-slate-500 tracking-widest flex items-center gap-2"><ImageIcon className="w-4 h-4"/> Media Vault</h4>
                     
-                    {formData.type !== "RECIPE" && formData.type !== "SPLIT_PROMO" && (
+                    {formData.type !== "SPLIT_PROMO" && (
                        <div className="space-y-2">
                           <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Primary Cover</label>
                           <div onClick={() => !viewOnly && !isSaving && fileInputRef.current?.click()} className={`aspect-[21/9] w-full rounded-2xl bg-black/50 border-2 border-dashed ${stagedCoverPreview || formData.image_url ? 'border-primary/50' : 'border-[var(--foreground)]/20'} flex items-center justify-center transition-all overflow-hidden relative group ${!viewOnly && !isSaving ? 'cursor-pointer hover:bg-[var(--foreground)]/5 hover:border-primary' : ''}`}>

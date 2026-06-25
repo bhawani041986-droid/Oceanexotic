@@ -222,6 +222,55 @@ export default function CustomerHomeScreen() {
   const { data: allProducts } = useProducts();
   const featured = (allProducts ?? []).slice(0, 4);
   const promo = cms.data?.find((c) => c.type === "PROMO" && c.status === "PUBLISHED");
+  const splitPromo = cms.data?.find((c) => c.type === "SPLIT_PROMO");
+  const showSplitPromo = splitPromo && splitPromo.status === "PUBLISHED";
+
+  const promoDataParsed = useMemo(() => {
+    let defaultPromo = {
+      panelA: {
+        title: "SEAFOOD\nGRILL.",
+        subtitle: "Grill Mode",
+        tagline: "Volcanic products.",
+        link: "/customer/products?search=grill",
+        image_url: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80"
+      },
+      panelB: {
+        title: "FLAME-SEA\nCOLLECTIONS",
+        subtitle: "Node: Flame",
+        tagline: "Volcanic collections.",
+        link: "/customer/products?search=fry",
+        image_url: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80"
+      }
+    };
+    if (splitPromo) {
+      try {
+        const parsed = typeof splitPromo.metadata === 'string' ? JSON.parse(splitPromo.metadata) : splitPromo.metadata;
+        if (parsed && parsed.panelA && parsed.panelB) {
+          return {
+            panelA: { ...defaultPromo.panelA, ...parsed.panelA },
+            panelB: { ...defaultPromo.panelB, ...parsed.panelB }
+          };
+        }
+      } catch (e) {}
+    }
+    return defaultPromo;
+  }, [splitPromo]);
+
+  const handleCMSNavigation = useCallback((link: string) => {
+    if (!link) return;
+    // Strip "/customer" prefix if present
+    const cleanLink = link.replace(/^\/customer/, '');
+    const [path, queryStr] = cleanLink.split('?');
+    const params: any = {};
+    if (queryStr) {
+      queryStr.split('&').forEach(pair => {
+        const [k, v] = pair.split('=');
+        if (k) params[k] = decodeURIComponent(v || '');
+      });
+    }
+    router.push({ pathname: path as any, params });
+  }, [router]);
+
 
   const [activeBatch, setActiveBatch] = useState<BatchFilter>("ALL");
   const [cutProduct, setCutProduct] = useState<TodaysCatchItem | null>(null);
@@ -677,146 +726,156 @@ export default function CustomerHomeScreen() {
 
 
         {/* Split Promo: Maritime Grill & Flame-Sea Collections */}
-        <View className="mx-4 my-6 bg-[#070b13] shadow-2xl relative overflow-hidden" style={{ height: 200 }}>
-          <Svg width={width - 32} height={200} style={StyleSheet.absoluteFill}>
-            <Defs>
-              <SvgLinearGradient id="gradGrill" x1="0" y1="0" x2="1" y2="1">
-                <Stop offset="0" stopColor="#E23744" stopOpacity={0.8} />
-                <Stop offset="0.7" stopColor="#7F1D1D" stopOpacity={0.9} />
-                <Stop offset="1" stopColor="#450A0A" stopOpacity={0.95} />
-              </SvgLinearGradient>
-              <SvgLinearGradient id="gradSea" x1="0" y1="0" x2="1" y2="1">
-                <Stop offset="0" stopColor="#00d4ff" stopOpacity={0.15} />
-                <Stop offset="0.6" stopColor="#0369a1" stopOpacity={0.85} />
-                <Stop offset="1" stopColor={colors.bg} stopOpacity={0.98} />
-              </SvgLinearGradient>
-              <SvgLinearGradient id="rgbDivider" x1="1" y1="0" x2="0" y2="1">
-                <Stop offset="0" stopColor="#ff007f" />
-                <Stop offset="0.5" stopColor="#00f3ff" />
-                <Stop offset="1" stopColor="#ffaa00" />
-              </SvgLinearGradient>
-              <ClipPath id="clipGrill">
-                <Polygon points={`0,0 ${width - 32},0 0,200`} />
-              </ClipPath>
-              <ClipPath id="clipSea">
-                <Polygon points={`0,200 ${width - 32},0 ${width - 32},200`} />
-              </ClipPath>
-            </Defs>
-            
-            {/* Panel A Gradient Overlay (bottom layer) */}
-            <Polygon points={`0,0 ${width - 32},0 0,200`} fill="url(#gradGrill)" />
-            {/* Background Image for Grill (clipped, top layer) */}
-            <SvgImage
-              href={{ uri: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80" }}
-              width={width - 32}
-              height={200}
-              preserveAspectRatio="xMidYMid slice"
-              clipPath="url(#clipGrill)"
-              opacity={1}
-            />
+        {showSplitPromo && (
+          <View className="mx-4 my-6 bg-[#070b13] shadow-2xl relative overflow-hidden" style={{ height: 200 }}>
+            <Svg width={width - 32} height={200} style={StyleSheet.absoluteFill}>
+              <Defs>
+                <SvgLinearGradient id="gradGrill" x1="0" y1="0" x2="1" y2="1">
+                  <Stop offset="0" stopColor="#E23744" stopOpacity={0.8} />
+                  <Stop offset="0.7" stopColor="#7F1D1D" stopOpacity={0.9} />
+                  <Stop offset="1" stopColor="#450A0A" stopOpacity={0.95} />
+                </SvgLinearGradient>
+                <SvgLinearGradient id="gradSea" x1="0" y1="0" x2="1" y2="1">
+                  <Stop offset="0" stopColor="#00d4ff" stopOpacity={0.15} />
+                  <Stop offset="0.6" stopColor="#0369a1" stopOpacity={0.85} />
+                  <Stop offset="1" stopColor={colors.bg} stopOpacity={0.98} />
+                </SvgLinearGradient>
+                <SvgLinearGradient id="rgbDivider" x1="1" y1="0" x2="0" y2="1">
+                  <Stop offset="0" stopColor="#ff007f" />
+                  <Stop offset="0.5" stopColor="#00f3ff" />
+                  <Stop offset="1" stopColor="#ffaa00" />
+                </SvgLinearGradient>
+                <ClipPath id="clipGrill">
+                  <Polygon points={`0,0 ${width - 32},0 0,200`} />
+                </ClipPath>
+                <ClipPath id="clipSea">
+                  <Polygon points={`0,200 ${width - 32},0 ${width - 32},200`} />
+                </ClipPath>
+              </Defs>
+              
+              {/* Panel A Gradient Overlay (bottom layer) */}
+              <Polygon points={`0,0 ${width - 32},0 0,200`} fill="url(#gradGrill)" />
+              {/* Background Image for Grill (clipped, top layer) */}
+              <SvgImage
+                href={{ uri: resolveMediaUrl(promoDataParsed.panelA.image_url) }}
+                width={width - 32}
+                height={200}
+                preserveAspectRatio="xMidYMid slice"
+                clipPath="url(#clipGrill)"
+                opacity={1}
+              />
 
-            {/* Panel B Gradient Overlay (bottom layer) */}
-            <Polygon points={`0,200 ${width - 32},0 ${width - 32},200`} fill="url(#gradSea)" />
-            {/* Background Image for Sea (clipped, top layer) */}
-            <SvgImage
-              href={{ uri: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80" }}
-              width={width - 32}
-              height={200}
-              preserveAspectRatio="xMidYMid slice"
-              clipPath="url(#clipSea)"
-              opacity={1}
-            />
+              {/* Panel B Gradient Overlay (bottom layer) */}
+              <Polygon points={`0,200 ${width - 32},0 ${width - 32},200`} fill="url(#gradSea)" />
+              {/* Background Image for Sea (clipped, top layer) */}
+              <SvgImage
+                href={{ uri: resolveMediaUrl(promoDataParsed.panelB.image_url) }}
+                width={width - 32}
+                height={200}
+                preserveAspectRatio="xMidYMid slice"
+                clipPath="url(#clipSea)"
+                opacity={1}
+              />
 
-            {/* Neon Stacked Glow Divider */}
-            <Line x1={width - 32} y1={0} x2={0} y2={200} stroke="#ffaa00" strokeWidth={8} opacity={0.15} />
-            <Line x1={width - 32} y1={0} x2={0} y2={200} stroke="#ff007f" strokeWidth={5} opacity={0.3} />
-            <Line x1={width - 32} y1={0} x2={0} y2={200} stroke="#00f3ff" strokeWidth={3} opacity={0.6} />
-            <Line x1={width - 32} y1={0} x2={0} y2={200} stroke="url(#rgbDivider)" strokeWidth={1.5} opacity={1} />
-          </Svg>
+              {/* Neon Stacked Glow Divider */}
+              <Line x1={width - 32} y1={0} x2={0} y2={200} stroke="#ffaa00" strokeWidth={8} opacity={0.15} />
+              <Line x1={width - 32} y1={0} x2={0} y2={200} stroke="#ff007f" strokeWidth={5} opacity={0.3} />
+              <Line x1={width - 32} y1={0} x2={0} y2={200} stroke="#00f3ff" strokeWidth={3} opacity={0.6} />
+              <Line x1={width - 32} y1={0} x2={0} y2={200} stroke="url(#rgbDivider)" strokeWidth={1.5} opacity={1} />
+            </Svg>
 
-          {/* Floating HUD SVG/Vector Icons (placed on top of background but behind text content) */}
-          <View style={[StyleSheet.absoluteFillObject, { opacity: 0.55 }]} pointerEvents="none">
-            {/* Panel A Icons (Left/Grill - Flame, ChefHat, Fish, Utensils, Timer, Activity, Zap) */}
-            <MaterialCommunityIcons name="fire" size={20} color="#ff007f" style={{ position: "absolute", top: 10, left: (width - 32) * 0.35 }} />
-            <MaterialCommunityIcons name="chef-hat" size={16} color="#ffaa00" style={{ position: "absolute", top: 50, left: (width - 32) * 0.25 }} />
-            <MaterialCommunityIcons name="fish" size={28} color="#ff007f" style={{ position: "absolute", top: 110, left: (width - 32) * 0.12, transform: [{ rotate: "-45deg" }] }} />
-            <MaterialCommunityIcons name="silverware-fork-knife" size={14} color="#fff" style={{ position: "absolute", top: 150, left: (width - 32) * 0.05 }} />
-            <MaterialCommunityIcons name="clock-outline" size={12} color="#00ff88" style={{ position: "absolute", top: 30, left: (width - 32) * 0.18 }} />
-            <MaterialCommunityIcons name="pulse" size={14} color="#ff007f" style={{ position: "absolute", top: 80, left: (width - 32) * 0.32 }} />
-            <MaterialCommunityIcons name="flash" size={14} color="#ffaa00" style={{ position: "absolute", top: 15, left: (width - 32) * 0.45 }} />
+            {/* Floating HUD SVG/Vector Icons (placed on top of background but behind text content) */}
+            <View style={[StyleSheet.absoluteFillObject, { opacity: 0.55 }]} pointerEvents="none">
+              {/* Panel A Icons (Left/Grill - Flame, ChefHat, Fish, Utensils, Timer, Activity, Zap) */}
+              <MaterialCommunityIcons name="fire" size={20} color="#ff007f" style={{ position: "absolute", top: 10, left: (width - 32) * 0.35 }} />
+              <MaterialCommunityIcons name="chef-hat" size={16} color="#ffaa00" style={{ position: "absolute", top: 50, left: (width - 32) * 0.25 }} />
+              <MaterialCommunityIcons name="fish" size={28} color="#ff007f" style={{ position: "absolute", top: 110, left: (width - 32) * 0.12, transform: [{ rotate: "-45deg" }] }} />
+              <MaterialCommunityIcons name="silverware-fork-knife" size={14} color="#fff" style={{ position: "absolute", top: 150, left: (width - 32) * 0.05 }} />
+              <MaterialCommunityIcons name="clock-outline" size={12} color="#00ff88" style={{ position: "absolute", top: 30, left: (width - 32) * 0.18 }} />
+              <MaterialCommunityIcons name="pulse" size={14} color="#ff007f" style={{ position: "absolute", top: 80, left: (width - 32) * 0.32 }} />
+              <MaterialCommunityIcons name="flash" size={14} color="#ffaa00" style={{ position: "absolute", top: 15, left: (width - 32) * 0.45 }} />
 
-            {/* Panel B Icons (Right/Sea - Waves, Gauge, Anchor, Ship, Compass, Windy, Navigation, Seashell) */}
-            <MaterialCommunityIcons name="waves" size={20} color="#00d4ff" style={{ position: "absolute", bottom: 10, right: (width - 32) * 0.35 }} />
-            <MaterialCommunityIcons name="gauge" size={16} color="#00ff88" style={{ position: "absolute", bottom: 50, right: (width - 32) * 0.25 }} />
-            <MaterialCommunityIcons name="anchor" size={24} color="#fff" style={{ position: "absolute", bottom: 110, right: (width - 32) * 0.12, transform: [{ rotate: "15deg" }] }} />
-            <MaterialCommunityIcons name="ferry" size={16} color="#ffaa00" style={{ position: "absolute", bottom: 150, right: (width - 32) * 0.05 }} />
-            <MaterialCommunityIcons name="compass-outline" size={16} color="#00d4ff" style={{ position: "absolute", bottom: 30, right: (width - 32) * 0.18 }} />
-            <MaterialCommunityIcons name="weather-windy" size={14} color="#00d4ff" style={{ position: "absolute", bottom: 80, right: (width - 32) * 0.32 }} />
-            <MaterialCommunityIcons name="navigation" size={12} color="#00ff88" style={{ position: "absolute", bottom: 15, right: (width - 32) * 0.45 }} />
-            <MaterialCommunityIcons name="fish" size={16} color="#ffaa00" style={{ position: "absolute", bottom: 45, right: (width - 32) * 0.08, transform: [{ rotate: "45deg" }] }} />
-          </View>
-
-          {/* Left Panel A Content (Maritime Grill Masters) */}
-          <View style={{ position: "absolute", left: 16, top: 16, width: (width - 32) * 0.52, zIndex: 10 }}>
-            <View className="flex-row items-center gap-1">
-              <Text className="text-[9px] font-black text-foreground uppercase tracking-widest">🔥 GRILL MASTER</Text>
+              {/* Panel B Icons (Right/Sea - Waves, Gauge, Anchor, Ship, Compass, Windy, Navigation, Seashell) */}
+              <MaterialCommunityIcons name="waves" size={20} color="#00d4ff" style={{ position: "absolute", bottom: 10, right: (width - 32) * 0.35 }} />
+              <MaterialCommunityIcons name="gauge" size={16} color="#00ff88" style={{ position: "absolute", bottom: 50, right: (width - 32) * 0.25 }} />
+              <MaterialCommunityIcons name="anchor" size={24} color="#fff" style={{ position: "absolute", bottom: 110, right: (width - 32) * 0.12, transform: [{ rotate: "15deg" }] }} />
+              <MaterialCommunityIcons name="ferry" size={16} color="#ffaa00" style={{ position: "absolute", bottom: 150, right: (width - 32) * 0.05 }} />
+              <MaterialCommunityIcons name="compass-outline" size={16} color="#00d4ff" style={{ position: "absolute", bottom: 30, right: (width - 32) * 0.18 }} />
+              <MaterialCommunityIcons name="weather-windy" size={14} color="#00d4ff" style={{ position: "absolute", bottom: 80, right: (width - 32) * 0.32 }} />
+              <MaterialCommunityIcons name="navigation" size={12} color="#00ff88" style={{ position: "absolute", bottom: 15, right: (width - 32) * 0.45 }} />
+              <MaterialCommunityIcons name="fish" size={16} color="#ffaa00" style={{ position: "absolute", bottom: 45, right: (width - 32) * 0.08, transform: [{ rotate: "45deg" }] }} />
             </View>
-            <Text className="mt-1 text-[15px] font-black uppercase italic leading-none text-foreground">
-              PREMIUM{"\n"}<Text className="text-amber-400">GRILL</Text>
-            </Text>
-            <Text className="mt-1.5 text-[8px] font-bold text-white/70 uppercase">Fresh Catches</Text>
-            <Pressable
-              onPress={() => router.push({ pathname: "/products", params: { search: "grill" } })}
-              className="mt-3 self-start rounded-none bg-white px-3 py-1.5 active:bg-white/90 relative overflow-hidden"
-              style={{ shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 3 }}
-            >
-              <Text className="text-[7.5px] font-black uppercase text-black tracking-wider">EXPLORE</Text>
-              <Svg width={6} height={6} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}>
-                <Polygon points="0,0 6,0 0,6" fill="rgba(0,0,0,0.5)" />
-              </Svg>
-              <Svg width={6} height={6} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}>
-                <Polygon points="6,6 0,6 6,0" fill="rgba(0,0,0,0.5)" />
-              </Svg>
-            </Pressable>
-          </View>
 
-          {/* Right Panel B Content (Flame-Sea Collections) */}
-          <View style={{ position: "absolute", right: 16, bottom: 16, width: (width - 32) * 0.52, zIndex: 10, alignItems: "flex-end" }}>
-            <View className="flex-row items-center gap-1">
-              <Text className="text-[9px] font-black text-[#00f3ff] uppercase tracking-widest">⚡ PREMIUM</Text>
+            {/* Left Panel A Content (Maritime Grill Masters) */}
+            <View style={{ position: "absolute", left: 16, top: 16, width: (width - 32) * 0.52, zIndex: 10 }}>
+              <View className="flex-row items-center gap-1">
+                <Text className="text-[9px] font-black text-foreground uppercase tracking-widest">{promoDataParsed.panelA.subtitle}</Text>
+              </View>
+              <Text className="mt-1 text-[15px] font-black uppercase italic leading-none text-foreground">
+                {promoDataParsed.panelA.title.split('\n').map((line: string, idx: number) => (
+                  <Text key={idx} style={idx === 1 ? { color: '#fbbf24' } : undefined}>
+                    {line}{idx < promoDataParsed.panelA.title.split('\n').length - 1 ? '\n' : ''}
+                  </Text>
+                ))}
+              </Text>
+              <Text className="mt-1.5 text-[8px] font-bold text-white/70 uppercase">{promoDataParsed.panelA.tagline}</Text>
+              <Pressable
+                onPress={() => handleCMSNavigation(promoDataParsed.panelA.link)}
+                className="mt-3 self-start rounded-none bg-white px-3 py-1.5 active:bg-white/90 relative overflow-hidden"
+                style={{ shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 3 }}
+              >
+                <Text className="text-[7.5px] font-black uppercase text-black tracking-wider">EXPLORE</Text>
+                <Svg width={6} height={6} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}>
+                  <Polygon points="0,0 6,0 0,6" fill="rgba(0,0,0,0.5)" />
+                </Svg>
+                <Svg width={6} height={6} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}>
+                  <Polygon points="6,6 0,6 6,0" fill="rgba(0,0,0,0.5)" />
+                </Svg>
+              </Pressable>
             </View>
-            <Text className="mt-1 text-[15px] font-black uppercase italic leading-none text-white text-right">
-              PREMIUM{"\n"}<Text className="text-[#00d4ff]">SEAFOOD</Text>
-            </Text>
-            <Text className="mt-1.5 text-[8px] font-bold text-white/70 uppercase text-right">Prime Seasteak</Text>
-            <Pressable
-              onPress={() => router.push({ pathname: "/products", params: { search: "fry" } })}
-              className="mt-3 rounded-none border border-white/20 bg-black/40 px-3 py-1.5 active:bg-black/60 relative overflow-hidden"
-            >
-              <Text className="text-[7.5px] font-black uppercase text-white tracking-wider">VIEW ALL</Text>
-              <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
-                <Polygon points="0,0 6,0 0,6" fill="rgba(0,0,0,0.5)" />
-              </Svg>
-              <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
-                <Polygon points="6,6 0,6 6,0" fill="rgba(0,0,0,0.5)" />
-              </Svg>
-            </Pressable>
+
+            {/* Right Panel B Content (Flame-Sea Collections) */}
+            <View style={{ position: "absolute", right: 16, bottom: 16, width: (width - 32) * 0.52, zIndex: 10, alignItems: "flex-end" }}>
+              <View className="flex-row items-center gap-1">
+                <Text className="text-[9px] font-black text-[#00f3ff] uppercase tracking-widest">{promoDataParsed.panelB.subtitle}</Text>
+              </View>
+              <Text className="mt-1 text-[15px] font-black uppercase italic leading-none text-white text-right">
+                {promoDataParsed.panelB.title.split('\n').map((line: string, idx: number) => (
+                  <Text key={idx} style={idx === 1 ? { color: '#00d4ff' } : undefined}>
+                    {line}{idx < promoDataParsed.panelB.title.split('\n').length - 1 ? '\n' : ''}
+                  </Text>
+                ))}
+              </Text>
+              <Text className="mt-1.5 text-[8px] font-bold text-white/70 uppercase text-right">{promoDataParsed.panelB.tagline}</Text>
+              <Pressable
+                onPress={() => handleCMSNavigation(promoDataParsed.panelB.link)}
+                className="mt-3 rounded-none border border-white/20 bg-black/40 px-3 py-1.5 active:bg-black/60 relative overflow-hidden"
+              >
+                <Text className="text-[7.5px] font-black uppercase text-white tracking-wider">VIEW ALL</Text>
+                <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+                  <Polygon points="0,0 6,0 0,6" fill="rgba(0,0,0,0.5)" />
+                </Svg>
+                <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+                  <Polygon points="6,6 0,6 6,0" fill="rgba(0,0,0,0.5)" />
+                </Svg>
+              </Pressable>
+            </View>
+
+            {/* HUD Tech Corner Details */}
+            <View className="absolute top-2 right-2 w-3 h-3 border-t border-r border-white/20 pointer-events-none" />
+            <View className="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-white/20 pointer-events-none" />
+
+            {/* Beveled overlays for split promo */}
+            <Svg width="24" height="24" style={{ position: "absolute", top: -1, left: -1, zIndex: 40 }}>
+              <Path d="M0,0 L24,0 L0,24 Z" fill={colors.bg} />
+              <Path d="M24,0 L0,24" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+            </Svg>
+            <Svg width="24" height="24" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 40 }}>
+              <Path d="M24,24 L0,24 L24,0 Z" fill={colors.bg} />
+              <Path d="M0,24 L24,0" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+            </Svg>
           </View>
-
-          {/* HUD Tech Corner Details */}
-          <View className="absolute top-2 right-2 w-3 h-3 border-t border-r border-white/20 pointer-events-none" />
-          <View className="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-white/20 pointer-events-none" />
-
-          {/* Beveled overlays for split promo */}
-          <Svg width="24" height="24" style={{ position: "absolute", top: -1, left: -1, zIndex: 40 }}>
-            <Path d="M0,0 L24,0 L0,24 Z" fill={colors.bg} />
-            <Path d="M24,0 L0,24" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-          </Svg>
-          <Svg width="24" height="24" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 40 }}>
-            <Path d="M24,24 L0,24 L24,0 Z" fill={colors.bg} />
-            <Path d="M0,24 L24,0" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-          </Svg>
-        </View>
+        )}
 
 
 

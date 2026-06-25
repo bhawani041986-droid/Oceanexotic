@@ -6,6 +6,7 @@ export interface CmsItem {
   sector?: string;
   title?: string;
   image_url?: string;
+  metadata?: any;
 }
 
 export interface Territory {
