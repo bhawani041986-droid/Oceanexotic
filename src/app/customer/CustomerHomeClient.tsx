@@ -76,7 +76,7 @@ import { FULL_API_URL as API_BASE_URL } from "@/config/api";
 
 // --- Components ---
 
-const AndamanMaritimeMap = ({ territories }: { territories: any[] }) => {
+const AndamanMaritimeMap = ({ territories, mapId = 'andaman-maritime-map' }: { territories: any[], mapId?: string }) => {
   const mapRef = React.useRef<any>(null);
   const [isLReady, setIsLReady] = React.useState(false);
   const [isMapInit, setIsMapInit] = React.useState(false);
@@ -105,11 +105,11 @@ const AndamanMaritimeMap = ({ territories }: { territories: any[] }) => {
   React.useEffect(() => {
     if (!isLReady || isMapInit || typeof window === 'undefined') return;
     const L = (window as any).L;
-    const container = document.getElementById('andaman-maritime-map');
+    const container = document.getElementById(mapId);
     if (!container || (container as any)._leaflet_id) return;
 
     try {
-      mapRef.current = L.map('andaman-maritime-map', {
+      mapRef.current = L.map(mapId, {
         zoomControl: false, // Disable default
         attributionControl: false,
         dragging: true,
@@ -236,7 +236,7 @@ const AndamanMaritimeMap = ({ territories }: { territories: any[] }) => {
       `}} />
       
       <div 
-        id="andaman-maritime-map" 
+        id={mapId} 
         className="absolute inset-0 filter saturate-[1.1] brightness-[0.75] contrast-[1.1] hue-rotate-[210deg] opacity-100"
         style={{ width: '100%', height: '100%' }}
       />
@@ -881,6 +881,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
   const [featuredProducts, setFeaturedProducts] = React.useState<any[]>([]);
   const [activeReels, setActiveReels] = React.useState<any[]>([]);
   const [liveReviews, setLiveReviews] = React.useState<any[]>([]);
+  const [isMapExpanded, setIsMapExpanded] = React.useState(false);
 
   // Flash Deals Banner ref and size for responsive diagonal paddle alignment
   const bannerRef = React.useRef<HTMLDivElement>(null);
@@ -1957,10 +1958,9 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                </div>
             </div>
 
-            <div className="relative group flex justify-center w-full">
+            <div className="relative group flex justify-center w-full mt-4">
                <div 
-                  className="border text-text-primary transition-all hover:border-[var(--c-primary)]/30 w-full aspect-[4/3] bg-[#0B1120] border-[var(--foreground)]/10 overflow-hidden shadow-2xl relative"
-                  style={{ clipPath: 'polygon(30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0 30px)' }}
+                  className="border text-text-primary transition-all hover:border-[var(--c-primary)]/30 w-full aspect-video md:aspect-[21/9] rounded-3xl border-2 border-[var(--c-primary)]/20 overflow-hidden shadow-2xl shadow-[var(--c-primary)]/10 relative"
                >
                   {/* ANDAMAN DELIVERY MAP */}
                   <AndamanMaritimeMap territories={territories} />
@@ -1981,8 +1981,39 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                     <line x1="60%" y1="0" x2="60%" y2="100%" stroke="rgba(0, 243, 255, 0.04)" strokeWidth="1" />
                     <line x1="80%" y1="0" x2="80%" y2="100%" stroke="rgba(0, 243, 255, 0.04)" strokeWidth="1" />
                   </svg>
+
+                  {/* Enlarge Button */}
+                  <button 
+                    onClick={() => setIsMapExpanded(true)}
+                    className="absolute bottom-6 right-6 z-40 bg-black/80 backdrop-blur-md border border-[var(--c-primary)]/40 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest text-[var(--c-primary)] hover:bg-[var(--c-primary)]/20 transition-all flex items-center gap-2"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+                    ENLARGE MAP
+                  </button>
                </div>
             </div>
+
+            {/* FULLSCREEN MAP OVERLAY */}
+            <AnimatePresence>
+               {isMapExpanded && (
+                 <motion.div 
+                   initial={{ opacity: 0, scale: 0.95 }}
+                   animate={{ opacity: 1, scale: 1 }}
+                   exit={{ opacity: 0, scale: 0.95 }}
+                   className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4 md:p-10"
+                 >
+                   <div className="w-full h-full max-h-[90vh] md:max-h-[85vh] relative rounded-3xl border-2 border-[var(--c-primary)]/40 overflow-hidden shadow-[0_0_50px_rgba(0,243,255,0.1)]">
+                     <button 
+                       onClick={() => setIsMapExpanded(false)}
+                       className="absolute top-4 right-4 z-50 bg-black/80 backdrop-blur-md border border-red-500/40 p-3 rounded-full text-red-500 hover:bg-red-500/20 hover:scale-110 transition-all shadow-[0_0_15px_rgba(255,0,0,0.2)]"
+                     >
+                       <X className="w-5 h-5" />
+                     </button>
+                     <AndamanMaritimeMap territories={territories} mapId="andaman-maritime-map-enlarged" />
+                   </div>
+                 </motion.div>
+               )}
+            </AnimatePresence>
          </div>
       </section>
 
