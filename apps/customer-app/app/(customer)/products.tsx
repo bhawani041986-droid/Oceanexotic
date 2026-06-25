@@ -10,9 +10,11 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import api from "@/services/api";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useProductSearch, useProducts } from "@/hooks/useProducts";
+import { useDebounce } from "@/hooks/useDebounce";
 import { ProductCard } from "@/components/customer/ProductCard";
 import { SectionTitle } from "@/components/customer/SectionTitle";
 import { CutSelectionModal } from "@/components/customer/CutSelectionModal";
@@ -49,7 +51,8 @@ export default function ProductsScreen() {
   const colors = useThemeColors();
   const currentLanguage = useSettingsStore((s) => s.language); // force re-render
 
-  const [searchQuery, setSearchQuery] = useState(params.search ?? "");
+  const [searchText, setSearchText] = useState(params.search ?? "");
+  const searchQuery = useDebounce(searchText, 300);
   const [activeTab, setActiveTab] = useState(() => {
     if (!params.category) return "All Seafood";
     const slug = String(params.category).toLowerCase();
@@ -89,10 +92,9 @@ export default function ProductsScreen() {
       : (registry.data ?? []);
 
     return rawList.filter((p) => {
-      // 1. Name search matching (only needed if using client-side registry list directly, 
-      // but harmless to enforce for consistency)
-      const matchSearch = !searchQuery.trim() || p.name.toLowerCase().includes(searchQuery.toLowerCase());
-      if (!matchSearch) return false;
+      // When using server search results, skip redundant client-side name filter
+      // (server already filtered by name). Only apply it to registry list.
+      if (searchQuery.trim() && search.data) return true;
 
       // 2. Active Tab Category Resolver (Smart Mapping)
       if (activeTab === "All Seafood") return true;
@@ -191,6 +193,7 @@ export default function ProductsScreen() {
   }, [searchQuery, activeTab, registry.data, search.data]);
 
   const isLoading = registry.isLoading || (searchQuery.trim() ? search.isLoading : false);
+  const isSearching = searchText.trim() !== searchQuery.trim(); // debounce in progress
 
   const [addons, setAddons] = useState<any[]>([]);
   useEffect(() => {
@@ -256,18 +259,41 @@ export default function ProductsScreen() {
       >
         <SectionTitle title="Product Catalog" subtitle="Premium Seafood Discovery • Fast Delivery" />
 
-        <TextInput
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          placeholder={t('search_seafood')}
-          placeholderTextColor={colors.isDark ? "#94A3B8" : "#6B7280"}
-          className="mt-4 h-12 rounded-none border px-4 text-sm"
-          style={{ 
-            backgroundColor: colors.card, 
-            borderColor: colors.border, 
-            color: colors.text 
-          }}
-        />
+        {/* Polished Search Bar */}
+        <View
+          className="mt-4 h-12 flex-row items-center rounded-none border px-3"
+          style={{ backgroundColor: colors.card, borderColor: searchText.trim() ? colors.primary : colors.border }}
+        >
+          <MaterialCommunityIcons
+            name="magnify"
+            size={18}
+            color={searchText.trim() ? colors.primary : (colors.isDark ? "#94A3B8" : "#6B7280")}
+          />
+          <TextInput
+            value={searchText}
+            onChangeText={setSearchText}
+            placeholder={t('search_seafood')}
+            placeholderTextColor={colors.isDark ? "#94A3B8" : "#6B7280"}
+            style={{ flex: 1, color: colors.text, fontSize: 13, marginHorizontal: 8 }}
+            returnKeyType="search"
+            clearButtonMode="never"
+          />
+          {isSearching && (
+            <ActivityIndicator size="small" color={colors.primary} />
+          )}
+          {!isSearching && searchText.trim().length > 0 && (
+            <Pressable
+              onPress={() => setSearchText("")}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <MaterialCommunityIcons
+                name="close-circle"
+                size={18}
+                color={colors.isDark ? "#94A3B8" : "#6B7280"}
+              />
+            </Pressable>
+          )}
+        </View>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
           {TABS.map((tab) => {
