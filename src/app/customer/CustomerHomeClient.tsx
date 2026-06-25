@@ -2200,8 +2200,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                      <div 
                         className="absolute inset-0 -z-20 bg-cover bg-center"
                         style={{ 
-                           backgroundImage: `url(${promoDataParsed.panelA.image_url})`,
-                           opacity: 0.65
+                           backgroundImage: `url(${promoDataParsed.panelA.image_url})`
                         }}
                      />
                      {/* Gradient Overlay */}
@@ -2283,8 +2282,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                      <div 
                         className="absolute inset-0 -z-20 bg-cover bg-center"
                         style={{ 
-                           backgroundImage: `url(${promoDataParsed.panelB.image_url})`,
-                           opacity: 0.55
+                           backgroundImage: `url(${promoDataParsed.panelB.image_url})`
                         }}
                      />
                      {/* Gradient Overlay */}

@@ -712,7 +712,7 @@ export default function CustomerHomeScreen() {
               height={200}
               preserveAspectRatio="xMidYMid slice"
               clipPath="url(#clipGrill)"
-              opacity={0.65}
+              opacity={1}
             />
 
             {/* Panel B Gradient Overlay (bottom layer) */}
@@ -724,7 +724,7 @@ export default function CustomerHomeScreen() {
               height={200}
               preserveAspectRatio="xMidYMid slice"
               clipPath="url(#clipSea)"
-              opacity={0.55}
+              opacity={1}
             />
 
             {/* Neon Stacked Glow Divider */}
@@ -734,16 +734,30 @@ export default function CustomerHomeScreen() {
             <Line x1={width - 32} y1={0} x2={0} y2={200} stroke="url(#rgbDivider)" strokeWidth={1.5} opacity={1} />
           </Svg>
 
+          {/* Floating HUD SVG/Vector Icons (placed on top of background but behind text content) */}
+          <View style={[StyleSheet.absoluteFillObject, { opacity: 0.55 }]} pointerEvents="none">
+            {/* Panel A Icons (Left/Grill - Flame, ChefHat, Fish, Utensils, Timer, Activity, Zap) */}
+            <MaterialCommunityIcons name="fire" size={20} color="#ff007f" style={{ position: "absolute", top: 10, left: (width - 32) * 0.35 }} />
+            <MaterialCommunityIcons name="chef-hat" size={16} color="#ffaa00" style={{ position: "absolute", top: 50, left: (width - 32) * 0.25 }} />
+            <MaterialCommunityIcons name="fish" size={28} color="#ff007f" style={{ position: "absolute", top: 110, left: (width - 32) * 0.12, transform: [{ rotate: "-45deg" }] }} />
+            <MaterialCommunityIcons name="silverware-fork-knife" size={14} color="#fff" style={{ position: "absolute", top: 150, left: (width - 32) * 0.05 }} />
+            <MaterialCommunityIcons name="clock-outline" size={12} color="#00ff88" style={{ position: "absolute", top: 30, left: (width - 32) * 0.18 }} />
+            <MaterialCommunityIcons name="pulse" size={14} color="#ff007f" style={{ position: "absolute", top: 80, left: (width - 32) * 0.32 }} />
+            <MaterialCommunityIcons name="flash" size={14} color="#ffaa00" style={{ position: "absolute", top: 15, left: (width - 32) * 0.45 }} />
+
+            {/* Panel B Icons (Right/Sea - Waves, Gauge, Anchor, Ship, Compass, Windy, Navigation, Seashell) */}
+            <MaterialCommunityIcons name="waves" size={20} color="#00d4ff" style={{ position: "absolute", bottom: 10, right: (width - 32) * 0.35 }} />
+            <MaterialCommunityIcons name="gauge" size={16} color="#00ff88" style={{ position: "absolute", bottom: 50, right: (width - 32) * 0.25 }} />
+            <MaterialCommunityIcons name="anchor" size={24} color="#fff" style={{ position: "absolute", bottom: 110, right: (width - 32) * 0.12, transform: [{ rotate: "15deg" }] }} />
+            <MaterialCommunityIcons name="ferry" size={16} color="#ffaa00" style={{ position: "absolute", bottom: 150, right: (width - 32) * 0.05 }} />
+            <MaterialCommunityIcons name="compass-outline" size={16} color="#00d4ff" style={{ position: "absolute", bottom: 30, right: (width - 32) * 0.18 }} />
+            <MaterialCommunityIcons name="weather-windy" size={14} color="#00d4ff" style={{ position: "absolute", bottom: 80, right: (width - 32) * 0.32 }} />
+            <MaterialCommunityIcons name="navigation" size={12} color="#00ff88" style={{ position: "absolute", bottom: 15, right: (width - 32) * 0.45 }} />
+            <MaterialCommunityIcons name="fish" size={16} color="#ffaa00" style={{ position: "absolute", bottom: 45, right: (width - 32) * 0.08, transform: [{ rotate: "45deg" }] }} />
+          </View>
+
           {/* Left Panel A Content (Maritime Grill Masters) */}
           <View style={{ position: "absolute", left: 16, top: 16, width: (width - 32) * 0.52, zIndex: 10 }}>
-            {/* Floating HUD Icons for Grill Panel */}
-            <View style={StyleSheet.absoluteFillObject} className="pointer-events-none opacity-20">
-              <MaterialCommunityIcons name="fire" size={24} color="#E23744" style={{ position: "absolute", top: 10, left: 70 }} />
-              <MaterialCommunityIcons name="fish" size={26} color="#fff" style={{ position: "absolute", top: 80, left: 30, transform: [{ rotate: "-45deg" }] }} />
-              <MaterialCommunityIcons name="silverware-fork-knife" size={20} color="#fff" style={{ position: "absolute", top: 110, left: 90 }} />
-              <MaterialCommunityIcons name="chef-hat" size={22} color="#E23744" style={{ position: "absolute", top: 30, left: 120 }} />
-            </View>
-
             <View className="flex-row items-center gap-1">
               <Text className="text-[9px] font-black text-foreground uppercase tracking-widest">🔥 GRILL MASTER</Text>
             </View>
@@ -768,14 +782,6 @@ export default function CustomerHomeScreen() {
 
           {/* Right Panel B Content (Flame-Sea Collections) */}
           <View style={{ position: "absolute", right: 16, bottom: 16, width: (width - 32) * 0.52, zIndex: 10, alignItems: "flex-end" }}>
-            {/* Floating HUD Icons for Sea Panel */}
-            <View style={StyleSheet.absoluteFillObject} className="pointer-events-none opacity-20">
-              <MaterialCommunityIcons name="water" size={24} color="#00d4ff" style={{ position: "absolute", bottom: 10, right: 70 }} />
-              <MaterialCommunityIcons name="anchor" size={26} color="#fff" style={{ position: "absolute", bottom: 80, right: 30, transform: [{ rotate: "15deg" }] }} />
-              <MaterialCommunityIcons name="compass-outline" size={22} color="#00d4ff" style={{ position: "absolute", bottom: 110, right: 90 }} />
-              <MaterialCommunityIcons name="ferry" size={20} color="#fff" style={{ position: "absolute", bottom: 30, right: 120 }} />
-            </View>
-
             <View className="flex-row items-center gap-1">
               <Text className="text-[9px] font-black text-[#00f3ff] uppercase tracking-widest">⚡ PREMIUM</Text>
             </View>
