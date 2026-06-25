@@ -189,7 +189,7 @@ export default function RecipeDetailsScreen() {
             </View>
           ) : (
             <Image 
-              source={{ uri: recipe.image_url || recipe.image }} 
+              source={{ uri: (recipe.gallery && recipe.gallery.length > 0) ? recipe.gallery[0] : (recipe.image_url || recipe.image) }} 
               style={{ width: '100%', height: '100%' }}
               contentFit="cover"
             />

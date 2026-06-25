@@ -82,7 +82,7 @@ export default function CustomerRecipesPage() {
           region: (metaVal as any).region || "Andaman Local",
           difficulty: (metaVal as any).difficulty || "Medium",
           time: (metaVal as any).time || "25m",
-          image: c.image_url || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800",
+          image: (metaVal.gallery && metaVal.gallery.length > 0) ? metaVal.gallery[0] : (c.image_url || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800"),
           isDynamic: true
         };
       });

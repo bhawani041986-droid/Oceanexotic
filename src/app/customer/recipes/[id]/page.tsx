@@ -147,7 +147,7 @@ export default function CustomerRecipeDetailsPage() {
     return {
       id: String(found.id),
       title: found.title,
-      image_url: found.image_url || found.image,
+      image_url: (metaVal.gallery && metaVal.gallery.length > 0) ? metaVal.gallery[0] : (found.image_url || found.image),
       metadata: metaVal,
       ingredients: metaVal.ingredients || [
         "500g Fresh Catch fish",

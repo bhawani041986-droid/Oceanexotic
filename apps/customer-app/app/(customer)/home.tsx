@@ -682,7 +682,7 @@ export default function CustomerHomeScreen() {
                   className="w-full relative overflow-hidden shadow-2xl"
                 >
                   <Image 
-                    source={{ uri: recipe.image_url || recipe.image }} 
+                    source={{ uri: (meta.gallery && meta.gallery.length > 0) ? meta.gallery[0] : (recipe.image_url || recipe.image) }} 
                     className="absolute inset-0 h-full w-full opacity-60" 
                     contentFit="cover"
                   />
