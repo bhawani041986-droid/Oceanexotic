@@ -550,13 +550,34 @@ export default function ProductDetailPage({
                         <p className="text-[8px] font-black text-[var(--c-text-secondary)] uppercase tracking-widest">Price</p>
                         <span className="text-[8px] font-bold text-[var(--c-primary)] uppercase tracking-widest italic">• {product.weight}</span>
                      </div>
-               <div className="flex items-baseline gap-[4px]">
+                     <div className="flex items-baseline gap-[4px]">
                         <span className="text-3xl font-black text-[var(--c-text-primary)] italic">₹{currentPrice.toLocaleString()}</span>
-                        {product.originalPrice > currentPrice && (
-                          <span className="text-sm text-[var(--c-text-secondary)] line-through italic font-bold">
-                            ₹{product.originalPrice.toLocaleString()}
-                          </span>
-                        )}
+                        {(() => {
+                          const discountPercent = product?.discount_percent > 0 
+                            ? Number(product.discount_percent) 
+                            : (product?.originalPrice > currentPrice 
+                              ? Math.round(((product.originalPrice - currentPrice) / product.originalPrice) * 100) 
+                              : 0);
+
+                          const originalPrice = product?.originalPrice 
+                            ? (product.discount_percent > 0 
+                              ? Math.round((currentPrice * 100) / (100 - product.discount_percent)) 
+                              : product.originalPrice)
+                            : (discountPercent > 0 
+                              ? Math.round((currentPrice * 100) / (100 - discountPercent)) 
+                              : null);
+
+                          return originalPrice > currentPrice ? (
+                            <>
+                              <span className="text-sm text-[var(--c-text-secondary)] line-through italic font-bold">
+                                ₹{originalPrice.toLocaleString()}
+                              </span>
+                              <Badge className="bg-success text-[7px] font-black uppercase italic rounded-full border-none px-2 py-0.5 text-white ml-1.5 align-middle">
+                                {discountPercent}% OFF
+                              </Badge>
+                            </>
+                          ) : null;
+                        })()}
                      </div>
                   </div>
                   <div className="inline-flex items-center py-0.5 uppercase tracking-widest transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-success/10 text-success border border-success/20 h-6 px-3 rounded-full text-[8px] font-black shadow-glow-purple">

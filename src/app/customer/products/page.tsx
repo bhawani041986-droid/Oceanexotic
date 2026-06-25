@@ -361,9 +361,28 @@ function ProductListingContent() {
       // Hydrate Catalog with extended metadata fallbacks
       const hydrated = data.map((p: any) => {
         const fallback = MASTER_PRODUCT_REGISTRY.find(m => m.id === p.id) || MASTER_PRODUCT_REGISTRY[0];
+        const discountPercent = p.discount_percent !== undefined && p.discount_percent !== null && p.discount_percent > 0
+          ? Number(p.discount_percent)
+          : (fallback.originalPrice > p.price
+            ? Math.round(((fallback.originalPrice - p.price) / fallback.originalPrice) * 100)
+            : 0);
+
+        const originalPrice = fallback.originalPrice
+          ? (p.discount_percent > 0
+            ? Math.round((p.price * 100) / (100 - p.discount_percent))
+            : fallback.originalPrice)
+          : (discountPercent > 0
+            ? Math.round((p.price * 100) / (100 - discountPercent))
+            : null);
+
+        const discountStr = discountPercent > 0 ? `${discountPercent}% OFF` : null;
+
         return {
           ...fallback,
           ...p,
+          originalPrice,
+          discount_percent: discountPercent,
+          discount: discountStr,
           images: p.image_url ? [p.image_url] : fallback.images,
           status: p.stock <= 0 ? "OUT OF STOCK" : (p.status || "ACTIVE")
         };

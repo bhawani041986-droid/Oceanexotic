@@ -43,12 +43,24 @@ export const productService = {
       return data.map((apiProd) => {
         const registryProd = MASTER_PRODUCT_REGISTRY.find(p => p.id === apiProd.id);
         if (registryProd) {
+          const discountPercent = apiProd.discount_percent !== undefined && apiProd.discount_percent !== null && (apiProd.discount_percent ?? 0) > 0
+            ? Number(apiProd.discount_percent)
+            : (registryProd.originalPrice > apiProd.price
+              ? Math.round(((registryProd.originalPrice - apiProd.price) / registryProd.originalPrice) * 100)
+              : 0);
+
+          const originalPrice = registryProd.originalPrice
+            ? ((apiProd.discount_percent ?? 0) > 0
+              ? Math.round((apiProd.price * 100) / (100 - (apiProd.discount_percent ?? 0)))
+              : registryProd.originalPrice)
+            : (discountPercent > 0
+              ? Math.round((apiProd.price * 100) / (100 - discountPercent))
+              : apiProd.price);
+
           return {
             ...apiProd,
-            original_price: registryProd.originalPrice || apiProd.price,
-            discount_percent: registryProd.originalPrice 
-              ? Math.round(((registryProd.originalPrice - apiProd.price) / registryProd.originalPrice) * 100)
-              : undefined,
+            original_price: originalPrice,
+            discount_percent: discountPercent > 0 ? discountPercent : undefined,
             badge: registryProd.badge,
             rating: registryProd.rating || apiProd.rating,
             description: apiProd.description || registryProd.description,
@@ -66,13 +78,26 @@ export const productService = {
     if (data) {
       const registryProd = MASTER_PRODUCT_REGISTRY.find(p => p.id === id);
       if (registryProd) {
+        const discountPercent = data.discount_percent !== undefined && data.discount_percent !== null && data.discount_percent > 0
+          ? Number(data.discount_percent)
+          : (registryProd.originalPrice > data.price
+            ? Math.round(((registryProd.originalPrice - data.price) / registryProd.originalPrice) * 100)
+            : 0);
+
+        const originalPrice = registryProd.originalPrice
+          ? (data.discount_percent > 0
+            ? Math.round((data.price * 100) / (100 - data.discount_percent))
+            : registryProd.originalPrice)
+          : (discountPercent > 0
+            ? Math.round((data.price * 100) / (100 - discountPercent))
+            : data.price);
+
         return {
           ...registryProd,
           ...data,
-          original_price: registryProd.originalPrice || data.price,
-          discount_percent: registryProd.originalPrice 
-            ? Math.round(((registryProd.originalPrice - data.price) / registryProd.originalPrice) * 100)
-            : undefined,
+          original_price: originalPrice,
+          originalPrice: originalPrice,
+          discount_percent: discountPercent,
           nutrition: data.nutrition || registryProd.nutrition,
           variants: data.variants || registryProd.variants,
           addons: data.addons || registryProd.addons,
