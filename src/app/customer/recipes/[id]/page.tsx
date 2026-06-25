@@ -22,7 +22,6 @@ import {
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { RECIPES_DB } from "@/constants/recipes";
 import { FULL_API_URL as API_BASE_URL } from "@/config/api";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
@@ -95,22 +94,6 @@ export default function CustomerRecipeDetailsPage() {
   }, []);
 
   const recipe = useMemo(() => {
-    const foundLocal = RECIPES_DB.find(r => r.id === id);
-    if (foundLocal) {
-      return {
-        id: foundLocal.id,
-        title: foundLocal.title,
-        image_url: foundLocal.image,
-        metadata: { difficulty: foundLocal.difficulty, time: foundLocal.time },
-        ingredients: foundLocal.ingredients,
-        steps: foundLocal.steps,
-        gallery: [foundLocal.image],
-        fishType: foundLocal.fishType,
-        prepType: foundLocal.prepType,
-        region: foundLocal.region
-      } as any;
-    }
-
     let found = cmsContent.find(c => String(c.id) === id);
     if (!found) {
       return {

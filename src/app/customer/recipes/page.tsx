@@ -87,7 +87,7 @@ export default function CustomerRecipesPage() {
         };
       });
 
-    return [...dynamicRecipes, ...RECIPES_DB];
+    return dynamicRecipes;
   }, [cmsContent]);
 
   // Filtered recipes list

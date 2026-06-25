@@ -545,6 +545,60 @@ export default function AdminCMSPage() {
                              <Input disabled={viewOnly || isSaving} value={formData.metadata?.time || ""} onChange={(e) => setFormData({...formData, metadata: { ...formData.metadata, time: e.target.value }})} placeholder="e.g. 30 min" className="h-12 bg-black/50 border-primary/20 text-primary" />
                           </div>
                        </div>
+                       
+                       <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                             <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Prep Type</label>
+                             <select disabled={viewOnly || isSaving} value={formData.metadata?.prepType || "Curry"} onChange={(e) => setFormData({...formData, metadata: { ...formData.metadata, prepType: e.target.value }})} className="w-full h-12 bg-black/50 border border-primary/20 rounded-xl px-4 text-xs font-black uppercase text-primary">
+                                <option value="Curry">CURRY</option>
+                                <option value="Grill">GRILL</option>
+                                <option value="Fry">FRY</option>
+                             </select>
+                          </div>
+                          <div className="space-y-2">
+                             <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Region</label>
+                             <select disabled={viewOnly || isSaving} value={formData.metadata?.region || "Andaman Local"} onChange={(e) => setFormData({...formData, metadata: { ...formData.metadata, region: e.target.value }})} className="w-full h-12 bg-black/50 border border-primary/20 rounded-xl px-4 text-xs font-black uppercase text-primary">
+                                <option value="Andaman Local">ANDAMAN LOCAL</option>
+                                <option value="South Indian">SOUTH INDIAN</option>
+                                <option value="Bengali">BENGALI</option>
+                                <option value="Telugu">TELUGU</option>
+                             </select>
+                          </div>
+                       </div>
+
+                       <div className="space-y-2">
+                          <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Ingredients (One per line)</label>
+                          <textarea 
+                             disabled={viewOnly || isSaving}
+                             value={formData.metadata?.ingredients?.join('\n') || ""}
+                             onChange={(e) => setFormData({
+                                ...formData,
+                                metadata: {
+                                   ...formData.metadata,
+                                   ingredients: e.target.value.split('\n')
+                                }
+                             })}
+                             placeholder="e.g.&#10;500g Fresh Snapper&#10;2 tbsp Coconut oil"
+                             className="w-full h-32 bg-black/50 border border-primary/20 rounded-xl p-4 text-xs text-primary outline-none focus:border-primary/50"
+                          />
+                       </div>
+
+                       <div className="space-y-2">
+                          <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Steps / Instructions (One per line)</label>
+                          <textarea 
+                             disabled={viewOnly || isSaving}
+                             value={formData.metadata?.steps?.join('\n') || ""}
+                             onChange={(e) => setFormData({
+                                ...formData,
+                                metadata: {
+                                   ...formData.metadata,
+                                   steps: e.target.value.split('\n')
+                                }
+                             })}
+                             placeholder="e.g.&#10;Clean the fish thoroughly.&#10;Marinate with salt."
+                             className="w-full h-32 bg-black/50 border border-primary/20 rounded-xl p-4 text-xs text-primary outline-none focus:border-primary/50"
+                          />
+                       </div>
                     </div>
                  )}
 

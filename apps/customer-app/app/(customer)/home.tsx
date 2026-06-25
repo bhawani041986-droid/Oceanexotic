@@ -48,10 +48,7 @@ import api from "@/services/api";
 type BatchFilter = "ALL" | "MORNING" | "AFTERNOON" | "EVENING";
 
 
-const RECIPES = [
-  { id: "REC-1", title: "Pan-Seared King Salmon", time: "20 min", difficulty: "Easy", image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&q=80" },
-  { id: "REC-2", title: "Spicy Garlic Tiger Prawns", time: "15 min", difficulty: "Medium", image: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80" },
-];
+
 
 const FALLBACK_REVIEWS = [
   { id: "REV-1", user_name: "Arjun Das", comment: "Incredible quality. Arrived perfectly chilled.", rating: 5 },
@@ -664,9 +661,7 @@ export default function CustomerHomeScreen() {
             </Pressable>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
-            {((cms.data?.filter(c => c.type === 'RECIPE' && c.status === 'PUBLISHED')?.length || 0) > 0
-               ? cms.data!.filter(c => c.type === 'RECIPE' && c.status === 'PUBLISHED')
-               : RECIPES).map((recipe: any) => {
+            {(cms.data?.filter(c => c.type === 'RECIPE' && c.status === 'PUBLISHED') || []).map((recipe: any) => {
                const meta = recipe.metadata ? (typeof recipe.metadata === 'string' ? JSON.parse(recipe.metadata) : recipe.metadata) : {};
                return (
               <Pressable

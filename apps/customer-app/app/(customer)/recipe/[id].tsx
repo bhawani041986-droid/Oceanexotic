@@ -8,7 +8,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Svg, { Path, Circle } from 'react-native-svg';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useHomeData } from '@/hooks/useHomeData';
-import { RECIPES_DB } from '@/constants/recipes';
 import { ChamferedBox } from '@/components/ui/ChamferedBox';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -61,22 +60,7 @@ export default function RecipeDetailsScreen() {
   const colors = useThemeColors();
   const { cms } = useHomeData();
   const [activeImg, setActiveImg] = React.useState(0);
-
   const recipe = useMemo(() => {
-    // Try to find in local recipes database first
-    const foundLocal = RECIPES_DB.find(r => r.id === id);
-    if (foundLocal) {
-      return {
-        id: foundLocal.id,
-        title: foundLocal.title,
-        image_url: foundLocal.image,
-        metadata: JSON.stringify({ difficulty: foundLocal.difficulty, time: foundLocal.time }),
-        ingredients: foundLocal.ingredients,
-        steps: foundLocal.steps,
-        gallery: [foundLocal.image]
-      } as any;
-    }
-
     // Fallback to CMS dynamic recipes
     let found: any = cms?.data?.find((c: any) => c.id?.toString() === id);
     if (!found) {
