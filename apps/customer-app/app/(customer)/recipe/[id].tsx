@@ -238,7 +238,7 @@ export default function RecipeDetailsScreen() {
         className="flex-1" 
         bounces={false}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 120 }}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 160 }}
       >
         {/* Immersive Header Image / Gallery */}
         <View style={{ height: HEADER_HEIGHT }} className="relative w-full bg-black">
@@ -294,7 +294,7 @@ export default function RecipeDetailsScreen() {
 
           {/* Bottom Gradient Overlay for Title Text readability */}
           <LinearGradient 
-            colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.7)']} 
+            colors={['transparent', colors.bg]} 
             style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 130, zIndex: 10 }}
             className="pointer-events-none"
           />
@@ -665,39 +665,60 @@ export default function RecipeDetailsScreen() {
             </ChamferedBox>
 
             {/* Comments Feed List */}
-            <View className="space-y-3 mt-4">
+            <View className="space-y-4 mt-6">
               {comments.map((comment) => (
                 <ChamferedBox
                   key={comment.id}
-                  fillColor={colors.card}
-                  strokeColor={colors.border}
+                  fillColor="transparent"
+                  strokeColor="rgba(255,255,255,0.05)"
                   bevelSize={10}
                   style={{ minHeight: 0 }}
-                  className="w-full relative overflow-hidden"
+                  className="w-full relative overflow-hidden shadow-xl"
                 >
-                  <View className="p-4 flex-row gap-3.5">
+                  <LinearGradient
+                    colors={[`${colors.card}e6`, `${colors.bg}fa`]}
+                    className="p-4 flex-row gap-4"
+                  >
+                    {/* Subtle left accent */}
+                    <View className="absolute left-0 top-0 bottom-0 w-[2px] opacity-40" style={{ backgroundColor: colors.primary }} />
+
                     <Image 
                       source={{ uri: comment.avatar }} 
-                      className="w-10 h-10 rounded-full border" 
-                      style={{ borderColor: colors.border }}
+                      className="w-11 h-11 rounded-none border border-white/10" 
+                      style={{ 
+                        shadowColor: colors.primary,
+                        shadowOpacity: 0.2,
+                        shadowRadius: 5
+                      }}
                     />
-                    <View className="flex-1 space-y-1">
-                      <View className="flex-row justify-between items-center">
-                        <View className="flex-row items-center gap-2 flex-wrap">
-                          <Text className="text-xs font-bold" style={{ color: colors.text }}>{comment.user}</Text>
-                          <Text className="text-[8px] font-medium uppercase" style={{ color: colors.textMuted }}>{comment.time}</Text>
+                    
+                    <View className="flex-1 space-y-1.5 pt-0.5">
+                      <View className="flex-row justify-between items-start">
+                        <View className="flex-1">
+                          <Text className="text-xs font-black uppercase tracking-wider" style={{ color: colors.text }}>{comment.user}</Text>
+                          <Text className="text-[9px] font-bold uppercase tracking-[0.2em] opacity-60" style={{ color: colors.textMuted }}>{comment.time}</Text>
                         </View>
-                        <View className="flex-row gap-0.5">
-                          {Array.from({ length: comment.rating }).map((_, idx) => (
-                            <MaterialCommunityIcons key={idx} name="star" size={10} color="#eab308" />
+                        
+                        {/* Star Rating Badge */}
+                        <View className="flex-row gap-0.5 bg-black/20 px-2 py-1 rounded-full border border-white/5">
+                          {Array.from({ length: 5 }).map((_, idx) => (
+                            <MaterialCommunityIcons 
+                              key={idx} 
+                              name="star" 
+                              size={10} 
+                              color={idx < comment.rating ? "#eab308" : "rgba(255,255,255,0.1)"} 
+                            />
                           ))}
                         </View>
                       </View>
-                      <Text className="text-xs leading-relaxed font-medium" style={{ color: colors.textMuted }}>
-                        {comment.text}
-                      </Text>
+                      
+                      <View className="pt-1">
+                        <Text className="text-xs leading-[1.6] font-medium" style={{ color: colors.text, opacity: 0.85 }}>
+                          "{comment.text}"
+                        </Text>
+                      </View>
                     </View>
-                  </View>
+                  </LinearGradient>
                 </ChamferedBox>
               ))}
             </View>

@@ -661,7 +661,7 @@ export default function CustomerHomeScreen() {
             </Pressable>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
-            {(cms.data?.filter(c => c.type === 'RECIPE' && c.status === 'PUBLISHED') || []).map((recipe: any) => {
+            {(cms.data?.filter(c => c.type === 'RECIPE' && c.status === 'PUBLISHED') || []).slice(0, 6).map((recipe: any) => {
                const meta = recipe.metadata ? (typeof recipe.metadata === 'string' ? JSON.parse(recipe.metadata) : recipe.metadata) : {};
                return (
               <Pressable
