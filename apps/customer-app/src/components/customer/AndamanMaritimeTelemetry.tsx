@@ -132,23 +132,20 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
 
           const icon = L.divIcon({
             className: "maritime-cyber-pointer",
-            html: `<div class="relative" style="width: 20px; height: 20px;">
-                  <div class="w-3 h-3 flex items-center justify-center">
-                      <div class="absolute w-6 h-6 rounded-none border border-[var(--foreground)]/10 animate-ping" style="border-color: ${color}22"></div>
-                      <div class="w-2.5 h-2.5 rounded-none border border-white shadow-[0_0_8px_${color}]" style="background-color: ${color}"></div>
+            html: `<div class="relative" style="position: relative; width: 20px; height: 20px;">
+                  <div class="flex items-center justify-center" style="width: 12px; height: 12px; display: flex; align-items: center; justify-content: center;">
+                      <div class="animate-ping" style="position: absolute; width: 24px; height: 24px; border: 1px solid ${color}22; border-radius: 50%;"></div>
+                      <div style="width: 10px; height: 10px; border: 1px solid white; box-shadow: 0 0 8px ${color}; background-color: ${color}; border-radius: 50%;"></div>
                   </div>
-                  <div class="absolute bottom-[2px] left-1/2 -translate-x-1/2 animate-pulse">
+                  <div class="animate-pulse" style="position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);">
                     <svg width="12" height="8" viewBox="0 0 24 16" fill="${color}" style="filter: drop-shadow(0 0 3px ${color}88)">
                       <path d="M0 0 L24 0 L12 16 Z" />
                     </svg>
                   </div>
-                  <div class="absolute bottom-[10px] left-1/2 -translate-x-1/2 bg-black/95 border-b-2 px-3 py-1.5 flex flex-col items-center shadow-[0_0_20px_rgba(0,0,0,0.6)] rounded whitespace-nowrap" 
-                       style="border-bottom-color: ${color}; transform: translateX(-50%); pointer-events: none; width: max-content;">
-                       <div class="flex items-center gap-1.5">
-                         <span class="text-[10px] font-black text-white/40 uppercase tracking-tighter">NODE REG: 0${i + 1}</span>
-                         <div class="w-1.5 h-1.5 rounded-none bg-emerald-500 animate-pulse"></div>
-                       </div>
-                       <span class="text-xs font-black text-white uppercase tracking-wider">${t.name}</span>
+                  <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); pointer-events: none; width: max-content; background: rgba(11, 17, 32, 0.95); border: 1.5px solid ${color}88; border-radius: 8px; padding: 6px 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 0 15px ${color}40, inset 0 0 10px ${color}20; white-space: nowrap;">
+                       <span style="color: ${color}; font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 8px ${color}88; font-family: sans-serif;">
+                           ${t.name}
+                       </span>
                   </div>
               </div>`,
             iconSize: [20, 20],
@@ -186,23 +183,20 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
         ${polylineCode}
         var icon_${i} = L.divIcon({
           className: "maritime-cyber-pointer",
-          html: \`<div class="relative" style="width: 20px; height: 20px;">
-                <div class="w-3 h-3 flex items-center justify-center">
-                    <div class="absolute w-6 h-6 border border-[#ffffff]/10 animate-ping" style="border-color: ${color}22; border-radius: 50%;"></div>
-                    <div class="w-2.5 h-2.5 border border-white shadow-[0_0_8px_${color}]" style="background-color: ${color}; border-radius: 50%;"></div>
+          html: \`<div class="relative" style="position: relative; width: 20px; height: 20px;">
+                <div class="flex items-center justify-center" style="width: 12px; height: 12px; display: flex; align-items: center; justify-content: center;">
+                    <div class="animate-ping" style="position: absolute; width: 24px; height: 24px; border: 1px solid ${color}22; border-radius: 50%;"></div>
+                    <div style="width: 10px; height: 10px; border: 1px solid white; box-shadow: 0 0 8px ${color}; background-color: ${color}; border-radius: 50%;"></div>
                 </div>
-                <div class="absolute bottom-[2px] left-1/2 -translate-x-1/2 animate-pulse">
+                <div class="animate-pulse" style="position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);">
                   <svg width="12" height="8" viewBox="0 0 24 16" fill="${color}" style="filter: drop-shadow(0 0 3px ${color}88)">
                     <path d="M0 0 L24 0 L12 16 Z" />
                   </svg>
                 </div>
-                <div class="absolute bottom-[10px] left-1/2 -translate-x-1/2 bg-black/95 border-b-2 px-3 py-1.5 flex flex-col items-center shadow-[0_0_20px_rgba(0,0,0,0.6)] rounded whitespace-nowrap" 
-                     style="border-bottom-color: ${color}; transform: translateX(-50%); pointer-events: none; width: max-content;">
-                     <div class="flex items-center gap-1.5">
-                       <span class="text-[10px] font-black text-white/40 uppercase tracking-tighter">NODE REG: 0${i + 1}</span>
-                       <div class="w-1.5 h-1.5 bg-emerald-500 animate-pulse" style="border-radius: 50%;"></div>
-                     </div>
-                     <span class="text-xs font-black text-white uppercase tracking-wider">${t.name}</span>
+                <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); pointer-events: none; width: max-content; background: rgba(11, 17, 32, 0.95); border: 1.5px solid ${color}88; border-radius: 8px; padding: 6px 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 0 15px ${color}40, inset 0 0 10px ${color}20; white-space: nowrap;">
+                     <span style="color: ${color}; font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 8px ${color}88; font-family: sans-serif;">
+                         ${t.name}
+                     </span>
                 </div>
             </div>\`,
           iconSize: [20, 20],
