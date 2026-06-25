@@ -2054,7 +2054,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
          <div className="grid grid-cols-2 gap-1 md:gap-10">
             {(cmsContent.filter(c => c.type === 'RECIPE' && c.status === 'PUBLISHED').length > 0 
                ? cmsContent.filter(c => c.type === 'RECIPE' && c.status === 'PUBLISHED')
-               : RECIPES).map((recipe: any) => {
+               : RECIPES).slice(0, 6).map((recipe: any) => {
                const meta = recipe.metadata ? (typeof recipe.metadata === 'string' ? JSON.parse(recipe.metadata) : recipe.metadata) : {};
                return (
                <div 
