@@ -142,8 +142,8 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
                       <path d="M0 0 L24 0 L12 16 Z" />
                     </svg>
                   </div>
-                  <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); pointer-events: none; width: max-content; background: rgba(11, 17, 32, 0.95); border: 1.5px solid ${color}88; border-radius: 8px; padding: 6px 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 0 15px ${color}40, inset 0 0 10px ${color}20; white-space: nowrap;">
-                       <span style="color: ${color}; font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 8px ${color}88; font-family: sans-serif;">
+                  <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); pointer-events: none; width: max-content; background: rgba(11, 17, 32, 0.95); border: 1px solid ${color}88; border-radius: 4px; padding: 2px 6px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 0 8px ${color}40, inset 0 0 5px ${color}20; white-space: nowrap;">
+                       <span style="color: ${color}; font-size: 7px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 0 4px ${color}88; font-family: sans-serif;">
                            ${t.name}
                        </span>
                   </div>
@@ -193,8 +193,8 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
                     <path d="M0 0 L24 0 L12 16 Z" />
                   </svg>
                 </div>
-                <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); pointer-events: none; width: max-content; background: rgba(11, 17, 32, 0.95); border: 1.5px solid ${color}88; border-radius: 8px; padding: 6px 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 0 15px ${color}40, inset 0 0 10px ${color}20; white-space: nowrap;">
-                     <span style="color: ${color}; font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 8px ${color}88; font-family: sans-serif;">
+                <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); pointer-events: none; width: max-content; background: rgba(11, 17, 32, 0.95); border: 1px solid ${color}88; border-radius: 4px; padding: 2px 6px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 0 8px ${color}40, inset 0 0 5px ${color}20; white-space: nowrap;">
+                     <span style="color: ${color}; font-size: 7px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 0 4px ${color}88; font-family: sans-serif;">
                          ${t.name}
                      </span>
                 </div>
@@ -355,13 +355,15 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
       style={{ height: radarSize * 0.75, width: "100%", borderColor: colors.primary + "33" }} 
       className="relative bg-[#0B1120] shadow-2xl shadow-primary/10 border-2 rounded-3xl self-center overflow-hidden"
     >
-      <WebView
-        source={{ html: generateWebViewHTML() }}
-        style={{ flex: 1, backgroundColor: 'transparent' }}
-        scrollEnabled={false}
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-      />
+      {!isMapExpanded && (
+        <WebView
+          source={{ html: generateWebViewHTML() }}
+          style={{ flex: 1, backgroundColor: 'transparent' }}
+          scrollEnabled={false}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
       {renderMapOverlays()}
     </View>
   );
