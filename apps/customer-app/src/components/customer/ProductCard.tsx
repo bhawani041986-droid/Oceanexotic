@@ -61,7 +61,7 @@ export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCar
           style={{ aspectRatio: 1, backgroundColor: colors.isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.03)" }}
         >
           {uri && (uri.startsWith("http") || uri.startsWith("/") || uri.startsWith("data:")) ? (
-            <Image source={{ uri }} className="h-full w-full" contentFit="cover" />
+            <Image source={{ uri }} className="h-full w-full" contentFit="contain" />
           ) : (
             <View className="flex-1 items-center justify-center">
               <Text className="text-5xl">🐟</Text>

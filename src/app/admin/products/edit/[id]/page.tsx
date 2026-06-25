@@ -428,6 +428,16 @@ export default function AdminEditProductPage() {
                   <Input value={formData.discount_percent} onChange={(e) => setFormData({...formData, discount_percent: parseInt(e.target.value) || 0})} type="number" className="h-[52px] rounded-[16px] border-red-500/20" style={{ backgroundColor: 'var(--agent-bg)', color: 'var(--agent-text)' }} />
                 </div>
               </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-widest ml-1">Description</label>
+                <textarea 
+                  value={formData.description} 
+                  onChange={(e) => setFormData({...formData, description: e.target.value})} 
+                  className="w-full border rounded-[16px] p-4 text-xs font-black outline-none min-h-[100px] resize-y" 
+                  style={{ backgroundColor: 'var(--agent-bg)', borderColor: 'var(--agent-border)', color: 'var(--agent-text)' }}
+                  placeholder="Enter comprehensive product description..."
+                />
+              </div>
             </div>
           </Card>
 
@@ -969,7 +979,7 @@ export default function AdminEditProductPage() {
               >
                 {formData.image_url ? (
                   <div className="w-full h-full relative group">
-                    <img src={formData.image_url} className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" />
+                    <img src={formData.image_url} className="w-full h-full object-contain group-hover:scale-105 transition-all duration-700" />
                     <button 
                       type="button"
                       onClick={(e) => {
@@ -992,7 +1002,7 @@ export default function AdminEditProductPage() {
               <div className="grid grid-cols-3 gap-2">
                   {getGalleryArray(formData.gallery).map((img: string, idx: number) => (
                     <div key={idx} className="relative aspect-square rounded-xl overflow-hidden group border border-[var(--agent-border)]">
-                      <img src={img} className="w-full h-full object-cover" />
+                      <img src={img} className="w-full h-full object-contain" />
                       <button 
                         type="button"
                         onClick={() => removeGalleryImage(idx)}
