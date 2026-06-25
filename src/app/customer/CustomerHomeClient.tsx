@@ -1151,14 +1151,14 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
         title: "SEAFOOD\nGRILL.",
         subtitle: "Grill Mode",
         tagline: "Volcanic products.",
-        link: "/customer/products",
+        link: "/customer/products?search=grill",
         image_url: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80"
      },
      panelB: {
         title: "FLAME-SEA\nCOLLECTIONS",
         subtitle: "Node: Flame",
         tagline: "Volcanic collections.",
-        link: "/customer/products",
+        link: "/customer/products?search=fry",
         image_url: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80"
      }
   };
@@ -2189,8 +2189,24 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
          <section className="py-1 container mx-auto px-0 md:px-10 relative group">
             <div className="relative min-h-[230px] md:min-h-[500px] bg-[var(--c-bg-alt)] border border-[var(--foreground)]/5 overflow-hidden shadow-2xl">
                {/* MOBILE: CORNER-TO-CORNER | DESKTOP: INTERLOCKING SIDE-SPLIT */}
-               <div className="absolute inset-0">
-                  {/* PANEL A: MARITIME GRILL MASTERS */}
+                <div className="absolute inset-0">
+                   {/* RGB Flash Diagonal Neon Divider */}
+                   <svg className="absolute inset-0 w-full h-full pointer-events-none z-30" viewBox="0 0 100 100" preserveAspectRatio="none">
+                      <defs>
+                         <linearGradient id="rgbFlash" x1="1" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#ff007f" />
+                            <stop offset="50%" stopColor="#00f3ff" />
+                            <stop offset="100%" stopColor="#ffaa00" />
+                         </linearGradient>
+                         <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feDropShadow dx="0" dy="0" stdDeviation="1.5" floodColor="#00f3ff" floodOpacity="0.8" />
+                            <feDropShadow dx="0" dy="0" stdDeviation="4.5" floodColor="#ff007f" floodOpacity="0.6" />
+                         </filter>
+                      </defs>
+                      <line x1="100" y1="0" x2="0" y2="100" stroke="url(#rgbFlash)" strokeWidth="0.8" filter="url(#neonGlow)" />
+                   </svg>
+
+                   {/* PANEL A: MARITIME GRILL MASTERS */}
                   <div 
                      className="absolute inset-0 z-25 p-4 md:p-16 flex flex-col justify-start items-start transition-all duration-500 overflow-hidden"
                      style={{ 

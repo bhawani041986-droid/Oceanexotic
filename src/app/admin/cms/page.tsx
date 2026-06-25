@@ -439,7 +439,7 @@ export default function AdminCMSPage() {
                                           title: "SEAFOOD\nGRILL.",
                                           subtitle: "Grill Mode",
                                           tagline: "Volcanic products.",
-                                          link: "/customer/products",
+                                          link: "/customer/products?search=grill",
                                           image_url: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80"
                                        };
                                     }
@@ -448,7 +448,7 @@ export default function AdminCMSPage() {
                                           title: "FLAME-SEA\nCOLLECTIONS",
                                           subtitle: "Node: Flame",
                                           tagline: "Volcanic collections.",
-                                          link: "/customer/products",
+                                          link: "/customer/products?search=fry",
                                           image_url: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80"
                                        };
                                     }
