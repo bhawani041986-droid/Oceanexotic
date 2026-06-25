@@ -356,7 +356,6 @@ export default function CustomerHomeScreen() {
 
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
-      <AnnouncementBar />
       <LiveTickerMarquee />
       <ScrollView
         className="flex-1"
