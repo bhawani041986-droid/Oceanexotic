@@ -513,8 +513,12 @@ export default function ProductDetailScreen() {
               </View>
             )}
 
-            {/* Top-Right Review/Rating Pill */}
-            {allImages.length > 0 && (
+            {/* Top-Right Review/Rating Pill — only when real approved reviews exist */}
+            {reviewsLoading ? (
+              <View className="absolute top-3 right-3 z-20 bg-black/60 px-3 py-1.5 rounded-full border border-white/10" style={{ elevation: 6 }}>
+                <ActivityIndicator size="small" color="#FBBF24" />
+              </View>
+            ) : reviews.length > 0 ? (
               <Pressable
                 onPress={() => {
                   scrollViewRef.current?.scrollToEnd({ animated: true });
@@ -536,7 +540,7 @@ export default function ProductDetailScreen() {
                   </View>
                 </View>
               </Pressable>
-            )}
+            ) : null}
           </View>
         </View>
 
