@@ -130,7 +130,7 @@ export default function CustomerRecipeDetailsPage() {
     return {
       id: String(found.id),
       title: found.title,
-      image_url: (metaVal.gallery && metaVal.gallery.length > 0) ? metaVal.gallery[0] : (found.image_url || found.image),
+      image_url: found.image_url || ((metaVal.gallery && metaVal.gallery.length > 0) ? metaVal.gallery[0] : found.image),
       metadata: metaVal,
       ingredients: metaVal.ingredients || [
         "500g Fresh Catch fish",
@@ -143,7 +143,9 @@ export default function CustomerRecipeDetailsPage() {
         "Marinate with salt, turmeric, and spice blend.",
         "Shallow fry or grill until cooked through."
       ],
-      gallery: metaVal.gallery || [found.image_url || found.image],
+      gallery: found.image_url 
+        ? [found.image_url, ...(metaVal.gallery || []).filter((img: string) => img !== found.image_url)]
+        : (metaVal.gallery || []),
       fishType: found.sector || "General Catch",
       prepType: metaVal.prepType || "Curry",
       region: metaVal.region || "Andaman Local",

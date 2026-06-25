@@ -7,7 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Svg, { Path, Circle } from 'react-native-svg';
 import { useThemeColors } from '@/hooks/useThemeColors';
-import { RECIPES_DB, Recipe } from '@/constants/recipes';
+import { useHomeData } from '@/hooks/useHomeData';
 import { ChamferedBox } from '@/components/ui/ChamferedBox';
 
 // Premium stylized outline fish SVG decorator
@@ -46,6 +46,7 @@ export default function RecipesListScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const colors = useThemeColors();
+  const { cms } = useHomeData();
 
   const [search, setSearch] = useState('');
   const [selectedPrep, setSelectedPrep] = useState<'ALL' | 'CURRY' | 'GRILL' | 'FRY'>('ALL');
@@ -54,9 +55,27 @@ export default function RecipesListScreen() {
   const preps = ['ALL', 'CURRY', 'GRILL', 'FRY'] as const;
   const regions = ['ALL', 'SOUTH INDIAN', 'BENGALI', 'TELUGU', 'ANDAMAN LOCAL'] as const;
 
+  // Map dynamic recipes
+  const allRecipes = useMemo(() => {
+    return (cms.data?.filter((c: any) => c.type === 'RECIPE' && c.status === 'PUBLISHED') || []).map((c: any) => {
+      const metaVal = c.metadata ? (typeof c.metadata === 'string' ? JSON.parse(c.metadata) : c.metadata) : {};
+      return {
+        id: String(c.id),
+        title: c.title,
+        fishType: c.sector || "General Catch",
+        prepType: metaVal.prepType || "Curry",
+        region: metaVal.region || "Andaman Local",
+        difficulty: metaVal.difficulty || "Medium",
+        time: metaVal.time || "25m",
+        image: c.image_url || ((metaVal.gallery && metaVal.gallery.length > 0) ? metaVal.gallery[0] : "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=800"),
+        ingredients: (metaVal.ingredients || []) as string[]
+      };
+    });
+  }, [cms.data]);
+
   // Filtered recipes list
   const filteredRecipes = useMemo(() => {
-    return RECIPES_DB.filter((recipe) => {
+    return allRecipes.filter((recipe) => {
       const matchesSearch = 
         recipe.title.toLowerCase().includes(search.toLowerCase()) ||
         recipe.fishType.toLowerCase().includes(search.toLowerCase()) ||
@@ -68,7 +87,7 @@ export default function RecipesListScreen() {
 
       return matchesSearch && matchesPrep && matchesRegion;
     });
-  }, [search, selectedPrep, selectedRegion]);
+  }, [allRecipes, search, selectedPrep, selectedRegion]);
 
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
@@ -192,11 +211,17 @@ export default function RecipesListScreen() {
         <View className="px-5 space-y-4">
           <View className="flex-row justify-between items-center">
             <Text className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-              Active Recipes ({filteredRecipes.length})
+              Active Recipes ({cms.isLoading ? "..." : filteredRecipes.length})
             </Text>
           </View>
 
-          {filteredRecipes.length > 0 ? (
+          {cms.isLoading ? (
+            <View className="py-16 items-center justify-center opacity-65">
+              <Text className="text-xs font-black uppercase tracking-widest animate-pulse" style={{ color: colors.primary }}>
+                Synchronizing Chef's Recipes...
+              </Text>
+            </View>
+          ) : filteredRecipes.length > 0 ? (
             filteredRecipes.map((recipe) => (
               <ChamferedBox
                 key={recipe.id}

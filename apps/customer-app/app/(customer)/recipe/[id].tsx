@@ -105,7 +105,9 @@ export default function RecipeDetailsScreen() {
           "Marinate with salt, turmeric, and spice blend.",
           "Shallow fry or grill until cooked through."
         ],
-        gallery: metaVal.gallery || [found.image_url || found.image]
+        gallery: found.image_url 
+          ? [found.image_url, ...(metaVal.gallery || []).filter((g: string) => g !== found.image_url)]
+          : (metaVal.gallery || [])
       } as any;
     }
     return found;
