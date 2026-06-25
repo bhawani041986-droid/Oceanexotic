@@ -49,6 +49,30 @@ const CUT_TYPES = [
   { id: 'SKIN_OFF', label: 'Skin Off' }
 ];
 
+const RECIPE_CATEGORIES = [
+  { id: 'CURRY', label: 'Fish Curry', defaultTime: '30 Mins', defaultDifficulty: 'Medium', titlePattern: (name: string) => `${name} Curry` },
+  { id: 'FRY', label: 'Fish Fry', defaultTime: '15 Mins', defaultDifficulty: 'Easy', titlePattern: (name: string) => `${name} Fry` },
+  { id: 'GRILLED', label: 'Grilled Seafood', defaultTime: '20 Mins', defaultDifficulty: 'Medium', titlePattern: (name: string) => `Grilled ${name}` },
+  { id: 'STEAMED', label: 'Steamed Seafood', defaultTime: '20 Mins', defaultDifficulty: 'Easy', titlePattern: (name: string) => `Steamed ${name}` },
+  { id: 'BAKED', label: 'Baked Seafood', defaultTime: '25 Mins', defaultDifficulty: 'Medium', titlePattern: (name: string) => `Baked ${name}` },
+  { id: 'SOUP', label: 'Seafood Soup', defaultTime: '15 Mins', defaultDifficulty: 'Easy', titlePattern: (name: string) => `${name} Soup` },
+  { id: 'RAW', label: 'Raw / Sashimi', defaultTime: '10 Mins', defaultDifficulty: 'Easy', titlePattern: (name: string) => `${name} Sashimi` },
+  { id: 'CUSTOM', label: 'Custom Recipe', defaultTime: '30 Mins', defaultDifficulty: 'Medium', titlePattern: () => '' }
+];
+
+const getRecipeCategory = (recipe: any) => {
+  if (recipe.category) return recipe.category;
+  const title = (recipe.title || '').toLowerCase();
+  if (title.includes('curry')) return 'CURRY';
+  if (title.includes('fry')) return 'FRY';
+  if (title.includes('grill')) return 'GRILLED';
+  if (title.includes('steam')) return 'STEAMED';
+  if (title.includes('bake')) return 'BAKED';
+  if (title.includes('soup')) return 'SOUP';
+  if (title.includes('raw') || title.includes('sashimi')) return 'RAW';
+  return 'CUSTOM';
+};
+
 export default function AdminEditProductPage() {
   const { toast } = useToast();
   const router = useRouter();
@@ -664,7 +688,7 @@ export default function AdminEditProductPage() {
               <Button 
                 onClick={(e) => {
                   e.preventDefault();
-                  setFormData({...formData, recipes: [...(formData.recipes || []), { title: '', time: '30 Mins', difficulty: 'Medium' }]});
+                  setFormData({...formData, recipes: [...(formData.recipes || []), { category: 'CUSTOM', title: '', time: '30 Mins', difficulty: 'Medium' }]});
                 }} 
                 variant="ghost" 
                 className="text-[10px] font-black text-primary border border-primary/20 h-10"
@@ -674,58 +698,102 @@ export default function AdminEditProductPage() {
             </div>
             
             <div className="space-y-4">
-              {(formData.recipes || []).map((recipe: any, idx: number) => (
-                <div key={idx} className="flex flex-col md:flex-row gap-4 items-center p-4 bg-bg-primary/40 border border-[var(--agent-border)] rounded-xl">
-                  <div className="flex-1 w-full">
-                    <Input 
-                      type="text" 
-                      placeholder="Recipe Title (e.g. Traditional Catla Fish Curry)"
-                      value={recipe.title} 
-                      onChange={(e) => {
+              {(formData.recipes || []).map((recipe: any, idx: number) => {
+                const currentCat = recipe.category || getRecipeCategory(recipe);
+                return (
+                  <div key={idx} className="flex flex-col gap-4 p-6 bg-bg-primary/40 border border-[var(--agent-border)] rounded-xl relative group">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
+                      <div className="space-y-2">
+                        <label className="text-[9px] font-black uppercase opacity-60">Category</label>
+                        <select 
+                          value={currentCat}
+                          onChange={(e) => {
+                            const catId = e.target.value;
+                            const newRecipes = [...formData.recipes];
+                            const cat = RECIPE_CATEGORIES.find(c => c.id === catId);
+                            if (cat) {
+                              newRecipes[idx] = {
+                                ...newRecipes[idx],
+                                category: catId,
+                                time: cat.defaultTime,
+                                difficulty: cat.defaultDifficulty,
+                                title: cat.titlePattern(formData.name || 'Fish')
+                              };
+                            }
+                            setFormData({...formData, recipes: newRecipes});
+                          }}
+                          className="w-full h-12 border rounded-xl px-3 text-xs font-black uppercase outline-none"
+                          style={{ backgroundColor: 'var(--agent-bg)', borderColor: 'var(--agent-border)', color: 'var(--agent-text)' }}
+                        >
+                          {RECIPE_CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
+                        </select>
+                      </div>
+                      
+                      <div className="space-y-2 md:col-span-2">
+                        <label className="text-[9px] font-black uppercase opacity-60">Recipe Title</label>
+                        <Input 
+                          type="text" 
+                          placeholder="Recipe Title (e.g. Traditional Catla Fish Curry)"
+                          value={recipe.title} 
+                          onChange={(e) => {
+                            const newRecipes = [...formData.recipes];
+                            newRecipes[idx].title = e.target.value;
+                            setFormData({...formData, recipes: newRecipes});
+                          }}
+                          className="w-full h-12 text-xs font-black" 
+                        />
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-2 items-center">
+                        <div className="space-y-2">
+                          <label className="text-[9px] font-black uppercase opacity-60">Time</label>
+                          <Input 
+                            type="text" 
+                            placeholder="Time (e.g. 30 Mins)"
+                            value={recipe.time} 
+                            onChange={(e) => {
+                              const newRecipes = [...formData.recipes];
+                              newRecipes[idx].time = e.target.value;
+                              setFormData({...formData, recipes: newRecipes});
+                            }}
+                            className="w-full h-12 text-xs font-black" 
+                          />
+                        </div>
+                        
+                        <div className="space-y-2">
+                          <label className="text-[9px] font-black uppercase opacity-60">Difficulty</label>
+                          <select 
+                            value={recipe.difficulty}
+                            onChange={(e) => {
+                              const newRecipes = [...formData.recipes];
+                              newRecipes[idx].difficulty = e.target.value;
+                              setFormData({...formData, recipes: newRecipes});
+                            }}
+                            className="w-full h-12 border rounded-xl px-3 text-xs font-black uppercase outline-none"
+                            style={{ backgroundColor: 'var(--agent-bg)', borderColor: 'var(--agent-border)', color: 'var(--agent-text)' }}
+                          >
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <button 
+                      onClick={(e) => {
+                        e.preventDefault();
                         const newRecipes = [...formData.recipes];
-                        newRecipes[idx].title = e.target.value;
+                        newRecipes.splice(idx, 1);
                         setFormData({...formData, recipes: newRecipes});
-                      }}
-                      className="w-full h-12 text-xs font-black" 
-                    />
-                  </div>
-                  <div className="flex items-center gap-4 w-full md:w-auto">
-                    <Input 
-                      type="text" 
-                      placeholder="Time (e.g. 30 Mins)"
-                      value={recipe.time} 
-                      onChange={(e) => {
-                        const newRecipes = [...formData.recipes];
-                        newRecipes[idx].time = e.target.value;
-                        setFormData({...formData, recipes: newRecipes});
-                      }}
-                      className="w-32 h-12 text-xs font-black" 
-                    />
-                    <select 
-                      value={recipe.difficulty}
-                      onChange={(e) => {
-                        const newRecipes = [...formData.recipes];
-                        newRecipes[idx].difficulty = e.target.value;
-                        setFormData({...formData, recipes: newRecipes});
-                      }}
-                      className="w-32 h-12 border rounded-xl px-3 text-xs font-black uppercase outline-none"
-                      style={{ backgroundColor: 'var(--agent-bg)', borderColor: 'var(--agent-border)', color: 'var(--agent-text)' }}
+                      }} 
+                      className="absolute top-2 right-2 p-2 text-danger hover:bg-danger/10 rounded-xl transition-all"
                     >
-                      <option value="Easy">Easy</option>
-                      <option value="Medium">Medium</option>
-                      <option value="Hard">Hard</option>
-                    </select>
-                    <button onClick={(e) => {
-                      e.preventDefault();
-                      const newRecipes = [...formData.recipes];
-                      newRecipes.splice(idx, 1);
-                      setFormData({...formData, recipes: newRecipes});
-                    }} className="p-3 text-danger hover:bg-danger/10 rounded-xl transition-all">
-                      <Trash2 className="w-5 h-5" />
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
-                </div>
-              ))}
+                );
+              })}
               {(!formData.recipes || formData.recipes.length === 0) && (
                 <p className="text-xs font-black uppercase opacity-40 italic text-center">No chef recipes added for this product.</p>
               )}

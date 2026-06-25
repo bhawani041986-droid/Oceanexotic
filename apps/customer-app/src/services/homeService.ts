@@ -26,6 +26,7 @@ export interface TodaysCatchItem {
   freshness_label: string;
   catch_image_url?: string;
   image_url?: string;
+  discount_percent?: number;
 }
 
 export interface CutOption {

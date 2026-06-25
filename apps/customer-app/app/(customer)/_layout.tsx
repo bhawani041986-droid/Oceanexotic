@@ -49,6 +49,7 @@ export default function CustomerLayout() {
           <Stack.Screen name="orders" />
           <Stack.Screen name="profile" />
           <Stack.Screen name="cart" />
+          <Stack.Screen name="favorites" />
           <Stack.Screen name="product/[id]" />
           <Stack.Screen name="recipe/index" />
           <Stack.Screen name="recipe/[id]" />

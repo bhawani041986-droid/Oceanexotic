@@ -26,6 +26,7 @@ try {
             "sellerName" => $p['sellerName'] ?? "Andaman Hub",
             "category" => $p['category'],
             "description" => $p['description'],
+            "discount_percent" => (int)($p['discount_percent'] ?? 0),
             "freshness" => "FRESH CATCH",
             "deliveryTime" => "12h",
             "rating" => 4.9

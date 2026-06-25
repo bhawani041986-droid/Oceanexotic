@@ -25,13 +25,28 @@ export async function GET(request: NextRequest) {
       sellers.forEach(s => { sellerMap[s.id] = s.name; });
     }
 
-    const mapped = products.map((p: any) => ({
-      ...p,
-      image: p.image_url,
-      sellerName: sellerMap[p.seller_id] || "Unknown Seller",
-      sellerId: p.seller_id,
-      delivery: "90 MIN"
-    }));
+    const mapped = products.map((p: any) => {
+      // Parse description metadata
+      let parsedDesc = p.description || '';
+      let discountPercent = 0;
+      const matchMeta = parsedDesc.match(/<!--METADATA-([\s\S]*?)-METADATA-->/);
+      if (matchMeta && matchMeta[1]) {
+        try {
+          const meta = JSON.parse(matchMeta[1]);
+          discountPercent = meta.discount_percent || 0;
+        } catch (_) {}
+      }
+
+      return {
+        ...p,
+        discount_percent: discountPercent,
+        description: parsedDesc.replace(/<!--METADATA-[\s\S]*?-METADATA-->/g, '').trim(),
+        image: p.image_url,
+        sellerName: sellerMap[p.seller_id] || "Unknown Seller",
+        sellerId: p.seller_id,
+        delivery: "90 MIN"
+      };
+    });
 
     const translated = await translateArray(
       mapped,

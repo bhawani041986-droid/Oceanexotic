@@ -103,13 +103,15 @@ function TodaysCatchCardComponent({ item, onPress, onOpenCut }: TodaysCatchCardP
             <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 20 }}><Polygon points="4,4 0,4 4,0" fill={colors.bg} /></Svg>
           </View>
           {/* Offer Badge (Amazon/Licious Style) */}
-          <View className="absolute right-2 top-2 rounded-none bg-red-500/90 px-2 py-0.5 z-20 relative overflow-hidden">
-            <Text className="text-[7px] font-black uppercase text-white relative z-10">
-              15% OFF
-            </Text>
-            <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 20 }}><Polygon points="0,0 4,0 0,4" fill={colors.bg} /></Svg>
-            <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 20 }}><Polygon points="4,4 0,4 4,0" fill={colors.bg} /></Svg>
-          </View>
+          {Number(item.discount_percent ?? 0) > 0 ? (
+            <View className="absolute right-2 top-2 rounded-none bg-red-500/90 px-2 py-0.5 z-20 relative overflow-hidden">
+              <Text className="text-[7px] font-black uppercase text-white relative z-10">
+                {Number(item.discount_percent)}% OFF
+              </Text>
+              <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 20 }}><Polygon points="0,0 4,0 0,4" fill={colors.bg} /></Svg>
+              <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 20 }}><Polygon points="4,4 0,4 4,0" fill={colors.bg} /></Svg>
+            </View>
+          ) : null}
           <View className="absolute bottom-2 left-2 rounded-none border border-white/10 bg-black/60 px-2 py-1">
             <Text className="text-[7px] font-black uppercase text-foreground">
               {item.harbor_node}

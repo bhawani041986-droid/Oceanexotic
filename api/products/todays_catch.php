@@ -46,6 +46,7 @@ try {
             p.image_url,
             p.gallery,
             p.unit,
+            p.discount_percent,
             -- Seller details
             s.name           AS seller_name
         FROM todays_catch tc
@@ -89,6 +90,7 @@ try {
         $row['freshness_pct'] = max(0, 100 - (int)($mins / 14.4)); // 0-100 over 24h
         // Parse gallery JSON if present
         $row['gallery'] = $row['gallery'] ? json_decode($row['gallery'], true) : [];
+        $row['discount_percent'] = (int)($row['discount_percent'] ?? 0);
         return $row;
     }, $rows);
 

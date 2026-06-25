@@ -30,13 +30,26 @@ export async function GET(request: NextRequest) {
 
     const mapped = catches.map((c: any) => {
       const p = productMap[c.product_id] || {};
+      
+      // Parse description metadata to extract discount_percent
+      let discountPercent = 0;
+      let parsedDesc = p.description || '';
+      const matchMeta = parsedDesc.match(/<!--METADATA-([\s\S]*?)-METADATA-->/);
+      if (matchMeta && matchMeta[1]) {
+        try {
+          const meta = JSON.parse(matchMeta[1]);
+          discountPercent = meta.discount_percent || 0;
+        } catch (_) {}
+      }
+
       return {
         ...c,
         name: p.name || `Harvest #${c.product_id}`,
         price_per_kg: p.price || 0,
         image_url: p.image_url,
         seller_name: sellerMap[p.seller_id] || "Unknown",
-        seller_id: p.seller_id
+        seller_id: p.seller_id,
+        discount_percent: discountPercent
       };
     });
 

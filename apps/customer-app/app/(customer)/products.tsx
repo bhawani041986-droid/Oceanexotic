@@ -339,7 +339,8 @@ export default function ProductsScreen() {
                              image_url: item.catch_image_url || item.image_url,
                              seller_name: item.seller_name,
                              stock: item.remaining_kg || 10,
-                             status: "LIVE"
+                             status: "LIVE",
+                             discount_percent: item.discount_percent
                            };
                            return (
                              <View key={item.id} className="w-[180px]">

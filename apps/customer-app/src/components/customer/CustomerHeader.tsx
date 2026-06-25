@@ -300,6 +300,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                   { label: t('fresh_catch_market'), href: "/products" },
                   { label: t('recipes'), href: "/recipe" },
                   { label: t('my_orders'), href: "/orders" },
+                  { label: t('favorites'), href: "/favorites" },
                   { label: t('my_profile'), href: "/profile" },
                   { label: t('active_cart'), href: "/cart" }
                 ].map((item) => {
