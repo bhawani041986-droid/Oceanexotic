@@ -54,20 +54,19 @@ export const FlashDealCard = React.memo(function FlashDealCard({
           {[timeLeft.hrs, timeLeft.min, timeLeft.sec].map((val, i) => (
             <View
               key={i}
-              className="min-w-[56px] border px-3 py-2 rounded-none relative overflow-hidden"
+              className="w-14 h-14 border rounded-full items-center justify-center bg-zinc-800"
               style={{
-                backgroundColor: colors.card,
                 borderColor: colors.border,
               }}
             >
               <Text
-                className="text-center text-xl font-black italic relative z-10"
+                className="text-center text-base font-black italic"
                 style={{ color: colors.text }}
               >
                 {val}
               </Text>
               <Text
-                className="text-center text-[7px] font-black uppercase relative z-10"
+                className="text-center text-[7px] font-black uppercase mt-0.5"
                 style={{ color: colors.textMuted }}
               >
                 {i === 0
@@ -76,8 +75,6 @@ export const FlashDealCard = React.memo(function FlashDealCard({
                     ? t("min") || "MIN"
                     : t("sec") || "SEC"}
               </Text>
-              <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 20 }}><Polygon points="0,0 4,0 0,4" fill={colors.bg} /></Svg>
-              <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 20 }}><Polygon points="4,4 0,4 4,0" fill={colors.bg} /></Svg>
             </View>
           ))}
         </View>

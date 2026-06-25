@@ -142,18 +142,9 @@ export function FlashDealsBanner() {
 
           <View style={styles.timerRow}>
             {[timeLeft.hrs, timeLeft.min, timeLeft.sec].map((val, i) => (
-              <View key={i} style={[styles.timerBox, { borderColor: `${colors.primary}33` }]}>
+              <View key={i} style={[styles.timerBox, { borderColor: `${colors.primary}66` }]}>
                 <Text style={[styles.timerVal, { color: colors.primary }]}>{val}</Text>
-                <Text style={styles.timerLabel}>{i === 0 ? 'HRS' : i === 1 ? 'MIN' : 'SEC'}</Text>
-                {/* Cut-corner bevel overlays on timer box */}
-                <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 5 }}>
-                  <Path d="M0,0 L6,0 L0,6 Z" fill={'rgba(0,0,0,0.5)'} />
-                  <Path d="M6,0 L0,6" stroke={`${colors.primary}55`} strokeWidth={0.8} />
-                </Svg>
-                <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 5 }}>
-                  <Path d="M6,6 L0,6 L6,0 Z" fill={'rgba(0,0,0,0.5)'} />
-                  <Path d="M0,6 L6,0" stroke={`${colors.primary}55`} strokeWidth={0.8} />
-                </Svg>
+                <Text style={[styles.timerLabel, { color: colors.textMuted }]}>{i === 0 ? 'HRS' : i === 1 ? 'MIN' : 'SEC'}</Text>
               </View>
             ))}
           </View>
@@ -296,27 +287,28 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   timerBox: {
-    paddingVertical: 4,
-    paddingHorizontal: 6,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    borderRadius: 0,
+    width: 46,
+    height: 46,
+    backgroundColor: '#27272a',
+    borderRadius: 23,
     borderWidth: 1,
-    minWidth: 38,
     alignItems: 'center',
-    overflow: 'visible',
-    position: 'relative',
+    justifyContent: 'center',
+    overflow: 'hidden',
   },
   timerVal: {
-    fontSize: 14,
+    fontSize: 13,
     fontFamily: 'Inter-Black',
     fontStyle: 'italic',
+    textAlign: 'center',
+    lineHeight: 14,
   },
   timerLabel: {
-    fontSize: 7,
+    fontSize: 6,
     fontFamily: 'Inter-Black',
-    color: 'rgba(255,255,255,0.6)',
-    marginTop: 2,
-    letterSpacing: 1,
+    textAlign: 'center',
+    marginTop: 1,
+    letterSpacing: 0.5,
   },
   btnText: {
     color: '#000',
