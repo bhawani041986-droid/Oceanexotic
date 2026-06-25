@@ -11,7 +11,7 @@ import {
   FlatList,
   InteractionManager,
 } from "react-native";
-import Svg, { Polygon, Defs, LinearGradient as SvgLinearGradient, Stop, Path, ClipPath, Image as SvgImage } from "react-native-svg";
+import Svg, { Polygon, Defs, LinearGradient as SvgLinearGradient, Stop, Path, ClipPath, Image as SvgImage, Line } from "react-native-svg";
 import { Image } from "expo-image";
 import Animated, { FadeIn, FadeOut, FadeInDown } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
@@ -690,6 +690,11 @@ export default function CustomerHomeScreen() {
                 <Stop offset="0.6" stopColor="#0369a1" stopOpacity={0.85} />
                 <Stop offset="1" stopColor={colors.bg} stopOpacity={0.98} />
               </SvgLinearGradient>
+              <SvgLinearGradient id="rgbDivider" x1="1" y1="0" x2="0" y2="1">
+                <Stop offset="0" stopColor="#ff007f" />
+                <Stop offset="0.5" stopColor="#00f3ff" />
+                <Stop offset="1" stopColor="#ffaa00" />
+              </SvgLinearGradient>
               <ClipPath id="clipGrill">
                 <Polygon points={`0,0 ${width - 32},0 0,200`} />
               </ClipPath>
@@ -721,6 +726,12 @@ export default function CustomerHomeScreen() {
               clipPath="url(#clipSea)"
               opacity={0.55}
             />
+
+            {/* Neon Stacked Glow Divider */}
+            <Line x1={width - 32} y1={0} x2={0} y2={200} stroke="#ffaa00" strokeWidth={8} opacity={0.15} />
+            <Line x1={width - 32} y1={0} x2={0} y2={200} stroke="#ff007f" strokeWidth={5} opacity={0.3} />
+            <Line x1={width - 32} y1={0} x2={0} y2={200} stroke="#00f3ff" strokeWidth={3} opacity={0.6} />
+            <Line x1={width - 32} y1={0} x2={0} y2={200} stroke="url(#rgbDivider)" strokeWidth={1.5} opacity={1} />
           </Svg>
 
           {/* Left Panel A Content (Maritime Grill Masters) */}
@@ -741,7 +752,7 @@ export default function CustomerHomeScreen() {
             </Text>
             <Text className="mt-1.5 text-[8px] font-bold text-white/70 uppercase">Fresh Catches</Text>
             <Pressable
-              onPress={() => router.push("/products")}
+              onPress={() => router.push({ pathname: "/products", params: { search: "grill" } })}
               className="mt-3 self-start rounded-none bg-white px-3 py-1.5 active:bg-white/90 relative overflow-hidden"
               style={{ shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 3 }}
             >
@@ -773,7 +784,7 @@ export default function CustomerHomeScreen() {
             </Text>
             <Text className="mt-1.5 text-[8px] font-bold text-white/70 uppercase text-right">Prime Seasteak</Text>
             <Pressable
-              onPress={() => router.push("/products")}
+              onPress={() => router.push({ pathname: "/products", params: { search: "fry" } })}
               className="mt-3 rounded-none border border-white/20 bg-black/40 px-3 py-1.5 active:bg-black/60 relative overflow-hidden"
             >
               <Text className="text-[7.5px] font-black uppercase text-white tracking-wider">VIEW ALL</Text>
