@@ -1739,11 +1739,11 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                            </p>
                         </div>
 
-                        <div className="flex gap-1 md:gap-4 justify-start">
+                        <div className="flex gap-2 md:gap-4 justify-start">
                            {[timeLeft.hrs, timeLeft.min, timeLeft.sec].map((val, i) => (
-                              <div key={i} className="p-1.5 md:p-4 rounded-xl md:rounded-2xl bg-black/40 backdrop-blur-md border border-[var(--c-primary)]/20 text-center min-w-[45px] md:min-w-[80px] shadow-2xl">
-                                 <p className="text-lg md:text-4xl font-black text-[var(--c-primary)] italic">{val}</p>
-                                 <p className="text-[5px] md:text-[10px] font-black text-[var(--foreground)]/60 uppercase tracking-widest mt-0.5 md:mt-1">{i === 0 ? 'HRS' : i === 1 ? 'MIN' : 'SEC'}</p>
+                              <div key={i} className="w-14 h-14 md:w-24 md:h-24 rounded-full bg-zinc-800 border border-[var(--c-primary)]/40 flex flex-col items-center justify-center text-center shadow-2xl">
+                                 <p className="text-lg md:text-3xl font-black text-[var(--c-primary)] italic leading-none">{val}</p>
+                                 <p className="text-[6px] md:text-[10px] font-black text-[var(--foreground)]/70 uppercase tracking-widest mt-1 leading-none">{i === 0 ? 'HRS' : i === 1 ? 'MIN' : 'SEC'}</p>
                               </div>
                            ))}
                         </div>

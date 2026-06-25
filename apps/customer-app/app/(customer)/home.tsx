@@ -200,9 +200,9 @@ function FlashDealCountdown() {
   return (
     <View className="mt-4 flex-row justify-center gap-2">
       {[timeLeft.hrs, timeLeft.min, timeLeft.sec].map((val, i) => (
-        <View key={i} className="min-w-[56px] rounded-none border px-3 py-2" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-          <Text className="text-center text-xl font-black italic" style={{ color: colors.text }}>{val}</Text>
-          <Text className="text-center text-[7px] font-black uppercase" style={{ color: colors.textMuted }}>
+        <View key={i} className="w-14 h-14 rounded-full border items-center justify-center" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+          <Text className="text-center text-base font-black italic" style={{ color: colors.text }}>{val}</Text>
+          <Text className="text-center text-[7px] font-black uppercase mt-0.5" style={{ color: colors.textMuted }}>
             {i === 0 ? "HRS" : i === 1 ? "MIN" : "SEC"}
           </Text>
         </View>
