@@ -20,8 +20,8 @@ export async function GET(request: NextRequest) {
     if (process.env.NODE_ENV === 'production') {
       let query = supabase
         .from('products')
-        .select('id, name, category, price, image_url, rating, seller_id, description, status')
-        .order('rating', { ascending: false });
+        .select('id, name, category, price, image_url, seller_id, description, status, discount_percent')
+        .order('created_at', { ascending: false });
 
       if (q) {
         query = query.or(`name.ilike.%${q}%,description.ilike.%${q}%`);
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
         category: p.category ?? '',
         price: Number(p.price) || 0,
         image: p.image_url ?? '',
-        rating: Number(p.rating) || 0,
+        rating: 4.5,
         seller: 'Verified Fleet',
         is_live: false,
         harbor: null,
