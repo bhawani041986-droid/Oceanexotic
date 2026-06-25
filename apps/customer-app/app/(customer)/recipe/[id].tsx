@@ -285,10 +285,18 @@ export default function RecipeDetailsScreen() {
             />
           )}
 
+          {/* Top Gradient Overlay for Status/Navigation Bar readability */}
           <LinearGradient 
-            colors={['rgba(8,13,25,0.8)', 'transparent', 'transparent']} 
-            locations={[0, 0.45, 1]}
-            className="absolute inset-0 pointer-events-none z-10"
+            colors={['rgba(0,0,0,0.6)', 'rgba(0,0,0,0)']} 
+            style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 90, zIndex: 10 }}
+            className="pointer-events-none"
+          />
+
+          {/* Bottom Gradient Overlay for Title Text readability */}
+          <LinearGradient 
+            colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.7)']} 
+            style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 130, zIndex: 10 }}
+            className="pointer-events-none"
           />
           
           {/* Header Controls */}
@@ -512,7 +520,7 @@ export default function RecipeDetailsScreen() {
               strokeColor={colors.border}
               bevelSize={16}
               className="relative overflow-hidden"
-              style={{ minHeight: 120 }}
+              style={{ minHeight: 0 }}
             >
               <LinearGradient
                 colors={[`${colors.card}d5`, `${colors.bg}fa`]}
@@ -600,6 +608,7 @@ export default function RecipeDetailsScreen() {
               fillColor="transparent"
               strokeColor={colors.border}
               bevelSize={12}
+              style={{ minHeight: 0 }}
             >
               <LinearGradient
                 colors={[`${colors.card}d5`, `${colors.bg}fa`]}

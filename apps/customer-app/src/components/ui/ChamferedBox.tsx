@@ -66,7 +66,7 @@ export function ChamferedBox({
         }
       }}
       className={cn("relative overflow-hidden", className)}
-      style={[{ flexShrink: 1, minHeight: 120 }, style, glowStyle]}
+      style={[{ flexShrink: 1 }, style, glowStyle]}
       {...props}
     >
       {/* Background and Border layer */}
