@@ -10,6 +10,7 @@ import { useCartStore } from "@/store/cartStore";
 import { useWishlistStore } from "@/store/wishlistStore";
 import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
+import { ChamferedBox } from "@/components/ui/ChamferedBox";
 import { assetUrl } from "@/config/assets";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import type { TodaysCatchItem } from "@/services/homeService";
@@ -175,9 +176,9 @@ export default function ProductDetailScreen() {
 
   const hasThumbnails = allImages.length > 1;
   const paddingLeft = hasThumbnails ? 0 : 16;
-  const paddingRight = 16;
-  const thumbnailWidth = hasThumbnails ? 72 : 0;
-  const gapWidth = hasThumbnails ? 10 : 0;
+  const paddingRight = 0;
+  const thumbnailWidth = hasThumbnails ? 54 : 0;
+  const gapWidth = hasThumbnails ? 8 : 0;
   const viewWidth = screenWidth - paddingLeft - paddingRight - thumbnailWidth - gapWidth;
 
   const img = allImages[0] ?? "";
@@ -329,7 +330,7 @@ export default function ProductDetailScreen() {
           {/* Left-side Thumbnails */}
           {allImages.length > 1 && (
             <ScrollView 
-              style={{ width: 72, height: '100%' }} 
+              style={{ width: 54, height: '100%' }} 
               showsVerticalScrollIndicator={false}
             >
               {allImages.map((imgUrl, i) => {
@@ -342,8 +343,8 @@ export default function ProductDetailScreen() {
                       setActiveImageIndex(i);
                     }}
                     style={{ 
-                      width: 72, 
-                      height: 72, 
+                      width: 54, 
+                      height: 54, 
                       marginBottom: 6, 
                       borderWidth: 2, 
                       borderRadius: 8,
@@ -358,7 +359,7 @@ export default function ProductDetailScreen() {
                     {imgUrl ? (
                       <Image source={{ uri: resolveMediaUrl(imgUrl) }} style={{ width: '100%', height: '100%', borderRadius: 6 }} contentFit="contain" />
                     ) : (
-                      <Text style={{ fontSize: 24 }}>🐟</Text>
+                      <Text style={{ fontSize: 20 }}>🐟</Text>
                     )}
                   </Pressable>
                 );
@@ -366,16 +367,14 @@ export default function ProductDetailScreen() {
             </ScrollView>
           )}
 
-          <View 
+          <ChamferedBox 
+            fillColor={colors.card}
+            strokeColor={colors.border}
+            bevelSize={24}
             style={{ 
               width: viewWidth, 
               height: viewWidth, 
               position: 'relative', 
-              backgroundColor: colors.card, 
-              borderRadius: 12, 
-              borderWidth: 1, 
-              borderColor: colors.border,
-              overflow: 'hidden',
               marginLeft: gapWidth
             }}
           >
@@ -430,8 +429,8 @@ export default function ProductDetailScreen() {
             <View 
               style={{
                 position: 'absolute',
-                bottom: 12,
-                right: 12,
+                bottom: 6,
+                right: 6,
                 flexDirection: 'row',
                 alignItems: 'center',
                 zIndex: 20
@@ -442,10 +441,10 @@ export default function ProductDetailScreen() {
                   flexDirection: 'row', 
                   alignItems: 'center', 
                   backgroundColor: 'rgba(0, 0, 0, 0.5)', 
-                  borderRadius: 22, 
-                  paddingHorizontal: 12, 
-                  paddingVertical: 8,
-                  gap: 16,
+                  borderRadius: 12, 
+                  paddingHorizontal: 6, 
+                  paddingVertical: 4,
+                  gap: 8,
                   borderWidth: 1,
                   borderColor: 'rgba(255, 255, 255, 0.1)'
                 }}
@@ -457,7 +456,7 @@ export default function ProductDetailScreen() {
                     opacity: pressed ? 0.7 : 1,
                   })}
                 >
-                  <MaterialCommunityIcons name="share-variant" size={16} color="#FFFFFF" />
+                  <MaterialCommunityIcons name="share-variant" size={12} color="#FFFFFF" />
                 </Pressable>
 
                 {/* WhatsApp Button */}
@@ -467,7 +466,7 @@ export default function ProductDetailScreen() {
                     opacity: pressed ? 0.7 : 1,
                   })}
                 >
-                  <MaterialCommunityIcons name="whatsapp" size={18} color="#25D366" />
+                  <MaterialCommunityIcons name="whatsapp" size={14} color="#25D366" />
                 </Pressable>
 
                 {/* Copy Link Button */}
@@ -477,11 +476,11 @@ export default function ProductDetailScreen() {
                     opacity: pressed ? 0.7 : 1,
                   })}
                 >
-                  <MaterialCommunityIcons name="link-variant" size={16} color="#FFFFFF" />
+                  <MaterialCommunityIcons name="link-variant" size={12} color="#FFFFFF" />
                 </Pressable>
 
                 {/* Vertical Divider */}
-                <View style={{ width: 1, height: 16, backgroundColor: 'rgba(255,255,255,0.2)' }} />
+                <View style={{ width: 1, height: 10, backgroundColor: 'rgba(255,255,255,0.2)' }} />
 
                 {/* Heart Button */}
                 <Pressable
@@ -492,7 +491,7 @@ export default function ProductDetailScreen() {
                 >
                   <MaterialCommunityIcons 
                     name={isFavorited ? "heart" : "heart-outline"} 
-                    size={18} 
+                    size={14} 
                     color={isFavorited ? "#EF4444" : "#FFFFFF"} 
                   />
                 </Pressable>
@@ -531,7 +530,7 @@ export default function ProductDetailScreen() {
                 </View>
               </Pressable>
             )}
-          </View>
+          </ChamferedBox>
         </View>
 
         {/* Dynamic Pagination Dots (Amazon Style Dynamic Pills) */}
