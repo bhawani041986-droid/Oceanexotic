@@ -238,7 +238,7 @@ export default function RecipeDetailsScreen() {
         className="flex-1" 
         bounces={false}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: insets.bottom + 50 }}
+        contentContainerStyle={{ paddingBottom: insets.bottom + 120 }}
       >
         {/* Immersive Header Image / Gallery */}
         <View style={{ height: HEADER_HEIGHT }} className="relative w-full bg-black">
@@ -667,33 +667,38 @@ export default function RecipeDetailsScreen() {
             {/* Comments Feed List */}
             <View className="space-y-3 mt-4">
               {comments.map((comment) => (
-                <View 
-                  key={comment.id} 
-                  className="p-4 border flex-row gap-3.5"
-                  style={{ backgroundColor: colors.card, borderColor: colors.border }}
+                <ChamferedBox
+                  key={comment.id}
+                  fillColor={colors.card}
+                  strokeColor={colors.border}
+                  bevelSize={10}
+                  style={{ minHeight: 0 }}
+                  className="w-full relative overflow-hidden"
                 >
-                  <Image 
-                    source={{ uri: comment.avatar }} 
-                    className="w-10 h-10 rounded-full border" 
-                    style={{ borderColor: colors.border }}
-                  />
-                  <View className="flex-1 space-y-1">
-                    <View className="flex-row justify-between items-center">
-                      <View className="flex-row items-center gap-2 flex-wrap">
-                        <Text className="text-xs font-bold" style={{ color: colors.text }}>{comment.user}</Text>
-                        <Text className="text-[8px] font-medium uppercase" style={{ color: colors.textMuted }}>{comment.time}</Text>
+                  <View className="p-4 flex-row gap-3.5">
+                    <Image 
+                      source={{ uri: comment.avatar }} 
+                      className="w-10 h-10 rounded-full border" 
+                      style={{ borderColor: colors.border }}
+                    />
+                    <View className="flex-1 space-y-1">
+                      <View className="flex-row justify-between items-center">
+                        <View className="flex-row items-center gap-2 flex-wrap">
+                          <Text className="text-xs font-bold" style={{ color: colors.text }}>{comment.user}</Text>
+                          <Text className="text-[8px] font-medium uppercase" style={{ color: colors.textMuted }}>{comment.time}</Text>
+                        </View>
+                        <View className="flex-row gap-0.5">
+                          {Array.from({ length: comment.rating }).map((_, idx) => (
+                            <MaterialCommunityIcons key={idx} name="star" size={10} color="#eab308" />
+                          ))}
+                        </View>
                       </View>
-                      <View className="flex-row gap-0.5">
-                        {Array.from({ length: comment.rating }).map((_, idx) => (
-                          <MaterialCommunityIcons key={idx} name="star" size={10} color="#eab308" />
-                        ))}
-                      </View>
+                      <Text className="text-xs leading-relaxed font-medium" style={{ color: colors.textMuted }}>
+                        {comment.text}
+                      </Text>
                     </View>
-                    <Text className="text-xs leading-relaxed font-medium" style={{ color: colors.textMuted }}>
-                      {comment.text}
-                    </Text>
                   </View>
-                </View>
+                </ChamferedBox>
               ))}
             </View>
           </View>
