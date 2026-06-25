@@ -2051,7 +2051,8 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
             </button>
          </div>
          
-         <div className="grid grid-cols-2 gap-1 md:gap-10">
+         {/* Horizontal Scrolling Recipe Cards */}
+         <div className="flex overflow-x-auto snap-x snap-mandatory gap-3 md:gap-8 pb-6 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {(cmsContent.filter(c => c.type === 'RECIPE' && c.status === 'PUBLISHED').length > 0 
                ? cmsContent.filter(c => c.type === 'RECIPE' && c.status === 'PUBLISHED')
                : RECIPES).slice(0, 6).map((recipe: any) => {
@@ -2060,7 +2061,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                <div 
                   key={recipe.id} 
                   onClick={() => router.push(`/customer/recipes/${recipe.id}`)}
-                  className="aspect-[16/11] md:aspect-video relative group cursor-pointer overflow-hidden"
+                  className="relative group cursor-pointer overflow-hidden shrink-0 snap-start w-[280px] h-[190px] md:w-[480px] md:h-[270px]"
                   style={{ clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)' }}
                >
                   <img src={recipe.image_url || ((meta.gallery && meta.gallery.length > 0) ? meta.gallery[0] : recipe.image)} className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-110 transition-transform duration-1000 grayscale-[0.3] group-hover:grayscale-0" />
