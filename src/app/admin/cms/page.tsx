@@ -13,7 +13,8 @@ import { GlobalPromoEngine } from "@/components/admin/GlobalPromoEngine";
 import { cn } from "@/lib/utils";
 import { 
   FileText, ImageIcon, Layout, Plus, Search, Edit3, Trash2, 
-  ExternalLink, ChevronRight, Eye, Save, Clock, X, Globe, Share2, UploadCloud, Cpu
+  ExternalLink, ChevronRight, Eye, Save, Clock, X, Globe, Share2, UploadCloud, Cpu,
+  Flame, Waves
 } from "lucide-react";
 import { FULL_API_URL as API_BASE_URL } from "@/config/api";
 
@@ -29,6 +30,8 @@ export default function AdminCMSPage() {
   const [viewOnly, setViewOnly] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [editingItem, setEditingItem] = useState<any>(null);
+  const [isUploadingPanelA, setIsUploadingPanelA] = useState(false);
+  const [isUploadingPanelB, setIsUploadingPanelB] = useState(false);
 
   // Form State
   const [formData, setFormData] = useState<any>({
@@ -170,6 +173,52 @@ export default function AdminCMSPage() {
     const json = await res.json();
     if (json.status !== "success") throw new Error(json.message || "Upload failed");
     return json.url;
+  };
+
+  const handlePanelAUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setIsUploadingPanelA(true);
+      toast("Uploading Panel A image...", "info");
+      try {
+        const url = await uploadFileToServerless(file);
+        setFormData((prev: any) => ({
+          ...prev,
+          metadata: {
+            ...prev.metadata,
+            panelA: { ...prev.metadata?.panelA, image_url: url }
+          }
+        }));
+        toast("Panel A image uploaded successfully.", "success");
+      } catch (error) {
+        toast("Panel A image upload failed.", "error");
+      } finally {
+        setIsUploadingPanelA(false);
+      }
+    }
+  };
+
+  const handlePanelBUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setIsUploadingPanelB(true);
+      toast("Uploading Panel B image...", "info");
+      try {
+        const url = await uploadFileToServerless(file);
+        setFormData((prev: any) => ({
+          ...prev,
+          metadata: {
+            ...prev.metadata,
+            panelB: { ...prev.metadata?.panelB, image_url: url }
+          }
+        }));
+        toast("Panel B image uploaded successfully.", "success");
+      } catch (error) {
+        toast("Panel B image upload failed.", "error");
+      } finally {
+        setIsUploadingPanelB(false);
+      }
+    }
   };
 
   const handleSave = async (forceStatus?: string) => {
@@ -495,128 +544,190 @@ export default function AdminCMSPage() {
                  )}
 
                  {/* Diagonal Split Promo Fields */}
-                 {formData.type === "SPLIT_PROMO" && (
-                     <div className="space-y-6 p-6 rounded-2xl border border-primary/20 bg-primary/5">
-                        <h4 className="text-xs font-black uppercase text-primary tracking-widest">Diagonal Split Promo Parameters</h4>
-                        
-                        {/* PANEL A */}
-                        <div className="space-y-4 border-b border-primary/10 pb-4">
-                           <h5 className="text-xs font-black text-primary uppercase tracking-widest">Panel A (Left - Grill Masters)</h5>
-                           <div className="grid grid-cols-2 gap-4">
-                              <div className="space-y-2">
-                                 <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Subtitle</label>
-                                 <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelA?.subtitle || ""} onChange={(e) => setFormData({
-                                    ...formData,
-                                    metadata: {
-                                       ...formData.metadata,
-                                       panelA: { ...formData.metadata.panelA, subtitle: e.target.value }
-                                    }
-                                 })} placeholder="Grill Mode" className="h-12 bg-black/50 border-primary/20 text-primary" />
-                              </div>
-                              <div className="space-y-2">
-                                 <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Title (use \n for line break)</label>
-                                 <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelA?.title || ""} onChange={(e) => setFormData({
-                                    ...formData,
-                                    metadata: {
-                                       ...formData.metadata,
-                                       panelA: { ...formData.metadata.panelA, title: e.target.value }
-                                    }
-                                 })} placeholder="SEAFOOD\nGRILL." className="h-12 bg-black/50 border-primary/20 text-primary" />
-                              </div>
-                           </div>
-                           <div className="grid grid-cols-2 gap-4">
-                              <div className="space-y-2">
-                                 <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Tagline / Text</label>
-                                 <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelA?.tagline || ""} onChange={(e) => setFormData({
-                                    ...formData,
-                                    metadata: {
-                                       ...formData.metadata,
-                                       panelA: { ...formData.metadata.panelA, tagline: e.target.value }
-                                    }
-                                 })} placeholder="Volcanic products." className="h-12 bg-black/50 border-primary/20 text-primary" />
-                              </div>
-                              <div className="space-y-2">
-                                 <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Navigation Link</label>
-                                 <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelA?.link || ""} onChange={(e) => setFormData({
-                                    ...formData,
-                                    metadata: {
-                                       ...formData.metadata,
-                                       panelA: { ...formData.metadata.panelA, link: e.target.value }
-                                    }
-                                 })} placeholder="/customer/products" className="h-12 bg-black/50 border-primary/20 text-primary" />
-                              </div>
-                           </div>
-                           <div className="space-y-2">
-                              <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Panel A Background Image URL</label>
-                              <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelA?.image_url || ""} onChange={(e) => setFormData({
-                                 ...formData,
-                                 metadata: {
-                                    ...formData.metadata,
-                                    panelA: { ...formData.metadata.panelA, image_url: e.target.value }
-                                 }
-                              })} placeholder="https://unsplash..." className="h-12 bg-black/50 border-primary/20 text-primary" />
-                           </div>
-                        </div>
+                  {formData.type === "SPLIT_PROMO" && (
+                      <div className="space-y-6">
+                         <h4 className="text-xs font-black uppercase text-[var(--foreground)] opacity-60 tracking-widest italic ml-1">Diagonal Split Promo Parameters</h4>
+                         
+                         {/* PANEL A - GRILL MASTERS (Amber Theme Card) */}
+                         <div className="p-6 rounded-2xl border border-amber-500/20 bg-amber-500/5 space-y-4 shadow-[0_0_15px_rgba(245,158,11,0.05)]">
+                            <div className="flex items-center justify-between border-b border-amber-500/10 pb-2">
+                               <h5 className="text-xs font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                                  <Flame className="w-3.5 h-3.5" /> Panel A: Grill Masters
+                               </h5>
+                               <span className="text-[8px] font-black uppercase px-2 py-0.5 rounded bg-amber-500/10 text-amber-400">Left Sector</span>
+                            </div>
 
-                        {/* PANEL B */}
-                        <div className="space-y-4">
-                           <h5 className="text-xs font-black text-primary uppercase tracking-widest">Panel B (Right - Seafood Collections)</h5>
-                           <div className="grid grid-cols-2 gap-4">
-                              <div className="space-y-2">
-                                 <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Subtitle</label>
-                                 <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelB?.subtitle || ""} onChange={(e) => setFormData({
-                                    ...formData,
-                                    metadata: {
-                                       ...formData.metadata,
-                                       panelB: { ...formData.metadata.panelB, subtitle: e.target.value }
-                                    }
-                                 })} placeholder="Node: Flame" className="h-12 bg-black/50 border-primary/20 text-primary" />
-                              </div>
-                              <div className="space-y-2">
-                                 <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Title (use \n for line break)</label>
-                                 <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelB?.title || ""} onChange={(e) => setFormData({
-                                    ...formData,
-                                    metadata: {
-                                       ...formData.metadata,
-                                       panelB: { ...formData.metadata.panelB, title: e.target.value }
-                                    }
-                                 })} placeholder="FLAME-SEA\nCOLLECTIONS" className="h-12 bg-black/50 border-primary/20 text-primary" />
-                              </div>
-                           </div>
-                           <div className="grid grid-cols-2 gap-4">
-                              <div className="space-y-2">
-                                 <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Tagline / Text</label>
-                                 <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelB?.tagline || ""} onChange={(e) => setFormData({
-                                    ...formData,
-                                    metadata: {
-                                       ...formData.metadata,
-                                       panelB: { ...formData.metadata.panelB, tagline: e.target.value }
-                                    }
-                                 })} placeholder="Volcanic collections." className="h-12 bg-black/50 border-primary/20 text-primary" />
-                              </div>
-                              <div className="space-y-2">
-                                 <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Navigation Link</label>
-                                 <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelB?.link || ""} onChange={(e) => setFormData({
-                                    ...formData,
-                                    metadata: {
-                                       ...formData.metadata,
-                                       panelB: { ...formData.metadata.panelB, link: e.target.value }
-                                    }
-                                 })} placeholder="/customer/products" className="h-12 bg-black/50 border-primary/20 text-primary" />
-                              </div>
-                           </div>
-                           <div className="space-y-2">
-                              <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Panel B Background Image URL</label>
-                              <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelB?.image_url || ""} onChange={(e) => setFormData({
-                                 ...formData,
-                                 metadata: {
-                                    ...formData.metadata,
-                                    panelB: { ...formData.metadata.panelB, image_url: e.target.value }
-                                 }
-                              })} placeholder="https://unsplash..." className="h-12 bg-black/50 border-primary/20 text-primary" />
-                           </div>
-                        </div>
-                     </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                               <div className="space-y-2">
+                                  <label className="text-[10px] font-black text-amber-400/80 uppercase tracking-widest">Subtitle</label>
+                                  <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelA?.subtitle || ""} onChange={(e) => setFormData({
+                                     ...formData,
+                                     metadata: {
+                                        ...formData.metadata,
+                                        panelA: { ...formData.metadata.panelA, subtitle: e.target.value }
+                                     }
+                                  })} placeholder="Grill Mode" className="h-12 bg-black/40 border-amber-500/20 text-white placeholder-white/30 focus:border-amber-500/50" />
+                               </div>
+                               <div className="space-y-2">
+                                  <label className="text-[10px] font-black text-amber-400/80 uppercase tracking-widest">Title (use \n for line break)</label>
+                                  <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelA?.title || ""} onChange={(e) => setFormData({
+                                     ...formData,
+                                     metadata: {
+                                        ...formData.metadata,
+                                        panelA: { ...formData.metadata.panelA, title: e.target.value }
+                                     }
+                                  })} placeholder="SEAFOOD\nGRILL." className="h-12 bg-black/40 border-amber-500/20 text-white placeholder-white/30 focus:border-amber-500/50" />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                               <div className="space-y-2">
+                                  <label className="text-[10px] font-black text-amber-400/80 uppercase tracking-widest">Tagline / Text</label>
+                                  <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelA?.tagline || ""} onChange={(e) => setFormData({
+                                     ...formData,
+                                     metadata: {
+                                        ...formData.metadata,
+                                        panelA: { ...formData.metadata.panelA, tagline: e.target.value }
+                                     }
+                                  })} placeholder="Volcanic products." className="h-12 bg-black/40 border-amber-500/20 text-white placeholder-white/30 focus:border-amber-500/50" />
+                               </div>
+                               <div className="space-y-2">
+                                  <label className="text-[10px] font-black text-amber-400/80 uppercase tracking-widest">Navigation Link</label>
+                                  <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelA?.link || ""} onChange={(e) => setFormData({
+                                     ...formData,
+                                     metadata: {
+                                        ...formData.metadata,
+                                        panelA: { ...formData.metadata.panelA, link: e.target.value }
+                                     }
+                                  })} placeholder="/customer/products?search=grill" className="h-12 bg-black/40 border-amber-500/20 text-white placeholder-white/30 focus:border-amber-500/50" />
+                               </div>
+                            </div>
+
+                            <div className="space-y-2">
+                               <label className="text-[10px] font-black text-amber-400/80 uppercase tracking-widest">Panel A Background Image</label>
+                               <div className="flex flex-col sm:flex-row gap-3 items-center">
+                                  {formData.metadata?.panelA?.image_url && (
+                                     <div className="relative w-full sm:w-28 h-16 rounded-xl border border-amber-500/20 overflow-hidden bg-black/50 shrink-0">
+                                        <img src={formData.metadata.panelA.image_url} className="w-full h-full object-cover" alt="Panel A" />
+                                     </div>
+                                  )}
+                                  <div className="flex-1 w-full space-y-2">
+                                     <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelA?.image_url || ""} onChange={(e) => setFormData({
+                                        ...formData,
+                                        metadata: {
+                                           ...formData.metadata,
+                                           panelA: { ...formData.metadata.panelA, image_url: e.target.value }
+                                        }
+                                     })} placeholder="https://unsplash..." className="h-12 bg-black/40 border-amber-500/20 text-white placeholder-white/30 focus:border-amber-500/50" />
+                                     {!viewOnly && (
+                                        <div className="flex gap-2">
+                                           <label className="flex-1 h-10 border border-dashed border-amber-500/30 hover:border-amber-500/5 hover:bg-amber-500/5 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition-colors text-xs font-black uppercase text-amber-400 tracking-wider">
+                                              {isUploadingPanelA ? (
+                                                 <span className="animate-pulse">Uploading...</span>
+                                              ) : (
+                                                 <>
+                                                    <UploadCloud className="w-4 h-4" /> Upload Local Image
+                                                 </>
+                                              )}
+                                              <input type="file" className="hidden" accept="image/*" disabled={isSaving || isUploadingPanelA} onChange={handlePanelAUpload} />
+                                           </label>
+                                        </div>
+                                     )}
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+
+                         {/* PANEL B - SEAFOOD COLLECTIONS (Cyan Theme Card) */}
+                         <div className="p-6 rounded-2xl border border-cyan-500/20 bg-cyan-500/5 space-y-4 shadow-[0_0_15px_rgba(6,182,212,0.05)]">
+                            <div className="flex items-center justify-between border-b border-cyan-500/10 pb-2">
+                               <h5 className="text-xs font-black text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                                  <Waves className="w-3.5 h-3.5" /> Panel B: Seafood Collections
+                               </h5>
+                               <span className="text-[8px] font-black uppercase px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400">Right Sector</span>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                               <div className="space-y-2">
+                                  <label className="text-[10px] font-black text-cyan-400/80 uppercase tracking-widest">Subtitle</label>
+                                  <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelB?.subtitle || ""} onChange={(e) => setFormData({
+                                     ...formData,
+                                     metadata: {
+                                        ...formData.metadata,
+                                        panelB: { ...formData.metadata.panelB, subtitle: e.target.value }
+                                     }
+                                  })} placeholder="Node: Flame" className="h-12 bg-black/40 border-cyan-500/20 text-white placeholder-white/30 focus:border-cyan-500/50" />
+                               </div>
+                               <div className="space-y-2">
+                                  <label className="text-[10px] font-black text-cyan-400/80 uppercase tracking-widest">Title (use \n for line break)</label>
+                                  <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelB?.title || ""} onChange={(e) => setFormData({
+                                     ...formData,
+                                     metadata: {
+                                        ...formData.metadata,
+                                        panelB: { ...formData.metadata.panelB, title: e.target.value }
+                                     }
+                                  })} placeholder="FLAME-SEA\nCOLLECTIONS" className="h-12 bg-black/40 border-cyan-500/20 text-white placeholder-white/30 focus:border-cyan-500/50" />
+                               </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                               <div className="space-y-2">
+                                  <label className="text-[10px] font-black text-cyan-400/80 uppercase tracking-widest">Tagline / Text</label>
+                                  <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelB?.tagline || ""} onChange={(e) => setFormData({
+                                     ...formData,
+                                     metadata: {
+                                        ...formData.metadata,
+                                        panelB: { ...formData.metadata.panelB, tagline: e.target.value }
+                                     }
+                                  })} placeholder="Volcanic collections." className="h-12 bg-black/40 border-cyan-500/20 text-white placeholder-white/30 focus:border-cyan-500/50" />
+                               </div>
+                               <div className="space-y-2">
+                                  <label className="text-[10px] font-black text-cyan-400/80 uppercase tracking-widest">Navigation Link</label>
+                                  <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelB?.link || ""} onChange={(e) => setFormData({
+                                     ...formData,
+                                     metadata: {
+                                        ...formData.metadata,
+                                        panelB: { ...formData.metadata.panelB, link: e.target.value }
+                                     }
+                                  })} placeholder="/customer/products?search=fry" className="h-12 bg-black/40 border-cyan-500/20 text-white placeholder-white/30 focus:border-cyan-500/50" />
+                               </div>
+                            </div>
+
+                            <div className="space-y-2">
+                               <label className="text-[10px] font-black text-cyan-400/80 uppercase tracking-widest">Panel B Background Image</label>
+                               <div className="flex flex-col sm:flex-row gap-3 items-center">
+                                  {formData.metadata?.panelB?.image_url && (
+                                     <div className="relative w-full sm:w-28 h-16 rounded-xl border border-cyan-500/20 overflow-hidden bg-black/50 shrink-0">
+                                        <img src={formData.metadata.panelB.image_url} className="w-full h-full object-cover" alt="Panel B" />
+                                     </div>
+                                  )}
+                                  <div className="flex-1 w-full space-y-2">
+                                     <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelB?.image_url || ""} onChange={(e) => setFormData({
+                                        ...formData,
+                                        metadata: {
+                                           ...formData.metadata,
+                                           panelB: { ...formData.metadata.panelB, image_url: e.target.value }
+                                        }
+                                     })} placeholder="https://unsplash..." className="h-12 bg-black/40 border-cyan-500/20 text-white placeholder-white/30 focus:border-cyan-500/50" />
+                                     {!viewOnly && (
+                                        <div className="flex gap-2">
+                                           <label className="flex-1 h-10 border border-dashed border-cyan-500/30 hover:border-cyan-500/5 hover:bg-cyan-500/5 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition-colors text-xs font-black uppercase text-cyan-400 tracking-wider">
+                                              {isUploadingPanelB ? (
+                                                 <span className="animate-pulse">Uploading...</span>
+                                              ) : (
+                                                 <>
+                                                    <UploadCloud className="w-4 h-4" /> Upload Local Image
+                                                 </>
+                                              )}
+                                              <input type="file" className="hidden" accept="image/*" disabled={isSaving || isUploadingPanelB} onChange={handlePanelBUpload} />
+                                           </label>
+                                        </div>
+                                     )}
+                                  </div>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
                   )}
 
                  {/* Visual Media Zone */}
