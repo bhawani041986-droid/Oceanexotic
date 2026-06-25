@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { View, Text, ScrollView, Pressable, Platform, Dimensions, StyleSheet } from 'react-native';
+import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
+import { View, Text, ScrollView, Pressable, Platform, Dimensions, StyleSheet, Share, TextInput } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -9,6 +9,7 @@ import Svg, { Path, Circle } from 'react-native-svg';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useHomeData } from '@/hooks/useHomeData';
 import { ChamferedBox } from '@/components/ui/ChamferedBox';
+import api from '@/services/api';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const HEADER_HEIGHT = SCREEN_HEIGHT * 0.42;
@@ -59,7 +60,18 @@ export default function RecipeDetailsScreen() {
   const insets = useSafeAreaInsets();
   const colors = useThemeColors();
   const { cms } = useHomeData();
-  const [activeImg, setActiveImg] = React.useState(0);
+  const [activeImg, setActiveImg] = useState(0);
+
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  // Interactions State
+  const [likesCount, setLikesCount] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
+  const [comments, setComments] = useState<any[]>([]);
+  const [rating, setRating] = useState(5);
+  const [newComment, setNewComment] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const recipe = useMemo(() => {
     // Fallback to CMS dynamic recipes
     let found: any = cms?.data?.find((c: any) => c.id?.toString() === id);
@@ -125,12 +137,96 @@ export default function RecipeDetailsScreen() {
   const ingredients = recipe.ingredients;
   const steps = recipe.steps;
 
+  const calories = meta.calories || "420 kcal";
+  const protein = meta.protein || "45g";
+  const omega3 = meta.omega3 || "2.1g";
+  const carbs = meta.carbs || "12g";
+  const fats = meta.fats || "18g";
+  const equipment = meta.equipment || ["Cast Iron Skillet", "Fish Spatula", "Meat Thermometer"];
+
+  const fetchInteractions = useCallback(async () => {
+    if (!id) return;
+    try {
+      const response = await api.get(`/customer/recipes/interactions?recipe_id=${id}`);
+      if (response.data?.status === 'success') {
+        setLikesCount(response.data.likesCount || 0);
+        setComments(response.data.comments || []);
+      }
+    } catch (e) {
+      console.error("Failed to load interactions:", e);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    fetchInteractions();
+  }, [fetchInteractions]);
+
+  const handleLike = async () => {
+    if (isLiked) return;
+    setIsLiked(true);
+    setLikesCount(prev => prev + 1);
+    try {
+      await api.post(`/customer/recipes/interactions`, {
+        recipe_id: id,
+        interaction_type: 'LIKE'
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      await Share.share({
+        message: `Check out this amazing recipe for ${recipe.title} on OceanExotic!`,
+        url: `https://oceanexotic.com/customer/recipes/${id}`
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handlePostComment = async () => {
+    if (!newComment.trim() || isSubmitting) return;
+    setIsSubmitting(true);
+    
+    const tempId = Date.now().toString();
+    const newEntry = {
+      id: tempId,
+      user: "Guest Chef",
+      avatar: `https://ui-avatars.com/api/?name=Guest+Chef&background=random`,
+      text: newComment,
+      time: "Just now",
+      rating: rating
+    };
+    
+    setComments(prev => [newEntry, ...prev]);
+    setNewComment("");
+    setRating(5);
+
+    try {
+      await api.post(`/customer/recipes/interactions`, {
+        recipe_id: id,
+        interaction_type: 'COMMENT',
+        user_name: 'Guest Chef',
+        comment_text: newEntry.text,
+        rating_value: newEntry.rating
+      });
+      fetchInteractions();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       {/* Dynamic Telemetry Cyber Background */}
       <CyberFishGrid />
 
       <ScrollView 
+        ref={scrollViewRef}
         className="flex-1" 
         bounces={false}
         showsVerticalScrollIndicator={false}
@@ -225,13 +321,59 @@ export default function RecipeDetailsScreen() {
         {/* Content Section */}
         <View className="px-5 pt-6 space-y-8">
 
-          {/* Scientific Nutrition Telemetry */}
+          {/* Interactive Save / Share / Comment Action Bar */}
+          <ChamferedBox
+            fillColor="rgba(30, 41, 59, 0.2)"
+            strokeColor="rgba(255, 255, 255, 0.08)"
+            bevelSize={10}
+            className="w-full relative overflow-hidden"
+          >
+            <View className="flex-row justify-between items-center p-2.5 gap-2">
+              <Pressable 
+                onPress={handleLike}
+                className="flex-1 flex-row items-center justify-center gap-1.5 py-2"
+                style={{ 
+                  backgroundColor: isLiked ? `${colors.primary}10` : 'rgba(255,255,255,0.03)',
+                  borderColor: isLiked ? colors.primary : 'rgba(255,255,255,0.08)',
+                  borderWidth: 1
+                }}
+              >
+                <MaterialCommunityIcons 
+                  name={isLiked ? "heart" : "heart-outline"} 
+                  size={14} 
+                  color={isLiked ? "#ef4444" : "#94a3b8"} 
+                />
+                <Text className="text-[10px] font-black uppercase tracking-wider" style={{ color: isLiked ? "#ef4444" : "#94a3b8" }}>
+                  {isLiked ? `${likesCount} Saved` : `Save (${likesCount})`}
+                </Text>
+              </Pressable>
+              
+              <Pressable 
+                onPress={handleShare}
+                className="flex-1 flex-row items-center justify-center gap-1.5 py-2 bg-white/5 border border-white/10"
+              >
+                <MaterialCommunityIcons name="share-variant" size={14} color="#94a3b8" />
+                <Text className="text-[10px] font-black uppercase tracking-wider text-slate-400">Share</Text>
+              </Pressable>
+              
+              <Pressable 
+                onPress={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
+                className="flex-1 flex-row items-center justify-center gap-1.5 py-2 bg-white/5 border border-white/10"
+              >
+                <MaterialCommunityIcons name="comment-text-outline" size={14} color="#94a3b8" />
+                <Text className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                  {comments.length} Comments
+                </Text>
+              </Pressable>
+            </View>
+          </ChamferedBox>
+
+          {/* Dynamic Nutritional Profile Card */}
           <View className="space-y-4">
             <View className="flex-row items-center gap-2">
               <MaterialCommunityIcons name="heart-pulse" size={16} color={colors.primary} />
-              <Text className="text-sm font-black uppercase text-foreground tracking-widest">Efficiency Telemetry</Text>
+              <Text className="text-sm font-black uppercase text-foreground tracking-widest">Nutritional Profile</Text>
             </View>
-            
             <ChamferedBox
               fillColor="transparent"
               strokeColor="rgba(255, 255, 255, 0.08)"
@@ -243,48 +385,65 @@ export default function RecipeDetailsScreen() {
                 colors={['rgba(30, 41, 59, 0.4)', 'rgba(15, 23, 42, 0.65)']}
                 className="p-5 w-full"
               >
-                <View className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-500 via-blue-500 to-transparent" />
+                <View className="absolute top-0 left-0 right-0 h-[2px]" style={{ backgroundColor: colors.primary }} />
                 
-                <View className="flex-row justify-between items-center mb-4">
-                  <View>
-                    <Text className="text-[10px] font-black uppercase text-slate-400">Omega-3 Concentration</Text>
-                    <Text className="text-lg font-black text-white italic mt-0.5">High Density (94%)</Text>
+                <View className="space-y-3">
+                  <View className="flex-row justify-between items-center pb-3 border-b border-white/5">
+                    <Text className="text-xs text-slate-400 font-medium">Calories</Text>
+                    <Text className="text-xs font-black text-white">{calories}</Text>
                   </View>
-                  <View className="w-10 h-10 rounded-none items-center justify-center bg-cyan-500/10 border border-cyan-500/20">
-                    <MaterialCommunityIcons name="water-percent" size={20} color="#00d4ff" />
+                  <View className="flex-row justify-between items-center pb-3 border-b border-white/5">
+                    <Text className="text-xs text-slate-400 font-medium">Protein</Text>
+                    <Text className="text-xs font-black text-emerald-400">{protein}</Text>
                   </View>
-                </View>
-
-                {/* Efficiency Progress Bar */}
-                <View className="space-y-2">
-                  <View className="flex-row justify-between text-[9px] font-black uppercase tracking-wider text-slate-400">
-                    <Text>Bio-absorption Index</Text>
-                    <Text>98% Optimal</Text>
+                  <View className="flex-row justify-between items-center pb-3 border-b border-white/5">
+                    <Text className="text-xs text-slate-400 font-medium">Omega-3</Text>
+                    <Text className="text-xs font-black text-cyan-400">{omega3}</Text>
                   </View>
-                  <View className="h-2 w-full bg-slate-800 rounded-none overflow-hidden">
-                    <LinearGradient
-                      colors={['#00d4ff', '#00ffaa']}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 0 }}
-                      className="h-full rounded-none"
-                      style={{ width: '98%' }}
-                    />
+                  <View className="flex-row justify-between items-center pb-3 border-b border-white/5">
+                    <Text className="text-xs text-slate-400 font-medium">Carbs</Text>
+                    <Text className="text-xs font-black text-white">{carbs}</Text>
+                  </View>
+                  <View className="flex-row justify-between items-center">
+                    <Text className="text-xs text-slate-400 font-medium">Fats</Text>
+                    <Text className="text-xs font-black text-white">{fats}</Text>
                   </View>
                 </View>
 
-                <View className="flex-row justify-between mt-5 pt-4 border-t border-white/5">
-                  <View className="items-center flex-1">
-                    <Text className="text-[9px] font-black text-slate-500 uppercase">Protein</Text>
-                    <Text className="text-sm font-black text-emerald-400 mt-0.5">34g</Text>
-                  </View>
-                  <View className="items-center flex-1 border-x border-white/5">
-                    <Text className="text-[9px] font-black text-slate-500 uppercase">Calories</Text>
-                    <Text className="text-sm font-black text-cyan-400 mt-0.5">320 kcal</Text>
-                  </View>
-                  <View className="items-center flex-1">
-                    <Text className="text-[9px] font-black text-slate-500 uppercase">Prep Level</Text>
-                    <Text className="text-sm font-black text-amber-400 mt-0.5">Medium</Text>
-                  </View>
+                <View className="mt-5 p-3 rounded-none border" style={{ backgroundColor: 'rgba(16, 185, 129, 0.05)', borderColor: 'rgba(16, 185, 129, 0.15)' }}>
+                  <Text className="text-[9px] text-emerald-400 font-black uppercase tracking-wider text-center leading-relaxed">
+                    This recipe is certified healthy by OceanExotic's culinary team.
+                  </Text>
+                </View>
+              </LinearGradient>
+            </ChamferedBox>
+          </View>
+
+          {/* Dynamic Recommended Equipment Card */}
+          <View className="space-y-4">
+            <View className="flex-row items-center gap-2">
+              <MaterialCommunityIcons name="tools" size={16} color={colors.primary} />
+              <Text className="text-sm font-black uppercase text-foreground tracking-widest">Recommended Equipment</Text>
+            </View>
+            <ChamferedBox
+              fillColor="transparent"
+              strokeColor="rgba(255, 255, 255, 0.08)"
+              bevelSize={16}
+              className="relative overflow-hidden"
+            >
+              <LinearGradient
+                colors={['rgba(30, 41, 59, 0.4)', 'rgba(15, 23, 42, 0.65)']}
+                className="p-5 w-full"
+              >
+                <View className="absolute top-0 left-0 right-0 h-[2px] bg-slate-700" />
+                
+                <View className="space-y-2.5">
+                  {equipment.map((item: string, idx: number) => (
+                    <View key={idx} className="flex-row items-center gap-3">
+                      <View className="w-1.5 h-1.5 bg-slate-500 rounded-full" />
+                      <Text className="text-xs text-slate-300 font-medium">{item}</Text>
+                    </View>
+                  ))}
                 </View>
               </LinearGradient>
             </ChamferedBox>
@@ -368,6 +527,104 @@ export default function RecipeDetailsScreen() {
                     <Text className="text-sm text-foreground/90 flex-1 leading-relaxed pt-0.5 font-medium">{step}</Text>
                   </LinearGradient>
                 </ChamferedBox>
+              ))}
+            </View>
+          </View>
+
+          {/* Chef's Discussion Feed */}
+          <View className="space-y-4 pt-4 border-t border-white/5">
+            <View className="flex-row items-center gap-2">
+              <MaterialCommunityIcons name="forum" size={16} color={colors.primary} />
+              <Text className="text-sm font-black uppercase text-foreground tracking-widest">
+                Discussion ({comments.length})
+              </Text>
+            </View>
+
+            {/* Post Review Form Card */}
+            <ChamferedBox
+              fillColor="transparent"
+              strokeColor="rgba(255, 255, 255, 0.06)"
+              bevelSize={12}
+            >
+              <LinearGradient
+                colors={['rgba(30, 41, 59, 0.3)', 'rgba(15, 23, 42, 0.5)']}
+                className="p-5 w-full space-y-4"
+              >
+                <Text className="text-[10px] font-black uppercase tracking-wider text-slate-400">Rate this recipe</Text>
+                
+                {/* Star Ratings Input */}
+                <View className="flex-row gap-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Pressable key={star} onPress={() => setRating(star)}>
+                      <MaterialCommunityIcons 
+                        name={rating >= star ? "star" : "star-outline"} 
+                        size={26} 
+                        color={rating >= star ? "#eab308" : "#475569"} 
+                      />
+                    </Pressable>
+                  ))}
+                </View>
+
+                {/* Comment Textarea Input */}
+                <View 
+                  className="border p-3 bg-black/40 min-h-[80px]"
+                  style={{ borderColor: colors.border }}
+                >
+                  <TextInput
+                    value={newComment}
+                    onChangeText={setNewComment}
+                    placeholder="Share your experience or modifications..."
+                    placeholderTextColor="#475569"
+                    multiline
+                    numberOfLines={3}
+                    className="text-xs text-white leading-relaxed font-medium text-left"
+                    style={{ textAlignVertical: 'top' }}
+                  />
+                </View>
+
+                {/* Submit button */}
+                <Pressable
+                  disabled={!newComment.trim() || isSubmitting}
+                  onPress={handlePostComment}
+                  className="py-2.5 items-center justify-center border"
+                  style={{
+                    backgroundColor: (!newComment.trim() || isSubmitting) ? 'rgba(255,255,255,0.02)' : colors.primary,
+                    borderColor: (!newComment.trim() || isSubmitting) ? 'rgba(255,255,255,0.05)' : colors.primary,
+                    opacity: (!newComment.trim() || isSubmitting) ? 0.4 : 1
+                  }}
+                >
+                  <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: (!newComment.trim() || isSubmitting) ? '#64748b' : '#000000' }}>
+                    {isSubmitting ? "Posting..." : "Post Review ➜"}
+                  </Text>
+                </Pressable>
+              </LinearGradient>
+            </ChamferedBox>
+
+            {/* Comments Feed List */}
+            <View className="space-y-3 mt-4">
+              {comments.map((comment) => (
+                <View key={comment.id} className="p-4 bg-white/5 border border-white/5 flex-row gap-3.5">
+                  <Image 
+                    source={{ uri: comment.avatar }} 
+                    className="w-10 h-10 rounded-full border border-white/10" 
+                  />
+                  <View className="flex-1 space-y-1">
+                    <View className="flex-row justify-between items-center">
+                      <View className="flex-row items-center gap-2 flex-wrap">
+                        <Text className="text-xs font-bold text-white">{comment.user}</Text>
+                        <Text className="text-[8px] font-medium text-slate-500 uppercase">{comment.time}</Text>
+                      </View>
+                      <View className="flex-row gap-0.5">
+                        {Array.from({ length: comment.rating }).map((_, idx) => (
+                          <MaterialCommunityIcons key={idx} name="star" size={10} color="#eab308" />
+                        ))}
+                      </View>
+                    </View>
+                    <Text className="text-xs text-slate-300 leading-relaxed font-medium">
+                      {comment.text}
+                    </Text>
+                  </View>
+                </View>
               ))}
             </View>
           </View>

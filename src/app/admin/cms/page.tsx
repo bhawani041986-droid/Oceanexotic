@@ -564,7 +564,50 @@ export default function AdminCMSPage() {
                                 <option value="Telugu">TELUGU</option>
                              </select>
                           </div>
-                       </div>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-4">
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Calories</label>
+                              <Input disabled={viewOnly || isSaving} value={formData.metadata?.calories || ""} onChange={(e) => setFormData({...formData, metadata: { ...formData.metadata, calories: e.target.value }})} placeholder="e.g. 420 kcal" className="h-12 bg-black/50 border-primary/20 text-primary" />
+                           </div>
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Protein</label>
+                              <Input disabled={viewOnly || isSaving} value={formData.metadata?.protein || ""} onChange={(e) => setFormData({...formData, metadata: { ...formData.metadata, protein: e.target.value }})} placeholder="e.g. 45g" className="h-12 bg-black/50 border-primary/20 text-primary" />
+                           </div>
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Omega-3</label>
+                              <Input disabled={viewOnly || isSaving} value={formData.metadata?.omega3 || ""} onChange={(e) => setFormData({...formData, metadata: { ...formData.metadata, omega3: e.target.value }})} placeholder="e.g. 2.1g" className="h-12 bg-black/50 border-primary/20 text-primary" />
+                           </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Carbs</label>
+                              <Input disabled={viewOnly || isSaving} value={formData.metadata?.carbs || ""} onChange={(e) => setFormData({...formData, metadata: { ...formData.metadata, carbs: e.target.value }})} placeholder="e.g. 12g" className="h-12 bg-black/50 border-primary/20 text-primary" />
+                           </div>
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Fats</label>
+                              <Input disabled={viewOnly || isSaving} value={formData.metadata?.fats || ""} onChange={(e) => setFormData({...formData, metadata: { ...formData.metadata, fats: e.target.value }})} placeholder="e.g. 18g" className="h-12 bg-black/50 border-primary/20 text-primary" />
+                           </div>
+                        </div>
+
+                        <div className="space-y-2">
+                           <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Recommended Equipment (One per line)</label>
+                           <textarea 
+                              disabled={viewOnly || isSaving}
+                              value={formData.metadata?.equipment?.join('\n') || ""}
+                              onChange={(e) => setFormData({
+                                 ...formData,
+                                 metadata: {
+                                    ...formData.metadata,
+                                    equipment: e.target.value.split('\n')
+                                 }
+                              })}
+                              placeholder="e.g.&#10;Cast Iron Skillet&#10;Fish Spatula"
+                              className="w-full h-24 bg-black/50 border border-primary/20 rounded-xl p-4 text-xs text-primary outline-none focus:border-primary/50"
+                           />
+                        </div>
 
                        <div className="space-y-2">
                           <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Ingredients (One per line)</label>

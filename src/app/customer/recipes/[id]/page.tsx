@@ -157,6 +157,13 @@ export default function CustomerRecipeDetailsPage() {
   const time = recipe.metadata?.time || "25m";
   const gallery = recipe.gallery || [recipe.image_url];
 
+  const calories = recipe.metadata?.calories || "420 kcal";
+  const protein = recipe.metadata?.protein || "45g";
+  const omega3 = recipe.metadata?.omega3 || "2.1g";
+  const carbs = recipe.metadata?.carbs || "12g";
+  const fats = recipe.metadata?.fats || "18g";
+  const equipment = recipe.metadata?.equipment || ["Cast Iron Skillet", "Fish Spatula", "Meat Thermometer"];
+
   const handleShare = async () => {
     if (navigator.share) {
       try {
@@ -234,15 +241,16 @@ export default function CustomerRecipeDetailsPage() {
         <img 
           src={gallery[activeImg]} 
           alt={recipe.title} 
-          className="absolute inset-0 w-full h-full object-cover opacity-80" 
+          className="absolute inset-0 w-full h-full object-cover opacity-100" 
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--c-bg)] via-[var(--c-bg)]/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--c-bg)]/50 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent pointer-events-none" />
 
         {/* Back Button */}
         <button 
           onClick={() => router.push('/customer/recipes')} 
-          className="absolute top-8 left-4 md:left-10 z-20 flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white/80 hover:text-white transition-all py-2.5 px-5 rounded-full bg-black/40 backdrop-blur-md border border-white/10 hover:border-white/30"
+          className="absolute top-8 left-4 md:left-10 z-20 flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white/80 hover:text-white transition-all py-2.5 px-5 bg-black/40 backdrop-blur-md border border-white/10 hover:border-white/30"
+          style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}
         >
           <ArrowLeft className="w-4 h-4" /> CHEF'S RECIPES
         </button>
@@ -268,6 +276,7 @@ export default function CustomerRecipeDetailsPage() {
             <h1 className="text-3xl sm:text-4xl md:text-7xl font-black uppercase italic tracking-tight text-white leading-[1.1] drop-shadow-2xl max-w-4xl">
               {recipe.title}
             </h1>
+            <div className="h-0.5 w-full max-w-[280px] bg-gradient-to-r from-[var(--c-primary)] via-[var(--c-primary)]/50 to-transparent mt-4 shadow-[0_0_10px_var(--c-primary)]" />
 
             <p className="text-sm md:text-base text-slate-300 font-bold uppercase tracking-widest mt-6 flex items-center gap-3">
               Target Seafood: <span className="text-[var(--c-primary)] font-black text-lg">{recipe.fishType}</span>
@@ -308,26 +317,29 @@ export default function CustomerRecipeDetailsPage() {
           </div>
 
           {/* Social Actions - Wrap on mobile if needed */}
-          <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 bg-transparent xl:bg-[var(--c-card)] p-0 xl:p-1.5 rounded-full xl:border border-[var(--foreground)]/5 xl:shadow-inner w-full xl:w-auto">
+          <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 bg-transparent xl:bg-[var(--c-card)] p-0 xl:p-1.5 xl:border border-[var(--foreground)]/5 xl:shadow-inner w-full xl:w-auto" style={{ clipPath: 'polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)' }}>
             <button 
               onClick={handleLike}
               className={cn(
-                "flex-1 xl:flex-none flex items-center justify-center gap-2 px-3 md:px-4 py-2.5 md:py-2 rounded-full text-[10px] md:text-xs font-black uppercase tracking-wider transition-all",
+                "flex-1 xl:flex-none flex items-center justify-center gap-2 px-4 py-2.5 md:py-2 text-[10px] md:text-xs font-black uppercase tracking-wider transition-all",
                 isLiked ? "bg-red-500/10 text-red-500 shadow-glow-red" : "bg-[var(--c-card)] xl:bg-transparent hover:bg-white/5 text-slate-400 border border-[var(--foreground)]/5 xl:border-transparent"
               )}
+              style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}
             >
               <Heart className={cn("w-3.5 h-3.5 md:w-4 md:h-4 transition-transform", isLiked ? "fill-current scale-110" : "")} /> 
               <span className="whitespace-nowrap">{isLiked ? `${likesCount} Saved` : `Save (${likesCount})`}</span>
             </button>
             <button 
               onClick={handleShare}
-              className="flex-1 xl:flex-none flex items-center justify-center gap-2 px-3 md:px-4 py-2.5 md:py-2 rounded-full text-[10px] md:text-xs font-black uppercase tracking-wider text-slate-400 bg-[var(--c-card)] xl:bg-transparent hover:bg-white/5 hover:text-white transition-all border border-[var(--foreground)]/5 xl:border-transparent"
+              className="flex-1 xl:flex-none flex items-center justify-center gap-2 px-4 py-2.5 md:py-2 text-[10px] md:text-xs font-black uppercase tracking-wider text-slate-400 bg-[var(--c-card)] xl:bg-transparent hover:bg-white/5 hover:text-white transition-all border border-[var(--foreground)]/5 xl:border-transparent"
+              style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}
             >
               <Share2 className="w-3.5 h-3.5 md:w-4 md:h-4" /> <span className="whitespace-nowrap">Share</span>
             </button>
             <button 
               onClick={() => document.getElementById('comments-section')?.scrollIntoView({ behavior: 'smooth' })}
-              className="flex-1 xl:flex-none flex items-center justify-center gap-2 px-3 md:px-4 py-2.5 md:py-2 rounded-full text-[10px] md:text-xs font-black uppercase tracking-wider text-slate-400 bg-[var(--c-card)] xl:bg-transparent hover:bg-white/5 hover:text-white transition-all border border-[var(--foreground)]/5 xl:border-transparent"
+              className="flex-1 xl:flex-none flex items-center justify-center gap-2 px-4 py-2.5 md:py-2 text-[10px] md:text-xs font-black uppercase tracking-wider text-slate-400 bg-[var(--c-card)] xl:bg-transparent hover:bg-white/5 hover:text-white transition-all border border-[var(--foreground)]/5 xl:border-transparent"
+              style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}
             >
               <MessageSquare className="w-3.5 h-3.5 md:w-4 md:h-4" /> <span className="whitespace-nowrap">{comments.length} <span className="hidden sm:inline">Comments</span></span>
             </button>
@@ -465,7 +477,10 @@ export default function CustomerRecipeDetailsPage() {
 
           {/* Right Column: Nutrition & Context Sidebar */}
           <div className="lg:col-span-4 space-y-8">
-            <Card className="p-8 bg-[var(--c-card)] border border-[var(--c-primary)]/20 rounded-[var(--c-radius-card)] shadow-[0_0_40px_-10px_rgba(0,209,255,0.1)] relative overflow-hidden">
+            <Card 
+              className="p-8 bg-[var(--c-card)] border border-[var(--c-primary)]/20 shadow-[0_0_40px_-10px_rgba(0,209,255,0.1)] relative overflow-hidden"
+              style={{ clipPath: 'polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px)' }}
+            >
               <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--c-primary)]/10 blur-3xl rounded-full pointer-events-none" />
               
               <h4 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--c-primary)] mb-6 flex items-center gap-2">
@@ -475,23 +490,23 @@ export default function CustomerRecipeDetailsPage() {
               <div className="space-y-4">
                 <div className="flex justify-between items-center pb-4 border-b border-white/5">
                   <span className="text-sm text-slate-400">Calories</span>
-                  <span className="font-black text-white">420 kcal</span>
+                  <span className="font-black text-white">{calories}</span>
                 </div>
                 <div className="flex justify-between items-center pb-4 border-b border-white/5">
                   <span className="text-sm text-slate-400">Protein</span>
-                  <span className="font-black text-emerald-400">45g</span>
+                  <span className="font-black text-emerald-400">{protein}</span>
                 </div>
                 <div className="flex justify-between items-center pb-4 border-b border-white/5">
                   <span className="text-sm text-slate-400">Omega-3</span>
-                  <span className="font-black text-cyan-400">2.1g</span>
+                  <span className="font-black text-cyan-400">{omega3}</span>
                 </div>
                 <div className="flex justify-between items-center pb-4 border-b border-white/5">
                   <span className="text-sm text-slate-400">Carbs</span>
-                  <span className="font-black text-white">12g</span>
+                  <span className="font-black text-white">{carbs}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-slate-400">Fats</span>
-                  <span className="font-black text-white">18g</span>
+                  <span className="font-black text-white">{fats}</span>
                 </div>
               </div>
               
@@ -503,14 +518,19 @@ export default function CustomerRecipeDetailsPage() {
             </Card>
 
             {/* Required Equipment */}
-            <Card className="p-8 bg-[var(--c-card)]/50 border border-white/5 rounded-[var(--c-radius-card)]">
+            <Card 
+              className="p-8 bg-[var(--c-card)]/50 border border-white/5"
+              style={{ clipPath: 'polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px)' }}
+            >
               <h4 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-6">
                 Recommended Equipment
               </h4>
               <ul className="space-y-3">
-                <li className="flex items-center gap-3 text-sm text-slate-300"><div className="w-1.5 h-1.5 bg-slate-500 rounded-full" /> Cast Iron Skillet</li>
-                <li className="flex items-center gap-3 text-sm text-slate-300"><div className="w-1.5 h-1.5 bg-slate-500 rounded-full" /> Fish Spatula</li>
-                <li className="flex items-center gap-3 text-sm text-slate-300"><div className="w-1.5 h-1.5 bg-slate-500 rounded-full" /> Meat Thermometer</li>
+                {equipment.map((item: string, idx: number) => (
+                  <li key={idx} className="flex items-center gap-3 text-sm text-slate-300">
+                    <div className="w-1.5 h-1.5 bg-slate-500 rounded-full" /> {item}
+                  </li>
+                ))}
               </ul>
             </Card>
           </div>
