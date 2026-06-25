@@ -316,6 +316,7 @@ export async function PUT(request: Request) {
     const finalDescription = `${cleanDescription}\n<!--METADATA-${JSON.stringify(metadata)}-METADATA-->`;
 
     const updatePayload: any = {
+      seller_id,
       name, category, price, stock, status, image_url, gallery, description: finalDescription,
       landed_at: body.landed_at || null,
       storage_temp: body.storage_temp !== undefined && body.storage_temp !== '' ? Number(body.storage_temp) : null,
