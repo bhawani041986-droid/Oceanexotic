@@ -443,9 +443,9 @@ export default function ProductDetailScreen() {
                   alignItems: 'center', 
                   backgroundColor: 'rgba(0, 0, 0, 0.5)', 
                   borderRadius: 22, 
-                  paddingHorizontal: 10, 
-                  paddingVertical: 6,
-                  gap: 12,
+                  paddingHorizontal: 12, 
+                  paddingVertical: 8,
+                  gap: 16,
                   borderWidth: 1,
                   borderColor: 'rgba(255, 255, 255, 0.1)'
                 }}
@@ -479,35 +479,24 @@ export default function ProductDetailScreen() {
                 >
                   <MaterialCommunityIcons name="link-variant" size={16} color="#FFFFFF" />
                 </Pressable>
-              </View>
 
-              {/* Heart Button */}
-              <Pressable
-                onPress={handleToggleWishlist}
-                style={({ pressed }) => ({
-                  opacity: pressed ? 0.7 : 1,
-                  width: 36,
-                  height: 36,
-                  borderRadius: 18,
-                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                  borderWidth: 1,
-                  borderColor: 'rgba(255, 255, 255, 0.15)',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginLeft: 8,
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.3,
-                  shadowRadius: 3,
-                  elevation: 4
-                })}
-              >
-                <MaterialCommunityIcons 
-                  name={isFavorited ? "heart" : "heart-outline"} 
-                  size={18} 
-                  color={isFavorited ? "#EF4444" : "#FFFFFF"} 
-                />
-              </Pressable>
+                {/* Vertical Divider */}
+                <View style={{ width: 1, height: 16, backgroundColor: 'rgba(255,255,255,0.2)' }} />
+
+                {/* Heart Button */}
+                <Pressable
+                  onPress={handleToggleWishlist}
+                  style={({ pressed }) => ({
+                    opacity: pressed ? 0.7 : 1,
+                  })}
+                >
+                  <MaterialCommunityIcons 
+                    name={isFavorited ? "heart" : "heart-outline"} 
+                    size={18} 
+                    color={isFavorited ? "#EF4444" : "#FFFFFF"} 
+                  />
+                </Pressable>
+              </View>
             </View>
 
             {/* Tap overlay info */}
