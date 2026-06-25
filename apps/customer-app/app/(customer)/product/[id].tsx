@@ -436,10 +436,10 @@ export default function ProductDetailScreen() {
                   flexDirection: 'row', 
                   alignItems: 'center', 
                   backgroundColor: 'rgba(0, 0, 0, 0.5)', 
-                  borderRadius: 22, 
-                  paddingHorizontal: 12, 
-                  paddingVertical: 8,
-                  gap: 16,
+                  borderRadius: 12, 
+                  paddingHorizontal: 6, 
+                  paddingVertical: 4,
+                  gap: 8,
                   borderWidth: 1,
                   borderColor: 'rgba(255, 255, 255, 0.1)'
                 }}
@@ -451,7 +451,7 @@ export default function ProductDetailScreen() {
                     opacity: pressed ? 0.7 : 1,
                   })}
                 >
-                  <MaterialCommunityIcons name="share-variant" size={18} color="#FFFFFF" />
+                  <MaterialCommunityIcons name="share-variant" size={12} color="#FFFFFF" />
                 </Pressable>
 
                 {/* WhatsApp Button */}
@@ -461,7 +461,7 @@ export default function ProductDetailScreen() {
                     opacity: pressed ? 0.7 : 1,
                   })}
                 >
-                  <MaterialCommunityIcons name="whatsapp" size={20} color="#25D366" />
+                  <MaterialCommunityIcons name="whatsapp" size={14} color="#25D366" />
                 </Pressable>
 
                 {/* Copy Link Button */}
@@ -471,11 +471,11 @@ export default function ProductDetailScreen() {
                     opacity: pressed ? 0.7 : 1,
                   })}
                 >
-                  <MaterialCommunityIcons name="link-variant" size={18} color="#FFFFFF" />
+                  <MaterialCommunityIcons name="link-variant" size={12} color="#FFFFFF" />
                 </Pressable>
 
                 {/* Vertical Divider */}
-                <View style={{ width: 1, height: 16, backgroundColor: 'rgba(255,255,255,0.2)' }} />
+                <View style={{ width: 1, height: 10, backgroundColor: 'rgba(255,255,255,0.2)' }} />
 
                 {/* Heart Button */}
                 <Pressable
@@ -486,7 +486,7 @@ export default function ProductDetailScreen() {
                 >
                   <MaterialCommunityIcons 
                     name={isFavorited ? "heart" : "heart-outline"} 
-                    size={20} 
+                    size={14} 
                     color={isFavorited ? "#EF4444" : "#FFFFFF"} 
                   />
                 </Pressable>
