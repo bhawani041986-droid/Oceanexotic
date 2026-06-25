@@ -282,8 +282,9 @@ export default function CustomerRecipesPage() {
                   )}
 
                   {/* Cyber Corner Elements */}
-                  <div className="absolute top-2 right-2 w-3 h-3 border-t border-r border-[var(--foreground)]/20 pointer-events-none group-hover:border-[var(--c-primary)]/40 transition-colors" />
-                  <div className="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-[var(--foreground)]/20 pointer-events-none group-hover:border-[var(--c-primary)]/40 transition-colors" />
+                  <div className="absolute top-2 right-2 w-3 h-3 border-t border-r border-[var(--border)] pointer-events-none group-hover:border-[var(--c-primary)]/50 transition-colors" />
+                  <div className="absolute bottom-2 left-2 w-3 h-3 border-b border-l border-[var(--border)] pointer-events-none group-hover:border-[var(--c-primary)]/50 transition-colors" />
+
                 </Card>
               ))}
             </div>
@@ -295,7 +296,7 @@ export default function CustomerRecipesPage() {
                   variant="outline"
                   onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                   disabled={currentPage === 1}
-                  className="h-10 px-4 text-[10px] font-black uppercase tracking-widest border-[var(--foreground)]/5 rounded-xl disabled:opacity-40 italic flex items-center gap-2 hover:bg-[var(--foreground)]/5"
+                  className="h-10 px-4 text-[10px] font-black uppercase tracking-widest border-[var(--border)] rounded-xl disabled:opacity-40 italic flex items-center gap-2 hover:bg-[var(--border)]/40"
                 >
                   Previous
                 </Button>
@@ -308,8 +309,8 @@ export default function CustomerRecipesPage() {
                       onClick={() => setCurrentPage(page)}
                       variant={isCurrent ? "primary" : "outline"}
                       className={cn(
-                        "h-10 w-10 text-[10px] font-black rounded-xl border-[var(--foreground)]/5",
-                        isCurrent ? "shadow-glow-purple italic text-white bg-[var(--c-primary)]" : "hover:bg-[var(--foreground)]/5 text-[var(--c-text-secondary)]"
+                        "h-10 w-10 text-[10px] font-black rounded-xl border-[var(--border)]",
+                        isCurrent ? "shadow-glow-purple italic text-white bg-[var(--c-primary)]" : "hover:bg-[var(--border)]/40 text-[var(--c-text-secondary)]"
                       )}
                     >
                       {page}
@@ -321,10 +322,11 @@ export default function CustomerRecipesPage() {
                   variant="outline"
                   onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                   disabled={currentPage === totalPages}
-                  className="h-10 px-4 text-[10px] font-black uppercase tracking-widest border-[var(--foreground)]/5 rounded-xl disabled:opacity-40 italic flex items-center gap-2 hover:bg-[var(--foreground)]/5"
+                  className="h-10 px-4 text-[10px] font-black uppercase tracking-widest border-[var(--border)] rounded-xl disabled:opacity-40 italic flex items-center gap-2 hover:bg-[var(--border)]/40"
                 >
                   Next
                 </Button>
+
               </div>
             )}
           </div>

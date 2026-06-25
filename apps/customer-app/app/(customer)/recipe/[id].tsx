@@ -134,8 +134,16 @@ export default function RecipeDetailsScreen() {
     }
   }, [recipe]);
 
+  const difficultyColor = useMemo(() => {
+    const d = (meta.difficulty || 'Medium').toLowerCase();
+    if (d === 'easy') return '#10b981'; // Emerald
+    if (d === 'expert') return '#f43f5e'; // Rose
+    return '#f59e0b'; // Amber/Medium
+  }, [meta.difficulty]);
+
   const ingredients = recipe.ingredients;
   const steps = recipe.steps;
+
 
   const calories = meta.calories || "420 kcal";
   const protein = meta.protein || "45g";
@@ -278,7 +286,7 @@ export default function RecipeDetailsScreen() {
           )}
 
           <LinearGradient 
-            colors={['rgba(8,13,25,0.8)', 'transparent', colors.bg]} 
+            colors={['rgba(8,13,25,0.8)', 'transparent', 'transparent']} 
             locations={[0, 0.45, 1]}
             className="absolute inset-0 pointer-events-none z-10"
           />
@@ -303,19 +311,50 @@ export default function RecipeDetailsScreen() {
           {/* Title Area */}
           <View className="absolute bottom-6 left-5 right-5 space-y-3">
             <View className="flex-row items-center gap-2 flex-wrap">
-              <View className="flex-row items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-none border border-white/20 backdrop-blur-md">
-                <MaterialCommunityIcons name="fire" size={12} color={colors.primary} />
-                <Text className="text-[9px] font-black text-white uppercase tracking-widest">{meta.difficulty || 'Expert'}</Text>
+              <View 
+                className="flex-row items-center gap-1.5 px-2.5 py-1 rounded-none border"
+                style={{ 
+                  backgroundColor: `${difficultyColor}15`, 
+                  borderColor: `${difficultyColor}35`
+                }}
+              >
+                <MaterialCommunityIcons name="fire" size={12} color={difficultyColor} />
+                <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: difficultyColor }}>
+                  {meta.difficulty || 'Medium'}
+                </Text>
               </View>
-              <View className="flex-row items-center gap-1.5 bg-white/10 px-2.5 py-1 rounded-none border border-white/20 backdrop-blur-md">
-                <MaterialCommunityIcons name="clock-outline" size={12} color="white" />
-                <Text className="text-[9px] font-black text-white uppercase tracking-widest">{meta.time || '25m'}</Text>
+              <View 
+                className="flex-row items-center gap-1.5 px-2.5 py-1 rounded-none border"
+                style={{ 
+                  backgroundColor: 'rgba(6, 182, 212, 0.1)', 
+                  borderColor: 'rgba(6, 182, 212, 0.3)'
+                }}
+              >
+                <MaterialCommunityIcons name="clock-outline" size={12} color="#06b6d4" />
+                <Text className="text-[9px] font-black uppercase tracking-widest text-cyan-400">
+                  {meta.time || '25m'}
+                </Text>
               </View>
             </View>
             <Text className="text-3xl font-black text-white uppercase italic tracking-tight shadow-2xl leading-none">
               {recipe.title}
             </Text>
+            {/* Glowing Neon Underline */}
+            <View 
+              style={{
+                height: 2,
+                width: 160,
+                backgroundColor: colors.primary,
+                shadowColor: colors.primary,
+                shadowOffset: { width: 0, height: 0 },
+                shadowOpacity: 0.8,
+                shadowRadius: 5,
+                elevation: 3,
+                marginTop: 4
+              }}
+            />
           </View>
+
         </View>
 
         {/* Content Section */}
@@ -323,90 +362,98 @@ export default function RecipeDetailsScreen() {
 
           {/* Interactive Save / Share / Comment Action Bar */}
           <ChamferedBox
-            fillColor="rgba(30, 41, 59, 0.2)"
-            strokeColor="rgba(255, 255, 255, 0.08)"
+            fillColor={colors.card}
+            strokeColor={colors.border}
             bevelSize={10}
             className="w-full relative overflow-hidden"
+            style={{ minHeight: 0 }}
           >
-            <View className="flex-row justify-between items-center p-2.5 gap-2">
+            <View className="flex-row justify-between items-center p-1 gap-1.5">
+
               <Pressable 
                 onPress={handleLike}
-                className="flex-1 flex-row items-center justify-center gap-1.5 py-2"
+                className="flex-1 flex-row items-center justify-center gap-1"
                 style={{ 
-                  backgroundColor: isLiked ? `${colors.primary}10` : 'rgba(255,255,255,0.03)',
-                  borderColor: isLiked ? colors.primary : 'rgba(255,255,255,0.08)',
-                  borderWidth: 1
+                  backgroundColor: isLiked ? `${colors.primary}15` : colors.card,
+                  borderColor: isLiked ? colors.primary : colors.border,
+                  borderWidth: 1,
+                  height: 26
                 }}
               >
                 <MaterialCommunityIcons 
                   name={isLiked ? "heart" : "heart-outline"} 
-                  size={14} 
+                  size={12} 
                   color={isLiked ? "#ef4444" : "#94a3b8"} 
                 />
-                <Text className="text-[10px] font-black uppercase tracking-wider" style={{ color: isLiked ? "#ef4444" : "#94a3b8" }}>
+                <Text className="text-[8.5px] font-black uppercase tracking-wider" style={{ color: isLiked ? "#ef4444" : "#94a3b8" }}>
                   {isLiked ? `${likesCount} Saved` : `Save (${likesCount})`}
                 </Text>
               </Pressable>
               
               <Pressable 
                 onPress={handleShare}
-                className="flex-1 flex-row items-center justify-center gap-1.5 py-2 bg-white/5 border border-white/10"
+                className="flex-1 flex-row items-center justify-center gap-1"
+                style={{ backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1, height: 26 }}
               >
-                <MaterialCommunityIcons name="share-variant" size={14} color="#94a3b8" />
-                <Text className="text-[10px] font-black uppercase tracking-wider text-slate-400">Share</Text>
+                <MaterialCommunityIcons name="share-variant" size={12} color="#94a3b8" />
+                <Text className="text-[8.5px] font-black uppercase tracking-wider text-slate-400">Share</Text>
               </Pressable>
               
               <Pressable 
                 onPress={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
-                className="flex-1 flex-row items-center justify-center gap-1.5 py-2 bg-white/5 border border-white/10"
+                className="flex-1 flex-row items-center justify-center gap-1"
+                style={{ backgroundColor: colors.card, borderColor: colors.border, borderWidth: 1, height: 26 }}
               >
-                <MaterialCommunityIcons name="comment-text-outline" size={14} color="#94a3b8" />
-                <Text className="text-[10px] font-black uppercase tracking-wider text-slate-400">
+                <MaterialCommunityIcons name="comment-text-outline" size={12} color="#94a3b8" />
+                <Text className="text-[8.5px] font-black uppercase tracking-wider text-slate-400">
                   {comments.length} Comments
                 </Text>
               </Pressable>
             </View>
+
           </ChamferedBox>
+
 
           {/* Dynamic Nutritional Profile Card */}
           <View className="space-y-4">
             <View className="flex-row items-center gap-2">
               <MaterialCommunityIcons name="heart-pulse" size={16} color={colors.primary} />
-              <Text className="text-sm font-black uppercase text-foreground tracking-widest">Nutritional Profile</Text>
+              <Text className="text-sm font-black uppercase tracking-widest" style={{ color: colors.text }}>Nutritional Profile</Text>
             </View>
+
             <ChamferedBox
               fillColor="transparent"
-              strokeColor="rgba(255, 255, 255, 0.08)"
+              strokeColor={colors.border}
               bevelSize={16}
               className="relative overflow-hidden"
               style={{ minHeight: 180 }}
             >
               <LinearGradient
-                colors={['rgba(30, 41, 59, 0.4)', 'rgba(15, 23, 42, 0.65)']}
+                colors={[`${colors.card}d5`, `${colors.bg}fa`]}
                 className="p-5 w-full"
               >
                 <View className="absolute top-0 left-0 right-0 h-[2px]" style={{ backgroundColor: colors.primary }} />
                 
                 <View className="space-y-3">
-                  <View className="flex-row justify-between items-center pb-3 border-b border-white/5">
-                    <Text className="text-xs text-slate-400 font-medium">Calories</Text>
-                    <Text className="text-xs font-black text-white">{calories}</Text>
+                  <View className="flex-row justify-between items-center pb-3 border-b" style={{ borderBottomColor: colors.border }}>
+                    <Text className="text-xs font-medium" style={{ color: colors.textMuted }}>Calories</Text>
+                    <Text className="text-xs font-black" style={{ color: colors.text }}>{calories}</Text>
                   </View>
-                  <View className="flex-row justify-between items-center pb-3 border-b border-white/5">
-                    <Text className="text-xs text-slate-400 font-medium">Protein</Text>
+                  <View className="flex-row justify-between items-center pb-3 border-b" style={{ borderBottomColor: colors.border }}>
+                    <Text className="text-xs font-medium" style={{ color: colors.textMuted }}>Protein</Text>
                     <Text className="text-xs font-black text-emerald-400">{protein}</Text>
                   </View>
-                  <View className="flex-row justify-between items-center pb-3 border-b border-white/5">
-                    <Text className="text-xs text-slate-400 font-medium">Omega-3</Text>
+                  <View className="flex-row justify-between items-center pb-3 border-b" style={{ borderBottomColor: colors.border }}>
+                    <Text className="text-xs font-medium" style={{ color: colors.textMuted }}>Omega-3</Text>
                     <Text className="text-xs font-black text-cyan-400">{omega3}</Text>
                   </View>
-                  <View className="flex-row justify-between items-center pb-3 border-b border-white/5">
-                    <Text className="text-xs text-slate-400 font-medium">Carbs</Text>
-                    <Text className="text-xs font-black text-white">{carbs}</Text>
+                  <View className="flex-row justify-between items-center pb-3 border-b" style={{ borderBottomColor: colors.border }}>
+                    <Text className="text-xs font-medium" style={{ color: colors.textMuted }}>Carbs</Text>
+                    <Text className="text-xs font-black" style={{ color: colors.text }}>{carbs}</Text>
                   </View>
                   <View className="flex-row justify-between items-center">
-                    <Text className="text-xs text-slate-400 font-medium">Fats</Text>
-                    <Text className="text-xs font-black text-white">{fats}</Text>
+                    <Text className="text-xs font-medium" style={{ color: colors.textMuted }}>Fats</Text>
+                    <Text className="text-xs font-black" style={{ color: colors.text }}>{fats}</Text>
                   </View>
                 </View>
 
@@ -417,54 +464,58 @@ export default function RecipeDetailsScreen() {
                 </View>
               </LinearGradient>
             </ChamferedBox>
+
           </View>
 
           {/* Dynamic Recommended Equipment Card */}
           <View className="space-y-4">
             <View className="flex-row items-center gap-2">
               <MaterialCommunityIcons name="tools" size={16} color={colors.primary} />
-              <Text className="text-sm font-black uppercase text-foreground tracking-widest">Recommended Equipment</Text>
+              <Text className="text-sm font-black uppercase tracking-widest" style={{ color: colors.text }}>Recommended Equipment</Text>
             </View>
+
             <ChamferedBox
               fillColor="transparent"
-              strokeColor="rgba(255, 255, 255, 0.08)"
+              strokeColor={colors.border}
               bevelSize={16}
               className="relative overflow-hidden"
             >
               <LinearGradient
-                colors={['rgba(30, 41, 59, 0.4)', 'rgba(15, 23, 42, 0.65)']}
+                colors={[`${colors.card}d5`, `${colors.bg}fa`]}
                 className="p-5 w-full"
               >
-                <View className="absolute top-0 left-0 right-0 h-[2px] bg-slate-700" />
+                <View className="absolute top-0 left-0 right-0 h-[2px]" style={{ backgroundColor: colors.border }} />
                 
                 <View className="space-y-2.5">
                   {equipment.map((item: string, idx: number) => (
                     <View key={idx} className="flex-row items-center gap-3">
-                      <View className="w-1.5 h-1.5 bg-slate-500 rounded-full" />
-                      <Text className="text-xs text-slate-300 font-medium">{item}</Text>
+                      <View className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: colors.textMuted }} />
+                      <Text className="text-xs font-medium" style={{ color: colors.textMuted }}>{item}</Text>
                     </View>
                   ))}
                 </View>
               </LinearGradient>
             </ChamferedBox>
+
           </View>
           
           {/* Ingredients Section */}
           <View className="space-y-4">
             <View className="flex-row items-center gap-2">
               <MaterialCommunityIcons name={"sparkles" as any} size={16} color={colors.primary} />
-              <Text className="text-sm font-black uppercase text-foreground tracking-widest">Required Elements</Text>
+              <Text className="text-sm font-black uppercase tracking-widest" style={{ color: colors.text }}>Required Ingredients</Text>
             </View>
+
             
             <ChamferedBox
               fillColor="transparent"
-              strokeColor="rgba(255, 255, 255, 0.08)"
+              strokeColor={colors.border}
               bevelSize={16}
               className="relative overflow-hidden"
               style={{ minHeight: 120 }}
             >
               <LinearGradient
-                colors={['rgba(30, 41, 59, 0.4)', 'rgba(15, 23, 42, 0.65)']}
+                colors={[`${colors.card}d5`, `${colors.bg}fa`]}
                 className="p-5 w-full space-y-3.5"
               >
                 <View className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-emerald-500 via-cyan-500 to-transparent" />
@@ -475,38 +526,40 @@ export default function RecipeDetailsScreen() {
                     <View 
                       className="w-7 h-7 rounded-none items-center justify-center border"
                       style={{
-                        backgroundColor: 'rgba(16, 185, 129, 0.08)',
-                        borderColor: 'rgba(16, 185, 129, 0.25)',
+                        backgroundColor: `${colors.primary}12`,
+                        borderColor: `${colors.primary}40`,
                       }}
                     >
-                      <MaterialCommunityIcons name="fish" size={14} color="#10b981" />
+                      <MaterialCommunityIcons name="fish" size={14} color={colors.primary} />
                     </View>
-                    <Text className="text-sm text-foreground/80 flex-1 leading-relaxed font-medium">{ing}</Text>
+                    <Text className="text-sm flex-1 leading-relaxed font-medium" style={{ color: colors.text }}>{ing}</Text>
                   </View>
                 ))}
               </LinearGradient>
             </ChamferedBox>
+
           </View>
 
           {/* Execution Protocol */}
           <View className="space-y-4">
             <View className="flex-row items-center gap-2">
               <MaterialCommunityIcons name="silverware-clean" size={16} color={colors.primary} />
-              <Text className="text-sm font-black uppercase text-foreground tracking-widest">Cooking Steps</Text>
+              <Text className="text-sm font-black uppercase tracking-widest" style={{ color: colors.text }}>Cooking Sequence</Text>
             </View>
+
             
             <View className="space-y-4">
               {(steps as string[]).map((step: string, i: number) => (
                 <ChamferedBox
                   key={i}
                   fillColor="transparent"
-                  strokeColor="rgba(255, 255, 255, 0.06)"
+                  strokeColor={colors.border}
                   bevelSize={10}
                   style={{ minHeight: 60 }}
                   className="relative overflow-hidden"
                 >
                   <LinearGradient
-                    colors={['rgba(30, 41, 59, 0.3)', 'rgba(15, 23, 42, 0.5)']}
+                    colors={[`${colors.card}d5`, `${colors.bg}fa`]}
                     className="flex-row items-start gap-4 p-4 w-full"
                   >
                     {/* Left neon indicator border */}
@@ -516,7 +569,7 @@ export default function RecipeDetailsScreen() {
                       className="w-6 h-6 rounded-none items-center justify-center border" 
                       style={{ 
                         borderColor: colors.primary, 
-                        backgroundColor: 'rgba(255,255,255,0.03)',
+                        backgroundColor: colors.card,
                         shadowColor: colors.primary,
                         shadowOpacity: 0.15,
                         shadowRadius: 3
@@ -524,33 +577,35 @@ export default function RecipeDetailsScreen() {
                     >
                       <Text className="text-[10px] font-black" style={{ color: colors.primary }}>{i + 1}</Text>
                     </View>
-                    <Text className="text-sm text-foreground/90 flex-1 leading-relaxed pt-0.5 font-medium">{step}</Text>
+                    <Text className="text-sm flex-1 leading-relaxed pt-0.5 font-medium" style={{ color: colors.text }}>{step}</Text>
                   </LinearGradient>
                 </ChamferedBox>
+
               ))}
             </View>
           </View>
 
           {/* Chef's Discussion Feed */}
-          <View className="space-y-4 pt-4 border-t border-white/5">
+          <View className="space-y-4 pt-4 border-t" style={{ borderTopColor: colors.border, borderTopWidth: 1 }}>
             <View className="flex-row items-center gap-2">
               <MaterialCommunityIcons name="forum" size={16} color={colors.primary} />
-              <Text className="text-sm font-black uppercase text-foreground tracking-widest">
-                Discussion ({comments.length})
+              <Text className="text-sm font-black uppercase tracking-widest" style={{ color: colors.text }}>
+                Chef's Discussion ({comments.length})
               </Text>
             </View>
+
 
             {/* Post Review Form Card */}
             <ChamferedBox
               fillColor="transparent"
-              strokeColor="rgba(255, 255, 255, 0.06)"
+              strokeColor={colors.border}
               bevelSize={12}
             >
               <LinearGradient
-                colors={['rgba(30, 41, 59, 0.3)', 'rgba(15, 23, 42, 0.5)']}
+                colors={[`${colors.card}d5`, `${colors.bg}fa`]}
                 className="p-5 w-full space-y-4"
               >
-                <Text className="text-[10px] font-black uppercase tracking-wider text-slate-400">Rate this recipe</Text>
+                <Text className="text-[10px] font-black uppercase tracking-wider" style={{ color: colors.textMuted }}>Rate this recipe</Text>
                 
                 {/* Star Ratings Input */}
                 <View className="flex-row gap-2">
@@ -567,18 +622,18 @@ export default function RecipeDetailsScreen() {
 
                 {/* Comment Textarea Input */}
                 <View 
-                  className="border p-3 bg-black/40 min-h-[80px]"
-                  style={{ borderColor: colors.border }}
+                  className="border p-3 min-h-[80px]"
+                  style={{ borderColor: colors.border, backgroundColor: colors.bg }}
                 >
                   <TextInput
                     value={newComment}
                     onChangeText={setNewComment}
                     placeholder="Share your experience or modifications..."
-                    placeholderTextColor="#475569"
+                    placeholderTextColor={colors.textMuted}
                     multiline
                     numberOfLines={3}
-                    className="text-xs text-white leading-relaxed font-medium text-left"
-                    style={{ textAlignVertical: 'top' }}
+                    className="text-xs leading-relaxed font-medium text-left"
+                    style={{ textAlignVertical: 'top', color: colors.text }}
                   />
                 </View>
 
@@ -603,16 +658,21 @@ export default function RecipeDetailsScreen() {
             {/* Comments Feed List */}
             <View className="space-y-3 mt-4">
               {comments.map((comment) => (
-                <View key={comment.id} className="p-4 bg-white/5 border border-white/5 flex-row gap-3.5">
+                <View 
+                  key={comment.id} 
+                  className="p-4 border flex-row gap-3.5"
+                  style={{ backgroundColor: colors.card, borderColor: colors.border }}
+                >
                   <Image 
                     source={{ uri: comment.avatar }} 
-                    className="w-10 h-10 rounded-full border border-white/10" 
+                    className="w-10 h-10 rounded-full border" 
+                    style={{ borderColor: colors.border }}
                   />
                   <View className="flex-1 space-y-1">
                     <View className="flex-row justify-between items-center">
                       <View className="flex-row items-center gap-2 flex-wrap">
-                        <Text className="text-xs font-bold text-white">{comment.user}</Text>
-                        <Text className="text-[8px] font-medium text-slate-500 uppercase">{comment.time}</Text>
+                        <Text className="text-xs font-bold" style={{ color: colors.text }}>{comment.user}</Text>
+                        <Text className="text-[8px] font-medium uppercase" style={{ color: colors.textMuted }}>{comment.time}</Text>
                       </View>
                       <View className="flex-row gap-0.5">
                         {Array.from({ length: comment.rating }).map((_, idx) => (
@@ -620,7 +680,7 @@ export default function RecipeDetailsScreen() {
                         ))}
                       </View>
                     </View>
-                    <Text className="text-xs text-slate-300 leading-relaxed font-medium">
+                    <Text className="text-xs leading-relaxed font-medium" style={{ color: colors.textMuted }}>
                       {comment.text}
                     </Text>
                   </View>
@@ -628,6 +688,7 @@ export default function RecipeDetailsScreen() {
               ))}
             </View>
           </View>
+
 
         </View>
       </ScrollView>

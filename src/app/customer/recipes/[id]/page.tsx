@@ -234,95 +234,105 @@ export default function CustomerRecipeDetailsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--c-bg)] text-[var(--c-text-primary)] font-sans relative pb-32">
+    <div className="min-h-screen bg-[var(--c-bg)] text-[var(--c-text-primary)] font-sans relative pb-32 overflow-hidden">
       
-      {/* 1. STUNNING HERO IMAGE HEADER */}
-      <div className="relative h-[50vh] md:h-[65vh] w-full bg-black">
-        <img 
-          src={gallery[activeImg]} 
-          alt={recipe.title} 
-          className="absolute inset-0 w-full h-full object-cover opacity-100" 
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[var(--c-bg)]/50 via-transparent to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-transparent pointer-events-none" />
-
-        {/* Back Button */}
-        <button 
-          onClick={() => router.push('/customer/recipes')} 
-          className="absolute top-8 left-4 md:left-10 z-20 flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white/80 hover:text-white transition-all py-2.5 px-5 bg-black/40 backdrop-blur-md border border-white/10 hover:border-white/30"
-          style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}
+      {/* Background ambiance */}
+      <div className="absolute top-0 left-0 right-0 h-[400px] bg-gradient-to-b from-[var(--c-primary)]/5 via-transparent to-transparent pointer-events-none" />
+      <div className="absolute top-1/3 right-0 w-[300px] h-[300px] bg-[var(--c-primary)]/5 blur-[100px] rounded-full pointer-events-none" />
+      
+      {/* 1. STAND-ALONE BEVELED HERO IMAGE BANNER */}
+      <div className="container mx-auto px-4 md:px-12 pt-8">
+        <div 
+          className="relative h-[40vh] md:h-[50vh] w-full bg-black overflow-hidden border border-[var(--border)] shadow-2xl"
+          style={{ clipPath: 'polygon(30px 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%, 0 30px)' }}
         >
-          <ArrowLeft className="w-4 h-4" /> CHEF'S RECIPES
-        </button>
-
-        {/* Title & Badges Superimposed */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12 z-20">
-          <div className="container mx-auto">
-            <div className="flex flex-wrap gap-2.5 mb-6">
-              <Badge variant="glass" className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30 text-[10px] font-black uppercase tracking-widest px-4 py-1.5 backdrop-blur-md">
-                {recipe.region}
-              </Badge>
-              <Badge variant="glass" className="bg-cyan-500/20 text-cyan-300 border-cyan-500/30 text-[10px] font-black uppercase tracking-widest px-4 py-1.5 backdrop-blur-md">
-                {recipe.prepType}
-              </Badge>
-              <Badge variant="glass" className="bg-orange-500/20 text-orange-300 border-orange-500/30 text-[10px] font-black uppercase tracking-widest px-4 py-1.5 backdrop-blur-md flex items-center gap-1.5">
-                <Flame className="w-3.5 h-3.5" /> High Protein
-              </Badge>
-              <Badge variant="glass" className="bg-purple-500/20 text-purple-300 border-purple-500/30 text-[10px] font-black uppercase tracking-widest px-4 py-1.5 backdrop-blur-md flex items-center gap-1.5">
-                <Leaf className="w-3.5 h-3.5" /> Keto-Friendly
-              </Badge>
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl md:text-7xl font-black uppercase italic tracking-tight text-white leading-[1.1] drop-shadow-2xl max-w-4xl">
-              {recipe.title}
-            </h1>
-            <div className="h-0.5 w-full max-w-[280px] bg-gradient-to-r from-[var(--c-primary)] via-[var(--c-primary)]/50 to-transparent mt-4 shadow-[0_0_10px_var(--c-primary)]" />
-
-            <p className="text-sm md:text-base text-slate-300 font-bold uppercase tracking-widest mt-6 flex items-center gap-3">
-              Target Seafood: <span className="text-[var(--c-primary)] font-black text-lg">{recipe.fishType}</span>
-            </p>
-          </div>
+          <img 
+            src={gallery[activeImg]} 
+            alt={recipe.title} 
+            className="w-full h-full object-cover opacity-100" 
+          />
+          {/* Back Button */}
+          <button 
+            onClick={() => router.push('/customer/recipes')} 
+            className="absolute top-6 left-6 z-20 flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[var(--c-text-primary)] hover:text-white transition-all py-2 px-4 bg-[var(--c-card)]/80 backdrop-blur-md border border-[var(--border)] hover:border-[var(--c-primary)]/50 cursor-pointer"
+            style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}
+          >
+            <ArrowLeft className="w-4 h-4" /> CHEF'S RECIPES
+          </button>
+          
+          <div className="absolute top-4 right-4 w-4 h-4 border-t border-r border-[var(--c-primary)]/30 pointer-events-none" />
+          <div className="absolute bottom-4 left-4 w-4 h-4 border-b border-l border-[var(--c-primary)]/30 pointer-events-none" />
         </div>
+
+        {/* Gallery Thumbnails Strip */}
+        {gallery.length > 1 && (
+          <div className="flex gap-3 mt-4 overflow-x-auto pb-2 no-scrollbar">
+            {gallery.map((img: string, idx: number) => (
+              <button
+                key={idx}
+                onClick={() => setActiveImg(idx)}
+                className={cn(
+                  "relative w-20 h-14 md:w-24 md:h-16 shrink-0 overflow-hidden border transition-all cursor-pointer",
+                  idx === activeImg 
+                    ? "border-[var(--c-primary)] shadow-[0_0_10px_var(--c-primary)] scale-105" 
+                    : "border-[var(--border)] hover:border-[var(--c-primary)]/40"
+                )}
+                style={{ clipPath: 'polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px)' }}
+              >
+                <img src={img} className="w-full h-full object-cover" alt="" />
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
+
       {/* 2. INTERACTIVE FLOATING ACTION BAR */}
-      <div className="sticky top-[76px] z-40 bg-[var(--c-bg)]/90 backdrop-blur-3xl border-b border-[var(--foreground)]/5 shadow-sm">
-        <div className="container mx-auto px-4 md:px-12 py-3 md:py-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+      <div className="sticky top-[76px] z-40 bg-[var(--c-bg)]/95 backdrop-blur-3xl border-b border-[var(--border)] shadow-sm">
+        <div className="container mx-auto px-4 md:px-12 py-1.5 flex flex-col xl:flex-row xl:items-center justify-between gap-3">
           
           {/* Scientific Tracking - Scrollable on mobile to prevent squishing */}
           <div className="flex items-center justify-between xl:justify-start gap-4 md:gap-12 w-full xl:w-auto overflow-x-auto no-scrollbar pb-1 xl:pb-0">
             <div className="flex items-center gap-2.5 shrink-0">
-              <Flame className="w-4 h-4 md:w-5 md:h-5 text-[var(--c-primary)]" />
+              <Flame className={cn("w-4 h-4 md:w-5 md:h-5", 
+                difficulty.toLowerCase() === 'easy' ? "text-emerald-400" :
+                difficulty.toLowerCase() === 'expert' ? "text-rose-400" :
+                "text-amber-400"
+              )} />
               <div>
-                <span className="text-[7px] md:text-[8px] font-black text-slate-500 uppercase tracking-widest block leading-none">Difficulty</span>
-                <span className="text-xs md:text-sm text-white font-black italic uppercase">{difficulty}</span>
+                <span className="text-[7px] md:text-[8px] font-black text-[var(--c-text-secondary)]/65 uppercase tracking-widest block leading-none">Difficulty</span>
+                <span className={cn("text-xs md:text-sm font-black italic uppercase", 
+                  difficulty.toLowerCase() === 'easy' ? "text-emerald-400" :
+                  difficulty.toLowerCase() === 'expert' ? "text-rose-400" :
+                  "text-amber-400"
+                )}>{difficulty}</span>
               </div>
             </div>
-            <div className="w-[1px] h-6 md:h-8 bg-white/10 shrink-0" />
+            <div className="w-[1px] h-6 md:h-8 bg-[var(--border)] shrink-0" />
             <div className="flex items-center gap-2.5 shrink-0">
               <Clock className="w-4 h-4 md:w-5 md:h-5 text-cyan-400" />
               <div>
-                <span className="text-[7px] md:text-[8px] font-black text-slate-500 uppercase tracking-widest block leading-none">Cook Time</span>
-                <span className="text-xs md:text-sm text-white font-black italic uppercase">{time}</span>
+                <span className="text-[7px] md:text-[8px] font-black text-[var(--c-text-secondary)]/65 uppercase tracking-widest block leading-none">Cook Time</span>
+                <span className="text-xs md:text-sm text-cyan-400 font-black italic uppercase">{time}</span>
               </div>
             </div>
-            <div className="w-[1px] h-6 md:h-8 bg-white/10 shrink-0 hidden sm:block" />
+            <div className="w-[1px] h-6 md:h-8 bg-[var(--border)] shrink-0 hidden sm:block" />
             <div className="flex items-center gap-2.5 shrink-0">
               <ShieldCheck className="w-4 h-4 md:w-5 md:h-5 text-emerald-400" />
               <div>
-                <span className="text-[7px] md:text-[8px] font-black text-slate-500 uppercase tracking-widest block leading-none">Omega-3</span>
-                <span className="text-xs md:text-sm text-white font-black italic uppercase">Optimal</span>
+                <span className="text-[7px] md:text-[8px] font-black text-[var(--c-text-secondary)]/65 uppercase tracking-widest block leading-none">Omega-3</span>
+                <span className="text-xs md:text-sm text-emerald-400 font-black italic uppercase">Optimal</span>
               </div>
             </div>
           </div>
 
-          {/* Social Actions - Wrap on mobile if needed */}
-          <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 bg-transparent xl:bg-[var(--c-card)] p-0 xl:p-1.5 xl:border border-[var(--foreground)]/5 xl:shadow-inner w-full xl:w-auto" style={{ clipPath: 'polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)' }}>
+          {/* Social Actions - Slimmer & theme synced */}
+          <div className="flex flex-wrap items-center justify-center gap-1.5 md:gap-2 bg-transparent xl:bg-[var(--c-card)] p-0 xl:p-0.5 w-full xl:w-auto" style={{ clipPath: 'polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)' }}>
             <button 
               onClick={handleLike}
               className={cn(
-                "flex-1 xl:flex-none flex items-center justify-center gap-2 px-4 py-2.5 md:py-2 text-[10px] md:text-xs font-black uppercase tracking-wider transition-all",
-                isLiked ? "bg-red-500/10 text-red-500 shadow-glow-red" : "bg-[var(--c-card)] xl:bg-transparent hover:bg-white/5 text-slate-400 border border-[var(--foreground)]/5 xl:border-transparent"
+                "flex-1 xl:flex-none flex items-center justify-center gap-2 px-3 py-1.5 md:py-1 text-[10px] md:text-xs font-black uppercase tracking-wider transition-all cursor-pointer",
+                isLiked ? "bg-rose-500/10 text-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.2)]" : "bg-[var(--c-card)] xl:bg-transparent hover:bg-[var(--border)] text-[var(--c-text-secondary)] border border-[var(--border)] xl:border-transparent"
               )}
               style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}
             >
@@ -331,14 +341,14 @@ export default function CustomerRecipeDetailsPage() {
             </button>
             <button 
               onClick={handleShare}
-              className="flex-1 xl:flex-none flex items-center justify-center gap-2 px-4 py-2.5 md:py-2 text-[10px] md:text-xs font-black uppercase tracking-wider text-slate-400 bg-[var(--c-card)] xl:bg-transparent hover:bg-white/5 hover:text-white transition-all border border-[var(--foreground)]/5 xl:border-transparent"
+              className="flex-1 xl:flex-none flex items-center justify-center gap-2 px-3 py-1.5 md:py-1 text-[10px] md:text-xs font-black uppercase tracking-wider text-[var(--c-text-secondary)] bg-[var(--c-card)] xl:bg-transparent hover:bg-[var(--border)] hover:text-[var(--c-text-primary)] transition-all border border-[var(--border)] xl:border-transparent cursor-pointer"
               style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}
             >
               <Share2 className="w-3.5 h-3.5 md:w-4 md:h-4" /> <span className="whitespace-nowrap">Share</span>
             </button>
             <button 
               onClick={() => document.getElementById('comments-section')?.scrollIntoView({ behavior: 'smooth' })}
-              className="flex-1 xl:flex-none flex items-center justify-center gap-2 px-4 py-2.5 md:py-2 text-[10px] md:text-xs font-black uppercase tracking-wider text-slate-400 bg-[var(--c-card)] xl:bg-transparent hover:bg-white/5 hover:text-white transition-all border border-[var(--foreground)]/5 xl:border-transparent"
+              className="flex-1 xl:flex-none flex items-center justify-center gap-2 px-3 py-1.5 md:py-1 text-[10px] md:text-xs font-black uppercase tracking-wider text-[var(--c-text-secondary)] bg-[var(--c-card)] xl:bg-transparent hover:bg-[var(--border)] hover:text-[var(--c-text-primary)] transition-all border border-[var(--border)] xl:border-transparent cursor-pointer"
               style={{ clipPath: 'polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)' }}
             >
               <MessageSquare className="w-3.5 h-3.5 md:w-4 md:h-4" /> <span className="whitespace-nowrap">{comments.length} <span className="hidden sm:inline">Comments</span></span>
@@ -348,7 +358,40 @@ export default function CustomerRecipeDetailsPage() {
         </div>
       </div>
 
+
       <div className="container mx-auto px-4 md:px-12 pt-12 relative z-10">
+        
+        {/* Title, Badges & Context Section */}
+        <div className="mb-10 space-y-4">
+          <div className="flex flex-wrap gap-2.5">
+            <Badge variant="glass" className={cn("border text-[9px] font-black uppercase tracking-widest px-3 py-1 backdrop-blur-md", 
+              difficulty.toLowerCase() === 'easy' ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/25 shadow-[0_0_8px_rgba(16,185,129,0.15)]" :
+              difficulty.toLowerCase() === 'expert' ? "bg-rose-500/10 text-rose-400 border-rose-500/25 shadow-[0_0_8px_rgba(244,63,94,0.15)]" :
+              "bg-amber-500/10 text-amber-400 border-amber-500/25 shadow-[0_0_8px_rgba(245,158,11,0.15)]"
+            )}>
+              {difficulty}
+            </Badge>
+            <Badge variant="glass" className="bg-cyan-500/10 text-cyan-400 border-cyan-500/25 text-[9px] font-black uppercase tracking-widest px-3 py-1 backdrop-blur-md flex items-center gap-1 shadow-[0_0_8px_rgba(6,182,212,0.15)]">
+              <Clock className="w-3.5 h-3.5" /> {time}
+            </Badge>
+            <Badge variant="glass" className="bg-[var(--c-primary)]/10 text-[var(--c-primary)] border-[var(--c-primary)]/20 text-[9px] font-black uppercase tracking-widest px-3 py-1 backdrop-blur-md shadow-[0_0_8px_rgba(var(--c-primary-rgb),0.1)]">
+              {recipe.region}
+            </Badge>
+            <Badge variant="glass" className="bg-purple-500/10 text-purple-400 border-purple-500/20 text-[9px] font-black uppercase tracking-widest px-3 py-1 backdrop-blur-md shadow-[0_0_8px_rgba(168,85,247,0.1)]">
+              {recipe.prepType}
+            </Badge>
+          </div>
+
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black uppercase italic tracking-tight text-[var(--c-text-primary)] leading-tight drop-shadow-2xl max-w-4xl">
+            {recipe.title}
+          </h1>
+          <div className="h-[2px] w-full max-w-[320px] bg-[var(--c-primary)] mt-2 rounded-full shadow-[0_0_12px_var(--c-primary),0_0_4px_var(--c-primary)]" />
+
+          <p className="text-xs md:text-sm text-[var(--c-text-secondary)] font-bold uppercase tracking-widest pt-2 flex items-center gap-3">
+            Target Seafood: <span className="text-[var(--c-primary)] font-black text-base">{recipe.fishType}</span>
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
           
           {/* Left Column: Recipe Steps & Ingredients */}
@@ -356,7 +399,7 @@ export default function CustomerRecipeDetailsPage() {
             
             {/* Ingredients Board */}
             <div className="space-y-6">
-              <h3 className="text-2xl font-black uppercase italic tracking-widest text-white flex items-center gap-3">
+              <h3 className="text-2xl font-black uppercase italic tracking-widest text-[var(--c-text-primary)] flex items-center gap-3">
                 <span className="w-2 h-8 rounded-full bg-[var(--c-primary)]" /> Required Ingredients
               </h3>
               
@@ -364,12 +407,12 @@ export default function CustomerRecipeDetailsPage() {
                 {recipe.ingredients.map((ing: string, i: number) => (
                   <div 
                     key={i} 
-                    className="flex items-center gap-4 p-5 bg-[var(--c-card)] border border-[var(--foreground)]/5 rounded-2xl hover:border-[var(--c-primary)]/30 hover:bg-[var(--foreground)]/5 transition-colors cursor-default"
+                    className="flex items-center gap-4 p-5 bg-[var(--c-card)] border border-[var(--border)] rounded-2xl hover:border-[var(--c-primary)]/40 hover:bg-[var(--c-card)]/80 transition-colors cursor-default"
                   >
-                    <div className="w-8 h-8 rounded-full bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/20 flex items-center justify-center text-[var(--c-primary)] shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/30 flex items-center justify-center text-[var(--c-primary)] shrink-0">
                       <CheckCircle className="w-4 h-4" />
                     </div>
-                    <span className="text-sm font-medium text-slate-200 leading-relaxed flex-1 break-words">
+                    <span className="text-sm font-medium text-[var(--c-text-primary)] leading-relaxed flex-1 break-words">
                       {ing}
                     </span>
                   </div>
@@ -379,7 +422,7 @@ export default function CustomerRecipeDetailsPage() {
 
             {/* Cooking Steps */}
             <div className="space-y-6">
-              <h3 className="text-2xl font-black uppercase italic tracking-widest text-white flex items-center gap-3">
+              <h3 className="text-2xl font-black uppercase italic tracking-widest text-[var(--c-text-primary)] flex items-center gap-3">
                 <span className="w-2 h-8 rounded-full bg-[var(--c-primary)]" /> Cooking Sequence
               </h3>
 
@@ -387,13 +430,13 @@ export default function CustomerRecipeDetailsPage() {
                 {recipe.steps.map((step: string, i: number) => (
                   <div 
                     key={i}
-                    className="flex flex-col sm:flex-row gap-4 md:gap-6 p-5 md:p-8 bg-[var(--c-card)] border border-[var(--foreground)]/5 rounded-3xl relative overflow-hidden group hover:border-[var(--c-primary)]/30 transition-all duration-500"
+                    className="flex flex-col sm:flex-row gap-4 md:gap-6 p-5 md:p-8 bg-[var(--c-card)] border border-[var(--border)] rounded-3xl relative overflow-hidden group hover:border-[var(--c-primary)]/40 transition-all duration-500"
                   >
-                    <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-[var(--foreground)]/10 group-hover:bg-[var(--c-primary)] transition-colors" />
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/20 flex items-center justify-center text-[var(--c-primary)] font-black text-lg md:text-xl shrink-0 shadow-lg group-hover:scale-110 group-hover:bg-[var(--c-primary)] group-hover:text-black transition-all duration-500">
+                    <div className="absolute left-0 top-0 bottom-0 w-[4px] bg-[var(--border)] group-hover:bg-[var(--c-primary)] transition-colors" />
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/30 flex items-center justify-center text-[var(--c-primary)] font-black text-lg md:text-xl shrink-0 shadow-lg group-hover:scale-110 group-hover:bg-[var(--c-primary)] group-hover:text-black transition-all duration-500">
                       {i + 1}
                     </div>
-                    <p className="text-base md:text-lg font-medium text-slate-300 leading-relaxed pt-2">
+                    <p className="text-base md:text-lg font-medium text-[var(--c-text-secondary)] leading-relaxed pt-2">
                       {step}
                     </p>
                   </div>
@@ -402,16 +445,16 @@ export default function CustomerRecipeDetailsPage() {
             </div>
 
             {/* Discussion & Comments Section */}
-            <div id="comments-section" className="space-y-8 pt-12 border-t border-white/5">
-              <h3 className="text-2xl font-black uppercase italic tracking-widest text-white flex items-center gap-3">
+            <div id="comments-section" className="space-y-8 pt-12 border-t border-[var(--border)]">
+              <h3 className="text-2xl font-black uppercase italic tracking-widest text-[var(--c-text-primary)] flex items-center gap-3">
                 <span className="w-2 h-8 rounded-full bg-[var(--c-primary)]" /> Chef's Discussion ({comments.length})
               </h3>
               
               {/* Add Comment / Rate Component */}
-              <Card className="p-6 md:p-8 bg-[var(--c-card)] border border-white/5 rounded-[var(--c-radius-card)] shadow-2xl">
+              <Card className="p-6 md:p-8 bg-[var(--c-card)] border border-[var(--border)] rounded-[var(--c-radius-card)] shadow-2xl">
                 <form onSubmit={handlePostComment} className="space-y-6">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <span className="text-xs font-black uppercase tracking-widest text-slate-400">Rate this recipe</span>
+                    <span className="text-xs font-black uppercase tracking-widest text-[var(--c-text-secondary)]">Rate this recipe</span>
                     <div className="flex items-center gap-2">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star 
@@ -435,7 +478,7 @@ export default function CustomerRecipeDetailsPage() {
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
                       placeholder="Share your experience or modifications..."
-                      className="w-full h-32 bg-black/40 border border-white/10 rounded-2xl p-5 text-sm text-white resize-none focus:outline-none focus:border-[var(--c-primary)] transition-colors placeholder:text-slate-600"
+                      className="w-full h-32 bg-[var(--c-bg-alt)]/65 border border-[var(--border)] rounded-2xl p-5 text-sm text-[var(--c-text-primary)] resize-none focus:outline-none focus:border-[var(--c-primary)] transition-colors placeholder:text-slate-600"
                     />
                   </div>
                   
@@ -443,7 +486,7 @@ export default function CustomerRecipeDetailsPage() {
                     <Button 
                       type="submit"
                       disabled={!newComment.trim() || isSubmitting}
-                      className="bg-[var(--c-primary)] text-black hover:bg-[var(--c-primary-light)] px-8 py-6 rounded-2xl font-black uppercase tracking-widest text-xs flex items-center gap-3 transition-all active:scale-95 disabled:opacity-50"
+                      className="bg-[var(--c-primary)] text-black hover:bg-[var(--c-primary-light)] px-8 py-6 rounded-2xl font-black uppercase tracking-widest text-xs flex items-center gap-3 transition-all active:scale-95 disabled:opacity-50 cursor-pointer"
                     >
                       {isSubmitting ? "Posting..." : "Post Review"} <Send className="w-4 h-4" />
                     </Button>
@@ -454,31 +497,32 @@ export default function CustomerRecipeDetailsPage() {
               {/* Comments Feed */}
               <div className="space-y-6 mt-8">
                 {comments.map((comment) => (
-                  <div key={comment.id} className="flex gap-4 md:gap-6 p-6 bg-[var(--c-card)]/40 border border-white/5 rounded-3xl backdrop-blur-sm">
-                    <img src={comment.avatar} alt={comment.user} className="w-12 h-12 rounded-full border-2 border-white/10" />
+                  <div key={comment.id} className="flex gap-4 md:gap-6 p-6 bg-[var(--c-card)]/40 border border-[var(--border)] rounded-3xl backdrop-blur-sm">
+                    <img src={comment.avatar} alt={comment.user} className="w-12 h-12 rounded-full border-2 border-[var(--border)]" />
                     <div className="flex-1 space-y-2">
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
                         <div className="flex items-center gap-3">
-                          <span className="font-bold text-white">{comment.user}</span>
-                          <span className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">{comment.time}</span>
+                          <span className="font-bold text-[var(--c-text-primary)]">{comment.user}</span>
+                          <span className="text-[10px] uppercase tracking-widest text-[var(--c-text-secondary)]/70 font-bold">{comment.time}</span>
                         </div>
                         <div className="flex gap-1 text-yellow-400">
                           {Array.from({ length: comment.rating }).map((_, i) => <Star key={i} className="w-3.5 h-3.5 fill-current" />)}
                         </div>
                       </div>
-                      <p className="text-sm text-slate-300 leading-relaxed">{comment.text}</p>
+                      <p className="text-sm text-[var(--c-text-secondary)] leading-relaxed">{comment.text}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
+
           </div>
 
           {/* Right Column: Nutrition & Context Sidebar */}
           <div className="lg:col-span-4 space-y-8">
             <Card 
-              className="p-8 bg-[var(--c-card)] border border-[var(--c-primary)]/20 shadow-[0_0_40px_-10px_rgba(0,209,255,0.1)] relative overflow-hidden"
+              className="p-8 bg-[var(--c-card)] border border-[var(--c-primary)]/30 shadow-[0_0_40px_-10px_rgba(0,209,255,0.1)] relative overflow-hidden"
               style={{ clipPath: 'polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px)' }}
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--c-primary)]/10 blur-3xl rounded-full pointer-events-none" />
@@ -488,25 +532,25 @@ export default function CustomerRecipeDetailsPage() {
               </h4>
               
               <div className="space-y-4">
-                <div className="flex justify-between items-center pb-4 border-b border-white/5">
-                  <span className="text-sm text-slate-400">Calories</span>
-                  <span className="font-black text-white">{calories}</span>
+                <div className="flex justify-between items-center pb-4 border-b border-[var(--border)]">
+                  <span className="text-sm text-[var(--c-text-secondary)]">Calories</span>
+                  <span className="font-black text-[var(--c-text-primary)]">{calories}</span>
                 </div>
-                <div className="flex justify-between items-center pb-4 border-b border-white/5">
-                  <span className="text-sm text-slate-400">Protein</span>
+                <div className="flex justify-between items-center pb-4 border-b border-[var(--border)]">
+                  <span className="text-sm text-[var(--c-text-secondary)]">Protein</span>
                   <span className="font-black text-emerald-400">{protein}</span>
                 </div>
-                <div className="flex justify-between items-center pb-4 border-b border-white/5">
-                  <span className="text-sm text-slate-400">Omega-3</span>
+                <div className="flex justify-between items-center pb-4 border-b border-[var(--border)]">
+                  <span className="text-sm text-[var(--c-text-secondary)]">Omega-3</span>
                   <span className="font-black text-cyan-400">{omega3}</span>
                 </div>
-                <div className="flex justify-between items-center pb-4 border-b border-white/5">
-                  <span className="text-sm text-slate-400">Carbs</span>
-                  <span className="font-black text-white">{carbs}</span>
+                <div className="flex justify-between items-center pb-4 border-b border-[var(--border)]">
+                  <span className="text-sm text-[var(--c-text-secondary)]">Carbs</span>
+                  <span className="font-black text-[var(--c-text-primary)]">{carbs}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-slate-400">Fats</span>
-                  <span className="font-black text-white">{fats}</span>
+                  <span className="text-sm text-[var(--c-text-secondary)]">Fats</span>
+                  <span className="font-black text-[var(--c-text-primary)]">{fats}</span>
                 </div>
               </div>
               
@@ -519,15 +563,15 @@ export default function CustomerRecipeDetailsPage() {
 
             {/* Required Equipment */}
             <Card 
-              className="p-8 bg-[var(--c-card)]/50 border border-white/5"
+              className="p-8 bg-[var(--c-card)]/50 border border-[var(--border)]"
               style={{ clipPath: 'polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px)' }}
             >
-              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-slate-400 mb-6">
+              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--c-text-secondary)] mb-6">
                 Recommended Equipment
               </h4>
               <ul className="space-y-3">
                 {equipment.map((item: string, idx: number) => (
-                  <li key={idx} className="flex items-center gap-3 text-sm text-slate-300">
+                  <li key={idx} className="flex items-center gap-3 text-sm text-[var(--c-text-secondary)]">
                     <div className="w-1.5 h-1.5 bg-slate-500 rounded-full" /> {item}
                   </li>
                 ))}
