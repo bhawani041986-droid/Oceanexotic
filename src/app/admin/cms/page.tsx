@@ -427,10 +427,45 @@ export default function AdminCMSPage() {
                     <div className="grid grid-cols-2 gap-4">
                        <div className="space-y-2">
                           <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Asset Class</label>
-                          <select disabled={viewOnly || isSaving} value={formData.type} onChange={(e) => setFormData({...formData, type: e.target.value})} className="w-full h-14 bg-black/50 border border-[var(--foreground)]/10 rounded-xl px-4 text-xs font-black uppercase text-[var(--foreground)] outline-none italic cursor-pointer">
+                          <select 
+                              disabled={viewOnly || isSaving} 
+                              value={formData.type} 
+                              onChange={(e) => {
+                                 const newType = e.target.value;
+                                 let updatedMeta = { ...formData.metadata };
+                                 if (newType === 'SPLIT_PROMO') {
+                                    if (!updatedMeta.panelA) {
+                                       updatedMeta.panelA = {
+                                          title: "SEAFOOD\nGRILL.",
+                                          subtitle: "Grill Mode",
+                                          tagline: "Volcanic products.",
+                                          link: "/customer/products",
+                                          image_url: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80"
+                                       };
+                                    }
+                                    if (!updatedMeta.panelB) {
+                                       updatedMeta.panelB = {
+                                          title: "FLAME-SEA\nCOLLECTIONS",
+                                          subtitle: "Node: Flame",
+                                          tagline: "Volcanic collections.",
+                                          link: "/customer/products",
+                                          image_url: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80"
+                                       };
+                                    }
+                                 }
+                                 setFormData({ 
+                                    ...formData, 
+                                    title: newType === 'SPLIT_PROMO' ? (formData.title || "Diagonal Split Promo Section") : formData.title,
+                                    type: newType, 
+                                    metadata: updatedMeta 
+                                 });
+                              }} 
+                              className="w-full h-14 bg-black/50 border border-[var(--foreground)]/10 rounded-xl px-4 text-xs font-black uppercase text-[var(--foreground)] outline-none italic cursor-pointer"
+                           >
                              <option value="BANNER">BANNER (Hero)</option>
                              <option value="RECIPE">RECIPE (Editorial)</option>
                              <option value="STORY">STORY (Dispatch)</option>
+                             <option value="SPLIT_PROMO">SPLIT PROMO (Diagonal Split)</option>
                           </select>
                        </div>
                        <div className="space-y-2">
@@ -459,11 +494,136 @@ export default function AdminCMSPage() {
                     </div>
                  )}
 
+                 {/* Diagonal Split Promo Fields */}
+                 {formData.type === "SPLIT_PROMO" && (
+                     <div className="space-y-6 p-6 rounded-2xl border border-primary/20 bg-primary/5">
+                        <h4 className="text-xs font-black uppercase text-primary tracking-widest">Diagonal Split Promo Parameters</h4>
+                        
+                        {/* PANEL A */}
+                        <div className="space-y-4 border-b border-primary/10 pb-4">
+                           <h5 className="text-xs font-black text-primary uppercase tracking-widest">Panel A (Left - Grill Masters)</h5>
+                           <div className="grid grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                 <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Subtitle</label>
+                                 <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelA?.subtitle || ""} onChange={(e) => setFormData({
+                                    ...formData,
+                                    metadata: {
+                                       ...formData.metadata,
+                                       panelA: { ...formData.metadata.panelA, subtitle: e.target.value }
+                                    }
+                                 })} placeholder="Grill Mode" className="h-12 bg-black/50 border-primary/20 text-primary" />
+                              </div>
+                              <div className="space-y-2">
+                                 <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Title (use \n for line break)</label>
+                                 <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelA?.title || ""} onChange={(e) => setFormData({
+                                    ...formData,
+                                    metadata: {
+                                       ...formData.metadata,
+                                       panelA: { ...formData.metadata.panelA, title: e.target.value }
+                                    }
+                                 })} placeholder="SEAFOOD\nGRILL." className="h-12 bg-black/50 border-primary/20 text-primary" />
+                              </div>
+                           </div>
+                           <div className="grid grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                 <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Tagline / Text</label>
+                                 <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelA?.tagline || ""} onChange={(e) => setFormData({
+                                    ...formData,
+                                    metadata: {
+                                       ...formData.metadata,
+                                       panelA: { ...formData.metadata.panelA, tagline: e.target.value }
+                                    }
+                                 })} placeholder="Volcanic products." className="h-12 bg-black/50 border-primary/20 text-primary" />
+                              </div>
+                              <div className="space-y-2">
+                                 <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Navigation Link</label>
+                                 <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelA?.link || ""} onChange={(e) => setFormData({
+                                    ...formData,
+                                    metadata: {
+                                       ...formData.metadata,
+                                       panelA: { ...formData.metadata.panelA, link: e.target.value }
+                                    }
+                                 })} placeholder="/customer/products" className="h-12 bg-black/50 border-primary/20 text-primary" />
+                              </div>
+                           </div>
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Panel A Background Image URL</label>
+                              <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelA?.image_url || ""} onChange={(e) => setFormData({
+                                 ...formData,
+                                 metadata: {
+                                    ...formData.metadata,
+                                    panelA: { ...formData.metadata.panelA, image_url: e.target.value }
+                                 }
+                              })} placeholder="https://unsplash..." className="h-12 bg-black/50 border-primary/20 text-primary" />
+                           </div>
+                        </div>
+
+                        {/* PANEL B */}
+                        <div className="space-y-4">
+                           <h5 className="text-xs font-black text-primary uppercase tracking-widest">Panel B (Right - Seafood Collections)</h5>
+                           <div className="grid grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                 <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Subtitle</label>
+                                 <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelB?.subtitle || ""} onChange={(e) => setFormData({
+                                    ...formData,
+                                    metadata: {
+                                       ...formData.metadata,
+                                       panelB: { ...formData.metadata.panelB, subtitle: e.target.value }
+                                    }
+                                 })} placeholder="Node: Flame" className="h-12 bg-black/50 border-primary/20 text-primary" />
+                              </div>
+                              <div className="space-y-2">
+                                 <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Title (use \n for line break)</label>
+                                 <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelB?.title || ""} onChange={(e) => setFormData({
+                                    ...formData,
+                                    metadata: {
+                                       ...formData.metadata,
+                                       panelB: { ...formData.metadata.panelB, title: e.target.value }
+                                    }
+                                 })} placeholder="FLAME-SEA\nCOLLECTIONS" className="h-12 bg-black/50 border-primary/20 text-primary" />
+                              </div>
+                           </div>
+                           <div className="grid grid-cols-2 gap-4">
+                              <div className="space-y-2">
+                                 <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Tagline / Text</label>
+                                 <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelB?.tagline || ""} onChange={(e) => setFormData({
+                                    ...formData,
+                                    metadata: {
+                                       ...formData.metadata,
+                                       panelB: { ...formData.metadata.panelB, tagline: e.target.value }
+                                    }
+                                 })} placeholder="Volcanic collections." className="h-12 bg-black/50 border-primary/20 text-primary" />
+                              </div>
+                              <div className="space-y-2">
+                                 <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Navigation Link</label>
+                                 <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelB?.link || ""} onChange={(e) => setFormData({
+                                    ...formData,
+                                    metadata: {
+                                       ...formData.metadata,
+                                       panelB: { ...formData.metadata.panelB, link: e.target.value }
+                                    }
+                                 })} placeholder="/customer/products" className="h-12 bg-black/50 border-primary/20 text-primary" />
+                              </div>
+                           </div>
+                           <div className="space-y-2">
+                              <label className="text-[10px] font-black text-primary/70 uppercase tracking-widest">Panel B Background Image URL</label>
+                              <Input disabled={viewOnly || isSaving} value={formData.metadata?.panelB?.image_url || ""} onChange={(e) => setFormData({
+                                 ...formData,
+                                 metadata: {
+                                    ...formData.metadata,
+                                    panelB: { ...formData.metadata.panelB, image_url: e.target.value }
+                                 }
+                              })} placeholder="https://unsplash..." className="h-12 bg-black/50 border-primary/20 text-primary" />
+                           </div>
+                        </div>
+                     </div>
+                  )}
+
                  {/* Visual Media Zone */}
                  <div className="space-y-4">
                     <h4 className="text-xs font-black uppercase text-slate-500 tracking-widest flex items-center gap-2"><ImageIcon className="w-4 h-4"/> Media Vault</h4>
                     
-                    {formData.type !== "RECIPE" && (
+                    {formData.type !== "RECIPE" && formData.type !== "SPLIT_PROMO" && (
                        <div className="space-y-2">
                           <label className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Primary Cover</label>
                           <div onClick={() => !viewOnly && !isSaving && fileInputRef.current?.click()} className={`aspect-[21/9] w-full rounded-2xl bg-black/50 border-2 border-dashed ${stagedCoverPreview || formData.image_url ? 'border-primary/50' : 'border-[var(--foreground)]/20'} flex items-center justify-center transition-all overflow-hidden relative group ${!viewOnly && !isSaving ? 'cursor-pointer hover:bg-[var(--foreground)]/5 hover:border-primary' : ''}`}>

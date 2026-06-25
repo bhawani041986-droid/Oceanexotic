@@ -1,9 +1,9 @@
 // @ts-nocheck
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
@@ -53,6 +53,36 @@ const CATEGORIES = [
   { name: "Chicken", slug: "chicken" },
 ];
 
+function HeaderSearch({ isProductsPage }: { isProductsPage: boolean }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    const sQuery = searchParams.get("search");
+    setSearchQuery(sQuery || "");
+  }, [searchParams]);
+
+  if (isProductsPage) {
+    return <div className="flex-1 max-w-[200px] xl:max-w-md relative hidden lg:block mx-4 xl:mx-10" />;
+  }
+
+  return (
+    <div className="flex-1 max-w-[200px] xl:max-w-md relative hidden lg:block mx-4 xl:mx-10">
+       <input 
+          type="text" 
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={(e) => e.key === 'Enter' && router.push(`/customer/products?search=${searchQuery}`)}
+          placeholder="Search for seafood..." 
+          className="w-full h-11 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 pl-11 pr-4 text-xs focus:border-[var(--c-primary)] text-[var(--c-text-primary)] transition-all outline-none" 
+          style={{ clipPath: 'polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)' }}
+       />
+       <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--c-text-secondary)]" />
+    </div>
+  );
+}
+
 export default function MainLayout({ children }: MainLayoutProps) {
   const { user, isAuthenticated, logout } = useAuthStore();
   const settings = useSettingsStore();
@@ -60,6 +90,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   const { unreadCount, setUnreadCount } = useNotificationStore();
   const router = useRouter();
   const pathname = usePathname();
+  const isProductsPage = pathname === "/customer/products" || pathname === "/customer/search";
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
@@ -117,8 +148,6 @@ export default function MainLayout({ children }: MainLayoutProps) {
     { label: "Support Chat", href: "/customer/chat", icon: <MessageCircle className="w-5 h-5" /> },
     { label: "Profile", href: "/customer/profile", icon: <UserIcon className="w-5 h-5" /> },
   ];
-
-  const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <div className={cn(
@@ -207,18 +236,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
             </nav>
           </div>
 
-          <div className="flex-1 max-w-[200px] xl:max-w-md relative hidden lg:block mx-4 xl:mx-10">
-             <input 
-                type="text" 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && router.push(`/customer/products?search=${searchQuery}`)}
-                placeholder="Search for seafood..." 
-                className="w-full h-11 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 pl-11 pr-4 text-xs focus:border-[var(--c-primary)] text-[var(--c-text-primary)] transition-all outline-none" 
-                style={{ clipPath: 'polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px)' }}
-             />
-             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--c-text-secondary)]" />
-          </div>
+          <Suspense fallback={<div className="flex-1 max-w-[200px] xl:max-w-md relative hidden lg:block mx-4 xl:mx-10" />}>
+            <HeaderSearch isProductsPage={isProductsPage} />
+          </Suspense>
 
           <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2.5 lg:gap-3">
             <div className="block">

@@ -1143,7 +1143,58 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
     toast(`${product.name} added to cart`, "success");
   };
 
+  const splitPromo = cmsContent.find(c => c.type === 'SPLIT_PROMO');
+  const showSplitPromo = splitPromo && splitPromo.status === 'PUBLISHED';
 
+  let promoDataParsed = {
+     panelA: {
+        title: "SEAFOOD\nGRILL.",
+        subtitle: "Grill Mode",
+        tagline: "Volcanic products.",
+        link: "/customer/products",
+        image_url: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&q=80"
+     },
+     panelB: {
+        title: "FLAME-SEA\nCOLLECTIONS",
+        subtitle: "Node: Flame",
+        tagline: "Volcanic collections.",
+        link: "/customer/products",
+        image_url: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80"
+     }
+  };
+
+  if (splitPromo) {
+     try {
+        const parsed = typeof splitPromo.metadata === 'string' ? JSON.parse(splitPromo.metadata) : splitPromo.metadata;
+        if (parsed && parsed.panelA && parsed.panelB) {
+           promoDataParsed = parsed;
+        }
+     } catch (e) {
+        console.error("Failed to parse split promo metadata:", e);
+     }
+  }
+
+  const renderSplitPromoTitle = (title: string, accentColorClass: string) => {
+    const parts = title.split('\\n').flatMap(p => p.split('\n'));
+    if (parts.length > 1) {
+      return (
+        <>
+          {parts[0]} <br />
+          <span className={accentColorClass}>{parts.slice(1).join(' ')}</span>
+        </>
+      );
+    }
+    const spaceParts = title.split(' ');
+    if (spaceParts.length > 1) {
+      return (
+        <>
+          {spaceParts[0]} <br />
+          <span className={accentColorClass}>{spaceParts.slice(1).join(' ')}</span>
+        </>
+      );
+    }
+    return title;
+  };
 
   return (
     <div className="w-full">
@@ -2134,136 +2185,180 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
          </div>      </section>
 
       {/* 11.5 SECONDARY PROMOTIONAL CAMPAIGN - VIBRANT ICONIC HUD */}
-      <section className="py-1 container mx-auto px-0 md:px-10 relative group">
-         <div className="relative min-h-[230px] md:min-h-[500px] bg-[var(--c-bg-alt)] border border-[var(--foreground)]/5 overflow-hidden shadow-2xl">
-            {/* MOBILE: CORNER-TO-CORNER | DESKTOP: INTERLOCKING SIDE-SPLIT */}
-            <div className="absolute inset-0">
-               {/* PANEL A: MARITIME GRILL MASTERS */}
-               <div 
-                  className="absolute inset-0 z-20 p-4 md:p-16 flex flex-col justify-start items-start transition-all duration-500"
-                  style={{ 
-                     clipPath: 'polygon(0 0, 100% 0, 0 100%)',
-                     background: 'linear-gradient(135deg, rgba(var(--c-bg-alt-rgb), 0.98) 0%, transparent 100%)'
-                  }}
-               >
-                  {/* Staggered Floating HUD Icons for A */}
-                  <div className="absolute inset-0 pointer-events-none opacity-60">
-                     {[
-                        { Icon: Flame, top: '2%', left: '75%', color: 'text-danger', delay: 0, size: 'w-6 h-6 md:w-16 md:h-16' },
-                        { Icon: ChefHat, top: '20%', left: '55%', color: 'text-[var(--c-primary)]', delay: 0.5, size: 'w-6 h-6 md:w-12 md:h-12' },
-                        { Icon: Fish, top: '40%', left: '35%', color: 'text-[var(--c-primary)]', delay: 1, size: 'w-10 h-10 md:w-20 md:h-20', rotate: -45 },
-                        { Icon: Utensils, top: '60%', left: '15%', color: 'text-[var(--foreground)]', delay: 1.5, size: 'w-4 h-4 md:w-10 md:h-10' },
-                        { Icon: Timer, top: '10%', left: '45%', color: 'text-success', delay: 0.2, size: 'w-4 h-4 md:w-8 md:h-8' },
-                        { Icon: Activity, top: '35%', left: '70%', color: 'text-danger', delay: 0.8, size: 'w-5 h-5 md:w-10 md:h-10' },
-                        { Icon: Zap, top: '5%', left: '90%', color: 'text-warning', delay: 1.2, size: 'w-4 h-4 md:w-8 md:h-8' }
-                     ].map((item, i) => (
-                        <motion.div
-                           key={i}
-                           className={cn("absolute", item.color, item.size)}
-                           style={{ top: item.top, left: item.left }}
-                           initial={{ opacity: 0, y: 10, rotate: item.rotate || 0 }}
-                           animate={{ 
-                              opacity: 1, 
-                              y: [0, -15, 0],
-                              rotate: (item.rotate || 0) + (i % 2 === 0 ? 5 : -5)
-                           }}
-                           transition={{ 
-                              y: { duration: 4 + i, repeat: Infinity, ease: "easeInOut", delay: item.delay },
-                              rotate: { duration: 6 + i, repeat: Infinity, ease: "easeInOut", delay: item.delay },
-                              opacity: { duration: 1, delay: item.delay }
-                           }}
+      {showSplitPromo && (
+         <section className="py-1 container mx-auto px-0 md:px-10 relative group">
+            <div className="relative min-h-[230px] md:min-h-[500px] bg-[var(--c-bg-alt)] border border-[var(--foreground)]/5 overflow-hidden shadow-2xl">
+               {/* MOBILE: CORNER-TO-CORNER | DESKTOP: INTERLOCKING SIDE-SPLIT */}
+               <div className="absolute inset-0">
+                  {/* PANEL A: MARITIME GRILL MASTERS */}
+                  <div 
+                     className="absolute inset-0 z-25 p-4 md:p-16 flex flex-col justify-start items-start transition-all duration-500 overflow-hidden"
+                     style={{ 
+                        clipPath: 'polygon(0 0, 100% 0, 0 100%)',
+                     }}
+                  >
+                     {/* Background Image */}
+                     <div 
+                        className="absolute inset-0 -z-20 bg-cover bg-center"
+                        style={{ 
+                           backgroundImage: `url(${promoDataParsed.panelA.image_url})`,
+                           opacity: 0.65
+                        }}
+                     />
+                     {/* Gradient Overlay */}
+                     <div 
+                        className="absolute inset-0 -z-10 bg-gradient-to-br from-[var(--c-bg-alt)]/90 via-[var(--c-bg-alt)]/40 to-transparent"
+                     />
+
+                     {/* Staggered Floating HUD Icons for A */}
+                     <div className="absolute inset-0 pointer-events-none opacity-60">
+                        {[
+                           { Icon: Flame, top: '2%', left: '75%', color: 'text-danger', delay: 0, size: 'w-6 h-6 md:w-16 md:h-16' },
+                           { Icon: ChefHat, top: '20%', left: '55%', color: 'text-[var(--c-primary)]', delay: 0.5, size: 'w-6 h-6 md:w-12 md:h-12' },
+                           { Icon: Fish, top: '40%', left: '35%', color: 'text-[var(--c-primary)]', delay: 1, size: 'w-10 h-10 md:w-20 md:h-20', rotate: -45 },
+                           { Icon: Utensils, top: '60%', left: '15%', color: 'text-[var(--foreground)]', delay: 1.5, size: 'w-4 h-4 md:w-10 md:h-10' },
+                           { Icon: Timer, top: '10%', left: '45%', color: 'text-success', delay: 0.2, size: 'w-4 h-4 md:w-8 md:h-8' },
+                           { Icon: Activity, top: '35%', left: '70%', color: 'text-danger', delay: 0.8, size: 'w-5 h-5 md:w-10 md:h-10' },
+                           { Icon: Zap, top: '5%', left: '90%', color: 'text-warning', delay: 1.2, size: 'w-4 h-4 md:w-8 md:h-8' }
+                        ].map((item, i) => (
+                           <motion.div
+                              key={i}
+                              className={cn("absolute", item.color, item.size)}
+                              style={{ 
+                                 top: item.top, 
+                                 left: item.left,
+                                 filter: "drop-shadow(0 0 10px currentColor)"
+                              }}
+                              initial={{ opacity: 0, y: 10, rotate: item.rotate || 0 }}
+                              animate={{ 
+                                 opacity: 1, 
+                                 y: [0, -15, 0],
+                                 rotate: (item.rotate || 0) + (i % 2 === 0 ? 5 : -5)
+                              }}
+                              transition={{ 
+                                 y: { duration: 4 + i, repeat: Infinity, ease: "easeInOut", delay: item.delay },
+                                 rotate: { duration: 6 + i, repeat: Infinity, ease: "easeInOut", delay: item.delay },
+                                 opacity: { duration: 1, delay: item.delay }
+                              }}
+                           >
+                              <item.Icon className="w-full h-full" />
+                           </motion.div>
+                        ))}
+                     </div>
+
+                     <div className="relative z-30 max-w-[50%]">
+                        <motion.div 
+                           initial={{ opacity: 0, x: -20 }}
+                           whileInView={{ opacity: 1, x: 0 }}
+                           className="inline-flex items-center gap-1 text-[var(--c-primary)]"
                         >
-                           <item.Icon className="w-full h-full" />
+                           <Zap className="w-2.5 h-2.5 md:w-4 md:h-4 animate-pulse" />
+                           <span className="text-[6px] md:text-[8px] font-black uppercase tracking-[0.3em]">{promoDataParsed.panelA.subtitle}</span>
                         </motion.div>
-                     ))}
+                        <div className="space-y-0.5 md:space-y-1">
+                           <h3 className="text-lg md:text-5xl font-black text-white uppercase italic leading-[0.85] tracking-tighter">
+                              {renderSplitPromoTitle(promoDataParsed.panelA.title, "text-amber-400")}
+                           </h3>
+                           <p className="text-[8px] md:text-xs text-[var(--c-text-secondary)] font-medium italic opacity-80 leading-tight">
+                              {promoDataParsed.panelA.tagline}
+                           </p>
+                        </div>
+                        <Button 
+                           onClick={() => router.push(promoDataParsed.panelA.link)}
+                           className="h-6 md:h-10 px-3 md:px-6 mt-2 bg-white text-black hover:bg-white/90 text-[6px] md:text-[8px] font-black uppercase rounded-none"
+                           style={{ clipPath: 'polygon(4px 0, 100% 0, 100% 100%, 0 100%, 0 4px)' }}
+                        >
+                           EXPLORE
+                        </Button>
+                     </div>
                   </div>
 
-                  <div className="relative z-30 max-w-[50%]">
-                    <motion.div 
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        className="inline-flex items-center gap-1 text-[var(--c-primary)]"
-                    >
-                      <Zap className="w-2.5 h-2.5 md:w-4 md:h-4 animate-pulse" />
-                      <span className="text-[6px] md:text-[8px] font-black uppercase tracking-[0.3em]">Grill Mode</span>
-                    </motion.div>
-                    <div className="space-y-0.5 md:space-y-1">
-                       <h3 className="text-lg md:text-5xl font-black text-[var(--c-text-primary)] uppercase italic leading-[0.85] tracking-tighter">
-                          SEAFOOD <br />
-                          <span className="text-[var(--c-primary)]">GRILL.</span>
-                       </h3>
-                       <p className="text-[8px] md:text-xs text-[var(--c-text-secondary)] font-medium italic opacity-80 leading-tight">
-                          Volcanic products.
-                       </p>
-                    </div>
-                    <Button 
-                       className="h-6 md:h-10 px-3 md:px-6 mt-1 bg-[var(--c-primary)] text-[var(--foreground)] text-[6px] md:text-[8px] font-black uppercase"
-                       style={{ clipPath: 'polygon(4px 0, 100% 0, 100% 100%, 0 100%, 0 4px)' }}
-                    >
-                       EXPLORE
-                    </Button>
+                  {/* PANEL B: FLAME-SEA COLLECTIONS */}
+                  <div 
+                     className="absolute inset-0 z-10 flex flex-col justify-end items-end p-4 md:p-16 transition-all duration-500 bg-[#020617] overflow-hidden"
+                     style={{ 
+                        clipPath: 'polygon(100% 0, 100% 100%, 0 100%)'
+                     }}
+                  >
+                     {/* Background Image */}
+                     <div 
+                        className="absolute inset-0 -z-20 bg-cover bg-center"
+                        style={{ 
+                           backgroundImage: `url(${promoDataParsed.panelB.image_url})`,
+                           opacity: 0.55
+                        }}
+                     />
+                     {/* Gradient Overlay */}
+                     <div 
+                        className="absolute inset-0 -z-10 bg-gradient-to-tl from-[var(--c-bg-alt)]/95 via-[var(--c-bg-alt)]/50 to-transparent"
+                     />
+
+                     {/* Staggered Floating HUD Icons for B */}
+                     <div className="absolute inset-0 pointer-events-none opacity-60">
+                        {[
+                           { Icon: Waves, bottom: '2%', right: '75%', color: 'text-[#00d4ff]', delay: 0.1, size: 'w-8 h-8 md:w-20 md:h-20' },
+                           { Icon: Gauge, bottom: '20%', right: '55%', color: 'text-success', delay: 0.6, size: 'w-6 h-6 md:w-12 md:h-12' },
+                           { Icon: Anchor, bottom: '40%', right: '35%', color: 'text-[var(--foreground)]', delay: 1.1, size: 'w-8 h-8 md:w-16 md:h-16', rotate: 12 },
+                           { Icon: Ship, bottom: '60%', right: '15%', color: 'text-warning', delay: 1.6, size: 'w-6 h-6 md:w-12 md:h-12' },
+                           { Icon: Compass, bottom: '10%', right: '45%', color: 'text-[var(--c-primary)]', delay: 0.3, size: 'w-5 h-5 md:w-10 md:h-10' },
+                           { Icon: Wind, bottom: '35%', right: '70%', color: 'text-[#00d4ff]', delay: 0.9, size: 'w-5 h-5 md:w-10 md:h-10' },
+                           { Icon: Navigation, bottom: '5%', right: '90%', color: 'text-success', delay: 1.3, size: 'w-4 h-4 md:w-8 md:h-8' },
+                           { Icon: Shell, bottom: '15%', right: '85%', color: 'text-warning', delay: 0.5, size: 'w-6 h-6 md:w-12 md:h-12', rotate: 45 }
+                        ].map((item, i) => (
+                           <motion.div
+                              key={i}
+                              className={cn("absolute", item.color, item.size)}
+                              style={{ 
+                                 bottom: item.bottom, 
+                                 right: item.right,
+                                 filter: "drop-shadow(0 0 10px currentColor)"
+                              }}
+                              initial={{ opacity: 0, y: -10, rotate: item.rotate || 0 }}
+                              animate={{ 
+                                 opacity: 1, 
+                                 y: [0, 15, 0],
+                                 rotate: (item.rotate || 0) + (i % 2 === 0 ? -5 : 5)
+                              }}
+                              transition={{ 
+                                 y: { duration: 5 + i, repeat: Infinity, ease: "easeInOut", delay: item.delay },
+                                 rotate: { duration: 7 + i, repeat: Infinity, ease: "easeInOut", delay: item.delay },
+                                 opacity: { duration: 1, delay: item.delay }
+                              }}
+                           >
+                              <item.Icon className="w-full h-full" />
+                           </motion.div>
+                        ))}
+                     </div>
+
+                     <div className="relative z-30 text-right max-w-[50%] space-y-1">
+                        <motion.p 
+                           initial={{ opacity: 0, x: 20 }}
+                           whileInView={{ opacity: 1, x: 0 }}
+                           className="text-[6px] md:text-[8px] font-black text-[#00d4ff] uppercase tracking-[0.3em]"
+                        >
+                           {promoDataParsed.panelB.subtitle}
+                        </motion.p>
+                        <h4 className="text-lg md:text-4xl font-black text-white uppercase italic leading-none drop-shadow-2xl">
+                           {renderSplitPromoTitle(promoDataParsed.panelB.title, "text-[#00d4ff]")}
+                        </h4>
+                        <div className="h-0.5 w-8 md:w-20 bg-[var(--c-primary)] ml-auto shadow-[0_0_10px_var(--c-primary)] mb-2" />
+                        <Button 
+                           onClick={() => router.push(promoDataParsed.panelB.link)}
+                           className="h-6 md:h-10 px-3 md:px-6 mt-2 border border-white/20 bg-black/40 hover:bg-black/60 text-white text-[6px] md:text-[8px] font-black uppercase rounded-none"
+                           style={{ clipPath: 'polygon(4px 0, 100% 0, 100% 100%, 0 100%, 0 4px)' }}
+                        >
+                           EXPLORE
+                        </Button>
+                     </div>
                   </div>
                </div>
 
-               {/* PANEL B: FLAME-SEA COLLECTIONS */}
-               <div 
-                  className="absolute inset-0 z-10 flex flex-col justify-end items-end p-4 md:p-16 transition-all duration-500 bg-[#020617]"
-                  style={{ 
-                     clipPath: 'polygon(100% 0, 100% 100%, 0 100%)'
-                  }}
-               >
-                  {/* Staggered Floating HUD Icons for B */}
-                  <div className="absolute inset-0 pointer-events-none opacity-60">
-                     {[
-                        { Icon: Waves, bottom: '2%', right: '75%', color: 'text-[#00d4ff]', delay: 0.1, size: 'w-8 h-8 md:w-20 md:h-20' },
-                        { Icon: Gauge, bottom: '20%', right: '55%', color: 'text-success', delay: 0.6, size: 'w-6 h-6 md:w-12 md:h-12' },
-                        { Icon: Anchor, bottom: '40%', right: '35%', color: 'text-[var(--foreground)]', delay: 1.1, size: 'w-8 h-8 md:w-16 md:h-16', rotate: 12 },
-                        { Icon: Ship, bottom: '60%', right: '15%', color: 'text-warning', delay: 1.6, size: 'w-6 h-6 md:w-12 md:h-12' },
-                        { Icon: Compass, bottom: '10%', right: '45%', color: 'text-[var(--c-primary)]', delay: 0.3, size: 'w-5 h-5 md:w-10 md:h-10' },
-                        { Icon: Wind, bottom: '35%', right: '70%', color: 'text-[#00d4ff]', delay: 0.9, size: 'w-5 h-5 md:w-10 md:h-10' },
-                        { Icon: Navigation, bottom: '5%', right: '90%', color: 'text-success', delay: 1.3, size: 'w-4 h-4 md:w-8 md:h-8' },
-                        { Icon: Shell, bottom: '15%', right: '85%', color: 'text-warning', delay: 0.5, size: 'w-6 h-6 md:w-12 md:h-12', rotate: 45 }
-                     ].map((item, i) => (
-                        <motion.div
-                           key={i}
-                           className={cn("absolute", item.color, item.size)}
-                           style={{ bottom: item.bottom, right: item.right }}
-                           initial={{ opacity: 0, y: -10, rotate: item.rotate || 0 }}
-                           animate={{ 
-                              opacity: 1, 
-                              y: [0, 15, 0],
-                              rotate: (item.rotate || 0) + (i % 2 === 0 ? -5 : 5)
-                           }}
-                           transition={{ 
-                              y: { duration: 5 + i, repeat: Infinity, ease: "easeInOut", delay: item.delay },
-                              rotate: { duration: 7 + i, repeat: Infinity, ease: "easeInOut", delay: item.delay },
-                              opacity: { duration: 1, delay: item.delay }
-                           }}
-                        >
-                           <item.Icon className="w-full h-full" />
-                        </motion.div>
-                     ))}
-                  </div>
-
-                  <div className="relative z-30 text-right max-w-[50%] space-y-1">
-                     <motion.p 
-                        initial={{ opacity: 0, x: 20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        className="text-[6px] md:text-[8px] font-black text-[var(--foreground)]/80 uppercase tracking-[0.3em]"
-                     >
-                        Node: Flame
-                     </motion.p>
-                     <h4 className="text-lg md:text-4xl font-black text-[var(--foreground)] uppercase italic leading-none drop-shadow-2xl">FLAME-SEA <br /> COLLECTIONS</h4>
-                     <div className="h-0.5 w-8 md:w-20 bg-[var(--c-primary)] ml-auto shadow-[0_0_10px_var(--c-primary)]" />
-                  </div>
-               </div>
+               {/* Corner Indicators */}
+               <div className="absolute top-2 right-2 w-6 h-6 border-t border-r border-[var(--c-primary)] opacity-40" />
+               <div className="absolute bottom-2 left-2 w-6 h-6 border-b border-l border-[var(--c-primary)] opacity-40" />
             </div>
-
-            {/* Corner Indicators */}
-            <div className="absolute top-2 right-2 w-6 h-6 border-t border-r border-[var(--c-primary)] opacity-40" />
-            <div className="absolute bottom-2 left-2 w-6 h-6 border-b border-l border-[var(--c-primary)] opacity-40" />
-         </div>
-      </section>
+         </section>
+      )}
 
       {/* 12. TRUST & NEWSLETTER - VIBRANT & POLYGONAL */}
       <section className="py-1 container mx-auto px-[2px] md:px-10 space-y-4">

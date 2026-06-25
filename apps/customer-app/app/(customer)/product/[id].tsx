@@ -941,13 +941,15 @@ export default function ProductDetailScreen() {
               <Text className="text-xs font-black uppercase opacity-40 italic text-center">No reviews yet for this catch.</Text>
             )}
             {reviews.length > 3 && (
-              <Button 
-                label={`VIEW ALL ${reviews.length} REVIEWS`} 
-                variant="ghost" 
-                className="mt-2 border" 
-                style={{ borderColor: colors.border }} 
-                onPress={() => setIsAllReviewsVisible(true)} 
-              />
+              <Pressable
+                onPress={() => setIsAllReviewsVisible(true)}
+                className="self-end px-3 py-1.5 border rounded-lg active:opacity-80"
+                style={{ borderColor: colors.border, backgroundColor: colors.card, marginTop: -2 }}
+              >
+                <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>
+                  VIEW ALL {reviews.length} REVIEWS
+                </Text>
+              </Pressable>
             )}
           </View>
           <Button label="SUBMIT FEEDBACK" variant="ghost" className="mt-4 border" style={{ borderColor: colors.border }} onPress={() => setIsReviewModalVisible(true)} />

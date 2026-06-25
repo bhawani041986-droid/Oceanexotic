@@ -325,12 +325,12 @@ function ProductListingContent() {
     if (categoryParam) {
       const matched = CATEGORIES.find(c => c.toLowerCase().includes(categoryParam.toLowerCase()));
       if (matched) setActiveTab(matched);
+    } else {
+      setActiveTab("All Seafood");
     }
     
     const sQuery = searchParams.get('search');
-    if (sQuery) {
-      setSearchQuery(sQuery);
-    }
+    setSearchQuery(sQuery || "");
   }, [searchParams]);
 
   const fetchLiveRegistry = async () => {
