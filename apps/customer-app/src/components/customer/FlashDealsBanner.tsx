@@ -168,7 +168,7 @@ export function FlashDealsBanner() {
               <View key={idx} style={{ width: 170, height: 100, justifyContent: 'flex-end' }}>
                 <View style={[styles.carouselCardWrap, { backgroundColor: colors.primary, shadowColor: colors.primary }]}>
                   <View style={styles.carouselCardInner}>
-                    <Image source={{ uri: item.image_url }} style={[StyleSheet.absoluteFillObject, { opacity: 0.9 }]} contentFit="cover" />
+                    <Image source={{ uri: item.image_url }} style={[StyleSheet.absoluteFillObject, { opacity: 0.9 }]} contentFit="contain" />
                     
                     {/* Gradient Overlay for button contrast */}
                     <View style={styles.carouselGradient} />

@@ -1753,7 +1753,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
 
                    {/* PANEL B (Bottom/Right Diagonal): Image Carousel & Cover */}
                    <div 
-                      className="absolute inset-0 z-10 flex flex-col justify-end items-end p-4 md:p-16 transition-all duration-500 bg-[#020617] bg-cover bg-center"
+                      className="absolute inset-0 z-10 flex flex-col justify-end items-end p-4 md:p-16 transition-all duration-500 bg-[#020617] bg-contain bg-center bg-no-repeat"
                       style={{ 
                          clipPath: 'polygon(100% 0px, 100% 100%, 0px 100%)',
                          backgroundImage: settings.customerAssets?.promo 
@@ -1780,7 +1780,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                                             className="w-full h-full bg-black relative overflow-hidden"
                                             style={{ clipPath: 'polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px)' }}
                                          >
-                                            <img src={item.image_url} className="w-full h-full object-cover group-hover/carousel:scale-105 transition-transform duration-700 opacity-90" />
+                                            <img src={item.image_url} className="w-full h-full object-contain group-hover/carousel:scale-105 transition-transform duration-700 opacity-90" />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end justify-center pb-2 md:pb-4">
                                                <Link href={item.product_link || "#"}>
                                                   <Button 

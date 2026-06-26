@@ -86,7 +86,7 @@ export function GlobalPromoEngine() {
               finalCoverUrl = await uploadFileToServerless(stagedFiles.cover);
           }
 
-          const finalCarousel = [...draft.carousel];
+          const finalCarousel = draft.carousel.map(item => ({ ...item }));
           for (let i = 0; i < 3; i++) {
               if (stagedFiles.carousel[i]) {
                   finalCarousel[i].image_url = await uploadFileToServerless(stagedFiles.carousel[i]!);
@@ -231,7 +231,7 @@ export function GlobalPromoEngine() {
                  {(stagedFiles.cover || draft.image) ? (
                     <img 
                         src={stagedFiles.cover ? URL.createObjectURL(stagedFiles.cover) : draft.image} 
-                        className="w-full h-full object-cover opacity-80" 
+                        className="w-full h-full object-contain opacity-80" 
                     />
                  ) : (
                     <div className="w-full h-full flex items-center justify-center text-text-secondary text-[10px] font-black uppercase tracking-widest opacity-40">No Cover Set</div>
@@ -255,7 +255,7 @@ export function GlobalPromoEngine() {
                             {(stagedFiles.carousel[index] || draft.carousel[index]?.image_url) ? (
                                 <img 
                                     src={stagedFiles.carousel[index] ? URL.createObjectURL(stagedFiles.carousel[index]!) : draft.carousel[index].image_url} 
-                                    className="w-full h-full object-cover opacity-80 transition-opacity group-hover:opacity-40" 
+                                    className="w-full h-full object-contain opacity-80 transition-opacity group-hover:opacity-40" 
                                 />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center text-text-secondary text-[10px] font-black uppercase tracking-widest opacity-40 border border-dashed border-[var(--foreground)]/20 rounded-xl">Empty</div>

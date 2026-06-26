@@ -1,16 +1,8 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from "@/lib/supabase";
 
 export async function GET() {
   try {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://kyqmhibffbwoqlpdplfu.supabase.co';
-    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-    
-    if (!supabaseKey) {
-       return NextResponse.json({ status: 'success', assets: [] }); // Graceful fallback
-    }
-
-    const supabase = createClient(supabaseUrl, supabaseKey);
     // Attempt to list files from the 'assets' bucket
     const { data, error } = await supabase.storage.from('assets').list('optimized', {
       limit: 100,
