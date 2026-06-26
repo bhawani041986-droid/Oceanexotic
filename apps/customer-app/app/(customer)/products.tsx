@@ -28,7 +28,7 @@ import { cn } from "@/lib/utils";
 import { t } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useHomeData } from "@/hooks/useHomeData";
-import { CATEGORIES } from "@/constants/categories";
+import { CATEGORIES, getSortedCategories } from "@/constants/categories";
 import { ChamferedBox } from "@/components/ui/ChamferedBox";
 
 const TABS = [
@@ -380,7 +380,7 @@ export default function ProductsScreen() {
                  )}
 
                  {/* DYNAMIC CATEGORY LAYERS */}
-                {CATEGORIES.map(category => {
+                {getSortedCategories(settings.productCategories).map(category => {
                   const categoryProducts = displayList.filter(p => {
                     const catLower = (p.category ?? "").toLowerCase();
                     const nameLower = p.name.toLowerCase();

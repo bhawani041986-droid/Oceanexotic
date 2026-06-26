@@ -18,7 +18,9 @@ import {
   Filter,
   BarChart3,
   Globe,
-  RefreshCw
+  RefreshCw,
+  ArrowUp,
+  ArrowDown
 } from "lucide-react";
 import { useToast } from "@/components/ui/Toast";
 
@@ -103,6 +105,36 @@ export default function AdminCategoriesPage() {
       }
     } catch (err) {
       toast("Network error", "error");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleMove = async (index: number, direction: 'up' | 'down') => {
+    if (direction === 'up' && index === 0) return;
+    if (direction === 'down' && index === categories.length - 1) return;
+
+    const newIndex = direction === 'up' ? index - 1 : index + 1;
+    const updatedCategories = [...categories];
+    const temp = updatedCategories[index];
+    updatedCategories[index] = updatedCategories[newIndex];
+    updatedCategories[newIndex] = temp;
+
+    setIsSaving(true);
+    try {
+      const res = await fetch('/api/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedCategories)
+      });
+      if (res.ok) {
+        setCategories(updatedCategories);
+        toast("Category order updated", "success");
+      } else {
+        toast("Failed to save updated order", "error");
+      }
+    } catch (err) {
+      toast("Failed to update order due to network issue", "error");
     } finally {
       setIsSaving(false);
     }
@@ -205,7 +237,7 @@ export default function AdminCategoriesPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {categories.map((cat) => (
+                  {categories.map((cat, idx) => (
                     <TableRow key={cat.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
                       <TableCell>
                         <div className="space-y-0.5 md:space-y-1">
@@ -221,6 +253,22 @@ export default function AdminCategoriesPage() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1 md:gap-2">
+                          <button
+                            disabled={isSaving || idx === 0}
+                            onClick={() => handleMove(idx, 'up')}
+                            className="p-2 md:p-2.5 rounded-lg hover:bg-primary/10 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5 disabled:opacity-30"
+                            title="Move Up"
+                          >
+                            <ArrowUp className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                          </button>
+                          <button
+                            disabled={isSaving || idx === categories.length - 1}
+                            onClick={() => handleMove(idx, 'down')}
+                            className="p-2 md:p-2.5 rounded-lg hover:bg-primary/10 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5 disabled:opacity-30"
+                            title="Move Down"
+                          >
+                            <ArrowDown className="w-3.5 md:w-4 h-3.5 md:h-4" />
+                          </button>
                           <button 
                             disabled={isSaving}
                             onClick={() => handleEdit(cat)}
@@ -245,7 +293,7 @@ export default function AdminCategoriesPage() {
 
             {/* Mobile card list */}
             <div className="lg:hidden space-y-3 p-4">
-              {categories.map((cat) => (
+              {categories.map((cat, idx) => (
                 <div key={cat.id} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
                   <div className="flex items-start justify-between">
                     <div className="space-y-0.5">
@@ -257,6 +305,20 @@ export default function AdminCategoriesPage() {
                     </Badge>
                   </div>
                   <div className="flex justify-end gap-2 pt-2 border-t border-[var(--foreground)]/5">
+                    <button
+                      disabled={isSaving || idx === 0}
+                      onClick={() => handleMove(idx, 'up')}
+                      className="p-2 rounded-lg hover:bg-primary/10 text-primary transition-all border border-[var(--foreground)]/5 disabled:opacity-30"
+                    >
+                      <ArrowUp className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      disabled={isSaving || idx === categories.length - 1}
+                      onClick={() => handleMove(idx, 'down')}
+                      className="p-2 rounded-lg hover:bg-primary/10 text-primary transition-all border border-[var(--foreground)]/5 disabled:opacity-30"
+                    >
+                      <ArrowDown className="w-3.5 h-3.5" />
+                    </button>
                     <button onClick={() => handleEdit(cat)} disabled={isSaving} className="p-2 rounded-lg hover:bg-primary/10 text-primary transition-all border border-[var(--foreground)]/5 disabled:opacity-50">
                       <Edit3 className="w-3.5 h-3.5" />
                     </button>

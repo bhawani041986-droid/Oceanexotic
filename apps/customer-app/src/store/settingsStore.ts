@@ -42,6 +42,8 @@ interface SettingsState {
   settings: { language: string };
   customerAssets: CustomerAssets;
   topSellers?: { id: string; name: string; rating: number; speed: string; image: string; products: string[] }[];
+  productCategories?: { id: string; label: string; iconName: string; status: string }[];
+  homeSectionOrder?: string[];
   fetchSettings: () => Promise<void>;
   setSettings: (partial: Partial<Omit<SettingsState, 'settings'>>) => void;
 }
@@ -94,6 +96,8 @@ export const useSettingsStore = create<SettingsState>()(
         { id: "SEL-2002", name: "Deep Sea Catch", rating: 4.8, speed: "45 min", image: "⚓", products: ["🦞", "🦀", "🦐"] },
         { id: "SEL-004", name: "Rig Fishing", rating: 4.8, speed: "45 min", image: "🚢", products: ["🦞", "🦀", "🦐"] },
       ],
+      productCategories: [],
+      homeSectionOrder: ["HERO", "CATEGORIES", "TODAYS_CATCH", "FEATURED", "RECIPES", "PROMO", "SELLERS", "RADAR", "TRUST", "REVIEWS", "NEWSLETTER"],
 
       setSettings: (partial) =>
         set((s) => {
@@ -132,6 +136,8 @@ export const useSettingsStore = create<SettingsState>()(
             theme: (settings.customerTheme as string) || (settings.theme as string) || get().theme,
             customerAssets: sanitized,
             topSellers: (settings.topSellers as any) || get().topSellers,
+            productCategories: (settings.PRODUCT_CATEGORIES as any) || get().productCategories,
+            homeSectionOrder: (settings.HOME_SECTION_ORDER as any) || get().homeSectionOrder,
           });
         } catch {
           /* keep persisted defaults */
@@ -155,6 +161,8 @@ export const useSettingsStore = create<SettingsState>()(
         language: state.language,
         customerAssets: state.customerAssets,
         topSellers: state.topSellers,
+        productCategories: state.productCategories,
+        homeSectionOrder: state.homeSectionOrder,
       }),
       onRehydrateStorage: () => (state) => {
         if (state) {

@@ -36,3 +36,42 @@ export const CATEGORIES: Category[] = [
   { name: "Mutton",          image: IMG_MUTTON,   slug: "mutton",     glowColor: "#f43f5e" },
   { name: "Chicken",         image: IMG_CHICKEN,  slug: "chicken",    glowColor: "#fbbf24" },
 ];
+
+export const BACKEND_SLUG_MAP: Record<string, string> = {
+  "SEAWATER_FISH": "seawater",
+  "FRESHWATER_FISH": "freshwater",
+  "PRAWNS_SHRIMPS": "prawns",
+  "CRABS_LOBSTERS": "crustaceans",
+  "STEAKS_FILLETS": "fillets",
+  "EXOTIC_CATCH": "exotic",
+  "READY_TO_COOK": "ready-to-cook",
+  "DRY_FISH": "dry-fish",
+  "MUTTON": "mutton",
+  "CHICKEN": "chicken"
+};
+
+export function getSortedCategories(dbCategories?: { id: string; label: string; status: string }[]): Category[] {
+  if (!dbCategories || dbCategories.length === 0) {
+    return CATEGORIES;
+  }
+  
+  const activeDbCategories = dbCategories.filter(c => c.status === "ACTIVE" || !c.status);
+  const sorted: Category[] = [];
+
+  activeDbCategories.forEach(dbCat => {
+    const slug = BACKEND_SLUG_MAP[dbCat.id] || dbCat.id.toLowerCase();
+    const found = CATEGORIES.find(c => c.slug === slug);
+    if (found) {
+      sorted.push(found);
+    }
+  });
+
+  // Append any local categories not present in DB list just in case
+  CATEGORIES.forEach(localCat => {
+    if (!sorted.find(s => s.slug === localCat.slug)) {
+      sorted.push(localCat);
+    }
+  });
+
+  return sorted;
+}

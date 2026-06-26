@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils";
 import { 
   FileText, ImageIcon, Layout, Plus, Search, Edit3, Trash2, 
   ExternalLink, ChevronRight, Eye, Save, Clock, X, Globe, Share2, UploadCloud, Cpu,
-  Flame, Waves
+  Flame, Waves, ArrowUp, ArrowDown, Settings
 } from "lucide-react";
 import { FULL_API_URL as API_BASE_URL } from "@/config/api";
 
@@ -69,6 +69,12 @@ export default function AdminCMSPage() {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [sharingItem, setSharingItem] = useState<any>(null);
 
+  // Home Screen Section Layout Order State
+  const [homeSections, setHomeSections] = useState<string[]>([
+    "HERO", "CATEGORIES", "TODAYS_CATCH", "FEATURED", "RECIPES", "PROMO", "SELLERS", "RADAR", "TRUST", "REVIEWS", "NEWSLETTER"
+  ]);
+  const [isSavingLayout, setIsSavingLayout] = useState(false);
+
   const fetchContent = async () => {
     try {
       setIsLoading(true);
@@ -77,11 +83,54 @@ export default function AdminCMSPage() {
       if (data.status === 'success') {
         setContent(data.content || []);
       }
+
+      // Fetch Home Layout Settings
+      const settingsRes = await fetch(`${API_BASE_URL}/system/settings`);
+      const settingsData = await settingsRes.json();
+      if (settingsData.status === 'success' && settingsData.settings?.HOME_SECTION_ORDER) {
+        setHomeSections(settingsData.settings.HOME_SECTION_ORDER);
+      }
     } catch (error) {
       console.error("Registry Fetch Failed:", error);
       toast("Failed to load content registry.", "error");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleMoveSection = (index: number, direction: 'up' | 'down') => {
+    if (direction === 'up' && index === 0) return;
+    if (direction === 'down' && index === homeSections.length - 1) return;
+    const nextIdx = direction === 'up' ? index - 1 : index + 1;
+    const newSections = [...homeSections];
+    const temp = newSections[index];
+    newSections[index] = newSections[nextIdx];
+    newSections[nextIdx] = temp;
+    setHomeSections(newSections);
+  };
+
+  const handleSaveLayoutOrder = async () => {
+    setIsSavingLayout(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/system/settings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          settings: {
+            HOME_SECTION_ORDER: homeSections
+          }
+        })
+      });
+      const data = await res.json();
+      if (data.status === 'success') {
+        toast("Home screen layout saved successfully", "success");
+      } else {
+        toast(data.message || "Failed to save layout order", "error");
+      }
+    } catch (err) {
+      toast("Failed to save layout order due to network issue", "error");
+    } finally {
+      setIsSavingLayout(false);
     }
   };
 
@@ -374,6 +423,66 @@ export default function AdminCMSPage() {
 
       {/* 1.5 GLOBAL PROMO ENGINE */}
       <GlobalPromoEngine />
+
+      {/* 1.75 HOME LAYOUT SECTION REORDERER */}
+      <Card className="border text-[var(--c-text-primary)] transition-all p-4 md:p-6 rounded-[24px] bg-bg-secondary/20 border-[var(--foreground)]/5 shadow-premium mb-6">
+        <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6 border-b border-[var(--foreground)]/10 pb-6">
+          <div className="space-y-1">
+            <h3 className="text-base md:text-lg font-black text-[var(--foreground)] tracking-tighter uppercase italic flex items-center gap-2">
+              <Settings className="w-4 h-4 text-primary" /> Home Layout Planner
+            </h3>
+            <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">
+              Arrange the ordering of home screen components dynamically
+            </p>
+          </div>
+          <Button 
+            disabled={isSavingLayout} 
+            onClick={handleSaveLayoutOrder} 
+            className="px-6 bg-primary hover:bg-primary/95 text-black font-black uppercase text-[10px] tracking-wider rounded-xl h-11 italic shadow-glow-purple"
+          >
+            {isSavingLayout ? "SAVING..." : "SAVE LAYOUT ORDER"}
+          </Button>
+        </div>
+        
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+          {homeSections.map((sec, idx) => (
+            <div 
+              key={sec} 
+              className="flex items-center justify-between p-3 bg-slate-900/60 border border-[var(--foreground)]/5 hover:border-primary/20 rounded-xl transition-all"
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-[9px] font-black bg-[var(--foreground)]/10 px-2 py-1 rounded text-text-secondary">
+                  {idx + 1}
+                </span>
+                <span className="text-xs font-black uppercase text-[var(--foreground)] tracking-wide">
+                  {sec.replace('_', ' ')}
+                </span>
+              </div>
+              
+              <div className="flex gap-1">
+                <button
+                  type="button"
+                  disabled={idx === 0}
+                  onClick={() => handleMoveSection(idx, 'up')}
+                  className="p-1.5 rounded bg-[var(--foreground)]/5 hover:bg-primary/10 hover:text-primary transition-all disabled:opacity-30 text-text-secondary"
+                  title="Move Up"
+                >
+                  <ArrowUp className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  disabled={idx === homeSections.length - 1}
+                  onClick={() => handleMoveSection(idx, 'down')}
+                  className="p-1.5 rounded bg-[var(--foreground)]/5 hover:bg-primary/10 hover:text-primary transition-all disabled:opacity-30 text-text-secondary"
+                  title="Move Down"
+                >
+                  <ArrowDown className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
 
       {/* 2. REGISTRY TABLE */}
       <Card className="p-1 rounded-[24px] md:rounded-[40px] bg-bg-secondary/20 border-[var(--foreground)]/5 shadow-premium overflow-hidden">

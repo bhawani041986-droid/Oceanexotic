@@ -3,9 +3,10 @@ import { View, StyleSheet, Dimensions, Animated, Easing, Text } from "react-nati
 import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Path, Circle, Line } from "react-native-svg";
 import { Image } from "expo-image";
-import { CATEGORIES } from "@/constants/categories";
+import { CATEGORIES, getSortedCategories } from "@/constants/categories";
 import api from "@/services/api";
 import { FULL_API_URL } from "@/config/api";
+import { useSettingsStore } from "@/store/settingsStore";
 
 const { width } = Dimensions.get("window");
 
@@ -518,7 +519,8 @@ export function MaritimeWaveDivider() {
   });
 
   const wavePath = `M 0 20 C 150 5, 300 35, 450 20 C 600 5, 750 35, 900 20 C 1050 5, 1200 35, 1350 20 L 1350 50 L 0 50 Z`;
-  const [finFish, setFinFish] = useState<any[]>(CATEGORIES.slice(0, 5));
+  const settings = useSettingsStore();
+  const [finFish, setFinFish] = useState<any[]>(() => getSortedCategories(settings.productCategories).slice(0, 5));
 
   useEffect(() => {
     let active = true;
