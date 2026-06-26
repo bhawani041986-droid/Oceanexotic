@@ -36,7 +36,8 @@ export async function GET() {
       sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS is_live_inventory BOOLEAN DEFAULT FALSE`,
       sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS quality_rank VARCHAR(50) NULL`,
       sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS discount_percent INTEGER DEFAULT 0`,
-      sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS unit VARCHAR(20) DEFAULT 'kg'`
+      sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS unit VARCHAR(20) DEFAULT 'kg'`,
+      sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT FALSE`
     ];
 
     for (let i = 0; i < queries.length; i++) {

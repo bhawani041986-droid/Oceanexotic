@@ -62,4 +62,9 @@ export const homeService = {
     if (data.status === "success") return data.cut_options || [];
     return [];
   },
+
+  subscribeNewsletter: async (email: string): Promise<{ success: boolean; message?: string; error?: string }> => {
+    const { data } = await api.post("/newsletter/subscribe", { email });
+    return data;
+  },
 };

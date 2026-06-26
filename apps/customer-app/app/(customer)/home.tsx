@@ -10,6 +10,7 @@ import {
   Dimensions,
   FlatList,
   InteractionManager,
+  TextInput,
 } from "react-native";
 import Svg, { Polygon, Defs, LinearGradient as SvgLinearGradient, Stop, Path, ClipPath, Image as SvgImage, Line } from "react-native-svg";
 import { Image } from "expo-image";
@@ -268,6 +269,31 @@ export default function CustomerHomeScreen() {
     router.push({ pathname: path as any, params });
   }, [router]);
 
+  const handleSubscribeNewsletter = async () => {
+    const trimmedEmail = newsletterEmail.trim();
+    if (!trimmedEmail) {
+      toast("Please enter your email address", "error");
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      toast("Please enter a valid email address", "error");
+      return;
+    }
+    try {
+      const res = await homeService.subscribeNewsletter(trimmedEmail);
+      if (res.success || (res as any).message === "Already subscribed") {
+        toast("Subscribed to newsletter!", "success");
+        setNewsletterEmail("");
+      } else {
+        toast(res.error || "Subscription failed", "error");
+      }
+    } catch (error: any) {
+      console.error("Newsletter error:", error);
+      toast(error?.response?.data?.error || "Subscription failed", "error");
+    }
+  };
+
 
   const [activeBatch, setActiveBatch] = useState<BatchFilter>("ALL");
   const [cutProduct, setCutProduct] = useState<TodaysCatchItem | null>(null);
@@ -277,6 +303,7 @@ export default function CustomerHomeScreen() {
   const [cutOpen, setCutOpen] = useState(false);
   const [subEmailLayout, setSubEmailLayout] = useState({ width: 0, height: 0 });
   const [subBtnLayout, setSubBtnLayout] = useState({ width: 0, height: 0 });
+  const [newsletterEmail, setNewsletterEmail] = useState("");
   const [liveReviews, setLiveReviews] = useState<any[]>([]);
 
   const banner = cms.data?.find((c) => c.type === "BANNER" && c.status === "PUBLISHED");
@@ -1017,7 +1044,7 @@ export default function CustomerHomeScreen() {
           fillColor={colors.card}
           strokeColor={colors.border}
           bevelSize={24}
-          style={{ minHeight: 280 }}
+          style={{ minHeight: 220 }}
           className="mx-4 mb-8 p-6 relative overflow-hidden"
         >
           <LinearGradient
@@ -1044,7 +1071,7 @@ export default function CustomerHomeScreen() {
           <View className="mt-5 space-y-2 relative z-10">
             <View 
               onLayout={(e) => setSubEmailLayout(e.nativeEvent.layout)}
-              className="px-4 py-3.5 items-center justify-center relative overflow-hidden"
+              className="px-4 relative overflow-hidden flex-row items-center"
               style={{ height: 50 }}
             >
               {subEmailLayout.width > 0 && subEmailLayout.height > 0 ? (
@@ -1057,12 +1084,20 @@ export default function CustomerHomeScreen() {
                   />
                 </Svg>
               ) : null}
-              <Text className="text-xs italic tracking-wider relative z-10" style={{ color: colors.textMuted }}>
-                Support Email: support@oceanexotic.com
-              </Text>
+              <TextInput
+                value={newsletterEmail}
+                onChangeText={setNewsletterEmail}
+                placeholder="ENTER YOUR EMAIL ADDRESS"
+                placeholderTextColor={`${colors.textMuted}aa`}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+                className="w-full text-xs italic tracking-wider relative z-10"
+                style={{ color: colors.text }}
+              />
             </View>
             <Pressable
-              onPress={() => toast("Subscribed to newsletter!", "success")}
+              onPress={handleSubscribeNewsletter}
               onLayout={(e) => setSubBtnLayout(e.nativeEvent.layout)}
               className="py-3.5 items-center justify-center relative overflow-hidden"
               style={{ height: 50 }}

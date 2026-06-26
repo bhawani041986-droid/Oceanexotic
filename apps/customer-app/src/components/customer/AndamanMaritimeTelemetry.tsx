@@ -24,10 +24,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
     return [
       colors.primary,
       colors.secondary,
-      colors.accent,
-      colors.primary,
-      colors.accent,
-      colors.text || "#ffffff"
+      colors.accent
     ];
   };
 
@@ -380,10 +377,18 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
         transparent={true}
         onRequestClose={() => setIsMapExpanded(false)}
       >
-        <View className="flex-1 bg-black/90 p-4 pt-12 items-center justify-center">
+        <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.9)', padding: 16, paddingTop: 48, alignItems: 'center', justifyContent: 'center' }}>
           <View 
-            style={{ borderColor: colors.primary + "66" }} 
-            className="w-full h-[85%] relative bg-[#0B1120] shadow-2xl border-2 rounded-3xl overflow-hidden"
+            style={{ 
+              borderColor: colors.primary + "66",
+              borderWidth: 2,
+              borderRadius: 24,
+              overflow: 'hidden',
+              backgroundColor: '#0B1120',
+              width: '100%',
+              height: '85%',
+              position: 'relative'
+            }}
           >
             <Pressable 
               onPress={() => setIsMapExpanded(false)}

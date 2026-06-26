@@ -90,7 +90,7 @@ function TodaysCatchCard({ item, onPress, onOpenCut }: TodaysCatchCardProps) {
           source={{ uri }}
           onLoad={onLoad}
           className="h-full w-full"
-          contentFit="contain"
+          contentFit="cover"
         />
         <LinearGradient
           colors={["transparent", colors.isDark ? "rgba(2,6,23,0.8)" : "rgba(255,255,255,0.8)"]}
@@ -178,7 +178,11 @@ export default function CustomerHomeScreen() {
   const { cms, territories, todaysCatch } = useHomeData();
   const { data: allProducts } = useProducts();
   const { timeLeft, flashDealActive } = useFlashDealTimer();
-  const featured = (allProducts ?? []).slice(0, 4);
+  const featured = useMemo(() => {
+    const list = allProducts ?? [];
+    const feat = list.filter(p => p.is_featured === true || p.is_featured === 1 || p.is_featured === "true");
+    return feat.length > 0 ? feat : list.slice(0, 4);
+  }, [allProducts]);
   const promo = cms.data?.find((c) => c.type === "PROMO" && c.status === "PUBLISHED");
 
   const [activeBatch, setActiveBatch] = useState<BatchFilter>("ALL");

@@ -115,6 +115,38 @@ export default function AdminProductsPage() {
     }
   };
 
+  const handleToggleFeatured = async (product: any) => {
+    try {
+      const updatedFeatured = !product.is_featured;
+      const updatedProduct = { ...product, is_featured: updatedFeatured };
+      
+      // Optimistic update
+      setProducts(prevProducts =>
+        prevProducts.map(p => p.id === product.id ? updatedProduct : p)
+      );
+
+      const res = await fetch('/api/seller/products', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedProduct)
+      });
+      
+      if (!res.ok) {
+        throw new Error("HTTP error " + res.status);
+      }
+      toast(
+        updatedFeatured ? `Asset ${product.name} promoted to Featured.` : `Asset ${product.name} demoted from Featured.`,
+        "success"
+      );
+    } catch (err) {
+      // Revert optimistic update
+      setProducts(prevProducts =>
+        prevProducts.map(p => p.id === product.id ? product : p)
+      );
+      toast("Featured update handshake failed.", "error");
+    }
+  };
+
   const handleDelete = async () => {
     if (!selectedProduct) return;
     setIsProcessing(true
@@ -314,6 +346,7 @@ export default function AdminProductsPage() {
                     <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Category</TableHead>
                     <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Live Status / Harbor</TableHead>
                     <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Registry State</TableHead>
+                    <TableHead className="text-center text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Featured</TableHead>
                     <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Governance</TableHead>
                   </TableRow>
               </TableHeader>
@@ -360,6 +393,17 @@ export default function AdminProductsPage() {
                                     <span className="text-[7px] font-black text-emerald-400 uppercase tracking-widest animate-pulse">● LIVE HARBOR</span>
                                 )}
                             </div>
+                        </TableCell>
+                        <TableCell className="text-center">
+                            <button
+                              className={cn(
+                                "p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 transition-all border border-[var(--foreground)]/5",
+                                prd.is_featured ? "text-warning hover:text-warning" : "text-text-secondary hover:text-warning"
+                              )}
+                              onClick={() => handleToggleFeatured(prd)}
+                            >
+                              <Star className={cn("w-3.5 md:w-4 h-3.5 md:h-4", prd.is_featured && "fill-warning")} />
+                            </button>
                         </TableCell>
                         <TableCell className="text-right pr-4 md:pr-6">
                             <div className="flex justify-end gap-1 md:gap-2">
@@ -441,6 +485,16 @@ export default function AdminProductsPage() {
                     </div>
                   </div>
                   <div className="flex gap-1.5 items-center">
+                    <button
+                      title={prd.is_featured ? "Remove from Featured" : "Mark as Featured"}
+                      className={cn(
+                        "p-2 rounded-lg hover:bg-[var(--foreground)]/5 transition-all border border-[var(--foreground)]/5",
+                        prd.is_featured ? "text-warning" : "text-text-secondary"
+                      )}
+                      onClick={() => handleToggleFeatured(prd)}
+                    >
+                      <Star className={cn("w-3.5 h-3.5", prd.is_featured && "fill-warning")} />
+                    </button>
                     <button 
                       title="View Details"
                       className="p-2 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-[var(--foreground)] transition-all border border-[var(--foreground)]/5" 

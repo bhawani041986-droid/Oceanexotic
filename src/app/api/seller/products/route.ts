@@ -194,7 +194,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { 
       id, name, category, price, stock, status, image_url, gallery, description, seller_id,
-      is_live_inventory, catch_time, batch_label, harbor_node
+      is_live_inventory, catch_time, batch_label, harbor_node, is_featured
     } = body;
 
     if (!id || !name || !price) {
@@ -237,7 +237,8 @@ export async function POST(request: Request) {
       is_live_inventory: !!is_live_inventory,
       quality_rank: body.quality_rank || 'VERIFIED',
       discount_percent: body.discount_percent !== undefined && body.discount_percent !== '' ? Number(body.discount_percent) : 0,
-      unit: body.unit || 'kg'
+      unit: body.unit || 'kg',
+      is_featured: !!is_featured
     };
 
     let insertSuccess = false;
@@ -295,7 +296,7 @@ export async function PUT(request: Request) {
     const body = await request.json();
     const { 
       id, name, category, price, stock, status, image_url, gallery, description,
-      seller_id, is_live_inventory, catch_time, batch_label, harbor_node
+      seller_id, is_live_inventory, catch_time, batch_label, harbor_node, is_featured
     } = body;
 
     if (!id) return NextResponse.json({ error: "Missing Asset ID" }, { status: 400 });
@@ -328,6 +329,9 @@ export async function PUT(request: Request) {
       discount_percent: body.discount_percent !== undefined && body.discount_percent !== '' ? Number(body.discount_percent) : 0,
       unit: body.unit || 'kg'
     };
+    if (is_featured !== undefined) {
+      updatePayload.is_featured = !!is_featured;
+    }
 
     let updateSuccess = false;
     let attempts = 0;
