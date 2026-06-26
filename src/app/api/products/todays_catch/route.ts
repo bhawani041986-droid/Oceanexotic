@@ -44,6 +44,7 @@ export async function GET(request: NextRequest) {
 
       return {
         ...c,
+        catch_id: c.id,
         name: p.name || `Harvest #${c.product_id}`,
         price_per_kg: p.price || 0,
         image_url: p.image_url,

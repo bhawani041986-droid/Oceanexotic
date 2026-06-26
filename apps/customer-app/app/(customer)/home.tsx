@@ -218,7 +218,11 @@ export default function CustomerHomeScreen() {
   const { toast, ToastHost } = useToast();
   const { cms, territories, todaysCatch } = useHomeData();
   const { data: allProducts } = useProducts();
-  const featured = (allProducts ?? []).slice(0, 4);
+  const featured = useMemo(() => {
+    const list = allProducts ?? [];
+    const feat = list.filter(p => p.is_featured === true || p.is_featured === 1 || p.is_featured === "true");
+    return feat.length > 0 ? feat : list.slice(0, 4);
+  }, [allProducts]);
   const promo = cms.data?.find((c) => c.type === "PROMO" && c.status === "PUBLISHED");
   const splitPromo = cms.data?.find((c) => c.type === "SPLIT_PROMO");
   const showSplitPromo = splitPromo && splitPromo.status === "PUBLISHED";

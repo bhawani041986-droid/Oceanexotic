@@ -19,6 +19,7 @@ export interface Product {
   rating?: number;
   description?: string;
   unit?: string;
+  is_featured?: boolean | number | string;
 }
 
 export interface SearchProduct {
