@@ -28,7 +28,19 @@ export async function GET(request: NextRequest) {
     const sellerMap: Record<string, string> = {};
     if (sellers) sellers.forEach(s => sellerMap[s.id] = s.name);
 
-    const mapped = catches.map((c: any) => {
+    // Group catches by product_id, keeping the latest one
+    const uniqueCatchesMap = new Map<string, any>();
+    if (catches) {
+      catches.forEach((c: any) => {
+        const existing = uniqueCatchesMap.get(c.product_id);
+        if (!existing || new Date(c.freshness_timestamp) > new Date(existing.freshness_timestamp)) {
+          uniqueCatchesMap.set(c.product_id, c);
+        }
+      });
+    }
+    const uniqueCatches = Array.from(uniqueCatchesMap.values());
+
+    const mapped = uniqueCatches.map((c: any) => {
       const p = productMap[c.product_id] || {};
       
       // Parse description metadata to extract discount_percent

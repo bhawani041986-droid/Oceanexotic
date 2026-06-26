@@ -18,6 +18,7 @@ import { useHomeData } from "@/hooks/useHomeData";
 import { useProducts } from "@/hooks/useProducts";
 import { useFlashDealTimer } from "@/hooks/useFlashDealTimer";
 import { ProductCard } from "@/components/customer/ProductCard";
+import type { Product } from "@/services/productService";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useCartStore } from "@/store/cartStore";
 import { CATEGORIES } from "@/constants/categories";
@@ -413,16 +414,26 @@ export default function CustomerHomeScreen() {
             </View>
           ) : filteredCatch.length > 0 ? (
             <View className="flex-row flex-wrap justify-between gap-y-3">
-              {filteredCatch.map((item) => (
-                <TodaysCatchCard
-                  key={item.catch_id}
-                  item={item}
-                  onPress={() =>
-                    router.push({ pathname: "/product/[id]", params: { id: String(item.product_id) } })
-                  }
-                  onOpenCut={() => openCutModal(item)}
-                />
-              ))}
+              {filteredCatch.map((item) => {
+                const mappedProduct: Product = {
+                  id: item.product_id,
+                  name: item.name,
+                  price: item.price_per_kg,
+                  image_url: item.catch_image_url || item.image_url,
+                  seller_name: item.seller_name,
+                  stock: item.remaining_kg || 10,
+                  status: "LIVE",
+                  discount_percent: item.discount_percent
+                };
+                return (
+                  <ProductCard
+                    key={item.catch_id}
+                    product={mappedProduct}
+                    compact
+                    onSelectCut={() => openCutModal(item)}
+                  />
+                );
+              })}
             </View>
           ) : (
             <View className="h-48 items-center justify-center rounded-3xl border-2 border-dashed border-white/10 opacity-50">

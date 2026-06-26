@@ -616,17 +616,26 @@ export default function CustomerHomeScreen() {
             </View>
           ) : filteredCatch.length > 0 ? (
             <View className="flex-row flex-wrap justify-between gap-y-3">
-              {filteredCatch.map((item) => (
-                <TodaysCatchCard
-                  key={item.id}
-                  item={item}
-                  onPress={() =>
-                    router.push({ pathname: "/product/[id]", params: { id: String(item.product_id) } })
-                  }
-                  onOpenCut={() => openCutModal(item)}
-                />
-              ))}
-
+              {filteredCatch.map((item) => {
+                const mappedProduct: Product = {
+                  id: item.product_id,
+                  name: item.name,
+                  price: item.price_per_kg,
+                  image_url: item.catch_image_url || item.image_url,
+                  seller_name: item.seller_name,
+                  stock: item.remaining_kg || 10,
+                  status: "LIVE",
+                  discount_percent: item.discount_percent
+                };
+                return (
+                  <ProductCard
+                    key={item.id}
+                    product={mappedProduct}
+                    compact
+                    onSelectCut={() => openCutModal(item)}
+                  />
+                );
+              })}
             </View>
           ) : (
             <View className="h-48 items-center justify-center rounded-none border-2 border-dashed border-white/10 opacity-50">

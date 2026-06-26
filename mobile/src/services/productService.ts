@@ -17,6 +17,8 @@ export interface Product {
   description?: string;
   unit?: string;
   is_featured?: boolean | number | string;
+  discount_percent?: number;
+  original_price?: number;
 }
 
 export interface SearchProduct {
