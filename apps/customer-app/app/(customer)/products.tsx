@@ -49,6 +49,7 @@ export default function ProductsScreen() {
   const { toast, ToastHost } = useToast();
   const cart = useCartStore();
   const colors = useThemeColors();
+  const settings = useSettingsStore();
   const currentLanguage = useSettingsStore((s) => s.language); // force re-render
 
   const [searchText, setSearchText] = useState(params.search ?? "");
