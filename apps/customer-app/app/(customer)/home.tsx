@@ -1124,23 +1124,24 @@ export default function CustomerHomeScreen() {
                       autoCorrect={false}
                       style={{
                         position: 'absolute',
-                        top: '46%',
-                        left: '20%',
-                        width: '72%',
-                        height: '13%',
-                        fontSize: newsletterWidth * 0.035,
+                        top: '48.5%',
+                        left: '21%',
+                        width: '68%',
+                        height: '11%',
+                        fontSize: newsletterWidth * 0.028,
                         color: '#1E293B',
-                        fontWeight: 'bold',
+                        backgroundColor: '#F8FBFD',
+                        fontStyle: 'italic',
                       }}
                     />
                     <Pressable
                       onPress={handleSubscribeNewsletter}
                       style={{
                         position: 'absolute',
-                        top: '67%',
+                        top: '66%',
                         left: '6%',
                         width: '88%',
-                        height: '14%',
+                        height: '15%',
                       }}
                     />
                   </View>
