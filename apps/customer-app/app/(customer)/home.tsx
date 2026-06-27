@@ -1046,7 +1046,7 @@ export default function CustomerHomeScreen() {
                 const qualityWidth = width - 32;
                 const qualityHeight = qualityWidth / 2.504;
                 return (
-                  <View key="QUALITY_CHECKED" className="mx-4 mb-0 relative overflow-hidden" style={{ width: qualityWidth, height: qualityHeight }}>
+                  <View key="QUALITY_CHECKED" className="mx-4 mb-0 relative overflow-hidden" style={{ width: qualityWidth, height: qualityHeight, marginTop: -18, marginBottom: 0 }}>
                     <Image
                       source={IMG_QUALITY_CHECKED_BANNER}
                       style={{ width: "100%", height: "100%" }}
@@ -1060,7 +1060,7 @@ export default function CustomerHomeScreen() {
                 const fssaiWidth = width - 32;
                 const fssaiHeight = fssaiWidth / 3.003;
                 return (
-                  <View key="FSSAI" className="mx-4 mb-8 relative overflow-hidden" style={{ width: fssaiWidth, height: fssaiHeight }}>
+                  <View key="FSSAI" className="mx-4 mb-8 relative overflow-hidden" style={{ width: fssaiWidth, height: fssaiHeight, marginTop: -18 }}>
                     <Image
                       source={IMG_FSSAI_BANNER}
                       style={{ width: "100%", height: "100%" }}
@@ -1107,7 +1107,7 @@ export default function CustomerHomeScreen() {
                   <View 
                     key="NEWSLETTER" 
                     className="mx-4 mb-0 relative overflow-hidden" 
-                    style={{ width: newsletterWidth, height: newsletterHeight }}
+                    style={{ width: newsletterWidth, height: newsletterHeight, marginBottom: 0 }}
                   >
                     <Image
                       source={IMG_NEWSLETTER_BANNER}
