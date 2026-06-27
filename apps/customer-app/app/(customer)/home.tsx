@@ -462,6 +462,13 @@ export default function CustomerHomeScreen() {
   const heroTitle2Color = settings.customerAssets?.heroTitle2Color || colors.accent;
   const heroSubtitleColor = settings.customerAssets?.heroSubtitleColor || colors.text;
 
+  const homeSectionOrder = useMemo(() => {
+    const rawOrder = settings.homeSectionOrder || ["HERO", "CATEGORIES", "TODAYS_CATCH", "FEATURED", "RECIPES", "PROMO", "SELLERS", "RADAR", "REVIEWS", "NEWSLETTER", "QUALITY_CHECKED", "FSSAI"];
+    let order = rawOrder.filter(sec => sec !== "TRUST" && sec !== "NEWSLETTER" && sec !== "QUALITY_CHECKED" && sec !== "FSSAI");
+    order.push("NEWSLETTER", "QUALITY_CHECKED", "FSSAI");
+    return order;
+  }, [settings.homeSectionOrder]);
+
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       <LiveTickerMarquee />
@@ -477,7 +484,7 @@ export default function CustomerHomeScreen() {
         }
       >
         {/* Render Sections dynamically based on settings.homeSectionOrder */}
-        {(settings.homeSectionOrder || ["HERO", "CATEGORIES", "TODAYS_CATCH", "FEATURED", "RECIPES", "PROMO", "SELLERS", "RADAR", "REVIEWS", "NEWSLETTER", "QUALITY_CHECKED", "FSSAI"]).map((sectionId) => {
+        {homeSectionOrder.map((sectionId) => {
           switch (sectionId) {
             case "HERO":
               return (
