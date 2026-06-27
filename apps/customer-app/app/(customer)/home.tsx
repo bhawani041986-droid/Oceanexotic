@@ -1046,7 +1046,7 @@ export default function CustomerHomeScreen() {
                 const qualityWidth = width - 32;
                 const qualityHeight = qualityWidth / 2.504;
                 return (
-                  <View key="QUALITY_CHECKED" className="mx-4 mb-8 relative overflow-hidden" style={{ width: qualityWidth, height: qualityHeight }}>
+                  <View key="QUALITY_CHECKED" className="mx-4 mb-0 relative overflow-hidden" style={{ width: qualityWidth, height: qualityHeight }}>
                     <Image
                       source={IMG_QUALITY_CHECKED_BANNER}
                       style={{ width: "100%", height: "100%" }}
@@ -1106,7 +1106,7 @@ export default function CustomerHomeScreen() {
                 return (
                   <View 
                     key="NEWSLETTER" 
-                    className="mx-4 mb-8 relative overflow-hidden" 
+                    className="mx-4 mb-0 relative overflow-hidden" 
                     style={{ width: newsletterWidth, height: newsletterHeight }}
                   >
                     <Image
