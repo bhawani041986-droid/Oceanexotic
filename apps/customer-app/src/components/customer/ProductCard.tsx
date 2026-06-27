@@ -35,6 +35,20 @@ export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCar
   
   const colors = useThemeColors();
 
+  const isLightColor = (colorStr: string) => {
+    if (!colorStr || !colorStr.startsWith("#")) return false;
+    let cleanHex = colorStr.replace("#", "");
+    if (cleanHex.length === 3) {
+      cleanHex = cleanHex.split("").map(c => c + c).join("");
+    }
+    if (cleanHex.length !== 6) return false;
+    const r = parseInt(cleanHex.substring(0, 2), 16);
+    const g = parseInt(cleanHex.substring(2, 4), 16);
+    const b = parseInt(cleanHex.substring(4, 6), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 180;
+  };
+
   // Dynamic badge: only show when discount_percent > 0
   const discount = Number(product.discount_percent ?? 0);
   const hasDiscount = !outOfStock && discount > 0;
@@ -103,7 +117,12 @@ export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCar
             </View>
             {onSelectCut ? (
               <Pressable onPress={onSelectCut} className="rounded-none px-3 py-2 overflow-hidden relative" style={{ backgroundColor: colors.primary }}>
-                <Text className="text-[9px] font-black uppercase text-white relative z-10">+ CUT</Text>
+                <Text 
+                  className="text-[9px] font-black uppercase relative z-10" 
+                  style={{ color: isLightColor(colors.primary) ? "#000000" : "#FFFFFF" }}
+                >
+                  + CUT
+                </Text>
                 <Svg width="8" height="8" style={{ position: "absolute", top: -1, left: -1, zIndex: 20 }}>
                   <Path d="M0,0 L8,0 L0,8 Z" fill={colors.card} />
                 </Svg>
@@ -113,7 +132,12 @@ export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCar
               </Pressable>
             ) : onAdd ? (
               <Pressable onPress={onAdd} disabled={outOfStock} className="rounded-none px-3 py-2 opacity-100 disabled:opacity-40 overflow-hidden relative" style={{ backgroundColor: colors.primary }}>
-                <Text className="text-[9px] font-black uppercase text-white relative z-10">+ ADD</Text>
+                <Text 
+                  className="text-[9px] font-black uppercase relative z-10" 
+                  style={{ color: isLightColor(colors.primary) ? "#000000" : "#FFFFFF" }}
+                >
+                  + ADD
+                </Text>
                 <Svg width="8" height="8" style={{ position: "absolute", top: -1, left: -1, zIndex: 20 }}>
                   <Path d="M0,0 L8,0 L0,8 Z" fill={colors.card} />
                 </Svg>

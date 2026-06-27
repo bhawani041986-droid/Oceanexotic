@@ -24,6 +24,7 @@ import { useHomeData } from "@/hooks/useHomeData";
 import { useProducts } from "@/hooks/useProducts";
 import { useFlashDealTimer } from "@/hooks/useFlashDealTimer";
 import { ProductCard } from "@/components/customer/ProductCard";
+import type { Product } from "@/services/productService";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useCartStore } from "@/store/cartStore";
 import { CATEGORIES, getSortedCategories } from "@/constants/categories";
@@ -341,13 +342,42 @@ export default function CustomerHomeScreen() {
   const colors = useThemeColors();
   const primaryColor = colors.primary;
 
-  const getRgba = (hex: string, alpha: number) => {
-    const cleanHex = hex.replace("#", "");
+  const isLightColor = useCallback((colorStr: string) => {
+    if (!colorStr || !colorStr.startsWith("#")) return false;
+    let cleanHex = colorStr.replace("#", "");
+    if (cleanHex.length === 3) {
+      cleanHex = cleanHex.split("").map(c => c + c).join("");
+    }
+    if (cleanHex.length !== 6) return false;
     const r = parseInt(cleanHex.substring(0, 2), 16);
     const g = parseInt(cleanHex.substring(2, 4), 16);
     const b = parseInt(cleanHex.substring(4, 6), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  };
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 180;
+  }, []);
+
+  const getRgba = useCallback((colorStr: string, alpha: number) => {
+    if (!colorStr) return `rgba(0, 0, 0, ${alpha})`;
+    if (colorStr.startsWith("rgba(")) {
+      return colorStr.replace(/[\d.]+\)$/, `${alpha})`);
+    }
+    if (colorStr.startsWith("rgb(")) {
+      return colorStr.replace("rgb(", "rgba(").replace(")", `, ${alpha})`);
+    }
+    if (colorStr.startsWith("#")) {
+      let cleanHex = colorStr.replace("#", "");
+      if (cleanHex.length === 3) {
+        cleanHex = cleanHex.split("").map(c => c + c).join("");
+      }
+      if (cleanHex.length === 6) {
+        const r = parseInt(cleanHex.substring(0, 2), 16);
+        const g = parseInt(cleanHex.substring(2, 4), 16);
+        const b = parseInt(cleanHex.substring(4, 6), 16);
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      }
+    }
+    return colorStr;
+  }, []);
 
   useEffect(() => {
     settings.fetchSettings();
@@ -581,7 +611,10 @@ export default function CustomerHomeScreen() {
                       title={t('todays_catch')}
                       subtitle="Live Harbor Arrival • Freshness Guaranteed"
                     />
-                     <View className="flex-row flex-wrap rounded-none border border-white/5 bg-secondary/40 p-1">
+                     <View 
+                       className="flex-row flex-wrap rounded-none border p-1"
+                       style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}
+                     >
                       {(["ALL", "MORNING", "AFTERNOON", "EVENING"] as BatchFilter[]).map((batch) => (
                         <Pressable
                           key={batch}
@@ -592,7 +625,7 @@ export default function CustomerHomeScreen() {
                           <Text
                             className="text-[9px] font-black uppercase tracking-widest"
                             style={{
-                              color: activeBatch === batch ? "#FFFFFF" : colors.textMuted
+                              color: activeBatch === batch ? (isLightColor(primaryColor) ? "#000000" : "#FFFFFF") : colors.textMuted
                             }}
                           >
                             {t(batch.toLowerCase())}
@@ -618,7 +651,8 @@ export default function CustomerHomeScreen() {
                       {[0, 1, 2, 3].map((i) => (
                         <View
                           key={i}
-                          className="h-64 w-[47%] animate-pulse rounded-none bg-secondary/40"
+                          className="h-64 w-[47%] animate-pulse rounded-none"
+                          style={{ backgroundColor: colors.isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)" }}
                         />
                       ))}
                     </View>
@@ -662,7 +696,7 @@ export default function CustomerHomeScreen() {
               );
             case "FEATURED":
               return (
-                <View key="FEATURED" className="border-y border-white/5 bg-secondary/20 px-4 py-8">
+                <View key="FEATURED" className="border-y px-4 py-8" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
                   <SectionTitle title="Featured Seafood" subtitle="Premium Fresh Quality" />
                   {featured.length > 0 ? (
                     <View className="mt-4 flex-row flex-wrap justify-between gap-y-3">
@@ -696,7 +730,7 @@ export default function CustomerHomeScreen() {
                       className="px-3 py-1.5 rounded-none border relative overflow-hidden"
                       style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderColor: colors.border }}
                     >
-                      <Text className="text-[9px] font-black uppercase tracking-widest text-primary">VIEW ALL ➜</Text>
+                      <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>VIEW ALL ➜</Text>
                       <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
                         <Path d="M0,0 L6,0 L0,6 Z" fill={colors.bg} />
                         <Path d="M6,0 L0,6" stroke={colors.border} strokeWidth={1} />
@@ -1148,8 +1182,8 @@ export default function CustomerHomeScreen() {
                         <Svg width={subEmailLayout.width} height={subEmailLayout.height} style={StyleSheet.absoluteFill}>
                           <Path
                             d={`M10,0 L${subEmailLayout.width},0 L${subEmailLayout.width},${subEmailLayout.height} L0,${subEmailLayout.height} L0,10 Z`}
-                            fill="rgba(0,0,0,0.4)"
-                            stroke="rgba(255, 255, 255, 0.1)"
+                            fill={colors.isDark ? "rgba(0,0,0,0.4)" : "rgba(0,0,0,0.04)"}
+                            stroke={colors.isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.08)"}
                             strokeWidth="1"
                           />
                         </Svg>
@@ -1180,7 +1214,10 @@ export default function CustomerHomeScreen() {
                           />
                         </Svg>
                       ) : null}
-                      <Text className="text-[10px] font-black text-white uppercase tracking-[0.2em] relative z-10">
+                      <Text 
+                        className="text-[10px] font-black uppercase tracking-[0.2em] relative z-10"
+                        style={{ color: isLightColor(primaryColor) ? "#000000" : "#FFFFFF" }}
+                      >
                         SUBSCRIBE NOW
                       </Text>
                     </Pressable>

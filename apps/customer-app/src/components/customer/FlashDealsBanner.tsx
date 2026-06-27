@@ -46,6 +46,21 @@ const FloatingIcon = ({ Icon, top, left, color, delay, size, rotate = '0deg' }: 
 export function FlashDealsBanner() {
   const settings = useSettingsStore();
   const colors = useThemeColors();
+
+  const isLightColor = (colorStr: string) => {
+    if (!colorStr || !colorStr.startsWith("#")) return false;
+    let cleanHex = colorStr.replace("#", "");
+    if (cleanHex.length === 3) {
+      cleanHex = cleanHex.split("").map(c => c + c).join("");
+    }
+    if (cleanHex.length !== 6) return false;
+    const r = parseInt(cleanHex.substring(0, 2), 16);
+    const g = parseInt(cleanHex.substring(2, 4), 16);
+    const b = parseInt(cleanHex.substring(4, 6), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 180;
+  };
+
   const { timeLeft, timerStatus } = useFlashDealTimer();
   const router = useRouter();
 
@@ -179,9 +194,9 @@ export function FlashDealsBanner() {
                     >
                       <View style={{ width: 90, height: 26, justifyContent: 'center', alignItems: 'center' }}>
                         <Svg style={StyleSheet.absoluteFill} viewBox="0 0 90 26" preserveAspectRatio="none">
-                          <Polygon points="6,0 90,0 90,20 84,26 0,26 0,6" fill="#FFFFFF" />
+                          <Polygon points="6,0 90,0 90,20 84,26 0,26 0,6" fill={colors.primary} />
                         </Svg>
-                        <Text style={[styles.btnText, { color: colors.primary, fontSize: 7 }]}>VIEW DETAILS</Text>
+                        <Text style={[styles.btnText, { color: isLightColor(colors.primary) ? "#000000" : "#FFFFFF", fontSize: 7 }]}>VIEW DETAILS</Text>
                       </View>
                     </Pressable>
                   </View>

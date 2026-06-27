@@ -50,6 +50,21 @@ export default function ProductsScreen() {
   const cart = useCartStore();
   const colors = useThemeColors();
   const settings = useSettingsStore();
+
+  const isLightColor = (colorStr: string) => {
+    if (!colorStr || !colorStr.startsWith("#")) return false;
+    let cleanHex = colorStr.replace("#", "");
+    if (cleanHex.length === 3) {
+      cleanHex = cleanHex.split("").map(c => c + c).join("");
+    }
+    if (cleanHex.length !== 6) return false;
+    const r = parseInt(cleanHex.substring(0, 2), 16);
+    const g = parseInt(cleanHex.substring(2, 4), 16);
+    const b = parseInt(cleanHex.substring(4, 6), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 180;
+  };
+
   const currentLanguage = useSettingsStore((s) => s.language); // force re-render
 
   const [searchText, setSearchText] = useState(params.search ?? "");
@@ -312,7 +327,7 @@ export default function ProductsScreen() {
                 <Pressable onPress={() => setActiveTab(tab)}>
                   <Text
                     className="text-[9px] font-black uppercase"
-                    style={{ color: active ? "#FFFFFF" : colors.textMuted }}
+                    style={{ color: active ? (isLightColor(colors.primary) ? "#000000" : "#FFFFFF") : colors.textMuted }}
                   >
                     {tab}
                   </Text>
@@ -463,7 +478,12 @@ export default function ProductsScreen() {
                                   <View className="mt-2 flex-row items-center justify-between border-t pt-2" style={{ borderTopColor: colors.border }}>
                                     <Text className="text-[10px] font-black text-emerald-400">₹{addon.price}</Text>
                                     <Pressable onPress={() => handleAddAddon(addon)} className="rounded-none px-3 py-1.5" style={{ backgroundColor: colors.primary }}>
-                                      <Text className="text-[8px] font-black uppercase text-white">+ ADD</Text>
+                                      <Text 
+                                        className="text-[8px] font-black uppercase" 
+                                        style={{ color: isLightColor(colors.primary) ? "#000000" : "#FFFFFF" }}
+                                      >
+                                        + ADD
+                                      </Text>
                                     </Pressable>
                                   </View>
                                 </View>
@@ -503,7 +523,12 @@ export default function ProductsScreen() {
             </Text>
             {searchText.trim() ? (
               <Pressable onPress={() => setSearchText('')} className="mt-4 px-4 py-2" style={{ backgroundColor: colors.primary, borderRadius: 4 }}>
-                <Text className="text-[10px] font-black uppercase" style={{ color: '#FFFFFF' }}>Clear Search</Text>
+                <Text 
+                  className="text-[10px] font-black uppercase" 
+                  style={{ color: isLightColor(colors.primary) ? "#000000" : "#FFFFFF" }}
+                >
+                  Clear Search
+                </Text>
               </Pressable>
             ) : (
               <Pressable onPress={() => router.replace("/home")} className="mt-4">
