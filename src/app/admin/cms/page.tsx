@@ -71,7 +71,7 @@ export default function AdminCMSPage() {
 
   // Home Screen Section Layout Order State
   const [homeSections, setHomeSections] = useState<string[]>([
-    "HERO", "CATEGORIES", "TODAYS_CATCH", "FEATURED", "RECIPES", "PROMO", "SELLERS", "RADAR", "TRUST", "REVIEWS", "NEWSLETTER"
+    "HERO", "CATEGORIES", "TODAYS_CATCH", "FEATURED", "RECIPES", "PROMO", "SELLERS", "RADAR", "REVIEWS", "NEWSLETTER", "QUALITY_CHECKED", "FSSAI"
   ]);
   const [isSavingLayout, setIsSavingLayout] = useState(false);
 
@@ -88,7 +88,19 @@ export default function AdminCMSPage() {
       const settingsRes = await fetch(`${API_BASE_URL}/system/settings`);
       const settingsData = await settingsRes.json();
       if (settingsData.status === 'success' && settingsData.settings?.HOME_SECTION_ORDER) {
-        setHomeSections(settingsData.settings.HOME_SECTION_ORDER);
+        let order = settingsData.settings.HOME_SECTION_ORDER;
+        if (Array.isArray(order)) {
+          if (order.includes("TRUST")) {
+            const trustIndex = order.indexOf("TRUST");
+            order = [
+              ...order.slice(0, trustIndex),
+              "QUALITY_CHECKED",
+              "FSSAI",
+              ...order.slice(trustIndex + 1)
+            ];
+          }
+        }
+        setHomeSections(order);
       }
     } catch (error) {
       console.error("Registry Fetch Failed:", error);

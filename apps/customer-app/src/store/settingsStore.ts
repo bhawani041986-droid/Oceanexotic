@@ -97,7 +97,7 @@ export const useSettingsStore = create<SettingsState>()(
         { id: "SEL-004", name: "Rig Fishing", rating: 4.8, speed: "45 min", image: "🚢", products: ["🦞", "🦀", "🦐"] },
       ],
       productCategories: [],
-      homeSectionOrder: ["HERO", "CATEGORIES", "TODAYS_CATCH", "FEATURED", "RECIPES", "PROMO", "SELLERS", "RADAR", "TRUST", "REVIEWS", "NEWSLETTER"],
+      homeSectionOrder: ["HERO", "CATEGORIES", "TODAYS_CATCH", "FEATURED", "RECIPES", "PROMO", "SELLERS", "RADAR", "REVIEWS", "NEWSLETTER", "QUALITY_CHECKED", "FSSAI"],
 
       setSettings: (partial) =>
         set((s) => {
@@ -137,7 +137,21 @@ export const useSettingsStore = create<SettingsState>()(
             customerAssets: sanitized,
             topSellers: (settings.topSellers as any) || get().topSellers,
             productCategories: (settings.PRODUCT_CATEGORIES as any) || get().productCategories,
-            homeSectionOrder: (settings.HOME_SECTION_ORDER as any) || get().homeSectionOrder,
+            homeSectionOrder: (() => {
+              let order = (settings.HOME_SECTION_ORDER as any) || get().homeSectionOrder;
+              if (Array.isArray(order)) {
+                if (order.includes("TRUST")) {
+                  const trustIndex = order.indexOf("TRUST");
+                  order = [
+                    ...order.slice(0, trustIndex),
+                    "QUALITY_CHECKED",
+                    "FSSAI",
+                    ...order.slice(trustIndex + 1)
+                  ];
+                }
+              }
+              return order;
+            })(),
           });
         } catch {
           /* keep persisted defaults */

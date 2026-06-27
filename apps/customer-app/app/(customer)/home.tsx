@@ -18,6 +18,9 @@ import Animated, { FadeIn, FadeOut, FadeInDown } from "react-native-reanimated";
 import { LinearGradient } from "expo-linear-gradient";
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);
+const IMG_NEWSLETTER_BANNER = require("../../assets/newsletter_banner.jpg");
+const IMG_QUALITY_CHECKED_BANNER = require("../../assets/quality_checked_banner.jpg");
+const IMG_FSSAI_BANNER = require("../../assets/fssai_banner.jpg");
 import { useRouter } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useHomeData } from "@/hooks/useHomeData";
@@ -306,8 +309,7 @@ export default function CustomerHomeScreen() {
   const [selectedCut, setSelectedCut] = useState<CutOption | null>(null);
   const [cutLoading, setCutLoading] = useState(false);
   const [cutOpen, setCutOpen] = useState(false);
-  const [subEmailLayout, setSubEmailLayout] = useState({ width: 0, height: 0 });
-  const [subBtnLayout, setSubBtnLayout] = useState({ width: 0, height: 0 });
+
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [liveReviews, setLiveReviews] = useState<any[]>([]);
 
@@ -475,7 +477,7 @@ export default function CustomerHomeScreen() {
         }
       >
         {/* Render Sections dynamically based on settings.homeSectionOrder */}
-        {(settings.homeSectionOrder || ["HERO", "CATEGORIES", "TODAYS_CATCH", "FEATURED", "RECIPES", "PROMO", "SELLERS", "RADAR", "TRUST", "REVIEWS", "NEWSLETTER"]).map((sectionId) => {
+        {(settings.homeSectionOrder || ["HERO", "CATEGORIES", "TODAYS_CATCH", "FEATURED", "RECIPES", "PROMO", "SELLERS", "RADAR", "REVIEWS", "NEWSLETTER", "QUALITY_CHECKED", "FSSAI"]).map((sectionId) => {
           switch (sectionId) {
             case "HERO":
               return (
@@ -1032,85 +1034,34 @@ export default function CustomerHomeScreen() {
               return (
                 <AndamanMaritimeTelemetry key="RADAR" territories={territories.data ?? []} />
               );
-            case "TRUST":
-              return (
-                <View key="TRUST">
-                  {/* High-Tech Trust Badge Grid */}
-                  <View className="px-4 py-4" style={{ borderBottomColor: colors.border, borderBottomWidth: 1 }}>
-                    <View className="flex-row justify-between gap-2">
-                      {[ 
-                        { icon: "🛡️", title: "Quality Checked", subtitle: "Verified Seller", color: "#00ff88" }, 
-                        { icon: "⚡", title: "Instant", subtitle: "90 Min Dispatch", color: "#eab308" }, 
-                        { icon: "❄️", title: "Cold-Chain", subtitle: "0°C Controlled", color: "#00d4ff" }, 
-                        { icon: "📍", title: "Local Catch", subtitle: "Port Blair Hub", color: "#ef4444" } 
-                      ].map((item, i) => (
-                        <ChamferedBox 
-                          key={i} 
-                          fillColor={colors.card}
-                          strokeColor={colors.border}
-                          bevelSize={12}
-                          style={{ minHeight: 90 }}
-                          className="flex-1 relative overflow-hidden"
-                          contentClassName="items-center justify-center p-3 w-full"
-                        >
-                          <ChamferedBox 
-                            fillColor={`${item.color}15`}
-                            strokeColor={`${item.color}30`}
-                            bevelSize={6}
-                            style={{ minHeight: 40 }}
-                            className="w-10 h-10 relative overflow-hidden mb-2 shadow-lg"
-                            contentClassName="w-full h-full items-center justify-center"
-                          >
-                            <Text className="text-lg relative z-10">{item.icon}</Text>
-                          </ChamferedBox>
-                          <Text className="text-[8px] font-black uppercase italic tracking-wider text-center" style={{ color: colors.text }}>{item.title}</Text>
-                          <Text className="text-[5.5px] font-bold uppercase text-center mt-0.5" style={{ color: colors.textMuted }}>{item.subtitle}</Text>
-                        </ChamferedBox>
-                      ))}
-                    </View>
+            case "QUALITY_CHECKED":
+              {
+                const qualityWidth = width - 32;
+                const qualityHeight = qualityWidth / 2.504;
+                return (
+                  <View key="QUALITY_CHECKED" className="mx-4 mb-8 relative overflow-hidden" style={{ width: qualityWidth, height: qualityHeight }}>
+                    <Image
+                      source={IMG_QUALITY_CHECKED_BANNER}
+                      style={{ width: "100%", height: "100%" }}
+                      contentFit="cover"
+                    />
                   </View>
-
-                  {/* Trust strip */}
-                  <ChamferedBox
-                    fillColor={colors.card}
-                    strokeColor={colors.border}
-                    bevelSize={12}
-                    style={{ minHeight: 50 }}
-                    className="mx-4 my-8"
-                    contentClassName="flex-row flex-wrap justify-between items-center w-full gap-2 p-3"
-                  >
-                    {["FSSAI AUTH", "COLD-CHAIN", "SUSTAINABLE"].map((label) => {
-                      const isFssai = label === "FSSAI AUTH";
-                      const badgeColor = isFssai ? "#F97316" : primaryColor;
-                      return (
-                        <ChamferedBox 
-                          key={label} 
-                          fillColor={getRgba(badgeColor, 0.1)}
-                          strokeColor={getRgba(badgeColor, 0.2)}
-                          bevelSize={4}
-                          style={{ minHeight: 22 }}
-                          className="flex-shrink"
-                          contentClassName="w-auto flex-shrink px-3 py-1"
-                        >
-                          {isFssai ? (
-                            <View className="items-center justify-center">
-                              <View className="flex-row items-baseline -mt-[2px]">
-                                <Text className="text-[10px] italic leading-none" style={{ color: "#0c3f87", fontWeight: '800', fontFamily: 'serif', letterSpacing: -0.5 }}>fssa</Text>
-                                <Text className="text-[10px] italic leading-none" style={{ color: "#F97316", fontWeight: '800', fontFamily: 'serif' }}>i</Text>
-                              </View>
-                              <Text className="text-[4px] font-black leading-none" style={{ color: badgeColor }} numberOfLines={1}>
-                                Reg. No. 22926204000077
-                              </Text>
-                            </View>
-                          ) : (
-                            <Text className="text-[8px] font-black uppercase text-center" style={{ color: badgeColor }}>{label}</Text>
-                          )}
-                        </ChamferedBox>
-                      );
-                    })}
-                  </ChamferedBox>
-                </View>
-              );
+                );
+              }
+            case "FSSAI":
+              {
+                const fssaiWidth = width - 32;
+                const fssaiHeight = fssaiWidth / 3.003;
+                return (
+                  <View key="FSSAI" className="mx-4 mb-8 relative overflow-hidden" style={{ width: fssaiWidth, height: fssaiHeight }}>
+                    <Image
+                      source={IMG_FSSAI_BANNER}
+                      style={{ width: "100%", height: "100%" }}
+                      contentFit="cover"
+                    />
+                  </View>
+                );
+              }
             case "REVIEWS":
               return (
                 <View key="REVIEWS" className="pb-8">
@@ -1142,96 +1093,52 @@ export default function CustomerHomeScreen() {
                 </View>
               );
             case "NEWSLETTER":
-              return (
-                <ChamferedBox
-                  key="NEWSLETTER"
-                  fillColor={colors.card}
-                  strokeColor={colors.border}
-                  bevelSize={24}
-                  style={{ minHeight: 220 }}
-                  className="mx-4 mb-8 p-6 relative overflow-hidden"
-                >
-                  <LinearGradient
-                    colors={["transparent", getRgba(primaryColor, 0.06)]}
-                    style={StyleSheet.absoluteFill}
-                  />
-                  <LinearGradient
-                    colors={["transparent", primaryColor, "transparent"]}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
-                    className="absolute top-0 left-0 right-0 h-[1px] opacity-30"
-                  />
-                  <View className="space-y-2 items-center text-center relative z-10">
-                    <Text className="text-[7.5px] font-black uppercase tracking-[0.4em]" style={{ color: primaryColor }}>
-                      Global Dispatch Subscription
-                    </Text>
-                    <Text className="text-2xl font-black uppercase italic text-center" style={{ color: colors.text }}>
-                      Join Our Newsletter.
-                    </Text>
-                    <Text className="text-[9px] text-center italic max-w-[280px]" style={{ color: colors.textMuted }}>
-                      Join our newsletter for the latest fresh catches and exclusive offers.
-                    </Text>
-                  </View>
-                  <View className="mt-5 space-y-2 relative z-10">
-                    <View 
-                      onLayout={(e) => setSubEmailLayout(e.nativeEvent.layout)}
-                      className="px-4 relative overflow-hidden flex-row items-center"
-                      style={{ height: 50 }}
-                    >
-                      {subEmailLayout.width > 0 && subEmailLayout.height > 0 ? (
-                        <Svg width={subEmailLayout.width} height={subEmailLayout.height} style={StyleSheet.absoluteFill}>
-                          <Path
-                            d={`M10,0 L${subEmailLayout.width},0 L${subEmailLayout.width},${subEmailLayout.height} L0,${subEmailLayout.height} L0,10 Z`}
-                            fill={colors.isDark ? "rgba(0,0,0,0.4)" : "rgba(0,0,0,0.04)"}
-                            stroke={colors.isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.08)"}
-                            strokeWidth="1"
-                          />
-                        </Svg>
-                      ) : null}
-                      <TextInput
-                        value={newsletterEmail}
-                        onChangeText={setNewsletterEmail}
-                        placeholder="ENTER YOUR EMAIL ADDRESS"
-                        placeholderTextColor={`${colors.textMuted}aa`}
-                        keyboardType="email-address"
-                        autoCapitalize="none"
-                        autoCorrect={false}
-                        className="w-full text-xs italic tracking-wider relative z-10"
-                        style={{ color: colors.text }}
-                      />
-                    </View>
+              {
+                const newsletterWidth = width - 32;
+                const newsletterHeight = newsletterWidth / 1.469;
+                return (
+                  <View 
+                    key="NEWSLETTER" 
+                    className="mx-4 mb-8 relative overflow-hidden" 
+                    style={{ width: newsletterWidth, height: newsletterHeight }}
+                  >
+                    <Image
+                      source={IMG_NEWSLETTER_BANNER}
+                      style={{ width: "100%", height: "100%" }}
+                      contentFit="cover"
+                    />
+                    <TextInput
+                      value={newsletterEmail}
+                      onChangeText={setNewsletterEmail}
+                      placeholder="ENTER YOUR EMAIL ADDRESS"
+                      placeholderTextColor="#94A3B8"
+                      keyboardType="email-address"
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      style={{
+                        position: 'absolute',
+                        top: '46%',
+                        left: '20%',
+                        width: '72%',
+                        height: '13%',
+                        fontSize: newsletterWidth * 0.035,
+                        color: '#1E293B',
+                        fontWeight: 'bold',
+                      }}
+                    />
                     <Pressable
                       onPress={handleSubscribeNewsletter}
-                      onLayout={(e) => setSubBtnLayout(e.nativeEvent.layout)}
-                      className="py-3.5 items-center justify-center relative overflow-hidden"
-                      style={{ height: 50 }}
-                    >
-                      {subBtnLayout.width > 0 && subBtnLayout.height > 0 ? (
-                        <Svg width={subBtnLayout.width} height={subBtnLayout.height} style={StyleSheet.absoluteFill}>
-                          <Polygon
-                            points={`15,0 ${subBtnLayout.width},0 ${subBtnLayout.width - 15},${subBtnLayout.height} 0,${subBtnLayout.height}`}
-                            fill={primaryColor}
-                          />
-                        </Svg>
-                      ) : null}
-                      <Text 
-                        className="text-[10px] font-black uppercase tracking-[0.2em] relative z-10"
-                        style={{ color: isLightColor(primaryColor) ? "#000000" : "#FFFFFF" }}
-                      >
-                        SUBSCRIBE NOW
-                      </Text>
-                    </Pressable>
+                      style={{
+                        position: 'absolute',
+                        top: '67%',
+                        left: '6%',
+                        width: '88%',
+                        height: '14%',
+                      }}
+                    />
                   </View>
-                  <View 
-                    className="absolute top-2 right-2 w-4 h-4 border-t border-r z-10" 
-                    style={{ borderColor: getRgba(primaryColor, 0.2) }}
-                  />
-                  <View 
-                    className="absolute bottom-2 left-2 w-4 h-4 border-b border-l z-10" 
-                    style={{ borderColor: getRgba(primaryColor, 0.2) }}
-                  />
-                </ChamferedBox>
-              );
+                );
+              }
             default:
               return null;
           }
