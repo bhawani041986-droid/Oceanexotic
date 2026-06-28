@@ -251,6 +251,9 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                 fontSize: 13,
                 fontFamily: "Inter_400Regular",
                 paddingHorizontal: 8,
+                paddingVertical: 0, // Fix for Android text clipping
+                includeFontPadding: false,
+                textAlignVertical: 'center',
               }}
             />
             
@@ -263,6 +266,18 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                 left: '2%',
                 width: '12%',
                 height: '46%',
+              }}
+            />
+
+            {/* Delivery Hub Location Arrow Click Overlay */}
+            <Pressable
+              onPress={() => console.log('Delivery Hub clicked')} // Placeholder action
+              style={{
+                position: 'absolute',
+                bottom: '0%',
+                left: '0%',
+                width: '100%',
+                height: '50%',
               }}
             />
           </View>
