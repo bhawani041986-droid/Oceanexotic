@@ -643,30 +643,42 @@ export default function CustomerHomeScreen() {
                     <ScrollView 
                       horizontal 
                       showsHorizontalScrollIndicator={false} 
-                      contentContainerStyle={{ paddingHorizontal: 16, gap: 8 }}
+                      contentContainerStyle={{ paddingHorizontal: 16, gap: 10 }}
                     >
                       {(settings.productCategories || [])
                         .filter(c => c.status?.toUpperCase() !== "INACTIVE")
                         .map((cat, idx) => {
-                          const fallbackSource = require("../../assets/categories/seawater.jpg");
-                          const imageSource = cat.imageUrl ? { uri: cat.imageUrl } : fallbackSource;
+                          const l = (cat.label || "").toLowerCase();
+                          let iconSource = require("../../assets/categories/seawater.jpg"); // default fallback
+                          
+                          if (l.includes("freshwater")) iconSource = require("../../assets/categories/new/freshwater.png");
+                          else if (l.includes("prawn") || l.includes("shrimp")) iconSource = require("../../assets/categories/new/prawns.png");
+                          else if (l.includes("crab") || l.includes("lobster")) iconSource = require("../../assets/categories/new/crabs.png");
+                          else if (l.includes("steak") || l.includes("fillet")) iconSource = require("../../assets/categories/new/steaks.png");
+                          else if (l.includes("exotic")) iconSource = require("../../assets/categories/new/exotic.png");
+                          else if (l.includes("cook") || l.includes("eat")) iconSource = require("../../assets/categories/new/ready_to_cook.png");
+                          else if (l.includes("dry")) iconSource = require("../../assets/categories/new/dry_fish.png");
+                          else if (l.includes("mutton")) iconSource = require("../../assets/categories/new/mutton.png");
+                          else if (l.includes("chicken")) iconSource = require("../../assets/categories/new/chicken.png");
+                          else if (l.includes("seawater")) iconSource = require("../../assets/categories/new/seawater.png");
+                          else if (cat.imageUrl) iconSource = { uri: cat.imageUrl };
 
                           return (
                             <Pressable 
                               key={cat.id || idx}
                               onPress={() => router.push({ pathname: "/products", params: { category: cat.id } })}
-                              style={{ width: 64, alignItems: 'center' }}
+                              style={{ width: 62, alignItems: 'center' }}
                             >
-                              <View style={{ width: '100%', aspectRatio: 0.7 }}>
+                              <View style={{ width: 62, height: 62, borderRadius: 12, overflow: 'hidden', backgroundColor: '#F8FAFC', borderWidth: 1, borderColor: '#E2E8F0' }}>
                                 <Image
-                                  source={imageSource}
+                                  source={iconSource}
                                   style={{ width: '100%', height: '100%' }}
-                                  contentFit="contain"
+                                  contentFit="cover"
                                 />
                               </View>
                               {cat.label && (
                                 <Text 
-                                  className="text-[7px] font-black uppercase text-center mt-1.5 leading-tight" 
+                                  className="text-[7.5px] font-black uppercase text-center mt-2 leading-tight" 
                                   style={{ color: colors.text }}
                                   numberOfLines={2}
                                 >
