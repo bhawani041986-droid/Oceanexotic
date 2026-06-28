@@ -226,11 +226,42 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
         </View>
 
         {showSearch && pathname !== "/login" && pathname !== "/products" ? (
-          <View className="mt-2 w-full relative" style={{ aspectRatio: 2.0 }}>
+          <View className="mt-2 w-full relative" style={{ aspectRatio: 7.212 }}>
             <Image
-              source={require("../../../assets/pre_orders_mockup.jpg")}
+              source={require("../../../assets/search_and_hub_mockup.jpg")}
               style={StyleSheet.absoluteFillObject}
-              contentFit="contain"
+              contentFit="fill"
+            />
+            {/* Transparent absolute TextInput overlay */}
+            <TextInput
+              value={search}
+              onChangeText={setSearch}
+              onSubmitEditing={onSearch}
+              placeholder="Search products..."
+              placeholderTextColor="transparent" // Hide placeholder text to prevent overlap
+              returnKeyType="search"
+              style={{
+                position: 'absolute',
+                top: '2%',
+                left: '14%',
+                width: '68%',
+                height: '44%',
+                color: '#334155', // dark slate text color for visibility
+                fontSize: 8,
+                paddingHorizontal: 8,
+              }}
+            />
+            
+            {/* Search Icon Click Overlay */}
+            <Pressable
+              onPress={onSearch}
+              style={{
+                position: 'absolute',
+                top: '2%',
+                left: '2%',
+                width: '12%',
+                height: '44%',
+              }}
             />
           </View>
         ) : null}
