@@ -548,11 +548,11 @@ export default function CustomerHomeScreen() {
                     )}
 
                     {/* Relocated Search Bar & Delivery Hub Widget (Absolute Bottom Right) */}
-                    <View className="absolute bottom-4 right-4 w-[65%] z-30 pointer-events-auto" style={{ aspectRatio: 3.606 }}>
+                    <View className="absolute bottom-4 right-4 w-[65%] z-30 pointer-events-auto" style={{ aspectRatio: 7.212 }}>
                       <Image
                         source={require("../../assets/search_and_hub_mockup.jpg")}
                         style={StyleSheet.absoluteFillObject}
-                        contentFit="contain"
+                        contentFit="fill"
                       />
                       {/* Transparent absolute TextInput overlay */}
                       <TextInput
@@ -569,7 +569,7 @@ export default function CustomerHomeScreen() {
                           width: '68%',
                           height: '44%',
                           color: '#334155', // dark slate text color for visibility
-                          fontSize: 10,
+                          fontSize: 8,
                           paddingHorizontal: 6,
                         }}
                       />
