@@ -279,101 +279,109 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                   style={{ position: 'absolute', top: '11.3%', left: '5%', width: '90%', height: '8.8%' }}
                 />
 
-                {MENU_ITEMS.map((item, idx) => {
-                  const active = isItemActive(item.href);
-                  const topPercent = `${22.0 + idx * 9.0}%`;
-                  return (
-                    <Pressable
-                      key={item.href}
-                      onPress={() => navigateTo(item.href)}
-                      style={{
-                        position: 'absolute',
-                        top: topPercent as any,
-                        left: '5%',
-                        width: '90%',
-                        height: '7.0%',
-                        backgroundColor: active ? "rgba(14, 165, 233, 0.08)" : "#ffffff",
-                        borderColor: active ? "rgba(14, 165, 233, 0.2)" : "#f1f5f9",
-                        borderWidth: 1.5,
-                        borderRadius: 10,
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        paddingHorizontal: 12,
-                      }}
-                    >
-                      <View style={{ width: 22, height: 22, borderRadius: 11, backgroundColor: active ? "rgba(14, 165, 233, 0.15)" : "#f1f5f9", justifyContent: 'center', alignItems: 'center' }}>
-                        <MaterialCommunityIcons 
-                          name={item.icon as any} 
-                          size={12} 
-                          color={active ? primaryColor : "#64748B"} 
-                        />
-                      </View>
-                      <Text 
-                        style={{
-                          marginLeft: 10,
-                          fontSize: 12,
-                          fontWeight: '700',
-                          color: active ? primaryColor : "#475569",
-                          flex: 1
-                        }}
-                      >
-                        {item.label}
-                      </Text>
-                      <MaterialCommunityIcons 
-                        name="chevron-right" 
-                        size={14} 
-                        color={active ? primaryColor : "#94A3B8"} 
-                      />
-                    </Pressable>
-                  );
-                })}
-
-                {/* Sign Out */}
-                <Pressable
-                  onPress={() => {
-                    setIsMenuOpen(false);
-                    logout();
-                    router.replace("/login");
-                  }}
-                  style={{
-                    position: 'absolute',
-                    top: '85.0%',
-                    left: '5%',
-                    width: '90%',
-                    height: '7.0%',
-                    backgroundColor: "rgba(239, 68, 68, 0.08)",
-                    borderColor: "rgba(239, 68, 68, 0.2)",
-                    borderWidth: 1.5,
-                    borderRadius: 10,
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    paddingHorizontal: 12,
+                {/* Solid White Masking Container to cover printed JPEG menu buttons */}
+                <View 
+                  style={{ 
+                    position: 'absolute', 
+                    top: 98, 
+                    left: 0, 
+                    width: 300, 
+                    height: 330, 
+                    backgroundColor: '#ffffff', 
+                    paddingHorizontal: 15, 
+                    gap: 7, 
+                    justifyContent: 'center' 
                   }}
                 >
-                  <View style={{ width: 22, height: 22, borderRadius: 11, backgroundColor: "rgba(239, 68, 68, 0.15)", justifyContent: 'center', alignItems: 'center' }}>
+                  {MENU_ITEMS.map((item) => {
+                    const active = isItemActive(item.href);
+                    return (
+                      <Pressable
+                        key={item.href}
+                        onPress={() => navigateTo(item.href)}
+                        style={{
+                          width: '100%',
+                          height: 32,
+                          backgroundColor: active ? "rgba(14, 165, 233, 0.06)" : "#ffffff",
+                          borderColor: active ? "rgba(14, 165, 233, 0.15)" : "#f1f5f9",
+                          borderWidth: 1.2,
+                          borderRadius: 8,
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          paddingHorizontal: 10,
+                        }}
+                      >
+                        <View style={{ width: 20, height: 20, borderRadius: 10, backgroundColor: active ? "rgba(14, 165, 233, 0.12)" : "#f1f5f9", justifyContent: 'center', alignItems: 'center' }}>
+                          <MaterialCommunityIcons 
+                            name={item.icon as any} 
+                            size={11} 
+                            color={active ? primaryColor : "#64748B"} 
+                          />
+                        </View>
+                        <Text 
+                          style={{
+                            marginLeft: 8,
+                            fontSize: 11,
+                            fontWeight: '700',
+                            color: active ? primaryColor : "#475569",
+                            flex: 1
+                          }}
+                        >
+                          {item.label}
+                        </Text>
+                        <MaterialCommunityIcons 
+                          name="chevron-right" 
+                          size={12} 
+                          color={active ? primaryColor : "#94A3B8"} 
+                        />
+                      </Pressable>
+                    );
+                  })}
+
+                  {/* Sign Out Card */}
+                  <Pressable
+                    onPress={() => {
+                      setIsMenuOpen(false);
+                      logout();
+                      router.replace("/login");
+                    }}
+                    style={{
+                      width: '100%',
+                      height: 32,
+                      backgroundColor: "rgba(239, 68, 68, 0.06)",
+                      borderColor: "rgba(239, 68, 68, 0.15)",
+                      borderWidth: 1.2,
+                      borderRadius: 8,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      paddingHorizontal: 10,
+                    }}
+                  >
+                    <View style={{ width: 20, height: 20, borderRadius: 10, backgroundColor: "rgba(239, 68, 68, 0.12)", justifyContent: 'center', alignItems: 'center' }}>
+                      <MaterialCommunityIcons 
+                        name="logout" 
+                        size={11} 
+                        color="#ef4444" 
+                      />
+                    </View>
+                    <Text 
+                      style={{
+                        marginLeft: 8,
+                        fontSize: 11,
+                        fontWeight: '700',
+                        color: "#ef4444",
+                        flex: 1
+                      }}
+                    >
+                      Sign Out
+                    </Text>
                     <MaterialCommunityIcons 
-                      name="logout" 
+                      name="chevron-right" 
                       size={12} 
                       color="#ef4444" 
                     />
-                  </View>
-                  <Text 
-                    style={{
-                      marginLeft: 10,
-                      fontSize: 12,
-                      fontWeight: '700',
-                      color: "#ef4444",
-                      flex: 1
-                    }}
-                  >
-                    Sign Out
-                  </Text>
-                  <MaterialCommunityIcons 
-                    name="chevron-right" 
-                    size={14} 
-                    color="#ef4444" 
-                  />
-                </Pressable>
+                  </Pressable>
+                </View>
               </View>
             </ScrollView>
           </View>
