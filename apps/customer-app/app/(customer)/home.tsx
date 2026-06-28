@@ -317,6 +317,7 @@ export default function CustomerHomeScreen() {
   const { cms, territories, todaysCatch } = useHomeData();
   const { data: allProducts } = useProducts();
   const [search, setSearch] = useState("");
+  const [catScrollProgress, setCatScrollProgress] = useState(0);
   const onSearch = () => {
     router.push({
       pathname: "/products",
@@ -644,6 +645,13 @@ export default function CustomerHomeScreen() {
                       horizontal 
                       showsHorizontalScrollIndicator={false} 
                       contentContainerStyle={{ paddingHorizontal: 16, gap: 10 }}
+                      scrollEventThrottle={16}
+                      onScroll={(event) => {
+                        const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
+                        const maxScroll = contentSize.width - layoutMeasurement.width;
+                        const progress = maxScroll > 0 ? contentOffset.x / maxScroll : 0;
+                        setCatScrollProgress(progress);
+                      }}
                     >
                       {(settings.productCategories || [])
                         .filter(c => c.status?.toUpperCase() !== "INACTIVE")
@@ -656,7 +664,7 @@ export default function CustomerHomeScreen() {
                           else if (l.includes("crab") || l.includes("lobster")) iconSource = require("../../assets/categories/new/crabs.png");
                           else if (l.includes("steak") || l.includes("fillet")) iconSource = require("../../assets/categories/new/steaks.png");
                           else if (l.includes("exotic")) iconSource = require("../../assets/categories/new/exotic.png");
-                          else if (l.includes("cook") || l.includes("eat")) iconSource = require("../../assets/categories/new/ready_to_cook.png");
+                          else if (l.includes("cook")) iconSource = require("../../assets/categories/new/ready_to_cook.png");
                           else if (l.includes("dry")) iconSource = require("../../assets/categories/new/dry_fish.png");
                           else if (l.includes("mutton")) iconSource = require("../../assets/categories/new/mutton.png");
                           else if (l.includes("chicken")) iconSource = require("../../assets/categories/new/chicken.png");
@@ -689,6 +697,23 @@ export default function CustomerHomeScreen() {
                           );
                         })}
                     </ScrollView>
+
+                    {/* Neon sliding scroll indicator */}
+                    {(settings.productCategories || []).filter(c => c.status?.toUpperCase() !== "INACTIVE").length > 5 && (
+                      <View style={{ height: 3, width: 50, backgroundColor: '#E2E8F0', borderRadius: 1.5, alignSelf: 'center', marginTop: 10, overflow: 'hidden' }}>
+                        <View 
+                          style={{ 
+                            height: '100%', 
+                            width: '35%', 
+                            backgroundColor: '#00F3FF', // neon cyan
+                            borderRadius: 1.5,
+                            transform: [{
+                              translateX: catScrollProgress * (50 * 0.65) // 50 * (1 - 0.35)
+                            }]
+                          }} 
+                        />
+                      </View>
+                    )}
                   </View>
                 </View>
               );
