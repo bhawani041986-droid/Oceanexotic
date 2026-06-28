@@ -244,14 +244,11 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
 
         {showSearch && pathname !== "/login" && pathname !== "/products" ? (
           <View className="mt-3 gap-3">
-            {/* Search Bar - White Pill */}
-            <Pressable 
-              onPress={onSearch}
-              className="flex-row items-center h-[46px] rounded-full p-1 pl-4"
+            {/* Search Bar - Optimized Size h-40 */}
+            <View className="relative flex-row items-center h-[40px] rounded-full bg-[#ffffff]"
               style={{
-                backgroundColor: '#ffffff',
                 borderWidth: 1.5,
-                borderColor: '#115e59', // teal-800
+                borderColor: '#115e59',
                 shadowColor: "#000",
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.1,
@@ -259,28 +256,35 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                 elevation: 3,
               }}
             >
-              <MaterialCommunityIcons name="magnify" size={24} color="#115e59" />
-              <TextInput
-                value={search}
-                onChangeText={setSearch}
-                onSubmitEditing={onSearch}
-                placeholder="Search seafood products..."
-                placeholderTextColor="#64748b"
-                returnKeyType="search"
-                className="flex-1 ml-2 text-[15px] font-medium"
-                style={{ color: '#334155', height: '100%' }}
-              />
               <Pressable 
                 onPress={onSearch}
-                className="h-[36px] w-[36px] rounded-full items-center justify-center bg-[#0f4a5c]"
+                className="flex-1 flex-row items-center h-full pl-3 pr-[40px]"
               >
-                <MaterialCommunityIcons name="fish" size={20} color="#ffffff" />
+                <MaterialCommunityIcons name="magnify" size={20} color="#115e59" />
+                <TextInput
+                  value={search}
+                  onChangeText={setSearch}
+                  onSubmitEditing={onSearch}
+                  placeholder="Search seafood products..."
+                  placeholderTextColor="#64748b"
+                  returnKeyType="search"
+                  className="flex-1 ml-2 text-[13px] font-medium"
+                  style={{ color: '#334155', height: '100%' }}
+                />
               </Pressable>
-            </Pressable>
+              
+              <Pressable 
+                onPress={onSearch}
+                className="absolute w-[40px] h-[40px] rounded-full items-center justify-center bg-[#0f4a5c]"
+                style={{ right: -1.5, top: -1.5 }}
+              >
+                <MaterialCommunityIcons name="fish" size={18} color="#ffffff" />
+              </Pressable>
+            </View>
 
-            {/* Hub Location Bar - Teal Gradient Pill with S-Curve */}
+            {/* Hub Location Bar - Optimized Size h-38 with fixed S-Curve seam */}
             <Pressable onPress={() => setIsLocationModalOpen(true)}>
-              <View className="h-[42px] rounded-full overflow-hidden flex-row bg-[#ffffff]" style={{
+              <View className="h-[38px] rounded-full overflow-hidden flex-row bg-[#ffffff]" style={{
                   shadowColor: "#3cd3ad",
                   shadowOffset: { width: 0, height: 4 },
                   shadowOpacity: 0.3,
@@ -294,22 +298,23 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                     end={{ x: 1, y: 0 }}
                     className="absolute inset-0"
                   />
-                  <View className="absolute inset-0 flex-row items-center px-4">
-                    <MaterialCommunityIcons name="map-marker" size={18} color="#ffffff" />
-                    <Text className="ml-2 text-[13px] font-bold text-white tracking-wide" numberOfLines={1}>
+                  <View className="absolute inset-0 flex-row items-center px-3">
+                    <MaterialCommunityIcons name="map-marker" size={16} color="#ffffff" />
+                    <Text className="ml-1 text-[12px] font-bold text-white tracking-wide" numberOfLines={1}>
                       {activeHubName} <Text className="font-normal opacity-90">• Active Fishing Zones</Text>
                     </Text>
                   </View>
                 </View>
                 
                 {/* S-curve mask and white chevron container */}
-                <View className="w-[60px] flex-row bg-[#ffffff]">
-                  <Svg width={20} height={42} viewBox="0 0 20 42">
-                    <Path d="M0,0 L20,0 C20,21 0,21 0,42 Z" fill="#3cd3ad" />
-                    <Path d="M20,0 C20,21 0,21 0,42 L20,42 Z" fill="#ffffff" />
+                <View className="w-[50px] flex-row bg-[#ffffff]" style={{ marginLeft: -1 }}>
+                  <Svg width={16} height={38} viewBox="0 0 16 38">
+                    {/* Exaggerate the left edge to ensure no sub-pixel seam with the gradient */}
+                    <Path d="M-5,0 L16,0 C16,19 0,19 0,38 L-5,38 Z" fill="#3cd3ad" />
+                    <Path d="M16,0 C16,19 0,19 0,38 L16,38 Z" fill="#ffffff" />
                   </Svg>
-                  <View className="w-[40px] items-center justify-center">
-                    <MaterialCommunityIcons name="chevron-down" size={20} color="#3cd3ad" />
+                  <View className="w-[35px] items-center justify-center">
+                    <MaterialCommunityIcons name="chevron-down" size={18} color="#3cd3ad" />
                   </View>
                 </View>
               </View>
