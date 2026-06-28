@@ -223,6 +223,85 @@ function FlashDealCountdown() {
   );
 }
 
+// --- ISOLATED NEWSLETTER COMPONENT ---
+function NewsletterSection() {
+  const { width } = Dimensions.get("window");
+  const { toast } = useToast();
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+
+  const handleSubscribeNewsletter = async () => {
+    const trimmedEmail = newsletterEmail.trim();
+    if (!trimmedEmail) {
+      toast("Please enter your email address", "error");
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      toast("Please enter a valid email address", "error");
+      return;
+    }
+    try {
+      const res = await homeService.subscribeNewsletter(trimmedEmail);
+      if (res.success || (res as any).message === "Already subscribed") {
+        toast("Subscribed to newsletter!", "success");
+        setNewsletterEmail("");
+      } else {
+        toast(res.error || "Subscription failed", "error");
+      }
+    } catch (error: any) {
+      console.error("Newsletter error:", error);
+      toast(error?.response?.data?.error || "Subscription failed", "error");
+    }
+  };
+
+  const newsletterWidth = width - 32;
+  const newsletterHeight = newsletterWidth / 1.469;
+
+  return (
+    <View 
+      className="mx-4 mb-0 relative overflow-hidden" 
+      style={{ width: newsletterWidth, height: newsletterHeight, marginBottom: 0 }}
+    >
+      <Image
+        source={IMG_NEWSLETTER_BANNER}
+        style={{ width: "100%", height: "100%" }}
+        contentFit="cover"
+      />
+      <TextInput
+        value={newsletterEmail}
+        onChangeText={setNewsletterEmail}
+        placeholder="ENTER YOUR EMAIL ADDRESS"
+        placeholderTextColor="#94A3B8"
+        keyboardType="email-address"
+        autoCapitalize="none"
+        autoCorrect={false}
+        style={{
+          position: 'absolute',
+          top: '48.5%',
+          left: '21%',
+          width: '68%',
+          height: '11%',
+          fontSize: newsletterWidth * 0.028,
+          color: '#1E293B',
+          backgroundColor: 'transparent',
+          paddingHorizontal: 8,
+          fontStyle: 'italic',
+        }}
+      />
+      <Pressable
+        onPress={handleSubscribeNewsletter}
+        style={{
+          position: 'absolute',
+          top: '66%',
+          left: '6%',
+          width: '88%',
+          height: '15%',
+        }}
+      />
+    </View>
+  );
+}
+
 export default function CustomerHomeScreen() {
   const { width } = Dimensions.get("window");
   const router = useRouter();
@@ -294,29 +373,11 @@ export default function CustomerHomeScreen() {
     router.push({ pathname: path as any, params });
   }, [router]);
 
-  const handleSubscribeNewsletter = async () => {
-    const trimmedEmail = newsletterEmail.trim();
-    if (!trimmedEmail) {
-      toast("Please enter your email address", "error");
-      return;
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(trimmedEmail)) {
-      toast("Please enter a valid email address", "error");
-      return;
-    }
-    try {
-      const res = await homeService.subscribeNewsletter(trimmedEmail);
-      if (res.success || (res as any).message === "Already subscribed") {
-        toast("Subscribed to newsletter!", "success");
-        setNewsletterEmail("");
-      } else {
-        toast(res.error || "Subscription failed", "error");
-      }
-    } catch (error: any) {
-      console.error("Newsletter error:", error);
-      toast(error?.response?.data?.error || "Subscription failed", "error");
-    }
+  const onSearch = () => {
+    router.push({
+      pathname: "/products",
+      params: search.trim() ? { search: search.trim() } : {},
+    });
   };
 
 
@@ -327,7 +388,7 @@ export default function CustomerHomeScreen() {
   const [cutLoading, setCutLoading] = useState(false);
   const [cutOpen, setCutOpen] = useState(false);
 
-  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [liveReviews, setLiveReviews] = useState<any[]>([]);
 
   const banner = cms.data?.find((c) => c.type === "BANNER" && c.status === "PUBLISHED");
@@ -1123,53 +1184,7 @@ export default function CustomerHomeScreen() {
                 </View>
               );
             case "NEWSLETTER":
-              {
-                const newsletterWidth = width - 32;
-                const newsletterHeight = newsletterWidth / 1.469;
-                return (
-                  <View 
-                    key="NEWSLETTER" 
-                    className="mx-4 mb-0 relative overflow-hidden" 
-                    style={{ width: newsletterWidth, height: newsletterHeight, marginBottom: 0 }}
-                  >
-                    <Image
-                      source={IMG_NEWSLETTER_BANNER}
-                      style={{ width: "100%", height: "100%" }}
-                      contentFit="cover"
-                    />
-                    <TextInput
-                      value={newsletterEmail}
-                      onChangeText={setNewsletterEmail}
-                      placeholder="ENTER YOUR EMAIL ADDRESS"
-                      placeholderTextColor="#94A3B8"
-                      keyboardType="email-address"
-                      autoCapitalize="none"
-                      autoCorrect={false}
-                      style={{
-                        position: 'absolute',
-                        top: '48.5%',
-                        left: '21%',
-                        width: '68%',
-                        height: '11%',
-                        fontSize: newsletterWidth * 0.028,
-                        color: '#1E293B',
-                        backgroundColor: '#F8FBFD',
-                        fontStyle: 'italic',
-                      }}
-                    />
-                    <Pressable
-                      onPress={handleSubscribeNewsletter}
-                      style={{
-                        position: 'absolute',
-                        top: '66%',
-                        left: '6%',
-                        width: '88%',
-                        height: '15%',
-                      }}
-                    />
-                  </View>
-                );
-              }
+              return <NewsletterSection key="NEWSLETTER" />;
             default:
               return null;
           }
