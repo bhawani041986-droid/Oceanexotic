@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { View, Text, Pressable, TextInput, Modal } from "react-native";
+import { View, Text, Pressable, TextInput, Modal, StyleSheet } from "react-native";
 import { useRouter, usePathname } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Svg, { Path, Circle, Polygon } from "react-native-svg";
@@ -259,97 +259,83 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
             onPress={() => setIsMenuOpen(false)} 
           />
           <View 
-            className="w-[280px] h-full border-r p-5 pt-12 gap-6 relative shadow-2xl justify-between"
+            className="w-[280px] h-full border-r relative shadow-2xl"
             style={{
-              backgroundColor: colors.bgAlt,
+              backgroundColor: "#ffffff",
               borderRightColor: colors.border
             }}
           >
-            <View className="gap-6">
-              <View className="flex-row items-center justify-between">
-                <Logo size="sm" style={{ width: 196, height: 48 }} />
-                <Pressable 
-                  onPress={() => setIsMenuOpen(false)} 
-                  className="h-7 w-7 rounded-none border items-center justify-center active:opacity-70"
-                  style={{
-                    borderColor: colors.border,
-                    backgroundColor: colors.card
-                  }}
-                >
-                  <Text className="text-[10px] font-black" style={{ color: colors.textMuted }}>✕</Text>
-                </Pressable>
-              </View>
+            <Image
+              source={require("../../assets/drawer_menu_mockup.jpg")}
+              style={StyleSheet.absoluteFillObject}
+              contentFit="fill"
+            />
 
-              <ChamferedBox 
-                fillColor={getRgba(primaryColor, 0.05)}
-                strokeColor={getRgba(primaryColor, 0.2)}
-                bevelSize={10}
-                style={{ minHeight: 50 }}
-                contentClassName="p-3 flex-row items-center gap-2"
-              >
-                <View className="h-2.5 w-2.5 rounded-none bg-emerald-500" />
-                <View className="flex-1">
-                  <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>Local Delivery Hub</Text>
-                  <Text className="text-[10px] font-bold" style={{ color: colors.text }} numberOfLines={1}>{user?.email ?? "Guest Mode"}</Text>
-                </View>
-              </ChamferedBox>
+            {/* Clickable Overlays */}
+            
+            {/* Close Button X */}
+            <Pressable
+              onPress={() => setIsMenuOpen(false)}
+              style={{ position: 'absolute', top: '3.5%', right: '4%', width: '14%', height: '5.5%' }}
+            />
 
-              <View className="gap-2">
-                {[
-                  { label: t('home'), href: "/home" },
-                  { label: t('fresh_catch_market'), href: "/products" },
-                  { label: t('recipes'), href: "/recipe" },
-                  { label: t('my_orders'), href: "/orders" },
-                  { label: t('favorites'), href: "/favorites" },
-                  { label: t('my_profile'), href: "/profile" },
-                  { label: t('active_cart'), href: "/cart" }
-                ].map((item) => {
-                  const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
-                  return (
-                    <ChamferedBox
-                      key={item.href}
-                      fillColor={active ? getRgba(primaryColor, 0.1) : colors.card}
-                      strokeColor={active ? getRgba(primaryColor, 0.2) : colors.border}
-                      bevelSize={10}
-                      style={{ minHeight: 44 }}
-                    >
-                      <Pressable 
-                        onPress={() => navigateTo(item.href)} 
-                        className="flex-row items-center px-4 py-3 w-full"
-                      >
-                        <Text 
-                          className="text-xs font-black uppercase tracking-wider"
-                          style={{ color: active ? primaryColor : colors.text }}
-                        >
-                          {item.label}
-                        </Text>
-                      </Pressable>
-                    </ChamferedBox>
-                  );
-                })}
-              </View>
-            </View>
+            {/* Local Delivery Hub info (absorbs touches) */}
+            <Pressable
+              onPress={() => {}}
+              style={{ position: 'absolute', top: '11.3%', left: '5%', width: '90%', height: '8.8%' }}
+            />
 
-            <View className="gap-2 pb-6">
-              <ChamferedBox
-                fillColor="rgba(239, 68, 68, 0.1)"
-                strokeColor="rgba(239, 68, 68, 0.2)"
-                bevelSize={12}
-                style={{ minHeight: 48 }}
-              >
-                <Pressable 
-                  onPress={() => {
-                    setIsMenuOpen(false);
-                    logout();
-                    router.replace("/login");
-                  }}
-                  className="w-full py-3.5 items-center justify-center active:bg-red-500/10"
-                >
-                  <Text className="text-xs font-black uppercase tracking-widest text-red-500">{t('sign_out')}</Text>
-                </Pressable>
-              </ChamferedBox>
-              <Text className="text-[7px] font-black text-center uppercase tracking-widest mt-2" style={{ color: colors.textMuted }}>OceanExotic Mobile App v1.4</Text>
-            </View>
+            {/* Home */}
+            <Pressable
+              onPress={() => navigateTo("/home")}
+              style={{ position: 'absolute', top: '22.0%', left: '5%', width: '90%', height: '7.0%' }}
+            />
+
+            {/* Shop */}
+            <Pressable
+              onPress={() => navigateTo("/products")}
+              style={{ position: 'absolute', top: '31.0%', left: '5%', width: '90%', height: '7.0%' }}
+            />
+
+            {/* Recipes */}
+            <Pressable
+              onPress={() => navigateTo("/recipe")}
+              style={{ position: 'absolute', top: '40.0%', left: '5%', width: '90%', height: '7.0%' }}
+            />
+
+            {/* Orders */}
+            <Pressable
+              onPress={() => navigateTo("/orders")}
+              style={{ position: 'absolute', top: '49.0%', left: '5%', width: '90%', height: '7.0%' }}
+            />
+
+            {/* Profile */}
+            <Pressable
+              onPress={() => navigateTo("/profile")}
+              style={{ position: 'absolute', top: '58.0%', left: '5%', width: '90%', height: '7.0%' }}
+            />
+
+            {/* Cart */}
+            <Pressable
+              onPress={() => navigateTo("/cart")}
+              style={{ position: 'absolute', top: '67.0%', left: '5%', width: '90%', height: '7.0%' }}
+            />
+
+            {/* Chat with Us */}
+            <Pressable
+              onPress={() => navigateTo("/chat")}
+              style={{ position: 'absolute', top: '76.0%', left: '5%', width: '90%', height: '7.0%' }}
+            />
+
+            {/* Sign Out */}
+            <Pressable
+              onPress={() => {
+                setIsMenuOpen(false);
+                logout();
+                router.replace("/login");
+              }}
+              style={{ position: 'absolute', top: '85.0%', left: '5%', width: '90%', height: '7.0%' }}
+            />
           </View>
         </View>
       </Modal>

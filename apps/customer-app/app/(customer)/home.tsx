@@ -541,28 +541,12 @@ export default function CustomerHomeScreen() {
                     )}
 
                     {/* Relocated Pre-Orders Widget (Absolute Bottom Right) */}
-                    <View className="absolute bottom-4 right-4 w-[55%] z-30 pointer-events-auto">
-                       <View className="p-2.5 rounded-none border flex-col gap-1.5 w-full shadow-lg relative overflow-hidden" style={{ backgroundColor: '#0b0e14e6', borderColor: 'rgba(245,158,11,0.3)' }}>
-                         <View className="flex-row items-center justify-between w-full relative z-10">
-                           <View className="flex-row items-center gap-1.5">
-                             <View className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                             <Text className="text-[9px] font-black uppercase italic tracking-wider text-amber-400">PRE-ORDERS</Text>
-                           </View>
-                         </View>
-                         <View className="flex-row items-center justify-between w-full pt-1.5 border-t border-white/10 relative z-10">
-                           <Text className="text-[7px] font-black text-amber-300/90 uppercase tracking-widest">Next Dispatch</Text>
-                           <Text className="text-[7px] font-black text-white uppercase truncate">Tomorrow at 05:30 AM</Text>
-                         </View>
-                         {/* Beveled overlays for pre-orders widget */}
-                         <Svg width="12" height="12" style={{ position: "absolute", top: -1, left: -1, zIndex: 40 }}>
-                           <Path d="M0,0 L12,0 L0,12 Z" fill={colors.bg} />
-                           <Path d="M12,0 L0,12" stroke="rgba(245,158,11,0.3)" strokeWidth="1" />
-                         </Svg>
-                         <Svg width="12" height="12" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 40 }}>
-                           <Path d="M12,12 L0,12 L12,0 Z" fill={colors.bg} />
-                           <Path d="M0,12 L12,0" stroke="rgba(245,158,11,0.3)" strokeWidth="1" />
-                         </Svg>
-                       </View>
+                    <View className="absolute bottom-4 right-4 w-[55%] z-30 pointer-events-auto" style={{ aspectRatio: 2.0 }}>
+                      <Image
+                        source={require("../../assets/pre_orders_mockup.jpg")}
+                        style={StyleSheet.absoluteFillObject}
+                        contentFit="contain"
+                      />
                     </View>
                   </View>
                 </View>
@@ -573,42 +557,59 @@ export default function CustomerHomeScreen() {
                   {/* Maritime Wave Divider */}
                   <MaritimeWaveDivider />
 
-                  {/* Category Grid - 4 columns, 2 rows circular layout (Amazon style) */}
-                  <View className="border-y border-white/5 py-4 px-4">
-                    <View className="flex-row flex-wrap justify-between gap-y-3.5">
-                      {getSortedCategories(settings.productCategories).map((cat) => (
-                        <Pressable
-                          key={cat.slug}
-                          onPress={() =>
-                            router.push({ pathname: "/products", params: { category: cat.slug } })
-                          }
-                          className="w-[18%] items-center"
-                        >
-                          <ChamferedBox
-                            fillColor={colors.isDark ? "rgba(30, 41, 59, 0.4)" : "rgba(241, 245, 249, 0.9)"}
-                            strokeColor={`${cat.glowColor}50`}
-                            strokeWidth={1.5}
-                            bevelSize={8}
-                            style={{ minHeight: 56 }}
-                            className="w-14 h-14 relative overflow-hidden"
-                            contentClassName="w-full h-full items-center justify-center"
-                          >
-                            <Image
-                              source={cat.image}
-                              className="h-10 w-10 relative z-10"
-                              contentFit="contain"
-                            />
-                          </ChamferedBox>
-                          <Text
-                            className="mt-1.5 text-center text-[7px] font-black uppercase tracking-widest"
-                            numberOfLines={2}
-                            style={{ color: colors.text, width: "100%", lineHeight: 9 }}
-                          >
-                            {cat.name.replace(" ", "\n")}
-                          </Text>
-                        </Pressable>
-                      ))}
-                    </View>
+                  {/* Mockup Category Grid Banner */}
+                  <View className="relative w-full" style={{ aspectRatio: 1.5 }}>
+                    <Image
+                      source={require("../../assets/category_grid_mockup.jpg")}
+                      style={StyleSheet.absoluteFillObject}
+                      contentFit="contain"
+                    />
+                    
+                    {/* Transparent Clickable Overlays (2 rows of 5 columns) */}
+                    
+                    {/* Row 1 */}
+                    <Pressable 
+                      onPress={() => router.push({ pathname: "/products", params: { category: "seawater" } })} 
+                      style={{ position: 'absolute', top: 0, left: '0%', width: '20%', height: '50%' }} 
+                    />
+                    <Pressable 
+                      onPress={() => router.push({ pathname: "/products", params: { category: "freshwater" } })} 
+                      style={{ position: 'absolute', top: 0, left: '20%', width: '20%', height: '50%' }} 
+                    />
+                    <Pressable 
+                      onPress={() => router.push({ pathname: "/products", params: { category: "prawns" } })} 
+                      style={{ position: 'absolute', top: 0, left: '40%', width: '20%', height: '50%' }} 
+                    />
+                    <Pressable 
+                      onPress={() => router.push({ pathname: "/products", params: { category: "crustaceans" } })} 
+                      style={{ position: 'absolute', top: 0, left: '60%', width: '20%', height: '50%' }} 
+                    />
+                    <Pressable 
+                      onPress={() => router.push({ pathname: "/products", params: { category: "fillets" } })} 
+                      style={{ position: 'absolute', top: 0, left: '80%', width: '20%', height: '50%' }} 
+                    />
+                    
+                    {/* Row 2 */}
+                    <Pressable 
+                      onPress={() => router.push({ pathname: "/products", params: { category: "exotic" } })} 
+                      style={{ position: 'absolute', top: '50%', left: '0%', width: '20%', height: '50%' }} 
+                    />
+                    <Pressable 
+                      onPress={() => router.push({ pathname: "/products", params: { category: "ready-to-cook" } })} 
+                      style={{ position: 'absolute', top: '50%', left: '20%', width: '20%', height: '50%' }} 
+                    />
+                    <Pressable 
+                      onPress={() => router.push({ pathname: "/products", params: { category: "dry-fish" } })} 
+                      style={{ position: 'absolute', top: '50%', left: '40%', width: '20%', height: '50%' }} 
+                    />
+                    <Pressable 
+                      onPress={() => router.push({ pathname: "/products", params: { category: "mutton" } })} 
+                      style={{ position: 'absolute', top: '50%', left: '60%', width: '20%', height: '50%' }} 
+                    />
+                    <Pressable 
+                      onPress={() => router.push({ pathname: "/products", params: { category: "chicken" } })} 
+                      style={{ position: 'absolute', top: '50%', left: '80%', width: '20%', height: '50%' }} 
+                    />
                   </View>
                 </View>
               );
@@ -972,68 +973,86 @@ export default function CustomerHomeScreen() {
                 <View key="SELLERS" className="px-4 py-8">
                   <SectionTitle title="Premium Sellers" subtitle="Top Rated Sellers" />
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
-                    {(settings.topSellers || []).map((seller) => (
-                      <Pressable
-                        key={seller.id}
-                        onPress={() => router.push({ pathname: "/products", params: { sellerId: seller.id } })}
-                        className="mr-3 w-56"
-                      >
-                        <ChamferedBox
-                          fillColor={colors.card}
-                          strokeColor={colors.border}
-                          bevelSize={14}
-                          style={{ minHeight: 140 }}
-                          className="w-full p-4 relative overflow-hidden"
+                    {(settings.topSellers || []).map((seller) => {
+                      if (seller.id === "SEL-003") {
+                        return (
+                          <Pressable
+                            key={seller.id}
+                            onPress={() => router.push({ pathname: "/products", params: { sellerId: seller.id } })}
+                            className="mr-3 w-56"
+                            style={{ height: 122 }}
+                          >
+                            <Image
+                              source={require("../../assets/deep_fishing_card.jpg")}
+                              style={StyleSheet.absoluteFillObject}
+                              contentFit="cover"
+                            />
+                          </Pressable>
+                        );
+                      }
+                      return (
+                        <Pressable
+                          key={seller.id}
+                          onPress={() => router.push({ pathname: "/products", params: { sellerId: seller.id } })}
+                          className="mr-3 w-56"
                         >
-                          <View className="flex-row justify-between items-center mb-2">
-                            <Text className="text-[8px] font-black uppercase" style={{ color: primaryColor }}>{seller.id}</Text>
-                            <View className="flex-row items-center gap-1">
-                              <View className="h-1.5 w-1.5 rounded-none bg-[#00ff88]" />
-                              <Text className="text-[6px] font-black uppercase" style={{ color: colors.textMuted }}>LIVE</Text>
-                            </View>
-                          </View>
-                          
-                          <View className="flex-row items-center gap-3">
-                            <ChamferedBox
-                              fillColor={colors.bgAlt}
-                              strokeColor={colors.border}
-                              bevelSize={6}
-                              style={{ minHeight: 40 }}
-                              className="h-10 w-10 items-center justify-center relative overflow-hidden"
-                            >
-                              <Text className="text-2xl relative z-10">{seller.image}</Text>
-                            </ChamferedBox>
-                            <View className="flex-1">
-                              <Text className="text-sm font-black uppercase italic" style={{ color: colors.text }} numberOfLines={1}>
-                                {seller.name}
-                              </Text>
-                              <View className="flex-row items-center gap-2 mt-1">
-                                <Text className="text-[8px] font-black text-warning">★ {seller.rating}</Text>
-                                <Text className="text-[8px] font-black" style={{ color: primaryColor }}>{seller.speed}</Text>
+                          <ChamferedBox
+                            fillColor={colors.card}
+                            strokeColor={colors.border}
+                            bevelSize={14}
+                            style={{ minHeight: 140 }}
+                            className="w-full p-4 relative overflow-hidden"
+                          >
+                            <View className="flex-row justify-between items-center mb-2">
+                              <Text className="text-[8px] font-black uppercase" style={{ color: primaryColor }}>{seller.id}</Text>
+                              <View className="flex-row items-center gap-1">
+                                <View className="h-1.5 w-1.5 rounded-none bg-[#00ff88]" />
+                                <Text className="text-[6px] font-black uppercase" style={{ color: colors.textMuted }}>LIVE</Text>
                               </View>
                             </View>
-                          </View>
-                          
-                          <View className="flex-row justify-between items-center mt-3 pt-2 border-t" style={{ borderTopColor: colors.border }}>
-                            <View className="flex-row gap-1">
-                              {seller.products.map((p, idx) => (
-                                <ChamferedBox
-                                  key={idx}
-                                  fillColor={colors.bgAlt}
-                                  strokeColor={colors.border}
-                                  bevelSize={3}
-                                  style={{ minHeight: 20 }}
-                                  className="h-5 w-5 items-center justify-center relative overflow-hidden"
-                                >
-                                  <Text className="text-xs relative z-10">{p}</Text>
-                                </ChamferedBox>
-                              ))}
+                            
+                            <View className="flex-row items-center gap-3">
+                              <ChamferedBox
+                                fillColor={colors.bgAlt}
+                                strokeColor={colors.border}
+                                bevelSize={6}
+                                style={{ minHeight: 40 }}
+                                className="h-10 w-10 items-center justify-center relative overflow-hidden"
+                              >
+                                <Text className="text-2xl relative z-10">{seller.image}</Text>
+                              </ChamferedBox>
+                              <View className="flex-1">
+                                <Text className="text-sm font-black uppercase italic" style={{ color: colors.text }} numberOfLines={1}>
+                                  {seller.name}
+                                </Text>
+                                <View className="flex-row items-center gap-2 mt-1">
+                                  <Text className="text-[8px] font-black text-warning">★ {seller.rating}</Text>
+                                  <Text className="text-[8px] font-black" style={{ color: primaryColor }}>{seller.speed}</Text>
+                                </View>
+                              </View>
                             </View>
-                            <Text className="text-[8px] font-black uppercase" style={{ color: primaryColor }}>VIEW NODE ➜</Text>
-                          </View>
-                        </ChamferedBox>
-                      </Pressable>
-                    ))}
+                            
+                            <View className="flex-row justify-between items-center mt-3 pt-2 border-t" style={{ borderTopColor: colors.border }}>
+                              <View className="flex-row gap-1">
+                                {seller.products.map((p, idx) => (
+                                  <ChamferedBox
+                                    key={idx}
+                                    fillColor={colors.bgAlt}
+                                    strokeColor={colors.border}
+                                    bevelSize={3}
+                                    style={{ minHeight: 20 }}
+                                    className="h-5 w-5 items-center justify-center relative overflow-hidden"
+                                  >
+                                    <Text className="text-xs relative z-10">{p}</Text>
+                                  </ChamferedBox>
+                                ))}
+                              </View>
+                              <Text className="text-[8px] font-black uppercase" style={{ color: primaryColor }}>VIEW NODE ➜</Text>
+                            </View>
+                          </ChamferedBox>
+                        </Pressable>
+                      );
+                    })}
                   </ScrollView>
                 </View>
               );
