@@ -226,11 +226,11 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
         </View>
 
         {showSearch && pathname !== "/login" && pathname !== "/products" ? (
-          <View className="mt-2 w-full relative" style={{ aspectRatio: 2.0 }}>
+          <View className="mt-2 w-full relative" style={{ aspectRatio: 3.737 }}>
             <Image
               source={require("../../../assets/pre_orders_mockup.jpg")}
               style={StyleSheet.absoluteFillObject}
-              contentFit="contain"
+              contentFit="fill"
             />
           </View>
         ) : null}
