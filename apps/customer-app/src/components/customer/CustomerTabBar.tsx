@@ -1,4 +1,5 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
+import { Image } from "expo-image";
 import { usePathname, useRouter, type Href } from "expo-router";
 import Svg, { Path, Circle } from "react-native-svg";
 import { cn } from "@/lib/utils";
@@ -168,87 +169,49 @@ export function CustomerTabBar() {
   const router = useRouter();
   const count = useCartStore((s) => s.itemCount());
   const colors = useThemeColors();
-  const language = useSettingsStore((s) => s.language);
 
   return (
     <View 
-      className="absolute bottom-0 left-0 right-0 z-50 flex-row items-center justify-around"
+      className="absolute bottom-0 left-0 right-0 z-50 flex-row items-center"
       style={{
-        height: 87,
-        paddingBottom: 31,  // 12 + 19 = 31 (keep visual padding + fill gap)
-        paddingTop: 4,
-        backgroundColor: colors.isDark ? "#080C16FA" : "rgba(255, 255, 255, 0.98)",
+        height: 64,
+        backgroundColor: "#ffffff",
         borderTopWidth: 1.5,
         borderTopColor: colors.border,
         shadowColor: "#000",
-        shadowOffset: { width: 0, height: -8 },
-        shadowOpacity: colors.isDark ? 0.7 : 0.08,
-        shadowRadius: 15,
-        elevation: 10,
+        shadowOffset: { width: 0, height: -4 },
+        shadowOpacity: 0.06,
+        shadowRadius: 10,
+        elevation: 8,
       }}
     >
-      {NAV.map((item) => {
-        const active = pathActive(pathname, String(item.href));
-        const activeColor = colors.primary;
-        const inactiveColor = colors.isDark ? "#7C8BA1" : "#64748B"; // Match slate-500 in light mode
+      <Image
+        source={require("../../../assets/bottom_nav_mockup.jpg")}
+        style={StyleSheet.absoluteFillObject}
+        contentFit="fill"
+      />
 
+      {/* Hotspots */}
+      {NAV.map((item, idx) => {
         return (
           <Pressable
             key={String(item.href)}
             onPress={() => router.push(item.href)}
-            className="flex-1 items-center justify-center h-full relative"
-          >
-            {/* Glowing top line indicator for active tab */}
-            {active && (
-              <View 
-                style={{ 
-                  position: "absolute",
-                  top: 0,
-                  width: 44,
-                  height: 3.5,
-                  backgroundColor: activeColor,
-                  borderRadius: 2,
-                  shadowColor: activeColor,
-                  shadowOffset: { width: 0, height: 4 },
-                  shadowOpacity: 0.6,
-                  shadowRadius: 6,
-                  elevation: 6,
-                }}
-              />
-            )}
-
-            {/* Circular highlight wash behind the icon */}
-            <View 
-              className="items-center justify-center"
-              style={{
-                width: 44,
-                height: 44,
-                borderRadius: 22,
-                backgroundColor: active ? getRgba(activeColor, 0.05) : "transparent",
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: 2,
-              }}
-            >
-              <TabIcon label={item.label} active={active} activeColor={activeColor} />
-            </View>
-
-            <Text
-              className={cn(
-                "text-[8px] font-black uppercase tracking-[0.08em] mt-0.5 text-center"
-              )}
-              style={{ color: active ? activeColor : inactiveColor }}
-            >
-              {t(item.label.toLowerCase())}
-            </Text>
-          </Pressable>
+            style={{
+              position: 'absolute',
+              left: `${idx * 20}%`,
+              width: '20%',
+              height: '100%',
+            }}
+          />
         );
       })}
+
       {count > 0 ? (
         <View 
           style={{
             position: "absolute",
-            top: 6,
+            top: 4,
             right: "32%",
             backgroundColor: "#FF3B30",
             borderRadius: 8,

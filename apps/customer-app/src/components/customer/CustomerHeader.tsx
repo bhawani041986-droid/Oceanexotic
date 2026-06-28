@@ -210,42 +210,11 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
         </View>
 
         {showSearch && pathname !== "/login" && pathname !== "/products" ? (
-          <View className="mt-2 w-full relative" style={{ aspectRatio: 3.606 }}>
+          <View className="mt-2 w-full relative" style={{ aspectRatio: 3.737 }}>
             <Image
-              source={require("../../../assets/search_and_hub_mockup.jpg")}
+              source={require("../../../assets/pre_orders_mockup.jpg")}
               style={StyleSheet.absoluteFillObject}
               contentFit="contain"
-            />
-            {/* Transparent absolute TextInput overlay over the "Search products..." input field */}
-            <TextInput
-              value={search}
-              onChangeText={setSearch}
-              onSubmitEditing={onSearch}
-              placeholder="Search products..."
-              placeholderTextColor="transparent" // Hide placeholder text to prevent double text rendering
-              returnKeyType="search"
-              style={{
-                position: 'absolute',
-                top: '2%',
-                left: '14%',
-                width: '68%',
-                height: '44%',
-                color: '#334155', // dark slate text color for visibility
-                fontSize: 12,
-                paddingHorizontal: 8,
-              }}
-            />
-            
-            {/* Search Icon Click Overlay */}
-            <Pressable
-              onPress={onSearch}
-              style={{
-                position: 'absolute',
-                top: '2%',
-                left: '2%',
-                width: '12%',
-                height: '44%',
-              }}
             />
           </View>
         ) : null}
@@ -266,7 +235,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
             onPress={() => setIsMenuOpen(false)} 
           />
           <View 
-            className="w-[280px] h-full border-r relative shadow-2xl"
+            className="w-[300px] h-full border-r relative shadow-2xl"
             style={{
               backgroundColor: "#ffffff",
               borderRightColor: colors.border

@@ -222,6 +222,13 @@ export default function CustomerHomeScreen() {
   const { toast, ToastHost } = useToast();
   const { cms, territories, todaysCatch } = useHomeData();
   const { data: allProducts } = useProducts();
+  const [search, setSearch] = useState("");
+  const onSearch = () => {
+    router.push({
+      pathname: "/products",
+      params: search.trim() ? { search: search.trim() } : {},
+    });
+  };
   const featured = useMemo(() => {
     const list = allProducts ?? [];
     const feat = list.filter(p => p.is_featured === true || p.is_featured === 1 || p.is_featured === "true");
@@ -540,12 +547,43 @@ export default function CustomerHomeScreen() {
                       </View>
                     )}
 
-                    {/* Relocated Pre-Orders Widget (Absolute Bottom Right) */}
-                    <View className="absolute bottom-4 right-4 w-[55%] z-30 pointer-events-auto" style={{ aspectRatio: 3.737 }}>
+                    {/* Relocated Search Bar & Delivery Hub Widget (Absolute Bottom Right) */}
+                    <View className="absolute bottom-4 right-4 w-[65%] z-30 pointer-events-auto" style={{ aspectRatio: 3.606 }}>
                       <Image
-                        source={require("../../assets/pre_orders_mockup.jpg")}
+                        source={require("../../assets/search_and_hub_mockup.jpg")}
                         style={StyleSheet.absoluteFillObject}
                         contentFit="contain"
+                      />
+                      {/* Transparent absolute TextInput overlay */}
+                      <TextInput
+                        value={search}
+                        onChangeText={setSearch}
+                        onSubmitEditing={onSearch}
+                        placeholder="Search products..."
+                        placeholderTextColor="transparent" // Hide placeholder text to prevent overlap
+                        returnKeyType="search"
+                        style={{
+                          position: 'absolute',
+                          top: '2%',
+                          left: '14%',
+                          width: '68%',
+                          height: '44%',
+                          color: '#334155', // dark slate text color for visibility
+                          fontSize: 10,
+                          paddingHorizontal: 6,
+                        }}
+                      />
+                      
+                      {/* Search Icon Click Overlay */}
+                      <Pressable
+                        onPress={onSearch}
+                        style={{
+                          position: 'absolute',
+                          top: '2%',
+                          left: '2%',
+                          width: '12%',
+                          height: '44%',
+                        }}
                       />
                     </View>
                   </View>
