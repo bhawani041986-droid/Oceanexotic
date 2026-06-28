@@ -35,7 +35,7 @@ export default function TerritoryManagementPage() {
   );
   const [isLoading, setIsLoading] = React.useState(true);
   const [showAddModal, setShowAddModal] = React.useState(false);
-  const [newArea, setNewArea] = React.useState({ name: "", type: "CITY", parentId: "", lat: "", lng: "" });
+  const [newArea, setNewArea] = React.useState({ name: "", type: "CITY_ISLAND", parentId: "", lat: "", lng: "", hubCode: "", manager: "", riderCapacity: "", minOrder: "", deliveryCharge: "", eta: "" });
   const [showEditModal, setShowEditModal] = React.useState(false);
   const [editingArea, setEditingArea] = React.useState<any>(null);
 
@@ -50,19 +50,15 @@ export default function TerritoryManagementPage() {
         if (rootNodes.length > 0) setActiveIsland(rootNodes[0].name);
       }
     } catch (error) {
-      console.error("Failed to fetch territories", error
-  );
+      console.error("Failed to fetch territories", error);
     } finally {
-      setIsLoading(false
-  );
+      setIsLoading(false);
     }
   };
 
   React.useEffect(() => {
-    fetchTerritories(
-  );
-  }, [activeIsland]
-  );
+    fetchTerritories();
+  }, [activeIsland]);
 
   const toggleStatus = async (id: number) => {
     try {
@@ -70,27 +66,23 @@ export default function TerritoryManagementPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id })
-      }
-  );
-      const data = await res.json(
-  );
+      });
+      const data = await res.json();
       if (data.status === "success") {
-        fetchTerritories(
-  );
+        fetchTerritories();
       }
     } catch (error) {
-      console.error("Failed to toggle status", error
-  );
+      console.error("Failed to toggle status", error);
     }
   };
 
   const handleAddArea = async () => {
     if (!newArea.name) return;
     try {
-      const coords = ['AREA', 'WARD', 'JETTY'].includes(newArea.type) && newArea.lat && newArea.lng ? `${newArea.lat}, ${newArea.lng}` : null;
+      const coords = ['DELIVERY_ZONE', 'ADMIN_HUB'].includes(newArea.type) && newArea.lat && newArea.lng ? `${newArea.lat}, ${newArea.lng}` : null;
       
       let finalParentId = newArea.parentId || null;
-      if (newArea.type === 'COUNTRY' || newArea.type === 'ISLAND') {
+      if (newArea.type === 'COUNTRY') {
         finalParentId = null;
       } else if (!finalParentId) {
         alert(`Please explicitly select a valid Parent Registry for the new ${newArea.type}.`);
@@ -105,14 +97,21 @@ export default function TerritoryManagementPage() {
           zone_type: newArea.type,
           parent_id: finalParentId,
           coordinates: coords,
-          status: "ACTIVE"
+          status: "ACTIVE",
+          // Extended payload for Hubs and Zones
+          hub_code: newArea.hubCode,
+          manager_name: newArea.manager,
+          rider_capacity: newArea.riderCapacity,
+          minimum_order: newArea.minOrder,
+          delivery_charge: newArea.deliveryCharge,
+          eta_mins: newArea.eta
         })
       });
       const data = await res.json();
       if (data.status === "success") {
         fetchTerritories();
         setShowAddModal(false);
-        setNewArea({ name: "", type: "CITY", parentId: "", lat: "", lng: "" });
+        setNewArea({ name: "", type: "CITY_ISLAND", parentId: "", lat: "", lng: "", hubCode: "", manager: "", riderCapacity: "", minOrder: "", deliveryCharge: "", eta: "" });
       }
     } catch (error) {
       console.error("Failed to add territory", error);
@@ -143,7 +142,7 @@ export default function TerritoryManagementPage() {
   const handleEditArea = async () => {
     if (!editingArea.name) return;
     try {
-      const coords = editingArea.type === 'AREA' && editingArea.lat && editingArea.lng ? `${editingArea.lat}, ${editingArea.lng}` : null;
+      const coords = editingArea.lat && editingArea.lng ? `${editingArea.lat}, ${editingArea.lng}` : null;
       const res = await fetch(`${API_BASE_URL}/system/edit_territory`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -212,13 +211,12 @@ export default function TerritoryManagementPage() {
 
   const getValidParentTypes = (type: string) => {
     switch(type) {
-      case 'STATE': return ['COUNTRY'];
-      case 'CITY': return ['STATE', 'ISLAND'];
-      case 'AREA': return ['CITY', 'JETTY', 'PORT'];
-      case 'WARD': return ['CITY', 'ISLAND'];
-      case 'JETTY': return ['ISLAND', 'CITY'];
-      case 'PORT': return ['ISLAND', 'STATE'];
-      case 'ISLAND': return ['COUNTRY'];
+      case 'STATE_PROVINCE': return ['COUNTRY'];
+      case 'DISTRICT': return ['STATE_PROVINCE'];
+      case 'CITY_ISLAND': return ['DISTRICT'];
+      case 'ADMIN_HUB': return ['CITY_ISLAND'];
+      case 'DELIVERY_TERRITORY': return ['ADMIN_HUB'];
+      case 'DELIVERY_ZONE': return ['DELIVERY_TERRITORY'];
       case 'COUNTRY': return [];
       default: return [];
     }
@@ -274,14 +272,13 @@ export default function TerritoryManagementPage() {
                     className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
                  >
                     <option value="COUNTRY">COUNTRY</option>
-                    <option value="STATE">STATE / PROVINCE</option>
-                    <option value="CITY">CITY</option>
-                    <option value="AREA">AREA (Delivery Hub)</option>
+                    <option value="STATE_PROVINCE">STATE / PROVINCE</option>
+                    <option value="DISTRICT">DISTRICT</option>
+                    <option value="CITY_ISLAND">CITY / ISLAND</option>
                     <option disabled>──────────</option>
-                    <option value="ISLAND">ISLAND</option>
-                    <option value="PORT">PORT</option>
-                    <option value="JETTY">JETTY</option>
-                    <option value="WARD">WARD</option>
+                    <option value="ADMIN_HUB">ADMIN HUB</option>
+                    <option value="DELIVERY_TERRITORY">DELIVERY TERRITORY</option>
+                    <option value="DELIVERY_ZONE">DELIVERY ZONE (POLYGON)</option>
                  </select>
               </div>
               <div className="space-y-1.5">
@@ -299,8 +296,80 @@ export default function TerritoryManagementPage() {
                  </select>
               </div>
            </div>
+
+           {/* ADMIN HUB SPECIFIC FIELDS */}
+           {newArea.type === 'ADMIN_HUB' && (
+             <div className="grid grid-cols-2 gap-4 animate-fade-in mt-4 border-t border-[var(--foreground)]/10 pt-4">
+                <div className="space-y-1.5">
+                   <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Hub Code</label>
+                   <input 
+                      type="text" 
+                      placeholder="e.g. PBH001"
+                      value={newArea.hubCode}
+                      onChange={(e) => setNewArea({...newArea, hubCode: e.target.value})}
+                      className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
+                   />
+                </div>
+                <div className="space-y-1.5">
+                   <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Manager</label>
+                   <input 
+                      type="text" 
+                      placeholder="e.g. John Doe"
+                      value={newArea.manager}
+                      onChange={(e) => setNewArea({...newArea, manager: e.target.value})}
+                      className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
+                   />
+                </div>
+                <div className="space-y-1.5">
+                   <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Rider Capacity</label>
+                   <input 
+                      type="number" 
+                      placeholder="e.g. 20"
+                      value={newArea.riderCapacity}
+                      onChange={(e) => setNewArea({...newArea, riderCapacity: e.target.value})}
+                      className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
+                   />
+                </div>
+             </div>
+           )}
+
+           {/* DELIVERY ZONE SPECIFIC FIELDS */}
+           {newArea.type === 'DELIVERY_ZONE' && (
+             <div className="grid grid-cols-2 gap-4 animate-fade-in mt-4 border-t border-[var(--foreground)]/10 pt-4">
+                <div className="space-y-1.5">
+                   <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Delivery Charge (₹)</label>
+                   <input 
+                      type="number" 
+                      placeholder="e.g. 40"
+                      value={newArea.deliveryCharge}
+                      onChange={(e) => setNewArea({...newArea, deliveryCharge: e.target.value})}
+                      className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
+                   />
+                </div>
+                <div className="space-y-1.5">
+                   <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Minimum Order (₹)</label>
+                   <input 
+                      type="number" 
+                      placeholder="e.g. 300"
+                      value={newArea.minOrder}
+                      onChange={(e) => setNewArea({...newArea, minOrder: e.target.value})}
+                      className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
+                   />
+                </div>
+                <div className="space-y-1.5">
+                   <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">ETA (Mins)</label>
+                   <input 
+                      type="number" 
+                      placeholder="e.g. 18"
+                      value={newArea.eta}
+                      onChange={(e) => setNewArea({...newArea, eta: e.target.value})}
+                      className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl p-3 text-sm text-[var(--foreground)] outline-none focus:border-primary/50"
+                   />
+                </div>
+             </div>
+           )}
            
-           {['AREA', 'WARD', 'JETTY'].includes(newArea.type) && (
+           {['DELIVERY_ZONE', 'ADMIN_HUB'].includes(newArea.type) && (
              <div className="grid grid-cols-2 gap-4 animate-fade-in mt-4">
                 <div className="space-y-1.5">
                    <label className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-widest">Geo-Tag Latitude</label>
