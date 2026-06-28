@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { View, Text, Pressable, TextInput, Modal, StyleSheet, ScrollView } from "react-native";
 import { useRouter, usePathname } from "expo-router";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Svg, { Path, Circle, Polygon } from "react-native-svg";
 import { Image } from "expo-image";
@@ -97,6 +98,21 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
   const navigateTo = (href: string) => {
     setIsMenuOpen(false);
     router.push(href as any);
+  };
+
+  const MENU_ITEMS = [
+    { label: "Home", href: "/home", icon: "home" },
+    { label: "Shop", href: "/products", icon: "storefront-outline" },
+    { label: "Recipes", href: "/recipe", icon: "chef-hat" },
+    { label: "Orders", href: "/orders", icon: "clipboard-outline" },
+    { label: "Profile", href: "/profile", icon: "account-circle-outline" },
+    { label: "Cart", href: "/cart", icon: "cart-outline" },
+    { label: "Chat with Us", href: "/chat", icon: "message-outline" },
+  ];
+
+  const isItemActive = (href: string) => {
+    if (href === "/home") return pathname === "/home" || pathname === "/";
+    return pathname === href || pathname.startsWith(`${href}/`);
   };
 
   const handleNotificationPress = () => {
@@ -263,47 +279,54 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                   style={{ position: 'absolute', top: '11.3%', left: '5%', width: '90%', height: '8.8%' }}
                 />
 
-                {/* Home */}
-                <Pressable
-                  onPress={() => navigateTo("/home")}
-                  style={{ position: 'absolute', top: '22.0%', left: '5%', width: '90%', height: '7.0%' }}
-                />
-
-                {/* Shop */}
-                <Pressable
-                  onPress={() => navigateTo("/products")}
-                  style={{ position: 'absolute', top: '31.0%', left: '5%', width: '90%', height: '7.0%' }}
-                />
-
-                {/* Recipes */}
-                <Pressable
-                  onPress={() => navigateTo("/recipe")}
-                  style={{ position: 'absolute', top: '40.0%', left: '5%', width: '90%', height: '7.0%' }}
-                />
-
-                {/* Orders */}
-                <Pressable
-                  onPress={() => navigateTo("/orders")}
-                  style={{ position: 'absolute', top: '49.0%', left: '5%', width: '90%', height: '7.0%' }}
-                />
-
-                {/* Profile */}
-                <Pressable
-                  onPress={() => navigateTo("/profile")}
-                  style={{ position: 'absolute', top: '58.0%', left: '5%', width: '90%', height: '7.0%' }}
-                />
-
-                {/* Cart */}
-                <Pressable
-                  onPress={() => navigateTo("/cart")}
-                  style={{ position: 'absolute', top: '67.0%', left: '5%', width: '90%', height: '7.0%' }}
-                />
-
-                {/* Chat with Us */}
-                <Pressable
-                  onPress={() => navigateTo("/chat")}
-                  style={{ position: 'absolute', top: '76.0%', left: '5%', width: '90%', height: '7.0%' }}
-                />
+                {MENU_ITEMS.map((item, idx) => {
+                  const active = isItemActive(item.href);
+                  const topPercent = `${22.0 + idx * 9.0}%`;
+                  return (
+                    <Pressable
+                      key={item.href}
+                      onPress={() => navigateTo(item.href)}
+                      style={{
+                        position: 'absolute',
+                        top: topPercent as any,
+                        left: '5%',
+                        width: '90%',
+                        height: '7.0%',
+                        backgroundColor: active ? "rgba(14, 165, 233, 0.08)" : "#ffffff",
+                        borderColor: active ? "rgba(14, 165, 233, 0.2)" : "#f1f5f9",
+                        borderWidth: 1.5,
+                        borderRadius: 10,
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        paddingHorizontal: 12,
+                      }}
+                    >
+                      <View style={{ width: 22, height: 22, borderRadius: 11, backgroundColor: active ? "rgba(14, 165, 233, 0.15)" : "#f1f5f9", justifyContent: 'center', alignItems: 'center' }}>
+                        <MaterialCommunityIcons 
+                          name={item.icon as any} 
+                          size={12} 
+                          color={active ? primaryColor : "#64748B"} 
+                        />
+                      </View>
+                      <Text 
+                        style={{
+                          marginLeft: 10,
+                          fontSize: 12,
+                          fontWeight: '700',
+                          color: active ? primaryColor : "#475569",
+                          flex: 1
+                        }}
+                      >
+                        {item.label}
+                      </Text>
+                      <MaterialCommunityIcons 
+                        name="chevron-right" 
+                        size={14} 
+                        color={active ? primaryColor : "#94A3B8"} 
+                      />
+                    </Pressable>
+                  );
+                })}
 
                 {/* Sign Out */}
                 <Pressable
@@ -312,8 +335,45 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                     logout();
                     router.replace("/login");
                   }}
-                  style={{ position: 'absolute', top: '85.0%', left: '5%', width: '90%', height: '7.0%' }}
-                />
+                  style={{
+                    position: 'absolute',
+                    top: '85.0%',
+                    left: '5%',
+                    width: '90%',
+                    height: '7.0%',
+                    backgroundColor: "rgba(239, 68, 68, 0.08)",
+                    borderColor: "rgba(239, 68, 68, 0.2)",
+                    borderWidth: 1.5,
+                    borderRadius: 10,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    paddingHorizontal: 12,
+                  }}
+                >
+                  <View style={{ width: 22, height: 22, borderRadius: 11, backgroundColor: "rgba(239, 68, 68, 0.15)", justifyContent: 'center', alignItems: 'center' }}>
+                    <MaterialCommunityIcons 
+                      name="logout" 
+                      size={12} 
+                      color="#ef4444" 
+                    />
+                  </View>
+                  <Text 
+                    style={{
+                      marginLeft: 10,
+                      fontSize: 12,
+                      fontWeight: '700',
+                      color: "#ef4444",
+                      flex: 1
+                    }}
+                  >
+                    Sign Out
+                  </Text>
+                  <MaterialCommunityIcons 
+                    name="chevron-right" 
+                    size={14} 
+                    color="#ef4444" 
+                  />
+                </Pressable>
               </View>
             </ScrollView>
           </View>
