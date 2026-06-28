@@ -638,51 +638,45 @@ export default function CustomerHomeScreen() {
                   {/* Maritime Wave Divider */}
                   <MaritimeWaveDivider />
 
-                  {/* Dynamic Category Grid */}
-                  <View className="px-2 w-full">
-                    <View className="flex-row flex-wrap justify-between gap-y-3">
+                  {/* Dynamic Category Scroll */}
+                  <View className="w-full mt-2">
+                    <ScrollView 
+                      horizontal 
+                      showsHorizontalScrollIndicator={false} 
+                      contentContainerStyle={{ paddingHorizontal: 16, gap: 12 }}
+                    >
                       {(settings.productCategories || [])
                         .filter(c => c.status?.toUpperCase() !== "INACTIVE")
                         .map((cat, idx) => {
-                        const l = (cat.label || "").toLowerCase();
-                        let iconSource = require("../../assets/categories/new/seawater.png");
-                        if (l.includes("freshwater")) iconSource = require("../../assets/categories/new/freshwater.png");
-                        else if (l.includes("prawn") || l.includes("shrimp")) iconSource = require("../../assets/categories/new/prawns.png");
-                        else if (l.includes("crab") || l.includes("lobster")) iconSource = require("../../assets/categories/new/crabs.png");
-                        else if (l.includes("steak") || l.includes("fillet")) iconSource = require("../../assets/categories/new/steaks.png");
-                        else if (l.includes("exotic")) iconSource = require("../../assets/categories/new/exotic.png");
-                        else if (l.includes("cook") || l.includes("eat")) iconSource = require("../../assets/categories/new/ready_to_cook.png");
-                        else if (l.includes("dry")) iconSource = require("../../assets/categories/new/dry_fish.png");
-                        else if (l.includes("mutton")) iconSource = require("../../assets/categories/new/mutton.png");
-                        else if (l.includes("chicken")) iconSource = require("../../assets/categories/new/chicken.png");
-                        else if (l.includes("seawater")) iconSource = require("../../assets/categories/new/seawater.png");
+                          const fallbackSource = require("../../assets/categories/seawater.jpg");
+                          const imageSource = cat.imageUrl ? { uri: cat.imageUrl } : fallbackSource;
 
-                        return (
-                        <Pressable 
-                          key={cat.id || idx}
-                          onPress={() => router.push({ pathname: "/products", params: { category: cat.id } })}
-                          style={{ width: '19%', alignItems: 'center' }}
-                        >
-                          <View style={{ width: '100%', aspectRatio: 0.7 }}>
-                            <Image
-                              source={iconSource}
-                              style={{ width: '100%', height: '100%' }}
-                              contentFit="contain"
-                            />
-                          </View>
-                          {cat.label && (
-                            <Text 
-                              className="text-[7px] font-black uppercase text-center mt-1.5 leading-tight" 
-                              style={{ color: colors.text }}
-                              numberOfLines={2}
+                          return (
+                            <Pressable 
+                              key={cat.id || idx}
+                              onPress={() => router.push({ pathname: "/products", params: { category: cat.id } })}
+                              style={{ width: 80, alignItems: 'center' }}
                             >
-                              {t(cat.label.toLowerCase().replace(/ & /g, "_").replace(/ /g, "_")) || cat.label}
-                            </Text>
-                          )}
-                        </Pressable>
-                      );
-                      })}
-                    </View>
+                              <View style={{ width: '100%', aspectRatio: 0.7 }}>
+                                <Image
+                                  source={imageSource}
+                                  style={{ width: '100%', height: '100%', borderRadius: 8 }}
+                                  contentFit="contain"
+                                />
+                              </View>
+                              {cat.label && (
+                                <Text 
+                                  className="text-[8px] font-black uppercase text-center mt-1.5 leading-tight" 
+                                  style={{ color: colors.text }}
+                                  numberOfLines={2}
+                                >
+                                  {t(cat.label.toLowerCase().replace(/ & /g, "_").replace(/ /g, "_")) || cat.label}
+                                </Text>
+                              )}
+                            </Pressable>
+                          );
+                        })}
+                    </ScrollView>
                   </View>
                 </View>
               );
