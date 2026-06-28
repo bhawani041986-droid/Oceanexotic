@@ -654,13 +654,13 @@ export default function CustomerHomeScreen() {
                               contentFit="contain"
                             />
                           </View>
-                          {cat.name && (
+                          {cat.label && (
                             <Text 
                               className="text-[7px] font-black uppercase text-center mt-1.5 leading-tight" 
                               style={{ color: colors.text }}
                               numberOfLines={2}
                             >
-                              {t(cat.name.toLowerCase().replace(/ & /g, "_").replace(/ /g, "_")) || cat.name}
+                              {t(cat.label.toLowerCase().replace(/ & /g, "_").replace(/ /g, "_")) || cat.label}
                             </Text>
                           )}
                         </Pressable>
