@@ -42,7 +42,7 @@ interface SettingsState {
   settings: { language: string };
   customerAssets: CustomerAssets;
   topSellers?: { id: string; name: string; rating: number; speed: string; image: string; products: string[] }[];
-  productCategories?: { id: string; label: string; iconName: string; status: string }[];
+  productCategories?: { id: string; label: string; iconName: string; status: string; imageUrl?: string }[];
   homeSectionOrder?: string[];
   fetchSettings: () => Promise<void>;
   setSettings: (partial: Partial<Omit<SettingsState, 'settings'>>) => void;
