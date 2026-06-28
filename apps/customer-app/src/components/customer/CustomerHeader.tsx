@@ -19,6 +19,8 @@ import { ChamferedBox } from "@/components/ui/ChamferedBox";
 import { useNotificationStore } from "@/store/notificationStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FULL_API_URL } from "@/config/api";
+import { LinearGradient } from "expo-linear-gradient";
+import { LocationSelectorModal } from "./LocationSelectorModal";
 
 interface CustomerHeaderProps {
   showSearch?: boolean;
@@ -56,7 +58,22 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
   const { toast, ToastHost } = useToast();
   const [search, setSearch] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+  const [activeHubName, setActiveHubName] = useState("Port Blair Live Hub");
   const { unreadCount, setUnreadCount } = useNotificationStore();
+
+  useEffect(() => {
+    const loadHub = async () => {
+      try {
+        const hubStr = await AsyncStorage.getItem('ocean_active_hub');
+        if (hubStr) {
+          const hub = JSON.parse(hubStr);
+          setActiveHubName(hub.name);
+        }
+      } catch (e) { }
+    };
+    loadHub();
+  }, [isLocationModalOpen]);
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -226,62 +243,74 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
         </View>
 
         {showSearch && pathname !== "/login" && pathname !== "/products" ? (
-          <View className="mt-2 w-full relative" style={{ aspectRatio: 7.756 }}>
-            <Image
-              source={require("../../../assets/search_and_hub_mockup.jpg")}
-              style={StyleSheet.absoluteFillObject}
-              contentFit="fill"
-            />
-            {/* Transparent absolute TextInput overlay */}
-            <TextInput
-              value={search}
-              onChangeText={setSearch}
-              onSubmitEditing={onSearch}
-              placeholder="Search products..."
-              placeholderTextColor="#9ca3af" // Restored visible placeholder
-              returnKeyType="search"
-              style={{
-                position: 'absolute',
-                top: '5%',
-                left: '12%',
-                width: '72%',
-                height: '40%',
-                backgroundColor: '#ffffff', // Covers the baked-in text in the image
-                color: '#334155', // dark slate text
-                fontSize: 13,
-                fontFamily: "Inter_400Regular",
-                paddingHorizontal: 8,
-                paddingVertical: 0, // Fix for Android text clipping
-                includeFontPadding: false,
-                textAlignVertical: 'center',
-              }}
-            />
-            
-            {/* Search Icon Click Overlay */}
-            <Pressable
+          <View className="mt-3 gap-3">
+            {/* Search Bar - White Pill */}
+            <Pressable 
               onPress={onSearch}
+              className="flex-row items-center h-[46px] rounded-full px-1 pl-4"
               style={{
-                position: 'absolute',
-                top: '2%',
-                left: '2%',
-                width: '12%',
-                height: '46%',
+                backgroundColor: '#ffffff',
+                borderWidth: 1.5,
+                borderColor: '#115e59', // teal-800
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 3,
+                elevation: 3,
               }}
-            />
+            >
+              <MaterialCommunityIcons name="magnify" size={24} color="#115e59" />
+              <TextInput
+                value={search}
+                onChangeText={setSearch}
+                onSubmitEditing={onSearch}
+                placeholder="Search seafood products..."
+                placeholderTextColor="#64748b"
+                returnKeyType="search"
+                className="flex-1 ml-2 text-[15px] font-medium"
+                style={{ color: '#334155', height: '100%' }}
+              />
+              <Pressable 
+                onPress={onSearch}
+                className="h-[38px] w-[38px] rounded-full items-center justify-center bg-[#0f4a5c]"
+              >
+                <MaterialCommunityIcons name="fish" size={20} color="#ffffff" />
+              </Pressable>
+            </Pressable>
 
-            {/* Delivery Hub Location Arrow Click Overlay */}
-            <Pressable
-              onPress={() => console.log('Delivery Hub clicked')} // Placeholder action
-              style={{
-                position: 'absolute',
-                bottom: '0%',
-                left: '0%',
-                width: '100%',
-                height: '50%',
-              }}
-            />
+            {/* Hub Location Bar - Teal Gradient Pill */}
+            <Pressable onPress={() => setIsLocationModalOpen(true)}>
+              <LinearGradient
+                colors={['#4cb8c4', '#3cd3ad']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                className="flex-row items-center h-[42px] rounded-full px-4"
+                style={{
+                  shadowColor: "#3cd3ad",
+                  shadowOffset: { width: 0, height: 4 },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 5,
+                  elevation: 5,
+                }}
+              >
+                <MaterialCommunityIcons name="map-marker" size={18} color="#ffffff" />
+                <Text className="flex-1 ml-2 text-[13px] font-bold text-white tracking-wide">
+                  {activeHubName} <Text className="font-normal opacity-90">• Active Fishing Zones</Text>
+                </Text>
+                <View className="w-6 h-6 rounded-full bg-white/20 items-center justify-center">
+                  <MaterialCommunityIcons name="chevron-down" size={16} color="#ffffff" />
+                </View>
+              </LinearGradient>
+            </Pressable>
           </View>
         ) : null}
+
+        <LocationSelectorModal 
+          visible={isLocationModalOpen} 
+          onClose={() => setIsLocationModalOpen(false)} 
+          onSelectHub={(hub) => setActiveHubName(hub.name)} 
+          colors={colors}
+        />
 
         {/* Removed HOME, MARKET, ORDERS Menu list below search bar */}
       </View>
