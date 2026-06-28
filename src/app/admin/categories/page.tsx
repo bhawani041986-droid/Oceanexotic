@@ -35,9 +35,12 @@ export default function AdminCategoriesPage() {
     id: "",
     label: "",
     iconName: "Fish",
-    status: "ACTIVE"
+    status: "ACTIVE",
+    imageUrl: "",
+    colorHex: "#14B8A6"
   });
   const [originalId, setOriginalId] = useState("");
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   const fetchCategories = async () => {
     setIsLoading(true);
@@ -57,15 +60,43 @@ export default function AdminCategoriesPage() {
   }, []);
 
   const handleAdd = () => {
-    setFormData({ id: "", label: "", iconName: "Fish", status: "ACTIVE" });
+    setFormData({ id: "", label: "", iconName: "Fish", status: "ACTIVE", imageUrl: "", colorHex: "#14B8A6" });
     setOriginalId("");
     setIsModalOpen(true);
   };
 
   const handleEdit = (cat: any) => {
-    setFormData({ id: cat.id, label: cat.label, iconName: cat.iconName || "Fish", status: cat.status || "ACTIVE" });
+    setFormData({ id: cat.id, label: cat.label, iconName: cat.iconName || "Fish", status: cat.status || "ACTIVE", imageUrl: cat.imageUrl || "", colorHex: cat.colorHex || "#14B8A6" });
     setOriginalId(cat.id);
     setIsModalOpen(true);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files?.[0]) return;
+    const file = e.target.files[0];
+    setIsUploadingImage(true);
+    
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: form
+      });
+      
+      const data = await res.json();
+      if (res.ok && data.url) {
+        setFormData(prev => ({ ...prev, imageUrl: data.url }));
+        toast("Image uploaded successfully", "success");
+      } else {
+        toast(data.error || "Upload failed", "error");
+      }
+    } catch (err) {
+      toast("Network error during upload", "error");
+    } finally {
+      setIsUploadingImage(false);
+    }
   };
 
   const handleSave = async () => {
@@ -350,23 +381,61 @@ export default function AdminCategoriesPage() {
       {isModalOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
            <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={() => setIsModalOpen(false)} />
-           <Card className="relative z-10 w-full max-w-sm md:max-w-lg p-6 md:p-10 bg-bg-secondary border-[var(--foreground)]/5 space-y-6 md:space-y-8 animate-in zoom-in-95 duration-300 rounded-[24px] md:rounded-[48px] shadow-glow-purple/20">
-              <div className="space-y-1 border-b border-[var(--foreground)]/5 pb-4 md:pb-6">
+           <Card className="relative z-10 w-full max-w-sm md:max-w-xl p-6 md:p-8 bg-bg-secondary border-[var(--foreground)]/5 space-y-4 md:space-y-6 animate-in zoom-in-95 duration-300 rounded-[24px] md:rounded-[32px] shadow-glow-purple/20">
+              <div className="space-y-1 border-b border-[var(--foreground)]/5 pb-4">
                  <h3 className="text-lg md:text-xl font-black text-[var(--foreground)] uppercase italic tracking-tighter">{originalId ? "Edit Category" : "Add Category"}</h3>
                  <p className="text-[8px] md:text-[10px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">Create or modify a category for the marketplace</p>
               </div>
-              <div className="space-y-4 md:space-y-6">
-                 <div className="space-y-1.5 md:space-y-2">
-                    <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Category ID</label>
-                    <Input value={formData.id} onChange={(e) => setFormData({...formData, id: e.target.value})} disabled={!!originalId} placeholder="e.g. EXOTIC_FISH" className="h-11 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 italic rounded-lg md:rounded-xl uppercase font-black text-sm disabled:opacity-50" />
+              <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2 custom-scrollbar">
+                 <div className="space-y-1.5">
+                    <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Category Image</label>
+                    <div className="flex items-center gap-4">
+                       {formData.imageUrl && (
+                         <div className="w-16 h-16 rounded-lg bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 overflow-hidden shrink-0">
+                           <img src={formData.imageUrl} alt="Category" className="w-full h-full object-cover" />
+                         </div>
+                       )}
+                       <div className="flex-1">
+                         <input 
+                           type="file" 
+                           accept="image/jpeg, image/png, image/webp" 
+                           onChange={handleImageUpload} 
+                           className="hidden" 
+                           id="category-image-upload" 
+                           disabled={isUploadingImage}
+                         />
+                         <label 
+                           htmlFor="category-image-upload" 
+                           className="flex items-center justify-center h-11 md:h-14 bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 transition-colors border border-dashed border-[var(--foreground)]/20 rounded-lg md:rounded-xl cursor-pointer text-xs font-black uppercase italic"
+                         >
+                           {isUploadingImage ? <RefreshCw className="w-4 h-4 animate-spin mr-2" /> : null}
+                           {isUploadingImage ? 'UPLOADING...' : 'UPLOAD IMAGE (204x341px)'}
+                         </label>
+                       </div>
+                    </div>
                  </div>
-                 <div className="space-y-1.5 md:space-y-2">
-                    <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Category Name</label>
-                    <Input value={formData.label} onChange={(e) => setFormData({...formData, label: e.target.value})} placeholder="e.g. Exotic Fish" className="h-11 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 italic rounded-lg md:rounded-xl text-sm" />
+                 <div className="grid grid-cols-2 gap-4">
+                   <div className="space-y-1.5 md:space-y-2">
+                      <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Category ID</label>
+                      <Input value={formData.id} onChange={(e) => setFormData({...formData, id: e.target.value})} disabled={!!originalId} placeholder="e.g. EXOTIC_FISH" className="h-11 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 italic rounded-lg md:rounded-xl uppercase font-black text-sm disabled:opacity-50" />
+                   </div>
+                   <div className="space-y-1.5 md:space-y-2">
+                      <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Category Name</label>
+                      <Input value={formData.label} onChange={(e) => setFormData({...formData, label: e.target.value})} placeholder="e.g. Exotic Fish" className="h-11 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 italic rounded-lg md:rounded-xl text-sm" />
+                   </div>
                  </div>
-                 <div className="space-y-1.5 md:space-y-2">
-                    <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Lucide Icon Name</label>
-                    <Input value={formData.iconName} onChange={(e) => setFormData({...formData, iconName: e.target.value})} placeholder="e.g. Anchor, Fish, Star" className="h-11 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 italic rounded-lg md:rounded-xl text-sm" />
+                 <div className="grid grid-cols-2 gap-4">
+                   <div className="space-y-1.5 md:space-y-2">
+                      <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Accent Color</label>
+                      <div className="flex gap-2">
+                        <Input type="color" value={formData.colorHex} onChange={(e) => setFormData({...formData, colorHex: e.target.value})} className="w-14 h-11 md:h-14 p-1 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 rounded-lg md:rounded-xl" />
+                        <Input value={formData.colorHex} onChange={(e) => setFormData({...formData, colorHex: e.target.value})} placeholder="#14B8A6" className="flex-1 h-11 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 italic rounded-lg md:rounded-xl uppercase font-black text-sm" />
+                      </div>
+                   </div>
+                   <div className="space-y-1.5 md:space-y-2">
+                      <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Lucide Icon Name</label>
+                      <Input value={formData.iconName} onChange={(e) => setFormData({...formData, iconName: e.target.value})} placeholder="e.g. Anchor, Fish, Star" className="h-11 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 italic rounded-lg md:rounded-xl text-sm" />
+                   </div>
                  </div>
                  <div className="space-y-1.5 md:space-y-2">
                     <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Status</label>

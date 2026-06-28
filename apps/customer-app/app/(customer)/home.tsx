@@ -581,14 +581,14 @@ export default function CustomerHomeScreen() {
                   {/* Dynamic Category Grid */}
                   <View className="px-2 w-full">
                     <View className="flex-row flex-wrap justify-between gap-y-2">
-                      {GRID_CATEGORIES.map((cat, idx) => (
+                      {(settings.productCategories || []).slice(0, 10).map((cat, idx) => (
                         <Pressable 
-                          key={idx}
-                          onPress={() => router.push({ pathname: "/products", params: { category: cat.slug } })}
+                          key={cat.id || idx}
+                          onPress={() => router.push({ pathname: "/products", params: { category: cat.id } })}
                           style={{ width: '19%', aspectRatio: 0.598 }}
                         >
                           <Image
-                            source={cat.image}
+                            source={cat.imageUrl ? { uri: cat.imageUrl } : require("../../assets/categories/seawater.jpg")}
                             style={{ width: '100%', height: '100%' }}
                             contentFit="contain"
                           />
