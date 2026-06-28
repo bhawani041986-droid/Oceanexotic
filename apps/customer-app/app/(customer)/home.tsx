@@ -681,7 +681,7 @@ export default function CustomerHomeScreen() {
                                 <Image
                                   source={iconSource}
                                   style={{ width: '100%', height: '100%' }}
-                                  contentFit="cover"
+                                  contentFit="contain"
                                 />
                               </View>
                               {cat.label && (
