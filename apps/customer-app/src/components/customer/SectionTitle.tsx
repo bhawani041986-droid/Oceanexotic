@@ -7,17 +7,19 @@ export function SectionTitle({ title, subtitle }: { title: string; subtitle: str
   return (
     <View className="gap-1">
       <View>
-        <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>{title}</Text>
-        <View className="mt-1.5 mb-3" style={{ height: 2, width: 64, borderRadius: 999, overflow: 'hidden' }}>
+        <Text className="text-lg font-black uppercase tracking-tight" style={{ color: colors.primary }}>
+          {title}
+        </Text>
+        <View className="mt-1.5 mb-2" style={{ height: 3, width: 80, borderRadius: 999, overflow: 'hidden' }}>
           <LinearGradient
-            colors={[colors.text, colors.primary]}
+            colors={[colors.primary, '#00F3FF', '#FF5E36']} // Theme Primary -> Neon Cyan -> Neon Coral
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
             style={{ flex: 1 }}
           />
         </View>
       </View>
-      <Text className="text-[10px] font-medium uppercase tracking-widest" style={{ color: colors.textMuted }}>
+      <Text className="text-[9px] font-semibold uppercase tracking-wider" style={{ color: colors.textMuted }}>
         {subtitle}
       </Text>
     </View>
