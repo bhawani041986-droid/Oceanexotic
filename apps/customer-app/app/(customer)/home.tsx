@@ -547,12 +547,12 @@ export default function CustomerHomeScreen() {
                       </View>
                     )}
 
-                    {/* Relocated Search Bar & Delivery Hub Widget (Absolute Bottom Right) */}
-                    <View className="absolute bottom-4 right-4 w-[65%] z-30 pointer-events-auto" style={{ aspectRatio: 7.212 }}>
+                    {/* Relocated Search Bar & Delivery Hub Widget (Absolute Bottom Right - Flush, Sleek) */}
+                    <View className="absolute bottom-0 right-2 w-[65%] z-30 pointer-events-auto" style={{ aspectRatio: 10.0 }}>
                       <Image
                         source={require("../../assets/search_and_hub_mockup.jpg")}
                         style={StyleSheet.absoluteFillObject}
-                        contentFit="fill"
+                        contentFit="cover"
                       />
                       {/* Transparent absolute TextInput overlay */}
                       <TextInput
