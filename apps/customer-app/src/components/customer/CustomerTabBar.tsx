@@ -10,9 +10,9 @@ import { t } from "@/lib/i18n";
 
 const NAV: { label: string; href: Href }[] = [
   { label: "Home", href: "/home" },
-  { label: "Market", href: "/products" },
+  { label: "Shop", href: "/products" },
   { label: "Chat", href: "/chat" },
-  { label: "Orders", href: "/orders" },
+  { label: "My Orders", href: "/orders" },
   { label: "Profile", href: "/profile" },
 ];
 
@@ -59,33 +59,30 @@ function TabIcon({ label, active, activeColor }: { label: string; active: boolea
     );
   }
 
-  if (label.toLowerCase() === "market") {
-    const basketColor = active ? activeColor : inactiveColor;
-    const wheelColor = active ? activeColor : activeTeal;
+  if (label.toLowerCase() === "shop") {
+    const bagColor = active ? activeColor : inactiveColor;
     return (
       <Svg width="22" height="22" viewBox="0 0 24 24" fill="none">
         <Path 
-          d="M3 3H5L6.6 13.4C6.7 14.1 7.3 14.6 8 14.6H17.2C17.9 14.6 18.5 14.1 18.6 13.4L20 6H6" 
-          stroke={basketColor} 
+          d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" 
+          stroke={bagColor} 
           strokeWidth="2" 
           strokeLinecap="round" 
           strokeLinejoin="round" 
         />
-        <Circle 
-          cx="9" 
-          cy="19" 
-          r="1.8" 
-          stroke={wheelColor} 
-          strokeWidth="2.2" 
-          fill={active ? activeColor : "none"} 
+        <Path 
+          d="M3 6h18" 
+          stroke={bagColor} 
+          strokeWidth="2" 
+          strokeLinecap="round" 
+          strokeLinejoin="round" 
         />
-        <Circle 
-          cx="17" 
-          cy="19" 
-          r="1.8" 
-          stroke={wheelColor} 
-          strokeWidth="2.2" 
-          fill={active ? activeColor : "none"} 
+        <Path 
+          d="M16 10a4 4 0 0 1-8 0" 
+          stroke={bagColor} 
+          strokeWidth="2" 
+          strokeLinecap="round" 
+          strokeLinejoin="round" 
         />
       </Svg>
     );
@@ -110,7 +107,7 @@ function TabIcon({ label, active, activeColor }: { label: string; active: boolea
     );
   }
 
-  if (label.toLowerCase() === "orders") {
+  if (label.toLowerCase() === "my orders" || label.toLowerCase() === "orders") {
     const boardColor = active ? activeColor : inactiveColor;
     const rupeeColor = active ? activeColor : activeTeal;
     return (
