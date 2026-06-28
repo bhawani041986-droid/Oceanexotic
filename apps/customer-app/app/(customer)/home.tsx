@@ -641,7 +641,21 @@ export default function CustomerHomeScreen() {
                   {/* Dynamic Category Grid */}
                   <View className="px-2 w-full">
                     <View className="flex-row flex-wrap justify-between gap-y-3">
-                      {(settings.productCategories || []).slice(0, 10).map((cat, idx) => (
+                      {(settings.productCategories || []).slice(0, 10).map((cat, idx) => {
+                        const l = (cat.label || "").toLowerCase();
+                        let iconSource = require("../../assets/categories/new/seawater.png");
+                        if (l.includes("freshwater")) iconSource = require("../../assets/categories/new/freshwater.png");
+                        else if (l.includes("prawn") || l.includes("shrimp")) iconSource = require("../../assets/categories/new/prawns.png");
+                        else if (l.includes("crab") || l.includes("lobster")) iconSource = require("../../assets/categories/new/crabs.png");
+                        else if (l.includes("steak") || l.includes("fillet")) iconSource = require("../../assets/categories/new/steaks.png");
+                        else if (l.includes("exotic")) iconSource = require("../../assets/categories/new/exotic.png");
+                        else if (l.includes("cook")) iconSource = require("../../assets/categories/new/ready_to_cook.png");
+                        else if (l.includes("dry")) iconSource = require("../../assets/categories/new/dry_fish.png");
+                        else if (l.includes("mutton")) iconSource = require("../../assets/categories/new/mutton.png");
+                        else if (l.includes("chicken")) iconSource = require("../../assets/categories/new/chicken.png");
+                        else if (l.includes("seawater")) iconSource = require("../../assets/categories/new/seawater.png");
+
+                        return (
                         <Pressable 
                           key={cat.id || idx}
                           onPress={() => router.push({ pathname: "/products", params: { category: cat.id } })}
@@ -649,7 +663,7 @@ export default function CustomerHomeScreen() {
                         >
                           <View style={{ width: '100%', aspectRatio: 0.7 }}>
                             <Image
-                              source={cat.imageUrl ? { uri: cat.imageUrl } : require("../../assets/categories/seawater.jpg")}
+                              source={iconSource}
                               style={{ width: '100%', height: '100%' }}
                               contentFit="contain"
                             />
@@ -664,7 +678,8 @@ export default function CustomerHomeScreen() {
                             </Text>
                           )}
                         </Pressable>
-                      ))}
+                      );
+                      })}
                     </View>
                   </View>
                 </View>
