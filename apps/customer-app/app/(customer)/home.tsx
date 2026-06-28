@@ -541,7 +541,7 @@ export default function CustomerHomeScreen() {
                     )}
 
                     {/* Relocated Pre-Orders Widget (Absolute Bottom Right) */}
-                    <View className="absolute bottom-4 right-4 w-[55%] z-30 pointer-events-auto" style={{ aspectRatio: 2.0 }}>
+                    <View className="absolute bottom-4 right-4 w-[55%] z-30 pointer-events-auto" style={{ aspectRatio: 3.737 }}>
                       <Image
                         source={require("../../assets/pre_orders_mockup.jpg")}
                         style={StyleSheet.absoluteFillObject}
@@ -974,82 +974,72 @@ export default function CustomerHomeScreen() {
                   <SectionTitle title="Premium Sellers" subtitle="Top Rated Sellers" />
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
                     {(settings.topSellers || []).map((seller) => {
-                      if (seller.id === "SEL-003") {
-                        return (
-                          <Pressable
-                            key={seller.id}
-                            onPress={() => router.push({ pathname: "/products", params: { sellerId: seller.id } })}
-                            className="mr-3 w-56"
-                            style={{ height: 122 }}
-                          >
-                            <Image
-                              source={require("../../assets/deep_fishing_card.jpg")}
-                              style={StyleSheet.absoluteFillObject}
-                              contentFit="cover"
-                            />
-                          </Pressable>
-                        );
-                      }
                       return (
                         <Pressable
                           key={seller.id}
                           onPress={() => router.push({ pathname: "/products", params: { sellerId: seller.id } })}
-                          className="mr-3 w-56"
+                          className="mr-3 w-56 rounded-2xl p-3 shadow-md border"
+                          style={{
+                            backgroundColor: colors.isDark ? "#0D1527" : "#FFFFFF",
+                            borderColor: colors.border,
+                            height: 122,
+                            justifyContent: "space-between"
+                          }}
                         >
-                          <ChamferedBox
-                            fillColor={colors.card}
-                            strokeColor={colors.border}
-                            bevelSize={14}
-                            style={{ minHeight: 140 }}
-                            className="w-full p-4 relative overflow-hidden"
-                          >
-                            <View className="flex-row justify-between items-center mb-2">
-                              <Text className="text-[8px] font-black uppercase" style={{ color: primaryColor }}>{seller.id}</Text>
-                              <View className="flex-row items-center gap-1">
-                                <View className="h-1.5 w-1.5 rounded-none bg-[#00ff88]" />
-                                <Text className="text-[6px] font-black uppercase" style={{ color: colors.textMuted }}>LIVE</Text>
-                              </View>
+                          {/* Top Row: Seller ID & LIVE Beacon */}
+                          <View className="flex-row justify-between items-center">
+                            <Text className="text-[10px] font-black uppercase" style={{ color: primaryColor }}>{seller.id}</Text>
+                            <View className="flex-row items-center gap-1 bg-emerald-500/10 px-1.5 py-0.5 rounded-full">
+                              <View className="h-1 w-1 rounded-full bg-[#10b981]" />
+                              <Text className="text-[6.5px] font-black uppercase text-[#10b981]">LIVE</Text>
                             </View>
-                            
-                            <View className="flex-row items-center gap-3">
-                              <ChamferedBox
-                                fillColor={colors.bgAlt}
-                                strokeColor={colors.border}
-                                bevelSize={6}
-                                style={{ minHeight: 40 }}
-                                className="h-10 w-10 items-center justify-center relative overflow-hidden"
-                              >
-                                <Text className="text-2xl relative z-10">{seller.image}</Text>
-                              </ChamferedBox>
-                              <View className="flex-1">
-                                <Text className="text-sm font-black uppercase italic" style={{ color: colors.text }} numberOfLines={1}>
-                                  {seller.name}
-                                </Text>
-                                <View className="flex-row items-center gap-2 mt-1">
-                                  <Text className="text-[8px] font-black text-warning">★ {seller.rating}</Text>
-                                  <Text className="text-[8px] font-black" style={{ color: primaryColor }}>{seller.speed}</Text>
+                          </View>
+                          
+                          {/* Middle Row: Emblem & Name/Rating */}
+                          <View className="flex-row items-center gap-2.5 my-0.5">
+                            <View className="h-10 w-10 items-center justify-center rounded-xl border" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
+                              <Text className="text-xl">{seller.image}</Text>
+                            </View>
+                            <View className="flex-1">
+                              <Text className="text-xs font-black uppercase italic" style={{ color: colors.text }} numberOfLines={1}>
+                                {seller.name}
+                              </Text>
+                              <View className="flex-row items-center gap-1 mt-0.5">
+                                <View className="flex-row items-center gap-1 px-1 rounded" style={{ backgroundColor: colors.isDark ? "#1E293B" : "#FEF3C7", borderColor: colors.border }}>
+                                  <Text className="text-[8px] font-black text-amber-500">★ {seller.rating}</Text>
+                                </View>
+                                <Text className="text-[8px]" style={{ color: colors.textMuted }}>|</Text>
+                                <View className="flex-row items-center gap-0.5 px-1 rounded" style={{ backgroundColor: colors.isDark ? "#1E293B" : "#F1F5F9" }}>
+                                  <MaterialCommunityIcons name="clock-outline" size={7} color={colors.textMuted} />
+                                  <Text className="text-[8px] font-black" style={{ color: colors.textMuted }}>{seller.speed}</Text>
                                 </View>
                               </View>
                             </View>
-                            
-                            <View className="flex-row justify-between items-center mt-3 pt-2 border-t" style={{ borderTopColor: colors.border }}>
-                              <View className="flex-row gap-1">
-                                {seller.products.map((p, idx) => (
-                                  <ChamferedBox
-                                    key={idx}
-                                    fillColor={colors.bgAlt}
-                                    strokeColor={colors.border}
-                                    bevelSize={3}
-                                    style={{ minHeight: 20 }}
-                                    className="h-5 w-5 items-center justify-center relative overflow-hidden"
-                                  >
-                                    <Text className="text-xs relative z-10">{p}</Text>
-                                  </ChamferedBox>
-                                ))}
-                              </View>
-                              <Text className="text-[8px] font-black uppercase" style={{ color: primaryColor }}>VIEW NODE ➜</Text>
+                          </View>
+                          
+                          {/* Bottom Row: Products & Shop Now Button */}
+                          <View className="flex-row justify-between items-center pt-1.5 border-t" style={{ borderTopColor: colors.border }}>
+                            <View className="flex-row gap-0.5">
+                              {seller.products.slice(0, 3).map((p, idx) => (
+                                <View
+                                  key={idx}
+                                  className="h-6 w-6 items-center justify-center rounded-lg border"
+                                  style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}
+                                >
+                                  <Text className="text-xs">{p}</Text>
+                                </View>
+                              ))}
                             </View>
-                          </ChamferedBox>
+                            
+                            {/* SHOP NOW Button */}
+                            <View className="flex-row items-center gap-0.5 px-2 py-0.5 rounded-full shadow-sm" style={{ backgroundColor: "#0284c7" }}>
+                              <MaterialCommunityIcons name="cart-outline" size={8} color="#ffffff" />
+                              <Text className="text-[7px] font-black uppercase text-white tracking-wider">SHOP NOW</Text>
+                              <View className="bg-white rounded-full p-0.5 ml-0.5">
+                                <MaterialCommunityIcons name="chevron-right" size={5} color="#0284c7" />
+                              </View>
+                            </View>
+                          </View>
                         </Pressable>
                       );
                     })}
@@ -1101,18 +1091,47 @@ export default function CustomerHomeScreen() {
                       const initials = displayName.split(' ').map((n: string) => n[0] || '').join('').slice(0, 2).toUpperCase();
                       const ratingNum = parseFloat(r.rating) || 5;
                       return (
-                        <ChamferedBox 
+                        <View 
                           key={r.id} 
-                          fillColor={colors.card}
-                          strokeColor={colors.border}
-                          bevelSize={14}
-                          style={{ minHeight: 120 }}
-                          className="p-4 w-64 relative overflow-hidden"
+                          className="p-3 w-64 rounded-2xl shadow-md border"
+                          style={{
+                            backgroundColor: colors.isDark ? "#0D1527" : "#FFFFFF",
+                            borderColor: colors.border,
+                            minHeight: 120,
+                            justifyContent: "space-between"
+                          }}
                         >
-                          <Text className="text-[10px] font-black uppercase relative z-10" style={{ color: primaryColor }}>★ {ratingNum % 1 === 0 ? ratingNum + '.0' : ratingNum}</Text>
-                          <Text className="mt-2 text-sm italic relative z-10" style={{ color: colors.textMuted }}>&ldquo;{displayText}&rdquo;</Text>
-                          <Text className="mt-2 text-[10px] font-black uppercase relative z-10" style={{ color: colors.text }}>— {displayName}</Text>
-                        </ChamferedBox>
+                          {/* Top: Star Rating & Verified Badge */}
+                          <View className="flex-row justify-between items-center mb-1">
+                            <View className="flex-row">
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                <MaterialCommunityIcons 
+                                  key={i} 
+                                  name="star" 
+                                  size={10} 
+                                  color={i < Math.floor(ratingNum) ? "#f59e0b" : "#e2e8f0"} 
+                                />
+                              ))}
+                            </View>
+                            <View className="flex-row items-center gap-0.5 bg-sky-500/10 px-1.5 py-0.5 rounded-full">
+                              <MaterialCommunityIcons name="decagram" size={8} color="#0284c7" />
+                              <Text className="text-[7px] font-black uppercase text-[#0284c7]">VERIFIED</Text>
+                            </View>
+                          </View>
+
+                          {/* Middle: Review Comment Text */}
+                          <Text className="text-[11px] italic text-slate-500 leading-tight flex-1" style={{ color: colors.textMuted }} numberOfLines={3}>
+                            &ldquo;{displayText}&rdquo;
+                          </Text>
+
+                          {/* Bottom: User Info */}
+                          <View className="flex-row items-center gap-2 pt-1.5 border-t" style={{ borderTopColor: colors.border }}>
+                            <View className="h-6 w-6 rounded-full items-center justify-center border" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
+                              <Text className="text-[8px] font-black" style={{ color: colors.text }}>{initials || 'C'}</Text>
+                            </View>
+                            <Text className="text-[9px] font-black uppercase" style={{ color: colors.text }}>— {displayName}</Text>
+                          </View>
+                        </View>
                       );
                     })}
                   </ScrollView>

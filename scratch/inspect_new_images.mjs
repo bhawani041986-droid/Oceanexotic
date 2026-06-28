@@ -21,11 +21,10 @@ function getJpgSize(filePath) {
 
 const dir = 'C:\\Users\\BHAWANI\\.gemini\\antigravity\\brain\\fa123dc6-1391-44a5-9637-bf5514b61a60';
 const files = [
-  'media__1782606984284.jpg',
-  'media__1782606984906.jpg',
-  'media__1782606984922.jpg',
-  'media__1782606984950.jpg',
-  'media__1782606984951.jpg'
+  'media__1782565088272.jpg',
+  'media__1782565796483.jpg',
+  'media__1782566388003.jpg',
+  'media__1782607542611.jpg'
 ];
 
 for (const file of files) {
