@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { View, Text, Pressable, TextInput, Modal, StyleSheet } from "react-native";
+import { View, Text, Pressable, TextInput, Modal, StyleSheet, ScrollView } from "react-native";
 import { useRouter, usePathname } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Svg, { Path, Circle, Polygon } from "react-native-svg";
@@ -241,77 +241,81 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               borderRightColor: colors.border
             }}
           >
-            <Image
-              source={require("../../../assets/drawer_menu_mockup.jpg")}
-              style={StyleSheet.absoluteFillObject}
-              contentFit="fill"
-            />
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}>
+              <View style={{ width: 300, height: 464, position: 'relative' }}>
+                <Image
+                  source={require("../../../assets/drawer_menu_mockup.jpg")}
+                  style={StyleSheet.absoluteFillObject}
+                  contentFit="fill"
+                />
 
-            {/* Clickable Overlays */}
-            
-            {/* Close Button X */}
-            <Pressable
-              onPress={() => setIsMenuOpen(false)}
-              style={{ position: 'absolute', top: '3.5%', right: '4%', width: '14%', height: '5.5%' }}
-            />
+                {/* Clickable Overlays */}
+                
+                {/* Close Button X */}
+                <Pressable
+                  onPress={() => setIsMenuOpen(false)}
+                  style={{ position: 'absolute', top: '3.5%', right: '4%', width: '14%', height: '5.5%' }}
+                />
 
-            {/* Local Delivery Hub info (absorbs touches) */}
-            <Pressable
-              onPress={() => {}}
-              style={{ position: 'absolute', top: '11.3%', left: '5%', width: '90%', height: '8.8%' }}
-            />
+                {/* Local Delivery Hub info (absorbs touches) */}
+                <Pressable
+                  onPress={() => {}}
+                  style={{ position: 'absolute', top: '11.3%', left: '5%', width: '90%', height: '8.8%' }}
+                />
 
-            {/* Home */}
-            <Pressable
-              onPress={() => navigateTo("/home")}
-              style={{ position: 'absolute', top: '22.0%', left: '5%', width: '90%', height: '7.0%' }}
-            />
+                {/* Home */}
+                <Pressable
+                  onPress={() => navigateTo("/home")}
+                  style={{ position: 'absolute', top: '22.0%', left: '5%', width: '90%', height: '7.0%' }}
+                />
 
-            {/* Shop */}
-            <Pressable
-              onPress={() => navigateTo("/products")}
-              style={{ position: 'absolute', top: '31.0%', left: '5%', width: '90%', height: '7.0%' }}
-            />
+                {/* Shop */}
+                <Pressable
+                  onPress={() => navigateTo("/products")}
+                  style={{ position: 'absolute', top: '31.0%', left: '5%', width: '90%', height: '7.0%' }}
+                />
 
-            {/* Recipes */}
-            <Pressable
-              onPress={() => navigateTo("/recipe")}
-              style={{ position: 'absolute', top: '40.0%', left: '5%', width: '90%', height: '7.0%' }}
-            />
+                {/* Recipes */}
+                <Pressable
+                  onPress={() => navigateTo("/recipe")}
+                  style={{ position: 'absolute', top: '40.0%', left: '5%', width: '90%', height: '7.0%' }}
+                />
 
-            {/* Orders */}
-            <Pressable
-              onPress={() => navigateTo("/orders")}
-              style={{ position: 'absolute', top: '49.0%', left: '5%', width: '90%', height: '7.0%' }}
-            />
+                {/* Orders */}
+                <Pressable
+                  onPress={() => navigateTo("/orders")}
+                  style={{ position: 'absolute', top: '49.0%', left: '5%', width: '90%', height: '7.0%' }}
+                />
 
-            {/* Profile */}
-            <Pressable
-              onPress={() => navigateTo("/profile")}
-              style={{ position: 'absolute', top: '58.0%', left: '5%', width: '90%', height: '7.0%' }}
-            />
+                {/* Profile */}
+                <Pressable
+                  onPress={() => navigateTo("/profile")}
+                  style={{ position: 'absolute', top: '58.0%', left: '5%', width: '90%', height: '7.0%' }}
+                />
 
-            {/* Cart */}
-            <Pressable
-              onPress={() => navigateTo("/cart")}
-              style={{ position: 'absolute', top: '67.0%', left: '5%', width: '90%', height: '7.0%' }}
-            />
+                {/* Cart */}
+                <Pressable
+                  onPress={() => navigateTo("/cart")}
+                  style={{ position: 'absolute', top: '67.0%', left: '5%', width: '90%', height: '7.0%' }}
+                />
 
-            {/* Chat with Us */}
-            <Pressable
-              onPress={() => navigateTo("/chat")}
-              style={{ position: 'absolute', top: '76.0%', left: '5%', width: '90%', height: '7.0%' }}
-            />
+                {/* Chat with Us */}
+                <Pressable
+                  onPress={() => navigateTo("/chat")}
+                  style={{ position: 'absolute', top: '76.0%', left: '5%', width: '90%', height: '7.0%' }}
+                />
 
-            {/* Sign Out */}
-            <Pressable
-              onPress={() => {
-                setIsMenuOpen(false);
-                logout();
-                router.replace("/login");
-              }}
-              style={{ position: 'absolute', top: '85.0%', left: '5%', width: '90%', height: '7.0%' }}
-            />
+                {/* Sign Out */}
+                <Pressable
+                  onPress={() => {
+                    setIsMenuOpen(false);
+                    logout();
+                    router.replace("/login");
+                  }}
+                  style={{ position: 'absolute', top: '85.0%', left: '5%', width: '90%', height: '7.0%' }}
+                />
+              </View>
+            </ScrollView>
           </View>
         </View>
       </Modal>

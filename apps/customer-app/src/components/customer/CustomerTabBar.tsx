@@ -191,8 +191,12 @@ export function CustomerTabBar() {
         contentFit="fill"
       />
 
-      {/* Hotspots */}
+      {/* Hotspots & Dynamic Overlays */}
       {NAV.map((item, idx) => {
+        const active = pathActive(pathname, String(item.href));
+        const activeColor = colors.primary;
+        const inactiveColor = colors.isDark ? "#7C8BA1" : "#64748B";
+
         return (
           <Pressable
             key={String(item.href)}
@@ -202,8 +206,73 @@ export function CustomerTabBar() {
               left: `${idx * 20}%`,
               width: '20%',
               height: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
-          />
+          >
+            {idx === 2 ? (
+              // Center CHAT tab: Keep blue circle mockup visible, overlay dynamic label at bottom
+              <View style={{ flex: 1, width: '100%', justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 6 }}>
+                <View style={{ position: 'absolute', bottom: 5, width: '80%', height: 12, backgroundColor: '#ffffff' }} />
+                <Text 
+                  className="text-[8px] font-black uppercase text-center relative z-10" 
+                  style={{ color: active ? activeColor : inactiveColor }}
+                >
+                  {item.label}
+                </Text>
+              </View>
+            ) : (
+              // Side tabs: Mask static icons/labels with solid white container, render dynamic SVGs & labels
+              <View 
+                style={{ 
+                  position: 'absolute', 
+                  width: '90%', 
+                  height: '85%', 
+                  alignSelf: 'center', 
+                  backgroundColor: '#ffffff', 
+                  justifyContent: 'center', 
+                  alignItems: 'center',
+                  paddingTop: 4,
+                }}
+              >
+                {/* Glowing top line indicator for active tab */}
+                {active && (
+                  <View 
+                    style={{ 
+                      position: "absolute",
+                      top: 0,
+                      width: 32,
+                      height: 3,
+                      backgroundColor: activeColor,
+                      borderRadius: 1.5,
+                    }}
+                  />
+                )}
+
+                {/* Tab Icon */}
+                <View 
+                  style={{
+                    width: 32,
+                    height: 32,
+                    borderRadius: 16,
+                    backgroundColor: active ? getRgba(activeColor, 0.05) : "transparent",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <TabIcon label={item.label} active={active} activeColor={activeColor} />
+                </View>
+
+                {/* Tab Label */}
+                <Text
+                  className="text-[8px] font-black uppercase tracking-[0.08em] mt-0.5 text-center"
+                  style={{ color: active ? activeColor : inactiveColor }}
+                >
+                  {item.label}
+                </Text>
+              </View>
+            )}
+          </Pressable>
         );
       })}
 
