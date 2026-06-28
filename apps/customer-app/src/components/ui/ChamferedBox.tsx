@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, ViewProps, StyleSheet, StyleProp, ViewStyle } from "react-native";
-import Svg, { Path } from "react-native-svg";
+import Svg, { Path, Defs } from "react-native-svg";
 import { cn } from "@/lib/utils";
 
 export interface ChamferedBoxProps extends ViewProps {
@@ -14,6 +14,8 @@ export interface ChamferedBoxProps extends ViewProps {
   glowColor?: string;
   contentClassName?: string;
   contentStyle?: StyleProp<ViewStyle>;
+  /** Pass SVG <LinearGradient> elements here to use them in fillColor="url(#myGrad)" */
+  gradientDefs?: React.ReactNode;
 }
 
 export function ChamferedBox({
@@ -25,6 +27,7 @@ export function ChamferedBox({
   glowColor,
   contentClassName,
   contentStyle,
+  gradientDefs,
   children,
   className,
   style,
@@ -72,6 +75,7 @@ export function ChamferedBox({
       {/* Background and Border layer */}
       {w > 0 && h > 0 ? (
         <Svg width={w} height={h} style={StyleSheet.absoluteFill}>
+          {gradientDefs ? <Defs>{gradientDefs}</Defs> : null}
           <Path
             d={pathD}
             fill={resolvedFill}

@@ -245,7 +245,7 @@ export default function ProfileScreen() {
   return (
     <View className="flex-1 bg-white">
       {ToastHost}
-      <ScrollView contentContainerClassName="px-4 pb-28 pt-16">
+      <ScrollView contentContainerClassName="px-4 pb-28 pt-32">
         <Text className="text-[28px] font-black uppercase italic tracking-tight" style={{ color: '#020817' }}>My Profile</Text>
         <Text 
           className="text-[12px] font-black uppercase tracking-[0.2em]" 
@@ -349,19 +349,7 @@ export default function ProfileScreen() {
           </Pressable>
         </View>
 
-        {/* Global Gradients for the screen */}
-        <Svg width={0} height={0} style={{ position: 'absolute' }}>
-          <Defs>
-            <SvgLinearGradient id="saveGrad" x1="0" y1="0" x2="1" y2="0">
-              <Stop offset="0%" stopColor="#0d9488" />
-              <Stop offset="100%" stopColor="#1d4ed8" />
-            </SvgLinearGradient>
-            <SvgLinearGradient id="secGrad" x1="0" y1="0" x2="1" y2="0">
-              <Stop offset="0%" stopColor="#0891b2" />
-              <Stop offset="100%" stopColor="#0d9488" />
-            </SvgLinearGradient>
-          </Defs>
-        </Svg>
+
 
         {/* Identity node */}
         <ChamferedBox fillColor="#ffffff" strokeColor="rgba(14, 165, 233, 0.25)" bevelSize={12} className="mt-6">
@@ -381,7 +369,7 @@ export default function ProfileScreen() {
             <View className="mb-4">
               <Text className="mb-2 text-[10px] font-black uppercase text-slate-500">Name</Text>
               <View className="flex-row rounded-lg border border-slate-200 overflow-hidden bg-white h-[52px]">
-                <View className="w-[52px] bg-teal-600 items-center justify-center">
+                <View className="w-[52px] bg-teal-600 items-center justify-center rounded-l-lg">
                   <Svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <Path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                     <Circle cx="12" cy="7" r="4" />
@@ -399,7 +387,7 @@ export default function ProfileScreen() {
             <View className="mb-6">
               <Text className="mb-2 text-[10px] font-black uppercase text-slate-500">Email</Text>
               <View className="flex-row rounded-lg border border-slate-200 overflow-hidden bg-white h-[52px]">
-                <View className="w-[52px] bg-teal-700 items-center justify-center">
+                <View className="w-[52px] bg-teal-700 items-center justify-center rounded-l-lg">
                   <Svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <Rect width="20" height="16" x="2" y="4" rx="2" />
                     <Path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
@@ -417,7 +405,18 @@ export default function ProfileScreen() {
             </View>
 
             <Pressable onPress={save} disabled={saving} className="w-full">
-              <ChamferedBox fillColor="url(#saveGrad)" strokeColor="transparent" bevelSize={12} className="w-full h-14">
+              <ChamferedBox 
+                fillColor="url(#saveGrad)" 
+                strokeColor="transparent" 
+                bevelSize={12} 
+                className="w-full h-14"
+                gradientDefs={
+                  <SvgLinearGradient id="saveGrad" x1="0" y1="0" x2="1" y2="0">
+                    <Stop offset="0%" stopColor="#0d9488" />
+                    <Stop offset="100%" stopColor="#1d4ed8" />
+                  </SvgLinearGradient>
+                }
+              >
                 <View className="flex-1 flex-row items-center justify-center gap-3">
                   {saving ? (
                     <ActivityIndicator color="white" />
@@ -460,7 +459,7 @@ export default function ProfileScreen() {
               <View key={idx} className="mb-4">
                 <Text className="mb-2 text-[10px] font-black uppercase text-slate-500">{field.label}</Text>
                 <View className="flex-row rounded-lg border border-slate-200 overflow-hidden bg-white h-[52px]">
-                  <View className="w-[52px] bg-cyan-50 items-center justify-center">
+                  <View className="w-[52px] bg-cyan-50 items-center justify-center rounded-l-lg">
                     <Svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0891b2" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <Rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
                       <Path d="M7 11V7a5 5 0 0 1 10 0v4" />
@@ -485,7 +484,18 @@ export default function ProfileScreen() {
             ))}
 
             <Pressable onPress={handleChangePassword} disabled={changingPassword} className="w-full mt-2">
-              <ChamferedBox fillColor="url(#secGrad)" strokeColor="transparent" bevelSize={12} className="w-full h-14">
+              <ChamferedBox 
+                fillColor="url(#secGrad)" 
+                strokeColor="transparent" 
+                bevelSize={12} 
+                className="w-full h-14"
+                gradientDefs={
+                  <SvgLinearGradient id="secGrad" x1="0" y1="0" x2="1" y2="0">
+                    <Stop offset="0%" stopColor="#0891b2" />
+                    <Stop offset="100%" stopColor="#0d9488" />
+                  </SvgLinearGradient>
+                }
+              >
                 <View className="flex-1 flex-row items-center justify-center gap-3">
                   {changingPassword ? (
                     <ActivityIndicator color="white" />
