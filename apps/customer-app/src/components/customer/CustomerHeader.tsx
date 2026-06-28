@@ -379,7 +379,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                     top: 98, 
                     left: 0, 
                     width: 300, 
-                    height: 345, 
+                    height: 352, 
                     backgroundColor: '#ffffff', 
                     paddingHorizontal: 15, 
                     gap: 7, 
