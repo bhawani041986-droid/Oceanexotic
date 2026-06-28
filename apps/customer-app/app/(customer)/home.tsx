@@ -552,7 +552,7 @@ export default function CustomerHomeScreen() {
       <LiveTickerMarquee />
       <ScrollView
         className="flex-1"
-        contentContainerClassName="pb-28 pt-2"
+        contentContainerClassName="pb-16 pt-2"
         refreshControl={
           <RefreshControl
             refreshing={todaysCatch.isRefetching}
