@@ -226,11 +226,11 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
         </View>
 
         {showSearch && pathname !== "/login" && pathname !== "/products" ? (
-          <View className="mt-2 w-full relative" style={{ aspectRatio: 10.0 }}>
+          <View className="mt-2 w-full relative" style={{ aspectRatio: 3.878 }}>
             <Image
               source={require("../../../assets/search_and_hub_mockup.jpg")}
               style={StyleSheet.absoluteFillObject}
-              contentFit="cover"
+              contentFit="fill"
             />
             {/* Transparent absolute TextInput overlay */}
             <TextInput
@@ -245,9 +245,9 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                 top: '2%',
                 left: '14%',
                 width: '68%',
-                height: '44%',
+                height: '46%',
                 color: '#334155', // dark slate text color for visibility
-                fontSize: 8,
+                fontSize: 10,
                 paddingHorizontal: 8,
               }}
             />
@@ -260,7 +260,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                 top: '2%',
                 left: '2%',
                 width: '12%',
-                height: '44%',
+                height: '46%',
               }}
             />
           </View>
