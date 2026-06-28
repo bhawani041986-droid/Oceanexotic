@@ -6,6 +6,10 @@ const LANGUAGE_KEY = '@app_language';
 
 const translations: Record<string, Record<string, string>> = {
   en: {
+    premium_steaks_fillets: "Premium Steaks & Fillets",
+    dry_fish: "Dry Fish",
+    mutton: "Mutton",
+    chicken: "Chicken",
     shop: "Shop",
     chat: "Chat",
     profile: "Profile",
@@ -221,6 +225,10 @@ const translations: Record<string, Record<string, string>> = {
 
   // ── Hindi ────────────────────────────────────────────────────────────────
   hi: {
+    premium_steaks_fillets: "प्रीमियम स्टेक और फिलेट",
+    dry_fish: "सूखी मछली",
+    mutton: "मटन",
+    chicken: "चिकन",
     premium_sellers: "प्रीमियम विक्रेता",
     certified_daily_catches: "शीर्ष बेड़े से प्रमाणित दैनिक पकड़",
     join_our_newsletter: "हमारे न्यूज़लेटर से जुड़ें",
@@ -416,6 +424,10 @@ const translations: Record<string, Record<string, string>> = {
 
   // ── Bengali ───────────────────────────────────────────────────────────────
   bn: {
+    premium_steaks_fillets: "প্রিমিয়াম স্টেক এবং ফিলেট",
+    dry_fish: "শুটকি মাছ",
+    mutton: "খাসির মাংস",
+    chicken: "মুরগি",
     premium_sellers: "প্রিমিয়াম বিক্রেতা",
     certified_daily_catches: "শীর্ষ রেটযুক্ত ফ্লিট থেকে প্রত্যয়িত দৈনিক ক্যাচ",
     join_our_newsletter: "আমাদের নিউজলেটারে যোগ দিন",
@@ -711,6 +723,10 @@ const translations: Record<string, Record<string, string>> = {
     min_order: "குறைந்தபட்ச ஆர்டர்",
   },
   te: {
+    premium_steaks_fillets: "ప్రీమియం స్టీక్స్ & ఫిల్లెట్స్",
+    dry_fish: "ఎండు చేప",
+    mutton: "మటన్",
+    chicken: "చికెన్",
     premium_sellers: "ప్రీమియం విక్రేతలు",
     certified_daily_catches: "అగ్రశ్రేణి నౌకాదళాల నుండి ధృవీకరించబడిన రోజువారీ క్యాచ్‌లు",
     join_our_newsletter: "మా వార్తాలేఖలో చేరండి",
@@ -1158,6 +1174,10 @@ const translations: Record<string, Record<string, string>> = {
     batch: "รอบจับ",
   },
   tl: {
+    premium_steaks_fillets: "Mga Premium na Steak at Fillet",
+    dry_fish: "Tuyo",
+    mutton: "Karne ng Tupa",
+    chicken: "Manok",
     todays_catch: "Huli Ngayong Araw",
     fresh_catch_of_the_day: "Sariwang Huli ng Araw",
     select_language: "Pumili ng Wika",
