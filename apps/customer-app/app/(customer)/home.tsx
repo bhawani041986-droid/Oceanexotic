@@ -373,12 +373,6 @@ export default function CustomerHomeScreen() {
     router.push({ pathname: path as any, params });
   }, [router]);
 
-  const onSearch = () => {
-    router.push({
-      pathname: "/products",
-      params: search.trim() ? { search: search.trim() } : {},
-    });
-  };
 
 
   const [activeBatch, setActiveBatch] = useState<BatchFilter>("ALL");
