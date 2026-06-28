@@ -719,7 +719,7 @@ export default function CustomerHomeScreen() {
               );
             case "TODAYS_CATCH":
               return (
-                <View key="TODAYS_CATCH" className="px-4 py-8">
+                <View key="TODAYS_CATCH" className="px-4 py-4">
                   <View className="mb-6 flex-col gap-4">
                     <View className="gap-1">
                       <View>
@@ -824,7 +824,7 @@ export default function CustomerHomeScreen() {
               );
             case "FEATURED":
               return (
-                <View key="FEATURED" className="border-y px-4 py-8" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
+                <View key="FEATURED" className="border-y px-4 py-4" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
                   <SectionTitle title="Featured Seafood" subtitle="Premium Fresh Quality" />
                   {featured.length > 0 ? (
                     <View className="mt-4 flex-row flex-wrap justify-between gap-y-3">
@@ -850,7 +850,7 @@ export default function CustomerHomeScreen() {
               );
             case "RECIPES":
               return (
-                <View key="RECIPES" className="px-4 py-8">
+                <View key="RECIPES" className="px-4 py-4">
                   <View className="flex-row justify-between items-end mb-4">
                     <SectionTitle title="Chef's Recipes" subtitle="Chef Tested Recipes" />
                     <Pressable 
@@ -935,7 +935,7 @@ export default function CustomerHomeScreen() {
                   
                   {/* Split Promo: Maritime Grill & Flame-Sea Collections */}
                   {showSplitPromo && (
-                    <View className="mx-4 my-6 bg-[#070b13] shadow-2xl relative overflow-hidden" style={{ height: 200 }}>
+                    <View className="mx-4 my-4 bg-[#070b13] shadow-2xl relative overflow-hidden" style={{ height: 200 }}>
                       <Svg width={width - 32} height={200} style={StyleSheet.absoluteFill}>
                         <Defs>
                           <SvgLinearGradient id="gradGrill" x1="0" y1="0" x2="1" y2="1">
@@ -1088,7 +1088,7 @@ export default function CustomerHomeScreen() {
               );
             case "SELLERS":
               return (
-                <View key="SELLERS" className="px-4 py-8">
+                <View key="SELLERS" className="px-4 py-4">
                   <SectionTitle title="Premium Sellers" subtitle="Top Rated Sellers" />
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
                     {(settings.topSellers || []).map((seller) => {
@@ -1198,7 +1198,7 @@ export default function CustomerHomeScreen() {
               }
             case "REVIEWS":
               return (
-                <View key="REVIEWS" className="pb-8">
+                <View key="REVIEWS" className="pb-4">
                   <View className="px-4">
                     <SectionTitle title="Customer Reviews" subtitle="Verified Buyer Reviews" />
                   </View>
