@@ -266,7 +266,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
             }}
           >
             <Image
-              source={require("../../assets/drawer_menu_mockup.jpg")}
+              source={require("../../../assets/drawer_menu_mockup.jpg")}
               style={StyleSheet.absoluteFillObject}
               contentFit="fill"
             />
