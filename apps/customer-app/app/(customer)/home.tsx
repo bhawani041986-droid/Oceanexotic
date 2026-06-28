@@ -547,8 +547,8 @@ export default function CustomerHomeScreen() {
                       </View>
                     )}
 
-                    {/* Relocated Pre-Orders Banner Widget (Absolute Top Right) */}
-                    <View className="absolute top-4 right-4 w-[55%] z-30 pointer-events-auto" style={{ aspectRatio: 3.737 }}>
+                    {/* Relocated Pre-Orders Banner Widget (Absolute Top Right Compacted) */}
+                    <View className="absolute top-2 right-2 w-[38%] z-30 pointer-events-auto" style={{ aspectRatio: 3.737, elevation: 3, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.15, shadowRadius: 4 }}>
                       <Image
                         source={require("../../assets/pre_orders_mockup.jpg")}
                         style={StyleSheet.absoluteFillObject}
