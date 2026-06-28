@@ -289,23 +289,32 @@ export default function TerritoryWizardPage() {
               <p className="text-[var(--foreground)]/50 text-sm">Choose the root node for this logistics branch.</p>
             </div>
             
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--foreground)]/30" />
-              <input 
-                value={countrySearch}
-                onChange={e => setCountrySearch(e.target.value)}
-                placeholder="Search countries..."
-                className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 p-4 pl-12 rounded-xl text-[var(--foreground)] outline-none focus:border-primary/50"
-              />
+            <div className="flex gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--foreground)]/30" />
+                <input 
+                  value={countrySearch}
+                  onChange={e => setCountrySearch(e.target.value)}
+                  placeholder="Search or type to add custom country..."
+                  className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 p-4 pl-12 rounded-xl text-[var(--foreground)] outline-none focus:border-primary/50"
+                />
+              </div>
+              {countrySearch.trim().length > 0 && (
+                <Button onClick={() => handleCountrySelect(countrySearch.trim())} disabled={loading} className="px-8 bg-primary uppercase font-black text-[11px] tracking-widest shadow-glow-purple h-auto rounded-xl">
+                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Add & Select'}
+                </Button>
+              )}
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-h-60 overflow-y-auto pr-2">
-              {GLOBAL_COUNTRIES.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase())).map(c => {
-                const isActive = dbCountries.some(dc => dc.name === c.name);
+              {Array.from(new Set([...GLOBAL_COUNTRIES.map(c => c.name), ...dbCountries.map(c => c.name)]))
+                .filter(name => name.toLowerCase().includes(countrySearch.toLowerCase()))
+                .map(name => {
+                const isActive = dbCountries.some(dc => dc.name === name);
                 return (
                   <button 
-                    key={c.code}
-                    onClick={() => handleCountrySelect(c.name)}
+                    key={name}
+                    onClick={() => handleCountrySelect(name)}
                     className={cn(
                       "p-4 rounded-xl border text-left flex justify-between items-center transition-all",
                       isActive 
@@ -313,7 +322,7 @@ export default function TerritoryWizardPage() {
                         : "bg-[var(--foreground)]/5 border-transparent text-[var(--foreground)]/70 hover:bg-[var(--foreground)]/10"
                     )}
                   >
-                    <span className="font-bold text-sm">{c.name}</span>
+                    <span className="font-bold text-sm">{name}</span>
                     {isActive && <Globe className="w-4 h-4 opacity-50" />}
                   </button>
                 );
