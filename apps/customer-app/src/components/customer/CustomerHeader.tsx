@@ -226,7 +226,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
         </View>
 
         {showSearch && pathname !== "/login" && pathname !== "/products" ? (
-          <View className="mt-2 w-full relative" style={{ aspectRatio: 3.878 }}>
+          <View className="mt-2 w-full relative" style={{ aspectRatio: 7.756 }}>
             <Image
               source={require("../../../assets/search_and_hub_mockup.jpg")}
               style={StyleSheet.absoluteFillObject}
