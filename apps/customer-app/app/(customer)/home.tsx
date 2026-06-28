@@ -643,7 +643,6 @@ export default function CustomerHomeScreen() {
                     <View className="flex-row flex-wrap justify-between gap-y-3">
                       {(settings.productCategories || [])
                         .filter(c => c.status?.toUpperCase() !== "INACTIVE")
-                        .slice(0, 10)
                         .map((cat, idx) => {
                         const l = (cat.label || "").toLowerCase();
                         let iconSource = require("../../assets/categories/new/seawater.png");
@@ -652,7 +651,7 @@ export default function CustomerHomeScreen() {
                         else if (l.includes("crab") || l.includes("lobster")) iconSource = require("../../assets/categories/new/crabs.png");
                         else if (l.includes("steak") || l.includes("fillet")) iconSource = require("../../assets/categories/new/steaks.png");
                         else if (l.includes("exotic")) iconSource = require("../../assets/categories/new/exotic.png");
-                        else if (l.includes("cook")) iconSource = require("../../assets/categories/new/ready_to_cook.png");
+                        else if (l.includes("cook") || l.includes("eat")) iconSource = require("../../assets/categories/new/ready_to_cook.png");
                         else if (l.includes("dry")) iconSource = require("../../assets/categories/new/dry_fish.png");
                         else if (l.includes("mutton")) iconSource = require("../../assets/categories/new/mutton.png");
                         else if (l.includes("chicken")) iconSource = require("../../assets/categories/new/chicken.png");
