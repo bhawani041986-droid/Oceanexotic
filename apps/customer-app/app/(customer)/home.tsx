@@ -52,8 +52,18 @@ import api from "@/services/api";
 
 type BatchFilter = "ALL" | "MORNING" | "AFTERNOON" | "EVENING";
 
-
-
+const GRID_CATEGORIES = [
+  { label: "SEAWATER FISH", slug: "seawater", image: require("../../assets/categories/seawater.jpg") },
+  { label: "FRESHWATER FISH", slug: "freshwater", image: require("../../assets/categories/freshwater.jpg") },
+  { label: "PRAWNS & SHRIMPS", slug: "prawns", image: require("../../assets/categories/prawns.jpg") },
+  { label: "CRABS & LOBSTERS", slug: "crustaceans", image: require("../../assets/categories/crabs.jpg") },
+  { label: "STEAKS & FILLETS", slug: "fillets", image: require("../../assets/categories/steaks.jpg") },
+  { label: "EXOTIC CATCH", slug: "exotic", image: require("../../assets/categories/exotic.jpg") },
+  { label: "READY TO COOK", slug: "ready-to-cook", image: require("../../assets/categories/ready.jpg") },
+  { label: "COASTAL DRY FISH", slug: "dry-fish", image: require("../../assets/categories/dry_fish.jpg") },
+  { label: "MUTTON", slug: "mutton", image: require("../../assets/categories/mutton.jpg") },
+  { label: "CHICKEN", slug: "chicken", image: require("../../assets/categories/chicken.jpg") }
+];
 
 const FALLBACK_REVIEWS = [
   { id: "REV-1", user_name: "Arjun Das", comment: "Incredible quality. Arrived perfectly chilled.", rating: 5 },
@@ -568,59 +578,23 @@ export default function CustomerHomeScreen() {
                   {/* Maritime Wave Divider */}
                   <MaritimeWaveDivider />
 
-                  {/* Mockup Category Grid Banner */}
-                  <View className="relative w-full" style={{ aspectRatio: 1.5 }}>
-                    <Image
-                      source={require("../../assets/category_grid_mockup.jpg")}
-                      style={StyleSheet.absoluteFillObject}
-                      contentFit="contain"
-                    />
-                    
-                    {/* Transparent Clickable Overlays (2 rows of 5 columns) */}
-                    
-                    {/* Row 1 */}
-                    <Pressable 
-                      onPress={() => router.push({ pathname: "/products", params: { category: "seawater" } })} 
-                      style={{ position: 'absolute', top: 0, left: '0%', width: '20%', height: '50%' }} 
-                    />
-                    <Pressable 
-                      onPress={() => router.push({ pathname: "/products", params: { category: "freshwater" } })} 
-                      style={{ position: 'absolute', top: 0, left: '20%', width: '20%', height: '50%' }} 
-                    />
-                    <Pressable 
-                      onPress={() => router.push({ pathname: "/products", params: { category: "prawns" } })} 
-                      style={{ position: 'absolute', top: 0, left: '40%', width: '20%', height: '50%' }} 
-                    />
-                    <Pressable 
-                      onPress={() => router.push({ pathname: "/products", params: { category: "crustaceans" } })} 
-                      style={{ position: 'absolute', top: 0, left: '60%', width: '20%', height: '50%' }} 
-                    />
-                    <Pressable 
-                      onPress={() => router.push({ pathname: "/products", params: { category: "fillets" } })} 
-                      style={{ position: 'absolute', top: 0, left: '80%', width: '20%', height: '50%' }} 
-                    />
-                    
-                    {/* Row 2 */}
-                    <Pressable 
-                      onPress={() => router.push({ pathname: "/products", params: { category: "exotic" } })} 
-                      style={{ position: 'absolute', top: '50%', left: '0%', width: '20%', height: '50%' }} 
-                    />
-                    <Pressable 
-                      onPress={() => router.push({ pathname: "/products", params: { category: "ready-to-cook" } })} 
-                      style={{ position: 'absolute', top: '50%', left: '20%', width: '20%', height: '50%' }} 
-                    />
-                    <Pressable 
-                      onPress={() => router.push({ pathname: "/products", params: { category: "dry-fish" } })} 
-                      style={{ position: 'absolute', top: '50%', left: '40%', width: '20%', height: '50%' }} 
-                    />
-                    <Pressable 
-                      onPress={() => router.push({ pathname: "/products", params: { category: "mutton" } })} 
-                      style={{ position: 'absolute', top: '50%', left: '60%', width: '20%', height: '50%' }} 
-                    />
-                    <Pressable 
-                      onPress={() => router.push({ pathname: "/products", params: { category: "chicken" } })} 
-                      style={{ position: 'absolute', top: '50%', left: '80%', width: '20%', height: '50%' }} 
-                    />
+                  {/* Dynamic Category Grid */}
+                  <View className="px-2 w-full">
+                    <View className="flex-row flex-wrap justify-between gap-y-2">
+                      {GRID_CATEGORIES.map((cat, idx) => (
+                        <Pressable 
+                          key={idx}
+                          onPress={() => router.push({ pathname: "/products", params: { category: cat.slug } })}
+                          style={{ width: '19%', aspectRatio: 0.598 }}
+                        >
+                          <Image
+                            source={cat.image}
+                            style={{ width: '100%', height: '100%' }}
+                            contentFit="contain"
+                          />
+                        </Pressable>
+                      ))}
+                    </View>
                   </View>
                 </View>
               );
