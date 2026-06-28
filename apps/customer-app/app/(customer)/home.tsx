@@ -640,18 +640,29 @@ export default function CustomerHomeScreen() {
 
                   {/* Dynamic Category Grid */}
                   <View className="px-2 w-full">
-                    <View className="flex-row flex-wrap justify-between gap-y-2">
+                    <View className="flex-row flex-wrap justify-between gap-y-3">
                       {(settings.productCategories || []).slice(0, 10).map((cat, idx) => (
                         <Pressable 
                           key={cat.id || idx}
                           onPress={() => router.push({ pathname: "/products", params: { category: cat.id } })}
-                          style={{ width: '19%', aspectRatio: 0.598 }}
+                          style={{ width: '19%', alignItems: 'center' }}
                         >
-                          <Image
-                            source={cat.imageUrl ? { uri: cat.imageUrl } : require("../../assets/categories/seawater.jpg")}
-                            style={{ width: '100%', height: '100%' }}
-                            contentFit="contain"
-                          />
+                          <View style={{ width: '100%', aspectRatio: 0.7 }}>
+                            <Image
+                              source={cat.imageUrl ? { uri: cat.imageUrl } : require("../../assets/categories/seawater.jpg")}
+                              style={{ width: '100%', height: '100%' }}
+                              contentFit="contain"
+                            />
+                          </View>
+                          {cat.name && (
+                            <Text 
+                              className="text-[7px] font-black uppercase text-center mt-1.5 leading-tight" 
+                              style={{ color: colors.text }}
+                              numberOfLines={2}
+                            >
+                              {t(cat.name.toLowerCase().replace(/ & /g, "_").replace(/ /g, "_")) || cat.name}
+                            </Text>
+                          )}
                         </Pressable>
                       ))}
                     </View>
