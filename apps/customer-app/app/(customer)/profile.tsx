@@ -409,7 +409,7 @@ export default function ProfileScreen() {
                 fillColor="url(#saveGrad)" 
                 strokeColor="transparent" 
                 bevelSize={12} 
-                className="w-full h-14"
+                className="w-full"
                 gradientDefs={
                   <SvgLinearGradient id="saveGrad" x1="0" y1="0" x2="1" y2="0">
                     <Stop offset="0%" stopColor="#0d9488" />
@@ -417,7 +417,7 @@ export default function ProfileScreen() {
                   </SvgLinearGradient>
                 }
               >
-                <View className="flex-1 flex-row items-center justify-center gap-3">
+                <View className="flex-row items-center justify-center gap-3 py-4">
                   {saving ? (
                     <ActivityIndicator color="white" />
                   ) : (
@@ -488,7 +488,7 @@ export default function ProfileScreen() {
                 fillColor="url(#secGrad)" 
                 strokeColor="transparent" 
                 bevelSize={12} 
-                className="w-full h-14"
+                className="w-full"
                 gradientDefs={
                   <SvgLinearGradient id="secGrad" x1="0" y1="0" x2="1" y2="0">
                     <Stop offset="0%" stopColor="#0891b2" />
@@ -496,7 +496,7 @@ export default function ProfileScreen() {
                   </SvgLinearGradient>
                 }
               >
-                <View className="flex-1 flex-row items-center justify-center gap-3">
+                <View className="flex-row items-center justify-center gap-3 py-4">
                   {changingPassword ? (
                     <ActivityIndicator color="white" />
                   ) : (
