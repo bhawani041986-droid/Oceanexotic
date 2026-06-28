@@ -238,16 +238,18 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               onChangeText={setSearch}
               onSubmitEditing={onSearch}
               placeholder="Search products..."
-              placeholderTextColor="transparent" // Hide placeholder text to prevent overlap
+              placeholderTextColor="#9ca3af" // Restored visible placeholder
               returnKeyType="search"
               style={{
                 position: 'absolute',
-                top: '2%',
-                left: '14%',
-                width: '68%',
-                height: '46%',
-                color: '#334155', // dark slate text color for visibility
-                fontSize: 10,
+                top: '5%',
+                left: '12%',
+                width: '72%',
+                height: '40%',
+                backgroundColor: '#ffffff', // Covers the baked-in text in the image
+                color: '#334155', // dark slate text
+                fontSize: 13,
+                fontFamily: "Inter_400Regular",
                 paddingHorizontal: 8,
               }}
             />
