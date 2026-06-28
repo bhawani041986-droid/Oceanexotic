@@ -6,6 +6,9 @@ const LANGUAGE_KEY = '@app_language';
 
 const translations: Record<string, Record<string, string>> = {
   en: {
+    shop: "Shop",
+    chat: "Chat",
+    profile: "Profile",
     premium_sellers: "Premium Sellers",
     certified_daily_catches: "Certified daily catches from top-rated fleets",
     join_our_newsletter: "Join Our Newsletter",
