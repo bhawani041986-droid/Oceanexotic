@@ -643,7 +643,7 @@ export default function CustomerHomeScreen() {
                     <ScrollView 
                       horizontal 
                       showsHorizontalScrollIndicator={false} 
-                      contentContainerStyle={{ paddingHorizontal: 16, gap: 12 }}
+                      contentContainerStyle={{ paddingHorizontal: 16, gap: 8 }}
                     >
                       {(settings.productCategories || [])
                         .filter(c => c.status?.toUpperCase() !== "INACTIVE")
@@ -655,18 +655,18 @@ export default function CustomerHomeScreen() {
                             <Pressable 
                               key={cat.id || idx}
                               onPress={() => router.push({ pathname: "/products", params: { category: cat.id } })}
-                              style={{ width: 80, alignItems: 'center' }}
+                              style={{ width: 64, alignItems: 'center' }}
                             >
                               <View style={{ width: '100%', aspectRatio: 0.7 }}>
                                 <Image
                                   source={imageSource}
-                                  style={{ width: '100%', height: '100%', borderRadius: 8 }}
+                                  style={{ width: '100%', height: '100%' }}
                                   contentFit="contain"
                                 />
                               </View>
                               {cat.label && (
                                 <Text 
-                                  className="text-[8px] font-black uppercase text-center mt-1.5 leading-tight" 
+                                  className="text-[7px] font-black uppercase text-center mt-1.5 leading-tight" 
                                   style={{ color: colors.text }}
                                   numberOfLines={2}
                                 >
