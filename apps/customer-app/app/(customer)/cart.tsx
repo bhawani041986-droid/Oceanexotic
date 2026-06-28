@@ -10,7 +10,7 @@ import { useState, useEffect } from "react";
 import { useAuthStore } from "@/store/authStore";
 import { checkoutService } from "@/services/checkoutService";
 import api from "@/services/api";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 
 const staticFallback = [
@@ -21,6 +21,8 @@ const staticFallback = [
 ];
 
 export default function CartScreen() {
+  const { t } = useTranslation();
+
   const router = useRouter();
   const { items, updateQuantity, removeItem, getTotal, toggleMarination } = useCartStore();
   const colors = useThemeColors();

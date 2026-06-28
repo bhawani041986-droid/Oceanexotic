@@ -23,7 +23,7 @@ import { useProducts } from "@/hooks/useProducts";
 import { ProductCard } from "@/components/customer/ProductCard";
 import { useAuthStore } from "@/store/authStore";
 import { checkoutService } from "@/services/checkoutService";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useReviews } from "@/hooks/useReviews";
 import { useQueryClient } from "@tanstack/react-query";
@@ -39,6 +39,8 @@ const MOCK_REVIEWS = [
 ];
 
 export default function ProductDetailScreen() {
+  const { t } = useTranslation();
+
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const cart = useCartStore();

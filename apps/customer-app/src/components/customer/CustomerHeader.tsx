@@ -14,7 +14,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import { cn } from "@/lib/utils";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { LanguageSelector } from "@/components/LanguageSelector";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { ChamferedBox } from "@/components/ui/ChamferedBox";
 import { useNotificationStore } from "@/store/notificationStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -50,6 +50,7 @@ const NotificationIcon = ({ color = "#F8FAFC" }: { color?: string }) => (
 );
 
 export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
+  const { t } = useTranslation();
   const router = useRouter();
   const pathname = usePathname();
   const { user, logout } = useAuthStore();

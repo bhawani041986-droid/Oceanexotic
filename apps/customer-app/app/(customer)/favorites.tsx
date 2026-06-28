@@ -8,11 +8,13 @@ import { ProductCard } from "@/components/customer/ProductCard";
 import { SectionTitle } from "@/components/customer/SectionTitle";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useToast } from "@/components/ui/Toast";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 import type { Product } from "@/services/productService";
 
 export default function FavoritesScreen() {
+  const { t } = useTranslation();
+
   const router = useRouter();
   const colors = useThemeColors();
   const { toast, ToastHost } = useToast();

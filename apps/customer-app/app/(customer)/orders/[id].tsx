@@ -11,9 +11,11 @@ import { orderService, type OrderDetail } from "@/services/orderService";
 import api from "@/services/api";
 import { useAuthStore } from "@/store/authStore";
 import * as ImagePicker from "expo-image-picker";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 
 export default function OrderDetailsScreen() {
+  const { t } = useTranslation();
+
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { toast, ToastHost } = useToast();

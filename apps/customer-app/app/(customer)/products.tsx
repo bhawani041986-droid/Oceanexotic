@@ -25,7 +25,7 @@ import { useToast } from "@/components/ui/Toast";
 import { homeService, type CutOption, type TodaysCatchItem } from "@/services/homeService";
 import type { Product } from "@/services/productService";
 import { cn } from "@/lib/utils";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useHomeData } from "@/hooks/useHomeData";
 import { CATEGORIES, getSortedCategories } from "@/constants/categories";
@@ -44,6 +44,8 @@ const TABS = [
 ];
 
 export default function ProductsScreen() {
+  const { t } = useTranslation();
+
   const router = useRouter();
   const params = useLocalSearchParams<{ category?: string; search?: string }>();
   const { toast, ToastHost } = useToast();

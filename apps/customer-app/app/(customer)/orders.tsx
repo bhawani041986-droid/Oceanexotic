@@ -7,10 +7,12 @@ import { orderService, type CustomerOrder } from "@/services/orderService";
 import { Button } from "@/components/ui/Button";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { cn } from "@/lib/utils";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 
 export default function OrdersScreen() {
+  const { t } = useTranslation();
+
   const router = useRouter();
   const { user, isHydrated } = useAuthStore();
   const currentLanguage = useSettingsStore((s) => s.language); // force re-render

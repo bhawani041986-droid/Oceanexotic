@@ -6,7 +6,7 @@ import Svg, { Path } from "react-native-svg";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import type { Product } from "@/services/productService";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 import { ChamferedBox } from "@/components/ui/ChamferedBox";
 
@@ -27,11 +27,10 @@ function imageUri(product: Product): string {
 }
 
 export function ProductCard({ product, onAdd, onSelectCut, compact }: ProductCardProps) {
+  const { t, language } = useTranslation();
   const router = useRouter();
   const uri = imageUri(product);
   const outOfStock = (product.stock ?? 1) <= 0 || product.status === "OUT OF STOCK";
-  // Subscribe to language — triggers re-render when user switches language
-  const language = useSettingsStore((s) => s.language);
   
   const colors = useThemeColors();
 

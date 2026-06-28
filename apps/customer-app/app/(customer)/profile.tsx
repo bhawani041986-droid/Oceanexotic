@@ -7,7 +7,7 @@ import { orderService } from "@/services/orderService";
 import { useCartStore } from "@/store/cartStore";
 import { useSettingsStore } from "@/store/settingsStore";
 import { authService } from "@/services/authService";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
@@ -24,6 +24,8 @@ import { LinearGradient } from "expo-linear-gradient";
 const JETTIES = ["Phoenix Bay Jetty", "Haddo Jetty", "Junglighat Jetty", "Havelock Jetty", "Chatham Jetty"];
 
 export default function ProfileScreen() {
+  const { t } = useTranslation();
+
   const router = useRouter();
   const { user, logout, updateUser } = useAuthStore();
   const cart = useCartStore();

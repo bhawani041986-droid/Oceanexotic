@@ -2,9 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { View, Text, Animated, Easing, Dimensions } from "react-native";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import api from "@/services/api";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 
 export function LiveTickerMarquee() {
+  const { t } = useTranslation();
+
   const colors = useThemeColors();
   const screenWidth = Dimensions.get("window").width;
   const animatedValue = useRef(new Animated.Value(screenWidth)).current;

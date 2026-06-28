@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { useCartStore } from "@/store/cartStore";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 
 const NAV: { label: string; href: Href }[] = [
   { label: "Home", href: "/home" },
@@ -162,6 +162,8 @@ function TabIcon({ label, active, activeColor }: { label: string; active: boolea
 }
 
 export function CustomerTabBar() {
+  const { t } = useTranslation();
+
   const pathname = usePathname();
   const router = useRouter();
   const count = useCartStore((s) => s.itemCount());

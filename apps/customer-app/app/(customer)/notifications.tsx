@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, ActivityIndicator, Pressable } from "react-native";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { Ionicons } from "@expo/vector-icons";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useAuthStore } from "@/store/authStore";
 import { FULL_API_URL } from "@/config/api";
@@ -10,6 +10,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNotificationStore } from "@/store/notificationStore";
 
 export default function NotificationsScreen() {
+  const { t } = useTranslation();
+
   const colors = useThemeColors();
   const currentLanguage = useSettingsStore((s) => s.language);
   const { user } = useAuthStore();

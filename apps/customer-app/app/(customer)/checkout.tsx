@@ -19,11 +19,13 @@ import { checkoutService, type SavedAddress } from "@/services/checkoutService";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import { cn } from "@/lib/utils";
 import { useThemeColors } from "@/hooks/useThemeColors";
-import { t } from "@/lib/i18n";
+import { useTranslation } from "@/lib/i18n";
 
 type Step = 1 | 2 | 3;
 
 export default function CheckoutScreen() {
+  const { t } = useTranslation();
+
   const router = useRouter();
   const { items, getTotal, clearCart } = useCartStore();
   const { user } = useAuthStore();
