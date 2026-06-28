@@ -217,7 +217,7 @@ export function CustomerTabBar() {
                   className="text-[8px] font-black uppercase text-center relative z-10" 
                   style={{ color: active ? activeColor : inactiveColor }}
                 >
-                  {item.label}
+                  {t(item.label.toLowerCase().replace("my orders", "my_orders"))}
                 </Text>
               </View>
             ) : (
@@ -267,7 +267,7 @@ export function CustomerTabBar() {
                   className="text-[8px] font-black uppercase tracking-[0.08em] mt-0.5 text-center"
                   style={{ color: active ? activeColor : inactiveColor }}
                 >
-                  {item.label}
+                  {t(item.label.toLowerCase().replace("my orders", "my_orders"))}
                 </Text>
               </View>
             )}

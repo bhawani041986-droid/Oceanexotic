@@ -195,6 +195,7 @@ const TodaysCatchCard = React.memo(TodaysCatchCardComponent);
 // --- ISOLATED TIMER COMPONENT ---
 // This prevents the massive CustomerHomeScreen from re-rendering every 1 second
 function FlashDealCountdown() {
+  const { t } = useTranslation();
   const { timeLeft, flashDealActive } = useFlashDealTimer();
   const colors = useThemeColors();
 
@@ -202,7 +203,7 @@ function FlashDealCountdown() {
     return (
       <View className="mt-4 self-center rounded-none border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 relative overflow-hidden">
         <Text className="text-[9px] font-black uppercase text-emerald-500 relative z-10">
-          PROMO ACTIVE • SECURE HARVEST
+          {t('promo_active')} • {t('radar_secure')}
         </Text>
         <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 20 }}><Polygon points="0,0 6,0 0,6" fill={colors.bg} /></Svg>
         <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 20 }}><Polygon points="6,6 0,6 6,0" fill={colors.bg} /></Svg>
@@ -216,7 +217,7 @@ function FlashDealCountdown() {
         <View key={i} className="w-14 h-14 rounded-full border items-center justify-center" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
           <Text className="text-center text-base font-black italic" style={{ color: colors.text }}>{val}</Text>
           <Text className="text-center text-[7px] font-black uppercase mt-0.5" style={{ color: colors.textMuted }}>
-            {i === 0 ? "HRS" : i === 1 ? "MIN" : "SEC"}
+            {i === 0 ? t('hrs') : i === 1 ? t('min') : t('sec')}
           </Text>
         </View>
       ))}
@@ -226,6 +227,7 @@ function FlashDealCountdown() {
 
 // --- ISOLATED NEWSLETTER COMPONENT ---
 function NewsletterSection() {
+  const { t } = useTranslation();
   const { width } = Dimensions.get("window");
   const { toast } = useToast();
   const [newsletterEmail, setNewsletterEmail] = useState("");
@@ -783,7 +785,7 @@ export default function CustomerHomeScreen() {
                       className="px-3 py-1.5 rounded-none border relative overflow-hidden"
                       style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderColor: colors.border }}
                     >
-                      <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>VIEW ALL ➜</Text>
+                      <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>{t('view_all_arrow')}</Text>
                       <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
                         <Path d="M0,0 L6,0 L0,6 Z" fill={colors.bg} />
                         <Path d="M6,0 L0,6" stroke={colors.border} strokeWidth={1} />
@@ -843,7 +845,7 @@ export default function CustomerHomeScreen() {
                               </ChamferedBox>
                             </View>
                             <Text className="text-sm font-black uppercase italic text-foreground" numberOfLines={2}>{recipe.title}</Text>
-                            <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>VIEW RECIPE ➜</Text>
+                            <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>{t('view_recipe')}</Text>
                           </View>
                         </ChamferedBox>
                       </Pressable>

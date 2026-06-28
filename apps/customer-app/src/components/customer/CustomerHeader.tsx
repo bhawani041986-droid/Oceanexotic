@@ -266,7 +266,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                   value={search}
                   onChangeText={setSearch}
                   onSubmitEditing={onSearch}
-                  placeholder="Search seafood products..."
+                  placeholder={t('search_seafood_placeholder')}
                   placeholderTextColor="#64748b"
                   returnKeyType="search"
                   className="flex-1 ml-1 text-[11px] font-medium p-0"
@@ -421,7 +421,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                             flex: 1
                           }}
                         >
-                          {item.label}
+                          {t(item.label.toLowerCase().replace("my orders", "my_orders").replace("chat with us", "chat").replace("recipes", "view_recipes"))}
                         </Text>
                         <MaterialCommunityIcons 
                           name="chevron-right" 
