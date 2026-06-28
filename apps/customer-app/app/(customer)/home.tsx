@@ -721,10 +721,24 @@ export default function CustomerHomeScreen() {
               return (
                 <View key="TODAYS_CATCH" className="px-4 py-8">
                   <View className="mb-6 flex-col gap-4">
-                    <SectionTitle 
-                      title={t('todays_catch')}
-                      subtitle="Live Harbor Arrival • Freshness Guaranteed"
-                    />
+                    <View className="gap-1">
+                      <View>
+                        <Text className="text-xl font-black uppercase italic" style={{ color: '#FF5E36' }}>
+                          {t('todays_catch')}
+                        </Text>
+                        <View className="mt-1.5 mb-3" style={{ height: 3, width: 80, borderRadius: 999, overflow: 'hidden' }}>
+                          <LinearGradient
+                            colors={['#FF3E3E', '#FFD700', '#00F3FF']} // Red -> Gold -> Cyan
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 0 }}
+                            style={{ flex: 1 }}
+                          />
+                        </View>
+                      </View>
+                      <Text className="text-[10px] font-medium uppercase tracking-widest" style={{ color: colors.textMuted }}>
+                        {t('live_harbor_arrival')}
+                      </Text>
+                    </View>
                      <View 
                        className="flex-row flex-wrap rounded-none border p-1"
                        style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}

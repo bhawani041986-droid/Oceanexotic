@@ -6,6 +6,7 @@ const LANGUAGE_KEY = '@app_language';
 
 const translations: Record<string, Record<string, string>> = {
   en: {
+    live_harbor_arrival: "Live Harbor Arrival • Freshness Guaranteed",
     premium_steaks_fillets: "Premium Steaks & Fillets",
     dry_fish: "Dry Fish",
     mutton: "Mutton",
@@ -225,6 +226,7 @@ const translations: Record<string, Record<string, string>> = {
 
   // ── Hindi ────────────────────────────────────────────────────────────────
   hi: {
+    live_harbor_arrival: "लाइव हार्बर आगमन • ताजगी की गारंटी",
     premium_steaks_fillets: "प्रीमियम स्टेक और फिलेट",
     dry_fish: "सूखी मछली",
     mutton: "मटन",
@@ -424,6 +426,7 @@ const translations: Record<string, Record<string, string>> = {
 
   // ── Bengali ───────────────────────────────────────────────────────────────
   bn: {
+    live_harbor_arrival: "লাইভ হারবার আগমন • সতেজতার নিশ্চয়তা",
     premium_steaks_fillets: "প্রিমিয়াম স্টেক এবং ফিলেট",
     dry_fish: "শুটকি মাছ",
     mutton: "খাসির মাংস",
@@ -723,6 +726,7 @@ const translations: Record<string, Record<string, string>> = {
     min_order: "குறைந்தபட்ச ஆர்டர்",
   },
   te: {
+    live_harbor_arrival: "లైవ్ హార్బర్ రాక • తాజాదనం హామీ",
     premium_steaks_fillets: "ప్రీమియం స్టీక్స్ & ఫిల్లెట్స్",
     dry_fish: "ఎండు చేప",
     mutton: "మటన్",
@@ -1174,6 +1178,7 @@ const translations: Record<string, Record<string, string>> = {
     batch: "รอบจับ",
   },
   tl: {
+    live_harbor_arrival: "Live na Pagdating sa Harbor • Garantisadong Sariwa",
     premium_steaks_fillets: "Mga Premium na Steak at Fillet",
     dry_fish: "Tuyo",
     mutton: "Karne ng Tupa",
