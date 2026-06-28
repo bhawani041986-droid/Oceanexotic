@@ -247,7 +247,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
             {/* Search Bar - White Pill */}
             <Pressable 
               onPress={onSearch}
-              className="flex-row items-center h-[46px] rounded-full px-1 pl-4"
+              className="flex-row items-center h-[46px] rounded-full p-1 pl-4"
               style={{
                 backgroundColor: '#ffffff',
                 borderWidth: 1.5,
@@ -272,35 +272,47 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               />
               <Pressable 
                 onPress={onSearch}
-                className="h-[38px] w-[38px] rounded-full items-center justify-center bg-[#0f4a5c]"
+                className="h-[36px] w-[36px] rounded-full items-center justify-center bg-[#0f4a5c]"
               >
                 <MaterialCommunityIcons name="fish" size={20} color="#ffffff" />
               </Pressable>
             </Pressable>
 
-            {/* Hub Location Bar - Teal Gradient Pill */}
+            {/* Hub Location Bar - Teal Gradient Pill with S-Curve */}
             <Pressable onPress={() => setIsLocationModalOpen(true)}>
-              <LinearGradient
-                colors={['#4cb8c4', '#3cd3ad']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                className="flex-row items-center h-[42px] rounded-full px-4"
-                style={{
+              <View className="h-[42px] rounded-full overflow-hidden flex-row bg-[#ffffff]" style={{
                   shadowColor: "#3cd3ad",
                   shadowOffset: { width: 0, height: 4 },
                   shadowOpacity: 0.3,
                   shadowRadius: 5,
                   elevation: 5,
-                }}
-              >
-                <MaterialCommunityIcons name="map-marker" size={18} color="#ffffff" />
-                <Text className="flex-1 ml-2 text-[13px] font-bold text-white tracking-wide">
-                  {activeHubName} <Text className="font-normal opacity-90">• Active Fishing Zones</Text>
-                </Text>
-                <View className="w-6 h-6 rounded-full bg-white/20 items-center justify-center">
-                  <MaterialCommunityIcons name="chevron-down" size={16} color="#ffffff" />
+                }}>
+                <View className="flex-1">
+                  <LinearGradient
+                    colors={['#4cb8c4', '#3cd3ad']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 0 }}
+                    className="absolute inset-0"
+                  />
+                  <View className="absolute inset-0 flex-row items-center px-4">
+                    <MaterialCommunityIcons name="map-marker" size={18} color="#ffffff" />
+                    <Text className="ml-2 text-[13px] font-bold text-white tracking-wide" numberOfLines={1}>
+                      {activeHubName} <Text className="font-normal opacity-90">• Active Fishing Zones</Text>
+                    </Text>
+                  </View>
                 </View>
-              </LinearGradient>
+                
+                {/* S-curve mask and white chevron container */}
+                <View className="w-[60px] flex-row bg-[#ffffff]">
+                  <Svg width={20} height={42} viewBox="0 0 20 42">
+                    <Path d="M0,0 L20,0 C20,21 0,21 0,42 Z" fill="#3cd3ad" />
+                    <Path d="M20,0 C20,21 0,21 0,42 L20,42 Z" fill="#ffffff" />
+                  </Svg>
+                  <View className="w-[40px] items-center justify-center">
+                    <MaterialCommunityIcons name="chevron-down" size={20} color="#3cd3ad" />
+                  </View>
+                </View>
+              </View>
             </Pressable>
           </View>
         ) : null}
