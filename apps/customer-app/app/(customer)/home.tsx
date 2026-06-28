@@ -641,7 +641,10 @@ export default function CustomerHomeScreen() {
                   {/* Dynamic Category Grid */}
                   <View className="px-2 w-full">
                     <View className="flex-row flex-wrap justify-between gap-y-3">
-                      {(settings.productCategories || []).slice(0, 10).map((cat, idx) => {
+                      {(settings.productCategories || [])
+                        .filter(c => c.status?.toUpperCase() !== "INACTIVE")
+                        .slice(0, 10)
+                        .map((cat, idx) => {
                         const l = (cat.label || "").toLowerCase();
                         let iconSource = require("../../assets/categories/new/seawater.png");
                         if (l.includes("freshwater")) iconSource = require("../../assets/categories/new/freshwater.png");
