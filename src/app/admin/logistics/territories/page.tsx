@@ -213,28 +213,51 @@ export default function TerritoryWizardPage() {
   };
   const activeZones = getZonesForSelectedHub();
 
+  const handleJumpToStep = (targetStep: number) => {
+    setStep(targetStep);
+    if (targetStep <= 1) {
+      setSelectedCountry(null);
+      setSelectedState(null);
+      setSelectedDistrict(null);
+      setSelectedCity(null);
+      setSelectedHub(null);
+    } else if (targetStep <= 2) {
+      setSelectedState(null);
+      setSelectedDistrict(null);
+      setSelectedCity(null);
+      setSelectedHub(null);
+    } else if (targetStep <= 3) {
+      setSelectedDistrict(null);
+      setSelectedCity(null);
+      setSelectedHub(null);
+    } else if (targetStep <= 4) {
+      setSelectedCity(null);
+      setSelectedHub(null);
+    }
+  };
+
   const renderBreadcrumbs = () => (
     <div className="flex flex-wrap items-center gap-2 mb-8 bg-bg-secondary p-4 rounded-xl border border-[var(--foreground)]/10 text-sm">
-      <button onClick={() => setStep(1)} className={cn("transition-colors font-bold", step === 1 ? "text-primary" : "text-[var(--foreground)]/50 hover:text-[var(--foreground)]")}>🌍 World</button>
+      <button onClick={() => handleJumpToStep(1)} className={cn("transition-colors font-bold", step === 1 ? "text-primary" : "text-[var(--foreground)]/50 hover:text-[var(--foreground)]")}>🌍 World</button>
       
       {selectedCountry && <>
         <span className="text-[var(--foreground)]/30">/</span>
-        <button onClick={() => setStep(2)} className={cn("transition-colors font-bold", step === 2 ? "text-primary" : "text-[var(--foreground)]/50 hover:text-[var(--foreground)]")}>{selectedCountry.name}</button>
+        <button onClick={() => handleJumpToStep(2)} className={cn("transition-colors font-bold", step === 2 ? "text-primary" : "text-[var(--foreground)]/50 hover:text-[var(--foreground)]")}>{selectedCountry.name}</button>
       </>}
       
       {selectedState && <>
         <span className="text-[var(--foreground)]/30">/</span>
-        <button onClick={() => setStep(3)} className={cn("transition-colors font-bold", step === 3 ? "text-primary" : "text-[var(--foreground)]/50 hover:text-[var(--foreground)]")}>{selectedState.name}</button>
+        <button onClick={() => handleJumpToStep(3)} className={cn("transition-colors font-bold", step === 3 ? "text-primary" : "text-[var(--foreground)]/50 hover:text-[var(--foreground)]")}>{selectedState.name}</button>
       </>}
       
       {selectedDistrict && <>
         <span className="text-[var(--foreground)]/30">/</span>
-        <button onClick={() => setStep(4)} className={cn("transition-colors font-bold", step === 4 ? "text-primary" : "text-[var(--foreground)]/50 hover:text-[var(--foreground)]")}>{selectedDistrict.name}</button>
+        <button onClick={() => handleJumpToStep(4)} className={cn("transition-colors font-bold", step === 4 ? "text-primary" : "text-[var(--foreground)]/50 hover:text-[var(--foreground)]")}>{selectedDistrict.name}</button>
       </>}
 
       {selectedCity && <>
         <span className="text-[var(--foreground)]/30">/</span>
-        <button onClick={() => { setStep(5); setSelectedHub(null); }} className={cn("transition-colors font-bold", step === 5 && !selectedHub ? "text-primary" : "text-[var(--foreground)]/50 hover:text-[var(--foreground)]")}>{selectedCity.name}</button>
+        <button onClick={() => handleJumpToStep(5)} className={cn("transition-colors font-bold", step === 5 && !selectedHub ? "text-primary" : "text-[var(--foreground)]/50 hover:text-[var(--foreground)]")}>{selectedCity.name}</button>
       </>}
 
       {selectedHub && <>
