@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 import { WebView } from "react-native-webview";
 import api from "@/services/api";
+import { useThemeColors } from "@/hooks/useThemeColors";
+import { SectionTitle } from "@/components/customer/SectionTitle";
 
 const AGENT_SENTINEL_HTML = (primary: string, glow: string) => `
   <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
@@ -34,12 +36,13 @@ const CUSTOMER_HARBOR_HTML = (primary: string) => `
 export default function OrderTrackingScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const colors = useThemeColors();
   const [trackingData, setTrackingData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const webViewRef = useRef<WebView>(null);
   const [isFullScreen, setIsFullScreen] = useState(false);
 
-  const primaryColor = "#00D1FF";
+  const primaryColor = colors.primary;
   const glowShadow = `drop-shadow(0 0 10px ${primaryColor})`;
 
   const fetchTelemetry = async () => {
@@ -149,7 +152,7 @@ export default function OrderTrackingScreen() {
 
   if (loading && !trackingData) {
     return (
-      <View className="flex-1 items-center justify-center bg-background">
+      <View className="flex-1 items-center justify-center" style={{ backgroundColor: colors.bg }}>
         <ActivityIndicator color="#7C3AED" size="large" />
         <Text className="mt-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
           Loading Tracking...
@@ -207,36 +210,74 @@ export default function OrderTrackingScreen() {
       </View>
 
       {/* Native Interactivity Controls (Bottom-Right) */}
-      <View className="absolute bottom-3 right-3 items-center gap-2">
-        <Pressable 
-          onPress={zoomIn}
-          className="w-8 h-8 rounded-full bg-black/80 border border-primary/30 items-center justify-center mb-1"
-        >
-          <Text className="text-primary font-black text-lg leading-none">+</Text>
-        </Pressable>
-        <Pressable 
-          onPress={zoomOut}
-          className="w-8 h-8 rounded-full bg-black/80 border border-primary/30 items-center justify-center mb-2"
-        >
-          <Text className="text-primary font-black text-lg leading-none">-</Text>
-        </Pressable>
-        <Pressable 
-          onPress={() => setIsFullScreen(!isFullScreen)}
-          className="px-3 py-1.5 rounded-md bg-primary/20 border border-primary"
-        >
-          <Text className="text-[8px] font-black uppercase text-primary tracking-widest">
-            {isFullScreen ? "SHRINK" : "ENLARGE"}
-          </Text>
-        </Pressable>
-      </View>
+      {!isFullScreen && (
+        <View className="absolute bottom-3 right-3 items-center gap-2">
+          <Pressable 
+            onPress={zoomIn}
+            className="w-8 h-8 rounded-full bg-black/80 border items-center justify-center mb-1"
+            style={{ borderColor: colors.border }}
+          >
+            <Text className="text-primary font-black text-lg leading-none">+</Text>
+          </Pressable>
+          <Pressable 
+            onPress={zoomOut}
+            className="w-8 h-8 rounded-full bg-black/80 border items-center justify-center mb-2"
+            style={{ borderColor: colors.border }}
+          >
+            <Text className="text-primary font-black text-lg leading-none">-</Text>
+          </Pressable>
+          <Pressable 
+            onPress={() => setIsFullScreen(true)}
+            className="px-3 py-1.5 rounded-md bg-primary/20 border border-primary"
+          >
+            <Text className="text-[8px] font-black uppercase text-primary tracking-widest">
+              ENLARGE
+            </Text>
+          </Pressable>
+        </View>
+      )}
     </>
   );
 
   return (
-    <View className="flex-1 bg-background">
+    <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       {isFullScreen ? (
         <View style={StyleSheet.absoluteFill} className="z-[9999]">
            <MapOverlay />
+           {/* Full Width Control Bar */}
+           <View 
+             className="absolute bottom-0 left-0 right-0 flex-row items-center justify-between px-6 py-4 border-t"
+             style={{ backgroundColor: 'rgba(2, 6, 23, 0.95)', borderColor: colors.border }}
+           >
+             {/* Zoom Out */}
+             <Pressable 
+               onPress={zoomOut}
+               className="w-12 h-12 rounded-full bg-black/50 border items-center justify-center"
+               style={{ borderColor: colors.border }}
+             >
+               <Text style={{ color: colors.primary, fontWeight: '900', fontSize: 24 }}>-</Text>
+             </Pressable>
+
+             {/* Minimize/Close Button */}
+             <Pressable 
+               onPress={() => setIsFullScreen(false)}
+               className="px-6 py-3 rounded-none border flex-row items-center gap-2"
+               style={{ backgroundColor: colors.primary, borderColor: 'transparent' }}
+             >
+               <Text className="text-[11px] font-black uppercase text-white tracking-widest">
+                 ✕ CLOSE FULLSCREEN
+               </Text>
+             </Pressable>
+
+             {/* Zoom In */}
+             <Pressable 
+               onPress={zoomIn}
+               className="w-12 h-12 rounded-full bg-black/50 border items-center justify-center"
+               style={{ borderColor: colors.border }}
+             >
+               <Text style={{ color: colors.primary, fontWeight: '900', fontSize: 24 }}>+</Text>
+             </Pressable>
+           </View>
         </View>
       ) : (
         <ScrollView contentContainerClassName="px-4 pb-12 pt-6">
