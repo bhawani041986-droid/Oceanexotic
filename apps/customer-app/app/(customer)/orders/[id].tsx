@@ -258,44 +258,64 @@ export default function OrderDetailsScreen() {
               </View>
             </View>
           </View>
-          
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 20 }} className="py-6 bg-black/20">
-            <View className="flex-row items-center">
-              {[
-                "Order Placed",
-                "Seller Accepted",
-                "Preparing",
-                "Packed",
-                "Rider Assigned",
-                "Out for Delivery",
-                "Delivered"
-              ].map((stage, idx, arr) => {
-                const currentStatus = (trackingData?.status ?? order?.status ?? "PROCESSING").toUpperCase();
-                const stageIndexMatch = arr.findIndex(s => s.toUpperCase() === currentStatus);
-                const isPassed = stageIndexMatch === -1 ? idx <= 1 : idx <= stageIndexMatch;
+          <View 
+            style={{ 
+              backgroundColor: colors.isDark ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.03)", 
+              paddingHorizontal: 20, 
+              paddingVertical: 16,
+              borderRadius: 8
+            }}
+            className="mb-4 gap-4"
+          >
+            {[
+              "Order Placed",
+              "Seller Accepted",
+              "Preparing",
+              "Packed",
+              "Rider Assigned",
+              "Out for Delivery",
+              "Delivered"
+            ].map((stage, idx, arr) => {
+              const currentStatus = (trackingData?.status ?? order?.status ?? "PROCESSING").toUpperCase();
+              const stageIndexMatch = arr.findIndex(s => s.toUpperCase() === currentStatus);
+              const isPassed = stageIndexMatch === -1 ? idx <= 1 : idx <= stageIndexMatch;
 
-                return (
-                  <View key={idx} className="flex-row items-center">
-                    <View className="items-center gap-2">
-                      <View 
-                        className="w-4 h-4 rounded-none border-2"
-                        style={{ 
-                          backgroundColor: isPassed ? colors.primary : "transparent",
-                          borderColor: isPassed ? colors.primary : colors.textMuted
-                        }} 
-                      />
-                      <Text className="text-[8px] font-bold uppercase w-16 text-center" style={{ color: isPassed ? colors.primary : colors.textMuted }}>
-                        {stage}
-                      </Text>
-                    </View>
-                    {idx < arr.length - 1 && (
-                      <View className="w-8 h-0.5 mx-1" style={{ backgroundColor: isPassed ? colors.primary : colors.border, marginBottom: 16 }} />
+              return (
+                <View key={idx} className="flex-row items-center relative pl-8 min-h-[32px]">
+                  {/* Timeline vertical connection line */}
+                  {idx < arr.length - 1 && (
+                    <View 
+                      style={{ 
+                        position: 'absolute', 
+                        left: 7, 
+                        top: 20, 
+                        bottom: -16, 
+                        width: 2, 
+                        backgroundColor: isPassed ? colors.primary : colors.border 
+                      }} 
+                    />
+                  )}
+                  {/* Timeline tick / circle bubble */}
+                  <View 
+                    className="absolute left-0 top-1.5 w-4.5 h-4.5 rounded-none border-2 items-center justify-center"
+                    style={{ 
+                      width: 18,
+                      height: 18,
+                      backgroundColor: isPassed ? colors.primary : "transparent",
+                      borderColor: isPassed ? colors.primary : colors.textMuted
+                    }} 
+                  >
+                    {isPassed && (
+                      <Text style={{ fontSize: 9, color: '#ffffff', fontWeight: '900', lineHeight: 11 }}>✓</Text>
                     )}
                   </View>
-                );
-              })}
-            </View>
-          </ScrollView>
+                  <Text className="text-xs font-black uppercase tracking-wider" style={{ color: isPassed ? colors.primary : colors.textMuted }}>
+                    {stage}
+                  </Text>
+                </View>
+              );
+            })}
+          </View>
         </View>
 
         <View 
