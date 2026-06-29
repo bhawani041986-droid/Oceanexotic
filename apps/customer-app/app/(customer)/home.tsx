@@ -1172,22 +1172,49 @@ export default function CustomerHomeScreen() {
               {
                 const qualityWidth = width - 32;
                 return (
-                  <View key="QUALITY_CHECKED" className="mx-4 mb-3 border p-4 flex-row flex-wrap justify-between gap-y-3" style={{ backgroundColor: colors.card, borderColor: colors.border, borderRadius: 24, marginTop: -10 }}>
+                  <View key="QUALITY_CHECKED" className="mx-4 mb-4 flex-row justify-between" style={{ width: qualityWidth, gap: 6, marginTop: -10 }}>
                     {[
-                      { icon: "🛡️", title: t('quality_checked') || "Quality Checked", desc: t('verified_seller') || "Verified Seller", color: "#00ff88" },
-                      { icon: "⚡", title: t('instant') || "Instant", desc: t('min_dispatch') || "90 Min Dispatch", color: "#eab308" },
-                      { icon: "❄️", title: t('cold_chain') || "Cold-Chain", desc: t('controlled_temp') || "0°C Controlled", color: "#00d4ff" },
-                      { icon: "📍", title: t('local_catch') || "Local Catch", desc: t('harbor_hub') || "Port Blair Hub", color: "#ef4444" }
+                      { icon: "shield-check-outline", title: t('quality_checked') || "QUALITY CHECKED", subtitle: t('verified_seller') || "VERIFIED SELLER", color: "#0d9488", bg: "#e2f0ec", border: "#a7f3d0", barColor: "#0d9488" },
+                      { icon: "clock-fast", title: t('instant') || "INSTANT", subtitle: t('min_dispatch') || "90 MIN DISPATCH", color: "#ea580c", bg: "#ffedd5", border: "#fed7aa", barColor: "#ea580c" },
+                      { icon: "snowflake", title: t('cold_chain') || "COLD-CHAIN", subtitle: t('controlled_temp') || "0°C CONTROLLED", color: "#0284c7", bg: "#e0f2fe", border: "#bae6fd", barColor: "#0284c7" },
+                      { icon: "map-marker-radius", title: t('local_catch') || "LOCAL CATCH", subtitle: t('harbor_hub') || "PORT BLAIR HUB", color: "#e11d48", bg: "#ffe4e6", border: "#fecdd3", barColor: "#e11d48" }
                     ].map((item, idx) => (
-                      <View key={idx} className="w-[48%] flex-row items-center gap-3 p-2 bg-[#0b1329] border border-white/5 rounded-2xl">
-                        <View className="w-8 h-8 rounded-full items-center justify-center" style={{ backgroundColor: `${item.color}15` }}>
-                          <Text style={{ color: item.color, fontSize: 16 }}>{item.icon}</Text>
-                        </View>
-                        <View className="flex-1">
-                          <Text className="text-[10px] font-black uppercase text-foreground" numberOfLines={1}>{item.title}</Text>
-                          <Text className="text-[8px] font-bold text-muted-foreground uppercase mt-0.5" numberOfLines={1}>{item.desc}</Text>
-                        </View>
-                      </View>
+                      <ChamferedBox
+                        key={idx}
+                        bevelSize={10}
+                        fillColor={colors.card === '#020617' ? '#0b1329' : '#f8fafc'}
+                        strokeColor={colors.card === '#020617' ? '#1e293b' : '#e2e8f0'}
+                        style={{ flex: 1, padding: 6, alignItems: "center", minHeight: 130 }}
+                      >
+                        {/* Icon Background bevel */}
+                        <ChamferedBox
+                          bevelSize={6}
+                          fillColor={item.bg}
+                          strokeColor={item.border}
+                          style={{ width: 34, height: 34, alignItems: "center", justifyContent: "center", marginTop: 4, marginBottom: 8 }}
+                        >
+                          <MaterialCommunityIcons name={item.icon as any} size={18} color={item.color} />
+                        </ChamferedBox>
+
+                        <Text 
+                          numberOfLines={2}
+                          className="text-[7.5px] font-black italic uppercase text-center leading-tight" 
+                          style={{ color: colors.text, minHeight: 20 }}
+                        >
+                          {item.title}
+                        </Text>
+
+                        {/* Line Decorator */}
+                        <View style={{ width: 14, height: 1.5, backgroundColor: item.barColor, marginVertical: 4 }} />
+
+                        <Text 
+                          numberOfLines={2}
+                          className="text-[6px] font-bold text-center uppercase leading-tight" 
+                          style={{ color: colors.textMuted }}
+                        >
+                          {item.subtitle}
+                        </Text>
+                      </ChamferedBox>
                     ))}
                   </View>
                 );
