@@ -69,6 +69,23 @@ const getTabLabel = (tab: string, t: any) => {
   }
 };
 
+const getCategoryTranslated = (name: string, t: any) => {
+  const transKeys: Record<string, string> = {
+    "Seawater Fish": "seawater_fish",
+    "Freshwater Fish": "freshwater_fish",
+    "Prawns & Shrimps": "prawns_shrimps",
+    "Crabs & Lobsters": "crabs_lobsters",
+    "Steaks & Fillets": "steaks_fillets",
+    "Exotic Catch": "exotic_catch",
+    "Ready to Cook": "ready_to_cook",
+    "Coastal Dry Fish": "coastal_dry_fish",
+    "Mutton": "mutton",
+    "Chicken": "chicken"
+  };
+  const key = transKeys[name];
+  return key ? t(key) : name;
+};
+
 const matchCategory = (pCategory: string, targetCategoryEnglish: string, t: any) => {
   const catLower = (pCategory ?? "").toLowerCase();
   const nameLower = catLower; // Fallback check in name if needed
@@ -419,7 +436,7 @@ export default function ProductsScreen() {
                             </View>
                           </View>
                           <Pressable onPress={() => setActiveTab(category.name)}>
-                             <Text className="text-[10px] font-black uppercase" style={{ color: colors.primary }}>View All</Text>
+                             <Text className="text-[10px] font-black uppercase" style={{ color: colors.primary }}>{t('view_all') || "View All"}</Text>
                           </Pressable>
                         </View>
                         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
@@ -438,7 +455,7 @@ export default function ProductsScreen() {
                           <View className="flex-row items-center justify-between">
                             <View>
                               <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }} numberOfLines={1}>
-                                Cooking <Text style={{ color: "#10B981" }}>Extras</Text>
+                                {t('addons')}
                               </Text>
                               <View className="mt-1.5 mb-2.5" style={{ height: 2, width: 64, borderRadius: 999, overflow: 'hidden' }}>
                                 <LinearGradient
@@ -468,7 +485,7 @@ export default function ProductsScreen() {
                                         className="text-[8px] font-black uppercase" 
                                         style={{ color: isLightColor(colors.primary) ? "#000000" : "#FFFFFF" }}
                                       >
-                                        + ADD
+                                        {t('plus_cut') || "+ ADD"}
                                       </Text>
                                     </Pressable>
                                   </View>
@@ -500,7 +517,7 @@ export default function ProductsScreen() {
           >
             <Text style={{ fontSize: 32 }}>🔍</Text>
             <Text className="mt-3 text-sm font-black uppercase" style={{ color: colors.text }}>
-              {searchText.trim() ? 'No products found' : 'No products available'}
+              {searchText.trim() ? t('no_harvest') : t('no_live_harbor_stock')}
             </Text>
             <Text className="mt-1 text-[10px] font-semibold text-center" style={{ color: colors.textMuted }}>
               {searchText.trim()
