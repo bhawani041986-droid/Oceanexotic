@@ -211,7 +211,7 @@ export default function OrderTrackingScreen() {
 
       {/* Native Interactivity Controls (Bottom-Right) */}
       {!isFullScreen && (
-        <View className="absolute bottom-3 right-3 items-center gap-2">
+        <View className="absolute bottom-3 right-3 items-center gap-2" style={{ zIndex: 9999, elevation: 10 }}>
           <Pressable 
             onPress={zoomIn}
             className="w-8 h-8 rounded-full bg-black/80 border items-center justify-center mb-1"
@@ -247,7 +247,7 @@ export default function OrderTrackingScreen() {
            {/* Full Width Control Bar */}
            <View 
              className="absolute bottom-0 left-0 right-0 flex-row items-center justify-between px-6 py-4 border-t"
-             style={{ backgroundColor: 'rgba(2, 6, 23, 0.95)', borderColor: colors.border }}
+             style={{ backgroundColor: 'rgba(2, 6, 23, 0.95)', borderColor: colors.border, zIndex: 9999, elevation: 20 }}
            >
              {/* Zoom Out */}
              <Pressable 
