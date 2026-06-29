@@ -244,18 +244,22 @@ export default function OrderTrackingScreen() {
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 48, paddingTop: 24 }}>
-        <View className="flex-row items-center justify-between mb-3 px-4">
-           <Button
-              variant="ghost"
-              label="← BACK"
-              onPress={() => router.back()}
-              className="px-0 h-auto"
-           />
-           <View className="rounded bg-emerald-500/20 px-3 py-1">
-              <Text className="text-[10px] font-black uppercase text-emerald-400">
-                {displayData.status}
-              </Text>
-           </View>
+        <View className="flex-row items-center justify-between mb-4 mt-2 px-4">
+          <Pressable 
+            onPress={() => router.back()}
+            className="flex-row items-center gap-1.5 px-3 py-1.5 border"
+            style={{ borderColor: colors.border, backgroundColor: colors.card }}
+          >
+            <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
+              ← BACK
+            </Text>
+          </Pressable>
+          
+          <View className="rounded px-3 py-1.5" style={{ backgroundColor: 'rgba(16, 185, 129, 0.12)' }}>
+            <Text className="text-[10px] font-black uppercase tracking-wider" style={{ color: '#10B981' }}>
+              {displayData.status}
+            </Text>
+          </View>
         </View>
 
         {/* Compact Header Grid */}
