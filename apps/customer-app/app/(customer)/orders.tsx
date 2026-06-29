@@ -23,6 +23,29 @@ export default function OrdersScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const colors = useThemeColors();
 
+  const getStatusColors = (status: string) => {
+    const s = (status || "").toUpperCase();
+    if (s === "DELIVERED") {
+      return {
+        border: "rgba(16, 185, 129, 0.35)",
+        text: "#10B981",
+        bg: "rgba(16, 185, 129, 0.08)"
+      };
+    }
+    if (s === "CANCELLED") {
+      return {
+        border: "rgba(244, 63, 94, 0.25)",
+        text: "#F43F5E",
+        bg: "rgba(244, 63, 94, 0.05)"
+      };
+    }
+    return {
+      border: colors.primary + "66",
+      text: colors.primary,
+      bg: colors.primary + "0F"
+    };
+  };
+
   const load = async () => {
     if (!user?.id) {
       setOrders([]);
@@ -75,89 +98,116 @@ export default function OrdersScreen() {
           </View>
         ) : orders.length > 0 ? (
           <View className="mt-6 gap-3">
-            {orders.map((order) => (
-              <ChamferedBox
-                key={order.id}
-                fillColor={colors.card}
-                strokeColor={colors.border}
-                bevelSize={14}
-                className="mb-3"
-              >
-                <View className="p-5">
-                  <View className="flex-row items-center justify-between border-b pb-3 mb-3" style={{ borderBottomColor: colors.border }}>
-                    <View>
-                      <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
-                        Order ID
-                      </Text>
-                      <Text className="text-base font-black uppercase italic" style={{ color: colors.text }}>
-                        {order.id}
-                      </Text>
-                    </View>
-                    
-                    {/* Status Badge */}
-                    <View
-                      className="rounded px-2.5 py-1"
-                      style={{
-                        backgroundColor: order.status === "DELIVERED" ? "rgba(16, 185, 129, 0.12)" : colors.primary + "1A"
-                      }}
-                    >
-                      <Text 
-                        className="text-[9px] font-black uppercase tracking-wider" 
-                        style={{ color: order.status === "DELIVERED" ? "#10B981" : colors.primary }}
+            {orders.map((order) => {
+              const statusColors = getStatusColors(order.status);
+              return (
+                <ChamferedBox
+                  key={order.id}
+                  fillColor={colors.card}
+                  strokeColor={statusColors.border}
+                  bevelSize={14}
+                  className="mb-3"
+                >
+                  <View className="p-5">
+                    <View className="flex-row items-center justify-between border-b pb-3 mb-3" style={{ borderBottomColor: colors.border }}>
+                      <View>
+                        <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
+                          Order ID
+                        </Text>
+                        <Text className="text-base font-black uppercase italic" style={{ color: colors.text }}>
+                          {order.id}
+                        </Text>
+                      </View>
+                      
+                      {/* Status Badge */}
+                      <View
+                        className="rounded px-2.5 py-1"
+                        style={{
+                          backgroundColor: statusColors.bg
+                        }}
                       >
-                        {order.status}
-                      </Text>
-                    </View>
-                  </View>
-
-                  <View className="flex-row justify-between items-center">
-                    <View>
-                      <Text className="text-[9px] font-black uppercase tracking-wider" style={{ color: colors.textMuted }}>
-                        Placed On
-                      </Text>
-                      <Text className="text-xs font-bold" style={{ color: colors.text, marginTop: 1 }}>
-                        {order.date}
-                      </Text>
-                      <Text className="text-[9px] font-black uppercase tracking-wider mt-1.5" style={{ color: colors.textMuted }}>
-                        Items Quantity
-                      </Text>
-                      <Text className="text-xs font-bold" style={{ color: colors.text, marginTop: 1 }}>
-                        {order.items} items
-                      </Text>
+                        <Text 
+                          className="text-[9px] font-black uppercase tracking-wider" 
+                          style={{ color: statusColors.text }}
+                        >
+                          {order.status}
+                        </Text>
+                      </View>
                     </View>
 
-                    <View className="items-end">
-                      <Text className="text-[9px] font-black uppercase tracking-wider" style={{ color: colors.textMuted }}>
-                        Total Amount
-                      </Text>
-                      <Text className="text-2xl font-black italic mt-0.5" style={{ color: colors.text }}>
-                        ₹{Number(order.total).toLocaleString()}
-                      </Text>
-                    </View>
-                  </View>
+                    <View className="flex-row justify-between items-center">
+                      <View>
+                        <Text className="text-[9px] font-black uppercase tracking-wider" style={{ color: colors.textMuted }}>
+                          Placed On
+                        </Text>
+                        <Text className="text-xs font-bold" style={{ color: colors.text, marginTop: 1 }}>
+                          {order.date}
+                        </Text>
+                        <Text className="text-[9px] font-black uppercase tracking-wider mt-1.5" style={{ color: colors.textMuted }}>
+                          Items Quantity
+                        </Text>
+                        <Text className="text-xs font-bold" style={{ color: colors.text, marginTop: 1 }}>
+                          {order.items} items
+                        </Text>
+                      </View>
 
-                  <View className="mt-5 flex-row gap-3">
-                    <Button
-                      label="VIEW DETAILS"
-                      variant="ghost"
-                      onPress={() =>
-                        router.push({ pathname: "/orders/[id]", params: { id: order.id } } as never)
-                      }
-                      className="flex-1 h-10"
-                    />
-                    {!["DELIVERED", "CANCELLED"].includes(order.status?.toUpperCase() ?? "") && (
-                      <Button
-                        label="TRACK LIVE"
+                      <View className="items-end">
+                        <Text className="text-[9px] font-black uppercase tracking-wider" style={{ color: colors.textMuted }}>
+                          Total Amount
+                        </Text>
+                        <Text className="text-2xl font-black italic mt-0.5" style={{ color: colors.text }}>
+                          ₹{Number(order.total).toLocaleString()}
+                        </Text>
+                      </View>
+                    </View>
+
+                    <View className="mt-5 flex-row gap-3">
+                      <Pressable
                         onPress={() =>
-                          router.push({ pathname: "/orders/[id]/tracking", params: { id: order.id } } as never)
+                          router.push({ pathname: "/orders/[id]", params: { id: order.id } } as never)
                         }
-                        className="flex-1 h-10"
-                      />
-                    )}
+                        className="flex-1"
+                      >
+                        <ChamferedBox
+                          fillColor="transparent"
+                          strokeColor={colors.border}
+                          bevelSize={8}
+                          className="w-full"
+                        >
+                          <View className="flex-row items-center justify-center gap-1.5 py-2.5">
+                            <Text className="text-[11px] font-black uppercase tracking-wider" style={{ color: colors.text }}>
+                              ⚓ DETAILS
+                            </Text>
+                          </View>
+                        </ChamferedBox>
+                      </Pressable>
+                      
+                      {!["DELIVERED", "CANCELLED"].includes(order.status?.toUpperCase() ?? "") && (
+                        <Pressable
+                          onPress={() =>
+                            router.push({ pathname: "/orders/[id]/tracking", params: { id: order.id } } as never)
+                          }
+                          className="flex-1"
+                        >
+                          <ChamferedBox
+                            fillColor={colors.primary}
+                            strokeColor="transparent"
+                            bevelSize={8}
+                            className="w-full"
+                          >
+                            <View className="flex-row items-center justify-center gap-1.5 py-2.5">
+                              <Text className="text-[11px] font-black uppercase tracking-wider text-white">
+                                🧭 TRACK LIVE
+                              </Text>
+                            </View>
+                          </ChamferedBox>
+                        </Pressable>
+                      )}
+                    </View>
                   </View>
-                </View>
-              </ChamferedBox>
-            ))}
+                </ChamferedBox>
+              );
+            })}
           </View>
         ) : (
           <View 
