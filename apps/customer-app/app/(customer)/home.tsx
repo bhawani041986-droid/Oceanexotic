@@ -1171,28 +1171,51 @@ export default function CustomerHomeScreen() {
             case "QUALITY_CHECKED":
               {
                 const qualityWidth = width - 32;
-                const qualityHeight = qualityWidth / 2.504;
                 return (
-                  <View key="QUALITY_CHECKED" className="mx-4 mb-0 relative overflow-hidden" style={{ width: qualityWidth, height: qualityHeight, marginTop: -10, marginBottom: 0 }}>
-                    <Image
-                      source={IMG_QUALITY_CHECKED_BANNER}
-                      style={{ width: "100%", height: "100%" }}
-                      contentFit="cover"
-                    />
+                  <View key="QUALITY_CHECKED" className="mx-4 mb-3 border p-4 flex-row flex-wrap justify-between gap-y-3" style={{ backgroundColor: colors.card, borderColor: colors.border, borderRadius: 24, marginTop: -10 }}>
+                    {[
+                      { icon: "🛡️", title: t('quality_checked') || "Quality Checked", desc: t('verified_seller') || "Verified Seller", color: "#00ff88" },
+                      { icon: "⚡", title: t('instant') || "Instant", desc: t('min_dispatch') || "90 Min Dispatch", color: "#eab308" },
+                      { icon: "❄️", title: t('cold_chain') || "Cold-Chain", desc: t('controlled_temp') || "0°C Controlled", color: "#00d4ff" },
+                      { icon: "📍", title: t('local_catch') || "Local Catch", desc: t('harbor_hub') || "Port Blair Hub", color: "#ef4444" }
+                    ].map((item, idx) => (
+                      <View key={idx} className="w-[48%] flex-row items-center gap-3 p-2 bg-[#0b1329] border border-white/5 rounded-2xl">
+                        <View className="w-8 h-8 rounded-full items-center justify-center" style={{ backgroundColor: `${item.color}15` }}>
+                          <Text style={{ color: item.color, fontSize: 16 }}>{item.icon}</Text>
+                        </View>
+                        <View className="flex-1">
+                          <Text className="text-[10px] font-black uppercase text-foreground" numberOfLines={1}>{item.title}</Text>
+                          <Text className="text-[8px] font-bold text-muted-foreground uppercase mt-0.5" numberOfLines={1}>{item.desc}</Text>
+                        </View>
+                      </View>
+                    ))}
                   </View>
                 );
               }
             case "FSSAI":
               {
-                const fssaiWidth = width - 32;
-                const fssaiHeight = fssaiWidth / 3.003;
                 return (
-                  <View key="FSSAI" className="mx-4 mb-2 relative overflow-hidden" style={{ width: fssaiWidth, height: fssaiHeight, marginTop: -12 }}>
-                    <Image
-                      source={IMG_FSSAI_BANNER}
-                      style={{ width: "100%", height: "100%" }}
-                      contentFit="cover"
-                    />
+                  <View key="FSSAI" className="mx-4 mb-4 border p-4 flex-row justify-center items-center gap-3" style={{ backgroundColor: colors.card, borderColor: colors.border, borderRadius: 24, marginTop: -6 }}>
+                    <View className="items-center justify-center border-r border-white/10 pr-3">
+                      <View className="flex-row items-baseline -mt-[2px]">
+                        <Text className="text-xs italic leading-none" style={{ color: "#0c3f87", fontWeight: '800', fontFamily: 'serif', letterSpacing: -0.5 }}>fssa</Text>
+                        <Text className="text-xs italic leading-none" style={{ color: "#F97316", fontWeight: '800', fontFamily: 'serif' }}>i</Text>
+                      </View>
+                      <Text className="text-[5px] font-black leading-none text-muted-foreground mt-0.5" numberOfLines={1}>
+                        Lic No. 12423999000142
+                      </Text>
+                    </View>
+                    
+                    {[
+                      { icon: "❄️", label: t('cold_chain') || "COLD-CHAIN", color: colors.primary },
+                      { icon: "🌿", label: t('sustainable') || "SUSTAINABLE", color: colors.primary },
+                      { icon: "🚀", label: t('rapid_delivery') || "RAPID DELIVERY", color: colors.primary }
+                    ].map((item, idx) => (
+                      <View key={idx} className="flex-row items-center gap-1 bg-[#0b1329] border border-white/5 px-2 py-1.5 rounded-full">
+                        <Text style={{ fontSize: 10 }}>{item.icon}</Text>
+                        <Text className="text-[8px] font-black uppercase text-foreground">{item.label}</Text>
+                      </View>
+                    ))}
                   </View>
                 );
               }
