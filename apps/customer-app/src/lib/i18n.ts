@@ -14,6 +14,7 @@ const translations: Record<string, Record<string, string>> = {
     shop: "Shop",
     chat: "Chat",
     profile: "Profile",
+    clear_search: "Clear Search",
     premium_sellers: "Premium Sellers",
     certified_daily_catches: "Certified daily catches from top-rated fleets",
     join_our_newsletter: "Join Our Newsletter",
@@ -226,6 +227,10 @@ const translations: Record<string, Record<string, string>> = {
 
   // ── Hindi ────────────────────────────────────────────────────────────────
   hi: {
+    shop: "मार्केट",
+    chat: "चैट",
+    profile: "प्रोफ़ाइल",
+    clear_search: "खोज साफ़ करें",
     live_harbor_arrival: "लाइव हार्बर आगमन • ताजगी की गारंटी",
     premium_steaks_fillets: "प्रीमियम स्टेक और फिलेट",
     dry_fish: "सूखी मछली",
@@ -426,6 +431,10 @@ const translations: Record<string, Record<string, string>> = {
 
   // ── Bengali ───────────────────────────────────────────────────────────────
   bn: {
+    shop: "মার্কেট",
+    chat: "চ্যাট",
+    profile: "প্রোফাইল",
+    clear_search: "অনুসন্ধান মুছুন",
     live_harbor_arrival: "লাইভ হারবার আগমন • সতেজতার নিশ্চয়তা",
     premium_steaks_fillets: "প্রিমিয়াম স্টেক এবং ফিলেট",
     dry_fish: "শুটকি মাছ",
@@ -621,6 +630,10 @@ const translations: Record<string, Record<string, string>> = {
   },
 
   ta: {
+    shop: "கடை",
+    chat: "அரட்டை",
+    profile: "சுயவிவரம்",
+    clear_search: "தேடலை அழி",
     product_catalog: "தயாரிப்பு பட்டியல்",
     catalog_subtitle: "பிரீமியம் கடல் உணவு கண்டுபிடிப்பு • விரைவான டெலிவரி",
     items_in_catalog: "பட்டியலில் உள்ள பொருட்கள்",
@@ -726,6 +739,10 @@ const translations: Record<string, Record<string, string>> = {
     min_order: "குறைந்தபட்ச ஆர்டர்",
   },
   te: {
+    shop: "షాప్",
+    chat: "చాట్",
+    profile: "ప్రొఫైల్",
+    clear_search: "శోధనను క్లియర్ చేయి",
     live_harbor_arrival: "లైవ్ హార్బర్ రాక • తాజాదనం హామీ",
     premium_steaks_fillets: "ప్రీమియం స్టీక్స్ & ఫిల్లెట్స్",
     dry_fish: "ఎండు చేప",
@@ -807,6 +824,10 @@ const translations: Record<string, Record<string, string>> = {
     batch: "బ్యాచ్",
   },
   mr: {
+    shop: "दुकान",
+    chat: "चॅट",
+    profile: "प्रोफाइल",
+    clear_search: "शोध साफ करा",
     product_catalog: "उत्पादन कॅटलॉग",
     catalog_subtitle: "प्रीमियम सीफूड डिस्कवरी • जलद वितरण",
     items_in_catalog: "कॅटलॉगमधील आयटम",
@@ -866,6 +887,10 @@ const translations: Record<string, Record<string, string>> = {
     batch: "बॅच",
   },
   ml: {
+    shop: "ഷോപ്പ്",
+    chat: "ചാറ്റ്",
+    profile: "പ്രൊഫൈൽ",
+    clear_search: "തിരയൽ മായ്ക്കുക",
     product_catalog: "ഉൽപ്പന്ന കാറ്റലോഗ്",
     catalog_subtitle: "പ്രീമിയം സീഫുഡ് കണ്ടെത്തൽ • ഫാസ്റ്റ് ഡെലിവറി",
     items_in_catalog: "കാറ്റലോഗിലെ ഇനങ്ങൾ",
@@ -916,6 +941,10 @@ const translations: Record<string, Record<string, string>> = {
     batch: "ബാച്ച്",
   },
   or: {
+    shop: "ଦୋକାନ",
+    chat: "ଚାଟ୍",
+    profile: "ପ୍ରୋଫାଇଲ୍",
+    clear_search: "ଖୋଜିବା ସଫା କରନ୍ତୁ",
     product_catalog: "ଉତ୍ପାଦ କାଟାଲଗ୍ |",
     catalog_subtitle: "ପ୍ରିମିୟମ୍ ସାମୁଦ୍ରିକ ଖାଦ୍ୟ ଆବିଷ୍କାର • ଦ୍ରୁତ ବିତରଣ |",
     items_in_catalog: "କାଟାଲଗ୍ ରେ ଥିବା ଆଇଟମ୍ |",
@@ -961,6 +990,10 @@ const translations: Record<string, Record<string, string>> = {
     my_orders: "ମୋର ଅର୍ଡର",
   },
   as: {
+    shop: "দোকান",
+    chat: "চাট",
+    profile: "প্ৰফাইল",
+    clear_search: "সন্ধান মুছক",
     product_catalog: "প্ৰডাক্ট কেটেলগ",
     catalog_subtitle: "প্ৰিমিয়াম সীফুড আৱিষ্কাৰ • দ্ৰুত ডেলিভাৰী",
     items_in_catalog: "কেটেলগত থকা বস্তুবোৰ",
@@ -1022,6 +1055,10 @@ const translations: Record<string, Record<string, string>> = {
     batch: "বেচ",
   },
   mni: {
+    shop: "দোকান",
+    chat: "চাট",
+    profile: "প্রোফাইল",
+    clear_search: "মুছশিল্লু",
     ready_to_cook: "ꯆꯥꯛ ꯊꯣꯡꯅꯕꯥ ꯁꯦꯝ ꯁꯥꯕꯥ꯫",
     coastal_dry_fish: "ꯀꯣꯁ꯭ꯇꯦꯜ ꯗ꯭ꯔꯥꯏ ꯐꯤꯁ꯫",
     todays_catch: "ঙসি ফাব ঙা",
@@ -1069,6 +1106,10 @@ const translations: Record<string, Record<string, string>> = {
     batch: "বেচ",
   },
   "zh-CN": {
+    shop: "商店",
+    chat: "聊天",
+    profile: "个人资料",
+    clear_search: "清除搜索",
     product_catalog: "产品目录",
     catalog_subtitle: "优质海鲜探索 • 快速交货",
     items_in_catalog: "目录中的项目",
@@ -1116,6 +1157,10 @@ const translations: Record<string, Record<string, string>> = {
     batch: "批次",
   },
   th: {
+    shop: "ร้านค้า",
+    chat: "แชท",
+    profile: "โปรไฟล์",
+    clear_search: "ล้างการค้นหา",
     product_catalog: "แคตตาล็อกสินค้า",
     catalog_subtitle: "การค้นพบอาหารทะเลระดับพรีเมี่ยม • จัดส่งที่รวดเร็ว",
     items_in_catalog: "รายการในแค็ตตาล็อก",
@@ -1178,6 +1223,10 @@ const translations: Record<string, Record<string, string>> = {
     batch: "รอบจับ",
   },
   tl: {
+    shop: "Tindahan",
+    chat: "Chat",
+    profile: "Profile",
+    clear_search: "I-clear ang Paghahanap",
     live_harbor_arrival: "Live na Pagdating sa Harbor • Garantisadong Sariwa",
     premium_steaks_fillets: "Mga Premium na Steak at Fillet",
     dry_fish: "Tuyo",

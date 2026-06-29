@@ -424,7 +424,7 @@ export default function ProductsScreen() {
                          <View className="flex-row items-center justify-between">
                           <View>
                             <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }} numberOfLines={1}>
-                              {getCategoryTranslated(category.name, t)}
+                              {getCategoryTranslated(category.name, t).split(" ")[0]} <Text style={{ color: category.glowColor }}>{getCategoryTranslated(category.name, t).split(" ").slice(1).join(" ") || ""}</Text>
                             </Text>
                             <View className="mt-1.5 mb-2.5" style={{ height: 2, width: 64, borderRadius: 999, overflow: 'hidden' }}>
                               <LinearGradient
