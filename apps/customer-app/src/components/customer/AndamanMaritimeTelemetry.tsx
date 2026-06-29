@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Dimensions, Pressable, Platform, Modal } from "
 import { WebView } from "react-native-webview";
 import type { Territory } from "@/services/homeService";
 import { useThemeColors } from "@/hooks/useThemeColors";
+import { useTranslation } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 
 interface TelemetryProps {
@@ -13,6 +14,7 @@ const { width } = Dimensions.get("window");
 const radarSize = width - 48;
 
 export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
+  const { t } = useTranslation();
   const [isLReady, setIsLReady] = useState(false);
   const [isMapInit, setIsMapInit] = useState(false);
   const [isMapExpanded, setIsMapExpanded] = useState(false);
@@ -257,9 +259,9 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
   const renderMapHeader = () => (
     <>
       <View className="mb-4">
-        <Text className="text-xl font-black italic uppercase text-foreground">Live Delivery Map</Text>
+        <Text className="text-xl font-black italic uppercase text-foreground">{t('live_delivery_map') || "Live Delivery Map"}</Text>
         <Text className="text-[9px] font-black uppercase tracking-[0.3em]" style={{ color: colors.primary }}>
-          Real-time delivery hub mapping
+          {t('real_time_delivery_mapping') || "Real-time delivery hub mapping"}
         </Text>
       </View>
 
@@ -270,7 +272,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
           </View>
           <View className="flex-1">
             <Text className="text-[8px] font-black text-rose-500 uppercase tracking-[0.1em]">DONE</Text>
-            <Text className="text-xs font-black text-foreground uppercase italic">Quality Check</Text>
+            <Text className="text-xs font-black text-foreground uppercase italic">{t('quality_check') || "Quality Check"}</Text>
           </View>
         </View>
 
@@ -280,7 +282,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
           </View>
           <View className="flex-1">
             <Text className="text-[8px] font-black text-rose-500 uppercase tracking-[0.1em]">ACTIVE</Text>
-            <Text className="text-xs font-black text-foreground uppercase italic">Out for Delivery</Text>
+            <Text className="text-xs font-black text-foreground uppercase italic">{t('out_for_delivery') || "Out for Delivery"}</Text>
           </View>
         </View>
       </View>
@@ -294,7 +296,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
         className="absolute top-4 right-4 flex-row items-center gap-1.5 bg-black/60 border px-2 py-1 rounded-none z-[1000] pointer-events-none"
       >
         <View className="h-1.5 w-1.5 rounded-none bg-emerald-500 animate-pulse" />
-        <Text className="text-[7px] font-black text-white uppercase tracking-widest">Stable Connection</Text>
+        <Text className="text-[7px] font-black text-white uppercase tracking-widest">{t('stable_connection') || "Stable Connection"}</Text>
       </View>
       <View 
         style={{ borderColor: colors.primary + "33" }}
@@ -314,7 +316,7 @@ export function AndamanMaritimeTelemetry({ territories = [] }: TelemetryProps) {
         className="absolute bottom-4 right-4 z-[1000] bg-black/80 border px-3 py-1.5 rounded-xl flex-row items-center gap-1.5"
         style={{ borderColor: colors.primary + "66" }}
       >
-        <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>⛶ ENLARGE MAP</Text>
+        <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>⛶ {t('enlarge_map') || "ENLARGE MAP"}</Text>
       </Pressable>
     </>
   );

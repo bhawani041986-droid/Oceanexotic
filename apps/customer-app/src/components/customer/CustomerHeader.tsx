@@ -302,7 +302,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                   <View className="absolute inset-0 flex-row items-center px-2">
                     <MaterialCommunityIcons name="map-marker" size={14} color="#ffffff" />
                     <Text className="ml-1 text-[10px] font-bold text-white tracking-wide" numberOfLines={1}>
-                      {activeHubName} <Text className="font-normal opacity-90">• Active Fishing Zones</Text>
+                      {activeHubName} <Text className="font-normal opacity-90">• {t('active_fishing_zones') || "Active Fishing Zones"}</Text>
                     </Text>
                   </View>
                 </View>

@@ -6,6 +6,7 @@ import { useRouter } from 'expo-router';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useThemeColors } from '@/hooks/useThemeColors';
 import { useFlashDealTimer } from '@/hooks/useFlashDealTimer';
+import { useTranslation } from '@/lib/i18n';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Animated, { 
   useSharedValue, 
@@ -44,6 +45,7 @@ const FloatingIcon = ({ Icon, top, left, color, delay, size, rotate = '0deg' }: 
 };
 
 export function FlashDealsBanner() {
+  const { t } = useTranslation();
   const settings = useSettingsStore();
   const colors = useThemeColors();
 
@@ -143,23 +145,23 @@ export function FlashDealsBanner() {
           <View style={styles.liveBadge}>
             <MaterialCommunityIcons name="lightning-bolt" size={12} color={colors.primary} />
             <Text style={[styles.liveText, { color: colors.primary }]}>
-              {settings.flashDealSector ? `${settings.flashDealSector.toUpperCase()} LIVE` : 'FLASH PRODUCT LIVE'}
+              {settings.flashDealSector ? `${settings.flashDealSector.toUpperCase()} ${t('live') || 'LIVE'}` : (t('flash_product_live') || 'FLASH PRODUCT LIVE')}
             </Text>
           </View>
           
           <Text style={[styles.title, { color: colors.text }]}>
-            {settings.flashDealTitle || 'FLASH DEALS.'}
+            {settings.flashDealTitle || t('flash_deals') || 'FLASH DEALS.'}
           </Text>
           
           <Text style={[styles.timerStatus, { color: colors.textMuted }]}>
-            {timerStatus === 'STARTS_IN' ? 'STARTS IN' : 'ENDS IN'}
+            {timerStatus === 'STARTS_IN' ? (t('starts_in') || 'STARTS IN') : (t('ends_in') || 'ENDS IN')}
           </Text>
 
           <View style={styles.timerRow}>
             {[timeLeft.hrs, timeLeft.min, timeLeft.sec].map((val, i) => (
               <View key={i} style={[styles.timerBox, { borderColor: `${colors.primary}66` }]}>
                 <Text style={[styles.timerVal, { color: colors.primary }]}>{val}</Text>
-                <Text style={[styles.timerLabel, { color: colors.textMuted }]}>{i === 0 ? 'HRS' : i === 1 ? 'MIN' : 'SEC'}</Text>
+                <Text style={[styles.timerLabel, { color: colors.textMuted }]}>{i === 0 ? (t('hrs') || 'HRS') : i === 1 ? (t('min') || 'MIN') : (t('sec') || 'SEC')}</Text>
               </View>
             ))}
           </View>
@@ -196,7 +198,7 @@ export function FlashDealsBanner() {
                         <Svg style={StyleSheet.absoluteFill} viewBox="0 0 90 26" preserveAspectRatio="none">
                           <Polygon points="6,0 90,0 90,20 84,26 0,26 0,6" fill={colors.primary} />
                         </Svg>
-                        <Text style={[styles.btnText, { color: isLightColor(colors.primary) ? "#000000" : "#FFFFFF", fontSize: 7 }]}>VIEW DETAILS</Text>
+                        <Text style={[styles.btnText, { color: isLightColor(colors.primary) ? "#000000" : "#FFFFFF", fontSize: 7 }]}>{t('view_details') || "VIEW DETAILS"}</Text>
                       </View>
                     </Pressable>
                   </View>
