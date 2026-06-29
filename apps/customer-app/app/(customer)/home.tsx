@@ -41,6 +41,7 @@ import { FlashDealsBanner } from "@/components/customer/FlashDealsBanner";
 import { Button } from "@/components/ui/Button";
 import { ChamferedBox } from "@/components/ui/ChamferedBox";
 import { useToast } from "@/components/ui/Toast";
+import { ShieldCheckIcon, InstantClockIcon, ColdChainIcon, LocalCatchIcon, LeafIcon, TruckIcon } from "@/components/customer/TrustIcons";
 import { homeService, type CutOption, type TodaysCatchItem } from "@/services/homeService";
 import { cn } from "@/lib/utils";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
@@ -1174,10 +1175,10 @@ export default function CustomerHomeScreen() {
                 return (
                   <View key="QUALITY_CHECKED" className="mx-4 mb-4 flex-row justify-between" style={{ width: qualityWidth, gap: 6, marginTop: -10 }}>
                     {[
-                      { icon: "shield-check-outline", title: t('quality_checked') || "QUALITY CHECKED", subtitle: t('verified_seller') || "VERIFIED SELLER", color: "#0d9488", bg: "#e2f0ec", border: "#a7f3d0", barColor: "#0d9488" },
-                      { icon: "clock-fast", title: t('instant') || "INSTANT", subtitle: t('min_dispatch') || "90 MIN DISPATCH", color: "#ea580c", bg: "#ffedd5", border: "#fed7aa", barColor: "#ea580c" },
-                      { icon: "snowflake", title: t('cold_chain') || "COLD-CHAIN", subtitle: t('controlled_temp') || "0°C CONTROLLED", color: "#0284c7", bg: "#e0f2fe", border: "#bae6fd", barColor: "#0284c7" },
-                      { icon: "map-marker-radius", title: t('local_catch') || "LOCAL CATCH", subtitle: t('harbor_hub') || "PORT BLAIR HUB", color: "#e11d48", bg: "#ffe4e6", border: "#fecdd3", barColor: "#e11d48" }
+                      { icon: <ShieldCheckIcon size={20} color="#0d9488" />, title: t('quality_checked') || "QUALITY CHECKED", subtitle: t('verified_seller') || "VERIFIED SELLER", color: "#0d9488", bg: "#e2f0ec", border: "#a7f3d0", barColor: "#0d9488" },
+                      { icon: <InstantClockIcon size={20} color="#ea580c" />, title: t('instant') || "INSTANT", subtitle: t('min_dispatch') || "90 MIN DISPATCH", color: "#ea580c", bg: "#ffedd5", border: "#fed7aa", barColor: "#ea580c" },
+                      { icon: <ColdChainIcon size={20} color="#0284c7" />, title: t('cold_chain') || "COLD-CHAIN", subtitle: t('controlled_temp') || "0°C CONTROLLED", color: "#0284c7", bg: "#e0f2fe", border: "#bae6fd", barColor: "#0284c7" },
+                      { icon: <LocalCatchIcon size={20} color="#e11d48" />, title: t('local_catch') || "LOCAL CATCH", subtitle: t('harbor_hub') || "PORT BLAIR HUB", color: "#e11d48", bg: "#ffe4e6", border: "#fecdd3", barColor: "#e11d48" }
                     ].map((item, idx) => (
                       <ChamferedBox
                         key={idx}
@@ -1193,7 +1194,7 @@ export default function CustomerHomeScreen() {
                           strokeColor={item.border}
                           style={{ width: 34, height: 34, alignItems: "center", justifyContent: "center", marginTop: 4, marginBottom: 8 }}
                         >
-                          <MaterialCommunityIcons name={item.icon as any} size={18} color={item.color} />
+                          {item.icon}
                         </ChamferedBox>
 
                         <Text 
