@@ -162,45 +162,51 @@ export default function OrdersScreen() {
                     </View>
 
                     <View className="mt-5 flex-row gap-3">
+                      {/* DETAILS button */}
                       <Pressable
                         onPress={() =>
                           router.push({ pathname: "/orders/[id]", params: { id: order.id } } as never)
                         }
-                        className="flex-1"
+                        className="flex-1 rounded-none border overflow-hidden relative"
+                        style={{ borderColor: colors.border, backgroundColor: 'transparent' }}
                       >
-                        <ChamferedBox
-                          fillColor="transparent"
-                          strokeColor={colors.border}
-                          bevelSize={8}
-                          className="w-full"
-                        >
-                          <View className="flex-row items-center justify-center gap-1.5 py-2.5">
-                            <Text className="text-[11px] font-black uppercase tracking-wider" style={{ color: colors.text }}>
-                              ⚓ DETAILS
-                            </Text>
-                          </View>
-                        </ChamferedBox>
+                        <View className="flex-row items-center justify-center gap-1.5 py-2.5">
+                          <Text className="text-[11px] font-black uppercase tracking-wider" style={{ color: colors.text }}>
+                            ⚓ DETAILS
+                          </Text>
+                        </View>
+                        {/* Top-Left Bevel mask */}
+                        <Svg width="10" height="10" style={{ position: "absolute", top: -1, left: -1, zIndex: 20 }}>
+                          <Path d="M0,0 L10,0 L0,10 Z" fill={colors.card} />
+                          <Path d="M10,0 L0,10" stroke={colors.border} strokeWidth={1} />
+                        </Svg>
+                        {/* Bottom-Right Bevel mask - only if Track button is NOT shown */}
+                        {["DELIVERED", "CANCELLED"].includes(order.status?.toUpperCase() ?? "") && (
+                          <Svg width="10" height="10" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 20 }}>
+                            <Path d="M10,10 L0,10 L10,0 Z" fill={colors.card} />
+                            <Path d="M0,10 L10,0" stroke={colors.border} strokeWidth={1} />
+                          </Svg>
+                        )}
                       </Pressable>
                       
+                      {/* TRACK LIVE button */}
                       {!["DELIVERED", "CANCELLED"].includes(order.status?.toUpperCase() ?? "") && (
                         <Pressable
                           onPress={() =>
                             router.push({ pathname: "/orders/[id]/tracking", params: { id: order.id } } as never)
                           }
-                          className="flex-1"
+                          className="flex-1 rounded-none overflow-hidden relative"
+                          style={{ backgroundColor: colors.primary }}
                         >
-                          <ChamferedBox
-                            fillColor={colors.primary}
-                            strokeColor="transparent"
-                            bevelSize={8}
-                            className="w-full"
-                          >
-                            <View className="flex-row items-center justify-center gap-1.5 py-2.5">
-                              <Text className="text-[11px] font-black uppercase tracking-wider text-white">
-                                🧭 TRACK LIVE
-                              </Text>
-                            </View>
-                          </ChamferedBox>
+                          <View className="flex-row items-center justify-center gap-1.5 py-2.5">
+                            <Text className="text-[11px] font-black uppercase tracking-wider text-white">
+                              🧭 TRACK LIVE
+                            </Text>
+                          </View>
+                          {/* Bottom-Right Bevel mask */}
+                          <Svg width="10" height="10" style={{ position: "absolute", bottom: -1, right: -1, zIndex: 20 }}>
+                            <Path d="M10,10 L0,10 L10,0 Z" fill={colors.card} />
+                          </Svg>
                         </Pressable>
                       )}
                     </View>
