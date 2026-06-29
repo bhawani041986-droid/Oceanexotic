@@ -1222,29 +1222,71 @@ export default function CustomerHomeScreen() {
               }
             case "FSSAI":
               {
+                const fssaiWidth = width - 32;
                 return (
-                  <View key="FSSAI" className="mx-4 mb-4 border p-4 flex-row justify-center items-center gap-3" style={{ backgroundColor: colors.card, borderColor: colors.border, borderRadius: 24, marginTop: -6 }}>
-                    <View className="items-center justify-center border-r border-white/10 pr-3">
+                  <ChamferedBox
+                    key="FSSAI"
+                    bevelSize={12}
+                    fillColor={colors.card === '#020617' ? '#081125' : '#f8fafc'}
+                    strokeColor={colors.card === '#020617' ? '#1e293b' : '#cbd5e1'}
+                    style={{ marginHorizontal: 16, padding: 6, marginBottom: 16, marginTop: -6, width: fssaiWidth }}
+                    contentStyle={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 4 }}
+                  >
+                    {/* 1. FSSAI Card */}
+                    <ChamferedBox
+                      bevelSize={6}
+                      fillColor="#fff7ed"
+                      strokeColor="#fed7aa"
+                      style={{ flex: 1.1, paddingVertical: 4, alignItems: "center", justifyContent: "center" }}
+                    >
                       <View className="flex-row items-baseline -mt-[2px]">
-                        <Text className="text-xs italic leading-none" style={{ color: "#0c3f87", fontWeight: '800', fontFamily: 'serif', letterSpacing: -0.5 }}>fssa</Text>
-                        <Text className="text-xs italic leading-none" style={{ color: "#F97316", fontWeight: '800', fontFamily: 'serif' }}>i</Text>
+                        <Text className="text-[12px] italic leading-none" style={{ color: "#0c3f87", fontWeight: '800', fontFamily: 'serif', letterSpacing: -0.5 }}>fssa</Text>
+                        <Text className="text-[12px] italic leading-none" style={{ color: "#ea580c", fontWeight: '800', fontFamily: 'serif' }}>i</Text>
+                        <Text style={{ fontSize: 7, marginLeft: 1 }}>🍃</Text>
                       </View>
-                      <Text className="text-[5px] font-black leading-none text-muted-foreground mt-0.5" numberOfLines={1}>
-                        Lic No. 12423999000142
+                      <Text className="text-[4.5px] font-black text-[#ea580c] mt-0.5" numberOfLines={1}>
+                        Reg. No. 22926204000077
                       </Text>
-                    </View>
-                    
-                    {[
-                      { icon: "❄️", label: t('cold_chain') || "COLD-CHAIN", color: colors.primary },
-                      { icon: "🌿", label: t('sustainable') || "SUSTAINABLE", color: colors.primary },
-                      { icon: "🚀", label: t('rapid_delivery') || "RAPID DELIVERY", color: colors.primary }
-                    ].map((item, idx) => (
-                      <View key={idx} className="flex-row items-center gap-1 bg-[#0b1329] border border-white/5 px-2 py-1.5 rounded-full">
-                        <Text style={{ fontSize: 10 }}>{item.icon}</Text>
-                        <Text className="text-[8px] font-black uppercase text-foreground">{item.label}</Text>
-                      </View>
-                    ))}
-                  </View>
+                    </ChamferedBox>
+
+                    {/* 2. Cold Chain Card */}
+                    <ChamferedBox
+                      bevelSize={6}
+                      fillColor="#f0f9ff"
+                      strokeColor="#bae6fd"
+                      style={{ flex: 1, paddingVertical: 4 }}
+                      contentStyle={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 3, height: "100%" }}
+                    >
+                      <ColdChainIcon size={12} color="#0284c7" />
+                      <Text className="text-[7.5px] font-black text-[#0284c7] uppercase">{t('cold_chain') || "COLD-CHAIN"}</Text>
+                    </ChamferedBox>
+
+                    {/* 3. Sustainable Card */}
+                    <ChamferedBox
+                      bevelSize={6}
+                      fillColor="#f0fdf4"
+                      strokeColor="#bbf7d0"
+                      style={{ flex: 1, paddingVertical: 4 }}
+                      contentStyle={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 3, height: "100%" }}
+                    >
+                      <LeafIcon size={12} color="#0f766e" />
+                      <Text className="text-[7.5px] font-black text-[#0f766e] uppercase">{t('sustainable') || "SUSTAINABLE"}</Text>
+                    </ChamferedBox>
+
+                    {/* 4. Rapid Delivery Card */}
+                    <ChamferedBox
+                      bevelSize={6}
+                      fillColor="#f0fdfa"
+                      strokeColor="#99f6e4"
+                      style={{ flex: 1, paddingVertical: 4 }}
+                      contentStyle={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 3, height: "100%" }}
+                    >
+                      <TruckIcon size={12} color="#0d9488" />
+                      <Text className="text-[7.5px] font-black text-[#0d9488] uppercase text-center leading-none" numberOfLines={2}>
+                        {t('rapid_delivery') ? t('rapid_delivery').replace(' ', '\n') : "RAPID\nDELIVERY"}
+                      </Text>
+                    </ChamferedBox>
+                  </ChamferedBox>
                 );
               }
             case "REVIEWS":
