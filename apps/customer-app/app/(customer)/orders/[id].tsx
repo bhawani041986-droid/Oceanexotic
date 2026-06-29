@@ -32,6 +32,7 @@ export default function OrderDetailsScreen() {
   const [images, setImages] = useState<string[]>([]);
   const [pickingImage, setPickingImage] = useState(false);
   const { user } = useAuthStore();
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
 
   const handlePickImage = async () => {
     setPickingImage(true);
@@ -231,9 +232,20 @@ export default function OrderDetailsScreen() {
               </Text>
             </View>
           </View>
-          <Text className="mt-2 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
-            {t('order_invoice')} • {order?.date ?? "—"}
-          </Text>
+          <View className="flex-row items-center justify-between mt-3 flex-wrap gap-2">
+            <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
+              {t('order_invoice')} • {order?.date ?? "—"}
+            </Text>
+            <Pressable
+              onPress={() => setShowInvoiceModal(true)}
+              className="px-3 py-1.5 border flex-row items-center gap-1.5 rounded-none"
+              style={{ backgroundColor: colors.card, borderColor: colors.primary }}
+            >
+              <Text className="text-[9px] font-black uppercase tracking-wider" style={{ color: colors.primary }}>
+                📄 {t('order_invoice').toUpperCase()}
+              </Text>
+            </Pressable>
+          </View>
         </View>
 
         <View
@@ -592,6 +604,148 @@ export default function OrderDetailsScreen() {
           </View>
         </ChamferedBox>
       </ScrollView>
+
+      {/* Invoice Generator Modal */}
+      <Modal
+        visible={showInvoiceModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowInvoiceModal(false)}
+      >
+        <View 
+          className="flex-1 justify-center items-center p-4" 
+          style={{ backgroundColor: 'rgba(2, 6, 23, 0.85)' }}
+        >
+          <View 
+            className="w-full max-w-md border overflow-hidden" 
+            style={{ backgroundColor: colors.card, borderColor: colors.border, borderRadius: 16 }}
+          >
+            {/* Modal Header */}
+            <View className="px-5 py-4 border-b flex-row justify-between items-center" style={{ borderBottomColor: colors.border, backgroundColor: colors.bg }}>
+              <Text className="text-sm font-black uppercase tracking-wider" style={{ color: colors.text }}>
+                📄 {t('order_invoice').toUpperCase()}
+              </Text>
+              <Pressable onPress={() => setShowInvoiceModal(false)} className="p-1">
+                <Text className="text-sm font-bold" style={{ color: colors.textMuted }}>✕</Text>
+              </Pressable>
+            </View>
+
+            {/* Invoice Scroll Content */}
+            <ScrollView className="p-5 max-h-[480px]">
+              {/* Brand logo & header */}
+              <View className="items-center mb-6">
+                <Text className="text-xl font-black tracking-widest text-primary italic">
+                  OCEANEXOTIC GLOBAL
+                </Text>
+                <Text className="text-[7px] font-black tracking-widest text-muted-foreground uppercase mt-1">
+                  Premium Cold-Chain Maritime Harvest
+                </Text>
+                <Text className="text-[7px] font-medium text-muted-foreground/60 uppercase">
+                  FSSAI LIC NO. 12423999000142
+                </Text>
+              </View>
+
+              {/* Invoice Meta details */}
+              <View className="flex-row justify-between mb-4 border-b pb-3" style={{ borderBottomColor: colors.border }}>
+                <View>
+                  <Text className="text-[7px] font-black text-muted-foreground uppercase">Invoice To:</Text>
+                  <Text className="text-[10px] font-black uppercase mt-0.5" style={{ color: colors.text }}>
+                    {order?.address?.name}
+                  </Text>
+                  <Text className="text-[8px] text-muted-foreground mt-0.5 leading-normal">
+                    {order?.address?.line1}, {order?.address?.city}
+                  </Text>
+                </View>
+                <View className="items-end">
+                  <Text className="text-[7px] font-black text-muted-foreground uppercase">Invoice details:</Text>
+                  <Text className="text-[9px] font-black mt-0.5" style={{ color: colors.primary }}>
+                    #INV-{id?.replace(/[^a-zA-Z0-9]/g, '')}
+                  </Text>
+                  <Text className="text-[8px] text-muted-foreground mt-0.5">
+                    Date: {order?.date ?? '—'}
+                  </Text>
+                </View>
+              </View>
+
+              {/* Items List */}
+              <Text className="text-[8px] font-black text-muted-foreground uppercase mb-2">Manifest Description</Text>
+              <View className="mb-4">
+                {(order?.items ?? []).map((item, idx) => (
+                  <View key={idx} className="flex-row justify-between items-center py-2 border-b" style={{ borderBottomColor: colors.border + '33' }}>
+                    <View className="flex-1 pr-4">
+                      <Text className="text-[10px] font-bold" style={{ color: colors.text }}>{item.name}</Text>
+                      <Text className="text-[8px] text-muted-foreground mt-0.5">Qty: {item.qty} × ₹{item.price.toLocaleString()}</Text>
+                    </View>
+                    <Text className="text-[10px] font-black" style={{ color: colors.text }}>
+                      ₹{(item.qty * item.price).toLocaleString()}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+
+              {/* Totals Breakdown */}
+              <View className="align-end gap-1.5 border-b pb-3 mb-4" style={{ borderBottomColor: colors.border }}>
+                <View className="flex-row justify-between">
+                  <Text className="text-[9px]" style={{ color: colors.textMuted }}>Subtotal</Text>
+                  <Text className="text-[9px] font-bold" style={{ color: colors.text }}>₹{displaySubtotal.toLocaleString()}</Text>
+                </View>
+                <View className="flex-row justify-between">
+                  <Text className="text-[9px]" style={{ color: colors.textMuted }}>Delivery Fee</Text>
+                  <Text className="text-[9px] font-bold" style={{ color: colors.text }}>
+                    {displayShipping > 0 ? `₹${displayShipping.toLocaleString()}` : 'COMPLIMENTARY'}
+                  </Text>
+                </View>
+                <View className="flex-row justify-between">
+                  <Text className="text-[9px]" style={{ color: colors.textMuted }}>Tax & Duties</Text>
+                  <Text className="text-[9px] font-bold" style={{ color: colors.text }}>₹{displayTax.toLocaleString()}</Text>
+                </View>
+              </View>
+
+              <View className="flex-row justify-between items-center mb-6">
+                <Text className="text-[9px] font-black uppercase tracking-wider" style={{ color: colors.text }}>Total Paid</Text>
+                <Text className="text-base font-black italic" style={{ color: colors.primary }}>
+                  ₹{displayTotal.toLocaleString()}
+                </Text>
+              </View>
+
+              {/* Sustainability seal & disclaimer */}
+              <View className="items-center p-3 mb-6 bg-emerald-500/5 border border-emerald-500/10">
+                <Text className="text-[8px] font-black text-emerald-400 uppercase tracking-widest">
+                  ⚓ HARBOR SUSTAINABILITY ASSURED
+                </Text>
+                <Text className="text-[7px] text-emerald-400/80 text-center mt-1">
+                  100% Traceable Line Caught Harvest • Temperature Logged Cold-Chain Delivery
+                </Text>
+              </View>
+            </ScrollView>
+
+            {/* Bottom Actions */}
+            <View className="p-4 border-t flex-row gap-3 bg-secondary/5" style={{ borderTopColor: colors.border }}>
+              <Pressable
+                onPress={() => setShowInvoiceModal(false)}
+                className="flex-1 py-2.5 border items-center justify-center rounded-none"
+                style={{ borderColor: colors.border, backgroundColor: colors.card }}
+              >
+                <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
+                  ✕ CLOSE
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  setShowInvoiceModal(false);
+                  toast(t('review_success'), "success");
+                }}
+                className="flex-1 py-2.5 items-center justify-center rounded-none"
+                style={{ backgroundColor: colors.primary }}
+              >
+                <Text className="text-[10px] font-black uppercase text-white tracking-widest">
+                  📥 DOWNLOAD
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       <Modal
         visible={!!reviewItem}
