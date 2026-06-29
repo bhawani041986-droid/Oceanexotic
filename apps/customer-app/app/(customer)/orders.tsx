@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
 import { SectionTitle } from "@/components/customer/SectionTitle";
+import { ChamferedBox } from "@/components/ui/ChamferedBox";
 
 export default function OrdersScreen() {
   const { t } = useTranslation();
@@ -60,13 +61,10 @@ export default function OrdersScreen() {
           />
         }
       >
-        <Text className="text-2xl font-black uppercase italic" style={{ color: colors.text }}>{t('order_history')}</Text>
-        <Text 
-          className="mt-1 text-[10px] font-black uppercase tracking-widest" 
-          style={{ color: colors.textMuted }}
-        >
-          Tracking {orders.length} active & past commissions
-        </Text>
+                <SectionTitle 
+          title={t('order_history') || "Order History"} 
+          subtitle={orders.length === 1 ? "Showing 1 order" : `Showing ${orders.length} orders`} 
+        />
 
         {loading ? (
           <View className="my-16 items-center">
@@ -78,61 +76,87 @@ export default function OrdersScreen() {
         ) : orders.length > 0 ? (
           <View className="mt-6 gap-3">
             {orders.map((order) => (
-              <View 
-                key={order.id} 
-                className="rounded-none border p-4 relative overflow-hidden"
-                style={{ borderColor: colors.border, backgroundColor: colors.card }}
+              <ChamferedBox
+                key={order.id}
+                fillColor={colors.card}
+                strokeColor={colors.border}
+                bevelSize={14}
+                className="mb-3"
               >
-                <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
-                  <Polygon points="0,0 12,0 0,12" fill={colors.bg} />
-                  <Path d="M12,0 L0,12" stroke={colors.border} strokeWidth={1} />
-                </Svg>
-                <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
-                  <Polygon points="12,12 0,12 12,0" fill={colors.bg} />
-                  <Path d="M0,12 L12,0" stroke={colors.border} strokeWidth={1} />
-                </Svg>
-                <View className="flex-row items-start justify-between">
-                  <View className="flex-1">
-                    <Text className="text-base font-black uppercase italic" style={{ color: colors.text }}>{order.id}</Text>
-                    <View
-                      className={cn(
-                        "mt-1 self-start rounded-none px-2 py-0.5",
-                        order.status === "DELIVERED" ? "bg-emerald-500/20" : "bg-primary/20"
-                      )}
-                    >
-                      <Text className="text-[8px] font-black uppercase" style={{ color: colors.text }}>{order.status}</Text>
+                <View className="p-5">
+                  <View className="flex-row items-center justify-between border-b pb-3 mb-3" style={{ borderBottomColor: colors.border }}>
+                    <View>
+                      <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
+                        Order ID
+                      </Text>
+                      <Text className="text-base font-black uppercase italic" style={{ color: colors.text }}>
+                        {order.id}
+                      </Text>
                     </View>
-                    <Text 
-                      className="mt-2 text-[9px] font-black uppercase tracking-widest" 
-                      style={{ color: colors.textMuted }}
+                    
+                    {/* Status Badge */}
+                    <View
+                      className="rounded px-2.5 py-1"
+                      style={{
+                        backgroundColor: order.status === "DELIVERED" ? "rgba(16, 185, 129, 0.12)" : colors.primary + "1A"
+                      }}
                     >
-                      {order.date} • {order.items} items
-                    </Text>
+                      <Text 
+                        className="text-[9px] font-black uppercase tracking-wider" 
+                        style={{ color: order.status === "DELIVERED" ? "#10B981" : colors.primary }}
+                      >
+                        {order.status}
+                      </Text>
+                    </View>
                   </View>
-                  <Text className="text-xl font-black italic" style={{ color: colors.text }}>
-                    ₹{Number(order.total).toLocaleString()}
-                  </Text>
-                </View>
-                <View className="mt-4 flex-row gap-2">
-                  <Button
-                    label="VIEW DETAILS"
-                    variant="ghost"
-                    onPress={() =>
-                      router.push({ pathname: "/orders/[id]", params: { id: order.id } } as never)
-                    }
-                    className="flex-1 h-10"
-                  />
-                  {!["DELIVERED", "CANCELLED"].includes(order.status?.toUpperCase() ?? "") && (
+
+                  <View className="flex-row justify-between items-center">
+                    <View>
+                      <Text className="text-[9px] font-black uppercase tracking-wider" style={{ color: colors.textMuted }}>
+                        Placed On
+                      </Text>
+                      <Text className="text-xs font-bold" style={{ color: colors.text, marginTop: 1 }}>
+                        {order.date}
+                      </Text>
+                      <Text className="text-[9px] font-black uppercase tracking-wider mt-1.5" style={{ color: colors.textMuted }}>
+                        Items Quantity
+                      </Text>
+                      <Text className="text-xs font-bold" style={{ color: colors.text, marginTop: 1 }}>
+                        {order.items} items
+                      </Text>
+                    </View>
+
+                    <View className="items-end">
+                      <Text className="text-[9px] font-black uppercase tracking-wider" style={{ color: colors.textMuted }}>
+                        Total Amount
+                      </Text>
+                      <Text className="text-2xl font-black italic mt-0.5" style={{ color: colors.text }}>
+                        ₹{Number(order.total).toLocaleString()}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View className="mt-5 flex-row gap-3">
                     <Button
-                      label="TRACK"
+                      label="VIEW DETAILS"
+                      variant="ghost"
                       onPress={() =>
-                        router.push({ pathname: "/orders/[id]/tracking", params: { id: order.id } } as never)
+                        router.push({ pathname: "/orders/[id]", params: { id: order.id } } as never)
                       }
-                      className="flex-1 h-10 rounded-none"
+                      className="flex-1 h-10"
                     />
-                  )}
+                    {!["DELIVERED", "CANCELLED"].includes(order.status?.toUpperCase() ?? "") && (
+                      <Button
+                        label="TRACK LIVE"
+                        onPress={() =>
+                          router.push({ pathname: "/orders/[id]/tracking", params: { id: order.id } } as never)
+                        }
+                        className="flex-1 h-10"
+                      />
+                    )}
+                  </View>
                 </View>
-              </View>
+              </ChamferedBox>
             ))}
           </View>
         ) : (
