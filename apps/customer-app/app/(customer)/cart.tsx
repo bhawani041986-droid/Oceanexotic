@@ -12,6 +12,7 @@ import { checkoutService } from "@/services/checkoutService";
 import api from "@/services/api";
 import { useTranslation } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
+import { SectionTitle } from "@/components/customer/SectionTitle";
 
 const staticFallback = [
   { id: 'ADD-001', name: 'Fish Fry Masala', price: 60, image_url: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?auto=format&fit=crop&w=200&q=80', description: 'Traditional island spice mix for crispy fish fry.' },
@@ -97,13 +98,10 @@ export default function CartScreen() {
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 112, paddingTop: 8 }}>
-        <Text className="text-2xl font-black uppercase italic" style={{ color: colors.text }}>{t('active_cart') || "Active Cart"}</Text>
-        <Text 
-          className="mt-1 text-[10px] font-black uppercase tracking-widest" 
-          style={{ color: colors.textMuted }}
-        >
-          {items.length} line items
-        </Text>
+        <SectionTitle 
+          title={t('active_cart') || "Active Cart"} 
+          subtitle={`${items.length} line items`} 
+        />
 
         {items.length === 0 ? (
           <View className="my-16 items-center">
