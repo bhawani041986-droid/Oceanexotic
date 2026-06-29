@@ -162,7 +162,7 @@ export async function GET(request: NextRequest) {
     // Perform translation if target language is specified and not English
     let translatedProduct = product;
     if (targetLang && !targetLang.toLowerCase().startsWith("en")) {
-      translatedProduct = await translateObject(product, ['name', 'description', 'category', 'tagline'], targetLang);
+      translatedProduct = await translateObject(product, ['name', 'description', 'tagline'], targetLang);
       if (translatedProduct.cut_options) {
         translatedProduct.cut_options = await translateArray(translatedProduct.cut_options, ['label'], targetLang);
       }

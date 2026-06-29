@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
       }
       
       if (targetLang && !targetLang.toLowerCase().startsWith("en")) {
-        product = await translateObject(product, ['name', 'description', 'category', 'tagline'], targetLang);
+        product = await translateObject(product, ['name', 'description', 'tagline'], targetLang);
       }
       return NextResponse.json(product);
     }
@@ -180,7 +180,7 @@ export async function GET(request: NextRequest) {
     });
 
     if (targetLang && !targetLang.toLowerCase().startsWith("en")) {
-      products = await translateArray(products, ['name', 'description', 'category', 'tagline'], targetLang);
+      products = await translateArray(products, ['name', 'description', 'tagline'], targetLang);
     }
     return NextResponse.json(products);
   } catch (error: any) {

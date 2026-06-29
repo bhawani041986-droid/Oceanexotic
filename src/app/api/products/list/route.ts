@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
 
     const translated = await translateArray(
       mapped,
-      ['name', 'description', 'category', 'tagline', 'sellerName'],
+      ['name', 'description', 'tagline', 'sellerName'],
       targetLang
     );
 
