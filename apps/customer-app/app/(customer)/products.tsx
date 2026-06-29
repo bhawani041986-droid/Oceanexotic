@@ -44,6 +44,31 @@ const TABS = [
   "Coastal Dry Fish",
 ];
 
+const getTabLabel = (tab: string, t: any) => {
+  switch (tab) {
+    case "All Seafood":
+      return t('all_seafood') || t('all') || "All Seafood";
+    case "Seawater Fish":
+      return t('seawater_fish') || "Seawater Fish";
+    case "Freshwater Fish":
+      return t('freshwater_fish') || "Freshwater Fish";
+    case "Prawns & Shrimps":
+      return t('prawns_shrimps') || "Prawns & Shrimps";
+    case "Crabs & Lobsters":
+      return t('crabs_lobsters') || "Crabs & Lobsters";
+    case "Steaks & Fillets":
+      return t('steaks_fillets') || "Steaks & Fillets";
+    case "Exotic Catch":
+      return t('exotic_catch') || "Exotic Catch";
+    case "Ready to Cook":
+      return t('ready_to_cook') || "Ready to Cook";
+    case "Coastal Dry Fish":
+      return t('coastal_dry_fish') || "Coastal Dry Fish";
+    default:
+      return tab;
+  }
+};
+
 export default function ProductsScreen() {
   const { t } = useTranslation();
 
@@ -276,7 +301,7 @@ export default function ProductsScreen() {
           <RefreshControl refreshing={registry.isRefetching} onRefresh={() => registry.refetch()} tintColor={colors.primary} />
         }
       >
-        <SectionTitle title="Product Catalog" subtitle="Premium Seafood Discovery • Fast Delivery" />
+        <SectionTitle title={t('product_catalog')} subtitle={t('catalog_subtitle')} />
 
         {/* Polished Search Bar */}
         <View
@@ -332,7 +357,7 @@ export default function ProductsScreen() {
                     className="text-[9px] font-black uppercase"
                     style={{ color: active ? (isLightColor(colors.primary) ? "#000000" : "#FFFFFF") : colors.textMuted }}
                   >
-                    {tab}
+                    {getTabLabel(tab, t)}
                   </Text>
                 </Pressable>
               </ChamferedBox>
@@ -344,7 +369,7 @@ export default function ProductsScreen() {
           className="mt-4 text-[10px] font-black uppercase tracking-widest"
           style={{ color: colors.textMuted }}
         >
-          {displayList.length} items in catalog
+          {displayList.length} {t('items_in_catalog')}
         </Text>
 
         {isLoading ? (
