@@ -546,7 +546,7 @@ function StepCard({ stepNum, label, active, done, summary, onEdit, children }: S
       style={{
         borderColor: active
           ? colors.primary + "66"
-          : "rgba(255, 255, 255, 0.1)"
+          : colors.border
       }}
     >
       <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 12,0 0,12" fill={colors.bg} /></Svg>
@@ -557,7 +557,7 @@ function StepCard({ stepNum, label, active, done, summary, onEdit, children }: S
         style={{
           backgroundColor: active
             ? colors.primary + "0D"
-            : "rgba(30, 41, 59, 0.3)"
+            : colors.isDark ? "rgba(30, 41, 59, 0.3)" : colors.bgAlt
         }}
       >
         <View className="flex-row items-center gap-3">
@@ -568,7 +568,7 @@ function StepCard({ stepNum, label, active, done, summary, onEdit, children }: S
             } : active ? {
               backgroundColor: primaryColor
             } : {
-              backgroundColor: "rgba(255, 255, 255, 0.1)"
+              backgroundColor: colors.isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)"
             }}
           >
             <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={colors.bg} /></Svg>
@@ -577,20 +577,16 @@ function StepCard({ stepNum, label, active, done, summary, onEdit, children }: S
               <Text className="text-[9px] font-black text-white">✓</Text>
             ) : (
               <Text
-                className={cn(
-                  "text-[9px] font-black",
-                  active ? "text-foreground" : "text-muted-foreground"
-                )}
+                className="text-[9px] font-black"
+                style={{ color: active ? "#FFFFFF" : colors.textMuted }}
               >
                 {stepNum}
               </Text>
             )}
           </View>
           <Text
-            className={cn(
-              "text-sm font-black uppercase",
-              active ? "text-foreground" : "text-muted-foreground"
-            )}
+            className="text-sm font-black uppercase"
+            style={{ color: active ? colors.text : colors.textMuted }}
           >
             {label}
           </Text>
