@@ -137,13 +137,13 @@ export default function CheckoutScreen() {
   }
 
   return (
-    <View className="flex-1 bg-background">
+    <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       {ToastHost}
 
       {/* ── Progress Header ────────────────────────────────────────── */}
       <LinearGradient
-        colors={["#020617", "#0d1b2a"]}
-        className="px-4 pt-14 pb-4 border-b border-white/5"
+        colors={colors.isDark ? ["#020617", "#0d1b2a"] : [colors.card, colors.bgAlt]}
+        className="px-4 pt-14 pb-4 border-b" style={{ borderBottomColor: colors.border }}
       >
         <Text className="text-[9px] font-black uppercase tracking-[0.3em] mb-3" style={{ color: primaryColor }}>
           Secure Checkout
@@ -170,7 +170,7 @@ export default function CheckoutScreen() {
                       borderColor: primaryColor
                     } : {
                       backgroundColor: "transparent",
-                      borderColor: "rgba(255, 255, 255, 0.2)"
+                      borderColor: colors.isDark ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.12)"
                     }}
                   >
                     <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={colors.bg} /></Svg>
@@ -253,7 +253,7 @@ export default function CheckoutScreen() {
                     <Svg width={8} height={8} style={{ position: 'absolute', top: -2, left: -2, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill={colors.bg} /></Svg>
                     <Svg width={8} height={8} style={{ position: 'absolute', bottom: -2, right: -2, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill={colors.bg} /></Svg>
                     <View className="flex-row items-start justify-between mb-2">
-                      <View className="bg-white/10 px-2 py-0.5 rounded">
+                      <View style={{ backgroundColor: colors.isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4 }}>
                         <Text className="text-[8px] font-black uppercase text-foreground">
                           {addr.type || addr.label}
                         </Text>
@@ -292,7 +292,7 @@ export default function CheckoutScreen() {
                   label="+ ADD ADDRESS"
                   variant="ghost"
                   onPress={() => router.push("/profile")}
-                  className="flex-1 border border-white/10"
+                  className="flex-1 border" style={{ borderColor: colors.border }}
                 />
                 <Button
                   label="USE THIS ADDRESS"
@@ -306,7 +306,7 @@ export default function CheckoutScreen() {
               </View>
             </View>
           ) : (
-            <View className="py-10 items-center gap-4 border-2 border-dashed border-white/10 rounded-none relative overflow-hidden">
+            <View className="py-10 items-center gap-4 border-2 border-dashed rounded-none relative overflow-hidden" style={{ borderColor: colors.border, backgroundColor: colors.card }}>
               <Svg width={8} height={8} style={{ position: 'absolute', top: -2, left: -2, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill={colors.bg} /></Svg>
               <Svg width={8} height={8} style={{ position: 'absolute', bottom: -2, right: -2, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill={colors.bg} /></Svg>
               <Text className="text-4xl">📍</Text>
@@ -317,7 +317,7 @@ export default function CheckoutScreen() {
                 label="+ ADD IN PROFILE"
                 variant="ghost"
                 onPress={() => router.push("/profile")}
-                className="border border-white/10"
+                className="border" style={{ borderColor: colors.border }}
               />
             </View>
           )}
@@ -380,7 +380,7 @@ export default function CheckoutScreen() {
               return (
                 <View
                   key={item.id}
-                  className="flex-row gap-4 items-center p-3 rounded-none border border-white/10 bg-secondary/30 relative overflow-hidden"
+                  className="flex-row gap-4 items-center p-3 rounded-none border relative overflow-hidden" style={{ borderColor: colors.border, backgroundColor: colors.card }}
                 >
                   <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 6,0 0,6" fill={colors.bg} /></Svg>
                   <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="6,6 0,6 6,0" fill={colors.bg} /></Svg>
@@ -419,7 +419,7 @@ export default function CheckoutScreen() {
           </View>
 
           {/* Order Total */}
-          <View className="bg-secondary/40 border border-white/10 rounded-none p-4 mb-6 gap-2 relative overflow-hidden">
+          <View className="rounded-none p-4 mb-6 gap-2 relative overflow-hidden border" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
             <Svg width={8} height={8} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill={colors.bg} /></Svg>
             <Svg width={8} height={8} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill={colors.bg} /></Svg>
             <View className="flex-row justify-between">
@@ -434,7 +434,7 @@ export default function CheckoutScreen() {
               <Text className="text-xs text-muted-foreground">Shipping &amp; Handling</Text>
               <Text className="text-xs font-bold text-emerald-400">FREE</Text>
             </View>
-            <View className="border-t border-white/10 pt-2 flex-row justify-between">
+            <View className="pt-2 flex-row justify-between border-t" style={{ borderTopColor: colors.border }}>
               <Text className="text-sm font-black uppercase text-foreground">Order Total</Text>
               <Text className="text-lg font-black italic" style={{ color: primaryColor }}>
                 ₹{grandTotal.toLocaleString()}
@@ -469,7 +469,7 @@ export default function CheckoutScreen() {
           )}
 
           {/* Authorize finalize */}
-          <View className="bg-secondary/40 border border-white/10 rounded-none p-6 items-center gap-4 relative overflow-hidden">
+          <View className="rounded-none p-6 items-center gap-4 relative overflow-hidden border" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
             <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 12,0 0,12" fill={colors.bg} /></Svg>
             <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="12,12 0,12 12,0" fill={colors.bg} /></Svg>
             <Text className="text-3xl">🛡️</Text>
@@ -493,7 +493,7 @@ export default function CheckoutScreen() {
       </ScrollView>
 
       {/* ── Sticky bottom summary ───────────────────────────────────── */}
-      <View className="absolute bottom-0 left-0 right-0 border-t border-white/10 bg-background/95 px-4 py-3">
+      <View className="absolute bottom-0 left-0 right-0 border-t px-4 py-3" style={{ borderTopColor: colors.border, backgroundColor: colors.isDark ? "rgba(13, 21, 39, 0.95)" : "rgba(255, 255, 255, 0.95)" }}>
         <View className="flex-row items-center justify-between mb-2">
           <Text className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
             {items.length} item{items.length !== 1 ? "s" : ""} · COD
@@ -510,7 +510,7 @@ export default function CheckoutScreen() {
             className="w-full"
           />
         ) : (
-          <View className="w-full py-3 rounded-none border border-white/10 bg-secondary/40 items-center relative overflow-hidden">
+          <View className="w-full py-3 rounded-none border items-center relative overflow-hidden" style={{ borderColor: colors.border, backgroundColor: colors.bgAlt }}>
             <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 6,0 0,6" fill={colors.bg} /></Svg>
             <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="6,6 0,6 6,0" fill={colors.bg} /></Svg>
             <Text className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
@@ -606,7 +606,7 @@ function StepCard({ stepNum, label, active, done, summary, onEdit, children }: S
 
       {/* Collapsed summary */}
       {!active && done && summary ? (
-        <View className="px-6 py-3 border-t border-white/5">
+        <View className="px-6 py-3 border-t" style={{ borderTopColor: colors.border }}>
           <Text className="text-xs font-bold italic text-muted-foreground">
             {summary}
           </Text>
@@ -615,7 +615,7 @@ function StepCard({ stepNum, label, active, done, summary, onEdit, children }: S
 
       {/* Expanded content */}
       {active ? (
-        <View className="p-4 border-t border-white/5">{children}</View>
+        <View className="p-4 border-t" style={{ borderTopColor: colors.border }}>{children}</View>
       ) : null}
     </View>
   );
