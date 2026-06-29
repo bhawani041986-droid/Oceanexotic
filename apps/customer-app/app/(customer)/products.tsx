@@ -19,6 +19,7 @@ import { ProductCard } from "@/components/customer/ProductCard";
 import { SectionTitle } from "@/components/customer/SectionTitle";
 import { CutSelectionModal } from "@/components/customer/CutSelectionModal";
 import { PromoBannerCard } from "@/components/customer/PromoBannerCard";
+import { FssaiBanner } from "@/components/customer/FssaiBanner";
 import { useCartStore } from "@/store/cartStore";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useToast } from "@/components/ui/Toast";
@@ -270,7 +271,7 @@ export default function ProductsScreen() {
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       <ScrollView
         className="flex-1"
-        contentContainerClassName="pb-28 px-4 pt-2"
+        contentContainerClassName="pb-16 px-4 pt-2"
         refreshControl={
           <RefreshControl refreshing={registry.isRefetching} onRefresh={() => registry.refetch()} tintColor={colors.primary} />
         }

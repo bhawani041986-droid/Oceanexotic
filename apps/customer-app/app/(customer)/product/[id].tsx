@@ -18,6 +18,7 @@ import { useImageAspectRatio } from "@/hooks/useImageAspectRatio";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { SectionTitle } from "@/components/customer/SectionTitle";
+import { FssaiBanner } from "@/components/customer/FssaiBanner";
 import Svg, { Path } from "react-native-svg";
 import { useProducts } from "@/hooks/useProducts";
 import { ProductCard } from "@/components/customer/ProductCard";
@@ -328,7 +329,7 @@ export default function ProductDetailScreen() {
 
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
-      <ScrollView ref={scrollViewRef} contentContainerClassName="pb-28">
+      <ScrollView ref={scrollViewRef} contentContainerClassName="pb-16">
         <View style={{ width: screenWidth, height: viewWidth, flexDirection: 'row', backgroundColor: colors.bg, paddingLeft: paddingLeft, paddingRight: paddingRight, marginTop: 8 }}>
           {/* Left-side Thumbnails */}
           {allImages.length > 1 && (

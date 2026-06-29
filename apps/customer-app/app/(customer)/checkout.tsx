@@ -17,6 +17,7 @@ import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 import { checkoutService, type SavedAddress } from "@/services/checkoutService";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
+import { FssaiBanner } from "@/components/customer/FssaiBanner";
 import { cn } from "@/lib/utils";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useTranslation } from "@/lib/i18n";
