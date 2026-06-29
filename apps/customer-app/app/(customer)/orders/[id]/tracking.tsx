@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, ScrollView, ActivityIndicator, Pressable, StyleSheet } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator, Pressable, StyleSheet, Modal } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
@@ -243,84 +243,46 @@ export default function OrderTrackingScreen() {
 
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
-      {isFullScreen ? (
-        <View style={StyleSheet.absoluteFill} className="z-[9999]">
-           <MapOverlay />
-           {/* Full Width Control Bar */}
-           <View 
-             className="absolute bottom-0 left-0 right-0 flex-row items-center justify-between px-6 py-4 border-t"
-             style={{ backgroundColor: 'rgba(2, 6, 23, 0.95)', borderColor: colors.border, zIndex: 9999, elevation: 20, paddingBottom: Math.max(insets.bottom, 16) }}
-           >
-             {/* Zoom Out */}
-             <Pressable 
-               onPress={zoomOut}
-               className="w-12 h-12 rounded-full bg-black/50 border items-center justify-center"
-               style={{ borderColor: colors.border }}
-             >
-               <Text style={{ color: colors.primary, fontWeight: '900', fontSize: 24 }}>-</Text>
-             </Pressable>
-
-             {/* Minimize/Close Button */}
-             <Pressable 
-               onPress={() => setIsFullScreen(false)}
-               className="px-6 py-3 rounded-none border flex-row items-center gap-2"
-               style={{ backgroundColor: colors.primary, borderColor: 'transparent' }}
-             >
-               <Text className="text-[11px] font-black uppercase text-white tracking-widest">
-                 ✕ CLOSE FULLSCREEN
-               </Text>
-             </Pressable>
-
-             {/* Zoom In */}
-             <Pressable 
-               onPress={zoomIn}
-               className="w-12 h-12 rounded-full bg-black/50 border items-center justify-center"
-               style={{ borderColor: colors.border }}
-             >
-               <Text style={{ color: colors.primary, fontWeight: '900', fontSize: 24 }}>+</Text>
-             </Pressable>
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 48, paddingTop: 24 }}>
+        <View className="flex-row items-center justify-between mb-3 px-4">
+           <Button
+              variant="ghost"
+              label="← BACK"
+              onPress={() => router.back()}
+              className="px-0 h-auto"
+           />
+           <View className="rounded bg-emerald-500/20 px-3 py-1">
+              <Text className="text-[10px] font-black uppercase text-emerald-400">
+                {displayData.status}
+              </Text>
            </View>
         </View>
-      ) : (
-        <ScrollView contentContainerClassName="px-4 pb-12 pt-6">
-          <View className="flex-row items-center justify-between mb-3">
-             <Button
-                variant="ghost"
-                label="← BACK"
-                onPress={() => router.back()}
-                className="px-0 h-auto"
-             />
-             <View className="rounded bg-emerald-500/20 px-3 py-1">
-                <Text className="text-[10px] font-black uppercase text-emerald-400">
-                  {displayData.status}
-                </Text>
-             </View>
-          </View>
 
-          {/* Compact Header Grid */}
-          <View className="mb-4 flex-row items-start justify-between p-3 rounded-xl border" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-            <View className="flex-1">
-              <SectionTitle 
-                title="Live Tracking" 
-                subtitle={`ID: ${id} • VESSEL: ${displayData.agent_name}`} 
-              />
-            </View>
-            <View className="items-end">
-              <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>
-                Cold-Chain
-              </Text>
-              <Text className="mt-0.5 text-base font-black" style={{ color: colors.text }}>
-                {displayData.current_temp}°C
-              </Text>
-            </View>
+        {/* Compact Header Grid */}
+        <View className="mb-4 mx-4 flex-row items-start justify-between p-3 rounded-xl border" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+          <View className="flex-1">
+            <SectionTitle 
+              title="Live Tracking" 
+              subtitle={`ID: ${id} • VESSEL: ${displayData.agent_name}`} 
+            />
           </View>
-
-          {/* Map Container */}
-          <View className="mb-6 h-80 overflow-hidden rounded-[24px] border border-primary/20 relative">
-            <MapOverlay />
+          <View className="items-end">
+            <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>
+              Cold-Chain
+            </Text>
+            <Text className="mt-0.5 text-base font-black" style={{ color: colors.text }}>
+              {displayData.current_temp}°C
+            </Text>
           </View>
+        </View>
 
-          {/* Delivery Timeline Logs */}
+        {/* Map Container */}
+        <View className="mb-6 mx-4 h-80 overflow-hidden rounded-[24px] border border-primary/20 relative">
+          <MapOverlay />
+        </View>
+
+        {/* Delivery Timeline Logs */}
+        <View className="mb-3 mx-4">
           <View className="mb-3">
             <Text className="text-sm font-black uppercase italic tracking-tighter" style={{ color: colors.text }}>
               Delivery Timeline
@@ -359,8 +321,60 @@ export default function OrderTrackingScreen() {
               </View>
             ))}
           </View>
-        </ScrollView>
-      )}
+        </View>
+      </ScrollView>
+
+      {/* Fullscreen Map Modal */}
+      <Modal
+        visible={isFullScreen}
+        animationType="fade"
+        onRequestClose={() => setIsFullScreen(false)}
+      >
+        <View className="flex-1" style={{ backgroundColor: colors.bg }}>
+          <MapOverlay />
+          
+          {/* Full Width Control Bar */}
+          <View 
+            className="absolute bottom-0 left-0 right-0 flex-row items-center justify-between px-6 py-4 border-t"
+            style={{ 
+              backgroundColor: 'rgba(2, 6, 23, 0.95)', 
+              borderColor: colors.border, 
+              zIndex: 9999, 
+              elevation: 20, 
+              paddingBottom: Math.max(insets.bottom, 16) 
+            }}
+          >
+            {/* Zoom Out */}
+            <Pressable 
+              onPress={zoomOut}
+              className="w-12 h-12 rounded-full bg-black/50 border items-center justify-center"
+              style={{ borderColor: colors.border }}
+            >
+              <Text style={{ color: colors.primary, fontWeight: '900', fontSize: 24 }}>-</Text>
+            </Pressable>
+
+            {/* Minimize/Close Button */}
+            <Pressable 
+              onPress={() => setIsFullScreen(false)}
+              className="px-6 py-3 rounded-none border flex-row items-center gap-2"
+              style={{ backgroundColor: colors.primary, borderColor: 'transparent' }}
+            >
+              <Text className="text-[11px] font-black uppercase text-white tracking-widest">
+                ✕ CLOSE FULLSCREEN
+              </Text>
+            </Pressable>
+
+            {/* Zoom In */}
+            <Pressable 
+              onPress={zoomIn}
+              className="w-12 h-12 rounded-full bg-black/50 border items-center justify-center"
+              style={{ borderColor: colors.border }}
+            >
+              <Text style={{ color: colors.primary, fontWeight: '900', fontSize: 24 }}>+</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
