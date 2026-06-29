@@ -69,6 +69,54 @@ const getTabLabel = (tab: string, t: any) => {
   }
 };
 
+const matchCategory = (pCategory: string, targetCategoryEnglish: string, t: any) => {
+  const catLower = (pCategory ?? "").toLowerCase();
+  const nameLower = catLower; // Fallback check in name if needed
+  
+  const englishKeys: Record<string, string[]> = {
+    "Seawater Fish": ["sea", "reef", "coastal", "marine", "fin-fish", "snapper", "pomfret", "grouper", "cod"],
+    "Freshwater Fish": ["fresh", "river", "lake", "sweet", "mackerel", "rohu"],
+    "Prawns & Shrimps": ["prawn", "shrimp", "crustacean", "shellfish"],
+    "Crabs & Lobsters": ["crab", "lobster", "mangrove", "crustacean", "shellfish"],
+    "Steaks & Fillets": ["fillet", "steak", "cut", "surmai", "kingfish"],
+    "Exotic Catch": ["exotic", "premium", "deep", "tuna", "salmon", "lobster"],
+    "Ready to Cook": ["ready", "marinated", "cook", "fry", "finger", "batter"],
+    "Coastal Dry Fish": ["dry", "dried"]
+  };
+
+  const matches = englishKeys[targetCategoryEnglish] || [targetCategoryEnglish.toLowerCase().split(" ")[0]];
+  
+  if (matches.some(m => catLower.includes(m))) {
+    return true;
+  }
+
+  const translatedLabel = getTabLabel(targetCategoryEnglish, t).toLowerCase();
+  if (catLower.includes(translatedLabel)) {
+    return true;
+  }
+
+  const transKeys: Record<string, string> = {
+    "Seawater Fish": "seawater_fish",
+    "Freshwater Fish": "freshwater_fish",
+    "Prawns & Shrimps": "prawns_shrimps",
+    "Crabs & Lobsters": "crabs_lobsters",
+    "Steaks & Fillets": "steaks_fillets",
+    "Exotic Catch": "exotic_catch",
+    "Ready to Cook": "ready_to_cook",
+    "Coastal Dry Fish": "coastal_dry_fish"
+  };
+
+  const key = transKeys[targetCategoryEnglish];
+  if (key) {
+    const translatedValue = t(key);
+    if (translatedValue && catLower.includes(translatedValue.toLowerCase())) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
 export default function ProductsScreen() {
   const { t } = useTranslation();
 
@@ -137,102 +185,12 @@ export default function ProductsScreen() {
 
     return rawList.filter((p) => {
       // When using server search results, skip redundant client-side name filter
-      // (server already filtered by name). Only apply it to registry list.
       if (searchQuery.trim() && search.data) return true;
 
       // 2. Active Tab Category Resolver (Smart Mapping)
       if (activeTab === "All Seafood") return true;
 
-      const catLower = (p.category ?? "").toLowerCase();
-      const nameLower = p.name.toLowerCase();
-
-      if (activeTab === "Seawater Fish") {
-        return (
-          catLower.includes("sea") ||
-          catLower.includes("reef") ||
-          catLower.includes("coastal") ||
-          catLower.includes("marine") ||
-          catLower.includes("fin-fish") ||
-          catLower.includes("snapper") ||
-          catLower.includes("pomfret") ||
-          catLower.includes("grouper") ||
-          catLower.includes("cod")
-        );
-      }
-      if (activeTab === "Freshwater Fish") {
-        return (
-          catLower.includes("freshwater") ||
-          catLower.includes("river") ||
-          catLower.includes("lake") ||
-          catLower.includes("sweetwater") ||
-          catLower.includes("mackerel") ||
-          nameLower.includes("mackerel")
-        );
-      }
-      if (activeTab === "Prawns & Shrimps") {
-        return (
-          catLower.includes("prawn") ||
-          catLower.includes("shrimp") ||
-          catLower.includes("crustacean") ||
-          catLower.includes("shellfish") ||
-          nameLower.includes("prawn") ||
-          nameLower.includes("shrimp")
-        );
-      }
-      if (activeTab === "Crabs & Lobsters") {
-        return (
-          catLower.includes("crab") ||
-          catLower.includes("lobster") ||
-          catLower.includes("mangrove") ||
-          catLower.includes("crustacean") ||
-          catLower.includes("shellfish") ||
-          nameLower.includes("crab") ||
-          nameLower.includes("lobster")
-        );
-      }
-      if (activeTab === "Steaks & Fillets") {
-        return (
-          catLower.includes("fillet") ||
-          catLower.includes("steak") ||
-          catLower.includes("cut") ||
-          nameLower.includes("steak") ||
-          nameLower.includes("fillet") ||
-          nameLower.includes("surmai") ||
-          nameLower.includes("kingfish") ||
-          nameLower.includes("cut")
-        );
-      }
-      if (activeTab === "Exotic Catch") {
-        return (
-          catLower.includes("exotic") ||
-          catLower.includes("premium") ||
-          catLower.includes("deep sea") ||
-          nameLower.includes("tuna") ||
-          nameLower.includes("salmon") ||
-          nameLower.includes("lobster")
-        );
-      }
-      if (activeTab === "Ready to Cook") {
-        return (
-          catLower.includes("ready") ||
-          catLower.includes("marinated") ||
-          catLower.includes("cook") ||
-          nameLower.includes("marinated") ||
-          nameLower.includes("fry") ||
-          nameLower.includes("finger") ||
-          nameLower.includes("batter")
-        );
-      }
-      if (activeTab === "Coastal Dry Fish") {
-        return (
-          catLower.includes("dry") ||
-          catLower.includes("dried") ||
-          nameLower.includes("dry") ||
-          nameLower.includes("dried")
-        );
-      }
-
-      return catLower.includes(activeTab.toLowerCase().split(" ")[0]);
+      return matchCategory(p.category ?? "", activeTab, t);
     });
   }, [searchQuery, activeTab, registry.data, search.data]);
 
