@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { WebView } from "react-native-webview";
 import api from "@/services/api";
 import { useThemeColors } from "@/hooks/useThemeColors";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SectionTitle } from "@/components/customer/SectionTitle";
 
 const AGENT_SENTINEL_HTML = (primary: string, glow: string) => `
@@ -37,6 +38,7 @@ export default function OrderTrackingScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const colors = useThemeColors();
+  const insets = useSafeAreaInsets();
   const [trackingData, setTrackingData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const webViewRef = useRef<WebView>(null);
@@ -247,7 +249,7 @@ export default function OrderTrackingScreen() {
            {/* Full Width Control Bar */}
            <View 
              className="absolute bottom-0 left-0 right-0 flex-row items-center justify-between px-6 py-4 border-t"
-             style={{ backgroundColor: 'rgba(2, 6, 23, 0.95)', borderColor: colors.border, zIndex: 9999, elevation: 20 }}
+             style={{ backgroundColor: 'rgba(2, 6, 23, 0.95)', borderColor: colors.border, zIndex: 9999, elevation: 20, paddingBottom: Math.max(insets.bottom, 16) }}
            >
              {/* Zoom Out */}
              <Pressable 
@@ -296,20 +298,18 @@ export default function OrderTrackingScreen() {
           </View>
 
           {/* Compact Header Grid */}
-          <View className="mb-4 flex-row items-start justify-between bg-secondary/10 border border-white/5 rounded-xl p-3">
+          <View className="mb-4 flex-row items-start justify-between p-3 rounded-xl border" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
             <View className="flex-1">
-              <Text className="text-2xl font-black uppercase italic leading-tight text-foreground">
-                Live Tracking
-              </Text>
-              <Text className="mt-1 text-[9px] font-black uppercase tracking-widest text-muted-foreground">
-                ID: {id} • VESSEL: {displayData.agent_name}
-              </Text>
+              <SectionTitle 
+                title="Live Tracking" 
+                subtitle={`ID: ${id} • VESSEL: ${displayData.agent_name}`} 
+              />
             </View>
             <View className="items-end">
-              <Text className="text-[8px] font-black uppercase tracking-widest text-primary">
+              <Text className="text-[8px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>
                 Cold-Chain
               </Text>
-              <Text className="mt-0.5 text-base font-black text-foreground">
+              <Text className="mt-0.5 text-base font-black" style={{ color: colors.text }}>
                 {displayData.current_temp}°C
               </Text>
             </View>
@@ -321,9 +321,12 @@ export default function OrderTrackingScreen() {
           </View>
 
           {/* Delivery Timeline Logs */}
-          <Text className="mb-3 text-sm font-black uppercase italic tracking-tighter text-foreground">
-            Delivery Timeline
-          </Text>
+          <View className="mb-3">
+            <Text className="text-sm font-black uppercase italic tracking-tighter" style={{ color: colors.text }}>
+              Delivery Timeline
+            </Text>
+            <View className="h-[2px] w-12 mt-1" style={{ backgroundColor: colors.primary }} />
+          </View>
           <View className="pl-2">
             {displayData.logs.map((event: any, i: number) => (
               <View key={i} className="relative mb-4 pl-8">
@@ -339,18 +342,14 @@ export default function OrderTrackingScreen() {
                   )}
                 />
                 <Text
-                  className={cn(
-                    "text-[9px] font-black uppercase tracking-widest",
-                    event.active ? "text-primary" : "text-muted-foreground"
-                  )}
+                  className="text-[9px] font-black uppercase tracking-widest"
+                  style={{ color: event.active ? colors.primary : colors.textMuted }}
                 >
                   {event.time}
                 </Text>
                 <Text
-                  className={cn(
-                    "mt-0.5 text-xs font-bold leading-tight",
-                    event.active ? "text-foreground" : "text-muted-foreground"
-                  )}
+                  className="mt-0.5 text-xs font-bold leading-tight"
+                  style={{ color: event.active ? colors.text : colors.textMuted }}
                 >
                   {event.status}
                 </Text>
