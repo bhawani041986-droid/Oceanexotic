@@ -27,6 +27,7 @@ import { useToast } from "@/components/ui/Toast";
 import { FULL_API_URL } from "@/config/api";
 import { useSettingsStore } from "@/store/settingsStore";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { useTranslation } from "@/lib/i18n";
 import { useGoogleAuth } from "@/hooks/useGoogleAuth";
 import { Ionicons } from "@expo/vector-icons";
 import Svg, { Path } from "react-native-svg";
@@ -43,6 +44,7 @@ const GoogleIcon = () => (
 );
 
 export default function LoginScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { login } = useAuthStore();
   const loginMutation = useLogin();
@@ -158,10 +160,10 @@ export default function LoginScreen() {
             {/* Trust Feature Cards Grid */}
             <View className="grid grid-cols-2 flex-row flex-wrap justify-between gap-y-3 mb-8">
               {[
-                { icon: <Ionicons name="fish-outline" size={20} color="#06b6d4" />, title: "WILD & SUSTAINABLE", desc: "SOURCING" },
-                { icon: <Ionicons name="snow-outline" size={20} color="#06b6d4" />, title: "COLD CHAIN", desc: "FRESHNESS" },
-                { icon: <Ionicons name="time-outline" size={20} color="#06b6d4" />, title: "LIVE TRACKING", desc: "YOUR ORDER" },
-                { icon: <Ionicons name="shield-checkmark-outline" size={20} color="#06b6d4" />, title: "SECURE PAYMENT", desc: "100% SAFE" },
+                { icon: <Ionicons name="fish-outline" size={20} color="#06b6d4" />, title: t('wild_sustainable') || "WILD & SUSTAINABLE", desc: t('sourcing') || "SOURCING" },
+                { icon: <Ionicons name="snow-outline" size={20} color="#06b6d4" />, title: t('cold_chain') || "COLD CHAIN", desc: t('freshness') || "FRESHNESS" },
+                { icon: <Ionicons name="time-outline" size={20} color="#06b6d4" />, title: t('live_tracking') || "LIVE TRACKING", desc: t('your_order') || "YOUR ORDER" },
+                { icon: <Ionicons name="shield-checkmark-outline" size={20} color="#06b6d4" />, title: t('secure_payment') || "SECURE PAYMENT", desc: t('secure_payment_desc') || "100% SAFE" },
               ].map((card, idx) => (
                 <View 
                   key={idx} 
@@ -191,8 +193,8 @@ export default function LoginScreen() {
               <View className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-[#06b6d4] rounded-br-3xl opacity-50" />
 
               <View className="mb-6">
-                <Text className="text-2xl font-bold text-white tracking-tight">Welcome Back!</Text>
-                <Text className="text-sm text-slate-400 mt-1">Login to continue your fresh journey</Text>
+                <Text className="text-2xl font-bold text-white tracking-tight">{t('welcome_back') || "Welcome Back!"}</Text>
+                <Text className="text-sm text-slate-400 mt-1">{t('login_subtitle') || "Login to continue your fresh journey"}</Text>
               </View>
 
               <View className="space-y-4">
@@ -207,7 +209,7 @@ export default function LoginScreen() {
                         value={value}
                         onChangeText={onChange}
                         onBlur={onBlur}
-                        placeholder="Email or Phone Number"
+                        placeholder={t('email_or_phone') || "Email or Phone Number"}
                         placeholderTextColor="#475569"
                         keyboardType="email-address"
                         autoCapitalize="none"
@@ -230,7 +232,7 @@ export default function LoginScreen() {
                         value={value}
                         onChangeText={onChange}
                         onBlur={onBlur}
-                        placeholder="Password"
+                        placeholder={t('password_placeholder') || "Password"}
                         placeholderTextColor="#475569"
                         secureTextEntry={!showPassword}
                         autoComplete="password"
@@ -243,7 +245,7 @@ export default function LoginScreen() {
                   </Pressable>
                   <Link href={"/forgot-password" as never} asChild>
                     <Pressable className="ml-2">
-                      <Text className="text-[12px] font-semibold text-[#06b6d4]">Forgot?</Text>
+                      <Text className="text-[12px] font-semibold text-[#06b6d4]">{t('forgot') || "Forgot?"}</Text>
                     </Pressable>
                   </Link>
                 </View>
@@ -266,7 +268,7 @@ export default function LoginScreen() {
                     className="absolute inset-0"
                   />
                   <Text className="text-white font-bold text-[14px] uppercase tracking-widest">
-                    {loginMutation.isPending ? "Logging In..." : "Login"}
+                    {loginMutation.isPending ? (t('logging_in') || "Logging In...") : (t('login') || "Login")}
                   </Text>
                 </Pressable>
 
@@ -284,15 +286,15 @@ export default function LoginScreen() {
                 >
                   <GoogleIcon />
                   <Text className="text-white font-semibold text-[13px] tracking-wide">
-                    Continue with Google
+                    {t('continue_with_google') || "Continue with Google"}
                   </Text>
                 </Pressable>
 
                 {/* Sign Up Link */}
                 <Text className="text-center text-[12px] text-slate-400 mt-4">
-                  Don't have an account?{" "}
+                  {t('dont_have_account') || "Don't have an account?"}{" "}
                   <Link href={"/register" as never} asChild>
-                    <Pressable><Text className="font-bold text-[#06b6d4]">Sign Up</Text></Pressable>
+                    <Pressable><Text className="font-bold text-[#06b6d4]">{t('sign_up') || "Sign Up"}</Text></Pressable>
                   </Link>
                 </Text>
 
