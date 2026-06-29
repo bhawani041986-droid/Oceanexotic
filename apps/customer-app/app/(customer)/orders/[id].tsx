@@ -81,6 +81,23 @@ export default function OrderDetailsScreen() {
     return () => clearInterval(interval);
   }, [id]);
 
+  const getEstArrival = () => {
+    const status = (trackingData?.status ?? order?.status ?? "PROCESSING").toUpperCase();
+    if (status === "DELIVERED") {
+      return "Arrived";
+    }
+    if (status === "CANCELLED") {
+      return "--";
+    }
+    if (trackingData?.minutes_remaining !== undefined && trackingData?.minutes_remaining !== null) {
+      return `${trackingData.minutes_remaining} Mins`;
+    }
+    if (status === "OUT_FOR_DELIVERY" || status === "RIDER_ASSIGNED") {
+      return "25-35 Mins";
+    }
+    return "TBD";
+  };
+
   const otpNum = ((parseInt(String(id ?? "").replace(/[^0-9]/g, "") || "123") * 997 + 12345) % 900000) + 100000;
 
   const handleSubmitReview = async () => {
@@ -254,67 +271,80 @@ export default function OrderDetailsScreen() {
               </View>
               <View>
                 <Text className="text-[10px] font-black uppercase" style={{ color: colors.textMuted }}>Est. Arrival</Text>
-                <Text className="text-xs font-black text-right" style={{ color: colors.text }}>{trackingData?.minutes_remaining ?? 32} Mins</Text>
+                <Text className="text-xs font-black text-right" style={{ color: colors.text }}>{getEstArrival()}</Text>
               </View>
             </View>
           </View>
           <View 
             style={{ 
               backgroundColor: colors.isDark ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.03)", 
-              paddingHorizontal: 20, 
-              paddingVertical: 16,
+              paddingHorizontal: 8, 
+              paddingVertical: 12,
               borderRadius: 8
             }}
-            className="mb-4 gap-4"
+            className="mb-4"
           >
-            {[
-              "Order Placed",
-              "Seller Accepted",
-              "Preparing",
-              "Packed",
-              "Rider Assigned",
-              "Out for Delivery",
-              "Delivered"
-            ].map((stage, idx, arr) => {
-              const currentStatus = (trackingData?.status ?? order?.status ?? "PROCESSING").toUpperCase();
-              const stageIndexMatch = arr.findIndex(s => s.toUpperCase() === currentStatus);
-              const isPassed = stageIndexMatch === -1 ? idx <= 1 : idx <= stageIndexMatch;
+            <View className="flex-row items-center justify-between w-full">
+              {[
+                "Placed",
+                "Accepted",
+                "Preparing",
+                "Packed",
+                "Assigned",
+                "Transit",
+                "Delivered"
+              ].map((stage, idx, arr) => {
+                const currentStatus = (trackingData?.status ?? order?.status ?? "PROCESSING").toUpperCase();
+                const backendStages = ["PROCESSING", "CONFIRMED", "PREPARING", "PACKED", "ASSIGNED", "OUT_FOR_DELIVERY", "DELIVERED"];
+                const currentStageIndex = backendStages.indexOf(currentStatus);
+                const isPassed = currentStageIndex === -1 ? idx <= 0 : idx <= currentStageIndex;
 
-              return (
-                <View key={idx} className="flex-row items-center relative pl-8 min-h-[32px]">
-                  {/* Timeline vertical connection line */}
-                  {idx < arr.length - 1 && (
-                    <View 
-                      style={{ 
-                        position: 'absolute', 
-                        left: 7, 
-                        top: 20, 
-                        bottom: -16, 
-                        width: 2, 
-                        backgroundColor: isPassed ? colors.primary : colors.border 
-                      }} 
-                    />
-                  )}
-                  {/* Timeline tick / circle bubble */}
-                  <View 
-                    className="absolute left-0 top-1.5 w-4.5 h-4.5 rounded-none border-2 items-center justify-center"
-                    style={{ 
-                      width: 18,
-                      height: 18,
-                      backgroundColor: isPassed ? colors.primary : "transparent",
-                      borderColor: isPassed ? colors.primary : colors.textMuted
-                    }} 
-                  >
-                    {isPassed && (
-                      <Text style={{ fontSize: 9, color: '#ffffff', fontWeight: '900', lineHeight: 11 }}>✓</Text>
+                return (
+                  <React.Fragment key={idx}>
+                    <View className="items-center flex-1">
+                      {/* Circle bubble with tick */}
+                      <View 
+                        className="border items-center justify-center relative overflow-hidden"
+                        style={{ 
+                          width: 15,
+                          height: 15,
+                          backgroundColor: isPassed ? colors.primary : colors.bg,
+                          borderColor: isPassed ? colors.primary : colors.textMuted
+                        }} 
+                      >
+                        <Svg width={2} height={2} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 2,0 0,2" fill={colors.bg} /></Svg>
+                        <Svg width={2} height={2} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="2,2 0,2 2,0" fill={colors.bg} /></Svg>
+                        {isPassed && (
+                          <Text style={{ fontSize: 7, color: '#ffffff', fontWeight: '900', lineHeight: 9 }}>✓</Text>
+                        )}
+                      </View>
+                      
+                      {/* Short Label */}
+                      <Text 
+                        className="text-[6.5px] font-black uppercase text-center mt-1 w-12" 
+                        style={{ color: isPassed ? colors.primary : colors.textMuted }}
+                        numberOfLines={1}
+                        adjustsFontSizeToFit
+                      >
+                        {stage}
+                      </Text>
+                    </View>
+                    
+                    {/* Connecting line */}
+                    {idx < arr.length - 1 && (
+                      <View 
+                        className="h-0.5 flex-1" 
+                        style={{ 
+                          backgroundColor: isPassed ? colors.primary : colors.border,
+                          marginTop: -10, // align with bubbles
+                          marginHorizontal: -4
+                        }} 
+                      />
                     )}
-                  </View>
-                  <Text className="text-xs font-black uppercase tracking-wider" style={{ color: isPassed ? colors.primary : colors.textMuted }}>
-                    {stage}
-                  </Text>
-                </View>
-              );
-            })}
+                  </React.Fragment>
+                );
+              })}
+            </View>
           </View>
         </View>
 
