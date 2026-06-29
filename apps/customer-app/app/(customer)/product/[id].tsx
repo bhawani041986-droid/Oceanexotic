@@ -975,7 +975,7 @@ export default function ProductDetailScreen() {
             ))}
           </ScrollView>
         </View>
-
+        <FssaiBanner />
       </ScrollView>
       <CutSelectionModal
         visible={cutOpen}

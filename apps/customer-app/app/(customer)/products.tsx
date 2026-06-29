@@ -540,6 +540,7 @@ export default function ProductsScreen() {
             )}
           </View>
         )}
+        <FssaiBanner />
       </ScrollView>
 
       <CutSelectionModal

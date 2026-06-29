@@ -488,6 +488,7 @@ export default function CheckoutScreen() {
             {isPlacing && <ActivityIndicator color={primaryColor} />}
           </View>
         </StepCard>
+        <FssaiBanner />
       </ScrollView>
 
       {/* ── Sticky bottom summary ───────────────────────────────────── */}
