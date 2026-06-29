@@ -211,7 +211,7 @@ export default function CheckoutScreen() {
         </View>
       </LinearGradient>
 
-      <ScrollView className="flex-1" contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 24, paddingBottom: 140, gap: 20, flexGrow: 1 }}>
+      <ScrollView className="flex-1" contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 110, gap: 12, flexGrow: 1 }}>
 
         {/* ══ STEP 1: Shipping Address ════════════════════════════════ */}
         <StepCard
@@ -488,7 +488,6 @@ export default function CheckoutScreen() {
             {isPlacing && <ActivityIndicator color={primaryColor} />}
           </View>
         </StepCard>
-        <View style={{ flex: 1 }} />
         <FssaiBanner />
       </ScrollView>
 
