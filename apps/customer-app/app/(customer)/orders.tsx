@@ -9,6 +9,7 @@ import { useThemeColors } from "@/hooks/useThemeColors";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n";
 import { useSettingsStore } from "@/store/settingsStore";
+import { SectionTitle } from "@/components/customer/SectionTitle";
 
 export default function OrdersScreen() {
   const { t } = useTranslation();
