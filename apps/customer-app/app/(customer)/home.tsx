@@ -131,7 +131,7 @@ function TodaysCatchCardComponent({ item, onPress, onOpenCut }: TodaysCatchCardP
           </View>
           <View className="absolute bottom-2 right-2">
             <Text className="text-[7px] font-black text-foreground/60 uppercase">
-              {t('stock')}
+              {t('stock') || "STOCK"}
             </Text>
             <Text className="text-[10px] font-black" style={{ color: colors.primary }}>
               {item.remaining_kg}kg
@@ -150,7 +150,7 @@ function TodaysCatchCardComponent({ item, onPress, onOpenCut }: TodaysCatchCardP
             {item.name}
           </Text>
           <Text className="text-[8px] uppercase italic text-muted-foreground" style={{ color: colors.textMuted }}>
-            {t('handled_by')} {item.seller_name}
+            {t('handled_by') || "Handled by"} {item.seller_name}
           </Text>
           <View className="flex-row items-center justify-between">
             <Text className="text-xl font-black italic text-foreground" style={{ color: colors.text }}>
@@ -166,7 +166,7 @@ function TodaysCatchCardComponent({ item, onPress, onOpenCut }: TodaysCatchCardP
               style={{ backgroundColor: colors.primary }}
             >
               <Text className="text-[9px] font-black uppercase text-white relative z-10">
-                + CUT
+                {t('plus_cut') || "+ CUT"}
               </Text>
               <Svg width="8" height="8" style={{ position: "absolute", top: -1, left: -1, zIndex: 20 }}>
                 <Path d="M0,0 L8,0 L0,8 Z" fill={colors.card} />
@@ -235,18 +235,18 @@ function NewsletterSection() {
   const handleSubscribeNewsletter = async () => {
     const trimmedEmail = newsletterEmail.trim();
     if (!trimmedEmail) {
-      toast("Please enter your email address", "error");
+      toast(t('enter_email_address') || "Please enter your email address", "error");
       return;
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(trimmedEmail)) {
-      toast("Please enter a valid email address", "error");
+      toast(t('enter_valid_email') || "Please enter a valid email address", "error");
       return;
     }
     try {
       const res = await homeService.subscribeNewsletter(trimmedEmail);
       if (res.success || (res as any).message === "Already subscribed") {
-        toast("Subscribed to newsletter!", "success");
+        toast(t('subscribed_to_newsletter') || "Subscribed to newsletter!", "success");
         setNewsletterEmail("");
       } else {
         toast(res.error || "Subscription failed", "error");
@@ -273,7 +273,7 @@ function NewsletterSection() {
       <TextInput
         value={newsletterEmail}
         onChangeText={setNewsletterEmail}
-        placeholder="ENTER YOUR EMAIL ADDRESS"
+        placeholder={(t('email_address') || "ENTER YOUR EMAIL ADDRESS").toUpperCase()}
         placeholderTextColor="#94A3B8"
         keyboardType="email-address"
         autoCapitalize="none"
@@ -506,7 +506,7 @@ export default function CustomerHomeScreen() {
       const first = options.find((c) => c.is_available !== false) ?? options[0] ?? null;
       setSelectedCut(first);
     } catch {
-      toast("Failed to load options", "error");
+      toast(t('failed_to_load_options') || "Failed to load options", "error");
     } finally {
       setCutLoading(false);
     }
@@ -527,7 +527,7 @@ export default function CustomerHomeScreen() {
         base_product_id: pid,
       },
     });
-    toast(`${cutProduct.name} [${selectedCut.label}] added to cart`, "success");
+    toast(`${cutProduct.name} [${selectedCut.label}] ${t('added_to_cart') || "added to cart"}`, "success");
     setCutOpen(false);
     setCutOpen(false);
   };
@@ -810,14 +810,14 @@ export default function CustomerHomeScreen() {
                   ) : (
                     <View className="h-48 items-center justify-center rounded-none border-2 border-dashed border-white/10 opacity-50">
                       <Text className="text-xs font-black uppercase tracking-widest text-muted-foreground">
-                        No Live Harbor Stock in this sector
+                        {t('no_live_harbor_stock') || "No Live Harbor Stock in this sector"}
                       </Text>
                     </View>
                   )}
 
                   {todaysCatch.isError ? (
                     <Text className="mt-4 text-center text-[10px] font-bold text-danger">
-                      Failed to sync products. Pull to refresh.
+                      {t('failed_to_sync_products') || "Failed to sync products. Pull to refresh."}
                     </Text>
                   ) : null}
                 </View>
@@ -825,7 +825,7 @@ export default function CustomerHomeScreen() {
             case "FEATURED":
               return (
                 <View key="FEATURED" className="border-y px-4 py-4" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
-                  <SectionTitle title="Featured Seafood" subtitle="Premium Fresh Quality" />
+                  <SectionTitle title={t('featured_seafood') || "Featured Seafood"} subtitle={t('certified_daily_catches') || "Premium Fresh Quality"} />
                   {featured.length > 0 ? (
                     <View className="mt-4 flex-row flex-wrap justify-between gap-y-3">
                       {featured.map((p) => (
@@ -852,7 +852,7 @@ export default function CustomerHomeScreen() {
               return (
                 <View key="RECIPES" className="px-4 py-4">
                   <View className="flex-row justify-between items-end mb-4">
-                    <SectionTitle title="Chef's Recipes" subtitle="Chef Tested Recipes" />
+                    <SectionTitle title={t('chefs_recipes') || "Chef's Recipes"} subtitle={t('chef_tested_recipes') || "Chef Tested Recipes"} />
                     <Pressable 
                       onPress={() => router.push("/recipe")}
                       className="px-3 py-1.5 rounded-none border relative overflow-hidden"
@@ -1032,7 +1032,7 @@ export default function CustomerHomeScreen() {
                           className="mt-3 self-start rounded-none bg-white px-3 py-1.5 active:bg-white/90 relative overflow-hidden"
                           style={{ shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.3, shadowRadius: 3 }}
                         >
-                          <Text className="text-[7.5px] font-black uppercase text-black tracking-wider">EXPLORE</Text>
+                          <Text className="text-[7.5px] font-black uppercase text-black tracking-wider">{t('explore') || "EXPLORE"}</Text>
                           <Svg width={6} height={6} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}>
                             <Polygon points="0,0 6,0 0,6" fill="rgba(0,0,0,0.5)" />
                           </Svg>
@@ -1059,7 +1059,7 @@ export default function CustomerHomeScreen() {
                           onPress={() => handleCMSNavigation(promoDataParsed.panelB.link)}
                           className="mt-3 rounded-none border border-white/20 bg-black/40 px-3 py-1.5 active:bg-black/60 relative overflow-hidden"
                         >
-                          <Text className="text-[7.5px] font-black uppercase text-white tracking-wider">VIEW ALL</Text>
+                          <Text className="text-[7.5px] font-black uppercase text-white tracking-wider">{t('view_all') || "VIEW ALL"}</Text>
                           <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
                             <Polygon points="0,0 6,0 0,6" fill="rgba(0,0,0,0.5)" />
                           </Svg>
@@ -1089,7 +1089,7 @@ export default function CustomerHomeScreen() {
             case "SELLERS":
               return (
                 <View key="SELLERS" className="px-4 py-4">
-                  <SectionTitle title="Premium Sellers" subtitle="Top Rated Sellers" />
+                  <SectionTitle title={t('premium_sellers') || "Premium Sellers"} subtitle={t('certified_daily_catches') || "Top Rated Sellers"} />
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
                     {(settings.topSellers || []).map((seller) => {
                       return (
@@ -1200,7 +1200,7 @@ export default function CustomerHomeScreen() {
               return (
                 <View key="REVIEWS" className="pb-4">
                   <View className="px-4">
-                    <SectionTitle title="Customer Reviews" subtitle="Verified Buyer Reviews" />
+                    <SectionTitle title={t('fleet_testimonials') || "Customer Reviews"} subtitle={t('verified_buyer_reviews') || "Verified Buyer Reviews"} />
                   </View>
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 16, gap: 12 }} className="mt-3">
                     {(liveReviews.length > 0 ? liveReviews : FALLBACK_REVIEWS).map((r: any) => {
@@ -1233,7 +1233,7 @@ export default function CustomerHomeScreen() {
                             </View>
                             <View className="flex-row items-center gap-0.5 bg-sky-500/10 px-1.5 py-0.5 rounded-full">
                               <MaterialCommunityIcons name="decagram" size={8} color="#0284c7" />
-                              <Text className="text-[7px] font-black uppercase text-[#0284c7]">VERIFIED</Text>
+                              <Text className="text-[7px] font-black uppercase text-[#0284c7]">{t('verified') || "VERIFIED"}</Text>
                             </View>
                           </View>
 
