@@ -4,6 +4,9 @@ import { useRouter } from "expo-router";
 import Svg, { Path, Circle, Polygon } from "react-native-svg";
 import api from "@/services/api";
 import { useAuthStore } from "@/store/authStore";
+import { useThemeColors } from "@/hooks/useThemeColors";
+import { SectionTitle } from "@/components/customer/SectionTitle";
+import { ChamferedBox } from "@/components/ui/ChamferedBox";
 
 function BackIcon({ color }: { color: string }) {
   return (
@@ -25,10 +28,11 @@ function SendIcon({ color }: { color: string }) {
 export default function CustomerChatScreen() {
   const router = useRouter();
   const { user } = useAuthStore();
+  const colors = useThemeColors();
 
-  const primaryColor = '#00D1FF';
-  const borderColor = 'rgba(0, 209, 255, 0.25)';
-  const bgCard = "rgba(15, 23, 42, 0.6)";
+  const primaryColor = colors.primary;
+  const borderColor = colors.border;
+  const bgCard = colors.card;
 
   const customerId = user?.id || 'USR-001';
 
@@ -128,12 +132,12 @@ export default function CustomerChatScreen() {
   return (
     <KeyboardAvoidingView 
       behavior={Platform.OS === "ios" ? "padding" : "height"} 
-      className="flex-1 bg-[#020617]"
+      className="flex-1" style={{ backgroundColor: colors.bg }}
     >
       {/* Header */}
       <View 
-        className="h-16 flex-row items-center px-4 border-b bg-slate-950"
-        style={{ borderColor: borderColor }}
+        className="h-16 flex-row items-center px-4 border-b" 
+        style={{ borderColor: colors.border, backgroundColor: colors.bg }}
       >
         {activeConv ? (
           <Pressable 
@@ -144,8 +148,8 @@ export default function CustomerChatScreen() {
             }} 
             className="p-2 mr-2 rounded-none bg-white/5 border border-white/5 active:scale-95 relative overflow-hidden"
           >
-            <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill="#020617" /></Svg>
-            <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill="#020617" /></Svg>
+            <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={colors.bg} /></Svg>
+            <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill={colors.bg} /></Svg>
             <BackIcon color="white" />
           </Pressable>
         ) : (
@@ -153,16 +157,16 @@ export default function CustomerChatScreen() {
             onPress={() => router.back()} 
             className="p-2 mr-2 rounded-none bg-white/5 border border-white/5 active:scale-95 relative overflow-hidden"
           >
-            <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill="#020617" /></Svg>
-            <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill="#020617" /></Svg>
+            <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={colors.bg} /></Svg>
+            <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill={colors.bg} /></Svg>
             <BackIcon color="white" />
           </Pressable>
         )}
         <View>
-          <Text className="text-xs font-black uppercase text-white tracking-widest italic">
+          <Text className="text-xs font-black uppercase tracking-widest italic" style={{ color: colors.text }}>
             {activeConv ? activeConv.other_party_name : "Chat Messages"}
           </Text>
-          <Text className="text-[7px] font-bold text-slate-500 uppercase tracking-widest">
+          <Text className="text-[7px] font-bold uppercase tracking-widest" style={{ color: colors.primary }}>
             {activeConv ? `${activeConv.other_party_role.toUpperCase()} PORT` : "Support Team"}
           </Text>
         </View>
@@ -175,9 +179,12 @@ export default function CustomerChatScreen() {
           className="flex-1"
           contentContainerStyle={{ padding: 16, paddingBottom: 120 }}
         >
-          <Text className="text-xs font-black text-white uppercase tracking-tight italic ml-1 mb-4">
-            Active Chats
-          </Text>
+          <View className="mb-4">
+            <SectionTitle 
+              title="Active Chats" 
+              subtitle="DIRECT MESSAGES TO SELLER HARBORS & RIDER FLEETS" 
+            />
+          </View>
 
           {loadingConv ? (
             <ActivityIndicator color={primaryColor} className="py-12" />
@@ -191,33 +198,37 @@ export default function CustomerChatScreen() {
             </View>
           ) : (
             conversations.map((conv) => (
-              <Pressable
+              <ChamferedBox
                 key={conv.id}
-                onPress={() => setActiveConv(conv)}
-                className="p-4 rounded-none border mb-3 bg-slate-950/40 flex-row justify-between items-center active:bg-slate-900/50 relative overflow-hidden"
-                style={{ borderColor: borderColor }}
+                fillColor={colors.card}
+                strokeColor={colors.border}
+                bevelSize={10}
+                className="mb-3"
               >
-                <Svg width={8} height={8} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill="#020617" /></Svg>
-                <Svg width={8} height={8} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill="#020617" /></Svg>
-                <View className="flex-1 pr-3">
-                  <View className="flex-row items-center gap-2 mb-1">
-                    <View className="w-2 h-2 rounded-none bg-emerald-500" />
-                    <Text className="text-[11px] font-black text-white uppercase tracking-wider italic">
-                      {conv.other_party_name}
-                    </Text>
-                    <Text className="text-[6.5px] font-black text-[#7C3AED] uppercase">
-                      {conv.other_party_role}
+                <Pressable
+                  onPress={() => setActiveConv(conv)}
+                  className="p-4 flex-row justify-between items-center active:opacity-85"
+                >
+                  <View className="flex-1 pr-3">
+                    <View className="flex-row items-center gap-2 mb-1">
+                      <View className="w-2 h-2 rounded-none" style={{ backgroundColor: colors.primary }} />
+                      <Text className="text-[11px] font-black uppercase tracking-wider italic" style={{ color: colors.text }}>
+                        {conv.other_party_name}
+                      </Text>
+                      <Text className="text-[6.5px] font-black uppercase" style={{ color: colors.accent }}>
+                        {conv.other_party_role}
+                      </Text>
+                    </View>
+                    <Text className="text-[9.5px] font-medium" style={{ color: colors.textMuted }} numberOfLines={1}>
+                      {conv.last_message || "Start chatting..."}
                     </Text>
                   </View>
-                  <Text className="text-[9.5px] font-medium text-slate-400" numberOfLines={1}>
-                    {conv.last_message || "Start chatting..."}
-                  </Text>
-                </View>
 
-                <Text className="text-[7.5px] font-black text-slate-500 uppercase">
-                  {conv.time}
-                </Text>
-              </Pressable>
+                  <Text className="text-[7.5px] font-black uppercase" style={{ color: colors.textMuted }}>
+                    {conv.time}
+                  </Text>
+                </Pressable>
+              </ChamferedBox>
             ))
           )}
         </ScrollView>
@@ -235,22 +246,21 @@ export default function CustomerChatScreen() {
               messages.map((m) => {
                 const isMe = m.sender_id === customerId;
                 return (
-                  <View 
-                    key={m.id}
-                    className={`mb-3 max-w-[80%] rounded-none p-3.5 border relative overflow-hidden ${
-                      isMe 
-                        ? "align-self-end bg-[#7C3AED]/15 border-[#7C3AED]/35 ml-auto" 
-                        : "align-self-start bg-slate-900 border-white/5 mr-auto"
-                    }`}
-                  >
-                    <Svg width={8} height={8} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill="#020617" /></Svg>
-                    <Svg width={8} height={8} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill="#020617" /></Svg>
-                    <Text className="text-[10px] font-medium text-slate-100">
-                      {m.message_text}
-                    </Text>
-                    <Text className="text-[6px] font-black text-slate-500 uppercase mt-1.5 text-right">
-                      {new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </Text>
+                  <View key={m.id} style={{ alignSelf: isMe ? 'flex-end' : 'flex-start', maxWidth: '80%', marginBottom: 12 }}>
+                    <ChamferedBox
+                      fillColor={isMe ? 'rgba(124, 58, 237, 0.12)' : colors.card}
+                      strokeColor={isMe ? 'rgba(124, 58, 237, 0.35)' : colors.border}
+                      bevelSize={8}
+                    >
+                      <View className="p-3">
+                        <Text className="text-[10px] font-medium" style={{ color: colors.text }}>
+                          {m.message_text}
+                        </Text>
+                        <Text className="text-[6px] font-black uppercase mt-1.5 text-right" style={{ color: colors.textMuted }}>
+                          {new Date(m.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </Text>
+                      </View>
+                    </ChamferedBox>
                   </View>
                 );
               })
