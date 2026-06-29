@@ -458,7 +458,7 @@ const translations: Record<string, Record<string, string>> = {
     steaks_fillets: "স্টেক ও ফিলেট",
     crabs_lobsters: "কাঁকড়া ও চিংড়ি",
     prawns_shrimps: "চিংড়ি",
-    freshwater_fish: "মিঠা পানির মাছ",
+    freshwater_fish: "মিঠা জলের মাছ",
     seawater_fish: "সমুদ্রের মাছ",
     return_home: "হার্বার হোমে ফিরুন",
     no_harvest: "এই সেক্টরে কোনো মাছ নেই",
