@@ -4,6 +4,7 @@ import Svg, { Path, Line, Rect, Circle } from "react-native-svg";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 import { WebView } from "react-native-webview";
+import { Camera } from "expo-camera";
 import { useAuthStore } from "@/store/authStore";
 import { useAgentStore, MOODS } from "@/store/agentStore";
 import api from "@/services/api";
@@ -334,7 +335,22 @@ export default function AgentSupportScreen() {
   };
 
   // Video call — agent is receive-only, admin initiates by sending [VIDEO_CALL_INVITE]:roomID
-  const handleIncomingCall = (roomId: string) => {
+  const handleIncomingCall = async (roomId: string) => {
+    try {
+      const cameraStatus = await Camera.requestCameraPermissionsAsync();
+      const micStatus = await Camera.requestMicrophonePermissionsAsync();
+      
+      if (!cameraStatus.granted || !micStatus.granted) {
+        Alert.alert(
+          "Permissions Denied",
+          "Camera and microphone permissions are required to answer video calls. Please check your system settings."
+        );
+        return;
+      }
+    } catch (e) {
+      console.warn("Media permissions request failed:", e);
+    }
+
     const fullUrl = api.defaults.baseURL?.replace('/api', '') || "https://oceanexotic.com";
     setVideoUrl(`${fullUrl}/agent/video-room?room=${roomId}&user=${agentId}`);
     setIncomingCall(null);
@@ -405,7 +421,11 @@ export default function AgentSupportScreen() {
                         className="text-[11px] mt-1 truncate"
                         style={{ color: conv.unread_count > 0 ? mood.text : '#94A3B8', fontWeight: conv.unread_count > 0 ? '700' : '500' }}
                         numberOfLines={1}
-                      >{conv.last_message}</Text>
+                      >
+                        {conv.last_message?.includes('[VIDEO_CALL_INVITE]:') 
+                          ? '📹 Incoming Video Call' 
+                          : conv.last_message}
+                      </Text>
                     </View>
                   </Pressable>
                 ))}
@@ -729,6 +749,10 @@ export default function AgentSupportScreen() {
               allowsInlineMediaPlayback={true}
               mediaPlaybackRequiresUserAction={false}
               javaScriptEnabled={true}
+              domStorageEnabled={true}
+              onPermissionRequest={(request: any) => {
+                request.grant(request.resources);
+              }}
               onMessage={(event) => {
                 if (event.nativeEvent.data === 'CLOSE_VIDEO') {
                   setVideoUrl(null);

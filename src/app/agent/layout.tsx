@@ -201,6 +201,9 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
 
   const mood = MOODS[currentMood] || MOODS.SENTINEL;
 
+  const isVideoRoom = pathname?.includes("/video-room");
+  if (isVideoRoom) return <>{children}</>;
+
   if (!isHydrated) return <div className="h-screen bg-slate-950 flex items-center justify-center"><Zap className="w-8 h-8 text-cyan-400 animate-pulse" /></div>;
 
   return (
