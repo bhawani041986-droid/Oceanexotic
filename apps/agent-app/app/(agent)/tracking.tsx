@@ -287,6 +287,7 @@ export default function AgentTrackingScreen() {
   const routingRef = useRef<any>(null);
   const [mapMode, setMapMode] = useState<'tactical' | 'satellite'>('satellite');
   const [isMapEnlarged, setIsMapEnlarged] = useState(false);
+  const [routeInfo, setRouteInfo] = useState<{ distKm: string; durationMin: number } | null>(null);
 
   // Web Leaflet Script & CSS Handshake Loader
   useEffect(() => {
@@ -892,17 +893,12 @@ export default function AgentTrackingScreen() {
             opacity: 0.9,
           }).addTo(map);
 
-          // Show distance badge on route midpoint
+          // Send distance + duration to React Native UI
           var distKm = (route.distance / 1000).toFixed(1);
           var durationMin = Math.round(route.duration / 60);
-          var mid = coords[Math.floor(coords.length / 2)];
-          L.marker(mid, {
-            icon: L.divIcon({
-              html: '<div style="background:rgba(2,6,23,0.9);color:${mood.primary};font-size:9px;font-weight:700;font-family:monospace;padding:3px 7px;border-radius:5px;border:1px solid ${mood.primary}55;white-space:nowrap;">' + distKm + ' km · ' + durationMin + ' min</div>',
-              className: '',
-              iconAnchor: [30, 10]
-            })
-          }).addTo(map);
+          if (window.ReactNativeWebView) {
+            window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'route', distKm: distKm, durationMin: durationMin }));
+          }
 
           // Fit map to show full route
           map.fitBounds(routeLine.getBounds(), { padding: [30, 30] });
@@ -925,6 +921,14 @@ export default function AgentTrackingScreen() {
             ` }}
           style={{ flex: 1, backgroundColor: 'transparent' }}
           scrollEnabled={false}
+          onMessage={(event) => {
+            try {
+              const msg = JSON.parse(event.nativeEvent.data);
+              if (msg.type === 'route') {
+                setRouteInfo({ distKm: msg.distKm, durationMin: msg.durationMin });
+              }
+            } catch (e) {}
+          }}
         />
 
 
@@ -1019,19 +1023,38 @@ export default function AgentTrackingScreen() {
 
 
 
-        {/* TOP-RIGHT — drift progress */}
-        {/* BOTTOM-LEFT — trip progress */}
+        {/* BOTTOM-LEFT — trip progress + km badge */}
         <View style={{
-          position: 'absolute', bottom: 12, left: 12,
-          backgroundColor: 'rgba(2,6,23,0.82)',
-          paddingHorizontal: 10, paddingVertical: 6,
-          borderRadius: 10,
-          borderWidth: 1, borderColor: mood.primary + '22',
+          position: 'absolute', bottom: 12, left: 12, gap: 4,
         }}>
-          <Text style={{ fontSize: 6, fontWeight: '900', color: '#475569', textTransform: 'uppercase', letterSpacing: 2 }}>TRIP PROGRESS</Text>
-          <Text style={{ fontSize: 9, fontWeight: '900', color: mood.primary, marginTop: 2 }}>
-            {Math.round(progressRatio * 100)}% Complete
-          </Text>
+          <View style={{
+            backgroundColor: 'rgba(2,6,23,0.82)',
+            paddingHorizontal: 10, paddingVertical: 6,
+            borderRadius: 10,
+            borderWidth: 1, borderColor: mood.primary + '22',
+          }}>
+            <Text style={{ fontSize: 6, fontWeight: '900', color: '#475569', textTransform: 'uppercase', letterSpacing: 2 }}>TRIP PROGRESS</Text>
+            <Text style={{ fontSize: 9, fontWeight: '900', color: mood.primary, marginTop: 2 }}>
+              {Math.round(progressRatio * 100)}% Complete
+            </Text>
+          </View>
+          {routeInfo && (
+            <View style={{
+              backgroundColor: 'rgba(2,6,23,0.82)',
+              paddingHorizontal: 10, paddingVertical: 5,
+              borderRadius: 10,
+              borderWidth: 1, borderColor: mood.primary + '33',
+              flexDirection: 'row', alignItems: 'center', gap: 6,
+            }}>
+              <Text style={{ fontSize: 9, fontWeight: '800', color: mood.primary, fontFamily: 'monospace' }}>
+                {routeInfo.distKm} km
+              </Text>
+              <Text style={{ fontSize: 9, color: '#475569', fontWeight: '600' }}>·</Text>
+              <Text style={{ fontSize: 9, fontWeight: '700', color: '#94A3B8' }}>
+                {routeInfo.durationMin} min
+              </Text>
+            </View>
+          )}
         </View>
       </View>
     );
