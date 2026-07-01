@@ -802,10 +802,7 @@ export default function AgentTrackingScreen() {
         height: 28px !important;
     }
     .leaflet-tile {
-      /* Only apply dark filter in tactical mode — JS toggles this class */
-    }
-    body.tactical-mode .leaflet-tile {
-      filter: saturate(1.1) brightness(0.7) contrast(1.1) hue-rotate(200deg) !important;
+      /* No filter — show natural map colours */
     }
     #distance-label {
       position: absolute;
@@ -929,26 +926,7 @@ export default function AgentTrackingScreen() {
           scrollEnabled={false}
         />
 
-        {/* TOP-LEFT HUD — Sentinel node label */}
-        <View style={{ position: 'absolute', top: 12, left: 12, gap: 6 }}>
-          <View style={{ backgroundColor: mood.primary, paddingHorizontal: 10, paddingVertical: 3, transform: [{ skewX: '-8deg' }] }}>
-            <Text style={{ fontSize: 8, fontWeight: '900', letterSpacing: 2, textTransform: 'uppercase', color: '#0F172A', fontStyle: 'italic', transform: [{ skewX: '8deg' }] }}>
-              Node: Sentinel-01
-            </Text>
-          </View>
-          <View style={{
-            flexDirection: 'row', alignItems: 'center', gap: 6,
-            paddingHorizontal: 8, paddingVertical: 3,
-            borderWidth: 1, borderColor: mood.primary + '40',
-            backgroundColor: 'rgba(2,6,23,0.85)',
-            transform: [{ skewX: '-8deg' }]
-          }}>
-            <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: isSyncing ? '#64748B' : '#10B981', shadowColor: '#10B981', shadowRadius: isSyncing ? 0 : 4 }} />
-            <Text style={{ fontSize: 7, fontWeight: '700', letterSpacing: 1.5, textTransform: 'uppercase', color: mood.primary, transform: [{ skewX: '8deg' }] }}>
-              Telemetry: {isSyncing ? 'Lock' : 'Registry Live'}
-            </Text>
-          </View>
-        </View>
+
 
         {/* BOTTOM-RIGHT HUD — layers + zoom + recenter + navigate + enlarge buttons */}
         <View style={{ position: 'absolute', bottom: 12, right: 12, gap: 6 }}>
@@ -1038,19 +1016,7 @@ export default function AgentTrackingScreen() {
           </Pressable>
         </View>
 
-        {/* BOTTOM-LEFT — grid coordinates */}
-        <View style={{
-          position: 'absolute', bottom: 12, left: 12,
-          backgroundColor: 'rgba(2,6,23,0.82)',
-          paddingHorizontal: 10, paddingVertical: 6,
-          borderRadius: 10,
-          borderWidth: 1, borderColor: 'rgba(255,255,255,0.06)'
-        }}>
-          <Text style={{ fontSize: 6, fontWeight: '900', color: '#475569', textTransform: 'uppercase', letterSpacing: 2 }}>GRID COORDINATES</Text>
-          <Text style={{ fontSize: 8, fontWeight: '700', color: '#CBD5E1', textTransform: 'uppercase', marginTop: 2 }}>
-            {coords.lat.toFixed(5)} N · {coords.lng.toFixed(5)} E
-          </Text>
-        </View>
+
 
         {/* TOP-RIGHT — drift progress */}
         <View style={{
