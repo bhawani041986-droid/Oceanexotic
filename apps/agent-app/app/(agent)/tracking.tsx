@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, ScrollView, TextInput, Pressable, ActivityIndicator, Linking, Dimensions, Platform, Image as RNImage, StyleSheet, Animated } from "react-native";
+import { View, Text, ScrollView, TextInput, Pressable, ActivityIndicator, Linking, Dimensions, Platform, Image as RNImage, StyleSheet, Animated, Modal } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import Svg, { Circle, Line, Path, Rect, G } from "react-native-svg";
 import { useAuthStore } from "@/store/authStore";
@@ -190,6 +190,28 @@ function NavigationIcon({ color }: { color: string }) {
   );
 }
 
+function MaximizeIcon({ color }: { color: string }) {
+  return (
+    <Svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <Path d="M15 3h6v6" />
+      <Path d="M9 21H3v-6" />
+      <Path d="M21 3l-7 7" />
+      <Path d="M3 21l7-7" />
+    </Svg>
+  );
+}
+
+function MinimizeIcon({ color }: { color: string }) {
+  return (
+    <Svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <Path d="M4 14h6v6" />
+      <Path d="M20 10h-6V4" />
+      <Path d="M14 10l7-7" />
+      <Path d="M10 14l-7 7" />
+    </Svg>
+  );
+}
+
 export default function AgentTrackingScreen() {
   const { order_id } = useLocalSearchParams<{ order_id: string }>();
   const orderId = order_id || "ORD-000001";
@@ -239,6 +261,7 @@ export default function AgentTrackingScreen() {
   const harborMarkerRef = useRef<any>(null);
   const routingRef = useRef<any>(null);
   const [mapMode, setMapMode] = useState<'tactical' | 'satellite'>('tactical');
+  const [isMapEnlarged, setIsMapEnlarged] = useState(false);
 
   // Web Leaflet Script & CSS Handshake Loader
   useEffect(() => {
@@ -373,24 +396,32 @@ export default function AgentTrackingScreen() {
   }, [coords, missionState, updateRouting]);
 
   const toggleMapMode = () => {
-    const L = (window as any).L;
-    if (!L || !mapRef.current || !tileLayerRef.current) return;
-    
     const newMode = mapMode === 'tactical' ? 'satellite' : 'tactical';
     setMapMode(newMode);
     
-    mapRef.current.removeLayer(tileLayerRef.current);
-    
-    if (newMode === 'satellite') {
-      tileLayerRef.current = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri'
-      }).addTo(mapRef.current);
-      toast("Satellite Reconnaissance Active", "success");
+    if (Platform.OS === "web") {
+      const L = (window as any).L;
+      if (!L || !mapRef.current || !tileLayerRef.current) return;
+      
+      mapRef.current.removeLayer(tileLayerRef.current);
+      
+      if (newMode === 'satellite') {
+        tileLayerRef.current = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          attribution: 'Tiles &copy; Esri'
+        }).addTo(mapRef.current);
+        toast("Satellite Reconnaissance Active", "success");
+      } else {
+        tileLayerRef.current = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+          attribution: '&copy; OpenStreetMap contributors' 
+        }).addTo(mapRef.current);
+        toast("Tactical Vector View Active", "success");
+      }
     } else {
-      tileLayerRef.current = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
-        attribution: '&copy; OpenStreetMap contributors' 
-      }).addTo(mapRef.current);
-      toast("Tactical Vector View Active", "success");
+      if (webViewRef.current) {
+        const js = `if (typeof window.toggleMapMode === 'function') { window.toggleMapMode('${newMode}'); } true;`;
+        webViewRef.current.injectJavaScript(js);
+        toast(newMode === 'satellite' ? "Satellite Reconnaissance Active" : "Tactical Vector View Active", "success");
+      }
     }
   };
 
@@ -662,6 +693,222 @@ export default function AgentTrackingScreen() {
   const userCoords = convertToRadarCoords(coords.lat, coords.lng);
   const customerCoords = convertToRadarCoords(destLat, destLng);
 
+  // Native map component helper to cleanly avoid Webview Ref duplication issues
+  const renderMapComponent = (isEnlarged: boolean) => {
+    return (
+      <View
+        style={{
+          height: isEnlarged ? '100%' : 290,
+          width: '100%',
+          borderRadius: isEnlarged ? 0 : 24,
+          borderWidth: isEnlarged ? 0 : 2,
+          borderColor: mood.border,
+          overflow: 'hidden',
+          marginBottom: isEnlarged ? 0 : 16,
+          backgroundColor: isLight ? '#E2E8F0' : '#020617',
+          position: 'relative',
+        }}
+      >
+        <WebView
+          ref={webViewRef}
+          originWhitelist={['*']}
+          source={{ html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    body { padding: 0; margin: 0; background-color: ${isLight ? '#E2E8F0' : '#020617'}; }
+    html, body, #map { height: 100%; width: 100%; }
+    .leaflet-control-attribution { display: none; }
+    /* Match Web Tactical Zoom Controls */
+    .leaflet-control-zoom { border: none !important; margin: 10px !important; }
+    .leaflet-control-zoom-in, .leaflet-control-zoom-out { 
+        background-color: rgba(0,0,0,0.7) !important; 
+        color: ${mood.primary} !important; 
+        border: 1px solid ${mood.primary}26 !important; 
+        backdrop-filter: blur(10px);
+        font-size: 14px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 28px !important;
+        height: 28px !important;
+    }
+    #map.tactical-theme .leaflet-tile {
+      filter: saturate(1.2) brightness(0.65) contrast(1.2) hue-rotate(210deg) !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+    var map = L.map('map', { zoomControl: true, attributionControl: false }).setView([${coords.lat}, ${coords.lng}], 16);
+    
+    var mapMode = '${mapMode}';
+    var isLight = ${isLight};
+    var activeLayer;
+    var mapEl = document.getElementById('map');
+
+    if (mapMode === 'satellite') {
+      activeLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', { maxZoom: 19 }).addTo(map);
+    } else {
+      mapEl.classList.add('tactical-theme');
+      var url = isLight ? "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+      activeLayer = L.tileLayer(url, { maxZoom: 19 }).addTo(map);
+    }
+
+    window.toggleMapMode = function(mode) {
+      if (activeLayer) {
+        map.removeLayer(activeLayer);
+      }
+      if (mode === 'satellite') {
+        mapEl.classList.remove('tactical-theme');
+        activeLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', { maxZoom: 19 }).addTo(map);
+      } else {
+        mapEl.classList.add('tactical-theme');
+        var url = isLight ? "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+        activeLayer = L.tileLayer(url, { maxZoom: 19 }).addTo(map);
+      }
+    };
+
+    var agentIcon = L.divIcon({ 
+      className: 'sentinel-marker', 
+      html: \`${AGENT_SENTINEL_HTML(mood.primary, mood.glow)}\`, 
+      iconSize: [40, 40], 
+      iconAnchor: [20, 20] 
+    });
+
+    var harborIcon = L.divIcon({ 
+      className: 'harbor-marker', 
+      html: \`${CUSTOMER_HARBOR_HTML(mood.primary)}\`, 
+      iconSize: [40, 40], 
+      iconAnchor: [20, 20] 
+    });
+
+    // Hub Marker
+    L.circleMarker([11.6670, 92.7359], { color: '#64748B', radius: 5, fillOpacity: 1 }).addTo(map);
+
+    var agentMarker = L.marker([${coords.lat}, ${coords.lng}], { icon: agentIcon }).addTo(map);
+    var custMarker = L.marker([${destLat}, ${destLng}], { icon: harborIcon }).addTo(map);
+
+    // Dotted line route
+    var routeLine = L.polyline([
+      [${coords.lat}, ${coords.lng}],
+      [${destLat}, ${destLng}]
+    ], { color: '${mood.primary}', weight: 3, dashArray: '5, 5' }).addTo(map);
+
+    window.updateTelemetry = function(lat, lng) {
+      var newLatLng = new L.LatLng(lat, lng);
+      agentMarker.setLatLng(newLatLng);
+      routeLine.setLatLngs([newLatLng, custMarker.getLatLng()]);
+    };
+  </script>
+</body>
+</html>
+            ` }}
+          style={{ flex: 1, backgroundColor: 'transparent' }}
+          scrollEnabled={false}
+        />
+
+        {/* TOP-LEFT HUD — Sentinel node label */}
+        <View style={{ position: 'absolute', top: 12, left: 12, gap: 6 }}>
+          <View style={{ backgroundColor: mood.primary, paddingHorizontal: 10, paddingVertical: 3, transform: [{ skewX: '-8deg' }] }}>
+            <Text style={{ fontSize: 8, fontWeight: '900', letterSpacing: 2, textTransform: 'uppercase', color: '#0F172A', fontStyle: 'italic', transform: [{ skewX: '8deg' }] }}>
+              Node: Sentinel-01
+            </Text>
+          </View>
+          <View style={{
+            flexDirection: 'row', alignItems: 'center', gap: 6,
+            paddingHorizontal: 8, paddingVertical: 3,
+            borderWidth: 1, borderColor: mood.primary + '40',
+            backgroundColor: 'rgba(2,6,23,0.85)',
+            transform: [{ skewX: '-8deg' }]
+          }}>
+            <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: isSyncing ? '#64748B' : '#10B981', shadowColor: '#10B981', shadowRadius: isSyncing ? 0 : 4 }} />
+            <Text style={{ fontSize: 7, fontWeight: '700', letterSpacing: 1.5, textTransform: 'uppercase', color: mood.primary, transform: [{ skewX: '8deg' }] }}>
+              Telemetry: {isSyncing ? 'Lock' : 'Registry Live'}
+            </Text>
+          </View>
+        </View>
+
+        {/* BOTTOM-RIGHT HUD — toggle + recenter + enlarge buttons */}
+        <View style={{ position: 'absolute', bottom: 12, right: 12, gap: 6 }}>
+          <Pressable
+            onPress={toggleMapMode}
+            style={{
+              width: 36, height: 36,
+              borderRadius: 6,
+              borderWidth: 1, borderColor: mood.primary + '4D',
+              backgroundColor: mapMode === 'satellite' ? mood.primary : 'rgba(2,6,23,0.88)',
+              alignItems: 'center', justifyContent: 'center',
+              transform: [{ skewX: '-8deg' }]
+            }}
+          >
+            <LayersIcon color={mapMode === 'satellite' ? '#FFFFFF' : mood.primary} />
+          </Pressable>
+          <Pressable
+            onPress={recenterMap}
+            style={{
+              width: 36, height: 36,
+              borderRadius: 6,
+              borderWidth: 1, borderColor: mood.primary + '4D',
+              backgroundColor: 'rgba(2,6,23,0.88)',
+              alignItems: 'center', justifyContent: 'center',
+              transform: [{ skewX: '-8deg' }]
+            }}
+          >
+            <NavigationIcon color={mood.primary} />
+          </Pressable>
+          <Pressable
+            onPress={() => setIsMapEnlarged(!isEnlarged)}
+            style={{
+              width: 36, height: 36,
+              borderRadius: 6,
+              borderWidth: 1, borderColor: mood.primary + '4D',
+              backgroundColor: 'rgba(2,6,23,0.88)',
+              alignItems: 'center', justifyContent: 'center',
+              transform: [{ skewX: '-8deg' }]
+            }}
+          >
+            {isEnlarged ? <MinimizeIcon color={mood.primary} /> : <MaximizeIcon color={mood.primary} />}
+          </Pressable>
+        </View>
+
+        {/* BOTTOM-LEFT — grid coordinates */}
+        <View style={{
+          position: 'absolute', bottom: 12, left: 12,
+          backgroundColor: 'rgba(2,6,23,0.82)',
+          paddingHorizontal: 10, paddingVertical: 6,
+          borderRadius: 10,
+          borderWidth: 1, borderColor: 'rgba(255,255,255,0.06)'
+        }}>
+          <Text style={{ fontSize: 6, fontWeight: '900', color: '#475569', textTransform: 'uppercase', letterSpacing: 2 }}>GRID COORDINATES</Text>
+          <Text style={{ fontSize: 8, fontWeight: '700', color: '#CBD5E1', textTransform: 'uppercase', marginTop: 2 }}>
+            {coords.lat.toFixed(5)} N · {coords.lng.toFixed(5)} E
+          </Text>
+        </View>
+
+        {/* TOP-RIGHT — drift progress */}
+        <View style={{
+          position: 'absolute', top: 12, right: 12,
+          backgroundColor: 'rgba(2,6,23,0.82)',
+          paddingHorizontal: 10, paddingVertical: 6,
+          borderRadius: 10,
+          borderWidth: 1, borderColor: mood.primary + '22',
+          alignItems: 'flex-end'
+        }}>
+          <Text style={{ fontSize: 6, fontWeight: '900', color: '#475569', textTransform: 'uppercase', letterSpacing: 2 }}>DRIFT PROGRESS</Text>
+          <Text style={{ fontSize: 9, fontWeight: '900', color: mood.primary, marginTop: 2 }}>
+            {Math.round(progressRatio * 100)}% COMPLETE
+          </Text>
+        </View>
+      </View>
+    );
+  };
+
   if (isLoading || !orderInfo) {
     return (
       <View className="flex-1 items-center justify-center bg-[#020617]">
@@ -762,183 +1009,19 @@ export default function AgentTrackingScreen() {
         </View>
       ) : (
         /* ── NATIVE TACTICAL MAP (matches web Leaflet visual) ── */
-        <View
-          style={{
-            height: 290,
-            borderRadius: 24,
-            borderWidth: 2,
-            borderColor: mood.border,
-            overflow: 'hidden',
-            marginBottom: 16,
-            backgroundColor: isLight ? '#E2E8F0' : '#020617',
-            position: 'relative',
-          }}
-        >
-          {/* Native MapView Replacement */}
-          {/* Native WebView Leaflet Map Replacement */}
-          <WebView
-            ref={webViewRef}
-            originWhitelist={['*']}
-            source={{ html: `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <style>
-    body { padding: 0; margin: 0; background-color: ${isLight ? '#E2E8F0' : '#020617'}; }
-    html, body, #map { height: 100%; width: 100%; }
-    .leaflet-control-attribution { display: none; }
-    /* Match Web Tactical Zoom Controls */
-    .leaflet-control-zoom { border: none !important; margin: 10px !important; }
-    .leaflet-control-zoom-in, .leaflet-control-zoom-out { 
-        background-color: rgba(0,0,0,0.7) !important; 
-        color: ${mood.primary} !important; 
-        border: 1px solid ${mood.primary}26 !important; 
-        backdrop-filter: blur(10px);
-        font-size: 14px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        width: 28px !important;
-        height: 28px !important;
-    }
-    .leaflet-tile {
-      filter: saturate(1.2) brightness(0.65) contrast(1.2) hue-rotate(210deg) !important;
-    }
-  </style>
-</head>
-<body>
-  <div id="map"></div>
-  <script>
-    var map = L.map('map', { zoomControl: true, attributionControl: false }).setView([${coords.lat}, ${coords.lng}], 16);
-    
-    L.tileLayer('${isLight ? "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}"}', {
-      maxZoom: 19
-    }).addTo(map);
-
-    var agentIcon = L.divIcon({ 
-      className: 'sentinel-marker', 
-      html: \`${AGENT_SENTINEL_HTML(mood.primary, mood.glow)}\`, 
-      iconSize: [40, 40], 
-      iconAnchor: [20, 20] 
-    });
-
-    var harborIcon = L.divIcon({ 
-      className: 'harbor-marker', 
-      html: \`${CUSTOMER_HARBOR_HTML(mood.primary)}\`, 
-      iconSize: [40, 40], 
-      iconAnchor: [20, 20] 
-    });
-
-    // Hub Marker
-    L.circleMarker([11.6670, 92.7359], { color: '#64748B', radius: 5, fillOpacity: 1 }).addTo(map);
-
-    var agentMarker = L.marker([${coords.lat}, ${coords.lng}], { icon: agentIcon }).addTo(map);
-    var custMarker = L.marker([${destLat}, ${destLng}], { icon: harborIcon }).addTo(map);
-
-    // Dotted line route
-    var routeLine = L.polyline([
-      [${coords.lat}, ${coords.lng}],
-      [${destLat}, ${destLng}]
-    ], { color: '${mood.primary}', weight: 3, dashArray: '5, 5' }).addTo(map);
-
-    window.updateTelemetry = function(lat, lng) {
-      var newLatLng = new L.LatLng(lat, lng);
-      agentMarker.setLatLng(newLatLng);
-      routeLine.setLatLngs([newLatLng, custMarker.getLatLng()]);
-    };
-  </script>
-</body>
-</html>
-            ` }}
-            style={{ flex: 1, backgroundColor: 'transparent' }}
-            scrollEnabled={false}
-          />
-
-          {/* TOP-LEFT HUD — Sentinel node label (skewed style matching web) */}
-          <View style={{ position: 'absolute', top: 12, left: 12, gap: 6 }}>
-            {/* Primary badge */}
-            <View style={{ backgroundColor: mood.primary, paddingHorizontal: 10, paddingVertical: 3, transform: [{ skewX: '-8deg' }] }}>
-              <Text style={{ fontSize: 8, fontWeight: '900', letterSpacing: 2, textTransform: 'uppercase', color: '#0F172A', fontStyle: 'italic', transform: [{ skewX: '8deg' }] }}>
-                Node: Sentinel-01
-              </Text>
+        <>
+          {!isMapEnlarged && renderMapComponent(false)}
+          
+          <Modal
+            visible={isMapEnlarged}
+            animationType="fade"
+            onRequestClose={() => setIsMapEnlarged(false)}
+          >
+            <View style={{ flex: 1, backgroundColor: mood.bg }}>
+              {isMapEnlarged && renderMapComponent(true)}
             </View>
-            {/* Telemetry status */}
-            <View style={{
-              flexDirection: 'row', alignItems: 'center', gap: 6,
-              paddingHorizontal: 8, paddingVertical: 3,
-              borderWidth: 1, borderColor: mood.primary + '40',
-              backgroundColor: 'rgba(2,6,23,0.85)',
-              transform: [{ skewX: '-8deg' }]
-            }}>
-              <View style={{ width: 6, height: 6, borderRadius: 3, backgroundColor: isSyncing ? '#64748B' : '#10B981', shadowColor: '#10B981', shadowRadius: isSyncing ? 0 : 4 }} />
-              <Text style={{ fontSize: 7, fontWeight: '700', letterSpacing: 1.5, textTransform: 'uppercase', color: mood.primary, transform: [{ skewX: '8deg' }] }}>
-                Telemetry: {isSyncing ? 'Lock' : 'Registry Live'}
-              </Text>
-            </View>
-          </View>
-
-          {/* BOTTOM-RIGHT HUD — toggle + recenter buttons (matching web) */}
-          <View style={{ position: 'absolute', bottom: 12, right: 12, gap: 6 }}>
-            <Pressable
-              onPress={toggleMapMode}
-              style={{
-                width: 36, height: 36,
-                borderRadius: 6,
-                borderWidth: 1, borderColor: mood.primary + '4D',
-                backgroundColor: mapMode === 'satellite' ? mood.primary : 'rgba(2,6,23,0.88)',
-                alignItems: 'center', justifyContent: 'center',
-                transform: [{ skewX: '-8deg' }]
-              }}
-            >
-              <LayersIcon color={mapMode === 'satellite' ? '#FFFFFF' : mood.primary} />
-            </Pressable>
-            <Pressable
-              onPress={recenterMap}
-              style={{
-                width: 36, height: 36,
-                borderRadius: 6,
-                borderWidth: 1, borderColor: mood.primary + '4D',
-                backgroundColor: 'rgba(2,6,23,0.88)',
-                alignItems: 'center', justifyContent: 'center',
-                transform: [{ skewX: '-8deg' }]
-              }}
-            >
-              <NavigationIcon color={mood.primary} />
-            </Pressable>
-          </View>
-
-          {/* BOTTOM-LEFT — grid coordinates */}
-          <View style={{
-            position: 'absolute', bottom: 12, left: 12,
-            backgroundColor: 'rgba(2,6,23,0.82)',
-            paddingHorizontal: 10, paddingVertical: 6,
-            borderRadius: 10,
-            borderWidth: 1, borderColor: 'rgba(255,255,255,0.06)'
-          }}>
-            <Text style={{ fontSize: 6, fontWeight: '900', color: '#475569', textTransform: 'uppercase', letterSpacing: 2 }}>GRID COORDINATES</Text>
-            <Text style={{ fontSize: 8, fontWeight: '700', color: '#CBD5E1', textTransform: 'uppercase', marginTop: 2 }}>
-              {coords.lat.toFixed(5)} N · {coords.lng.toFixed(5)} E
-            </Text>
-          </View>
-
-          {/* TOP-RIGHT — drift progress */}
-          <View style={{
-            position: 'absolute', top: 12, right: 12,
-            backgroundColor: 'rgba(2,6,23,0.82)',
-            paddingHorizontal: 10, paddingVertical: 6,
-            borderRadius: 10,
-            borderWidth: 1, borderColor: mood.primary + '22',
-            alignItems: 'flex-end'
-          }}>
-            <Text style={{ fontSize: 6, fontWeight: '900', color: '#475569', textTransform: 'uppercase', letterSpacing: 2 }}>DRIFT PROGRESS</Text>
-            <Text style={{ fontSize: 9, fontWeight: '900', color: mood.primary, marginTop: 2 }}>
-              {Math.round(progressRatio * 100)}% COMPLETE
-            </Text>
-          </View>
-        </View>
+          </Modal>
+        </>
       )}
 
       {/* MISSION CONTROL HUB */}
