@@ -90,10 +90,13 @@ export async function GET(request: Request) {
             estimatedArrivalStr = arrivalTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             
             // Optionally, update the estimated_delivery_at timestamp in orders
-            await supabase.from('orders').update({
-               estimated_delivery_at: arrivalTime.toISOString(),
-               eta_last_updated_at: new Date().toISOString()
-            }).eq('id', order_id);
+            const numericOrderId = parseInt(String(order_id).replace(/\D/g, ""), 10);
+            if (!isNaN(numericOrderId)) {
+              await supabase.from('orders').update({
+                 estimated_delivery_at: arrivalTime.toISOString(),
+                 eta_last_updated_at: new Date().toISOString()
+              }).eq('id', numericOrderId);
+            }
           }
         }
       } catch (err) {
