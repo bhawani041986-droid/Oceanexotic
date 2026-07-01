@@ -86,8 +86,10 @@ export default function AgentSupportScreen() {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [adminContacts, setAdminContacts] = useState<any[]>([]);
   const [loadingContacts, setLoadingContacts] = useState(false);
+  const [incomingCall, setIncomingCall] = useState<{ roomId: string; callerName: string } | null>(null);
 
   const scrollViewRef = useRef<ScrollView>(null);
+  const processedInvites = useRef<Set<string>>(new Set());
 
   // Fetch admin contacts for the New Chat picker
   const fetchAdminContacts = async () => {
@@ -131,6 +133,22 @@ export default function AgentSupportScreen() {
         setConvList(res.data);
         if (res.data.length === 0 && agentId) {
           createDefaultSupportConversation();
+        }
+
+        // Detect incoming video call invite from admin
+        // Admin sends a chat message: [VIDEO_CALL_INVITE]:roomID
+        const callConv = res.data.find((c: any) =>
+          c.unread_count > 0 &&
+          c.last_message &&
+          c.last_message_sender_id !== agentId &&
+          c.last_message.includes('[VIDEO_CALL_INVITE]:')
+        );
+        if (callConv) {
+          const roomId = callConv.last_message.replace('[VIDEO_CALL_INVITE]:', '').trim();
+          if (!processedInvites.current.has(roomId)) {
+            processedInvites.current.add(roomId);
+            setIncomingCall({ roomId, callerName: callConv.other_party_name || 'Admin' });
+          }
         }
       }
     } catch (err) {
@@ -181,8 +199,17 @@ export default function AgentSupportScreen() {
     fetchMessages(activeConv.id);
     const interval = setInterval(() => {
       fetchMessages(activeConv.id);
-      fetchConversations(); // Also refresh conv list
+      fetchConversations();
     }, 3000);
+    return () => clearInterval(interval);
+  }, [activeConv]);
+
+  // Background polling for incoming calls even when on conv list (no activeConv)
+  useEffect(() => {
+    if (activeConv) return; // already handled above
+    const interval = setInterval(() => {
+      fetchConversations();
+    }, 4000);
     return () => clearInterval(interval);
   }, [activeConv]);
 
@@ -306,16 +333,20 @@ export default function AgentSupportScreen() {
     );
   };
 
-  // Video calls can only be initiated by Admin — agent is receive-only
-  // The videoUrl state is set when admin sends a call invitation via polling (future)
+  // Video call — agent is receive-only, admin initiates by sending [VIDEO_CALL_INVITE]:roomID
   const handleIncomingCall = (roomId: string) => {
     const fullUrl = api.defaults.baseURL?.replace('/api', '') || "https://oceanexotic.com";
     setVideoUrl(`${fullUrl}/agent/video-room?room=${roomId}&user=${agentId}`);
+    setIncomingCall(null);
+  };
+
+  const handleDeclineCall = () => {
+    setIncomingCall(null);
   };
 
   return (
-    <KeyboardAvoidingView 
-      behavior={Platform.OS === "ios" ? "padding" : undefined} 
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       className="flex-1"
       keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
       style={{ backgroundColor: mood.bg }}
@@ -632,6 +663,35 @@ export default function AgentSupportScreen() {
                 style={{ flex: 1, padding: 13, backgroundColor: newChatTarget ? mood.primary : '#1E293B', alignItems: 'center', opacity: newChatTarget ? 1 : 0.5 }}
               >
                 <Text style={{ color: newChatTarget ? (isLight ? '#FFFFFF' : '#020617') : '#475569', fontWeight: '900', fontSize: 11, textTransform: 'uppercase', letterSpacing: 1.5 }}>Start Chat</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* INCOMING VIDEO CALL OVERLAY — triggered when admin sends [VIDEO_CALL_INVITE]:roomId */}
+      <Modal visible={!!incomingCall} animationType="fade" transparent>
+        <View style={{ flex: 1, backgroundColor: 'rgba(2,6,23,0.92)', alignItems: 'center', justifyContent: 'center', padding: 32 }}>
+          <View style={{ width: '100%', backgroundColor: '#0F172A', borderWidth: 1, borderColor: mood.primary, borderRadius: 0, padding: 28, alignItems: 'center' }}>
+            {/* Pulsing ring */}
+            <View style={{ width: 72, height: 72, borderRadius: 36, backgroundColor: mood.primary + '20', borderWidth: 2, borderColor: mood.primary + '60', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+              <VideoIcon color={mood.primary} />
+            </View>
+            <Text style={{ color: mood.primary, fontSize: 10, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 3, marginBottom: 6 }}>Incoming Video Call</Text>
+            <Text style={{ color: '#F1F5F9', fontSize: 17, fontWeight: '800', marginBottom: 4, textAlign: 'center' }}>{incomingCall?.callerName}</Text>
+            <Text style={{ color: '#475569', fontSize: 11, fontWeight: '600', marginBottom: 28, textAlign: 'center' }}>is calling you...</Text>
+            <View style={{ flexDirection: 'row', gap: 14, width: '100%' }}>
+              <Pressable
+                onPress={handleDeclineCall}
+                style={{ flex: 1, padding: 14, borderWidth: 1, borderColor: '#EF4444', backgroundColor: 'rgba(239,68,68,0.1)', alignItems: 'center', borderRadius: 0 }}
+              >
+                <Text style={{ color: '#EF4444', fontWeight: '900', fontSize: 12, textTransform: 'uppercase', letterSpacing: 1.5 }}>Decline</Text>
+              </Pressable>
+              <Pressable
+                onPress={() => incomingCall && handleIncomingCall(incomingCall.roomId)}
+                style={{ flex: 1, padding: 14, backgroundColor: mood.primary, alignItems: 'center', borderRadius: 0 }}
+              >
+                <Text style={{ color: '#020617', fontWeight: '900', fontSize: 12, textTransform: 'uppercase', letterSpacing: 1.5 }}>Accept</Text>
               </Pressable>
             </View>
           </View>
