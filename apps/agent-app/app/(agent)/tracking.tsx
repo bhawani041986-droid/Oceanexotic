@@ -212,6 +212,31 @@ function MinimizeIcon({ color }: { color: string }) {
   );
 }
 
+function ZoomInIcon({ color }: { color: string }) {
+  return (
+    <Svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <Path d="M12 5v14" />
+      <Path d="M5 12h14" />
+    </Svg>
+  );
+}
+
+function ZoomOutIcon({ color }: { color: string }) {
+  return (
+    <Svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <Path d="M5 12h14" />
+    </Svg>
+  );
+}
+
+function ExternalMapIcon({ color }: { color: string }) {
+  return (
+    <Svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <Path d="M3 11l19-9-9 19-2-8-8-2z" />
+    </Svg>
+  );
+}
+
 export default function AgentTrackingScreen() {
   const { order_id } = useLocalSearchParams<{ order_id: string }>();
   const orderId = order_id || "ORD-000001";
@@ -414,14 +439,44 @@ export default function AgentTrackingScreen() {
         tileLayerRef.current = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
           attribution: '&copy; OpenStreetMap contributors' 
         }).addTo(mapRef.current);
-        toast("Tactical Vector View Active", "success");
+        toast("Street Vector View Active", "success");
       }
     } else {
       if (webViewRef.current) {
         const js = `if (typeof window.toggleMapMode === 'function') { window.toggleMapMode('${newMode}'); } true;`;
         webViewRef.current.injectJavaScript(js);
-        toast(newMode === 'satellite' ? "Satellite Reconnaissance Active" : "Tactical Vector View Active", "success");
+        toast(newMode === 'satellite' ? "Satellite View Active" : "Street View Active", "success");
       }
+    }
+  };
+
+  const zoomInMap = () => {
+    if (Platform.OS === "web") {
+      if (mapRef.current) mapRef.current.zoomIn();
+    } else {
+      webViewRef.current?.injectJavaScript(`if (typeof map !== 'undefined') { map.zoomIn(); } true;`);
+    }
+  };
+
+  const zoomOutMap = () => {
+    if (Platform.OS === "web") {
+      if (mapRef.current) mapRef.current.zoomOut();
+    } else {
+      webViewRef.current?.injectJavaScript(`if (typeof map !== 'undefined') { map.zoomOut(); } true;`);
+    }
+  };
+
+  const openInMaps = () => {
+    const label = encodeURIComponent(orderInfo?.address || 'Delivery Location');
+    const url = Platform.select({
+      ios: `maps://app?daddr=${destLat},${destLng}&dirflg=d`,
+      android: `google.navigation:q=${destLat},${destLng}&mode=d`,
+    });
+    if (url) {
+      Linking.openURL(url).catch(() => {
+        // Fallback to browser maps
+        Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${destLat},${destLng}&travelmode=driving`);
+      });
     }
   };
 
@@ -747,27 +802,48 @@ export default function AgentTrackingScreen() {
         height: 28px !important;
     }
     .leaflet-tile {
-      filter: saturate(1.2) brightness(0.65) contrast(1.2) hue-rotate(210deg) !important;
+      /* Only apply dark filter in tactical mode — JS toggles this class */
+    }
+    body.tactical-mode .leaflet-tile {
+      filter: saturate(1.1) brightness(0.7) contrast(1.1) hue-rotate(200deg) !important;
+    }
+    #distance-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(2,6,23,0.85);
+      color: ${mood.primary};
+      font-size: 10px;
+      font-weight: 700;
+      font-family: monospace;
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid ${mood.primary}55;
+      pointer-events: none;
+      display: none;
+      white-space: nowrap;
+      z-index: 1000;
     }
   </style>
 </head>
-<body>
+<body class="tactical-mode">
   <div id="map"></div>
   <script>
-    var map = L.map('map', { zoomControl: true, attributionControl: false }).setView([${coords.lat}, ${coords.lng}], 16);
+    var map = L.map('map', { zoomControl: false, attributionControl: false }).setView([${coords.lat}, ${coords.lng}], 15);
     
-    var activeLayer = L.tileLayer('${isLight ? "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}"}', {
-      maxZoom: 19
+    var activeLayer = L.tileLayer('${isLight ? "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"}', {
+      maxZoom: 20
     }).addTo(map);
 
     window.toggleMapMode = function(mode) {
-      if (activeLayer) {
-        map.removeLayer(activeLayer);
-      }
+      if (activeLayer) map.removeLayer(activeLayer);
       if (mode === 'satellite') {
-        activeLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', { maxZoom: 19 }).addTo(map);
+        document.body.classList.remove('tactical-mode');
+        activeLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', { maxZoom: 20 }).addTo(map);
       } else {
-        activeLayer = L.tileLayer('${isLight ? "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}"}', { maxZoom: 19 }).addTo(map);
+        document.body.classList.add('tactical-mode');
+        activeLayer = L.tileLayer('${isLight ? "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"}', { maxZoom: 20 }).addTo(map);
       }
     };
 
@@ -785,22 +861,65 @@ export default function AgentTrackingScreen() {
       iconAnchor: [20, 20] 
     });
 
-    // Hub Marker
-    L.circleMarker([11.6670, 92.7359], { color: '#64748B', radius: 5, fillOpacity: 1 }).addTo(map);
-
     var agentMarker = L.marker([${coords.lat}, ${coords.lng}], { icon: agentIcon }).addTo(map);
     var custMarker = L.marker([${destLat}, ${destLng}], { icon: harborIcon }).addTo(map);
 
-    // Dotted line route
+    // Fallback straight dashed line (shown until route loads)
     var routeLine = L.polyline([
       [${coords.lat}, ${coords.lng}],
       [${destLat}, ${destLng}]
-    ], { color: '${mood.primary}', weight: 3, dashArray: '5, 5' }).addTo(map);
+    ], { color: '${mood.primary}', weight: 2, dashArray: '6, 8', opacity: 0.4 }).addTo(map);
+
+    // OSRM real road routing (motorbike = car profile, closest publicly available)
+    function fetchRoute(fromLat, fromLng) {
+      var url = 'https://router.project-osrm.org/route/v1/driving/' +
+        fromLng + ',' + fromLat + ';' +
+        '${destLng},${destLat}' +
+        '?overview=full&geometries=geojson';
+      
+      fetch(url)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (!data.routes || !data.routes.length) return;
+          var route = data.routes[0];
+          var coords = route.geometry.coordinates.map(function(c) { return [c[1], c[0]]; });
+          
+          // Remove old route line
+          if (routeLine) map.removeLayer(routeLine);
+          
+          // Draw real road route
+          routeLine = L.polyline(coords, {
+            color: '${mood.primary}',
+            weight: 4,
+            opacity: 0.9,
+          }).addTo(map);
+
+          // Show distance badge on route midpoint
+          var distKm = (route.distance / 1000).toFixed(1);
+          var durationMin = Math.round(route.duration / 60);
+          var mid = coords[Math.floor(coords.length / 2)];
+          L.marker(mid, {
+            icon: L.divIcon({
+              html: '<div style="background:rgba(2,6,23,0.9);color:${mood.primary};font-size:9px;font-weight:700;font-family:monospace;padding:3px 7px;border-radius:5px;border:1px solid ${mood.primary}55;white-space:nowrap;">' + distKm + ' km · ' + durationMin + ' min</div>',
+              className: '',
+              iconAnchor: [30, 10]
+            })
+          }).addTo(map);
+
+          // Fit map to show full route
+          map.fitBounds(routeLine.getBounds(), { padding: [30, 30] });
+        })
+        .catch(function(e) { console.warn('Route fetch error:', e); });
+    }
+
+    // Initial route fetch
+    fetchRoute(${coords.lat}, ${coords.lng});
 
     window.updateTelemetry = function(lat, lng) {
       var newLatLng = new L.LatLng(lat, lng);
       agentMarker.setLatLng(newLatLng);
-      routeLine.setLatLngs([newLatLng, custMarker.getLatLng()]);
+      // Refresh route from new position
+      fetchRoute(lat, lng);
     };
   </script>
 </body>
@@ -831,8 +950,9 @@ export default function AgentTrackingScreen() {
           </View>
         </View>
 
-        {/* BOTTOM-RIGHT HUD — toggle + recenter + enlarge buttons */}
+        {/* BOTTOM-RIGHT HUD — layers + zoom + recenter + navigate + enlarge buttons */}
         <View style={{ position: 'absolute', bottom: 12, right: 12, gap: 6 }}>
+          {/* Satellite/Street Toggle */}
           <Pressable
             onPress={toggleMapMode}
             style={{
@@ -846,6 +966,35 @@ export default function AgentTrackingScreen() {
           >
             <LayersIcon color={mapMode === 'satellite' ? '#FFFFFF' : mood.primary} />
           </Pressable>
+          {/* Zoom In */}
+          <Pressable
+            onPress={zoomInMap}
+            style={{
+              width: 36, height: 36,
+              borderRadius: 6,
+              borderWidth: 1, borderColor: mood.primary + '4D',
+              backgroundColor: 'rgba(2,6,23,0.88)',
+              alignItems: 'center', justifyContent: 'center',
+              transform: [{ skewX: '-8deg' }]
+            }}
+          >
+            <ZoomInIcon color={mood.primary} />
+          </Pressable>
+          {/* Zoom Out */}
+          <Pressable
+            onPress={zoomOutMap}
+            style={{
+              width: 36, height: 36,
+              borderRadius: 6,
+              borderWidth: 1, borderColor: mood.primary + '4D',
+              backgroundColor: 'rgba(2,6,23,0.88)',
+              alignItems: 'center', justifyContent: 'center',
+              transform: [{ skewX: '-8deg' }]
+            }}
+          >
+            <ZoomOutIcon color={mood.primary} />
+          </Pressable>
+          {/* Recenter */}
           <Pressable
             onPress={recenterMap}
             style={{
@@ -859,8 +1008,23 @@ export default function AgentTrackingScreen() {
           >
             <NavigationIcon color={mood.primary} />
           </Pressable>
+          {/* Open in phone GPS / Google Maps */}
           <Pressable
-            onPress={() => setIsMapEnlarged(!isEnlarged)}
+            onPress={openInMaps}
+            style={{
+              width: 36, height: 36,
+              borderRadius: 6,
+              borderWidth: 1, borderColor: '#10B981' + '80',
+              backgroundColor: 'rgba(16,185,129,0.15)',
+              alignItems: 'center', justifyContent: 'center',
+              transform: [{ skewX: '-8deg' }]
+            }}
+          >
+            <ExternalMapIcon color="#10B981" />
+          </Pressable>
+          {/* Enlarge / Minimize */}
+          <Pressable
+            onPress={() => setIsMapEnlarged(!isMapEnlarged)}
             style={{
               width: 36, height: 36,
               borderRadius: 6,
