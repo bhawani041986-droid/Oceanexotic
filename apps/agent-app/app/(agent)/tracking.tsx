@@ -522,14 +522,21 @@ export default function AgentTrackingScreen() {
     let locationSubscription: Location.LocationSubscription | null = null;
 
     const startTracking = async () => {
-      if (missionState !== "IN_TRANSIT") return;
-
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        toast("GPS Permission Denied. Cannot track mission.", "error");
+        toast("GPS Permission Denied. Cannot track location.", "error");
         return;
       }
 
+      // Resolve initial coordinates immediately
+      try {
+        const initialLoc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Balanced });
+        setCoords({ lat: initialLoc.coords.latitude, lng: initialLoc.coords.longitude });
+      } catch (e) {
+        console.warn("Could not fetch immediate position fallback:", e);
+      }
+
+      // Continuously watch for movement to keep marker updated
       locationSubscription = await Location.watchPositionAsync(
         {
           accuracy: Location.Accuracy.High,
@@ -542,13 +549,15 @@ export default function AgentTrackingScreen() {
           
           setCoords({ lat: newLat, lng: newLng });
 
-          const deltaLat = destLat - newLat;
-          const deltaLng = destLng - newLng;
-          const distance = Math.sqrt(deltaLat * deltaLat + deltaLng * deltaLng);
+          if (missionState === "IN_TRANSIT") {
+            const deltaLat = destLat - newLat;
+            const deltaLng = destLng - newLng;
+            const distance = Math.sqrt(deltaLat * deltaLat + deltaLng * deltaLng);
 
-          // Auto-Arrival Trigger if within range
-          if (distance < 0.0004) {
-            handleStateTransition("ARRIVED");
+            // Auto-Arrival Trigger if within range
+            if (distance < 0.0004) {
+              handleStateTransition("ARRIVED");
+            }
           }
         }
       );
