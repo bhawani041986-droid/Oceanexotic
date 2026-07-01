@@ -470,7 +470,19 @@ export default function AgentSupportScreen() {
           {messages.map((msg) => {
             const isMe = msg.sender_id === agentId;
 
-            // Optional generic system message logic if needed based on metadata/sender
+            // Filter out [VIDEO_CALL_INVITE] messages — show as system call event
+            if (msg.message_text && msg.message_text.includes('[VIDEO_CALL_INVITE]:')) {
+              return (
+                <View key={msg.id} className="items-center my-4">
+                  <View className="px-4 py-2.5 rounded-none border" style={{ borderColor: mood.primary + '40', backgroundColor: mood.primary + '08', flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                    <VideoIcon color={mood.primary} />
+                    <Text style={{ color: mood.primary, fontSize: 10, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 1.5 }}>Video Call Initiated</Text>
+                  </View>
+                </View>
+              );
+            }
+
+            // System messages (admin notices, etc.)
             if (msg.message_type === 'SYSTEM' || msg.sender_id === 'system') {
               return (
                 <View key={msg.id} className="items-center my-4">
@@ -534,7 +546,8 @@ export default function AgentSupportScreen() {
                       </Pressable>
                     )
                   ) : null}
-                  {msg.message_text ? (
+                  {/* Only show message_text if it's real user content, not the attachment fallback label */}
+                  {msg.message_text && msg.message_text !== '📎 Attachment' ? (
                     <Text className="text-[12px] font-medium leading-relaxed" style={{ color: mood.text }}>
                       {msg.message_text}
                     </Text>
