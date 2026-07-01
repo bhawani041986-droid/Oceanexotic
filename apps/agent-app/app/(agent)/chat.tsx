@@ -285,22 +285,11 @@ export default function AgentSupportScreen() {
     );
   };
 
-  const handleInitiateVideoCall = async () => {
-    if (!activeConv) return;
-    try {
-      const roomID = `room_${activeConv.id}_${Date.now()}`;
-      await api.post(`/chat/video_call/start`, {
-        room_id: roomID,
-        caller_id: agentId,
-        conversation_id: activeConv.id
-      });
-      // Web will handle it on their end via polling. We just join the room:
-      const fullUrl = api.defaults.baseURL?.replace('/api', '') || "https://oceanexotic.com";
-      setVideoUrl(`${fullUrl}/agent/video-room?room=${roomID}&user=${agentId}`);
-    } catch (err) {
-      console.error(err);
-      Alert.alert("Error", "Could not establish video uplink.");
-    }
+  // Video calls can only be initiated by Admin — agent is receive-only
+  // The videoUrl state is set when admin sends a call invitation via polling (future)
+  const handleIncomingCall = (roomId: string) => {
+    const fullUrl = api.defaults.baseURL?.replace('/api', '') || "https://oceanexotic.com";
+    setVideoUrl(`${fullUrl}/agent/video-room?room=${roomId}&user=${agentId}`);
   };
 
   return (
@@ -389,13 +378,20 @@ export default function AgentSupportScreen() {
                 </View>
               </View>
               
-              <Pressable 
-                onPress={handleInitiateVideoCall}
-                className="w-10 h-10 rounded-none items-center justify-center border active:scale-95 transition-transform"
-                style={{ backgroundColor: mood.primary + "15", borderColor: mood.primary + "50" }}
+              {/* Video call — receive only, admin initiates */}
+              <View
+                style={{
+                  width: 40, height: 40,
+                  borderRadius: 0,
+                  alignItems: 'center', justifyContent: 'center',
+                  borderWidth: 1,
+                  borderColor: 'rgba(255,255,255,0.08)',
+                  backgroundColor: 'rgba(255,255,255,0.04)',
+                  opacity: 0.45,
+                }}
               >
                 <VideoIcon color={mood.primary} />
-              </Pressable>
+              </View>
             </View>
 
         {/* Chat Log */}
