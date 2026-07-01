@@ -142,28 +142,32 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
           lng,
           is_online: true
         })
-      }).catch(console.error);
+      }).catch(() => {
+        // Silently ignore presence broadcast failures (network/offline)
+      });
     };
 
     if ('geolocation' in navigator) {
-      // Immediate broadcast
+      // Immediate broadcast — silent error handler prevents Next.js overlay
       navigator.geolocation.getCurrentPosition(
         (pos) => broadcastPresence(pos.coords.latitude, pos.coords.longitude),
-        (err) => console.error("Geo Error:", err),
-        { enableHighAccuracy: true }
+        () => { /* Permission denied or unavailable — non-fatal */ },
+        { enableHighAccuracy: true, timeout: 10000 }
       );
-      
+
       // Watch for movement
       watchId = navigator.geolocation.watchPosition(
         (pos) => broadcastPresence(pos.coords.latitude, pos.coords.longitude),
-        (err) => console.error("Geo Watch Error:", err),
-        { enableHighAccuracy: true, maximumAge: 10000, timeout: 5000 }
+        () => { /* Watch error — non-fatal, will retry on next movement */ },
+        { enableHighAccuracy: true, maximumAge: 10000, timeout: 10000 }
       );
-      
+
       // Heartbeat every 2 minutes
       const heartbeat = setInterval(() => {
         navigator.geolocation.getCurrentPosition(
-          (pos) => broadcastPresence(pos.coords.latitude, pos.coords.longitude)
+          (pos) => broadcastPresence(pos.coords.latitude, pos.coords.longitude),
+          () => { /* Heartbeat geo error — non-fatal */ },
+          { enableHighAccuracy: false, timeout: 10000 }
         );
       }, 120000);
 
