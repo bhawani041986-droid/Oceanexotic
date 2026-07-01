@@ -54,7 +54,7 @@
         "expo-camera",
         {
           "cameraPermission": "OceanExotic Agent needs camera access to scan customer QR codes for delivery confirmation.",
-          "microphonePermission": false
+          "microphonePermission": "OceanExotic Agent needs microphone access to communicate in video support calls."
         }
       ]
     ],
@@ -67,6 +67,6 @@
         "projectId": "bff592f5-1373-485d-b557-24533f9ea7be"
       }
     },
-    "owner": "bhawani_fish"
+    "owner": "ocean-final-2"
   }
 }
