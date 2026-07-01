@@ -824,12 +824,13 @@ export default function AgentTrackingScreen() {
     }
   </style>
 </head>
-<body class="tactical-mode">
+<body>
   <div id="map"></div>
   <script>
     var map = L.map('map', { zoomControl: false, attributionControl: false }).setView([${coords.lat}, ${coords.lng}], 15);
     
-    var activeLayer = L.tileLayer('${isLight ? "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"}', {
+    // Default to satellite (Google Maps imagery)
+    var activeLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
       maxZoom: 20
     }).addTo(map);
 
