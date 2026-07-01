@@ -26,11 +26,12 @@ export async function POST(request: Request) {
 
     if (insertError) throw insertError;
 
-    // Update conversation last_message
+    // Update conversation last_message — use fallback text for attachments
+    const previewText = message_text || '📎 Attachment';
     const { error: updateError } = await supabase
       .from('chat_conversations')
       .update({
-        last_message_text: message_text,
+        last_message_text: previewText,
         last_message_time: new Date().toISOString()
       })
       .eq('id', conversation_id);

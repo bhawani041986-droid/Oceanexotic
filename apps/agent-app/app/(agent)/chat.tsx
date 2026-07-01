@@ -84,8 +84,28 @@ export default function AgentSupportScreen() {
   const [newChatModal, setNewChatModal] = useState(false);
   const [newChatTarget, setNewChatTarget] = useState("");
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const [adminContacts, setAdminContacts] = useState<any[]>([]);
+  const [loadingContacts, setLoadingContacts] = useState(false);
 
   const scrollViewRef = useRef<ScrollView>(null);
+
+  // Fetch admin contacts for the New Chat picker
+  const fetchAdminContacts = async () => {
+    setLoadingContacts(true);
+    try {
+      const res = await api.get(`/admin/get_users`);
+      if (Array.isArray(res.data)) {
+        // Only show admins — agents should only start chats with admins
+        const admins = res.data.filter((u: any) => u.role === 'Admin' || u.role === 'admin' || u.id === 'ADM-001');
+        setAdminContacts(admins.length > 0 ? admins : [{ id: 'ADM-001', name: 'OceanExotic Support', role: 'Admin', avatar_url: null }]);
+      }
+    } catch {
+      // Fallback to default support admin
+      setAdminContacts([{ id: 'ADM-001', name: 'OceanExotic Support', role: 'Admin', avatar_url: null }]);
+    } finally {
+      setLoadingContacts(false);
+    }
+  };
 
   async function createDefaultSupportConversation() {
     if (!agentId) return;
@@ -140,7 +160,8 @@ export default function AgentSupportScreen() {
   const fetchMessages = async (convId: string) => {
     try {
       const res = await api.get(`/chat/get_messages`, {
-        params: { conversation_id: convId, t: Date.now() }
+        // Pass user_id so backend marks incoming messages as read
+        params: { conversation_id: convId, user_id: agentId, t: Date.now() }
       });
       if (Array.isArray(res.data)) {
         setMessages(res.data);
@@ -229,7 +250,7 @@ export default function AgentSupportScreen() {
         const res = await api.post(`/chat/send_message`, {
           conversation_id: activeConv.id,
           sender_id: agentId,
-          message_text: '',
+          message_text: '📎 Attachment',  // Bug 3 fix: non-blank so conv list shows something
           message_type: 'IMAGE',
           attachment_url: uploadRes.data.url
         });
@@ -325,7 +346,10 @@ export default function AgentSupportScreen() {
                     key={conv.id} 
                     onPress={() => setActiveConv(conv)}
                     className="flex-row items-center p-4 mb-3 border rounded-none"
-                    style={{ backgroundColor: "rgba(0,0,0,0.2)", borderColor: mood.border }}
+                    style={{
+                      backgroundColor: conv.unread_count > 0 ? mood.primary + '10' : 'rgba(0,0,0,0.2)',
+                      borderColor: conv.unread_count > 0 ? mood.primary + '60' : mood.border
+                    }}
                   >
                     {conv.other_party_avatar ? (
                       <Image source={{ uri: conv.other_party_avatar }} className="w-10 h-10 rounded-none mr-3 bg-slate-800" style={{ borderWidth: 1, borderColor: mood.primary }} />
@@ -337,9 +361,20 @@ export default function AgentSupportScreen() {
                     <View className="flex-1">
                       <View className="flex-row justify-between items-center">
                         <Text className="font-bold text-sm uppercase" style={{ color: mood.text }}>{conv.other_party_name}</Text>
-                        <Text className="text-[10px] font-bold text-slate-500">{conv.time}</Text>
+                        <View className="flex-row items-center gap-2">
+                          {conv.unread_count > 0 && (
+                            <View style={{ backgroundColor: mood.primary, borderRadius: 99, minWidth: 18, height: 18, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4 }}>
+                              <Text style={{ color: isLight ? '#FFFFFF' : '#020617', fontSize: 9, fontWeight: '900' }}>{conv.unread_count}</Text>
+                            </View>
+                          )}
+                          <Text className="text-[10px] font-bold text-slate-500">{conv.time}</Text>
+                        </View>
                       </View>
-                      <Text className="text-[11px] font-medium mt-1 truncate text-slate-400" numberOfLines={1}>{conv.last_message}</Text>
+                      <Text
+                        className="text-[11px] mt-1 truncate"
+                        style={{ color: conv.unread_count > 0 ? mood.text : '#94A3B8', fontWeight: conv.unread_count > 0 ? '700' : '500' }}
+                        numberOfLines={1}
+                      >{conv.last_message}</Text>
                     </View>
                   </Pressable>
                 ))}
@@ -398,7 +433,7 @@ export default function AgentSupportScreen() {
         <ScrollView 
           ref={scrollViewRef}
           className="flex-1 mb-4"
-          contentContainerStyle={{ paddingBottom: 20 }}
+          contentContainerStyle={{ paddingBottom: 20, flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
         >
           {messages.map((msg) => {
@@ -480,6 +515,18 @@ export default function AgentSupportScreen() {
               </Pressable>
             );
           })}
+          {/* Empty state */}
+          {messages.length === 0 && (
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingVertical: 40 }}>
+              <Text style={{ fontSize: 28, marginBottom: 10 }}>💬</Text>
+              <Text style={{ color: '#475569', fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 2, textAlign: 'center' }}>
+                No messages yet
+              </Text>
+              <Text style={{ color: '#475569', fontSize: 11, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 2, textAlign: 'center', marginTop: 2 }}>
+                Say hello!
+              </Text>
+            </View>
+          )}
         </ScrollView>
 
         {/* Input Area */}
@@ -523,26 +570,68 @@ export default function AgentSupportScreen() {
         )}
       </View>
 
-      {/* NEW CHAT MODAL */}
-      <Modal visible={newChatModal} animationType="slide" transparent>
-        <View className="flex-1 justify-center items-center p-6" style={{ backgroundColor: 'rgba(2,6,23,0.95)' }}>
-          <View className="w-full p-6 border rounded-none" style={{ backgroundColor: '#0F172A', borderColor: mood.primary }}>
-            <Text className="text-sm font-black uppercase tracking-widest mb-4" style={{ color: mood.primary }}>Initiate Secure Uplink</Text>
-            <Text className="text-xs font-bold text-slate-400 mb-2">Enter Target ID (e.g. ADM-001 or SELLER-10)</Text>
-            <TextInput
-              value={newChatTarget}
-              onChangeText={setNewChatTarget}
-              placeholder="TARGET ID"
-              placeholderTextColor="rgba(255,255,255,0.2)"
-              className="border p-3 rounded-none text-white font-bold mb-6"
-              style={{ borderColor: mood.border, backgroundColor: 'rgba(255,255,255,0.05)' }}
-            />
-            <View className="flex-row gap-4">
-              <Pressable onPress={() => setNewChatModal(false)} className="flex-1 p-3 border rounded-none items-center" style={{ borderColor: mood.border }}>
-                <Text className="text-white font-bold text-[10px] uppercase tracking-widest">Abort</Text>
+      {/* NEW CHAT MODAL — Admin Contact Picker */}
+      <Modal
+        visible={newChatModal}
+        animationType="slide"
+        transparent
+        onShow={fetchAdminContacts}
+      >
+        <View className="flex-1 justify-end" style={{ backgroundColor: 'rgba(2,6,23,0.9)' }}>
+          <View style={{ backgroundColor: '#0F172A', borderTopWidth: 1, borderColor: mood.primary, borderTopLeftRadius: 16, borderTopRightRadius: 16, padding: 24, maxHeight: '70%' }}>
+            <View className="flex-row items-center justify-between mb-5">
+              <View>
+                <Text style={{ color: mood.primary, fontSize: 12, fontWeight: '900', textTransform: 'uppercase', letterSpacing: 2 }}>New Conversation</Text>
+                <Text style={{ color: '#475569', fontSize: 10, fontWeight: '600', marginTop: 2 }}>Select a contact to message</Text>
+              </View>
+              <Pressable onPress={() => { setNewChatModal(false); setNewChatTarget(''); }} style={{ padding: 8, borderRadius: 0, backgroundColor: 'rgba(255,255,255,0.05)', borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)' }}>
+                <Text style={{ color: '#94A3B8', fontWeight: '700', fontSize: 11 }}>✕</Text>
               </Pressable>
-              <Pressable onPress={startNewChat} className="flex-1 p-3 rounded-none items-center" style={{ backgroundColor: mood.primary }}>
-                <Text className="text-[#0F172A] font-black text-[10px] uppercase tracking-widest">Initiate</Text>
+            </View>
+
+            {loadingContacts ? (
+              <ActivityIndicator color={mood.primary} style={{ marginVertical: 24 }} />
+            ) : (
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {adminContacts.map(contact => (
+                  <Pressable
+                    key={contact.id}
+                    onPress={() => { setNewChatTarget(contact.id); }}
+                    style={{
+                      flexDirection: 'row', alignItems: 'center',
+                      padding: 14, marginBottom: 8, borderWidth: 1,
+                      borderRadius: 0,
+                      borderColor: newChatTarget === contact.id ? mood.primary : 'rgba(255,255,255,0.08)',
+                      backgroundColor: newChatTarget === contact.id ? mood.primary + '18' : 'rgba(255,255,255,0.03)',
+                    }}
+                  >
+                    <View style={{ width: 36, height: 36, borderRadius: 0, backgroundColor: mood.primary + '22', alignItems: 'center', justifyContent: 'center', marginRight: 12, borderWidth: 1, borderColor: mood.primary + '40' }}>
+                      <MonitorIcon color={mood.primary} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={{ color: '#F1F5F9', fontSize: 13, fontWeight: '700' }}>{contact.name}</Text>
+                      <Text style={{ color: '#475569', fontSize: 10, fontWeight: '600', marginTop: 1 }}>{contact.role} · {contact.id}</Text>
+                    </View>
+                    {newChatTarget === contact.id && (
+                      <View style={{ width: 20, height: 20, borderRadius: 99, backgroundColor: mood.primary, alignItems: 'center', justifyContent: 'center' }}>
+                        <Text style={{ color: '#020617', fontSize: 11, fontWeight: '900' }}>✓</Text>
+                      </View>
+                    )}
+                  </Pressable>
+                ))}
+              </ScrollView>
+            )}
+
+            <View style={{ flexDirection: 'row', gap: 10, marginTop: 16 }}>
+              <Pressable onPress={() => { setNewChatModal(false); setNewChatTarget(''); }} style={{ flex: 1, padding: 13, borderWidth: 1, borderColor: 'rgba(255,255,255,0.12)', alignItems: 'center' }}>
+                <Text style={{ color: '#94A3B8', fontWeight: '700', fontSize: 11, textTransform: 'uppercase', letterSpacing: 1.5 }}>Cancel</Text>
+              </Pressable>
+              <Pressable
+                onPress={startNewChat}
+                disabled={!newChatTarget}
+                style={{ flex: 1, padding: 13, backgroundColor: newChatTarget ? mood.primary : '#1E293B', alignItems: 'center', opacity: newChatTarget ? 1 : 0.5 }}
+              >
+                <Text style={{ color: newChatTarget ? (isLight ? '#FFFFFF' : '#020617') : '#475569', fontWeight: '900', fontSize: 11, textTransform: 'uppercase', letterSpacing: 1.5 }}>Start Chat</Text>
               </Pressable>
             </View>
           </View>
