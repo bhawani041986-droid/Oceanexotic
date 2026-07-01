@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { NativeVideoCall } from '@/components/video/NativeVideoCall';
 
-export default function StandaloneVideoRoom() {
+function VideoRoomContent() {
   const searchParams = useSearchParams();
   const roomID = searchParams.get('room');
   const userID = searchParams.get('user');
@@ -36,5 +36,13 @@ export default function StandaloneVideoRoom() {
         }}
       />
     </div>
+  );
+}
+
+export default function StandaloneVideoRoom() {
+  return (
+    <Suspense fallback={<div className="p-10 text-white font-black">Initializing Secure Uplink...</div>}>
+      <VideoRoomContent />
+    </Suspense>
   );
 }
