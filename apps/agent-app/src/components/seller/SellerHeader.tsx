@@ -107,7 +107,7 @@ export function SellerHeader() {
 
       {/* Center Logo */}
       <View className="flex-1 items-center justify-center pr-2">
-        <Logo size="sm" style={{ width: 100, height: 26 }} />
+        <Logo size="sm" style={{ width: 144, height: 40 }} />
       </View>
 
       {/* Right Controls */}
@@ -155,7 +155,7 @@ export function SellerHeader() {
           >
             <View className="gap-6">
               <View className="flex-row items-center justify-between">
-                <Logo size="sm" style={{ width: 128, height: 32 }} />
+                <Logo size="sm" style={{ width: 144, height: 40 }} />
                 <Pressable 
                   onPress={() => setIsMenuOpen(false)} 
                   className="h-7 w-7 rounded-none border items-center justify-center active:opacity-70 bg-white/5"
