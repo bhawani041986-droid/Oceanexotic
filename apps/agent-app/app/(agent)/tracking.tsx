@@ -737,7 +737,7 @@ export default function AgentTrackingScreen() {
         width: 28px !important;
         height: 28px !important;
     }
-    #map.tactical-theme .leaflet-tile {
+    .leaflet-tile {
       filter: saturate(1.2) brightness(0.65) contrast(1.2) hue-rotate(210deg) !important;
     }
   </style>
@@ -747,30 +747,18 @@ export default function AgentTrackingScreen() {
   <script>
     var map = L.map('map', { zoomControl: true, attributionControl: false }).setView([${coords.lat}, ${coords.lng}], 16);
     
-    var mapMode = '${mapMode}';
-    var isLight = ${isLight};
-    var activeLayer;
-    var mapEl = document.getElementById('map');
-
-    if (mapMode === 'satellite') {
-      activeLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', { maxZoom: 19 }).addTo(map);
-    } else {
-      mapEl.classList.add('tactical-theme');
-      var url = isLight ? "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
-      activeLayer = L.tileLayer(url, { maxZoom: 19 }).addTo(map);
-    }
+    var activeLayer = L.tileLayer('${isLight ? "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}"}', {
+      maxZoom: 19
+    }).addTo(map);
 
     window.toggleMapMode = function(mode) {
       if (activeLayer) {
         map.removeLayer(activeLayer);
       }
       if (mode === 'satellite') {
-        mapEl.classList.remove('tactical-theme');
         activeLayer = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', { maxZoom: 19 }).addTo(map);
       } else {
-        mapEl.classList.add('tactical-theme');
-        var url = isLight ? "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
-        activeLayer = L.tileLayer(url, { maxZoom: 19 }).addTo(map);
+        activeLayer = L.tileLayer('${isLight ? "https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" : "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}"}', { maxZoom: 19 }).addTo(map);
       }
     };
 
