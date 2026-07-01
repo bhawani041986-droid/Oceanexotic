@@ -285,7 +285,7 @@ export default function AgentTrackingScreen() {
   const markerRef = useRef<any>(null);
   const harborMarkerRef = useRef<any>(null);
   const routingRef = useRef<any>(null);
-  const [mapMode, setMapMode] = useState<'tactical' | 'satellite'>('tactical');
+  const [mapMode, setMapMode] = useState<'tactical' | 'satellite'>('satellite');
   const [isMapEnlarged, setIsMapEnlarged] = useState(false);
 
   // Web Leaflet Script & CSS Handshake Loader
@@ -1019,17 +1019,17 @@ export default function AgentTrackingScreen() {
 
 
         {/* TOP-RIGHT — drift progress */}
+        {/* BOTTOM-LEFT — trip progress */}
         <View style={{
-          position: 'absolute', top: 12, right: 12,
+          position: 'absolute', bottom: 12, left: 12,
           backgroundColor: 'rgba(2,6,23,0.82)',
           paddingHorizontal: 10, paddingVertical: 6,
           borderRadius: 10,
           borderWidth: 1, borderColor: mood.primary + '22',
-          alignItems: 'flex-end'
         }}>
-          <Text style={{ fontSize: 6, fontWeight: '900', color: '#475569', textTransform: 'uppercase', letterSpacing: 2 }}>DRIFT PROGRESS</Text>
+          <Text style={{ fontSize: 6, fontWeight: '900', color: '#475569', textTransform: 'uppercase', letterSpacing: 2 }}>TRIP PROGRESS</Text>
           <Text style={{ fontSize: 9, fontWeight: '900', color: mood.primary, marginTop: 2 }}>
-            {Math.round(progressRatio * 100)}% COMPLETE
+            {Math.round(progressRatio * 100)}% Complete
           </Text>
         </View>
       </View>
