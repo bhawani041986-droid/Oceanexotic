@@ -128,10 +128,27 @@ export default function TerritoryWizardPage() {
       const defaultCenter = [11.635017, 92.707942] as [number, number];
       let initialCenter = defaultCenter;
 
-      if (editorModal.coordinates) {
+      if (editorModal.type === "ADMIN_HUB" && editorModal.coordinates) {
         const [lat, lng] = editorModal.coordinates.split(",").map(Number);
         if (!isNaN(lat) && !isNaN(lng) && lat !== 0) {
           initialCenter = [lat, lng];
+        }
+      } else if (editorModal.type === "DELIVERY_ZONE") {
+        if (editorModal.polygon_coordinates && editorModal.polygon_coordinates.length > 0) {
+          const lats = editorModal.polygon_coordinates.map(p => p[0]);
+          const lngs = editorModal.polygon_coordinates.map(p => p[1]);
+          const centerLat = (Math.min(...lats) + Math.max(...lats)) / 2;
+          const centerLng = (Math.min(...lngs) + Math.max(...lngs)) / 2;
+          initialCenter = [centerLat, centerLng];
+        } else {
+          // Center on parent hub
+          const parentNode = territories.find(t => t.id === editorModal.parentId);
+          if (parentNode && parentNode.coordinates) {
+            const [pLat, pLng] = parentNode.coordinates.split(",").map(Number);
+            if (!isNaN(pLat) && !isNaN(pLng) && pLat !== 0) {
+              initialCenter = [pLat, pLng];
+            }
+          }
         }
       }
 
@@ -159,9 +176,33 @@ export default function TerritoryWizardPage() {
           });
         });
       } else if (editorModal.type === "DELIVERY_ZONE") {
+        let activePolygon: any = null;
+
         if (editorModal.polygon_coordinates && editorModal.polygon_coordinates.length > 0) {
-          const polygon = L.polygon(editorModal.polygon_coordinates, { color: '#6366f1' }).addTo(drawnItems);
-          map.fitBounds(polygon.getBounds());
+          activePolygon = L.polygon(editorModal.polygon_coordinates, { color: '#6366f1' }).addTo(drawnItems);
+          
+          // Enable direct vertex editing immediately
+          if (activePolygon.editing) {
+            activePolygon.editing.enable();
+            
+            const updateCoords = () => {
+              const latlngs = activePolygon.getLatLngs()[0];
+              const coords = (Array.isArray(latlngs) ? latlngs : []).map((pt: any) => [pt.lat, pt.lng] as [number, number]);
+              setEditorModal(prev => {
+                if (!prev) return null;
+                return {
+                  ...prev,
+                  polygon_coordinates: coords
+                };
+              });
+            };
+
+            activePolygon.on('edit', updateCoords);
+            activePolygon.on('editvertex', updateCoords);
+            map.on('draw:editvertex', updateCoords);
+          }
+
+          map.fitBounds(activePolygon.getBounds());
         }
 
         if (L.Draw) {
@@ -187,9 +228,31 @@ export default function TerritoryWizardPage() {
             const layer = e.layer;
             drawnItems.clearLayers();
             drawnItems.addLayer(layer);
+            activePolygon = layer;
             
+            // Enable editing on new polygon as well
+            if (activePolygon.editing) {
+              activePolygon.editing.enable();
+              
+              const updateCoords = () => {
+                const latlngs = activePolygon.getLatLngs()[0];
+                const coords = (Array.isArray(latlngs) ? latlngs : []).map((pt: any) => [pt.lat, pt.lng] as [number, number]);
+                setEditorModal(prev => {
+                  if (!prev) return null;
+                  return {
+                    ...prev,
+                    polygon_coordinates: coords
+                  };
+                });
+              };
+
+              activePolygon.on('edit', updateCoords);
+              activePolygon.on('editvertex', updateCoords);
+              map.on('draw:editvertex', updateCoords);
+            }
+
             const latlngs = layer.getLatLngs()[0];
-            const coords = latlngs.map((pt: any) => [pt.lat, pt.lng]);
+            const coords = (Array.isArray(latlngs) ? latlngs : []).map((pt: any) => [pt.lat, pt.lng] as [number, number]);
             setEditorModal(prev => {
               if (!prev) return null;
               return {
@@ -203,7 +266,7 @@ export default function TerritoryWizardPage() {
             const layers = e.layers;
             layers.eachLayer((layer: any) => {
               const latlngs = layer.getLatLngs()[0];
-              const coords = latlngs.map((pt: any) => [pt.lat, pt.lng]);
+              const coords = (Array.isArray(latlngs) ? latlngs : []).map((pt: any) => [pt.lat, pt.lng] as [number, number]);
               setEditorModal(prev => {
                 if (!prev) return null;
                 return {
@@ -215,17 +278,17 @@ export default function TerritoryWizardPage() {
           });
         }
       }
-    }, 100);
 
-    return () => {
-      clearTimeout(timer);
-      const container = document.getElementById('editor-leaflet-map');
-      if (container && (container as any)._leaflet_map) {
-        (container as any)._leaflet_map.remove();
-        delete (container as any)._leaflet_map;
-      }
-      mapRef.current = null;
-    };
+      const containerLeaflet = document.getElementById('editor-leaflet-map');
+      return () => {
+        clearTimeout(timer);
+        if (containerLeaflet && (containerLeaflet as any)._leaflet_map) {
+          (containerLeaflet as any)._leaflet_map.remove();
+          delete (containerLeaflet as any)._leaflet_map;
+        }
+        mapRef.current = null;
+      };
+    }, 100);
   }, [editorModal, isLReady, isDrawReady]);
 
   useEffect(() => {
