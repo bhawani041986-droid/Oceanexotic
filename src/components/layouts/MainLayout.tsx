@@ -407,7 +407,17 @@ export default function MainLayout({ children }: MainLayoutProps) {
               <div className="p-6 md:p-10 space-y-4 lg:border-none">
                  <h4 className="text-[10px] md:text-[12px] font-black text-[var(--c-text-primary)] uppercase tracking-[0.2em]">Connect</h4>
                  <ul className="space-y-2 text-[10px] md:text-base text-[var(--c-text-secondary)] italic mb-4"><li>{settings.contactNumber || "+91 999" }</li><li className="truncate">{settings.email || "dispatch@oceanexotic.com"}</li></ul>
-                 <div className="flex gap-4 text-[var(--c-text-secondary)]"><Instagram className="w-4 h-4" /><Youtube className="w-4 h-4" /><MessageCircle className="w-4 h-4" /></div>
+                 <div className="flex gap-4 text-[var(--c-text-secondary)]">
+                    <a href="https://www.instagram.com/oceanexotic9/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                       <Instagram className="w-4 h-4 hover:text-primary transition-colors" />
+                    </a>
+                    <a href="https://www.facebook.com/profile.php?id=61591470971590" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                       <Facebook className="w-4 h-4 hover:text-primary transition-colors" />
+                    </a>
+                    <a href="https://www.youtube.com/channel/UCX-JtlARsNRozvdDekCkCKg" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                       <Youtube className="w-4 h-4 hover:text-primary transition-colors" />
+                    </a>
+                 </div>
               </div>
            </div>
            <div className="p-6 border-t border-[var(--foreground)]/5 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left bg-black/20">

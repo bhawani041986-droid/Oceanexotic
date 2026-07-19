@@ -23,7 +23,8 @@ import {
   LogOut,
   Instagram,
   Youtube,
-  MessageCircle
+  MessageCircle,
+  Facebook
 } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { useToast } from "@/components/ui/Toast";
@@ -210,7 +211,17 @@ export default function HomeClientWrapper({ children }: { children: React.ReactN
               <div className="md:col-span-2 space-y-10">
                  <Logo size="lg" />
                  <p className="text-lg text-[var(--c-text-secondary)] font-medium italic max-w-sm">Your trusted local source for fresh, premium seafood delivered straight to your home.</p>
-                 <div className="flex gap-6"><Instagram className="w-6 h-6 text-[var(--c-text-secondary)]" /><Youtube className="w-6 h-6 text-[var(--c-text-secondary)]" /><MessageCircle className="w-6 h-6 text-[var(--c-text-secondary)]" /></div>
+                 <div className="flex gap-6">
+                    <a href="https://www.instagram.com/oceanexotic9/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                      <Instagram className="w-6 h-6 text-[var(--c-text-secondary)] hover:text-primary transition-colors" />
+                    </a>
+                    <a href="https://www.facebook.com/profile.php?id=61591470971590" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                      <Facebook className="w-6 h-6 text-[var(--c-text-secondary)] hover:text-primary transition-colors" />
+                    </a>
+                    <a href="https://www.youtube.com/channel/UCX-JtlARsNRozvdDekCkCKg" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                      <Youtube className="w-6 h-6 text-[var(--c-text-secondary)] hover:text-primary transition-colors" />
+                    </a>
+                 </div>
               </div>
               {[ { title: "Marketplace", items: ["Fresh Catch", "Premium Seafood", "New Arrivals"] }, { title: "About Us", items: ["Our Fishermen", "Our Story", "Contact Us"] }, { title: "Legal", items: ["Privacy Policy", "Terms of Service", "Return Policy"] } ].map((sec) => (
                 <div key={sec.title} className="space-y-8">
