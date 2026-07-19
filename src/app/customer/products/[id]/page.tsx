@@ -35,12 +35,42 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     notFound();
   }
 
+  const schemaJson = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": baseline?.name || liveData?.name,
+    "image": baseline?.images || [liveData?.image],
+    "description": baseline?.description || liveData?.description,
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "INR",
+      "price": liveData?.price || baseline?.price,
+      "itemCondition": "https://schema.org/NewCondition",
+      "availability": liveData?.status === 'AVAILABLE' ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      "priceValidUntil": "2027-12-31",
+      "shippingDetails": {
+        "@type": "OfferShippingDetails",
+        "shippingDestination": {
+          "@type": "DefinedRegion",
+          "addressCountry": "IN",
+          "addressRegion": "Andaman and Nicobar Islands"
+        }
+      }
+    }
+  };
+
   return (
-    <ProductDetailClient 
-      initialProduct={liveData} 
-      initialCutOptions={cutOptionsData.cut_options} 
-      baseline={baseline}
-      productId={id}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaJson) }}
+      />
+      <ProductDetailClient 
+        initialProduct={liveData} 
+        initialCutOptions={cutOptionsData.cut_options} 
+        baseline={baseline}
+        productId={id}
+      />
+    </>
   );
 }

@@ -233,8 +233,37 @@ export default function CustomerRecipeDetailsPage() {
     }
   };
 
+  const recipeSchema = useMemo(() => {
+    if (!recipe || !recipe.title) return null;
+    return {
+      "@context": "https://schema.org",
+      "@type": "Recipe",
+      "name": recipe.title,
+      "image": recipe.image_url,
+      "description": `Delicious seafood recipe for cooking ${recipe.title} (${recipe.fishType}) Andaman style.`,
+      "prepTime": "PT10M",
+      "cookTime": "PT15M",
+      "totalTime": "PT25M",
+      "recipeYield": "2 servings",
+      "recipeCategory": "Entree",
+      "recipeCuisine": "Andaman Local",
+      "recipeIngredient": recipe.ingredients || [],
+      "recipeInstructions": (recipe.steps || []).map((step: string, idx: number) => ({
+        "@type": "HowToStep",
+        "text": step,
+        "position": idx + 1
+      }))
+    };
+  }, [recipe]);
+
   return (
     <div className="min-h-screen bg-[var(--c-bg)] text-[var(--c-text-primary)] font-sans relative pb-32 overflow-hidden">
+      {recipeSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(recipeSchema) }}
+        />
+      )}
       
       {/* Background ambiance */}
       <div className="absolute top-0 left-0 right-0 h-[400px] bg-gradient-to-b from-[var(--c-primary)]/5 via-transparent to-transparent pointer-events-none" />
