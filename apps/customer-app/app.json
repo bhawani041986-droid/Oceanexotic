@@ -47,8 +47,18 @@
         }
       ],
       "expo-video",
-      "expo-web-browser",
-      "@react-native-google-signin/google-signin"
+      [
+        "expo-web-browser",
+        {
+          "intentSchemes": ["https", "http", "oceanexotic"]
+        }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.843916088941-9kbsr70p54u5ob8spu816grl17bq3enq"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

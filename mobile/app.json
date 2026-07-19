@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "OceanExotic",
-    "slug": "oceanexotic-mobile",
+    "name": "Ocean Exotic Global",
+    "slug": "oceanexotic",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "oceanexotic",
@@ -17,8 +17,7 @@
       "assets/**"
     ],
     "android": {
-      "usesCleartextTraffic": true,
-      "package": "com.bhawaniocean.oceanexoticmobile",
+      "package": "com.oceanexotic.customer",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#050B18"
@@ -38,8 +37,28 @@
     },
     "plugins": [
       "expo-router",
+      "./withSplitApks.js",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
       "expo-video",
-      "expo-localization"
+      [
+        "expo-web-browser",
+        {
+          "intentSchemes": ["https", "http", "oceanexotic"]
+        }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.843916088941-9kbsr70p54u5ob8spu816grl17bq3enq"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
@@ -47,8 +66,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "d3e5e431-5d87-4a25-a2fa-1d8c0e3f234f"
+        "projectId": "80edfc37-67bb-487c-941f-c6da2d339741"
       }
-    }
+    },
+    "owner": "ocean-final-2"
   }
 }
