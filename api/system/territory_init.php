@@ -14,7 +14,7 @@ try {
         name VARCHAR(100) NOT NULL,
         zone_type ENUM('ISLAND', 'PORT', 'JETTY', 'WARD') NOT NULL,
         parent_id INT NULL,
-        coordinates VARCHAR(100) NULL,
+        coordinates TEXT NULL,
         status ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         INDEX (parent_id),
