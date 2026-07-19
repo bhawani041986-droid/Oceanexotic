@@ -397,7 +397,7 @@ export default function TerritoryWizardPage() {
   };
 
   return (
-    <div className="space-y-8 pb-24 max-w-7xl mx-auto animate-fade-in px-4">
+    <div className="space-y-8 pb-24 w-full animate-fade-in">
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-4">
