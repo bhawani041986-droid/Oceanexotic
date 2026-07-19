@@ -55,7 +55,7 @@ const AREA_COORDINATES: Record<string, [number, number]> = {
 function getDeliveryArea(address: string): string {
   const addr = (address || '').toLowerCase();
   if (addr.includes('havelock') || addr.includes('swaraj dweep')) return 'Havelock Island';
-  if (addr.includes('neil island') || addr.includes('shaheed dweep')) return 'Neil Island';
+  if (addr.includes('neil') || addr.includes('shaheed')) return 'Neil Island';
   if (addr.includes('bambooflat') || addr.includes('bamboo flat')) return 'Bambooflat';
   if (addr.includes('garacharma')) return 'Garacharma';
   if (addr.includes('diglipur')) return 'Diglipur';
@@ -65,6 +65,10 @@ function getDeliveryArea(address: string): string {
   if (addr.includes('haddo')) return 'Haddo';
   if (addr.includes('phoenix bay')) return 'Phoenix Bay';
   if (addr.includes('aberdeen')) return 'Aberdeen Bazaar';
+  if (addr.includes('minibay') || addr.includes('minnie bay')) return 'Minibay';
+  if (addr.includes('dollygunj')) return 'Dollygunj';
+  if (addr.includes('atamphad') || addr.includes('attam pahad')) return 'Atamphad';
+  if (addr.includes('bhatubasti') || addr.includes('bathubasti')) return 'Bhatubasti';
   return 'Port Blair';
 }
 
@@ -247,6 +251,7 @@ export default function AdminOrders() {
   const [mapTimeFilter, setMapTimeFilter] = useState<'all' | 'active' | 'today_delivered' | 'this_week'>('all');
 
   const [statusFilter, setStatusFilter] = useState("ALL");
+  const [zoneFilter, setZoneFilter] = useState("ALL");
   const [exportRange, setExportRange] = useState("ALL");
   const [exportFormat, setExportFormat] = useState("REPORT"); // REPORT or GSTR1
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
@@ -576,9 +581,10 @@ export default function AdminOrders() {
       const matchesSearch = String(o.id).toLowerCase().includes(searchTerm.toLowerCase()) ||
                           String(o.customer_name || '').toLowerCase().includes(searchTerm.toLowerCase());
       const matchesStatus = statusFilter === "ALL" || o.status === statusFilter;
-      return matchesSearch && matchesStatus;
+      const matchesZone = zoneFilter === "ALL" || getDeliveryArea(o.delivery_address || '') === zoneFilter;
+      return matchesSearch && matchesStatus && matchesZone;
     });
-  }, [searchTerm, statusFilter, orders]);
+  }, [searchTerm, statusFilter, zoneFilter, orders]);
 
   const mapFilteredOrders = useMemo(() => {
     return orders.filter(o => {
@@ -766,6 +772,37 @@ export default function AdminOrders() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
+                    {/* Delivery Zone Filter */}
+                    <div className="relative flex justify-center bg-[var(--foreground)]/5 p-1 px-2 border border-[var(--foreground)]/5 rounded-xl h-8 items-center">
+                      <select 
+                          value={zoneFilter}
+                          onChange={(e) => {
+                              setZoneFilter(e.target.value);
+                              setCurrentPage(1);
+                          }}
+                          className="bg-transparent text-[8px] font-black uppercase tracking-widest italic outline-none pl-2 pr-6 appearance-none cursor-pointer text-[var(--foreground)]"
+                      >
+                          <option value="ALL" className="bg-bg-secondary text-[var(--foreground)]">ALL ZONES</option>
+                          <option value="Minibay" className="bg-bg-secondary text-[var(--foreground)]">MINIBAY</option>
+                          <option value="Dollygunj" className="bg-bg-secondary text-[var(--foreground)]">DOLLYGUNJ</option>
+                          <option value="Atamphad" className="bg-bg-secondary text-[var(--foreground)]">ATAMPHAD</option>
+                          <option value="Bhatubasti" className="bg-bg-secondary text-[var(--foreground)]">BHATUBASTI</option>
+                          <option value="Port Blair" className="bg-bg-secondary text-[var(--foreground)]">PORT BLAIR (OTHER)</option>
+                          <option value="Havelock Island" className="bg-bg-secondary text-[var(--foreground)]">HAVELOCK ISLAND</option>
+                          <option value="Neil Island" className="bg-bg-secondary text-[var(--foreground)]">NEIL ISLAND</option>
+                          <option value="Bambooflat" className="bg-bg-secondary text-[var(--foreground)]">BAMBOOFLAT</option>
+                          <option value="Garacharma" className="bg-bg-secondary text-[var(--foreground)]">GARACHARMA</option>
+                          <option value="Diglipur" className="bg-bg-secondary text-[var(--foreground)]">DIGLIPUR</option>
+                          <option value="Rangat" className="bg-bg-secondary text-[var(--foreground)]">RANGAT</option>
+                          <option value="Mayabundar" className="bg-bg-secondary text-[var(--foreground)]">MAYABUNDAR</option>
+                          <option value="Baratang" className="bg-bg-secondary text-[var(--foreground)]">BARATANG</option>
+                          <option value="Haddo" className="bg-bg-secondary text-[var(--foreground)]">HADDO</option>
+                          <option value="Phoenix Bay" className="bg-bg-secondary text-[var(--foreground)]">PHOENIX BAY</option>
+                          <option value="Aberdeen Bazaar" className="bg-bg-secondary text-[var(--foreground)]">ABERDEEN BAZAAR</option>
+                      </select>
+                      <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-2.5 h-2.5 text-text-secondary pointer-events-none" />
+                    </div>
+
                     <div className="grid grid-cols-5 sm:flex bg-[var(--foreground)]/5 p-1 border border-[var(--foreground)]/5 rounded-xl w-full sm:w-auto">
                         {["ALL", "PENDING", "VERIFIED", "SHIPPED", "DELIVERED"].map((s) => (
                             <button
