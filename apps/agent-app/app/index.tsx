@@ -43,7 +43,17 @@ export default function AgentSplash() {
       <LinearGradient colors={["rgba(129,140,248,0.1)", "#020617", "#020617"]} className="absolute inset-0" />
 
       <View className="flex-1 justify-between px-6 py-16">
-        <View className="items-center mt-12"><Logo size="md" /></View>
+        <View className="items-center mt-12">
+          <Logo 
+            size="md" 
+            primaryColor="#00D1FF"
+            secondaryColor="#00D1FF"
+            accentColor="#FF007F"
+            backgroundColor="#020617"
+            textColor="#FFFFFF"
+            subtext="AGENT"
+          />
+        </View>
 
         <View className="items-center my-auto space-y-6">
           <View className="rounded-none border border-indigo-400/20 bg-white/5 p-1 max-w-[340px]">

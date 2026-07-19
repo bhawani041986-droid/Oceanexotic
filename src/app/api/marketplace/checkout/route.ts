@@ -14,14 +14,27 @@ export async function POST(request: Request) {
     const { data: maxOrder } = await supabase.from('orders').select('id').order('id', { ascending: false }).limit(1).single();
     const nextOrderId = (maxOrder?.id || 0) + 1;
 
+    // Resolve customer name from users
+    let customerName = "Customer";
+    try {
+      const { data: userData } = await supabase.from('users').select('name').eq('id', userId).single();
+      if (userData?.name) {
+        customerName = userData.name;
+      }
+    } catch (e) {}
+
+    if (!paymentMethod || paymentMethod === 'COD') {
+      return NextResponse.json({ status: "error", message: "Cash on Delivery is disabled. Please select a prepaid payment method." }, { status: 400 });
+    }
+
     // Insert master order
     const { data: orderData, error: orderError } = await supabase.from('orders').insert([{
       id: nextOrderId,
       user_id: userId,
       total_amount: total,
       status: 'PENDING',
-      delivery_address: address,
-      payment_method: paymentMethod || 'COD',
+      delivery_address: address + (phone ? ` | Phone: ${phone}` : ''),
+      payment_method: paymentMethod,
       is_pre_order: isPreOrder ? 1 : 0,
       coupon_code: couponCode || null,
       discount_amount: discountAmount || 0

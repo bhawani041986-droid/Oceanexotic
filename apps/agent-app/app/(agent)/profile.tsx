@@ -203,7 +203,12 @@ export default function AgentProfileScreen() {
                     : "rgba(255, 255, 255, 0.01)"
                   : "transparent",
                 borderColor: selected ? m.primary : mood.border,
-                borderWidth: selected ? 2 : 1
+                borderWidth: selected ? 2 : 1,
+                shadowColor: selected ? m.primary : "transparent",
+                shadowOffset: { width: 0, height: 0 },
+                shadowOpacity: selected ? 0.65 : 0,
+                shadowRadius: selected ? 8 : 0,
+                elevation: selected ? 3 : 0,
               }}
             >
               <View className="flex-1 mr-4 space-y-1">

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { View, Text, Pressable, Modal } from "react-native";
+import { useState, useEffect } from "react";
+import { View, Text, Pressable, Modal, Alert } from "react-native";
 import Svg, { Path } from "react-native-svg";
 import { useRouter, usePathname } from "expo-router";
 import { Image } from "expo-image";
@@ -8,6 +8,7 @@ import { useAuthStore } from "@/store/authStore";
 import { Logo } from "@/components/ui/Logo";
 import { useToast } from "@/components/ui/Toast";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
+import { FULL_API_URL } from "@/config/api";
 
 const MenuIcon = ({ color }: { color: string }) => (
   <Svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
@@ -43,8 +44,62 @@ export function AgentHeader() {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   };
 
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [notificationsList, setNotificationsList] = useState<any[]>([]);
+
+  const fetchNotifications = async () => {
+    if (!user?.id) return;
+    try {
+      const res = await fetch(`${FULL_API_URL}/customer/notifications?userId=${user.id}`);
+      const result = await res.json();
+      if (result.status === "success" && result.data) {
+        setNotificationsList(result.data);
+        setUnreadCount(result.data.filter((n: any) => !n.read).length);
+      }
+    } catch (err) {
+      console.warn("Failed to fetch notifications:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 20000);
+    return () => clearInterval(interval);
+  }, [user?.id]);
+
   const handleNotificationPress = () => {
-    toast("Missions Control Signal: No Pending Dispatch Directives", "success");
+    if (notificationsList.length === 0) {
+      Alert.alert("Alerts Radar", "No active notifications.");
+      return;
+    }
+
+    const displayList = notificationsList.slice(0, 3).map((n, i) => `${i + 1}. [${n.read ? 'READ' : 'NEW'}] ${n.title}\n   ${n.message}`).join("\n\n");
+    
+    Alert.alert(
+      "Alerts Radar",
+      `Active Notifications (${unreadCount} Unread):\n\n${displayList}\n\n${notificationsList.length > 3 ? `...and ${notificationsList.length - 3} more.` : ""}`,
+      [
+        {
+          text: "Mark All Read",
+          onPress: async () => {
+            if (!user?.id) return;
+            try {
+              await fetch(`${FULL_API_URL}/customer/notifications`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'MARK_ALL_READ', userId: user.id })
+              });
+              fetchNotifications();
+              toast("All notifications marked as read", "success");
+            } catch (err) {}
+          }
+        },
+        {
+          text: "Dismiss",
+          style: "cancel"
+        }
+      ]
+    );
   };
 
   const navigateTo = (href: string) => {
@@ -110,7 +165,16 @@ export function AgentHeader() {
 
       {/* Mini logo in center */}
       <View className="flex-1 items-center justify-center pr-2">
-        <Logo size="sm" style={{ width: 144, height: 40 }} />
+        <Logo 
+          size="sm" 
+          style={{ width: 144, height: 40 }} 
+          primaryColor={mood.primary}
+          secondaryColor={mood.primary}
+          accentColor={currentMood === "DAYLIGHT" ? "#F97316" : "#FF007F"}
+          backgroundColor={isLight ? "#F8FAFC" : "#020617"}
+          textColor={mood.text}
+          subtext="AGENT"
+        />
       </View>
 
       {/* Right controls: Bell and Profile */}
@@ -124,13 +188,15 @@ export function AgentHeader() {
           }}
         >
           <NotificationIcon color={mood.text} />
-          <View 
-            className="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-none" 
-            style={{ 
-              backgroundColor: mood.primary,
-              borderColor: isLight ? "#F8FAFC" : "#020617"
-            }} 
-          />
+          {unreadCount > 0 && (
+            <View 
+              className="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-none" 
+              style={{ 
+                backgroundColor: mood.primary,
+                borderColor: isLight ? "#F8FAFC" : "#020617"
+              }} 
+            />
+          )}
         </Pressable>
 
         <Pressable
@@ -170,7 +236,16 @@ export function AgentHeader() {
           >
             <View className="gap-6">
               <View className="flex-row items-center justify-between">
-                <Logo size="sm" style={{ width: 144, height: 40 }} />
+                <Logo 
+                  size="sm" 
+                  style={{ width: 144, height: 40 }} 
+                  primaryColor={mood.primary}
+                  secondaryColor={mood.primary}
+                  accentColor={currentMood === "DAYLIGHT" ? "#F97316" : "#FF007F"}
+                  backgroundColor={isLight ? "#F1F5F9" : "#020617"}
+                  textColor={mood.text}
+                  subtext="AGENT"
+                />
                 <Pressable 
                   onPress={() => setIsMenuOpen(false)} 
                   className="h-7 w-7 rounded-none border items-center justify-center active:opacity-70"

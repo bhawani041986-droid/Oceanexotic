@@ -362,7 +362,7 @@ export default function AgentSupportScreen() {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
       className="flex-1"
       keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
       style={{ backgroundColor: mood.bg }}
@@ -380,7 +380,15 @@ export default function AgentSupportScreen() {
               <Pressable 
                 onPress={() => setNewChatModal(true)}
                 className="w-10 h-10 rounded-none items-center justify-center border"
-                style={{ backgroundColor: mood.primary + "20", borderColor: mood.primary }}
+                style={{ 
+                  backgroundColor: mood.primary + "20", 
+                  borderColor: mood.primary,
+                  shadowColor: mood.primary,
+                  shadowOffset: { width: 0, height: 0 },
+                  shadowOpacity: 0.6,
+                  shadowRadius: 6,
+                  elevation: 2,
+                }}
               >
                 <Text className="text-lg font-black" style={{ color: mood.primary }}>+</Text>
               </Pressable>
@@ -409,8 +417,21 @@ export default function AgentSupportScreen() {
                       <View className="flex-row justify-between items-center">
                         <Text className="font-bold text-sm uppercase" style={{ color: mood.text }}>{conv.other_party_name}</Text>
                         <View className="flex-row items-center gap-2">
-                          {conv.unread_count > 0 && (
-                            <View style={{ backgroundColor: mood.primary, borderRadius: 99, minWidth: 18, height: 18, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 4 }}>
+                           {conv.unread_count > 0 && (
+                            <View style={{ 
+                              backgroundColor: mood.primary, 
+                              borderRadius: 99, 
+                              minWidth: 18, 
+                              height: 18, 
+                              alignItems: 'center', 
+                              justifyContent: 'center', 
+                              paddingHorizontal: 4,
+                              shadowColor: mood.primary,
+                              shadowOffset: { width: 0, height: 0 },
+                              shadowOpacity: 0.8,
+                              shadowRadius: 6,
+                              elevation: 3,
+                            }}>
                               <Text style={{ color: isLight ? '#FFFFFF' : '#020617', fontSize: 9, fontWeight: '900' }}>{conv.unread_count}</Text>
                             </View>
                           )}
@@ -456,7 +477,16 @@ export default function AgentSupportScreen() {
                     {activeConv.other_party_name}
                   </Text>
                   <View className="flex-row items-center gap-1.5 mt-0.5">
-                    <View className={`w-1.5 h-1.5 rounded-none ${activeConv.online ? 'bg-emerald-500' : 'bg-slate-500'}`} />
+                     <View 
+                      className={`w-1.5 h-1.5 rounded-none ${activeConv.online ? 'bg-emerald-500' : 'bg-slate-500'}`} 
+                      style={activeConv.online ? {
+                        shadowColor: "#10B981",
+                        shadowOffset: { width: 0, height: 0 },
+                        shadowOpacity: 0.9,
+                        shadowRadius: 4,
+                        elevation: 3,
+                      } : undefined}
+                    />
                     <Text className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
                       {activeConv.online ? 'Online' : 'Offline'}
                     </Text>
@@ -621,7 +651,15 @@ export default function AgentSupportScreen() {
             onPress={handleSend}
             disabled={sending || !inputText.trim()}
             className="w-11 h-11 rounded-none items-center justify-center ml-2 active:scale-95"
-            style={{ backgroundColor: mood.primary, opacity: (sending || !inputText.trim()) ? 0.5 : 1 }}
+            style={{ 
+              backgroundColor: mood.primary, 
+              opacity: (sending || !inputText.trim()) ? 0.5 : 1,
+              shadowColor: mood.primary,
+              shadowOffset: { width: 0, height: 0 },
+              shadowOpacity: (sending || !inputText.trim()) ? 0 : 0.85,
+              shadowRadius: 8,
+              elevation: (sending || !inputText.trim()) ? 0 : 4,
+            }}
           >
             {sending ? (
               <ActivityIndicator color={isLight ? "#FFFFFF" : "#020617"} size="small" />

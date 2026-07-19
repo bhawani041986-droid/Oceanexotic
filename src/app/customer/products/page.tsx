@@ -139,6 +139,15 @@ const ProductCard = ({ product }: { product: any }) => {
                 </Badge>
               )}
               {hydratedProduct.discount && <Badge className="bg-success text-[7px] font-black uppercase italic rounded-full border-none px-2 py-1 text-white">{hydratedProduct.discount}</Badge>}
+              
+              {/* Real-time Inventory Label */}
+              {hydratedProduct.stock <= 0 ? (
+                <Badge className="bg-danger text-[7px] font-black uppercase italic rounded-full border-none px-2 py-1 text-white shadow-lg">SOLD OUT</Badge>
+              ) : hydratedProduct.stock <= 5 ? (
+                <Badge className="bg-warning text-[7px] font-black uppercase italic rounded-full border-none px-2 py-1 text-black shadow-lg animate-pulse">ONLY {hydratedProduct.stock} LEFT</Badge>
+              ) : (
+                <Badge className="bg-success text-[7px] font-black uppercase italic rounded-full border-none px-2 py-1 text-white shadow-lg">IN STOCK</Badge>
+              )}
            </div>
            <button onClick={(e) => { e.stopPropagation(); toast("Added to Wishlist.", "success"); }} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-[var(--c-text-primary)] hover:bg-danger hover:text-white transition-all flex items-center justify-center"><Heart className="w-4 h-4" /></button>
         </div>
@@ -177,13 +186,17 @@ const ProductCard = ({ product }: { product: any }) => {
                 <Button disabled className="h-8 md:h-12 px-2 md:px-4 rounded-lg md:rounded-[var(--c-radius-btn)] bg-amber-500/20 text-amber-500 border border-amber-500/30 text-[8px] md:text-xs font-black uppercase tracking-tighter">
                   COMING SOON
                 </Button>
+              ) : hydratedProduct.stock <= 0 ? (
+                <Button disabled className="h-8 md:h-12 px-2 md:px-4 rounded-lg md:rounded-[var(--c-radius-btn)] bg-danger/20 text-danger border border-danger/30 text-[8px] md:text-xs font-black uppercase tracking-tighter">
+                  SOLD OUT
+                </Button>
               ) : quantity === 0 ? (
                 <Button onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(); }} className="w-8 h-8 md:w-12 md:h-12 rounded-lg md:rounded-[var(--c-radius-btn)] bg-[var(--c-primary)] hover:bg-[var(--c-primary-light)] shadow-[var(--c-shadow-glow)] flex items-center justify-center p-0 transition-all active:scale-90 text-[var(--foreground)]"><Plus className="w-4 h-4 md:w-6 md:h-6" /></Button>
               ) : (
                 <div onClick={(e) => { e.preventDefault(); e.stopPropagation(); }} className="flex items-center bg-[var(--foreground)]/5 rounded-lg md:rounded-[var(--c-radius-btn)] border border-[var(--foreground)]/10 overflow-hidden h-8 md:h-12">
                    <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); setQuantity(q => Math.max(0, q - 1)); }} className="w-6 md:w-10 h-full flex items-center justify-center hover:bg-[var(--foreground)]/10 text-[var(--c-text-primary)]"><Minus className="w-2.5 h-2.5 md:w-3 md:h-3" /></button>
                    <span className="w-6 md:w-8 text-center text-[10px] md:text-xs font-black text-[var(--c-primary)]">{quantity}</span>
-                   <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); setQuantity(q => q + 1); }} className="w-6 md:w-10 h-full flex items-center justify-center hover:bg-[var(--foreground)]/10 text-[var(--c-text-primary)]"><Plus className="w-2.5 h-2.5 md:w-3 md:h-3" /></button>
+                   <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); if (quantity < hydratedProduct.stock) setQuantity(q => q + 1); else toast(`Only ${hydratedProduct.stock} left in stock.`, 'error'); }} className="w-6 md:w-10 h-full flex items-center justify-center hover:bg-[var(--foreground)]/10 text-[var(--c-text-primary)]"><Plus className="w-2.5 h-2.5 md:w-3 md:h-3" /></button>
                 </div>
               )}
            </div>

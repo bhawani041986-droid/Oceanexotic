@@ -131,6 +131,9 @@ export default function AgentDashboardPage() {
                               )}
                            </div>
                            <p className="text-[10px] font-black text-text-secondary uppercase tracking-[0.2em] break-all">CONSIGNEE: {mission.customer}</p>
+                           {mission.customer_phone && (
+                              <p className="text-[9px] font-bold text-slate-500 uppercase tracking-wider mt-0.5">PHONE: {mission.customer_phone}</p>
+                           )}
                         </div>
                         <p className="text-[10px] font-black text-primary uppercase tracking-widest italic">{mission.time}</p>
                      </div>

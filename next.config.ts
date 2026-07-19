@@ -19,6 +19,21 @@ const nextConfig: NextConfig = {
         hostname: 'kyqmhibffbwoqlpdplfu.supabase.co',
         pathname: '**',
       },
+      {
+        protocol: 'https',
+        hostname: 'iklzcaqqvbrfxevufebi.supabase.co',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'oceanexotic.com',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.oceanexotic.com',
+        pathname: '**',
+      },
     ],
   },
   async rewrites() {

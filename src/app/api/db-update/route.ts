@@ -37,7 +37,13 @@ export async function GET() {
       sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS quality_rank VARCHAR(50) NULL`,
       sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS discount_percent INTEGER DEFAULT 0`,
       sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS unit VARCHAR(20) DEFAULT 'kg'`,
-      sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT FALSE`
+      sql`ALTER TABLE products ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT FALSE`,
+      sql`ALTER TABLE maritime_territories ADD COLUMN IF NOT EXISTS delivery_charge NUMERIC DEFAULT 0`,
+      sql`ALTER TABLE maritime_territories ADD COLUMN IF NOT EXISTS minimum_order NUMERIC DEFAULT 0`,
+      sql`ALTER TABLE maritime_territories ADD COLUMN IF NOT EXISTS eta_mins INTEGER DEFAULT 30`,
+      sql`ALTER TABLE maritime_territories ADD COLUMN IF NOT EXISTS hub_code VARCHAR(100) NULL`,
+      sql`ALTER TABLE maritime_territories ADD COLUMN IF NOT EXISTS manager_name VARCHAR(100) NULL`,
+      sql`ALTER TABLE maritime_territories ADD COLUMN IF NOT EXISTS rider_capacity INTEGER DEFAULT 0`
     ];
 
     for (let i = 0; i < queries.length; i++) {

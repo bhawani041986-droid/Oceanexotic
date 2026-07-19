@@ -1236,12 +1236,19 @@ export default function AgentTrackingScreen() {
           <View className="flex-row items-center justify-between">
             <View className="flex-row items-center space-x-2">
               <UserIcon color={mood.primary} />
-              <Text className="text-[10px] font-black uppercase" style={{ color: mood.text }}>
-                {orderInfo.customer}
-              </Text>
+              <View>
+                <Text className="text-[10px] font-black uppercase" style={{ color: mood.text }}>
+                  {orderInfo.customer}
+                </Text>
+                {orderInfo.customer_phone ? (
+                  <Text className="text-[9px] font-bold text-slate-400 mt-0.5">
+                    {orderInfo.customer_phone}
+                  </Text>
+                ) : null}
+              </View>
             </View>
             <Pressable
-              onPress={() => handleCall("+91 99332 12345")}
+              onPress={() => handleCall(orderInfo.customer_phone || "+91 99332 12345")}
               className="px-2.5 py-1 rounded-none bg-emerald-500/10 border border-emerald-500/20 flex-row items-center space-x-1"
             >
               <PhoneIcon color="#10B981" />
@@ -1294,10 +1301,10 @@ export default function AgentTrackingScreen() {
               style={{
                 backgroundColor: mood.primary,
                 shadowColor: mood.primary,
-                shadowOffset: { width: 0, height: 4 },
-                shadowOpacity: 0.3,
-                shadowRadius: 10,
-                elevation: 4
+                shadowOffset: { width: 0, height: 0 },
+                shadowOpacity: 0.85,
+                shadowRadius: 12,
+                elevation: 5
               }}
             >
               <Text className="text-[10px] font-black text-white uppercase tracking-[0.25em] italic">
@@ -1312,10 +1319,10 @@ export default function AgentTrackingScreen() {
               className="h-12 w-full bg-emerald-600 rounded-none flex-row items-center justify-center space-x-2"
               style={{
                 shadowColor: "#10B981",
-                shadowOffset: { width: 0, height: 4 },
-                shadowOpacity: 0.3,
-                shadowRadius: 10,
-                elevation: 4
+                shadowOffset: { width: 0, height: 0 },
+                shadowOpacity: 0.85,
+                shadowRadius: 12,
+                elevation: 5
               }}
             >
               <Text className="text-[10px] font-black text-white uppercase tracking-[0.25em] italic">
@@ -1336,10 +1343,10 @@ export default function AgentTrackingScreen() {
                 style={{
                   backgroundColor: mood.primary,
                   shadowColor: mood.primary,
-                  shadowOffset: { width: 0, height: 4 },
-                  shadowOpacity: 0.3,
-                  shadowRadius: 10,
-                  elevation: 4
+                  shadowOffset: { width: 0, height: 0 },
+                  shadowOpacity: 0.85,
+                  shadowRadius: 12,
+                  elevation: 5
                 }}
               >
                 <CameraIcon color="#FFFFFF" />
@@ -1389,7 +1396,12 @@ export default function AgentTrackingScreen() {
                   className="h-10 rounded-none flex-row items-center justify-center space-x-1.5"
                   style={{
                     backgroundColor: mood.primary,
-                    opacity: otpInput.length !== 6 || isVerifying ? 0.5 : 1
+                    opacity: otpInput.length !== 6 || isVerifying ? 0.5 : 1,
+                    shadowColor: mood.primary,
+                    shadowOffset: { width: 0, height: 0 },
+                    shadowOpacity: otpInput.length !== 6 || isVerifying ? 0 : 0.85,
+                    shadowRadius: 8,
+                    elevation: otpInput.length !== 6 || isVerifying ? 0 : 4
                   }}
                 >
                   {isVerifying ? (

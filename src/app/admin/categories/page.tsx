@@ -129,7 +129,7 @@ export default function AdminCategoriesPage() {
         setCategories(updatedCategories);
         toast("Category saved successfully", "success");
         setIsModalOpen(false);
-        setFormData({ id: "", label: "", iconName: "Fish", status: "ACTIVE" });
+        setFormData({ id: "", label: "", iconName: "Fish", status: "ACTIVE", imageUrl: "", colorHex: "#14B8A6" });
         setOriginalId("");
       } else {
         toast("Failed to save category", "error");

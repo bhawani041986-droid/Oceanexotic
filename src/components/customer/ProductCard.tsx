@@ -22,6 +22,7 @@ interface ProductCardProps {
     deliveryTime: string;
     image: string;
     rating?: number;
+    stock?: number;
   };
 }
 
@@ -62,13 +63,28 @@ export function ProductCard({ product }: ProductCardProps) {
           priority={false}
         />
         
-        <div className="absolute top-4 left-4 z-20 flex gap-2">
-           <Badge variant="glass" className="bg-bg-primary/80 backdrop-blur-md text-tertiary border-tertiary/20 text-[8px] font-black tracking-widest uppercase px-2 py-1">
-              {product.category || "AAA GRADE"}
-           </Badge>
-           <Badge className="bg-primary/20 backdrop-blur-md text-primary border-primary/20 text-[8px] font-black tracking-widest uppercase px-2 py-1">
-              SUSTAINABLE
-           </Badge>
+        <div className="absolute top-4 left-4 z-20 flex gap-2 flex-col">
+           <div className="flex gap-2">
+             <Badge variant="glass" className="bg-bg-primary/80 backdrop-blur-md text-tertiary border-tertiary/20 text-[8px] font-black tracking-widest uppercase px-2 py-1">
+                {product.category || "AAA GRADE"}
+             </Badge>
+             <Badge className="bg-primary/20 backdrop-blur-md text-primary border-primary/20 text-[8px] font-black tracking-widest uppercase px-2 py-1">
+                SUSTAINABLE
+             </Badge>
+           </div>
+           
+           {/* Real-time Inventory Label */}
+           {product.stock !== undefined && (
+             <div className="flex gap-2">
+               {product.stock <= 0 ? (
+                 <Badge className="bg-danger text-[7px] font-black uppercase italic rounded-full border-none px-2 py-1 text-white shadow-lg">SOLD OUT</Badge>
+               ) : product.stock <= 5 ? (
+                 <Badge className="bg-warning text-[7px] font-black uppercase italic rounded-full border-none px-2 py-1 text-black shadow-lg animate-pulse">ONLY {product.stock} LEFT</Badge>
+               ) : (
+                 <Badge className="bg-success text-[7px] font-black uppercase italic rounded-full border-none px-2 py-1 text-white shadow-lg">IN STOCK</Badge>
+               )}
+             </div>
+           )}
         </div>
 
         <div className="absolute bottom-4 right-4 z-20 bg-bg-primary/80 backdrop-blur-md px-3 py-1.5 rounded-[12px] flex items-center gap-2 border border-white/5">
@@ -102,12 +118,18 @@ export function ProductCard({ product }: ProductCardProps) {
                  <span className="text-[11px] font-bold text-text-secondary uppercase tracking-widest">/ kg</span>
               </div>
               
-              <button 
-                onClick={handleAddToCart}
-                className="w-12 h-12 rounded-[16px] bg-primary/10 border border-primary/20 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all shadow-glow-purple active:scale-90"
-              >
-                 <ShoppingCart className="w-5 h-5" />
-              </button>
+              {product.stock !== undefined && product.stock <= 0 ? (
+                <div className="w-12 h-12 rounded-[16px] bg-danger/10 border border-danger/20 flex items-center justify-center text-danger opacity-50 cursor-not-allowed">
+                  <ShoppingCart className="w-5 h-5" />
+                </div>
+              ) : (
+                <button 
+                  onClick={handleAddToCart}
+                  className="w-12 h-12 rounded-[16px] bg-primary/10 border border-primary/20 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all shadow-glow-purple active:scale-90"
+                >
+                   <ShoppingCart className="w-5 h-5" />
+                </button>
+              )}
            </div>
         </div>
       </div>

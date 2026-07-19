@@ -75,7 +75,15 @@ export default function AgentLoginScreen() {
           <View className="mx-auto w-full max-w-[400px] mt-auto mb-auto">
             <View className="mb-10 items-center space-y-4">
               <View className="items-center">
-                <Logo size="md" />
+                <Logo 
+                  size="md" 
+                  primaryColor="#00D1FF"
+                  secondaryColor="#00D1FF"
+                  accentColor="#FF007F"
+                  backgroundColor="#020617"
+                  textColor="#FFFFFF"
+                  subtext="AGENT"
+                />
               </View>
               <View className="items-center gap-1 mt-4">
                 <Text className="text-2xl font-black tracking-widest text-indigo-400 uppercase text-center">

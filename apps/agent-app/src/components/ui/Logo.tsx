@@ -29,18 +29,35 @@ interface LogoProps {
   size?: LogoSize;
   className?: string;
   style?: ViewStyle;
+  primaryColor?: string;
+  secondaryColor?: string;
+  accentColor?: string;
+  backgroundColor?: string;
+  textColor?: string;
+  subtext?: string;
 }
 
 /** Animated OceanExotic mark — powered by standard core Animated for bulletproof 100% native platform support */
-export function Logo({ size = "md", className, style }: LogoProps) {
+export function Logo({ 
+  size = "md", 
+  className, 
+  style,
+  primaryColor,
+  secondaryColor,
+  accentColor,
+  backgroundColor,
+  textColor,
+  subtext
+}: LogoProps) {
   const uid = useMemo(() => `logo${Math.random().toString(36).slice(2, 9)}`, []);
   const dims = SIZES[size];
   const colors = useThemeColors();
-  const textFill = colors.text;
 
-  const primaryFill = colors.primary;
-  const accentCyan = colors.secondary;
-  const accentPink = colors.accent;
+  const textFill = textColor || colors.text;
+  const primaryFill = primaryColor || colors.primary;
+  const accentCyan = secondaryColor || colors.secondary;
+  const accentPink = accentColor || colors.accent;
+  const bgFill = backgroundColor || colors.bg;
 
   // Core Animated Loop Values
   const dashAnim = useRef(new Animated.Value(0)).current;
@@ -114,8 +131,15 @@ export function Logo({ size = "md", className, style }: LogoProps) {
           <Path
             fill="none"
             stroke={accentCyan}
-            strokeWidth={5}
-            opacity={0.25}
+            strokeWidth={8}
+            opacity={0.45}
+            d="M50 20 C35 20 20 30 15 50 L5 30 L5 70 L15 50 C20 70 35 80 50 80 C70 80 85 70 90 50 C85 30 70 20 50 20 Z"
+          />
+          <Path
+            fill="none"
+            stroke={accentPink}
+            strokeWidth={4}
+            opacity={0.3}
             d="M50 20 C35 20 20 30 15 50 L5 30 L5 70 L15 50 C20 70 35 80 50 80 C70 80 85 70 90 50 C85 30 70 20 50 20 Z"
           />
           {/* Primary Solid Fish Body */}
@@ -128,16 +152,16 @@ export function Logo({ size = "md", className, style }: LogoProps) {
             x="50"
             y="58"
             textAnchor="middle"
-            fill={colors.bg}
+            fill={bgFill}
             fontSize="24"
             fontWeight="900"
             fontStyle="italic"
           >
             OX
           </SvgText>
-          <Path d="M38 44 L15 44" stroke={colors.bg} strokeWidth={2.5} />
-          <Path d="M62 58 L88 58" stroke={colors.bg} strokeWidth={2.5} />
-          <Circle cx="82" cy="48" r="4" fill={colors.bg} />
+          <Path d="M38 44 L15 44" stroke={bgFill} strokeWidth={2.5} />
+          <Path d="M62 58 L88 58" stroke={bgFill} strokeWidth={2.5} />
+          <Circle cx="82" cy="48" r="4" fill={bgFill} />
           <Circle cx="82" cy="48" r="3" fill={`url(#eyeGrad-${uid})`} />
         </AnimatedG>
 
@@ -190,7 +214,7 @@ export function Logo({ size = "md", className, style }: LogoProps) {
           <G transform="translate(0, 38)">
             <Rect fill={primaryFill} x="0" y="-8" width="50" height="5" rx="2.5" />
             <SvgText fill={primaryFill} x="65" y="0" fontSize="24" fontWeight="900" fontStyle="italic">
-              GLOBAL
+              {subtext || "GLOBAL"}
             </SvgText>
           </G>
         </G>

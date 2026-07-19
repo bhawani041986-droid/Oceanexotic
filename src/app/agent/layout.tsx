@@ -80,6 +80,63 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [currentMood, setCurrentMood] = useState<TacticalMood>("SENTINEL");
   const [isHydrated, setIsHydrated] = useState(false);
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+
+  const fetchNotifications = async () => {
+    if (!user?.id) return;
+    try {
+      const res = await fetch(`/api/customer/notifications?userId=${user.id}`);
+      const result = await res.json();
+      if (result.status === "success") {
+        setNotifications(result.data || []);
+      }
+    } catch (err) {}
+  };
+
+  useEffect(() => {
+    if (user?.id) {
+      fetchNotifications();
+      const interval = setInterval(fetchNotifications, 20000);
+      return () => clearInterval(interval);
+    }
+  }, [user?.id]);
+
+  const handleMarkAllRead = async () => {
+    if (!user?.id) return;
+    try {
+      await fetch('/api/customer/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'MARK_ALL_READ', userId: user.id })
+      });
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    } catch (err) {}
+  };
+
+  const handleMarkRead = async (id: string) => {
+    try {
+      await fetch('/api/customer/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'MARK_READ', notificationId: id })
+      });
+      setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+    } catch (err) {}
+  };
+
+  const handleDeleteNotification = async (id: string) => {
+    try {
+      await fetch('/api/customer/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'DELETE', notificationId: id })
+      });
+      setNotifications(prev => prev.filter(n => n.id !== id));
+    } catch (err) {}
+  };
+
+  const unreadCount = notifications.filter(n => !n.read).length;
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
@@ -213,7 +270,15 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
       <aside className="hidden md:flex flex-col w-20 lg:w-96 bg-bg-secondary/10 backdrop-blur-3xl border-r h-screen fixed left-0 top-0 z-[500] transition-all duration-500" style={{ borderColor: mood.border, backgroundColor: currentMood === 'DAYLIGHT' ? '#F1F5F9' : 'rgba(15, 23, 42, 0.8)' }}>
         <div className="px-6 lg:px-8 pt-4 pb-6 lg:pb-8 flex items-center justify-center lg:justify-start gap-3">
           <Link href="/agent/dashboard" className="flex items-center gap-2 group">
-            <Logo size="lg" className="!w-[340px] !h-[85px]" />
+            <Logo 
+              size="lg" 
+              className="!w-[340px] !h-[85px]" 
+              primaryColor={mood.primary}
+              secondaryColor={mood.primary}
+              accentColor={currentMood === "DAYLIGHT" ? "#F97316" : "#FF007F"}
+              textColor={mood.text}
+              subtext="AGENT"
+            />
           </Link>
         </div>
 
@@ -233,6 +298,15 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
             </div>
             <p className="text-[10px] font-bold truncate uppercase tracking-wide mt-0.5" style={{ color: mood.text }}>{user?.name || "Abijeet"}</p>
           </div>
+          <button 
+            onClick={() => setIsNotificationsOpen(!isNotificationsOpen)} 
+            className="p-2 hover:bg-white/5 rounded-xl relative transition-all"
+          >
+            <Bell className="w-4 h-4" style={{ color: unreadCount > 0 ? mood.primary : mood.text, opacity: unreadCount > 0 ? 1 : 0.6 }} />
+            {unreadCount > 0 && (
+              <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: mood.primary }} />
+            )}
+          </button>
         </div>
 
         <nav className="flex-1 px-4 space-y-2 pt-6">
@@ -327,7 +401,15 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
 
               <div className="p-6 border-b flex items-center mb-0" style={{ borderColor: mood.border }}>
                  <Link href="/agent/dashboard" onClick={toggleMobileMenu} className="flex items-center gap-2">
-                    <Logo size="lg" className="!w-[180px] !h-[45px]" />
+                    <Logo 
+                      size="lg" 
+                      className="!w-[180px] !h-[45px]" 
+                      primaryColor={mood.primary}
+                      secondaryColor={mood.primary}
+                      accentColor={currentMood === "DAYLIGHT" ? "#F97316" : "#FF007F"}
+                      textColor={mood.text}
+                      subtext="AGENT"
+                    />
                  </Link>
               </div>
 
@@ -471,14 +553,28 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
            <div className="flex items-center gap-4">
               <button onClick={toggleMobileMenu} className="w-10 h-10 rounded-xl flex items-center justify-center transition-colors" style={{ backgroundColor: mood.text + '10', color: mood.text }}><Menu className="w-6 h-6" /></button>
               <Link href="/agent/dashboard" className="flex items-center gap-2">
-                 <Logo size="sm" className="!w-[140px] !h-[35px]" />
+                 <Logo 
+                   size="sm" 
+                   className="!w-[140px] !h-[35px]" 
+                   primaryColor={mood.primary}
+                   secondaryColor={mood.primary}
+                   accentColor={currentMood === "DAYLIGHT" ? "#F97316" : "#FF007F"}
+                   textColor={mood.text}
+                   subtext="AGENT"
+                 />
               </Link>
            </div>
            <div className="flex items-center gap-3">
-              <button className="w-10 h-10 rounded-full border flex items-center justify-center relative transition-colors" style={{ backgroundColor: mood.text + '10', borderColor: mood.border }}>
-                 <Bell className="w-5 h-5 opacity-60" style={{ color: mood.text }} />
-                 <div className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full border-2" style={{ backgroundColor: mood.primary, borderColor: mood.bg }} />
-              </button>
+               <button 
+                  onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                  className="w-10 h-10 rounded-full border flex items-center justify-center relative transition-colors" 
+                  style={{ backgroundColor: mood.text + '10', borderColor: mood.border }}
+               >
+                  <Bell className="w-5 h-5 opacity-60" style={{ color: mood.text }} />
+                  {unreadCount > 0 && (
+                     <div className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full border-2 animate-pulse" style={{ backgroundColor: mood.primary, borderColor: mood.bg }} />
+                  )}
+               </button>
               <Link href="/agent/profile" className="w-10 h-10 rounded-full border overflow-hidden flex items-center justify-center transition-all hover:scale-105 active:scale-95" style={{ borderColor: mood.border }}>
                  <img 
                    src={(user?.avatar && user.avatar !== 'null' && user.avatar !== 'undefined') ? user.avatar : "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80"} 
@@ -493,6 +589,72 @@ export default function AgentLayout({ children }: { children: React.ReactNode })
           {children}
         </div>
       </main>
+
+      {/* Notifications Panel - Floating overlay */}
+      {isNotificationsOpen && (
+        <div 
+          className="fixed right-6 top-20 md:left-24 lg:left-96 md:top-24 w-80 rounded-2xl border shadow-2xl z-[1000] p-4 flex flex-col max-h-[400px] overflow-hidden backdrop-blur-xl animate-in fade-in slide-in-from-top-5 duration-300"
+          style={{ backgroundColor: mood.cardBg, borderColor: mood.border }}
+        >
+          <div className="flex items-center justify-between pb-3 border-b mb-3" style={{ borderColor: mood.border }}>
+            <div className="flex items-center gap-2">
+              <Bell className="w-4 h-4" style={{ color: mood.primary }} />
+              <h4 className="text-[10px] font-black uppercase tracking-widest" style={{ color: mood.text }}>Alerts Radar</h4>
+            </div>
+            <div className="flex items-center gap-3">
+              {unreadCount > 0 && (
+                <button onClick={handleMarkAllRead} className="text-[8px] font-black text-emerald-400 uppercase tracking-wider hover:underline">
+                  Clear All
+                </button>
+              )}
+              <button onClick={() => setIsNotificationsOpen(false)} className="p-1 hover:bg-white/5 rounded-lg">
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+          <div className="flex-1 overflow-y-auto space-y-2 pr-1">
+            {notifications.length === 0 ? (
+              <div className="py-8 text-center">
+                <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">No alerts pending</p>
+              </div>
+            ) : (
+              notifications.map((n) => (
+                <div 
+                  key={n.id} 
+                  className="p-3 rounded-xl border relative transition-all group/item cursor-pointer"
+                  style={{ 
+                    backgroundColor: n.read ? 'transparent' : 'rgba(0, 209, 255, 0.03)',
+                    borderColor: n.read ? mood.border : 'rgba(0, 209, 255, 0.15)'
+                  }}
+                  onClick={() => handleMarkRead(n.id)}
+                >
+                  <div className="flex justify-between items-start gap-2">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[10px] font-bold leading-tight" style={{ color: mood.text }}>{n.title}</p>
+                      <p className="text-[9px] text-slate-400 mt-1 leading-normal break-words">{n.message}</p>
+                      <p className="text-[7px] text-slate-500 mt-1 uppercase tracking-widest">{n.time}</p>
+                    </div>
+                    <div className="flex flex-col gap-1 items-end shrink-0">
+                      {!n.read && (
+                        <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: mood.primary }} />
+                      )}
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteNotification(n.id);
+                        }}
+                        className="opacity-0 group-hover/item:opacity-100 p-0.5 hover:bg-white/10 rounded transition-all"
+                      >
+                        <X className="w-2.5 h-2.5 text-slate-500 hover:text-red-500" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
 
     </div>
   );

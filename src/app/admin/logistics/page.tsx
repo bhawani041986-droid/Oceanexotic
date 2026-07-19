@@ -144,7 +144,7 @@ export default function AdminLogisticsPage() {
                           </TableCell>
                           <TableCell className="text-right">
                              <div className="flex justify-end gap-1 md:gap-2">
-                                <Link href="/admin/logistics/territories">
+                                <Link href={`/admin/logistics/territories?selectId=${area.id}`}>
                                   <button className="p-2 md:p-2.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
                                      <Edit3 className="w-3.5 md:w-4 h-3.5 md:h-4" />
                                   </button>
@@ -187,7 +187,7 @@ export default function AdminLogisticsPage() {
                            <p className="text-xs font-black text-primary italic">{area.coordinates || 'N/A'}</p>
                         </div>
                         <div className="flex gap-1">
-                           <Link href="/admin/logistics/territories">
+                           <Link href={`/admin/logistics/territories?selectId=${area.id}`}>
                              <button className="p-1.5 rounded-lg hover:bg-[var(--foreground)]/5 text-text-secondary hover:text-primary transition-all border border-[var(--foreground)]/5">
                                 <Edit3 className="w-3.5 h-3.5" />
                              </button>

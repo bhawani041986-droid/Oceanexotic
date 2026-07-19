@@ -51,22 +51,37 @@ export async function GET(request: Request) {
 
     if (error) throw error;
 
+    // Fetch user details for these orders
+    const userIds = [...new Set((orders || []).map(o => o.user_id).filter(Boolean))];
+    const { data: usersData } = userIds.length > 0 
+      ? await supabase.from('users').select('id, name').in('id', userIds)
+      : { data: [] };
+    
+    const userMap = new Map((usersData || []).map(u => [u.id, u.name]));
+
     // Transform into the specific mission structure expected by the Agent Frontend
-    const missions = (orders || []).map(order => ({
-      id: `ORD-${order.id}`,
-      original_id: order.id,
-      customer: order.user_id || "GUEST CITIZEN",
-      time: new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      status: order.status,
-      location: order.delivery_address || order.delivery_area || "Port Blair",
-      is_pre_order: order.is_pre_order || 0,
-      urgency: order.shipping_method === 'EXPRESS' ? 'HIGH' : 'NORMAL',
-      agent_details: {
-        name: order.delivery_agent_name || `AGENT-${agentId}`,
-        tracking: order.tracking_number || "AWAITING-SYNC",
-        method: order.shipping_method || "STANDARD"
-      }
-    }));
+    const missions = (orders || []).map(order => {
+      const addressParts = (order.delivery_address || "").split(" | Phone: ");
+      const displayAddress = addressParts[0];
+      const customerPhone = addressParts[1] || "";
+      
+      return {
+        id: `ORD-${order.id}`,
+        original_id: order.id,
+        customer: userMap.get(order.user_id) || order.user_id || "GUEST CITIZEN",
+        customer_phone: customerPhone,
+        time: new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        status: order.status,
+        location: displayAddress || order.delivery_area || "Port Blair",
+        is_pre_order: order.is_pre_order || 0,
+        urgency: order.shipping_method === 'EXPRESS' ? 'HIGH' : 'NORMAL',
+        agent_details: {
+          name: order.delivery_agent_name || `AGENT-${agentId}`,
+          tracking: order.tracking_number || "AWAITING-SYNC",
+          method: order.shipping_method || "STANDARD"
+        }
+      };
+    });
 
     return NextResponse.json(missions);
   } catch (error: any) {

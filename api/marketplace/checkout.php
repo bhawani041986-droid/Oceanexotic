@@ -98,7 +98,10 @@ try {
     $user_id = $data['userId'] ?? 'GUEST-' . time();
     $total = $data['total'];
     $address = $data['address'] ?? 'Default Address';
-    $payment = $data['paymentMethod'] ?? 'COD';
+    $payment = $data['paymentMethod'] ?? null;
+    if (!$payment || $payment === 'COD') {
+        throw new Exception("Cash on Delivery is disabled. Please select a prepaid option.");
+    }
 
     $stmt->execute([
         'user_id' => $user_id,

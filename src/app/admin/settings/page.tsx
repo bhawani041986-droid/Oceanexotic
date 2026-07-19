@@ -159,6 +159,7 @@ export default function AdminSettingsPage() {
     agentAppUrl,
     sellerAppUrl,
     adminAppUrl,
+    cod_enabled,
     setSettings, 
     fetchSettings, 
     pushSettings 
@@ -168,17 +169,46 @@ export default function AdminSettingsPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [showMerchantSalt, setShowMerchantSalt] = useState(false);
+  const [loyaltyTiers, setLoyaltyTiers] = useState<any[]>([]);
+
+  const fetchTiers = async () => {
+    try {
+      const res = await fetch("/api/admin/loyalty");
+      const data = await res.json();
+      if (data.status === "success") {
+        setLoyaltyTiers(data.tiers || []);
+      }
+    } catch (e) {
+      console.error("Failed to fetch loyalty tiers:", e);
+    }
+  };
 
   React.useEffect(() => {
     fetchSettings();
+    fetchTiers();
   }, [fetchSettings]);
 
   const handleSave = async () => {
     setIsSaving(true);
     const success = await pushSettings();
+    
+    // Save loyalty tiers as well
+    let loyaltySuccess = true;
+    try {
+      const res = await fetch("/api/admin/loyalty", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tiers: loyaltyTiers })
+      });
+      const data = await res.json();
+      loyaltySuccess = data.status === "success";
+    } catch (e) {
+      loyaltySuccess = false;
+    }
+
     setIsSaving(false);
     
-    if (success) {
+    if (success && loyaltySuccess) {
       setSaveSuccess(true);
       toast("Settings updated and synchronized.", "success");
       setTimeout(() => setSaveSuccess(false), 3000);
@@ -685,6 +715,97 @@ export default function AdminSettingsPage() {
                               <li><strong className="text-[var(--foreground)]">Vector Iconography:</strong> Using scalable vector SVGs (@expo/vector-icons) which weigh almost nothing compared to bundled PNGs.</li>
                               <li><strong className="text-[var(--foreground)]">Tailwind/NativeWind Pruning:</strong> Automatically strips out unused CSS classes during the build, keeping styling microscopically small.</li>
                            </ul>
+                        </div>
+                     </div>
+                  </Card>
+               </div>
+
+               {/* Loyalty Systems & Cash on Delivery (COD) Controls */}
+               <div className="pt-10 space-y-8">
+                  <div className="flex items-center justify-between px-1">
+                     <div className="space-y-[2px] md:space-y-1">
+                        <h3 className="text-[10px] md:text-lg font-black text-[var(--foreground)] uppercase tracking-tight flex items-center gap-2 md:gap-3">
+                           <ShieldCheck className="w-3.5 h-3.5 md:w-5 md:h-5 text-primary" /> Loyalty & COD Configurations
+                        </h3>
+                        <p className="text-[7px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest leading-relaxed">Direct governance over prepaid policies and customer retention rewards.</p>
+                     </div>
+                  </div>
+
+                  <Card className="p-6 md:p-10 space-y-8 rounded-[32px] border-[var(--foreground)]/5 bg-bg-secondary/40">
+                     {/* COD Switch Override */}
+                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-2xl bg-bg-primary/30 border border-[var(--foreground)]/5">
+                        <div className="space-y-1">
+                           <p className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]">Cash on Delivery (COD) Override</p>
+                           <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest">
+                              {cod_enabled ? "COD is enabled across checkout interfaces" : "Prepaid payments strictly enforced (COD disabled)"}
+                           </p>
+                        </div>
+                        <button
+                           onClick={() => setSettings({ cod_enabled: !cod_enabled })}
+                           className={cn(
+                              "px-6 h-12 rounded-xl text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-300",
+                              cod_enabled 
+                                 ? "bg-amber-500/20 text-amber-500 border border-amber-500/30" 
+                                 : "bg-primary text-[var(--foreground)] shadow-glow-purple"
+                           )}
+                        >
+                           {cod_enabled ? "COD: ENABLED" : "COD: DISABLED (PREPAID ONLY)"}
+                        </button>
+                     </div>
+
+                     {/* Loyalty Tiers Config */}
+                     <div className="space-y-6 pt-4 border-t border-[var(--foreground)]/5">
+                        <h4 className="text-[10px] font-black uppercase tracking-widest text-primary">Loyalty Tier Thresholds & Cashbacks</h4>
+                        <div className="space-y-4">
+                           {loyaltyTiers.map((tier, idx) => (
+                              <div key={tier.tier_key} className="p-4 rounded-xl bg-bg-primary/35 border border-[var(--foreground)]/5 space-y-3">
+                                 <div className="flex items-center gap-2">
+                                    <span className="text-xl">{tier.icon_emoji}</span>
+                                    <span className="text-[11px] font-black uppercase tracking-widest text-[var(--foreground)]">{tier.tier_label} Tier</span>
+                                 </div>
+                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div className="space-y-1">
+                                       <label className="text-[8px] font-black text-text-secondary uppercase tracking-widest">Min Spend Requirements (₹)</label>
+                                       <input 
+                                          type="number" 
+                                          value={tier.min_spend} 
+                                          onChange={(e) => {
+                                             const copy = [...loyaltyTiers];
+                                             copy[idx].min_spend = Number(e.target.value);
+                                             setLoyaltyTiers(copy);
+                                          }}
+                                          className="w-full h-10 bg-bg-primary/70 border border-[var(--foreground)]/5 rounded-lg px-3 text-[11px] font-black text-[var(--foreground)] outline-none"
+                                       />
+                                    </div>
+                                    <div className="space-y-1">
+                                       <label className="text-[8px] font-black text-text-secondary uppercase tracking-widest">Cashback Percentage (%)</label>
+                                       <input 
+                                          type="number" 
+                                          value={tier.cashback_pct} 
+                                          onChange={(e) => {
+                                             const copy = [...loyaltyTiers];
+                                             copy[idx].cashback_pct = Number(e.target.value);
+                                             setLoyaltyTiers(copy);
+                                          }}
+                                          className="w-full h-10 bg-bg-primary/70 border border-[var(--foreground)]/5 rounded-lg px-3 text-[11px] font-black text-[var(--foreground)] outline-none"
+                                       />
+                                    </div>
+                                 </div>
+                                 <div className="space-y-1">
+                                    <label className="text-[8px] font-black text-text-secondary uppercase tracking-widest">Perks Description</label>
+                                    <input 
+                                       type="text" 
+                                       value={tier.perks || ""} 
+                                       onChange={(e) => {
+                                          const copy = [...loyaltyTiers];
+                                          copy[idx].perks = e.target.value;
+                                          setLoyaltyTiers(copy);
+                                       }}
+                                       className="w-full h-10 bg-bg-primary/70 border border-[var(--foreground)]/5 rounded-lg px-3 text-[11px] font-black text-[var(--foreground)] outline-none"
+                                    />
+                                 </div>
+                              </div>
+                           ))}
                         </div>
                      </div>
                   </Card>

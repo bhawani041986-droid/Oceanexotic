@@ -75,6 +75,7 @@ interface SettingsState {
   ordersCloseTime: string;      // HH:MM format e.g. "22:00"
   ordersNextOpenText: string;   // Human-readable label shown to customers
   topSellers?: { id: string; name: string; rating: number; speed: string; image: string; products: string[] }[];
+  cod_enabled: boolean;
 
   setSettings: (settings: Partial<SettingsState>) => void;
   authorizeMultiSig: () => void;
@@ -151,6 +152,7 @@ export const useSettingsStore = create<SettingsState>()(
       ordersOpenTime: '09:00',
       ordersCloseTime: '22:00',
       ordersNextOpenText: 'Tomorrow at 09:00 AM',
+      cod_enabled: false,
       
       // Default Global Handshakes
       instagram: "@oceanexotic_global",
@@ -221,7 +223,8 @@ export const useSettingsStore = create<SettingsState>()(
             ordersOpenTime: state.ordersOpenTime,
             ordersCloseTime: state.ordersCloseTime,
             ordersNextOpenText: state.ordersNextOpenText,
-            topSellers: state.topSellers
+            topSellers: state.topSellers,
+            cod_enabled: state.cod_enabled
           };
 
           const response = await fetch(`${API_BASE_URL}/system/settings`, {

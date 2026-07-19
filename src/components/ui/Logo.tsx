@@ -5,12 +5,22 @@ interface LogoProps {
   className?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   variant?: 'light' | 'dark' | 'color';
+  primaryColor?: string;
+  secondaryColor?: string;
+  accentColor?: string;
+  textColor?: string;
+  subtext?: string;
 }
 
 export const Logo: React.FC<LogoProps> = ({ 
   className, 
   size = 'md', 
-  variant = 'color' 
+  variant = 'color',
+  primaryColor,
+  secondaryColor,
+  accentColor,
+  textColor,
+  subtext
 }) => {
   const id = useId().replace(/:/g, '');
   const containerSizes = {
@@ -20,8 +30,10 @@ export const Logo: React.FC<LogoProps> = ({
     xl: { width: '432px', height: '108px' },
   };
 
-  const textFill = variant === 'light' ? '#FFFFFF' : variant === 'dark' ? '#000000' : 'var(--foreground)';
-  const primaryFill = variant === 'light' ? '#FFFFFF' : variant === 'dark' ? '#000000' : 'var(--primary, #00D1FF)';
+  const textFill = textColor || (variant === 'light' ? '#FFFFFF' : variant === 'dark' ? '#000000' : 'var(--foreground)');
+  const primaryFill = primaryColor || (variant === 'light' ? '#FFFFFF' : variant === 'dark' ? '#000000' : 'var(--primary, #00D1FF)');
+  const secondaryColorVal = secondaryColor || '#00D1FF';
+  const accentColorVal = accentColor || '#F0ABFC';
 
   return (
     <div className={cn("inline-flex items-center group", className)} style={containerSizes[size]}>
@@ -31,10 +43,10 @@ export const Logo: React.FC<LogoProps> = ({
           100% { stroke-dashoffset: 0; }
         }
         @keyframes hairyPulse {
-          0% { filter: drop-shadow(0 0 1px #00D1FF) drop-shadow(0 0 2px #F0ABFC); }
-          33% { filter: drop-shadow(0 0 1.5px #FACC15) drop-shadow(0 0 2.5px #00D1FF); }
-          66% { filter: drop-shadow(0 0 1px #F0ABFC) drop-shadow(0 0 2px #FACC15); }
-          100% { filter: drop-shadow(0 0 1px #00D1FF) drop-shadow(0 0 2px #F0ABFC); }
+          0% { filter: drop-shadow(0 0 2.5px ${secondaryColorVal}) drop-shadow(0 0 5px ${accentColorVal}); }
+          33% { filter: drop-shadow(0 0 3.5px #FACC15) drop-shadow(0 0 5.5px ${secondaryColorVal}); }
+          66% { filter: drop-shadow(0 0 2.5px ${accentColorVal}) drop-shadow(0 0 5px #FACC15); }
+          100% { filter: drop-shadow(0 0 2.5px ${secondaryColorVal}) drop-shadow(0 0 5px ${accentColorVal}); }
         }
         .neon-path {
           stroke-dasharray: 200 1300;
@@ -46,25 +58,25 @@ export const Logo: React.FC<LogoProps> = ({
         }
         .rgb-eye {
           fill: url(#eyeGradient-${id});
-          filter: drop-shadow(0 0 5px #00D1FF);
+          filter: drop-shadow(0 0 5px ${secondaryColorVal});
         }
       `}</style>
 
       <svg viewBox="20 20 545 150" xmlns="http://www.w3.org/2000/svg" className="w-full h-full" preserveAspectRatio="xMidYMid meet">
         <defs>
           <linearGradient id={`neonGradient-${id}`} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#00D1FF">
-              <animate attributeName="stop-color" values="#00D1FF;#F0ABFC;#FACC15;#00D1FF" dur="4s" repeatCount="indefinite" />
+            <stop offset="0%" stopColor={secondaryColorVal}>
+              <animate attributeName="stop-color" values={`${secondaryColorVal};${accentColorVal};#FACC15;${secondaryColorVal}`} dur="4s" repeatCount="indefinite" />
             </stop>
-            <stop offset="100%" stopColor="#F0ABFC">
-              <animate attributeName="stop-color" values="#F0ABFC;#FACC15;#00D1FF;#F0ABFC" dur="4s" repeatCount="indefinite" />
+            <stop offset="100%" stopColor={accentColorVal}>
+              <animate attributeName="stop-color" values={`${accentColorVal};#FACC15;${secondaryColorVal};${accentColorVal}`} dur="4s" repeatCount="indefinite" />
             </stop>
           </linearGradient>
 
           <radialGradient id={`eyeGradient-${id}`}>
             <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="100%" stopColor="#00D1FF">
-               <animate attributeName="stop-color" values="#00D1FF;#F0ABFC;#FACC15;#00D1FF" dur="2s" repeatCount="indefinite" />
+            <stop offset="100%" stopColor={secondaryColorVal}>
+               <animate attributeName="stop-color" values={`${secondaryColorVal};${accentColorVal};#FACC15;${secondaryColorVal}`} dur="2s" repeatCount="indefinite" />
             </stop>
           </radialGradient>
 
@@ -80,7 +92,7 @@ export const Logo: React.FC<LogoProps> = ({
         <g className="hairy-glow" transform="translate(60, 55) scale(1.15)">
           <path 
             fill={primaryFill}
-            d="M50 20 C35 20 20 30 15 50 L5 30 L5 70 L15 50 C20 70 35 80 50 80 C70 80 85 70 90 50 C85 30 70 20 50 20 Z M50 20 C55 10 65 5 75 5 C65 5 55 10 50 20 Z M50 80 C55 90 65 95 75 95 C65 95 55 90 50 80 Z" 
+            d="M50 20 C35 20 20 30 15 50 L5 30 L5 70 L15 50 C20 70 35 80 50 80 C70 80 85 70 90 50 C85 30 70 20 50 20 Z" 
             mask={`url(#mask-${id})`} 
           />
           <circle className="rgb-eye" cx="82" cy="48" r="3" style={{ fill: `url(#eyeGradient-${id})` }} />
@@ -113,7 +125,7 @@ export const Logo: React.FC<LogoProps> = ({
               style={{ fontFamily: 'Inter, sans-serif', fontWeight: 900, fontStyle: 'italic', fontSize: '24px', textTransform: 'uppercase', letterSpacing: '0.4em' }}
               x="65" y="0"
             >
-              GLOBAL
+              {subtext || "GLOBAL"}
             </text>
           </g>
         </g>

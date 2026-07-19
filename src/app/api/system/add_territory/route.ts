@@ -13,7 +13,13 @@ export async function POST(req: Request) {
       name: data.name,
       zone_type: data.zone_type,
       parent_id: data.parent_id || null,
-      status: data.status || 'ACTIVE'
+      status: data.status || 'ACTIVE',
+      delivery_charge: data.delivery_charge !== undefined ? data.delivery_charge : 0,
+      minimum_order: data.minimum_order !== undefined ? data.minimum_order : 0,
+      eta_mins: data.eta_mins !== undefined ? data.eta_mins : 30,
+      hub_code: data.hub_code || null,
+      manager_name: data.manager_name || null,
+      rider_capacity: data.rider_capacity !== undefined ? data.rider_capacity : 0
     };
 
     if (data.coordinates !== undefined) {

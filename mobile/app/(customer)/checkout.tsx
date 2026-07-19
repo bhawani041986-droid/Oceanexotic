@@ -35,6 +35,7 @@ export default function CheckoutScreen() {
   const [isPlacing, setIsPlacing] = useState(false);
   const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
   const [selectedAddress, setSelectedAddress] = useState<SavedAddress | null>(null);
+  const [selectedPayment, setSelectedPayment] = useState<string>("UPI");
 
   const subtotal = getTotal();
   const tax = subtotal * 0.05;
@@ -80,6 +81,14 @@ export default function CheckoutScreen() {
         .filter(Boolean)
         .join(", ");
 
+      // Validate service area availability dynamically
+      const areaCheck = await checkoutService.checkArea(selectedAddress.address || selectedAddress.address_line1 || selectedAddress.hotel_name);
+      if (areaCheck && areaCheck.deliverable === false) {
+        toast("Delivery is currently unavailable to your location. Please select an active delivery zone.", "error");
+        setIsPlacing(false);
+        return;
+      }
+
       const result = await checkoutService.placeOrder({
         userId: user?.id ?? "GUEST",
         items: items.map((i) => ({
@@ -91,7 +100,7 @@ export default function CheckoutScreen() {
         total: grandTotal,
         address: addressStr,
         phone: selectedAddress.phone,
-        paymentMethod: "COD",
+        paymentMethod: selectedPayment,
       });
 
       if (result.status === "success") {
@@ -315,29 +324,40 @@ export default function CheckoutScreen() {
           label="Payment Method"
           active={activeStep === 2}
           done={activeStep > 2}
-          summary="Cash on Delivery"
+          summary={selectedPayment}
           onEdit={() => activeStep > 2 ? setActiveStep(2) : undefined}
         >
-          {/* COD is the only method (mirrors web) */}
-          <View 
-            className="border-2 rounded-xl p-5 flex-row items-center gap-4"
-            style={{
-              borderColor: primaryColor,
-              backgroundColor: colors.primary + "0D"
-            }}
-          >
-            <Text className="text-3xl">🚚</Text>
-            <View className="flex-1">
-              <Text className="font-black uppercase italic text-foreground">
-                Cash on Delivery
-              </Text>
-              <Text className="text-xs text-muted-foreground mt-1">
-                Handshake at the jetty upon trade fulfillment
-              </Text>
-            </View>
-            <View className="w-5 h-5 rounded-full items-center justify-center" style={{ backgroundColor: primaryColor }}>
-              <Text className="text-[9px] text-foreground font-black">✓</Text>
-            </View>
+          <View className="gap-3">
+            {[
+              { key: "UPI", label: "UPI", icon: "📱", desc: "Google Pay, PhonePe, Paytm" },
+              { key: "CARD", label: "Debit / Credit Card", icon: "💳", desc: "Visa, Mastercard, RuPay" },
+              { key: "NET_BANKING", label: "Net Banking", icon: "🏛️", desc: "All major banks supported" },
+              { key: "WALLET", label: "Wallet", icon: "👛", desc: "Paytm, Mobikwik, FreeCharge" },
+            ].map((pm) => {
+              const isSel = selectedPayment === pm.key;
+              return (
+                <Pressable
+                  key={pm.key}
+                  onPress={() => setSelectedPayment(pm.key)}
+                  className="border rounded-xl p-4 flex-row items-center gap-3"
+                  style={{
+                    borderColor: isSel ? primaryColor : "rgba(255,255,255,0.05)",
+                    backgroundColor: isSel ? colors.primary + "0D" : "transparent"
+                  }}
+                >
+                  <Text className="text-2xl">{pm.icon}</Text>
+                  <View className="flex-1">
+                    <Text className="font-bold text-sm text-foreground">{pm.label}</Text>
+                    <Text className="text-[10px] text-muted-foreground mt-0.5">{pm.desc}</Text>
+                  </View>
+                  {isSel && (
+                    <View className="w-5 h-5 rounded-full items-center justify-center" style={{ backgroundColor: primaryColor }}>
+                      <Text className="text-[9px] text-foreground font-black">✓</Text>
+                    </View>
+                  )}
+                </Pressable>
+              );
+            })}
           </View>
           <View className="flex-row justify-end mt-4">
             <Button
@@ -466,7 +486,7 @@ export default function CheckoutScreen() {
       <View className="absolute bottom-0 left-0 right-0 border-t border-white/10 bg-background/95 px-4 py-3">
         <View className="flex-row items-center justify-between mb-2">
           <Text className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
-            {items.length} item{items.length !== 1 ? "s" : ""} · COD
+            {items.length} item{items.length !== 1 ? "s" : ""} · {selectedPayment}
           </Text>
           <Text className="text-lg font-black italic text-foreground">
             ₹{grandTotal.toLocaleString()}

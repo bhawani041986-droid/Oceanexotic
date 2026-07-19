@@ -73,6 +73,7 @@ const OceanReelsFeed = dynamic(
   { ssr: false, loading: () => <div className="w-full h-[250px] bg-[var(--c-bg)] animate-pulse my-4 border-y border-[var(--foreground)]/5" /> }
 );
 import { FULL_API_URL as API_BASE_URL } from "@/config/api";
+import { ServiceAreaChecker } from "@/components/customer/ServiceAreaChecker";
 
 // --- Components ---
 
@@ -1425,6 +1426,18 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
          <MaritimeWaveDivider />
       </div>
 
+      {/* ── SERVICE AREA CHECKER ─────────────────── */}
+      <section className="py-8 container mx-auto px-4 md:px-10">
+        <div className="flex flex-col items-center gap-3 mb-6">
+          <h2 className="text-xl md:text-2xl font-black uppercase tracking-tight text-center text-[var(--c-text-primary)]">
+            Do We Deliver To You?
+          </h2>
+          <p className="text-xs text-[var(--c-text-secondary)] text-center max-w-xs">
+            Check if fresh seafood delivery is available at your location in Port Blair
+          </p>
+        </div>
+        <ServiceAreaChecker className="mx-auto" />
+      </section>
 
       {/* 4. CATEGORY VAULT (RIBBON TYPE) */}
       <section className="py-2 container mx-auto px-0 md:px-10">

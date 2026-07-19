@@ -168,7 +168,16 @@ export default function AgentDashboardScreen() {
           className="flex-row items-center p-3 rounded-none border"
           style={{ backgroundColor: "rgba(255,255,255,0.03)", borderColor: mood.border }}
         >
-          <View className="w-2.5 h-2.5 rounded-none bg-emerald-500 mr-2 animate-pulse" />
+          <View 
+            className="w-2.5 h-2.5 rounded-none bg-emerald-500 mr-2 animate-pulse" 
+            style={{
+              shadowColor: "#10B981",
+              shadowOffset: { width: 0, height: 0 },
+              shadowOpacity: 0.9,
+              shadowRadius: 5,
+              elevation: 4,
+            }}
+          />
           <Text className="text-[10px] font-black uppercase tracking-wider" style={{ color: mood.text }}>
             Registry Live
           </Text>
@@ -184,6 +193,11 @@ export default function AgentDashboardScreen() {
             style={{
               backgroundColor: isLight ? "#F1F5F9" : "rgba(255, 255, 255, 0.03)",
               borderColor: mood.border,
+              shadowColor: mood.primary,
+              shadowOffset: { width: 0, height: 0 },
+              shadowOpacity: isLight ? 0.05 : 0.2,
+              shadowRadius: 6,
+              elevation: 2,
             }}
           >
             {stat.icon}
@@ -269,6 +283,11 @@ export default function AgentDashboardScreen() {
                   <Text className="text-xs font-black text-slate-400 uppercase tracking-wider">
                     CONSIGNEE: {mission.customer}
                   </Text>
+                  {mission.customer_phone ? (
+                    <Text className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mt-1">
+                      PHONE: {mission.customer_phone}
+                    </Text>
+                  ) : null}
                 </View>
                 <Text className="text-[10px] font-black italic" style={{ color: mood.primary }}>
                   {mission.time}
@@ -302,10 +321,10 @@ export default function AgentDashboardScreen() {
                   style={{
                     backgroundColor: mood.primary,
                     shadowColor: mood.primary,
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.3,
-                    shadowRadius: 5,
-                    elevation: 3,
+                    shadowOffset: { width: 0, height: 0 },
+                    shadowOpacity: isLight ? 0.4 : 0.85,
+                    shadowRadius: 8,
+                    elevation: 5,
                   }}
                 >
                   <ZapIcon color="#FFFFFF" />

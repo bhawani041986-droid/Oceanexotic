@@ -25,7 +25,7 @@ export interface PlaceOrderPayload {
   total: number;
   address: string;       // formatted delivery string
   phone: string;
-  paymentMethod: "COD";
+  paymentMethod: string;
 }
 
 export interface PlaceOrderResponse {
@@ -56,6 +56,12 @@ export const checkoutService = {
   /** POST order to marketplace/checkout */
   placeOrder: async (payload: PlaceOrderPayload): Promise<PlaceOrderResponse> => {
     const { data } = await api.post("/marketplace/checkout", payload);
+    return data;
+  },
+
+  /** Validate location availability dynamically */
+  checkArea: async (area: string): Promise<any> => {
+    const { data } = await api.get(`/system/check-area?area=${encodeURIComponent(area)}`);
     return data;
   },
 };

@@ -1,4 +1,4 @@
-import { Stack, useRouter } from "expo-router";
+import { Stack, useRouter, usePathname } from "expo-router";
 import { useEffect } from "react";
 import { View, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,9 +9,12 @@ import { AgentTabBar } from "@/components/agent/AgentTabBar";
 
 export default function AgentLayout() {
   const router = useRouter();
+  const pathname = usePathname();
   const { isAuthenticated, isHydrated, user } = useAuthStore();
   const currentMood = useAgentStore((s) => s.currentMood);
   const mood = MOODS[currentMood];
+
+  const isChatScreen = pathname.includes("/chat");
 
   useEffect(() => {
     if (!isHydrated) return;
@@ -35,7 +38,7 @@ export default function AgentLayout() {
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: mood.bg }}>
       <AgentHeader />
-      <View className="flex-1 pb-20">
+      <View className={`flex-1 ${isChatScreen ? "" : "pb-20"}`}>
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="dashboard" />
           <Stack.Screen name="tracking" />
@@ -43,7 +46,7 @@ export default function AgentLayout() {
           <Stack.Screen name="profile" />
         </Stack>
       </View>
-      <AgentTabBar />
+      {!isChatScreen && <AgentTabBar />}
     </SafeAreaView>
   );
 }

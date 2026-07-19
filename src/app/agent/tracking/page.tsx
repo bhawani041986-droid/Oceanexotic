@@ -129,16 +129,35 @@ function AgentTrackingContent() {
   // ─── API Calls ───────────────────────────────────────────────────────────────
   const fetchOrderDetails = async () => {
     try {
+      const numericId = String(orderId).replace(/\D/g, "");
+      if (!numericId) return;
+      const res = await fetch(`/api/admin/orders?id=${numericId}`);
+      if (!res.ok) throw new Error("Failed to fetch order");
+      const order = await res.json();
+      const addressParts = (order.delivery_address || "").split(" | Phone: ");
+      const displayAddress = addressParts[0] || "Port Blair";
+      const customerPhone = addressParts[1] || order.customer_phone || "";
+      
+      setOrderInfo({
+        customer: order.customer_name || order.user_id || "Customer",
+        customer_phone: customerPhone,
+        address: displayAddress,
+        items: [
+          { name: "Ocean Fresh Seafood Order", qty: `Total: ₹${order.total_amount}` }
+        ],
+        original_id: order.id
+      });
+    } catch (err) {
       setOrderInfo({
         customer: "Vikram Sharma",
-        phone: "+91 98765 43210",
+        customer_phone: "+91 98765 43210",
         address: "Marine Villa, Sector 4, Port Blair, Andaman & Nicobar Islands",
         items: [
           { name: "Premium Bluefin Saku", qty: "2kg" },
           { name: "Fresh Atlantic Salmon", qty: "1.5kg" },
         ],
       });
-    } catch (err) {}
+    }
   };
 
   const broadcastTelemetry = async (newState?: MissionState) => {
@@ -381,11 +400,27 @@ function AgentTrackingContent() {
                   <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: "var(--agent-primary)1A" }}>
                     <User className="w-3 h-3" style={{ color: "var(--agent-primary)" }} />
                   </div>
-                  <p className="text-[11px] font-black uppercase tracking-tight truncate" style={{ color: "var(--agent-text)" }}>
-                    {orderInfo?.customer || "Syncing..."}
-                  </p>
+                  <div>
+                    <p className="text-[11px] font-black uppercase tracking-tight truncate" style={{ color: "var(--agent-text)" }}>
+                      {orderInfo?.customer || "Syncing..."}
+                    </p>
+                    {orderInfo?.customer_phone && (
+                      <p className="text-[9px] font-bold text-slate-500 truncate" style={{ color: "var(--agent-text)80" }}>
+                        {orderInfo.customer_phone}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <Button variant="ghost" className="w-full sm:w-auto h-7 px-3 text-emerald-400 hover:bg-emerald-500 hover:text-white -skew-x-12 text-[8px] font-black uppercase shrink-0" style={{ backgroundColor: "#10B9811A" }}>
+                <Button 
+                  variant="ghost" 
+                  className="w-full sm:w-auto h-7 px-3 text-emerald-400 hover:bg-emerald-500 hover:text-white -skew-x-12 text-[8px] font-black uppercase shrink-0" 
+                  style={{ backgroundColor: "#10B9811A" }}
+                  onClick={() => {
+                    if (orderInfo?.customer_phone) {
+                      window.location.href = `tel:${orderInfo.customer_phone}`;
+                    }
+                  }}
+                >
                   <Phone className="w-3 h-3 skew-x-12 mr-1" /> Call
                 </Button>
               </div>

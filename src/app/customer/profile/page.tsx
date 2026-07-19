@@ -30,7 +30,11 @@ import {
   Loader2,
   Smartphone,
   Wallet,
-  Search
+  Search,
+  Gift,
+  Share2,
+  TrendingUp,
+  Award
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -246,6 +250,8 @@ export default function CustomerProfilePage() {
 
   const menuItems = [
     { id: "overview", label: "Profile Overview", icon: <User className="w-4 h-4" />, color: "#00D1FF" },
+    { id: "loyalty", label: "Loyalty Hub", icon: <Award className="w-4 h-4" />, color: "#F59E0B" },
+    { id: "referrals", label: "Refer & Earn", icon: <Gift className="w-4 h-4" />, color: "#EC4899" },
     { id: "addresses", label: "Saved Addresses", icon: <MapPin className="w-4 h-4" />, color: "#10B981" },
     { id: "payments", label: "Payment Methods", icon: <CreditCard className="w-4 h-4" />, color: "#FACC15" },
     { id: "security", label: "Account Security", icon: <ShieldCheck className="w-4 h-4" />, color: "#A855F7" },
@@ -546,7 +552,7 @@ export default function CustomerProfilePage() {
                 <div className="flex items-center gap-0">
                    {menuItems.map((item, idx) => {
                      const isActive = activeTab === item.id;
-                     const shortLabels: Record<string, string> = { overview: "Profile", addresses: "Address", payments: "Payment", security: "Security", notifications: "Alerts" };
+                     const shortLabels: Record<string, string> = { overview: "Profile", loyalty: "Loyalty", referrals: "Refer", addresses: "Address", payments: "Payment", security: "Security", notifications: "Alerts" };
                      return (
                        <button 
                          key={item.id} 
@@ -574,28 +580,171 @@ export default function CustomerProfilePage() {
              </div>
 
              {activeTab === "overview" && (
-                <div className="space-y-[10px] md:space-y-10 animate-fade-in">
-                   <div className="grid grid-cols-1 md:grid-cols-3 gap-[10px] md:gap-6">
-                      <Card className="p-[10px] md:p-10 bg-bg-card/40 border-[var(--foreground)]/5 rounded-[24px] md:rounded-[48px] space-y-[4px] md:space-y-6 md:col-span-2 relative overflow-hidden group">
-                         <div className="flex items-center justify-between">
-                            <h4 className="text-sm md:text-xl font-black uppercase italic text-[var(--foreground)] shadow-glow-purple/5">Loyalty Points</h4>
-                            <Star className="w-4 h-4 md:w-6 md:h-6 text-warning fill-warning opacity-40" />
+                 <div className="space-y-[10px] md:space-y-10 animate-fade-in">
+                   <div className="grid grid-cols-2 md:grid-cols-4 gap-[10px] md:gap-6">
+                      <Card className="p-[10px] md:p-6 bg-bg-card/40 border-[var(--foreground)]/5 rounded-[24px] md:rounded-[32px] space-y-[4px] md:space-y-4">
+                         <div className="w-8 h-8 md:w-12 md:h-12 bg-blue-500/10 rounded-xl md:rounded-2xl flex items-center justify-center text-blue-500 shadow-glow-purple/5"><Wallet className="w-4 h-4 md:w-6 md:h-6" /></div>
+                         <div>
+                           <p className="text-[8px] md:text-[10px] font-black uppercase text-text-secondary tracking-widest italic">Wallet Balance</p>
+                           <p className="text-lg md:text-2xl font-black uppercase italic text-[var(--foreground)]">₹{Number(userProfile?.wallet_balance || 0).toLocaleString()}</p>
                          </div>
-                          <div className="space-y-[4px] md:space-y-4">
-                             <div className="h-3 md:h-4 bg-[var(--foreground)]/5 rounded-full overflow-hidden p-[1px]"><motion.div initial={{ width: 0 }} animate={{ width: `${Math.min(100, (loyaltyPoints / 3000) * 100)}%` }} className="h-full bg-gradient-to-r from-primary to-blue-500 shadow-glow-purple rounded-full" /></div>
-                             <div className="flex justify-between text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] italic text-[var(--foreground)]/40"><span>{loyaltyPoints} PTS</span><span className="text-text-secondary">{Math.max(0, 3000 - loyaltyPoints)} PTS TO PLATINUM</span></div>
-                          </div>
                       </Card>
-                      <Card className="p-[10px] md:p-10 bg-bg-card/40 border-[var(--foreground)]/5 rounded-[24px] md:rounded-[48px] flex flex-col items-center justify-center text-center space-y-[4px] md:space-y-4">
-                         <div className="w-10 h-10 md:w-16 md:h-16 bg-green-500/10 rounded-2xl md:rounded-3xl flex items-center justify-center text-green-500 shadow-glow-purple/5"><ShieldCheck className="w-5 h-5 md:w-8 md:h-8" /></div>
-                         <p className="text-xs md:text-xl font-black uppercase italic text-[var(--foreground)] shadow-glow-purple/5 leading-tight">Account Secure</p>
+                      <Card className="p-[10px] md:p-6 bg-bg-card/40 border-[var(--foreground)]/5 rounded-[24px] md:rounded-[32px] space-y-[4px] md:space-y-4">
+                         <div className="w-8 h-8 md:w-12 md:h-12 bg-emerald-500/10 rounded-xl md:rounded-2xl flex items-center justify-center text-emerald-500 shadow-glow-purple/5"><TrendingUp className="w-4 h-4 md:w-6 md:h-6" /></div>
+                         <div>
+                           <p className="text-[8px] md:text-[10px] font-black uppercase text-text-secondary tracking-widest italic">Lifetime Spend</p>
+                           <p className="text-lg md:text-2xl font-black uppercase italic text-[var(--foreground)]">₹{Number(userProfile?.total_spend || 0).toLocaleString()}</p>
+                         </div>
+                      </Card>
+                      <Card className="p-[10px] md:p-6 bg-bg-card/40 border-[var(--foreground)]/5 rounded-[24px] md:rounded-[32px] space-y-[4px] md:space-y-4">
+                         <div className="w-8 h-8 md:w-12 md:h-12 bg-purple-500/10 rounded-xl md:rounded-2xl flex items-center justify-center text-purple-500 shadow-glow-purple/5"><ShoppingBag className="w-4 h-4 md:w-6 md:h-6" /></div>
+                         <div>
+                           <p className="text-[8px] md:text-[10px] font-black uppercase text-text-secondary tracking-widest italic">Total Orders</p>
+                           <p className="text-lg md:text-2xl font-black uppercase italic text-[var(--foreground)]">{userProfile?.order_count || 0}</p>
+                         </div>
+                      </Card>
+                      <Card className="p-[10px] md:p-6 bg-bg-card/40 border-[var(--foreground)]/5 rounded-[24px] md:rounded-[32px] space-y-[4px] md:space-y-4">
+                         <div className="w-8 h-8 md:w-12 md:h-12 bg-amber-500/10 rounded-xl md:rounded-2xl flex items-center justify-center text-amber-500 shadow-glow-purple/5"><Heart className="w-4 h-4 md:w-6 md:h-6" /></div>
+                         <div>
+                           <p className="text-[8px] md:text-[10px] font-black uppercase text-text-secondary tracking-widest italic">Favorite Catch</p>
+                           <p className="text-xs md:text-sm font-black uppercase italic text-[var(--foreground)] mt-1 truncate">
+                             {userProfile?.favourite_seafood && userProfile.favourite_seafood.length > 0 ? (typeof userProfile.favourite_seafood === 'string' ? JSON.parse(userProfile.favourite_seafood)[0] : userProfile.favourite_seafood[0]) : "No orders yet"}
+                           </p>
+                         </div>
                       </Card>
                    </div>
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      <Card className="p-8 bg-bg-card/40 border-[var(--foreground)]/5 rounded-[40px] space-y-6 group text-[var(--foreground)]">
+                      <Card className="p-8 bg-bg-card/40 border-[var(--foreground)]/5 rounded-[40px] space-y-6 group text-[var(--foreground)] cursor-pointer hover:border-primary/30 transition-all" onClick={() => setActiveTab("addresses")}>
                          <h4 className="text-xl font-black uppercase italic shadow-glow-purple/5">Default Address</h4>
-                          <div className="flex items-start gap-4 p-5 rounded-2xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 shadow-glow-purple/5"><MapPin className="w-5 h-5 text-primary mt-1" /><p className="text-xs text-[var(--foreground)]/60 italic">{Array.isArray(addresses) ? (addresses.find(a => a.is_default)?.address || "No primary address set") : "Initializing..."}</p></div>
+                          <div className="flex items-start gap-4 p-5 rounded-2xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 shadow-glow-purple/5 group-hover:bg-primary/5 transition-all"><MapPin className="w-5 h-5 text-primary mt-1" /><p className="text-xs text-[var(--foreground)]/60 italic">{Array.isArray(addresses) ? (addresses.find(a => a.is_default)?.address || "No primary address set") : "Initializing..."}</p></div>
                       </Card>
+                      <Card className="p-8 bg-bg-card/40 border-[var(--foreground)]/5 rounded-[40px] space-y-6 group text-[var(--foreground)] cursor-pointer hover:border-primary/30 transition-all" onClick={() => setActiveTab("loyalty")}>
+                         <div className="flex items-center justify-between">
+                            <h4 className="text-xl font-black uppercase italic shadow-glow-purple/5 flex items-center gap-2">Loyalty Tier <Award className="w-5 h-5 text-warning" /></h4>
+                         </div>
+                         <div className="p-5 rounded-2xl bg-warning/10 border border-warning/20 shadow-glow-purple/5 group-hover:bg-warning/20 transition-all">
+                            <p className="text-lg font-black text-warning uppercase italic">{userProfile?.loyalty_tier || 'Bronze'} Tier</p>
+                            <p className="text-[10px] text-warning/80 uppercase tracking-widest font-black mt-1">Unlock benefits and cashbacks</p>
+                         </div>
+                      </Card>
+                   </div>
+                </div>
+             )}
+
+             {activeTab === "loyalty" && (
+                <div className="space-y-[10px] md:space-y-10 animate-fade-in">
+                   <div className="flex items-center justify-between px-2">
+                      <div>
+                        <h4 className="text-sm md:text-xl font-black uppercase italic text-[var(--foreground)] shadow-glow-purple/5 flex items-center gap-2">Loyalty Hub <Award className="w-5 h-5 text-warning" /></h4>
+                        <p className="text-[10px] text-text-secondary uppercase tracking-widest font-black mt-1">Unlock benefits & cashbacks</p>
+                      </div>
+                   </div>
+                   
+                   <div className="grid grid-cols-1 gap-6">
+                      <Card className="p-[10px] md:p-10 bg-bg-card/40 border-[var(--foreground)]/5 rounded-[24px] md:rounded-[48px] space-y-[4px] md:space-y-8 relative overflow-hidden group">
+                         <div className="flex items-center justify-between">
+                            <h4 className="text-sm md:text-xl font-black uppercase italic text-warning shadow-glow-purple/5 flex items-center gap-2">
+                               Current Tier: {userProfile?.loyalty_tier || 'Bronze'}
+                            </h4>
+                            <div className="px-3 py-1 bg-warning/10 text-warning text-[10px] font-black uppercase rounded-full border border-warning/20">
+                               {userProfile?.loyalty_tier === 'PLATINUM' ? '10%' : (userProfile?.loyalty_tier === 'GOLD' ? '6%' : (userProfile?.loyalty_tier === 'SILVER' ? '4%' : '2%'))} Cashback
+                            </div>
+                         </div>
+                          <div className="space-y-[4px] md:space-y-4">
+                             <div className="flex justify-between text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] italic text-[var(--foreground)]/60 mb-2">
+                               <span>Bronze</span>
+                               <span>Silver</span>
+                               <span>Gold</span>
+                               <span>Platinum</span>
+                             </div>
+                             <div className="h-4 md:h-6 bg-[var(--foreground)]/5 rounded-full overflow-hidden p-[1px] relative">
+                                <motion.div initial={{ width: 0 }} animate={{ width: `${Math.min(100, (Number(userProfile?.total_spend || 0) / 10000) * 100)}%` }} className="h-full bg-gradient-to-r from-warning to-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.5)] rounded-full relative overflow-hidden">
+                                   <div className="absolute top-0 -left-[100%] w-1/2 h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[45deg] animate-[shimmer_2s_infinite]" />
+                                </motion.div>
+                                {/* Tier markers */}
+                                <div className="absolute top-0 left-[5%] h-full w-[2px] bg-[var(--foreground)]/20" />
+                                <div className="absolute top-0 left-[20%] h-full w-[2px] bg-[var(--foreground)]/20" />
+                                <div className="absolute top-0 left-[50%] h-full w-[2px] bg-[var(--foreground)]/20" />
+                             </div>
+                             <div className="flex justify-between text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] italic text-[var(--foreground)]/40 mt-2">
+                               <span>₹{Number(userProfile?.total_spend || 0).toLocaleString()} SPENT</span>
+                               <span className="text-warning font-bold">₹{Math.max(0, 10000 - Number(userProfile?.total_spend || 0)).toLocaleString()} TO PLATINUM</span>
+                             </div>
+                          </div>
+                      </Card>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {[
+                          { tier: "Bronze", min: "₹0", cb: "2%", icon: "🥉", perks: "Early access to fresh catch alerts" },
+                          { tier: "Silver", min: "₹2,000", cb: "4%", icon: "🥈", perks: "4% cashback + priority delivery slot" },
+                          { tier: "Gold", min: "₹5,000", cb: "6%", icon: "🥇", perks: "6% cashback + free delivery on every order" },
+                          { tier: "Platinum", min: "₹10,000", cb: "10%", icon: "💎", perks: "10% cashback + dedicated delivery agent + priority" },
+                        ].map((t) => (
+                           <Card key={t.tier} className={cn("p-6 border-[var(--foreground)]/5 rounded-[24px] flex items-center gap-4 transition-all", (userProfile?.loyalty_tier || 'Bronze').toUpperCase() === t.tier.toUpperCase() ? "bg-warning/10 border-warning/30" : "bg-bg-card/40 opacity-70 grayscale hover:grayscale-0")}>
+                             <div className="text-4xl">{t.icon}</div>
+                             <div>
+                               <h5 className={cn("text-sm font-black uppercase italic", (userProfile?.loyalty_tier || 'Bronze').toUpperCase() === t.tier.toUpperCase() ? "text-warning" : "text-[var(--foreground)]")}>{t.tier} Tier</h5>
+                               <p className="text-[10px] text-text-secondary uppercase tracking-widest font-black mb-1">Min Spend: {t.min} • {t.cb} Cashback</p>
+                               <p className="text-[9px] text-[var(--foreground)]/60 italic">{t.perks}</p>
+                             </div>
+                           </Card>
+                        ))}
+                      </div>
+                   </div>
+                </div>
+             )}
+
+             {activeTab === "referrals" && (
+                <div className="space-y-[10px] md:space-y-10 animate-fade-in">
+                   <div className="flex items-center justify-between px-2">
+                      <div>
+                        <h4 className="text-sm md:text-xl font-black uppercase italic text-[var(--foreground)] shadow-glow-purple/5 flex items-center gap-2">Refer & Earn <Gift className="w-5 h-5 text-pink-500" /></h4>
+                        <p className="text-[10px] text-text-secondary uppercase tracking-widest font-black mt-1">Invite friends & earn wallet cash</p>
+                      </div>
+                   </div>
+                   
+                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                      <div className="lg:col-span-7 space-y-6">
+                         <Card className="p-8 bg-pink-500/5 border-pink-500/20 rounded-[32px] space-y-6 relative overflow-hidden text-center">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-pink-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+                            <div className="w-16 h-16 mx-auto bg-pink-500/20 rounded-full flex items-center justify-center text-pink-500 border border-pink-500/30">
+                               <Gift className="w-8 h-8" />
+                            </div>
+                            <div>
+                               <h4 className="text-2xl font-black uppercase italic text-[var(--foreground)]">Give ₹100, Get ₹100</h4>
+                               <p className="text-xs text-text-secondary mt-2">When your friend registers using your code, you both get ₹100 credited directly to your Wallet.</p>
+                            </div>
+                            
+                            <div className="space-y-2 pt-4">
+                               <p className="text-[9px] font-black uppercase text-pink-500 tracking-widest italic">YOUR UNIQUE REFERRAL CODE</p>
+                               <div className="flex items-center justify-center gap-4 bg-[var(--foreground)]/5 p-4 rounded-2xl border border-[var(--foreground)]/10">
+                                  <span className="text-3xl font-black tracking-widest text-[var(--foreground)]">{userProfile?.referral_code || 'OE-MEMBER'}</span>
+                               </div>
+                            </div>
+                            
+                            <div className="flex gap-4 justify-center">
+                               <Button onClick={() => { navigator.clipboard.writeText(userProfile?.referral_code || 'OE-MEMBER'); toast("Code copied to clipboard!", "success"); }} className="h-12 px-8 rounded-xl bg-[var(--foreground)]/10 hover:bg-[var(--foreground)]/20 text-[10px] font-black uppercase text-[var(--foreground)] italic">
+                                  Copy Code
+                               </Button>
+                               <Button onClick={() => {
+                                  const text = encodeURIComponent(`Use my code ${userProfile?.referral_code || 'OE-MEMBER'} on Ocean Exotic to get ₹100 in your wallet for premium seafood delivery!`);
+                                  window.open(`https://wa.me/?text=${text}`, '_blank');
+                               }} className="h-12 px-8 rounded-xl bg-green-500 hover:bg-green-600 text-white text-[10px] font-black uppercase italic shadow-[0_0_15px_rgba(34,197,94,0.3)] flex items-center gap-2">
+                                  <Share2 className="w-4 h-4" /> Share on WhatsApp
+                               </Button>
+                            </div>
+                         </Card>
+                      </div>
+                      
+                      <div className="lg:col-span-5">
+                         <Card className="p-6 bg-bg-card/40 border-[var(--foreground)]/5 rounded-[32px] h-full flex flex-col">
+                            <h4 className="text-sm font-black uppercase italic text-[var(--foreground)] mb-4">Your Referrals</h4>
+                            <div className="flex-1 flex flex-col items-center justify-center opacity-50 space-y-3 py-10">
+                               <Gift className="w-10 h-10 text-[var(--foreground)]/20" />
+                               <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary text-center">No successful referrals yet.<br/>Share your code to start earning!</p>
+                            </div>
+                         </Card>
+                      </div>
                    </div>
                 </div>
              )}
