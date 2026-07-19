@@ -47,6 +47,15 @@ export default function TerritoryWizardPage() {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+
+    // Guarantee Leaflet CSS is loaded
+    if (!document.querySelector('link[href*="leaflet.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+      document.head.appendChild(link);
+    }
+
     if ((window as any).L) {
       setIsLReady(true);
       if ((window as any).L.Draw) {
@@ -56,11 +65,6 @@ export default function TerritoryWizardPage() {
       }
       return;
     }
-
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
-    document.head.appendChild(link);
 
     const script = document.createElement('script');
     script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
@@ -73,10 +77,14 @@ export default function TerritoryWizardPage() {
 
   const loadLeafletDraw = () => {
     if (typeof window === 'undefined') return;
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css';
-    document.head.appendChild(link);
+    
+    // Guarantee Leaflet Draw CSS is loaded
+    if (!document.querySelector('link[href*="leaflet.draw.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css';
+      document.head.appendChild(link);
+    }
 
     const script = document.createElement('script');
     script.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js";
@@ -1141,10 +1149,11 @@ export default function TerritoryWizardPage() {
                   </div>
                   <div 
                     id="editor-leaflet-map" 
-                    className={cn(
-                      "bg-[var(--foreground)]/5 rounded-xl border border-[var(--foreground)]/10 overflow-hidden relative",
-                      isMapEnlarged ? "w-full flex-1 min-h-[300px]" : "w-full h-[220px]"
-                    )} 
+                    className="bg-[var(--foreground)]/5 rounded-xl border border-[var(--foreground)]/10 overflow-hidden relative w-full"
+                    style={{ 
+                      height: isMapEnlarged ? '450px' : '240px', 
+                      minHeight: isMapEnlarged ? '400px' : '240px' 
+                    }}
                   />
                 </div>
               )}
