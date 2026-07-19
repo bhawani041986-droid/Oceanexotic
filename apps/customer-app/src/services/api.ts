@@ -38,7 +38,7 @@ api.interceptors.response.use(
   async (error) => {
     const url = error.config?.url ?? "";
     const isAuthEndpoint =
-      url.includes("/auth/login") || url.includes("/auth/register");
+      url.includes("auth/login") || url.includes("auth/register");
 
     if (error.response?.status === 401 && !isAuthEndpoint) {
       await clearAuthStorage();
