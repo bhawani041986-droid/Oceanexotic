@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { 
@@ -19,7 +19,9 @@ import {
   Layers,
   Save,
   X,
-  PlusCircle
+  PlusCircle,
+  Maximize2,
+  Minimize2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -28,6 +30,7 @@ import { FULL_API_URL as API_BASE_URL } from "@/config/api";
 export default function TerritoryWizardPage() {
   const [loading, setLoading] = useState(false);
   const [territories, setTerritories] = useState<any[]>([]);
+  const mapRef = useRef<any>(null);
 
   // Selected Nodes
   const [selectedCountry, setSelectedCountry] = useState<any>(null);
@@ -40,6 +43,7 @@ export default function TerritoryWizardPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isLReady, setIsLReady] = useState(false);
   const [isDrawReady, setIsDrawReady] = useState(false);
+  const [isMapEnlarged, setIsMapEnlarged] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -125,9 +129,10 @@ export default function TerritoryWizardPage() {
 
       const map = L.map('editor-leaflet-map').setView(initialCenter, 14);
       (container as any)._leaflet_map = map;
+      mapRef.current = map;
 
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap &copy; CARTO'
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
       }).addTo(map);
 
       const drawnItems = new L.FeatureGroup();
@@ -211,8 +216,17 @@ export default function TerritoryWizardPage() {
         (container as any)._leaflet_map.remove();
         delete (container as any)._leaflet_map;
       }
+      mapRef.current = null;
     };
   }, [editorModal, isLReady, isDrawReady]);
+
+  useEffect(() => {
+    if (!mapRef.current) return;
+    const timer = setTimeout(() => {
+      mapRef.current.invalidateSize();
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [isMapEnlarged]);
 
   useEffect(() => {
     if (territories.length === 0) return;
@@ -923,15 +937,17 @@ export default function TerritoryWizardPage() {
                 />
               </div>
 
-              <div>
-                <label className="text-[10px] font-black text-primary uppercase tracking-widest block mb-2">Telemetry Coordinates (Lat, Lng)</label>
-                <input 
-                  value={editorModal.coordinates}
-                  onChange={e => setEditorModal({ ...editorModal, coordinates: e.target.value })}
-                  placeholder="e.g. 11.6350, 92.7079"
-                  className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 p-3 rounded-xl text-[var(--foreground)] outline-none focus:border-primary/50 text-sm"
-                />
-              </div>
+              {editorModal.type !== "DELIVERY_ZONE" && (
+                <div>
+                  <label className="text-[10px] font-black text-primary uppercase tracking-widest block mb-2">Telemetry Coordinates (Lat, Lng)</label>
+                  <input 
+                    value={editorModal.coordinates}
+                    onChange={e => setEditorModal({ ...editorModal, coordinates: e.target.value })}
+                    placeholder="e.g. 11.6350, 92.7079"
+                    className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 p-3 rounded-xl text-[var(--foreground)] outline-none focus:border-primary/50 text-sm"
+                  />
+                </div>
+              )}
 
               {/* Hub fields */}
               {editorModal.type === "ADMIN_HUB" && (
@@ -1092,14 +1108,44 @@ export default function TerritoryWizardPage() {
               )}
               {/* Geofence Map Drawer for Hubs & Zones */}
               {(editorModal.type === "ADMIN_HUB" || editorModal.type === "DELIVERY_ZONE") && (
-                <div className="space-y-2 pt-4 border-t border-[var(--foreground)]/5">
-                  <label className="text-[10px] font-black text-primary uppercase tracking-widest block">Geofence Boundary Map</label>
-                  <p className="text-[9px] text-muted-foreground">
-                    {editorModal.type === "ADMIN_HUB" 
-                      ? "Drag the marker on the map to set the exact logistics hub coordinates." 
-                      : "Use the draw polygon tool on the right side of the map to outline the strict geofence boundary."}
-                  </p>
-                  <div id="editor-leaflet-map" className="w-full h-[220px] bg-[var(--foreground)]/5 rounded-xl border border-[var(--foreground)]/10 overflow-hidden relative" />
+                <div className={cn(
+                  "space-y-2 pt-4 border-t border-[var(--foreground)]/5 transition-all duration-300",
+                  isMapEnlarged 
+                    ? "fixed inset-4 md:inset-10 z-[9999] bg-bg-secondary rounded-2xl border border-[var(--foreground)]/20 shadow-2xl p-6 flex flex-col space-y-4" 
+                    : "relative flex flex-col"
+                )}>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <label className="text-[10px] font-black text-primary uppercase tracking-widest block">Geofence Boundary Map</label>
+                      <p className="text-[9px] text-muted-foreground">
+                        {editorModal.type === "ADMIN_HUB" 
+                          ? "Drag the marker on the map to set the exact logistics hub coordinates." 
+                          : "Use the draw polygon tool on the right side of the map to outline the strict geofence boundary."}
+                      </p>
+                    </div>
+                    <Button 
+                      size="sm" 
+                      onClick={() => setIsMapEnlarged(!isMapEnlarged)}
+                      className="h-7 px-2.5 bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 text-[var(--foreground)] border-transparent rounded-lg flex items-center gap-1.5 text-[9px] font-black uppercase tracking-wider"
+                    >
+                      {isMapEnlarged ? (
+                        <>
+                          <Minimize2 className="w-3.5 h-3.5" /> Minimize Map
+                        </>
+                      ) : (
+                        <>
+                          <Maximize2 className="w-3.5 h-3.5" /> Enlarge Map
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                  <div 
+                    id="editor-leaflet-map" 
+                    className={cn(
+                      "bg-[var(--foreground)]/5 rounded-xl border border-[var(--foreground)]/10 overflow-hidden relative",
+                      isMapEnlarged ? "w-full flex-1 min-h-[300px]" : "w-full h-[220px]"
+                    )} 
+                  />
                 </div>
               )}
             </div>
