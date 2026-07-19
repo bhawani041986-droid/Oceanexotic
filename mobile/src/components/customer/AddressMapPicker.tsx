@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { WebView } from "react-native-webview";
 import Svg, { Path, Circle } from "react-native-svg";
@@ -17,6 +17,7 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
   primaryColor = "#0d9488",
 }) => {
   const webViewRef = useRef<WebView>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const defaultLat = initialLat || 11.6234;
   const defaultLng = initialLng || 92.7265;
@@ -29,7 +30,7 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
       <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
       <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
       <style>
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; background: #0f172a; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body, html { margin: 0; padding: 0; height: 100%; width: 100%; background: #020617; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; touch-action: none; }
         #map { height: 100%; width: 100%; z-index: 1; }
         .leaflet-control-attribution { display: none !important; }
         
@@ -47,7 +48,7 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
           border: 1px solid #334155;
           border-radius: 8px;
           padding: 6px 12px;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
         .search-input {
           flex: 1;
@@ -60,6 +61,18 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
         }
         .search-input::placeholder {
           color: #94a3b8;
+        }
+        .mode-toggle {
+          background: #1e293b;
+          color: #ffffff;
+          border: 1px solid #475569;
+          font-size: 9px;
+          font-weight: 800;
+          padding: 4px 8px;
+          border-radius: 6px;
+          cursor: pointer;
+          margin-left: 6px;
+          white-space: nowrap;
         }
         .results-list {
           background: rgba(15, 23, 42, 0.98);
@@ -78,7 +91,7 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
           cursor: pointer;
         }
         .result-item:hover {
-          background: ${primaryColor}22;
+          background: ${primaryColor}33;
           color: #ffffff;
         }
 
@@ -96,7 +109,7 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
           font-weight: 700;
           display: none;
           text-align: center;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.4);
         }
 
         .custom-pin-marker {
@@ -112,7 +125,7 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
           background: ${primaryColor};
           border: 3px solid #ffffff;
           border-radius: 50%;
-          box-shadow: 0 0 15px ${primaryColor}99;
+          box-shadow: 0 0 18px ${primaryColor};
           animation: pulse 2s infinite;
         }
         @keyframes pulse {
@@ -125,7 +138,8 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
     <body>
       <div className="search-container">
         <div className="search-input-wrap">
-          <input id="searchInput" type="text" className="search-input" placeholder="🔍 Search place in Andaman (e.g. Havelock, Phoenix Bay)..." />
+          <input id="searchInput" type="text" className="search-input" placeholder="🔍 Search Port Blair landmarks..." />
+          <button id="modeBtn" className="mode-toggle">🛰️ Hybrid</button>
         </div>
         <div id="resultsList" className="results-list"></div>
       </div>
@@ -134,11 +148,35 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
       <div id="map"></div>
 
       <script>
-        var map = L.map('map', { zoomControl: false }).setView([${defaultLat}, ${defaultLng}], 15);
+        var map = L.map('map', { 
+          zoomControl: false,
+          touchZoom: true,
+          scrollWheelZoom: true,
+          doubleClickZoom: true,
+          zoomAnimation: true,
+          fadeAnimation: true,
+          markerZoomAnimation: true
+        }).setView([${defaultLat}, ${defaultLng}], 16);
 
-        L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-          maxZoom: 19
-        }).addTo(map);
+        // Google Hybrid (Satellite + Buildings + Streets + Markings)
+        var hybridTile = 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}';
+        var streetTile = 'https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}';
+        var currentLayerType = 'y';
+
+        var tileLayer = L.tileLayer(hybridTile, { maxZoom: 19 }).addTo(map);
+
+        var modeBtn = document.getElementById('modeBtn');
+        modeBtn.addEventListener('click', function() {
+          if (currentLayerType === 'y') {
+            currentLayerType = 'm';
+            tileLayer.setUrl(streetTile);
+            modeBtn.innerText = '🗺️ Streets';
+          } else {
+            currentLayerType = 'y';
+            tileLayer.setUrl(hybridTile);
+            modeBtn.innerText = '🛰️ Hybrid';
+          }
+        });
 
         var customIcon = L.divIcon({
           className: 'custom-pin-marker',
@@ -187,7 +225,7 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
           }
           clearTimeout(searchTimeout);
           searchTimeout = setTimeout(function() {
-            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(query + ', Andaman') + '&viewbox=92.0,14.0,94.0,6.0&bounded=0')
+            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(query + ', Port Blair, Andaman') + '&viewbox=92.0,14.0,94.0,6.0&bounded=0')
               .then(function(r) { return r.json(); })
               .then(function(data) {
                 resultsList.innerHTML = '';
@@ -200,7 +238,7 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
                     div.addEventListener('click', function() {
                       var lat = parseFloat(item.lat);
                       var lon = parseFloat(item.lon);
-                      map.setView([lat, lon], 16);
+                      map.setView([lat, lon], 17);
                       marker.setLatLng([lat, lon]);
                       sendCoords(lat, lon, item.display_name);
                       resultsList.style.display = 'none';
@@ -222,24 +260,31 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
           setTimeout(function() { noticeToast.style.display = 'none'; }, 4000);
         }
 
+        window.zoomInMap = function() {
+          map.zoomIn({ animate: true });
+        };
+
+        window.zoomOutMap = function() {
+          map.zoomOut({ animate: true });
+        };
+
         window.locateMe = function() {
           if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
               var lat = position.coords.latitude;
               var lng = position.coords.longitude;
-              // Check Andaman Bounding Box
               var isAndaman = lat >= 6.0 && lat <= 14.0 && lng >= 92.0 && lng <= 94.0;
               if (!isAndaman) {
                 showNotice("📍 GPS outside Andaman. Map pin centered on Port Blair.");
                 lat = 11.6234;
                 lng = 92.7265;
               }
-              map.setView([lat, lng], 16);
+              map.setView([lat, lng], 17);
               marker.setLatLng([lat, lng]);
               sendCoords(lat, lng);
             }, function(err) {
               showNotice("📍 Satellite location centered on Port Blair.");
-              map.setView([11.6234, 92.7265], 16);
+              map.setView([11.6234, 92.7265], 17);
               marker.setLatLng([11.6234, 92.7265]);
               sendCoords(11.6234, 92.7265);
             }, { enableHighAccuracy: true });
@@ -269,8 +314,16 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
     webViewRef.current?.injectJavaScript(`if(window.locateMe) window.locateMe(); true;`);
   };
 
+  const handleZoomIn = () => {
+    webViewRef.current?.injectJavaScript(`if(window.zoomInMap) window.zoomInMap(); true;`);
+  };
+
+  const handleZoomOut = () => {
+    webViewRef.current?.injectJavaScript(`if(window.zoomOutMap) window.zoomOutMap(); true;`);
+  };
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isExpanded && styles.containerExpanded]}>
       <WebView
         ref={webViewRef}
         originWhitelist={["*"]}
@@ -281,21 +334,38 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
         domStorageEnabled
         scrollEnabled={false}
       />
-      <Pressable onPress={handleLocateMe} style={styles.locateBtn}>
-        <Svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <Circle cx="12" cy="12" r="10" />
-          <Circle cx="12" cy="12" r="3" />
-          <Path d="M12 2v2M12 20v2M2 12h2M20 12h2" />
-        </Svg>
-        <Text style={styles.locateText}>GPS LOCATE ME</Text>
-      </Pressable>
+      
+      {/* Map Control Bar (Enlarge/Minimize, Zoom, GPS) */}
+      <View style={styles.controlsBar}>
+        <Pressable onPress={() => setIsExpanded(!isExpanded)} style={styles.controlBtn}>
+          <Text style={styles.controlText}>{isExpanded ? "⤡ MINIMIZE" : "⤢ ENLARGE"}</Text>
+        </Pressable>
+
+        <View style={styles.zoomGroup}>
+          <Pressable onPress={handleZoomIn} style={styles.iconBtn}>
+            <Text style={styles.iconText}>＋</Text>
+          </Pressable>
+          <Pressable onPress={handleZoomOut} style={styles.iconBtn}>
+            <Text style={styles.iconText}>－</Text>
+          </Pressable>
+        </View>
+
+        <Pressable onPress={handleLocateMe} style={styles.locateBtn}>
+          <Svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <Circle cx="12" cy="12" r="10" />
+            <Circle cx="12" cy="12" r="3" />
+            <Path d="M12 2v2M12 20v2M2 12h2M20 12h2" />
+          </Svg>
+          <Text style={styles.locateText}>GPS LOCATE</Text>
+        </Pressable>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    height: 240,
+    height: 250,
     width: "100%",
     borderRadius: 12,
     overflow: "hidden",
@@ -303,28 +373,77 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#334155",
     marginBottom: 16,
+    transitionProperty: "height",
+    transitionDuration: "300ms",
+  },
+  containerExpanded: {
+    height: 480,
   },
   webview: {
     flex: 1,
-    backgroundColor: "#0f172a",
+    backgroundColor: "#020617",
   },
-  locateBtn: {
+  controlsBar: {
     position: "absolute",
     bottom: 10,
+    left: 10,
     right: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    zIndex: 100,
+  },
+  controlBtn: {
+    backgroundColor: "rgba(30, 41, 59, 0.95)",
+    borderWidth: 1,
+    borderColor: "#475569",
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 4,
+  },
+  controlText: {
+    color: "#ffffff",
+    fontSize: 9,
+    fontWeight: "900",
+    letterSpacing: 0.5,
+  },
+  zoomGroup: {
+    flexDirection: "row",
+    backgroundColor: "rgba(30, 41, 59, 0.95)",
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "#475569",
+    overflow: "hidden",
+  },
+  iconBtn: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  iconText: {
+    color: "#ffffff",
+    fontSize: 14,
+    fontWeight: "900",
+  },
+  locateBtn: {
     backgroundColor: "#0d9488",
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
-    gap: 6,
+    gap: 5,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
     elevation: 4,
-    zIndex: 100,
   },
   locateText: {
     color: "#ffffff",

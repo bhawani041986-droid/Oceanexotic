@@ -32,6 +32,7 @@ export default function CustomerAddressesPage() {
   const [isDefault, setIsDefault] = useState(true);
   const [lat, setLat] = useState<number>(11.6234);
   const [lng, setLng] = useState<number>(92.7265);
+  const [mapExpanded, setMapExpanded] = useState(false);
 
   const fetchAddresses = async () => {
     try {
@@ -248,15 +249,24 @@ export default function CustomerAddressesPage() {
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Pinpoint Map Coordinates</label>
-                  <button 
-                    type="button" 
-                    onClick={handleLocateMe} 
-                    className="text-[9px] font-black uppercase tracking-wider text-primary flex items-center gap-1 hover:underline"
-                  >
-                    <Navigation className="w-3 h-3" /> Get Current Location
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <button 
+                      type="button" 
+                      onClick={() => setMapExpanded(!mapExpanded)}
+                      className="text-[9px] font-black uppercase tracking-wider text-teal-400 bg-slate-800 px-2 py-1 rounded hover:bg-slate-700"
+                    >
+                      {mapExpanded ? "⤡ MINIMIZE MAP" : "⤢ ENLARGE MAP"}
+                    </button>
+                    <button 
+                      type="button" 
+                      onClick={handleLocateMe} 
+                      className="text-[9px] font-black uppercase tracking-wider text-primary flex items-center gap-1 hover:underline"
+                    >
+                      <Navigation className="w-3 h-3" /> GPS Locate
+                    </button>
+                  </div>
                 </div>
-                <div className="relative h-44 w-full rounded-xl overflow-hidden border border-slate-700">
+                <div className={`relative ${mapExpanded ? "h-96" : "h-48"} w-full rounded-xl overflow-hidden border border-slate-700 transition-all duration-300`}>
                   <iframe
                     className="w-full h-full border-0"
                     srcDoc={`
@@ -273,8 +283,8 @@ export default function CustomerAddressesPage() {
                       <body>
                         <div id="map"></div>
                         <script>
-                          var map = L.map('map', { zoomControl: false }).setView([${lat}, ${lng}], 15);
-                          L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', { maxZoom: 19 }).addTo(map);
+                          var map = L.map('map', { zoomControl: false }).setView([${lat}, ${lng}], 16);
+                          L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', { maxZoom: 19 }).addTo(map);
                           var marker = L.marker([${lat}, ${lng}], { draggable: true }).addTo(map);
                           map.on('click', function(e) {
                             marker.setLatLng(e.latlng);
