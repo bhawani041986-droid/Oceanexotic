@@ -251,6 +251,9 @@ export default function TerritoryWizardPage() {
           hubCode = parts[2]?.trim() || hubCode;
           managerName = parts[3]?.trim() || managerName;
           riderCap = parseInt(parts[4]) || riderCap;
+          if (parts[5] && parts[5].trim()) {
+            allowedSlots = parts[5].split("|").map((s: string) => s.trim()).filter(Boolean);
+          }
         }
       } else if (type === "DELIVERY_ZONE") {
         const parts = existingNode.coordinates.split(",");
@@ -294,7 +297,7 @@ export default function TerritoryWizardPage() {
       let coordVal = editorModal.coordinates || null;
       if (editorModal.type === "ADMIN_HUB") {
         const [lat, lng] = (editorModal.coordinates || "0, 0").split(",");
-        coordVal = `${(lat || "0").trim()}, ${(lng || "0").trim()}, ${editorModal.hub_code || ""}, ${editorModal.manager_name || ""}, ${editorModal.rider_capacity || 0}`;
+        coordVal = `${(lat || "0").trim()}, ${(lng || "0").trim()}, ${editorModal.hub_code || ""}, ${editorModal.manager_name || ""}, ${editorModal.rider_capacity || 0}, ${(editorModal.allowed_slots || []).join("|")}`;
       } else if (editorModal.type === "DELIVERY_ZONE") {
         coordVal = `${editorModal.delivery_charge || 0}, ${editorModal.minimum_order || 0}, ${editorModal.eta_mins || 30}, ${(editorModal.allowed_slots || []).join("|")}`;
       }
@@ -740,34 +743,65 @@ export default function TerritoryWizardPage() {
 
               {/* Hub fields */}
               {editorModal.type === "ADMIN_HUB" && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-[var(--foreground)]/5 pt-4">
-                  <div>
-                    <label className="text-[10px] font-black text-primary uppercase tracking-widest block mb-2">Hub Code</label>
-                    <input 
-                      value={editorModal.hub_code}
-                      onChange={e => setEditorModal({ ...editorModal, hub_code: e.target.value })}
-                      placeholder="e.g. PB-DOL-01"
-                      className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 p-3 rounded-xl text-[var(--foreground)] outline-none focus:border-primary/50 text-sm"
-                    />
+                <div className="space-y-4 pt-4 border-t border-[var(--foreground)]/5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-[10px] font-black text-primary uppercase tracking-widest block mb-2">Hub Code</label>
+                      <input 
+                        value={editorModal.hub_code}
+                        onChange={e => setEditorModal({ ...editorModal, hub_code: e.target.value })}
+                        placeholder="e.g. PB-DOL-01"
+                        className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 p-3 rounded-xl text-[var(--foreground)] outline-none focus:border-primary/50 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-black text-primary uppercase tracking-widest block mb-2">Manager Name</label>
+                      <input 
+                        value={editorModal.manager_name}
+                        onChange={e => setEditorModal({ ...editorModal, manager_name: e.target.value })}
+                        placeholder="e.g. John Doe"
+                        className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 p-3 rounded-xl text-[var(--foreground)] outline-none focus:border-primary/50 text-sm"
+                      />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="text-[10px] font-black text-primary uppercase tracking-widest block mb-2">Rider Fleet Capacity</label>
+                      <input 
+                        type="number"
+                        value={editorModal.rider_capacity}
+                        onChange={e => setEditorModal({ ...editorModal, rider_capacity: Number(e.target.value) })}
+                        placeholder="e.g. 15"
+                        className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 p-3 rounded-xl text-[var(--foreground)] outline-none focus:border-primary/50 text-sm"
+                      />
+                    </div>
                   </div>
+
                   <div>
-                    <label className="text-[10px] font-black text-primary uppercase tracking-widest block mb-2">Manager Name</label>
-                    <input 
-                      value={editorModal.manager_name}
-                      onChange={e => setEditorModal({ ...editorModal, manager_name: e.target.value })}
-                      placeholder="e.g. John Doe"
-                      className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 p-3 rounded-xl text-[var(--foreground)] outline-none focus:border-primary/50 text-sm"
-                    />
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="text-[10px] font-black text-primary uppercase tracking-widest block mb-2">Rider Fleet Capacity</label>
-                    <input 
-                      type="number"
-                      value={editorModal.rider_capacity}
-                      onChange={e => setEditorModal({ ...editorModal, rider_capacity: Number(e.target.value) })}
-                      placeholder="e.g. 15"
-                      className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 p-3 rounded-xl text-[var(--foreground)] outline-none focus:border-primary/50 text-sm"
-                    />
+                    <label className="text-[10px] font-black text-primary uppercase tracking-widest block mb-2">Allowed Delivery Slots</label>
+                    <div className="grid grid-cols-1 gap-2.5 bg-[var(--foreground)]/5 p-4 rounded-xl border border-[var(--foreground)]/10">
+                      {[
+                        { key: "TODAY_AM", label: "Today Morning (10:00 AM – 12:00 PM)" },
+                        { key: "TODAY_PM", label: "Today Evening (4:00 PM – 7:00 PM)" },
+                        { key: "TOMORROW", label: "Tomorrow (Next Day Delivery)" }
+                      ].map(slot => {
+                        const isChecked = (editorModal.allowed_slots || []).includes(slot.key);
+                        return (
+                          <label key={slot.key} className="flex items-center gap-3 cursor-pointer text-xs font-bold text-[var(--foreground)] hover:text-primary transition-colors">
+                            <input 
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={e => {
+                                const newSlots = e.target.checked 
+                                  ? [...(editorModal.allowed_slots || []), slot.key]
+                                  : (editorModal.allowed_slots || []).filter(k => k !== slot.key);
+                                setEditorModal({ ...editorModal, allowed_slots: newSlots });
+                              }}
+                              className="rounded border-[var(--foreground)]/20 text-primary focus:ring-primary focus:ring-offset-bg bg-[var(--foreground)]/5 w-4 h-4"
+                            />
+                            <span>{slot.label}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               )}
