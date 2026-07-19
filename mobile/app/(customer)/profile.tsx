@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, ScrollView, ActivityIndicator, Pressable, Modal, Switch } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator, Pressable, Modal, Switch, Linking } from "react-native";
+import Svg, { Path } from "react-native-svg";
 import { useRouter } from "expo-router";
 import { useAuthStore } from "@/store/authStore";
 import { userService, type UserProfile } from "@/services/userService";
@@ -448,6 +449,42 @@ export default function ProfileScreen() {
         </View>
 
         <Button label="LOG OUT" variant="ghost" onPress={handleLogout} className="mt-8 border border-danger/30" />
+
+        {/* Social Media Links */}
+        <View className="flex-row justify-center gap-6 mt-8 mb-12">
+          <Pressable 
+            onPress={() => Linking.openURL("https://www.instagram.com/oceanexotic9/")}
+            className="w-10 h-10 rounded-full items-center justify-center border active:opacity-70"
+            style={{ borderColor: colors.border, backgroundColor: colors.card }}
+          >
+            <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={colors.text} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+            </Svg>
+          </Pressable>
+
+          <Pressable 
+            onPress={() => Linking.openURL("https://www.facebook.com/profile.php?id=61591470971590")}
+            className="w-10 h-10 rounded-full items-center justify-center border active:opacity-70"
+            style={{ borderColor: colors.border, backgroundColor: colors.card }}
+          >
+            <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={colors.text} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+            </Svg>
+          </Pressable>
+
+          <Pressable 
+            onPress={() => Linking.openURL("https://www.youtube.com/channel/UCX-JtlARsNRozvdDekCkCKg")}
+            className="w-10 h-10 rounded-full items-center justify-center border active:opacity-70"
+            style={{ borderColor: colors.border, backgroundColor: colors.card }}
+          >
+            <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={colors.text} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z" />
+              <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill={colors.text} />
+            </Svg>
+          </Pressable>
+        </View>
       </ScrollView>
 
       {/* Address Addition Modal */}

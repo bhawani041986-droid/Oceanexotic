@@ -279,7 +279,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                   { label: "Home", href: "/home" },
                   { label: "Fresh Catch Market", href: "/products" },
                   { label: "Recipes", href: "/recipe" },
-                  { label: "My Orders", href: "/orders" },
+                  { label: "Orders", href: "/orders" },
                   { label: "My Profile", href: "/profile" },
                   { label: "Active Cart", href: "/cart" }
                 ].map((item) => {
