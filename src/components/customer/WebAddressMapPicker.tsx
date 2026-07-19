@@ -192,9 +192,9 @@ export const WebAddressMapPicker: React.FC<WebAddressMapPickerProps> = ({
             <body>
               <div id="map"></div>
               <script>
-                var map = L.map('map', { zoomControl: false }).setView([${lat}], [${lng}], 16);
+                var map = L.map('map', { zoomControl: false }).setView([${lat}, ${lng}], 16);
                 L.tileLayer('https://mt1.google.com/vt/lyrs=${layerType}&x={x}&y={y}&z={z}', { maxZoom: 19 }).addTo(map);
-                var marker = L.marker([${lat}], [${lng}], { draggable: true }).addTo(map);
+                var marker = L.marker([${lat}, ${lng}], { draggable: true }).addTo(map);
                 
                 marker.on('dragend', function(e) {
                   var pos = marker.getLatLng();

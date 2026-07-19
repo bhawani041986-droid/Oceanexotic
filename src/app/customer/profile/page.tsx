@@ -269,14 +269,14 @@ export default function CustomerProfilePage() {
           {isModalOpen && (
             <div className="fixed inset-0 z-[200] flex items-center justify-center p-6">
                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsModalOpen(false)} className="absolute inset-0 bg-black/80 backdrop-blur-md" />
-               <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} className="relative w-full max-w-lg bg-bg-card border border-[var(--foreground)]/10 rounded-[32px] md:rounded-[40px] p-5 md:p-10 shadow-2xl space-y-4 md:space-y-8 overflow-hidden text-[var(--foreground)]">
-                  <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary to-blue-500" />
-                  <div className="flex items-center justify-between">
-                     <h3 className="text-xl md:text-2xl font-black uppercase italic leading-tight">{modalType === 'profile' ? 'Profile Details' : (editingItem ? 'Update Details' : `Add ${modalType}`)}</h3>
-                     <button onClick={() => setIsModalOpen(false)} className="p-1.5 bg-[var(--foreground)]/5 rounded-xl hover:bg-[var(--foreground)]/10 transition-colors"><X className="w-5 h-5 md:w-6 md:h-6" /></button>
+               <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} className="relative w-full max-w-lg bg-[#0f172a] border border-slate-700 rounded-3xl p-5 md:p-7 shadow-2xl flex flex-col max-h-[90vh] overflow-hidden text-white">
+                  <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary to-teal-400" />
+                  <div className="flex items-center justify-between pb-3 border-b border-slate-800 shrink-0">
+                     <h3 className="text-lg md:text-xl font-black uppercase italic tracking-tight text-white">{modalType === 'profile' ? 'Profile Details' : (editingItem ? 'Update Details' : `Add Address`)}</h3>
+                     <button onClick={() => setIsModalOpen(false)} className="p-1.5 bg-slate-800 rounded-xl text-slate-400 hover:text-white transition-colors"><X className="w-5 h-5" /></button>
                   </div>
                   
-                  <div className="space-y-4 md:space-y-6">
+                  <div className="space-y-4 overflow-y-auto pr-1 flex-1 py-4">
                      {modalType === "profile" && (
                         <>
                            <div className="flex flex-col items-center justify-center space-y-3 pb-4">
@@ -474,11 +474,11 @@ export default function CustomerProfilePage() {
                      )}
                   </div>
 
-                  <div className="flex gap-3 md:gap-4 pt-2">
-                     <Button onClick={() => setIsModalOpen(false)} variant="outline" className="flex-1 h-12 md:h-14 rounded-xl md:rounded-2xl border-[var(--foreground)]/10 text-[9px] font-black uppercase italic">ABORT</Button>
-                     <Button onClick={handleSaveProtocol} disabled={isSaving} className="flex-1 h-12 md:h-14 rounded-xl md:rounded-2xl shadow-glow-purple text-[9px] font-black uppercase gap-2 italic">
+                  <div className="flex gap-3 pt-3 border-t border-slate-800 shrink-0">
+                     <Button onClick={() => setIsModalOpen(false)} variant="outline" className="flex-1 h-11 rounded-xl border-slate-700 bg-slate-800 text-slate-300 text-[10px] font-black uppercase tracking-wider hover:bg-slate-700">CANCEL</Button>
+                     <Button onClick={handleSaveProtocol} disabled={isSaving} className="flex-1 h-11 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-black text-[10px] uppercase tracking-wider gap-2 shadow-lg">
                         {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                        {isSaving ? "SYNCING..." : "AUTHORIZE"}
+                        {isSaving ? "SAVING..." : "SAVE ADDRESS"}
                      </Button>
                   </div>
                </motion.div>
