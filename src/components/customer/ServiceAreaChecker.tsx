@@ -279,13 +279,31 @@ export function ServiceAreaChecker({ className, compact = false }: ServiceAreaCh
                         onClick={() => selectSuggestion(s)}
                         className="w-full text-left px-3 py-2 text-xs font-bold hover:bg-primary/5 hover:text-primary transition-colors flex items-center gap-2 border-b border-[var(--foreground)]/5 last:border-b-0"
                       >
-                        <MapPin className="w-3 h-3 text-primary shrink-0" />
+                        <MapPin className="w-3.5 h-3.5 text-primary shrink-0" />
                         <span>{s}, Port Blair</span>
                       </button>
                     ))}
                   </motion.div>
                 )}
               </AnimatePresence>
+            </div>
+
+            {/* Quick Zones Selector */}
+            <div className="space-y-1.5 pt-1.5 border-t border-[var(--foreground)]/5">
+              <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest block">
+                Active Delivery Zones:
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {["Atamphad", "Bhatubasti", "Dollygunj", "Minibay"].map((zone) => (
+                  <button
+                    key={zone}
+                    onClick={() => selectSuggestion(zone)}
+                    className="px-2.5 py-1.5 rounded-lg border border-[var(--foreground)]/10 bg-[var(--foreground)]/5 text-[9px] font-black uppercase tracking-wider text-[var(--c-text-primary)] hover:border-primary/45 hover:text-primary transition-all flex items-center gap-1 cursor-pointer select-none"
+                  >
+                    🚚 <span>{zone}</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Results Display */}
