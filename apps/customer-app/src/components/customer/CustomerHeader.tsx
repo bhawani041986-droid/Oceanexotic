@@ -336,148 +336,213 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
       <Modal
         visible={isMenuOpen}
         transparent
-        animationType="fade"
+        animationType="slide"
+        statusBarTranslucent
         onRequestClose={() => setIsMenuOpen(false)}
       >
-        <View className="flex-1 flex-row">
-          <Pressable 
-            className="absolute inset-0 bg-black/60" 
-            onPress={() => setIsMenuOpen(false)} 
+        <View style={{ flex: 1, flexDirection: 'row' }}>
+          {/* Dim backdrop */}
+          <Pressable
+            style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: 'rgba(0,0,0,0.55)' }}
+            onPress={() => setIsMenuOpen(false)}
           />
-          <View 
-            className="w-[300px] h-full border-r relative shadow-2xl"
+
+          {/* Drawer Panel — uses paddingTop to clear status bar */}
+          <View
             style={{
-              backgroundColor: "#ffffff",
-              borderRightColor: colors.border
+              width: 300,
+              height: '100%',
+              backgroundColor: '#ffffff',
+              borderRightWidth: 1,
+              borderRightColor: colors.border,
+              shadowColor: '#000',
+              shadowOffset: { width: 4, height: 0 },
+              shadowOpacity: 0.18,
+              shadowRadius: 16,
+              elevation: 24,
+              paddingTop: 44,         // clears iOS status bar; on Android statusBarTranslucent handles it
+              flexDirection: 'column',
             }}
           >
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1 }}>
-              <View style={{ width: 300, height: 464, position: 'relative' }}>
-                <Image
-                  source={require("../../../assets/drawer_menu_mockup.jpg")}
-                  style={StyleSheet.absoluteFillObject}
-                  contentFit="fill"
-                />
+            {/* ── HEADER: Logo + close button ── */}
+            <View style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingHorizontal: 16,
+              paddingBottom: 12,
+              borderBottomWidth: 1,
+              borderBottomColor: colors.border,
+            }}>
+              <Pressable onPress={() => navigateTo('/home')}>
+                <Logo size="sm" style={{ width: 148, height: 42 }} />
+              </Pressable>
+              <Pressable
+                onPress={() => setIsMenuOpen(false)}
+                style={{
+                  width: 32, height: 32, borderRadius: 8,
+                  backgroundColor: getRgba(primaryColor, 0.1),
+                  borderWidth: 1, borderColor: getRgba(primaryColor, 0.25),
+                  alignItems: 'center', justifyContent: 'center',
+                }}
+              >
+                <MaterialCommunityIcons name="close" size={18} color={primaryColor} />
+              </Pressable>
+            </View>
 
-                {/* Clickable Overlays */}
-                
-                {/* Close Button X */}
+            {/* ── DELIVERY ZONE SELECTOR ── */}
+            <Pressable
+              onPress={() => { setIsMenuOpen(false); setIsLocationModalOpen(true); }}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginHorizontal: 16,
+                marginTop: 12,
+                marginBottom: 4,
+                paddingHorizontal: 12,
+                paddingVertical: 9,
+                borderRadius: 10,
+                backgroundColor: getRgba(primaryColor, 0.06),
+                borderWidth: 1,
+                borderColor: getRgba(primaryColor, 0.18),
+                gap: 8,
+              }}
+            >
+              <MaterialCommunityIcons name="map-marker" size={16} color={primaryColor} />
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 9, fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: 0.8 }}>
+                  Delivery To
+                </Text>
+                <Text style={{ fontSize: 12, fontWeight: '800', color: '#0f172a' }} numberOfLines={1}>
+                  {activeHubName}
+                </Text>
+              </View>
+              <MaterialCommunityIcons name="chevron-right" size={16} color={primaryColor} />
+            </Pressable>
+
+            {/* ── QUICK ZONE CHIPS ── */}
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, paddingHorizontal: 16, paddingVertical: 8 }}>
+              {['Atamphad', 'Bhatubasti', 'Dollygunj', 'Minibay'].map((zone) => (
                 <Pressable
-                  onPress={() => setIsMenuOpen(false)}
-                  style={{ position: 'absolute', top: '3.5%', right: '4%', width: '14%', height: '5.5%' }}
-                />
-
-                {/* Local Delivery Hub info (absorbs touches) */}
-                <Pressable
-                  onPress={() => {}}
-                  style={{ position: 'absolute', top: '11.3%', left: '5%', width: '90%', height: '8.8%' }}
-                />
-
-                {/* Solid White Masking Container to cover printed JPEG menu buttons */}
-                <View 
-                  style={{ 
-                    position: 'absolute', 
-                    top: 98, 
-                    left: 0, 
-                    width: 300, 
-                    height: 352, 
-                    backgroundColor: '#ffffff', 
-                    paddingHorizontal: 15, 
-                    gap: 7, 
-                    justifyContent: 'center' 
+                  key={zone}
+                  onPress={() => {
+                    setIsMenuOpen(false);
+                    setIsLocationModalOpen(true);
+                  }}
+                  style={{
+                    paddingHorizontal: 10, paddingVertical: 4,
+                    borderRadius: 20, borderWidth: 1,
+                    borderColor: getRgba(primaryColor, 0.2),
+                    backgroundColor: getRgba(primaryColor, 0.05),
                   }}
                 >
-                  {MENU_ITEMS.map((item) => {
-                    const active = isItemActive(item.href);
-                    return (
-                      <Pressable
-                        key={item.href}
-                        onPress={() => navigateTo(item.href)}
-                        style={{
-                          width: '100%',
-                          height: 32,
-                          backgroundColor: active ? "rgba(14, 165, 233, 0.06)" : "#ffffff",
-                          borderColor: active ? "rgba(14, 165, 233, 0.15)" : "#f1f5f9",
-                          borderWidth: 1.2,
-                          borderRadius: 8,
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          paddingHorizontal: 10,
-                        }}
-                      >
-                        <View style={{ width: 20, height: 20, borderRadius: 10, backgroundColor: active ? "rgba(14, 165, 233, 0.12)" : "#f1f5f9", justifyContent: 'center', alignItems: 'center' }}>
-                          <MaterialCommunityIcons 
-                            name={item.icon as any} 
-                            size={11} 
-                            color={active ? primaryColor : "#64748B"} 
-                          />
-                        </View>
-                        <Text 
-                          style={{
-                            marginLeft: 8,
-                            fontSize: 11,
-                            fontWeight: '700',
-                            color: active ? primaryColor : "#475569",
-                            flex: 1
-                          }}
-                        >
-                          {t(item.label.toLowerCase().replace("my orders", "my_orders").replace("chat with us", "chat").replace("recipes", "view_recipes"))}
-                        </Text>
-                        <MaterialCommunityIcons 
-                          name="chevron-right" 
-                          size={12} 
-                          color={active ? primaryColor : "#94A3B8"} 
-                        />
-                      </Pressable>
-                    );
-                  })}
+                  <Text style={{ fontSize: 10, fontWeight: '700', color: primaryColor }}>🚚 {zone}</Text>
+                </Pressable>
+              ))}
+            </View>
 
-                  {/* Sign Out Card */}
+            {/* ── SECTION LABEL ── */}
+            <Text style={{
+              fontSize: 9, fontWeight: '900', color: '#94a3b8',
+              textTransform: 'uppercase', letterSpacing: 1.5,
+              paddingHorizontal: 16, paddingTop: 8, paddingBottom: 6,
+            }}>
+              Quick Links
+            </Text>
+
+            {/* ── NAV ITEMS ── */}
+            <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingHorizontal: 16, gap: 5 }}>
+              {MENU_ITEMS.map((item) => {
+                const active = isItemActive(item.href);
+                return (
                   <Pressable
-                    onPress={() => {
-                      setIsMenuOpen(false);
-                      logout();
-                      router.replace("/login");
-                    }}
+                    key={item.href}
+                    onPress={() => navigateTo(item.href)}
                     style={{
-                      width: '100%',
-                      height: 32,
-                      backgroundColor: "rgba(239, 68, 68, 0.06)",
-                      borderColor: "rgba(239, 68, 68, 0.15)",
-                      borderWidth: 1.2,
-                      borderRadius: 8,
                       flexDirection: 'row',
                       alignItems: 'center',
-                      paddingHorizontal: 10,
+                      paddingHorizontal: 12,
+                      paddingVertical: 10,
+                      borderRadius: 10,
+                      backgroundColor: active ? getRgba(primaryColor, 0.08) : '#f8fafc',
+                      borderWidth: 1,
+                      borderColor: active ? getRgba(primaryColor, 0.2) : '#e2e8f0',
+                      gap: 10,
                     }}
                   >
-                    <View style={{ width: 20, height: 20, borderRadius: 10, backgroundColor: "rgba(239, 68, 68, 0.12)", justifyContent: 'center', alignItems: 'center' }}>
-                      <MaterialCommunityIcons 
-                        name="logout" 
-                        size={11} 
-                        color="#ef4444" 
+                    <View style={{
+                      width: 28, height: 28, borderRadius: 8,
+                      backgroundColor: active ? getRgba(primaryColor, 0.15) : '#f1f5f9',
+                      alignItems: 'center', justifyContent: 'center',
+                    }}>
+                      <MaterialCommunityIcons
+                        name={item.icon as any}
+                        size={15}
+                        color={active ? primaryColor : '#64748b'}
                       />
                     </View>
-                    <Text 
-                      style={{
-                        marginLeft: 8,
-                        fontSize: 11,
-                        fontWeight: '700',
-                        color: "#ef4444",
-                        flex: 1
-                      }}
-                    >
-                      Sign Out
+                    <Text style={{
+                      flex: 1,
+                      fontSize: 12,
+                      fontWeight: '700',
+                      color: active ? primaryColor : '#334155',
+                    }}>
+                      {t(item.label.toLowerCase().replace('my orders', 'my_orders').replace('chat with us', 'chat').replace('recipes', 'view_recipes'))}
                     </Text>
-                    <MaterialCommunityIcons 
-                      name="chevron-right" 
-                      size={12} 
-                      color="#ef4444" 
+                    <MaterialCommunityIcons
+                      name="chevron-right"
+                      size={14}
+                      color={active ? primaryColor : '#94a3b8'}
                     />
                   </Pressable>
+                );
+              })}
+
+              {/* Sign Out */}
+              <Pressable
+                onPress={() => {
+                  setIsMenuOpen(false);
+                  logout();
+                  router.replace('/login');
+                }}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  paddingHorizontal: 12,
+                  paddingVertical: 10,
+                  borderRadius: 10,
+                  backgroundColor: 'rgba(239,68,68,0.05)',
+                  borderWidth: 1,
+                  borderColor: 'rgba(239,68,68,0.15)',
+                  gap: 10,
+                  marginTop: 8,
+                }}
+              >
+                <View style={{
+                  width: 28, height: 28, borderRadius: 8,
+                  backgroundColor: 'rgba(239,68,68,0.1)',
+                  alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <MaterialCommunityIcons name="logout" size={15} color="#ef4444" />
                 </View>
-              </View>
+                <Text style={{ flex: 1, fontSize: 12, fontWeight: '700', color: '#ef4444' }}>
+                  Sign Out
+                </Text>
+                <MaterialCommunityIcons name="chevron-right" size={14} color="#ef4444" />
+              </Pressable>
             </ScrollView>
+
+            {/* ── FOOTER ── */}
+            <View style={{
+              paddingHorizontal: 16,
+              paddingVertical: 14,
+              borderTopWidth: 1,
+              borderTopColor: colors.border,
+            }}>
+              <Text style={{ fontSize: 9, fontWeight: '700', color: '#94a3b8', textAlign: 'center', letterSpacing: 0.8 }}>
+                📍 Sri Vijayapuram Hub  •  Delivery Radius: 8 km
+              </Text>
+            </View>
           </View>
         </View>
       </Modal>
