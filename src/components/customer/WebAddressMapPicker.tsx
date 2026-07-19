@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { MapPin, Navigation, Maximize2, Minimize2, Search } from "lucide-react";
+import { getPreciseDirectionalLandmark } from "@/lib/landmarkUtils";
 
 interface WebAddressMapPickerProps {
   initialLat?: number;
@@ -50,7 +51,7 @@ export const WebAddressMapPicker: React.FC<WebAddressMapPickerProps> = ({
   const triggerSelect = (newLat: number, newLng: number, name?: string) => {
     const formattedLat = Number(newLat.toFixed(6));
     const formattedLng = Number(newLng.toFixed(6));
-    const landmark = findNearestLandmark(formattedLat, formattedLng);
+    const landmark = getPreciseDirectionalLandmark(formattedLat, formattedLng, name);
     setLat(formattedLat);
     setLng(formattedLng);
     onLocationSelect(formattedLat, formattedLng, name, landmark);
@@ -225,7 +226,7 @@ export const WebAddressMapPicker: React.FC<WebAddressMapPickerProps> = ({
 
       <div className="flex items-center justify-between text-[10px] font-bold text-teal-400 px-1">
         <span>📍 Coordinates Locked: {lat}, {lng}</span>
-        <span className="text-slate-400">Nearest Landmark: {findNearestLandmark(lat, lng)}</span>
+        <span className="text-slate-300">📍 {getPreciseDirectionalLandmark(lat, lng)}</span>
       </div>
     </div>
   );

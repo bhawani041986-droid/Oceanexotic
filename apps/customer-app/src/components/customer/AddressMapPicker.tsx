@@ -159,17 +159,53 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
           { name: 'Atamphad Crossing', lat: 11.6370, lng: 92.7030 }
         ];
 
+        function getDistanceMeters(lat1, lng1, lat2, lng2) {
+          var R = 6371000;
+          var dLat = ((lat2 - lat1) * Math.PI) / 180;
+          var dLng = ((lng2 - lng1) * Math.PI) / 180;
+          var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) *
+                  Math.sin(dLng / 2) * Math.sin(dLng / 2);
+          return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
+
+        function getBearing(lat1, lng1, lat2, lng2) {
+          var phi1 = (lat1 * Math.PI) / 180;
+          var phi2 = (lat2 * Math.PI) / 180;
+          var lam1 = (lng1 * Math.PI) / 180;
+          var lam2 = (lng2 * Math.PI) / 180;
+          var y = Math.sin(lam2 - lam1) * Math.cos(phi2);
+          var x = Math.cos(phi1) * Math.sin(phi2) - Math.sin(phi1) * Math.cos(phi2) * Math.cos(lam2 - lam1);
+          return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
+        }
+
         function findNearestLandmark(lat, lng) {
           var minDistance = Infinity;
-          var nearestName = 'Port Blair Landmark';
+          var closest = PORT_BLAIR_LANDMARKS[0];
           PORT_BLAIR_LANDMARKS.forEach(function(lm) {
-            var d = Math.sqrt(Math.pow(lat - lm.lat, 2) + Math.pow(lng - lm.lng, 2));
-            if (d < minDistance) {
-              minDistance = d;
-              nearestName = lm.name;
+            var dist = getDistanceMeters(lat, lng, lm.lat, lm.lng);
+            if (dist < minDistance) {
+              minDistance = dist;
+              closest = lm;
             }
           });
-          return nearestName;
+
+          var meters = Math.round(minDistance);
+          var bearing = getBearing(lat, lng, closest.lat, closest.lng);
+          var prefix = "Near";
+          var cardinal = "North";
+
+          if (bearing >= 337.5 || bearing < 22.5) { prefix = "Opposite to"; cardinal = "North"; }
+          else if (bearing >= 22.5 && bearing < 67.5) { prefix = "Right side of"; cardinal = "North-East"; }
+          else if (bearing >= 67.5 && bearing < 112.5) { prefix = "Right side of"; cardinal = "East"; }
+          else if (bearing >= 112.5 && bearing < 157.5) { prefix = "Behind"; cardinal = "South-East"; }
+          else if (bearing >= 157.5 && bearing < 202.5) { prefix = "Opposite to"; cardinal = "South"; }
+          else if (bearing >= 202.5 && bearing < 247.5) { prefix = "Left side of"; cardinal = "South-West"; }
+          else if (bearing >= 247.5 && bearing < 292.5) { prefix = "Left side of"; cardinal = "West"; }
+          else { prefix = "Opposite to"; cardinal = "North-West"; }
+
+          var distStr = meters < 1000 ? meters + "m" : (meters / 1000).toFixed(1) + "km";
+          return prefix + " " + closest.name + " (~" + distStr + " " + cardinal + ")";
         }
 
         var map = L.map('map', { 
