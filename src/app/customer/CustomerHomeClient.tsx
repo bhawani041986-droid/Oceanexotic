@@ -1426,18 +1426,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
          <MaritimeWaveDivider />
       </div>
 
-      {/* ── SERVICE AREA CHECKER ─────────────────── */}
-      <section className="py-4 container mx-auto px-4 md:px-10">
-        <div className="flex flex-col items-center gap-1 mb-3">
-          <h2 className="text-base md:text-lg font-black uppercase tracking-tight text-center text-[var(--c-text-primary)]">
-            Craving Fresh Seafood? 🌊
-          </h2>
-          <p className="text-[10px] text-[var(--c-text-secondary)]/80 text-center max-w-xs font-semibold">
-            See if we deliver to your doorstep in Port Blair
-          </p>
-        </div>
-        <ServiceAreaChecker className="mx-auto" />
-      </section>
+
 
       {/* 4. CATEGORY VAULT (RIBBON TYPE) */}
       <section className="py-2 container mx-auto px-0 md:px-10">

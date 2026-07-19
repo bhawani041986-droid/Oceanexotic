@@ -35,6 +35,7 @@ import {
 } from "lucide-react";
 import { Logo } from "@/components/ui/Logo";
 import { LanguageSelector } from "@/components/layout/LanguageSelector";
+import { ServiceAreaChecker } from "@/components/customer/ServiceAreaChecker";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -188,35 +189,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
             </Link>
 
             <nav className="hidden xl:flex items-center gap-6 ml-6">
-              <div className="relative">
-                <button 
-                  onMouseEnter={() => setIsCategoryDropdownOpen(true)}
-                  onMouseLeave={() => setIsCategoryDropdownOpen(false)}
-                  className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[var(--c-text-primary)] hover:text-[var(--c-primary)] transition-colors h-full py-4"
-                >
-                  Categories <ChevronDown className={cn("w-3 h-3 transition-transform duration-300", isCategoryDropdownOpen && "rotate-180")} />
-                </button>
-                <AnimatePresence>
-                  {isCategoryDropdownOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      onMouseEnter={() => setIsCategoryDropdownOpen(true)}
-                      onMouseLeave={() => setIsCategoryDropdownOpen(false)}
-                      className="absolute top-[80%] left-0 w-[400px] p-6 bg-[var(--c-card)]/95 backdrop-blur-3xl border border-[var(--foreground)]/5 rounded-[var(--c-radius-card)] shadow-2xl z-[200] grid grid-cols-2 gap-4"
-                    >
-                      {CATEGORIES.map((cat) => (
-                        <Link key={cat.name} href={`/customer/products?category=${cat.slug}`} className="flex items-center gap-3 p-3 rounded-xl hover:bg-[var(--foreground)]/5 transition-all group">
-                          <p className="text-[10px] font-black text-[var(--c-text-primary)] uppercase italic group-hover:text-[var(--c-primary)]">{cat.name}</p>
-                        </Link>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              {navItems.map((item) => (
+              {navItems.filter(item => item.label !== "Profile").map((item) => (
                 <Link 
                   key={item.label} 
                   href={item.href}
@@ -230,9 +203,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 </Link>
               ))}
 
-              <button className="hidden xl:flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] transition-all ml-4">
-                <MapPin className="w-3 h-3 text-[var(--c-primary)]" /> Port Blair
-              </button>
+              <div className="ml-4">
+                <ServiceAreaChecker className="!max-w-[210px]" />
+              </div>
             </nav>
           </div>
 
