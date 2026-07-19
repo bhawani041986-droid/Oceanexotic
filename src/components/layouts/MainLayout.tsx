@@ -145,8 +145,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
     { label: "Home", href: "/customer", icon: <Home className="w-5 h-5" /> },
     { label: "Shop", href: "/customer/products", icon: <ShoppingBag className="w-5 h-5" /> },
     { label: "Recipes", href: "/customer/recipes", icon: <ChefHat className="w-5 h-5" /> },
-    { label: "My Orders", href: "/customer/orders", icon: <Receipt className="w-5 h-5" /> },
-    { label: "Support Chat", href: "/customer/chat", icon: <MessageCircle className="w-5 h-5" /> },
+    { label: "Orders", href: "/customer/orders", icon: <Receipt className="w-5 h-5" /> },
+    { label: "Chat", href: "/customer/chat", icon: <MessageCircle className="w-5 h-5" /> },
     { label: "Profile", href: "/customer/profile", icon: <UserIcon className="w-5 h-5" /> },
   ];
 
@@ -188,13 +188,13 @@ export default function MainLayout({ children }: MainLayoutProps) {
               <Logo size="lg" className="!h-[48px] !w-[192px] min-[375px]:!h-[51px] min-[375px]:!w-[204px] min-[420px]:!h-[54px] min-[420px]:!w-[216px] sm:!h-[54px] sm:!w-[216px] md:!h-[68px] md:!w-[272px] xl:!h-[72px] xl:!w-[288px]" />
             </Link>
 
-            <nav className="hidden xl:flex items-center gap-6 ml-6">
+            <nav className="hidden xl:flex items-center gap-4.5 ml-4">
               {navItems.filter(item => item.label !== "Profile").map((item) => (
                 <Link 
                   key={item.label} 
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all",
+                    "flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest transition-all",
                     pathname === item.href ? "text-[var(--c-primary)]" : "text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)]"
                   )}
                 >
@@ -203,7 +203,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                 </Link>
               ))}
 
-              <div className="ml-4">
+              <div className="ml-2.5">
                 <ServiceAreaChecker className="!max-w-[210px]" />
               </div>
             </nav>
@@ -256,7 +256,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
         }}
       >
         <div className="flex items-center justify-around h-full px-2">
-          {navItems.filter(item => ["Home", "Shop", "Recipes", "My Orders", "Profile"].includes(item.label)).slice(0, 5).map((item, i) => {
+          {navItems.filter(item => ["Home", "Shop", "Recipes", "Orders", "Profile"].includes(item.label)).slice(0, 5).map((item, i) => {
             const isActive = pathname === item.href;
             return (
               <button 

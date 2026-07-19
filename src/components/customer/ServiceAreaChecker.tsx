@@ -178,18 +178,18 @@ export function ServiceAreaChecker({ className, compact = false }: ServiceAreaCh
       {/* 1. Amazon-style Location selector Trigger Button */}
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2.5 px-4 py-2 border border-[var(--foreground)]/15 hover:border-primary/40 rounded-xl transition-all text-left bg-bg-secondary w-full select-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20 hover:bg-bg-secondary/80 group"
+        className="flex items-center gap-1.5 px-2 py-1 border border-transparent hover:border-[var(--foreground)]/10 hover:bg-[var(--foreground)]/5 rounded-lg transition-all text-left w-full select-none cursor-pointer focus:outline-none group"
       >
-        <MapPin className="w-5.5 h-5.5 text-primary shrink-0 transition-transform group-hover:scale-110" />
+        <MapPin className="w-4 h-4 text-primary shrink-0 transition-transform group-hover:scale-105" />
         <div className="flex flex-col leading-tight">
-          <span className="text-[9px] text-muted-foreground font-semibold uppercase tracking-wider">
+          <span className="text-[8px] text-muted-foreground font-semibold uppercase tracking-wider whitespace-nowrap">
             {result?.deliverable 
               ? `Delivering to ${areaInput}` 
               : "Delivering to Port Blair"}
           </span>
-          <span className="text-xs font-black text-[var(--c-text-primary)] uppercase tracking-widest flex items-center gap-1">
+          <span className="text-[10px] font-black text-[var(--c-text-primary)] uppercase tracking-widest flex items-center gap-0.5 whitespace-nowrap">
             {result?.deliverable ? "Change location" : "Update location"} 
-            <ChevronRight className={cn("w-3 h-3 text-primary transition-transform", isOpen && "rotate-90")} />
+            <ChevronRight className={cn("w-2.5 h-2.5 text-primary transition-transform", isOpen && "rotate-90")} />
           </span>
         </div>
       </button>
