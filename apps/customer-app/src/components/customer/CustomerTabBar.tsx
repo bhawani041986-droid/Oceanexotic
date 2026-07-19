@@ -12,7 +12,7 @@ const NAV: { label: string; href: Href }[] = [
   { label: "Home", href: "/home" },
   { label: "Shop", href: "/products" },
   { label: "Chat", href: "/chat" },
-  { label: "My Orders", href: "/orders" },
+  { label: "Orders", href: "/orders" },
   { label: "Profile", href: "/profile" },
 ];
 
