@@ -35,39 +35,22 @@ function buildApiUrl(host: string, port: string = DEFAULT_API_PORT): string {
  * - Override anytime with EXPO_PUBLIC_API_URL in mobile/.env
  */
 export function resolveApiBaseUrl(): string {
+  // If explicitly requested to use local dev server (e.g. EXPO_PUBLIC_USE_LOCAL_API=true)
+  const useLocal = process.env.EXPO_PUBLIC_USE_LOCAL_API === "true";
   const envUrl = process.env.EXPO_PUBLIC_API_URL?.trim();
-  if (envUrl) {
+
+  if (useLocal && envUrl) {
     return envUrl.replace(/\/$/, "");
   }
 
-  if (!__DEV__) {
-    return "https://oceanexotic.com/api";
-  }
-  const extraUrl = Constants.expoConfig?.extra?.apiUrl as string | undefined;
-
-  if (Platform.OS === "web") {
-    const browserHost = typeof window !== "undefined" && window.location.hostname 
-      ? window.location.hostname 
-      : "localhost";
-    const resolvedHost = browserHost === "localhost" ? "127.0.0.1" : browserHost;
-    return `http://${resolvedHost}:3000/api`;
+  if (useLocal) {
+    const lanHost = getExpoDevMachineHost();
+    if (lanHost) return buildApiUrl(lanHost);
+    if (Platform.OS === "android" && !Constants.isDevice) return buildApiUrl("10.0.2.2");
   }
 
-  if (envUrl && !envUrl.includes("localhost") && !envUrl.includes("127.0.0.1")) {
-    return envUrl.replace(/\/$/, "");
-  }
-
-  const lanHost = getExpoDevMachineHost();
-  if (lanHost) {
-    return buildApiUrl(lanHost);
-  }
-
-  // Android emulator → host machine
-  if (Platform.OS === "android" && !Constants.isDevice) {
-    return buildApiUrl("10.0.2.2");
-  }
-
-  return (envUrl ?? extraUrl ?? buildApiUrl("127.0.0.1")).replace(/\/$/, "");
+  // Default for all devices, Expo Go, and production: live backend server
+  return "https://oceanexotic.com/api";
 }
 
 export const FULL_API_URL = resolveApiBaseUrl();

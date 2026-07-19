@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Platform, Alert } from 'react-native';
+import { Platform } from 'react-native';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 import { useToast } from '@/components/ui/Toast';
@@ -9,32 +9,26 @@ import { toAuthUser, getPostLoginRoute } from '@/lib/auth/roles';
 import { FULL_API_URL } from '@/config/api';
 import * as WebBrowser from 'expo-web-browser';
 import * as Linking from 'expo-linking';
-import Constants from 'expo-constants';
 
-// Needed for the in-app browser session to close cleanly after OAuth redirect
+// Complete auth session handling for in-app browser modals
 WebBrowser.maybeCompleteAuthSession();
 
-// Detect if we are running inside Expo Go (store client)
-// executionEnvironment === 'storeClient' means Expo Go
-const isExpoGo = Constants.executionEnvironment === 'storeClient';
-
-// Lazily load the native module only on real builds — avoids crash in Expo Go
+// Try initializing the native Google Sign-In module
 let GoogleSignin: any = null;
 let statusCodes: any = {};
 
-if (!isExpoGo && Platform.OS !== 'web') {
+if (Platform.OS !== 'web') {
   try {
     const mod = require('@react-native-google-signin/google-signin');
     GoogleSignin = mod.GoogleSignin;
     statusCodes = mod.statusCodes ?? {};
 
     GoogleSignin.configure({
-      // Replace with your actual web client ID from Google Cloud Console
       webClientId: '843916088941-9kbsr70p54u5ob8spu816grl17bq3enq.apps.googleusercontent.com',
       offlineAccess: true,
     });
   } catch (e) {
-    console.warn('[GoogleAuth] Native module not available:', e);
+    console.log('[GoogleAuth] Native Google Sign-In module not present (Expo Go mode)');
   }
 }
 
@@ -82,8 +76,8 @@ export function useGoogleAuth() {
     setIsLoading(true);
 
     try {
-      // ── PATH A: Native Google Sign-In (Production APK / AAB) ──────────────
-      if (!isExpoGo && GoogleSignin) {
+      // ── PATH 1: NATIVE GOOGLE ACCOUNT PICKER (Standalone APK / Custom Dev Client) ──
+      if (GoogleSignin) {
         await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
         const response = await GoogleSignin.signIn();
 
@@ -92,37 +86,31 @@ export function useGoogleAuth() {
           return;
         }
 
-        if (response.type !== 'success' || !response.data?.idToken) {
-          toast('Could not get Google credentials. Please try again.', 'error');
+        if (response.type === 'success' && response.data?.idToken) {
+          const supabaseToken = await exchangeIdTokenWithSupabase(response.data.idToken);
+          const { token, user } = await syncOAuthUser(supabaseToken);
+
+          const authUser = toAuthUser(user);
+          await setAuthToken(token);
+          await setAuthUser(authUser);
+          login(authUser);
+
+          toast(`Welcome, ${authUser.name}! 👋`, 'success');
+          router.replace(getPostLoginRoute(authUser.role) as never);
           return;
         }
-
-        const supabaseToken = await exchangeIdTokenWithSupabase(response.data.idToken);
-        const { token, user } = await syncOAuthUser(supabaseToken);
-
-        const authUser = toAuthUser(user);
-        await setAuthToken(token);
-        await setAuthUser(authUser);
-        login(authUser);
-
-        toast(`Welcome, ${authUser.name}! 👋`, 'success');
-        router.replace(getPostLoginRoute(authUser.role) as never);
-        return;
       }
 
-      // ── PATH B: Expo Go fallback — in-app browser session ─────────────────
-      // This path only runs inside Expo Go during development testing.
-      // The in-app WebBrowser session stays INSIDE the app — it does NOT open
-      // the system browser. When auth completes, the redirect URL brings the
-      // user back to the oauth-callback screen automatically.
+      // ── PATH 2: IN-APP BROWSER MODAL (Expo Go Fallback) ──
+      // Uses openAuthSessionAsync which opens an IN-APP MODAL inside the app (not external Chrome/Safari)
       const redirectUrl = Linking.createURL('oauth-callback');
       const proxyUrl = `https://oceanexotic.com/mobile-auth?expoUrl=${encodeURIComponent(redirectUrl)}`;
       const authUrl = `${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(proxyUrl)}`;
 
       const result = await WebBrowser.openAuthSessionAsync(authUrl, redirectUrl, {
         showInRecents: false,
-        createTask: false,          // Android: keeps session in same task, no new tab
-        preferEphemeralSession: true, // iOS: no cookie carryover, cleaner UX
+        createTask: false,
+        preferEphemeralSession: true,
       });
 
       if (result.type === 'cancel' || result.type === 'dismiss') {
@@ -130,47 +118,38 @@ export function useGoogleAuth() {
         return;
       }
 
-      if (result.type !== 'success' || !result.url) {
-        toast('Something went wrong during sign in. Please try again.', 'error');
-        return;
+      if (result.type === 'success' && result.url) {
+        const hashIndex = result.url.indexOf('#');
+        if (hashIndex !== -1) {
+          const params = new URLSearchParams(result.url.substring(hashIndex + 1));
+          const accessToken = params.get('access_token');
+
+          if (accessToken) {
+            const { token, user } = await syncOAuthUser(accessToken);
+            const authUser = toAuthUser(user);
+            await setAuthToken(token);
+            await setAuthUser(authUser);
+            login(authUser);
+
+            toast(`Welcome, ${authUser.name}! 👋`, 'success');
+            router.replace(getPostLoginRoute(authUser.role) as never);
+            return;
+          }
+        }
       }
 
-      // Parse access_token from the hash fragment in the redirect URL
-      const hashIndex = result.url.indexOf('#');
-      if (hashIndex === -1) {
-        toast('Invalid response from Google. Please try again.', 'error');
-        return;
-      }
-
-      const params = new URLSearchParams(result.url.substring(hashIndex + 1));
-      const accessToken = params.get('access_token');
-
-      if (!accessToken) {
-        toast('Could not retrieve your sign-in token. Please try again.', 'error');
-        return;
-      }
-
-      const { token, user } = await syncOAuthUser(accessToken);
-      const authUser = toAuthUser(user);
-      await setAuthToken(token);
-      await setAuthUser(authUser);
-      login(authUser);
-
-      toast(`Welcome, ${authUser.name}! 👋`, 'success');
-      router.replace(getPostLoginRoute(authUser.role) as never);
+      toast('Could not complete Google Sign-In. Please try again.', 'error');
 
     } catch (err: any) {
       console.error('[GoogleAuth] Error:', err);
 
-      // Handle known native error codes gracefully
       if (err.code === statusCodes?.SIGN_IN_CANCELLED) {
         toast('Sign in was cancelled.', 'error');
       } else if (err.code === statusCodes?.IN_PROGRESS) {
-        toast('A sign in is already in progress. Please wait.', 'error');
+        toast('Sign in already in progress.', 'error');
       } else if (err.code === statusCodes?.PLAY_SERVICES_NOT_AVAILABLE) {
-        toast('Google Play Services is not available on this device.', 'error');
+        toast('Google Play Services not available.', 'error');
       } else {
-        // Show a clean human-readable message — no raw JSON alerts
         const message = err.response?.data?.message || err.message || 'Google sign in failed. Please try again.';
         toast(message, 'error');
       }
