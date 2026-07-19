@@ -16,6 +16,8 @@ import {
   Navigation
 } from "lucide-react";
 
+import { WebAddressMapPicker } from "@/components/customer/WebAddressMapPicker";
+
 export default function CustomerAddressesPage() {
   const [addresses, setAddresses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -24,6 +26,7 @@ export default function CustomerAddressesPage() {
 
   // Form Fields
   const [type, setType] = useState("HOME");
+  const [zone, setZone] = useState("Dollygunj (Zone 2)");
   const [hotelName, setHotelName] = useState("");
   const [roomNo, setRoomNo] = useState("");
   const [jetty, setJetty] = useState("Phoenix Bay Jetty");
@@ -32,7 +35,6 @@ export default function CustomerAddressesPage() {
   const [isDefault, setIsDefault] = useState(true);
   const [lat, setLat] = useState<number>(11.6234);
   const [lng, setLng] = useState<number>(92.7265);
-  const [mapExpanded, setMapExpanded] = useState(false);
 
   const fetchAddresses = async () => {
     try {
@@ -245,59 +247,39 @@ export default function CustomerAddressesPage() {
                 </div>
               </div>
 
-              {/* Pinpoint Location Leaflet Preview */}
+              {/* Pinpoint Location Leaflet Map Picker */}
               <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">Pinpoint Map Coordinates</label>
-                  <div className="flex items-center gap-3">
-                    <button 
-                      type="button" 
-                      onClick={() => setMapExpanded(!mapExpanded)}
-                      className="text-[9px] font-black uppercase tracking-wider text-teal-400 bg-slate-800 px-2 py-1 rounded hover:bg-slate-700"
-                    >
-                      {mapExpanded ? "⤡ MINIMIZE MAP" : "⤢ ENLARGE MAP"}
-                    </button>
-                    <button 
-                      type="button" 
-                      onClick={handleLocateMe} 
-                      className="text-[9px] font-black uppercase tracking-wider text-primary flex items-center gap-1 hover:underline"
-                    >
-                      <Navigation className="w-3 h-3" /> GPS Locate
-                    </button>
-                  </div>
-                </div>
-                <div className={`relative ${mapExpanded ? "h-96" : "h-48"} w-full rounded-xl overflow-hidden border border-slate-700 transition-all duration-300`}>
-                  <iframe
-                    className="w-full h-full border-0"
-                    srcDoc={`
-                      <!DOCTYPE html>
-                      <html>
-                      <head>
-                        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-                        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-                        <style>
-                          body, html, #map { margin:0; padding:0; height:100%; width:100%; background:#0f172a; }
-                          .leaflet-control-attribution { display:none; }
-                        </style>
-                      </head>
-                      <body>
-                        <div id="map"></div>
-                        <script>
-                          var map = L.map('map', { zoomControl: false }).setView([${lat}, ${lng}], 16);
-                          L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', { maxZoom: 19 }).addTo(map);
-                          var marker = L.marker([${lat}, ${lng}], { draggable: true }).addTo(map);
-                          map.on('click', function(e) {
-                            marker.setLatLng(e.latlng);
-                          });
-                        </script>
-                      </body>
-                      </html>
-                    `}
-                  />
-                </div>
-                <div className="mt-1 flex items-center justify-between text-[10px] text-teal-400 font-bold">
-                  <span>Selected Pin: {lat}, {lng}</span>
-                </div>
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-1.5">
+                  Pinpoint Map Coordinates & Location Search
+                </label>
+                <WebAddressMapPicker
+                  initialLat={lat}
+                  initialLng={lng}
+                  onLocationSelect={(nLat, nLng, addressName) => {
+                    setLat(nLat);
+                    setLng(nLng);
+                    if (addressName && !addressLine) {
+                      setAddressLine(addressName);
+                    }
+                  }}
+                />
+              </div>
+
+              {/* Delivery Zone Selection (1 Hub / 4 Active Zones) */}
+              <div>
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-1">
+                  Delivery Zone (Dollygunj Hub PB-DOL-01)
+                </label>
+                <select
+                  value={zone}
+                  onChange={(e) => setZone(e.target.value)}
+                  className="w-full h-11 px-3 bg-slate-900 border border-slate-700 rounded-lg text-sm font-bold text-white focus:outline-none focus:border-primary"
+                >
+                  <option value="Minibay (Zone 1)">📍 Minibay (Zone 1)</option>
+                  <option value="Dollygunj (Zone 2)">📍 Dollygunj (Zone 2)</option>
+                  <option value="Atamphad (Zone 3)">📍 Atamphad (Zone 3)</option>
+                  <option value="Bhatubasti (Zone 4)">📍 Bhatubasti (Zone 4)</option>
+                </select>
               </div>
 
               {/* Hotel / Resort Name */}

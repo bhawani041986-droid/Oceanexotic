@@ -58,6 +58,7 @@ export default function ProfileScreen() {
 
   // New Address Form Fields
   const [addrType, setAddrType] = useState("HOME");
+  const [addrZone, setAddrZone] = useState("Dollygunj (Zone 2)");
   const [addrHotel, setAddrHotel] = useState("");
   const [addrRoom, setAddrRoom] = useState("");
   const [addrJetty, setAddrJetty] = useState("Phoenix Bay Jetty");
@@ -741,6 +742,38 @@ export default function ProfileScreen() {
                   </Pressable>
                 ))}
               </View>
+            </View>
+
+            <View className="mb-4">
+              <Text 
+                className="mb-2 text-[10px] font-black uppercase tracking-widest" 
+                style={{ color: colors.text }}
+              >
+                Delivery Zone (Dollygunj Hub)
+              </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} className="flex-row gap-2">
+                {[
+                  "Minibay (Zone 1)",
+                  "Dollygunj (Zone 2)",
+                  "Atamphad (Zone 3)",
+                  "Bhatubasti (Zone 4)"
+                ].map((z) => (
+                  <Pressable
+                    key={z}
+                    onPress={() => setAddrZone(z)}
+                    className="px-3 py-2 rounded-none border mr-2"
+                    style={addrZone === z ? {
+                      borderColor: primaryColor,
+                      backgroundColor: colors.primary + "1A"
+                    } : {
+                      borderColor: colors.border,
+                      backgroundColor: colors.bgAlt
+                    }}
+                  >
+                    <Text className="text-[8px] font-black uppercase" style={{ color: colors.text }}>{z}</Text>
+                  </Pressable>
+                ))}
+              </ScrollView>
             </View>
 
             <View className="mb-4">
