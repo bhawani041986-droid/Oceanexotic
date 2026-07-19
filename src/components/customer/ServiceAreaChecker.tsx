@@ -201,7 +201,7 @@ export function ServiceAreaChecker({ className, compact = false }: ServiceAreaCh
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
-            className="absolute top-full left-0 right-0 mt-2 z-[100] bg-bg-secondary border border-[var(--foreground)]/10 rounded-2xl p-4 shadow-premium space-y-3"
+            className="absolute top-full left-0 right-0 xl:left-auto xl:right-0 xl:w-[320px] mt-2 z-[100] bg-[var(--c-card)]/95 backdrop-blur-3xl border border-[var(--foreground)]/10 rounded-2xl p-4 shadow-2xl space-y-3"
           >
             {/* Header label & Close */}
             <div className="flex items-center justify-between pb-2 border-b border-[var(--foreground)]/5">

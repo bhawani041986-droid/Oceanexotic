@@ -247,6 +247,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
         </div>
       </header>
 
+      {/* 1.1 MOBILE SUB-HEADER ADDRESS BAR (Amazon-style) */}
+      <div className="xl:hidden w-full bg-[var(--c-bg)]/80 backdrop-blur-md border-b border-[var(--foreground)]/5 px-4 py-1.5 flex items-center relative z-40">
+        <ServiceAreaChecker className="w-full" />
+      </div>
+
       {/* 2. STICKY BOTTOM NAVIGATION (MOBILE) */}
       <nav 
         className="fixed left-4 right-4 z-[100] h-[52px] bg-[var(--c-card)]/90 backdrop-blur-3xl border border-[var(--foreground)]/10 shadow-2xl lg:hidden"
