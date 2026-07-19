@@ -3,16 +3,35 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts, Inter_400Regular, Inter_700Bold, Inter_900Black } from "@expo-google-fonts/inter";
 import { useEffect } from "react";
+import { Platform, LogBox } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { AppProviders } from "@/providers/AppProviders";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { cssInterop } from "react-native-css-interop";
 
+// Suppress keep awake dev error overlays
+LogBox.ignoreLogs(["Unable to activate keep awake"]);
+if (typeof global.Promise !== "undefined") {
+  const globalPromise = global.Promise as any;
+  const originalOnUnhandled = globalPromise._onUnhandled;
+  if (typeof originalOnUnhandled === "function") {
+    globalPromise._onUnhandled = (id: any, rejection: any) => {
+      const message = rejection?.message || String(rejection);
+      if (message.includes("keep awake") || message.includes("keepawake")) {
+        return;
+      }
+      originalOnUnhandled(id, rejection);
+    };
+  }
+}
+
 cssInterop(Image, { className: "style" });
 cssInterop(LinearGradient, { className: "style" });
 
 SplashScreen.preventAutoHideAsync();
+
+import { useAuthStore } from "@/store/authStore";
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -21,15 +40,18 @@ export default function RootLayout() {
     Inter_900Black,
   });
 
+  const isHydrated = useAuthStore((s) => s.isHydrated);
+
   useEffect(() => {
     if (error) throw error;
   }, [error]);
 
   useEffect(() => {
-    if (loaded) SplashScreen.hideAsync();
-  }, [loaded]);
+    if (loaded && isHydrated) SplashScreen.hideAsync();
+  }, [loaded, isHydrated]);
 
-  if (!loaded) return null;
+  if (!loaded && Platform.OS !== "web") return null;
+  if (!isHydrated) return null;
 
   return (
     <AppProviders>
@@ -37,6 +59,7 @@ export default function RootLayout() {
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: "#020617" } }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="login" />
+        <Stack.Screen name="oauth-callback" />
         <Stack.Screen name="(customer)" options={{ headerShown: false }} />
       </Stack>
     </AppProviders>

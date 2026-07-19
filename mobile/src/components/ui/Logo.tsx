@@ -29,14 +29,15 @@ interface LogoProps {
   size?: LogoSize;
   className?: string;
   style?: ViewStyle;
+  iconOnly?: boolean;
 }
 
 /** Animated OceanExotic mark — powered by standard core Animated for bulletproof 100% native platform support */
-export function Logo({ size = "md", className, style }: LogoProps) {
+export function Logo({ size = "md", className, style, iconOnly }: LogoProps) {
   const uid = useMemo(() => `logo${Math.random().toString(36).slice(2, 9)}`, []);
   const dims = SIZES[size];
   const colors = useThemeColors();
-  const textFill = "#F8FAFC";
+  const textFill = colors.text;
 
   const primaryFill = colors.primary;
   const accentCyan = colors.secondary;
@@ -87,9 +88,64 @@ export function Logo({ size = "md", className, style }: LogoProps) {
     outputRange: [1030, 0],
   });
 
+  if (iconOnly) {
+    const width = style?.width ?? style?.height ?? 36;
+    const height = style?.height ?? style?.width ?? 36;
+    return (
+      <View className={cn("overflow-hidden", className)} style={[{ width, height }, style]}>
+        <Svg width="100%" height="100%" viewBox="0 0 140 140" preserveAspectRatio="xMidYMid meet">
+          <Defs>
+            <LinearGradient id={`eyeGrad-${uid}`} x1="0%" y1="0%" x2="100%" y2="100%">
+              <Stop offset="0%" stopColor="#FFFFFF" />
+              <Stop offset="100%" stopColor={accentCyan} />
+            </LinearGradient>
+          </Defs>
+
+          <AnimatedG
+            x={25}
+            y={20}
+            scale={pulseAnim}
+            originX={50}
+            originY={50}
+          >
+            {/* Neon Glow Aura behind the fish */}
+            <Path
+              fill="none"
+              stroke={accentCyan}
+              strokeWidth={5}
+              opacity={0.25}
+              d="M50 20 C35 20 20 30 15 50 L5 30 L5 70 L15 50 C20 70 35 80 50 80 C70 80 85 70 90 50 C85 30 70 20 50 20 Z"
+            />
+            {/* Primary Solid Fish Body */}
+            <Path
+              fill={primaryFill}
+              d="M50 20 C35 20 20 30 15 50 L5 30 L5 70 L15 50 C20 70 35 80 50 80 C70 80 85 70 90 50 C85 30 70 20 50 20 Z M50 20 C55 10 65 5 75 5 C65 5 55 10 50 20 Z M50 80 C55 90 65 95 75 95 C65 95 55 90 50 80 Z"
+            />
+            {/* Direct overlay of fish details in theme background color to render perfectly on native platforms */}
+            <SvgText
+              x="50"
+              y="58"
+              textAnchor="middle"
+              fill={colors.bg}
+              fontSize="24"
+              fontWeight="900"
+              fontStyle="italic"
+            >
+              OX
+            </SvgText>
+            <Path d="M38 44 L15 44" stroke={colors.bg} strokeWidth={2.5} />
+            <Path d="M62 58 L88 58" stroke={colors.bg} strokeWidth={2.5} />
+            <Circle cx="82" cy="48" r="4" fill={colors.bg} />
+            <Circle cx="82" cy="48" r="3" fill={`url(#eyeGrad-${uid})`} />
+          </AnimatedG>
+        </Svg>
+      </View>
+    );
+  }
+
   return (
     <View className={cn("overflow-hidden", className)} style={[{ width: dims.width, height: dims.height }, style]}>
-      <Svg width="100%" height="100%" viewBox="0 0 800 200" preserveAspectRatio="xMinYMid meet">
+      <Svg width="100%" height="100%" viewBox="10 10 555 160" preserveAspectRatio="xMidYMid meet">
         <Defs>
           <LinearGradient id={`neonGrad-${uid}`} x1="0%" y1="0%" x2="100%" y2="0%">
             <Stop offset="0%" stopColor={accentCyan} />

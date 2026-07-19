@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { View, Text, ScrollView, ActivityIndicator, Pressable, FlatList, Dimensions, Modal, TextInput } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator, Pressable, FlatList, Dimensions, Modal, TextInput, Share, Linking, Clipboard } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Image } from "expo-image";
 import api from "@/services/api";
@@ -7,8 +7,10 @@ import { productService } from "@/services/productService";
 import { homeService, type CutOption } from "@/services/homeService";
 import { CutSelectionModal } from "@/components/customer/CutSelectionModal";
 import { useCartStore } from "@/store/cartStore";
+import { useWishlistStore } from "@/store/wishlistStore";
 import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
+import { ChamferedBox } from "@/components/ui/ChamferedBox";
 import { assetUrl } from "@/config/assets";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
 import type { TodaysCatchItem } from "@/services/homeService";
@@ -16,11 +18,16 @@ import { useImageAspectRatio } from "@/hooks/useImageAspectRatio";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { SectionTitle } from "@/components/customer/SectionTitle";
+import { FssaiBanner } from "@/components/customer/FssaiBanner";
 import Svg, { Path } from "react-native-svg";
 import { useProducts } from "@/hooks/useProducts";
 import { ProductCard } from "@/components/customer/ProductCard";
 import { useAuthStore } from "@/store/authStore";
 import { checkoutService } from "@/services/checkoutService";
+import { useTranslation } from "@/lib/i18n";
+import { useSettingsStore } from "@/store/settingsStore";
+import { useReviews } from "@/hooks/useReviews";
+import { useQueryClient } from "@tanstack/react-query";
 
 const MOCK_RECIPES = [
   { title: "Simple Steam", time: "15 min", difficulty: "Easy" },
@@ -33,11 +40,68 @@ const MOCK_REVIEWS = [
 ];
 
 export default function ProductDetailScreen() {
+  const { t } = useTranslation();
+
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const cart = useCartStore();
   const { toast, ToastHost } = useToast();
   const { user } = useAuthStore();
+  const currentLanguage = useSettingsStore((s) => s.language); // force re-render
+
+  const wishlist = useWishlistStore();
+  const queryClient = useQueryClient();
+  const { data: reviews = [], isLoading: reviewsLoading } = useReviews(id);
+  const isFavorited = useWishlistStore(state => state.items.some(item => item.id === id));
+
+  const handleToggleWishlist = () => {
+    if (!product) return;
+    wishlist.toggleFavorite(product as any);
+    toast(isFavorited ? "Removed from Favorites" : "Added to Favorites", "success");
+  };
+
+  const handleNativeShare = async () => {
+    if (!product) return;
+    try {
+      await Share.share({
+        message: `Check out this product: ${product.name} - https://oceanexotic.com/customer/products/${id}`,
+        url: `https://oceanexotic.com/customer/products/${id}`
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleWhatsAppShare = async () => {
+    if (!product) return;
+    const message = `Check out this product: ${product.name} - https://oceanexotic.com/customer/products/${id}`;
+    const whatsappUrl = `whatsapp://send?text=${encodeURIComponent(message)}`;
+    try {
+      const supported = await Linking.canOpenURL(whatsappUrl);
+      if (supported) {
+        await Linking.openURL(whatsappUrl);
+      } else {
+        await Linking.openURL(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`);
+      }
+    } catch (error) {
+      await Linking.openURL(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`);
+    }
+  };
+
+  const handleCopyLink = () => {
+    if (!product) return;
+    const url = `https://oceanexotic.com/customer/products/${id}`;
+    try {
+      if (Clipboard && typeof Clipboard.setString === 'function') {
+        Clipboard.setString(url);
+        toast("Link copied to clipboard!", "success");
+      } else {
+        toast("Copy not supported on this platform", "error");
+      }
+    } catch (err) {
+      toast("Failed to copy link", "error");
+    }
+  };
 
   const [product, setProduct] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
@@ -54,10 +118,12 @@ export default function ProductDetailScreen() {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isFullScreenVisible, setIsFullScreenVisible] = useState(false);
   const [isReviewModalVisible, setIsReviewModalVisible] = useState(false);
+  const [isAllReviewsVisible, setIsAllReviewsVisible] = useState(false);
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const screenWidth = Dimensions.get("window").width;
   const flatListRef = useRef<FlatList>(null);
+  const scrollViewRef = useRef<ScrollView>(null);
 
   const submitReview = async () => {
     if (rating === 0) {
@@ -79,6 +145,7 @@ export default function ProductDetailScreen() {
         rating: rating,
         comment: reviewText
       });
+      queryClient.invalidateQueries({ queryKey: ["reviews", id] });
       setIsReviewModalVisible(false);
       toast("Review submitted to Moderation", "success");
       setRating(0);
@@ -113,9 +180,9 @@ export default function ProductDetailScreen() {
 
   const hasThumbnails = allImages.length > 1;
   const paddingLeft = hasThumbnails ? 0 : 16;
-  const paddingRight = 16;
-  const thumbnailWidth = hasThumbnails ? 72 : 0;
-  const gapWidth = hasThumbnails ? 10 : 0;
+  const paddingRight = 0;
+  const thumbnailWidth = hasThumbnails ? 54 : 0;
+  const gapWidth = hasThumbnails ? 8 : 0;
   const viewWidth = screenWidth - paddingLeft - paddingRight - thumbnailWidth - gapWidth;
 
   const img = allImages[0] ?? "";
@@ -253,14 +320,21 @@ export default function ProductDetailScreen() {
 
   const p = product as any;
 
+  const averageRating = reviews.length > 0
+    ? (reviews.reduce((acc: number, r: any) => acc + Number(r.rating), 0) / reviews.length).toFixed(1)
+    : String(p?.rating ?? "4.5");
+  const totalReviews = reviews.length > 0 
+    ? reviews.length 
+    : 0;
+
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
-      <ScrollView contentContainerClassName="pb-28">
+      <ScrollView ref={scrollViewRef} contentContainerClassName="pb-16">
         <View style={{ width: screenWidth, height: viewWidth, flexDirection: 'row', backgroundColor: colors.bg, paddingLeft: paddingLeft, paddingRight: paddingRight, marginTop: 8 }}>
           {/* Left-side Thumbnails */}
           {allImages.length > 1 && (
             <ScrollView 
-              style={{ width: 72, height: '100%' }} 
+              style={{ width: 54, height: '100%' }} 
               showsVerticalScrollIndicator={false}
             >
               {allImages.map((imgUrl, i) => {
@@ -273,8 +347,8 @@ export default function ProductDetailScreen() {
                       setActiveImageIndex(i);
                     }}
                     style={{ 
-                      width: 72, 
-                      height: 72, 
+                      width: 54, 
+                      height: 54, 
                       marginBottom: 6, 
                       borderWidth: 2, 
                       borderRadius: 8,
@@ -289,7 +363,7 @@ export default function ProductDetailScreen() {
                     {imgUrl ? (
                       <Image source={{ uri: resolveMediaUrl(imgUrl) }} style={{ width: '100%', height: '100%', borderRadius: 6 }} contentFit="contain" />
                     ) : (
-                      <Text style={{ fontSize: 24 }}>🐟</Text>
+                      <Text style={{ fontSize: 20 }}>🐟</Text>
                     )}
                   </Pressable>
                 );
@@ -297,16 +371,14 @@ export default function ProductDetailScreen() {
             </ScrollView>
           )}
 
-          <View 
+          <ChamferedBox 
+            fillColor={colors.card}
+            strokeColor={colors.border}
+            bevelSize={24}
             style={{ 
               width: viewWidth, 
               height: viewWidth, 
               position: 'relative', 
-              backgroundColor: colors.card, 
-              borderRadius: 12, 
-              borderWidth: 1, 
-              borderColor: colors.border,
-              overflow: 'hidden',
               marginLeft: gapWidth
             }}
           >
@@ -350,21 +422,119 @@ export default function ProductDetailScreen() {
 
             {/* Floating Badge Indicator (Amazon Style) */}
             {allImages.length > 1 && (
-              <View className="absolute bottom-4 right-4 bg-black/60 px-3 py-1 rounded-full border border-white/10 z-10">
+              <View className="absolute bottom-4 left-4 bg-black/60 px-3 py-1 rounded-none border border-white/10 z-10">
                 <Text className="text-white text-[10px] font-black tracking-widest">
                   {activeImageIndex + 1} / {allImages.length}
                 </Text>
               </View>
             )}
 
+            {/* Share and Wishlist Buttons */}
+            <View 
+              style={{
+                position: 'absolute',
+                bottom: 6,
+                right: 6,
+                flexDirection: 'row',
+                alignItems: 'center',
+                zIndex: 20
+              }}
+            >
+              <View 
+                style={{ 
+                  flexDirection: 'row', 
+                  alignItems: 'center', 
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+                  borderRadius: 12, 
+                  paddingHorizontal: 6, 
+                  paddingVertical: 4,
+                  gap: 8,
+                  borderWidth: 1,
+                  borderColor: 'rgba(255, 255, 255, 0.1)'
+                }}
+              >
+                {/* Main Share Button */}
+                <Pressable
+                  onPress={handleNativeShare}
+                  style={({ pressed }) => ({
+                    opacity: pressed ? 0.7 : 1,
+                  })}
+                >
+                  <MaterialCommunityIcons name="share-variant" size={12} color="#FFFFFF" />
+                </Pressable>
+
+                {/* WhatsApp Button */}
+                <Pressable
+                  onPress={handleWhatsAppShare}
+                  style={({ pressed }) => ({
+                    opacity: pressed ? 0.7 : 1,
+                  })}
+                >
+                  <MaterialCommunityIcons name="whatsapp" size={14} color="#25D366" />
+                </Pressable>
+
+                {/* Copy Link Button */}
+                <Pressable
+                  onPress={handleCopyLink}
+                  style={({ pressed }) => ({
+                    opacity: pressed ? 0.7 : 1,
+                  })}
+                >
+                  <MaterialCommunityIcons name="link-variant" size={12} color="#FFFFFF" />
+                </Pressable>
+
+                {/* Vertical Divider */}
+                <View style={{ width: 1, height: 10, backgroundColor: 'rgba(255,255,255,0.2)' }} />
+
+                {/* Heart Button */}
+                <Pressable
+                  onPress={handleToggleWishlist}
+                  style={({ pressed }) => ({
+                    opacity: pressed ? 0.7 : 1,
+                  })}
+                >
+                  <MaterialCommunityIcons 
+                    name={isFavorited ? "heart" : "heart-outline"} 
+                    size={14} 
+                    color={isFavorited ? "#EF4444" : "#FFFFFF"} 
+                  />
+                </Pressable>
+              </View>
+            </View>
+
             {/* Tap overlay info */}
             {allImages.length > 0 && (
-              <View className="absolute top-4 right-4 bg-black/45 px-2 py-1 rounded flex-row items-center gap-1 border border-white/5 z-10">
+              <View className="absolute top-4 left-4 bg-black/45 px-2 py-1 rounded flex-row items-center gap-1 border border-white/5 z-10">
                 <MaterialCommunityIcons name="magnify-plus-outline" size={10} color="#fff" />
                 <Text className="text-white text-[8px] font-bold uppercase">Tap to zoom</Text>
               </View>
             )}
-          </View>
+
+            {/* Top-Right Review/Rating Pill */}
+            {allImages.length > 0 && (
+              <Pressable
+                onPress={() => {
+                  scrollViewRef.current?.scrollToEnd({ animated: true });
+                }}
+                className="absolute top-3 right-3 z-20"
+                style={({ pressed }) => ({
+                  opacity: pressed ? 0.8 : 1,
+                  transform: [{ scale: pressed ? 0.98 : 1 }]
+                })}
+              >
+                <View 
+                  className="flex-row items-center gap-1.5 bg-black/60 px-3 py-1.5 rounded-full border border-white/10 shadow-2xl"
+                  style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 6, elevation: 6 }}
+                >
+                  <MaterialCommunityIcons name="star" size={12} color="#FBBF24" />
+                  <View className="flex-row items-center gap-0.5">
+                    <Text className="text-[11px] font-black text-white">{averageRating}</Text>
+                    <Text className="text-[9px] font-bold text-white/60 tracking-tighter">({totalReviews})</Text>
+                  </View>
+                </View>
+              </Pressable>
+            )}
+          </ChamferedBox>
         </View>
 
         {/* Dynamic Pagination Dots (Amazon Style Dynamic Pills) */}
@@ -391,18 +561,30 @@ export default function ProductDetailScreen() {
           <Text className="text-[10px] font-black uppercase text-primary">
             {String(product.seller_name ?? "Verified Fleet")}
           </Text>
-          <Text className="mt-2 text-3xl font-black uppercase italic text-primary">
+          <Text className="mt-2 text-3xl font-black uppercase italic" style={{ color: colors.primary }}>
             {String(product.name)}
           </Text>
           {product.description ? (
             <Text className="mt-3 text-sm text-muted-foreground">{String(product.description)}</Text>
           ) : null}
-          <Text className="mt-4 text-3xl font-black italic text-primary">
-            ₹{currentPrice.toLocaleString()}
-            <Text className="text-sm opacity-60">/{String(product.unit ?? "kg")}</Text>
-          </Text>
+          <View className="flex-row items-baseline gap-2 mt-4">
+            <Text className="text-3xl font-black italic text-primary">
+              ₹{currentPrice.toLocaleString()}
+              <Text className="text-sm opacity-60 font-normal">/{String(product.unit ?? "kg")}</Text>
+            </Text>
+            {p.discount_percent > 0 ? (
+              <>
+                <Text className="text-sm line-through text-muted-foreground ml-1 font-mono">
+                  ₹{Math.round(Number(p.originalPrice ?? currentPrice * (100/(100-p.discount_percent)))).toLocaleString()}
+                </Text>
+                <View className="rounded bg-red-500/10 px-1.5 py-0.5 border border-red-500/20 ml-1">
+                  <Text className="text-[8px] font-black text-red-500 uppercase">{p.discount_percent}% OFF</Text>
+                </View>
+              </>
+            ) : null}
+          </View>
           {product.live_harbor ? (
-            <Text className="mt-2 text-[10px] font-black uppercase text-emerald-500">
+            <Text className="mt-2 text-[10px] font-black uppercase" style={{ color: colors.primary }}>
               Live @ {String(product.live_harbor)} • {String(product.remaining_kg ?? product.live_stock)}kg left
             </Text>
           ) : null}
@@ -473,13 +655,13 @@ export default function ProductDetailScreen() {
                   return (
                     <View 
                       key={addon.id} 
-                      className="w-full p-2 border rounded-xl flex-row items-center justify-between"
+                      className="w-full p-2 border rounded-none flex-row items-center justify-between"
                       style={{ backgroundColor: colors.card, borderColor: colors.border }}
                     >
                       <View className="flex-row items-center flex-1 pr-3">
                         <Image 
                           source={{ uri: addonImg }} 
-                          className="w-10 h-10 rounded-lg bg-black/10 border mr-3"
+                          className="w-10 h-10 rounded-none bg-black/10 border mr-3"
                           style={{ borderColor: 'rgba(255, 255, 255, 0.05)' }}
                         />
                         <View className="flex-1 justify-center">
@@ -493,7 +675,7 @@ export default function ProductDetailScreen() {
                       
                       <Pressable
                         onPress={() => handleToggleAddon(addon)}
-                        className="px-3 py-1.5 rounded-lg flex-row items-center justify-center gap-1 border"
+                        className="px-3 py-1.5 rounded-none flex-row items-center justify-center gap-1 border"
                         style={{ 
                           backgroundColor: inCart ? colors.primary : 'transparent',
                           borderColor: colors.primary 
@@ -515,7 +697,7 @@ export default function ProductDetailScreen() {
               {p.addons.length > 3 && (
                 <Pressable
                   onPress={() => setShowAllAddons(!showAllAddons)}
-                  className="mt-3 py-2 items-center justify-center border rounded-lg"
+                  className="mt-3 py-2 items-center justify-center border rounded-none"
                   style={{ backgroundColor: `${colors.primary}10`, borderColor: `${colors.primary}20` }}
                 >
                   <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>
@@ -548,7 +730,7 @@ export default function ProductDetailScreen() {
                     <Pressable
                       key={option.id}
                       onPress={() => setSelectedPrepOption(option)}
-                      className="p-3 border rounded-xl items-center justify-center min-w-[90px]"
+                      className="p-3 border rounded-none items-center justify-center min-w-[90px]"
                       style={{
                         backgroundColor: isSelected ? `${colors.primary}15` : colors.card,
                         borderColor: isSelected ? colors.primary : colors.border
@@ -569,7 +751,7 @@ export default function ProductDetailScreen() {
 
           {isComingSoon ? (
             <View className="mt-8">
-              <View className="border rounded-xl py-4 items-center" style={{ backgroundColor: `${colors.primary}15`, borderColor: `${colors.primary}30` }}>
+              <View className="border rounded-none py-4 items-center" style={{ backgroundColor: `${colors.primary}15`, borderColor: `${colors.primary}30` }}>
                 <Text className="font-black uppercase tracking-widest text-center" style={{ color: colors.primary }}>
                   🚢 COMING SOON - NOT YET HARVESTED IN THIS SECTOR
                 </Text>
@@ -584,13 +766,16 @@ export default function ProductDetailScreen() {
                 onPress={() => {
                   const prepAdd = selectedPrepOption ? parseFloat(selectedPrepOption.price_flat_add) : 0;
                   cart.addItem({
-                    id: `${id}${selectedPrepOption ? '-' + selectedPrepOption.prep_type : ''}`,
-                    name: selectedPrepOption ? `${String(product.name)} (${selectedPrepOption.name})` : String(product.name),
+                    id: `${id}-whole${selectedPrepOption ? '-' + selectedPrepOption.prep_type : ''}`,
+                    name: selectedPrepOption
+                      ? `${String(product.name)} – Whole Fish (${selectedPrepOption.name})`
+                      : `${String(product.name)} – Whole Fish`,
                     price: Number(product.live_price ?? product.price ?? 0) + prepAdd,
                     quantity: 1,
                     image: img,
                     sellerId: String(product.seller_id ?? ""),
                     metadata: {
+                      cut_type: "WHOLE",
                       prep_option: selectedPrepOption ? {
                         id: selectedPrepOption.id,
                         prep_type: selectedPrepOption.prep_type,
@@ -599,7 +784,6 @@ export default function ProductDetailScreen() {
                       } : null
                     }
                   });
-                  toast("Proceeding to checkout...", "success");
                   router.push("/checkout");
                 }}
               />
@@ -696,7 +880,6 @@ export default function ProductDetailScreen() {
               <Pressable 
                 key={i} 
                 onPress={() => {
-                  // Fallback for recipe routing if not found in expo-router typings
                   router.push(`/(customer)/recipe/${recipe.id || 1}` as any);
                 }}
                 className="p-4 border flex-row items-center justify-between"
@@ -719,7 +902,7 @@ export default function ProductDetailScreen() {
         <View className="px-4 py-6 border-t" style={{ borderColor: colors.border }}>
           <SectionTitle title="Seller Information" subtitle="Seller Verification" />
           <View className="p-4 mt-4 border flex-row items-center gap-4" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-             <View className="w-12 h-12 rounded-full items-center justify-center border" style={{ backgroundColor: `${colors.primary}20`, borderColor: `${colors.primary}40` }}>
+             <View className="w-12 h-12 rounded-none items-center justify-center border" style={{ backgroundColor: `${colors.primary}20`, borderColor: `${colors.primary}40` }}>
                 <Text className="text-xl">⚓</Text>
              </View>
              <View>
@@ -733,16 +916,19 @@ export default function ProductDetailScreen() {
           </View>
         </View>
 
-        {/* --- LAYER 5: CUSTOMER REVIEWS --- */}
+        {/* --- LAYER 5: COMMUNITY & REVIEWS --- */}
         <View className="px-4 py-6 border-t" style={{ borderColor: colors.border }}>
           <SectionTitle title="Customer Reviews" subtitle="Verified Buyer Feedback" />
           <View className="mt-4 gap-3">
-            {(p.customerReviews && p.customerReviews.length > 0 ? p.customerReviews : []).map((review: any, i: number) => (
-              <View key={i} className="p-4 border rounded-xl" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+            {reviewsLoading && (
+              <ActivityIndicator size="small" color={colors.primary} style={{ marginVertical: 16 }} />
+            )}
+            {!reviewsLoading && reviews.slice(0, 3).map((review, i) => (
+              <View key={review.id ?? i} className="p-4 border rounded-xl" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
                 <View className="flex-row justify-between items-start mb-2">
                   <View className="flex-row items-center gap-3">
-                    <View className="w-8 h-8 rounded-full items-center justify-center" style={{ backgroundColor: `${colors.primary}20` }}>
-                      <Text className="font-black" style={{ color: colors.primary }}>{review.user_name ? review.user_name.charAt(0) : 'U'}</Text>
+                    <View className="w-8 h-8 rounded-none items-center justify-center" style={{ backgroundColor: `${colors.primary}20` }}>
+                      <Text className="font-black" style={{ color: colors.primary }}>{review.user_name ? review.user_name.charAt(0).toUpperCase() : 'U'}</Text>
                     </View>
                     <View>
                       <Text className="text-[10px] font-black uppercase" style={{ color: colors.text }}>{review.user_name || "Unknown User"}</Text>
@@ -754,8 +940,19 @@ export default function ProductDetailScreen() {
                 <Text className="text-xs italic" style={{ color: colors.textMuted }}>"{review.comment}"</Text>
               </View>
             ))}
-            {(!p.customerReviews || p.customerReviews.length === 0) && (
+            {!reviewsLoading && reviews.length === 0 && (
               <Text className="text-xs font-black uppercase opacity-40 italic text-center">No reviews yet for this catch.</Text>
+            )}
+            {reviews.length > 3 && (
+              <Pressable
+                onPress={() => setIsAllReviewsVisible(true)}
+                className="self-end px-3 py-1.5 border rounded-lg active:opacity-80"
+                style={{ borderColor: colors.border, backgroundColor: colors.card, marginTop: -2 }}
+              >
+                <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>
+                  VIEW ALL {reviews.length} REVIEWS
+                </Text>
+              </Pressable>
             )}
           </View>
           <Button label="SUBMIT FEEDBACK" variant="ghost" className="mt-4 border" style={{ borderColor: colors.border }} onPress={() => setIsReviewModalVisible(true)} />
@@ -778,7 +975,7 @@ export default function ProductDetailScreen() {
             ))}
           </ScrollView>
         </View>
-
+        <FssaiBanner />
       </ScrollView>
       <CutSelectionModal
         visible={cutOpen}
@@ -806,7 +1003,7 @@ export default function ProductDetailScreen() {
             </Text>
             <Pressable
               onPress={() => setIsFullScreenVisible(false)}
-              className="w-10 h-10 rounded-full bg-white/10 items-center justify-center border border-white/10"
+              className="w-10 h-10 rounded-none bg-white/10 items-center justify-center border border-white/10"
             >
               <MaterialCommunityIcons name="close" size={20} color="#fff" />
             </Pressable>
@@ -896,6 +1093,54 @@ export default function ProductDetailScreen() {
               label="SUBMIT PROTOCOL"
             />
           </View>
+        </View>
+      </Modal>
+
+      {/* View All Reviews Modal */}
+      <Modal
+        visible={isAllReviewsVisible}
+        animationType="slide"
+        onRequestClose={() => setIsAllReviewsVisible(false)}
+      >
+        <View style={{ flex: 1, backgroundColor: colors.bg, paddingTop: 48 }}>
+          {/* Header */}
+          <View className="px-4 py-4 border-b flex-row justify-between items-center" style={{ borderColor: colors.border }}>
+            <Pressable onPress={() => setIsAllReviewsVisible(false)} className="p-2">
+              <MaterialCommunityIcons name="arrow-left" size={24} color={colors.text} />
+            </Pressable>
+            <Text className="text-sm font-black uppercase italic" style={{ color: colors.text }}>
+              ALL REVIEWS ({reviews.length})
+            </Text>
+            <View style={{ width: 40 }} />
+          </View>
+
+          {/* List */}
+          <FlatList
+            data={reviews}
+            keyExtractor={(item, index) => item.id ? String(item.id) : String(index)}
+            contentContainerStyle={{ padding: 16, gap: 12, paddingBottom: 60 }}
+            renderItem={({ item: review }) => (
+              <View className="p-4 border rounded-xl" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+                <View className="flex-row justify-between items-start mb-2">
+                  <View className="flex-row items-center gap-3">
+                    <View className="w-8 h-8 rounded-none items-center justify-center" style={{ backgroundColor: `${colors.primary}20` }}>
+                      <Text className="font-black" style={{ color: colors.primary }}>
+                        {review.user_name ? review.user_name.charAt(0).toUpperCase() : 'U'}
+                      </Text>
+                    </View>
+                    <View>
+                      <Text className="text-[10px] font-black uppercase" style={{ color: colors.text }}>{review.user_name || "Unknown User"}</Text>
+                      <Text className="text-[8px] font-bold uppercase" style={{ color: colors.textMuted }}>
+                        {review.created_at ? new Date(review.created_at).toLocaleDateString() : "Recent"}
+                      </Text>
+                    </View>
+                  </View>
+                  <Text className="text-[10px] font-black" style={{ color: colors.primary }}>★ {review.rating}</Text>
+                </View>
+                <Text className="text-xs italic" style={{ color: colors.textMuted }}>"{review.comment}"</Text>
+              </View>
+            )}
+          />
         </View>
       </Modal>
 

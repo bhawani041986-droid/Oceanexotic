@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,18 +9,28 @@ import {
   RefreshControl,
 } from "react-native";
 import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import api from "@/services/api";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useProductSearch, useProducts } from "@/hooks/useProducts";
+import { useDebounce } from "@/hooks/useDebounce";
 import { ProductCard } from "@/components/customer/ProductCard";
 import { SectionTitle } from "@/components/customer/SectionTitle";
 import { CutSelectionModal } from "@/components/customer/CutSelectionModal";
+import { PromoBannerCard } from "@/components/customer/PromoBannerCard";
+import { FssaiBanner } from "@/components/customer/FssaiBanner";
 import { useCartStore } from "@/store/cartStore";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { useToast } from "@/components/ui/Toast";
 import { homeService, type CutOption, type TodaysCatchItem } from "@/services/homeService";
 import type { Product } from "@/services/productService";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "@/lib/i18n";
+import { useSettingsStore } from "@/store/settingsStore";
+import { useHomeData } from "@/hooks/useHomeData";
+import { CATEGORIES, getSortedCategories } from "@/constants/categories";
+import { ChamferedBox } from "@/components/ui/ChamferedBox";
 
 const TABS = [
   "All Seafood",
@@ -34,14 +44,124 @@ const TABS = [
   "Coastal Dry Fish",
 ];
 
+const getTabLabel = (tab: string, t: any) => {
+  switch (tab) {
+    case "All Seafood":
+      return t('all_seafood') || t('all') || "All Seafood";
+    case "Seawater Fish":
+      return t('seawater_fish') || "Seawater Fish";
+    case "Freshwater Fish":
+      return t('freshwater_fish') || "Freshwater Fish";
+    case "Prawns & Shrimps":
+      return t('prawns_shrimps') || "Prawns & Shrimps";
+    case "Crabs & Lobsters":
+      return t('crabs_lobsters') || "Crabs & Lobsters";
+    case "Steaks & Fillets":
+      return t('steaks_fillets') || "Steaks & Fillets";
+    case "Exotic Catch":
+      return t('exotic_catch') || "Exotic Catch";
+    case "Ready to Cook":
+      return t('ready_to_cook') || "Ready to Cook";
+    case "Coastal Dry Fish":
+      return t('coastal_dry_fish') || "Coastal Dry Fish";
+    default:
+      return tab;
+  }
+};
+
+const getCategoryTranslated = (name: string, t: any) => {
+  const transKeys: Record<string, string> = {
+    "Seawater Fish": "seawater_fish",
+    "Freshwater Fish": "freshwater_fish",
+    "Prawns & Shrimps": "prawns_shrimps",
+    "Crabs & Lobsters": "crabs_lobsters",
+    "Steaks & Fillets": "steaks_fillets",
+    "Exotic Catch": "exotic_catch",
+    "Ready to Cook": "ready_to_cook",
+    "Coastal Dry Fish": "coastal_dry_fish",
+    "Mutton": "mutton",
+    "Chicken": "chicken"
+  };
+  const key = transKeys[name];
+  return key ? t(key) : name;
+};
+
+const matchCategory = (pCategory: string, targetCategoryEnglish: string, t: any) => {
+  const catLower = (pCategory ?? "").toLowerCase();
+  const nameLower = catLower; // Fallback check in name if needed
+  
+  const englishKeys: Record<string, string[]> = {
+    "Seawater Fish": ["sea", "reef", "coastal", "marine", "fin-fish", "snapper", "pomfret", "grouper", "cod"],
+    "Freshwater Fish": ["fresh", "river", "lake", "sweet", "mackerel", "rohu"],
+    "Prawns & Shrimps": ["prawn", "shrimp", "crustacean", "shellfish"],
+    "Crabs & Lobsters": ["crab", "lobster", "mangrove", "crustacean", "shellfish"],
+    "Steaks & Fillets": ["fillet", "steak", "cut", "surmai", "kingfish"],
+    "Exotic Catch": ["exotic", "premium", "deep", "tuna", "salmon", "lobster"],
+    "Ready to Cook": ["ready", "marinated", "cook", "fry", "finger", "batter"],
+    "Coastal Dry Fish": ["dry", "dried"]
+  };
+
+  const matches = englishKeys[targetCategoryEnglish] || [targetCategoryEnglish.toLowerCase().split(" ")[0]];
+  
+  if (matches.some(m => catLower.includes(m))) {
+    return true;
+  }
+
+  const translatedLabel = getTabLabel(targetCategoryEnglish, t).toLowerCase();
+  if (catLower.includes(translatedLabel)) {
+    return true;
+  }
+
+  const transKeys: Record<string, string> = {
+    "Seawater Fish": "seawater_fish",
+    "Freshwater Fish": "freshwater_fish",
+    "Prawns & Shrimps": "prawns_shrimps",
+    "Crabs & Lobsters": "crabs_lobsters",
+    "Steaks & Fillets": "steaks_fillets",
+    "Exotic Catch": "exotic_catch",
+    "Ready to Cook": "ready_to_cook",
+    "Coastal Dry Fish": "coastal_dry_fish"
+  };
+
+  const key = transKeys[targetCategoryEnglish];
+  if (key) {
+    const translatedValue = t(key);
+    if (translatedValue && catLower.includes(translatedValue.toLowerCase())) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
 export default function ProductsScreen() {
+  const { t } = useTranslation();
+
   const router = useRouter();
   const params = useLocalSearchParams<{ category?: string; search?: string }>();
   const { toast, ToastHost } = useToast();
   const cart = useCartStore();
   const colors = useThemeColors();
+  const settings = useSettingsStore();
 
-  const [searchQuery, setSearchQuery] = useState(params.search ?? "");
+  const isLightColor = (colorStr: string) => {
+    if (!colorStr || !colorStr.startsWith("#")) return false;
+    let cleanHex = colorStr.replace("#", "");
+    if (cleanHex.length === 3) {
+      cleanHex = cleanHex.split("").map(c => c + c).join("");
+    }
+    if (cleanHex.length !== 6) return false;
+    const r = parseInt(cleanHex.substring(0, 2), 16);
+    const g = parseInt(cleanHex.substring(2, 4), 16);
+    const b = parseInt(cleanHex.substring(4, 6), 16);
+    const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+    return brightness > 180;
+  };
+
+  const currentLanguage = useSettingsStore((s) => s.language); // force re-render
+
+  const [searchText, setSearchText] = useState(params.search ?? "");
+  const searchQuery = useDebounce(searchText, 300);
   const [activeTab, setActiveTab] = useState(() => {
     if (!params.category) return "All Seafood";
     const slug = String(params.category).toLowerCase();
@@ -57,6 +177,7 @@ export default function ProductsScreen() {
   });
 
   const registry = useProducts();
+  const { todaysCatch } = useHomeData();
   const search = useProductSearch(searchQuery, "");
 
   const [cutProduct, setCutProduct] = useState<Product | null>(null);
@@ -80,122 +201,27 @@ export default function ProductsScreen() {
       : (registry.data ?? []);
 
     return rawList.filter((p) => {
-      // 1. Name search matching (only needed if using client-side registry list directly, 
-      // but harmless to enforce for consistency)
-      const matchSearch = !searchQuery.trim() || p.name.toLowerCase().includes(searchQuery.toLowerCase());
-      if (!matchSearch) return false;
+      // When using server search results, skip redundant client-side name filter
+      if (searchQuery.trim() && search.data) return true;
 
       // 2. Active Tab Category Resolver (Smart Mapping)
       if (activeTab === "All Seafood") return true;
 
-      const catLower = (p.category ?? "").toLowerCase();
-      const nameLower = p.name.toLowerCase();
-
-      if (activeTab === "Seawater Fish") {
-        return (
-          catLower.includes("sea") ||
-          catLower.includes("reef") ||
-          catLower.includes("coastal") ||
-          catLower.includes("marine") ||
-          catLower.includes("fin-fish") ||
-          catLower.includes("snapper") ||
-          catLower.includes("pomfret") ||
-          catLower.includes("grouper") ||
-          catLower.includes("cod")
-        );
-      }
-      if (activeTab === "Freshwater Fish") {
-        return (
-          catLower.includes("freshwater") ||
-          catLower.includes("river") ||
-          catLower.includes("lake") ||
-          catLower.includes("sweetwater") ||
-          catLower.includes("mackerel") ||
-          nameLower.includes("mackerel")
-        );
-      }
-      if (activeTab === "Prawns & Shrimps") {
-        return (
-          catLower.includes("prawn") ||
-          catLower.includes("shrimp") ||
-          catLower.includes("crustacean") ||
-          catLower.includes("shellfish") ||
-          nameLower.includes("prawn") ||
-          nameLower.includes("shrimp")
-        );
-      }
-      if (activeTab === "Crabs & Lobsters") {
-        return (
-          catLower.includes("crab") ||
-          catLower.includes("lobster") ||
-          catLower.includes("mangrove") ||
-          catLower.includes("crustacean") ||
-          catLower.includes("shellfish") ||
-          nameLower.includes("crab") ||
-          nameLower.includes("lobster")
-        );
-      }
-      if (activeTab === "Steaks & Fillets") {
-        return (
-          catLower.includes("fillet") ||
-          catLower.includes("steak") ||
-          catLower.includes("cut") ||
-          nameLower.includes("steak") ||
-          nameLower.includes("fillet") ||
-          nameLower.includes("surmai") ||
-          nameLower.includes("kingfish") ||
-          nameLower.includes("cut")
-        );
-      }
-      if (activeTab === "Exotic Catch") {
-        return (
-          catLower.includes("exotic") ||
-          catLower.includes("premium") ||
-          catLower.includes("deep sea") ||
-          nameLower.includes("tuna") ||
-          nameLower.includes("salmon") ||
-          nameLower.includes("lobster")
-        );
-      }
-      if (activeTab === "Ready to Cook") {
-        return (
-          catLower.includes("ready") ||
-          catLower.includes("marinated") ||
-          catLower.includes("cook") ||
-          nameLower.includes("marinated") ||
-          nameLower.includes("fry") ||
-          nameLower.includes("finger") ||
-          nameLower.includes("batter")
-        );
-      }
-      if (activeTab === "Coastal Dry Fish") {
-        return (
-          catLower.includes("dry") ||
-          catLower.includes("dried") ||
-          nameLower.includes("dry") ||
-          nameLower.includes("dried")
-        );
-      }
-
-      return catLower.includes(activeTab.toLowerCase().split(" ")[0]);
+      return matchCategory(p.category ?? "", activeTab, t);
     });
   }, [searchQuery, activeTab, registry.data, search.data]);
 
   const isLoading = registry.isLoading || (searchQuery.trim() ? search.isLoading : false);
+  const isSearching = searchText.trim() !== searchQuery.trim(); // debounce in progress
 
   const [addons, setAddons] = useState<any[]>([]);
   useEffect(() => {
-    api.get("/addons/list.php")
+    api.get("/addons/list")
       .then(res => setAddons(Array.isArray(res.data) ? res.data : []))
       .catch(err => console.error(err));
   }, []);
 
   const showLayers = activeTab === "All Seafood" && !searchQuery.trim();
-  const bestsellers = useMemo(() => displayList.slice(0, 8), [displayList]);
-  const readyToCook = useMemo(() => displayList.filter(p => 
-    p.category?.toLowerCase() === "ready to cook" || 
-    /marinate|grill|fry|masala|ready|spice/i.test((p.name || "") + " " + (p.description || ""))
-  ), [displayList]);
 
   const handleAddAddon = (addon: any) => {
     cart.addItem({
@@ -220,7 +246,7 @@ export default function ProductsScreen() {
       setCutOptions(options);
       setSelectedCut(options.find((c) => c.is_available !== false) ?? options[0] ?? null);
     } catch {
-      toast("Cut Registry Handshake Failure", "error");
+      toast("Failed to load options", "error");
     } finally {
       setCutLoading(false);
     }
@@ -245,161 +271,276 @@ export default function ProductsScreen() {
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       <ScrollView
         className="flex-1"
-        contentContainerClassName="pb-28 px-4 pt-2"
+        contentContainerClassName="pb-16 px-4 pt-2"
         refreshControl={
           <RefreshControl refreshing={registry.isRefetching} onRefresh={() => registry.refetch()} tintColor={colors.primary} />
         }
       >
-        <SectionTitle title="Harvest Registry" subtitle="Premium Seafood Discovery • Live Fleet Sync" />
+        <SectionTitle title={t('product_catalog')} subtitle={t('catalog_subtitle')} />
 
-        <TextInput
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          placeholder="Search the database..."
-          placeholderTextColor={colors.isDark ? "#94A3B8" : "#6B7280"}
-          className="mt-4 h-12 rounded-xl border px-4 text-sm"
-          style={{ 
-            backgroundColor: colors.card, 
-            borderColor: colors.border, 
-            color: colors.text 
-          }}
-        />
+        {/* Polished Search Bar */}
+        <View
+          className="mt-4 h-12 flex-row items-center rounded-none border px-3"
+          style={{ backgroundColor: colors.card, borderColor: searchText.trim() ? colors.primary : colors.border }}
+        >
+          <MaterialCommunityIcons
+            name="magnify"
+            size={18}
+            color={searchText.trim() ? colors.primary : (colors.isDark ? "#94A3B8" : "#6B7280")}
+          />
+          <TextInput
+            value={searchText}
+            onChangeText={setSearchText}
+            placeholder={t('search_seafood')}
+            placeholderTextColor={colors.isDark ? "#94A3B8" : "#6B7280"}
+            style={{ flex: 1, color: colors.text, fontSize: 13, marginHorizontal: 8 }}
+            returnKeyType="search"
+            clearButtonMode="never"
+          />
+          {isSearching && (
+            <ActivityIndicator size="small" color={colors.primary} />
+          )}
+          {!isSearching && searchText.trim().length > 0 && (
+            <Pressable
+              onPress={() => setSearchText("")}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+            >
+              <MaterialCommunityIcons
+                name="close-circle"
+                size={18}
+                color={colors.isDark ? "#94A3B8" : "#6B7280"}
+              />
+            </Pressable>
+          )}
+        </View>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
           {TABS.map((tab) => {
             const active = activeTab === tab;
             return (
-              <Pressable
+              <ChamferedBox
                 key={tab}
-                onPress={() => setActiveTab(tab)}
-                className="mr-2 rounded-xl px-4 py-2 border"
-                style={active ? { 
-                  backgroundColor: colors.primary, 
-                  borderColor: colors.primary 
-                } : { 
-                  backgroundColor: colors.card, 
-                  borderColor: colors.border 
-                }}
+                fillColor={active ? colors.primary : colors.card}
+                strokeColor={active ? colors.primary : colors.border}
+                bevelSize={8}
+                style={{ minHeight: 30 }}
+                className="mr-2"
+                contentClassName="w-auto flex-shrink px-4 py-2 justify-center items-center"
               >
-                <Text
-                  className="text-[9px] font-black uppercase"
-                  style={{ color: active ? "#FFFFFF" : colors.textMuted }}
-                >
-                  {tab}
-                </Text>
-              </Pressable>
+                <Pressable onPress={() => setActiveTab(tab)}>
+                  <Text
+                    className="text-[9px] font-black uppercase"
+                    style={{ color: active ? (isLightColor(colors.primary) ? "#000000" : "#FFFFFF") : colors.textMuted }}
+                  >
+                    {getTabLabel(tab, t)}
+                  </Text>
+                </Pressable>
+              </ChamferedBox>
             );
           })}
         </ScrollView>
-
+        <PromoBannerCard />
         <Text 
           className="mt-4 text-[10px] font-black uppercase tracking-widest"
           style={{ color: colors.textMuted }}
         >
-          {displayList.length} assets in registry
+          {displayList.length} {t('items_in_catalog')}
         </Text>
 
         {isLoading ? (
           <ActivityIndicator className="my-12" color={colors.primary} size="large" />
         ) : displayList.length > 0 ? (
           <View>
-            {showLayers && (
-              <View className="mb-6 space-y-8">
-                {/* LAYER 1: TODAY'S CATCH */}
-                <View className="space-y-3">
-                  <View className="flex-row items-center justify-between">
-                    <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
-                      Today's <Text style={{ color: colors.primary }}>Catch</Text>
-                    </Text>
-                  </View>
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
-                    <View className="flex-row gap-4 pr-8">
-                      {bestsellers.map(p => (
-                        <View key={p.id} className="w-[180px]">
-                          <ProductCard product={p} onSelectCut={() => openCut(p)} />
-                        </View>
-                      ))}
-                    </View>
-                  </ScrollView>
-                </View>
+             {showLayers && (
+               <View className="mb-6 space-y-8">
+                 {/* TODAY'S CATCH LAYER */}
+                 {todaysCatch.data && todaysCatch.data.length > 0 && (
+                   <View className="space-y-3 mb-6">
+                     <View className="flex-row items-center justify-between">
+                       <View>
+                         <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }} numberOfLines={1}>
+                           Today's <Text style={{ color: colors.primary }}>Catch</Text>
+                         </Text>
+                         <View className="mt-1.5 mb-2.5" style={{ height: 2, width: 64, borderRadius: 999, overflow: 'hidden' }}>
+                           <LinearGradient
+                             colors={[colors.text, colors.primary]}
+                             start={{ x: 0, y: 0 }}
+                             end={{ x: 1, y: 0 }}
+                             style={{ flex: 1 }}
+                           />
+                         </View>
+                       </View>
+                       <Pressable onPress={() => setActiveTab("Seawater Fish")}>
+                          <Text className="text-[10px] font-black uppercase" style={{ color: colors.primary }}>View All</Text>
+                       </Pressable>
+                     </View>
+                     <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
+                       <View className="flex-row gap-4 pr-8">
+                         {todaysCatch.data.slice(0, 10).map(item => {
+                           const mappedProduct: Product = {
+                             id: item.product_id,
+                             name: item.name,
+                             price: item.price_per_kg,
+                             image_url: item.catch_image_url || item.image_url,
+                             seller_name: item.seller_name,
+                             stock: item.remaining_kg || 10,
+                             status: "LIVE",
+                             discount_percent: item.discount_percent
+                           };
+                           return (
+                             <View key={item.id} className="w-[180px]">
+                               <ProductCard product={mappedProduct} onSelectCut={() => openCut(mappedProduct)} />
+                             </View>
+                           );
+                         })}
+                       </View>
+                     </ScrollView>
+                   </View>
+                 )}
 
-                {/* LAYER 2: CHEF'S SPECIALS */}
-                {readyToCook.length > 0 && (
-                  <View className="space-y-3">
-                    <View className="flex-row items-center justify-between">
-                      <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
-                        Chef's <Text style={{ color: "#F59E0B" }}>Specials</Text>
-                      </Text>
-                    </View>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
-                      <View className="flex-row gap-4 pr-8">
-                        {readyToCook.map(p => (
-                          <View key={p.id} className="w-[180px]">
-                            <ProductCard product={p} onSelectCut={() => openCut(p)} />
+                 {/* DYNAMIC CATEGORY LAYERS */}
+                {getSortedCategories(settings.productCategories).map(category => {
+                  const categoryProducts = displayList.filter(p => {
+                    const catLower = (p.category ?? "").toLowerCase();
+                    const nameLower = p.name.toLowerCase();
+                    const target = category.name;
+                    
+                    if (target === "Seawater Fish") return catLower.includes("sea") || catLower.includes("reef") || catLower.includes("snapper");
+                    if (target === "Freshwater Fish") return catLower.includes("fresh") || catLower.includes("river") || catLower.includes("rohu");
+                    if (target === "Prawns & Shrimps") return catLower.includes("prawn") || catLower.includes("shrimp");
+                    if (target === "Crabs & Lobsters") return catLower.includes("crab") || catLower.includes("lobster") || catLower.includes("crustacean");
+                    if (target === "Steaks & Fillets") return catLower.includes("steak") || catLower.includes("fillet") || catLower.includes("cut");
+                    if (target === "Exotic Catch") return catLower.includes("exotic") || catLower.includes("premium") || catLower.includes("deep sea") || nameLower.includes("tuna") || nameLower.includes("salmon") || nameLower.includes("lobster");
+                    if (target === "Ready to Cook") return catLower.includes("ready") || catLower.includes("marinated") || catLower.includes("cook") || nameLower.includes("marinated") || nameLower.includes("fry") || nameLower.includes("finger") || nameLower.includes("batter");
+                    if (target === "Coastal Dry Fish") return catLower.includes("dry") || catLower.includes("dried") || nameLower.includes("dry") || nameLower.includes("dried");
+                    return catLower.includes(target.toLowerCase().split(" ")[0]);
+                  });
+
+                  if (categoryProducts.length === 0) return null;
+
+                  return (
+                    <React.Fragment key={category.slug}>
+                      <View className="space-y-3">
+                         <View className="flex-row items-center justify-between">
+                          <View>
+                            <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }} numberOfLines={1}>
+                              {getCategoryTranslated(category.name, t).split(" ")[0]} <Text style={{ color: category.glowColor }}>{getCategoryTranslated(category.name, t).split(" ").slice(1).join(" ") || ""}</Text>
+                            </Text>
+                            <View className="mt-1.5 mb-2.5" style={{ height: 2, width: 64, borderRadius: 999, overflow: 'hidden' }}>
+                              <LinearGradient
+                                colors={[colors.text, category.glowColor]}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 0 }}
+                                style={{ flex: 1 }}
+                              />
+                            </View>
                           </View>
-                        ))}
+                          <Pressable onPress={() => setActiveTab(category.name)}>
+                             <Text className="text-[10px] font-black uppercase" style={{ color: colors.primary }}>{t('view_all') || "View All"}</Text>
+                          </Pressable>
+                        </View>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
+                          <View className="flex-row gap-4 pr-8">
+                            {categoryProducts.slice(0, 10).map(p => (
+                              <View key={p.id} className="w-[180px]">
+                                <ProductCard product={p} onSelectCut={() => openCut(p)} />
+                              </View>
+                            ))}
+                          </View>
+                        </ScrollView>
                       </View>
-                    </ScrollView>
-                  </View>
-                )}
 
-                {/* LAYER 3: ADDONS */}
-                {addons.length > 0 && (
-                  <View className="space-y-3">
-                    <View className="flex-row items-center justify-between">
-                      <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
-                        Culinary <Text style={{ color: "#10B981" }}>Add-ons</Text>
-                      </Text>
-                    </View>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
-                      <View className="flex-row gap-3 pr-8">
-                        {addons.map(addon => (
-                          <View key={addon.id} className="w-[180px] rounded-xl border p-2" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
-                            <View className="flex-row items-center gap-2">
-                              <Image source={{ uri: addon.image_url || "https://images.unsplash.com/photo-1596683788737-88981f33f674?q=80&w=500" }} className="h-10 w-10 rounded-lg bg-black/10" contentFit="cover" />
-                              <View className="flex-1">
-                                <Text className="text-[10px] font-black uppercase leading-tight" style={{ color: colors.text }} numberOfLines={2}>{addon.name}</Text>
-                                <Text className="text-[8px] italic" style={{ color: colors.textMuted }}>{addon.type || "Add-on"}</Text>
+                      {category.name === "Seawater Fish" && addons.length > 0 && (
+                        <View className="space-y-3 mt-6">
+                          <View className="flex-row items-center justify-between">
+                            <View>
+                              <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }} numberOfLines={1}>
+                                {t('addons').split(" ")[0]} <Text style={{ color: "#10B981" }}>{t('addons').split(" ").slice(1).join(" ") || ""}</Text>
+                              </Text>
+                              <View className="mt-1.5 mb-2.5" style={{ height: 2, width: 64, borderRadius: 999, overflow: 'hidden' }}>
+                                <LinearGradient
+                                  colors={[colors.text, "#10B981"]}
+                                  start={{ x: 0, y: 0 }}
+                                  end={{ x: 1, y: 0 }}
+                                  style={{ flex: 1 }}
+                                />
                               </View>
                             </View>
-                            <View className="mt-2 flex-row items-center justify-between border-t pt-2" style={{ borderTopColor: colors.border }}>
-                              <Text className="text-[10px] font-black text-emerald-400">₹{addon.price}</Text>
-                              <Pressable onPress={() => handleAddAddon(addon)} className="rounded-md px-3 py-1.5" style={{ backgroundColor: colors.primary }}>
-                                <Text className="text-[8px] font-black uppercase text-white">+ ADD</Text>
-                              </Pressable>
-                            </View>
                           </View>
-                        ))}
-                      </View>
-                    </ScrollView>
-                  </View>
-                )}
+                          <ScrollView horizontal showsHorizontalScrollIndicator={false} className="-mx-4 px-4 pb-2">
+                            <View className="flex-row gap-3 pr-8">
+                              {addons.map(addon => (
+                                <View key={addon.id} className="w-[180px] rounded-none border p-2" style={{ backgroundColor: colors.card, borderColor: colors.border }}>
+                                  <View className="flex-row items-center gap-2">
+                                    <Image source={{ uri: addon.image_url || "https://images.unsplash.com/photo-1596683788737-88981f33f674?q=80&w=500" }} className="h-10 w-10 rounded-none bg-black/10" contentFit="cover" />
+                                    <View className="flex-1">
+                                      <Text className="text-[10px] font-black uppercase leading-tight" style={{ color: colors.text }} numberOfLines={2}>{addon.name}</Text>
+                                      <Text className="text-[8px] italic" style={{ color: colors.textMuted }}>{addon.type || "Add-on"}</Text>
+                                    </View>
+                                  </View>
+                                  <View className="mt-2 flex-row items-center justify-between border-t pt-2" style={{ borderTopColor: colors.border }}>
+                                    <Text className="text-[10px] font-black text-emerald-400">₹{addon.price}</Text>
+                                    <Pressable onPress={() => handleAddAddon(addon)} className="rounded-none px-3 py-1.5" style={{ backgroundColor: colors.primary }}>
+                                      <Text 
+                                        className="text-[8px] font-black uppercase" 
+                                        style={{ color: isLightColor(colors.primary) ? "#000000" : "#FFFFFF" }}
+                                      >
+                                        {t('plus_cut') || "+ ADD"}
+                                      </Text>
+                                    </Pressable>
+                                  </View>
+                                </View>
+                              ))}
+                            </View>
+                          </ScrollView>
+                        </View>
+                      )}
+                    </React.Fragment>
+                  );
+                })}
 
-                <View className="flex-row items-center gap-4 py-2">
-                  <View className="h-px flex-1" style={{ backgroundColor: colors.border }} />
-                  <Text className="text-[10px] font-black uppercase tracking-widest italic" style={{ color: colors.textMuted }}>Full Catalog</Text>
-                  <View className="h-px flex-1" style={{ backgroundColor: colors.border }} />
-                </View>
               </View>
             )}
 
-            <View className="flex-row flex-wrap justify-between gap-y-3">
-              {displayList.map((p) => (
-                <ProductCard key={p.id} product={p} compact onSelectCut={() => openCut(p)} />
-              ))}
-            </View>
+            {!showLayers && (
+              <View className="flex-row flex-wrap justify-between gap-y-3">
+                {displayList.map((p) => (
+                  <ProductCard key={p.id} product={p} compact onSelectCut={() => openCut(p)} />
+                ))}
+              </View>
+            )}
           </View>
         ) : (
           <View 
-            className="my-12 items-center rounded-2xl border border-dashed p-8"
+            className="my-12 items-center rounded-none border border-dashed p-8"
             style={{ borderColor: colors.border }}
           >
-            <Text className="text-xs font-black uppercase" style={{ color: colors.textMuted }}>No harvest in this sector</Text>
-            <Pressable onPress={() => router.replace("/home")} className="mt-4">
-              <Text className="text-[10px] font-bold" style={{ color: colors.primary }}>Return to Harbor Home</Text>
-            </Pressable>
+            <Text style={{ fontSize: 32 }}>🔍</Text>
+            <Text className="mt-3 text-sm font-black uppercase" style={{ color: colors.text }}>
+              {searchText.trim() ? t('no_harvest') : t('no_live_harbor_stock')}
+            </Text>
+            <Text className="mt-1 text-[10px] font-semibold text-center" style={{ color: colors.textMuted }}>
+              {searchText.trim()
+                ? `We couldn't find anything matching "${searchText.trim()}". Try a different keyword.`
+                : `No products are listed in this category right now. Check back soon!`}
+            </Text>
+            {searchText.trim() ? (
+              <Pressable onPress={() => setSearchText('')} className="mt-4 px-4 py-2" style={{ backgroundColor: colors.primary, borderRadius: 4 }}>
+                <Text 
+                  className="text-[10px] font-black uppercase" 
+                  style={{ color: isLightColor(colors.primary) ? "#000000" : "#FFFFFF" }}
+                >
+                  Clear Search
+                </Text>
+              </Pressable>
+            ) : (
+              <Pressable onPress={() => router.replace("/home")} className="mt-4">
+                <Text className="text-[10px] font-bold" style={{ color: colors.primary }}>Back to Home</Text>
+              </Pressable>
+            )}
           </View>
         )}
+        <FssaiBanner />
       </ScrollView>
 
       <CutSelectionModal
@@ -416,3 +557,4 @@ export default function ProductsScreen() {
     </View>
   );
 }
+

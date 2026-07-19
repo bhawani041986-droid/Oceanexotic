@@ -6,6 +6,7 @@ import {
   Pressable,
   ActivityIndicator,
 } from "react-native";
+import Svg, { Polygon, Path } from "react-native-svg";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -16,17 +17,22 @@ import { useToast } from "@/components/ui/Toast";
 import { Button } from "@/components/ui/Button";
 import { checkoutService, type SavedAddress } from "@/services/checkoutService";
 import { resolveMediaUrl } from "@/lib/resolveMediaUrl";
+import { FssaiBanner } from "@/components/customer/FssaiBanner";
 import { cn } from "@/lib/utils";
 import { useThemeColors } from "@/hooks/useThemeColors";
+import { useTranslation } from "@/lib/i18n";
 
 type Step = 1 | 2 | 3;
 
 export default function CheckoutScreen() {
+  const { t } = useTranslation();
+
   const router = useRouter();
   const { items, getTotal, clearCart } = useCartStore();
   const { user } = useAuthStore();
   const { toast, ToastHost } = useToast();
   const colors = useThemeColors();
+  const currentLanguage = useSettingsStore((s) => s.language); // force re-render on language change
 
   const primaryColor = colors.primary;
 
@@ -140,16 +146,16 @@ export default function CheckoutScreen() {
   }
 
   return (
-    <View className="flex-1 bg-background">
+    <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       {ToastHost}
 
       {/* ── Progress Header ────────────────────────────────────────── */}
       <LinearGradient
-        colors={["#020617", "#0d1b2a"]}
-        className="px-4 pt-14 pb-4 border-b border-white/5"
+        colors={colors.isDark ? ["#020617", "#0d1b2a"] : [colors.card, colors.bgAlt]}
+        className="px-4 pt-14 pb-4 border-b" style={{ borderBottomColor: colors.border }}
       >
         <Text className="text-[9px] font-black uppercase tracking-[0.3em] mb-3" style={{ color: primaryColor }}>
-          Sovereign Trade Authorization
+          Secure Checkout
         </Text>
         <View className="flex-row items-center gap-0">
           {(["1", "2", "3"] as const).map((s, idx) => {
@@ -164,7 +170,7 @@ export default function CheckoutScreen() {
                   className="items-center gap-1"
                 >
                   <View
-                    className="w-7 h-7 rounded-full items-center justify-center border"
+                    className="w-7 h-7 rounded-none items-center justify-center border relative overflow-hidden"
                     style={done ? {
                       backgroundColor: "#10B981",
                       borderColor: "#10B981"
@@ -173,9 +179,11 @@ export default function CheckoutScreen() {
                       borderColor: primaryColor
                     } : {
                       backgroundColor: "transparent",
-                      borderColor: "rgba(255, 255, 255, 0.2)"
+                      borderColor: colors.isDark ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.12)"
                     }}
                   >
+                    <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={colors.bg} /></Svg>
+                    <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill={colors.bg} /></Svg>
                     {done ? (
                       <Text className="text-[10px] font-black text-white">✓</Text>
                     ) : (
@@ -212,7 +220,7 @@ export default function CheckoutScreen() {
         </View>
       </LinearGradient>
 
-      <ScrollView className="flex-1" contentContainerClassName="px-4 py-6 gap-5 pb-32">
+      <ScrollView className="flex-1" contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 110, gap: 12, flexGrow: 1 }}>
 
         {/* ══ STEP 1: Shipping Address ════════════════════════════════ */}
         <StepCard
@@ -242,7 +250,7 @@ export default function CheckoutScreen() {
                   <Pressable
                     key={String(addr.id)}
                     onPress={() => setSelectedAddress(addr)}
-                    className="rounded-xl border-2 p-4"
+                    className="rounded-none border-2 p-4 relative overflow-hidden"
                     style={selected ? {
                       borderColor: primaryColor,
                       backgroundColor: colors.primary + "1A"
@@ -251,14 +259,18 @@ export default function CheckoutScreen() {
                       backgroundColor: "rgba(255, 255, 255, 0.05)"
                     }}
                   >
+                    <Svg width={8} height={8} style={{ position: 'absolute', top: -2, left: -2, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill={colors.bg} /></Svg>
+                    <Svg width={8} height={8} style={{ position: 'absolute', bottom: -2, right: -2, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill={colors.bg} /></Svg>
                     <View className="flex-row items-start justify-between mb-2">
-                      <View className="bg-white/10 px-2 py-0.5 rounded">
+                      <View style={{ backgroundColor: colors.isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4 }}>
                         <Text className="text-[8px] font-black uppercase text-foreground">
                           {addr.type || addr.label}
                         </Text>
                       </View>
                       {selected && (
-                        <View className="w-4 h-4 rounded-full items-center justify-center" style={{ backgroundColor: primaryColor }}>
+                        <View className="w-4 h-4 rounded-none items-center justify-center relative overflow-hidden" style={{ backgroundColor: primaryColor }}>
+                          <Svg width={2} height={2} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}><Polygon points="0,0 2,0 0,2" fill={colors.card} /></Svg>
+                          <Svg width={2} height={2} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}><Polygon points="2,2 0,2 2,0" fill={colors.card} /></Svg>
                           <Text className="text-[8px] text-foreground font-black">✓</Text>
                         </View>
                       )}
@@ -289,7 +301,7 @@ export default function CheckoutScreen() {
                   label="+ ADD ADDRESS"
                   variant="ghost"
                   onPress={() => router.push("/profile")}
-                  className="flex-1 border border-white/10"
+                  className="flex-1 border" style={{ borderColor: colors.border }}
                 />
                 <Button
                   label="USE THIS ADDRESS"
@@ -303,7 +315,9 @@ export default function CheckoutScreen() {
               </View>
             </View>
           ) : (
-            <View className="py-10 items-center gap-4 border-2 border-dashed border-white/10 rounded-xl">
+            <View className="py-10 items-center gap-4 border-2 border-dashed rounded-none relative overflow-hidden" style={{ borderColor: colors.border, backgroundColor: colors.card }}>
+              <Svg width={8} height={8} style={{ position: 'absolute', top: -2, left: -2, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill={colors.bg} /></Svg>
+              <Svg width={8} height={8} style={{ position: 'absolute', bottom: -2, right: -2, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill={colors.bg} /></Svg>
               <Text className="text-4xl">📍</Text>
               <Text className="text-sm font-bold text-muted-foreground text-center">
                 No addresses found in your vault.
@@ -312,7 +326,7 @@ export default function CheckoutScreen() {
                 label="+ ADD IN PROFILE"
                 variant="ghost"
                 onPress={() => router.push("/profile")}
-                className="border border-white/10"
+                className="border" style={{ borderColor: colors.border }}
               />
             </View>
           )}
@@ -339,19 +353,23 @@ export default function CheckoutScreen() {
                 <Pressable
                   key={pm.key}
                   onPress={() => setSelectedPayment(pm.key)}
-                  className="border rounded-xl p-4 flex-row items-center gap-3"
+                  className="border rounded-none p-4 flex-row items-center gap-3 relative overflow-hidden"
                   style={{
                     borderColor: isSel ? primaryColor : "rgba(255,255,255,0.05)",
                     backgroundColor: isSel ? colors.primary + "0D" : "transparent"
                   }}
                 >
+                  <Svg width={8} height={8} style={{ position: 'absolute', top: -2, left: -2, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill={colors.bg} /></Svg>
+                  <Svg width={8} height={8} style={{ position: 'absolute', bottom: -2, right: -2, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill={colors.bg} /></Svg>
                   <Text className="text-2xl">{pm.icon}</Text>
                   <View className="flex-1">
                     <Text className="font-bold text-sm text-foreground">{pm.label}</Text>
                     <Text className="text-[10px] text-muted-foreground mt-0.5">{pm.desc}</Text>
                   </View>
                   {isSel && (
-                    <View className="w-5 h-5 rounded-full items-center justify-center" style={{ backgroundColor: primaryColor }}>
+                    <View className="w-5 h-5 rounded-none items-center justify-center relative overflow-hidden" style={{ backgroundColor: primaryColor }}>
+                      <Svg width={3} height={3} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}><Polygon points="0,0 3,0 0,3" fill={colors.card} /></Svg>
+                      <Svg width={3} height={3} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}><Polygon points="3,3 0,3 3,0" fill={colors.card} /></Svg>
                       <Text className="text-[9px] text-foreground font-black">✓</Text>
                     </View>
                   )}
@@ -382,9 +400,13 @@ export default function CheckoutScreen() {
               return (
                 <View
                   key={item.id}
-                  className="flex-row gap-4 items-center p-3 rounded-xl border border-white/10 bg-secondary/30"
+                  className="flex-row gap-4 items-center p-3 rounded-none border relative overflow-hidden" style={{ borderColor: colors.border, backgroundColor: colors.card }}
                 >
-                  <View className="w-14 h-14 rounded-lg overflow-hidden bg-secondary/50">
+                  <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 6,0 0,6" fill={colors.bg} /></Svg>
+                  <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="6,6 0,6 6,0" fill={colors.bg} /></Svg>
+                  <View className="w-14 h-14 rounded-none overflow-hidden bg-secondary/50 relative">
+                    <Svg width={4} height={4} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={colors.card} /></Svg>
+                    <Svg width={4} height={4} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill={colors.card} /></Svg>
                     {imgUri ? (
                       <Image
                         source={{ uri: imgUri }}
@@ -417,7 +439,9 @@ export default function CheckoutScreen() {
           </View>
 
           {/* Order Total */}
-          <View className="bg-secondary/40 border border-white/10 rounded-xl p-4 mb-6 gap-2">
+          <View className="rounded-none p-4 mb-6 gap-2 relative overflow-hidden border" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
+            <Svg width={8} height={8} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill={colors.bg} /></Svg>
+            <Svg width={8} height={8} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill={colors.bg} /></Svg>
             <View className="flex-row justify-between">
               <Text className="text-xs text-muted-foreground">Subtotal</Text>
               <Text className="text-xs font-bold text-foreground">₹{subtotal.toLocaleString()}</Text>
@@ -430,7 +454,7 @@ export default function CheckoutScreen() {
               <Text className="text-xs text-muted-foreground">Shipping &amp; Handling</Text>
               <Text className="text-xs font-bold text-emerald-400">FREE</Text>
             </View>
-            <View className="border-t border-white/10 pt-2 flex-row justify-between">
+            <View className="pt-2 flex-row justify-between border-t" style={{ borderTopColor: colors.border }}>
               <Text className="text-sm font-black uppercase text-foreground">Order Total</Text>
               <Text className="text-lg font-black italic" style={{ color: primaryColor }}>
                 ₹{grandTotal.toLocaleString()}
@@ -441,12 +465,14 @@ export default function CheckoutScreen() {
           {/* Delivery summary */}
           {selectedAddress && (
             <View 
-              className="border rounded-xl p-4 mb-6 gap-1"
+              className="border rounded-none p-4 mb-6 gap-1 relative overflow-hidden"
               style={{
                 backgroundColor: colors.primary + "0D",
                 borderColor: colors.primary + "33"
               }}
             >
+              <Svg width={8} height={8} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill={colors.bg} /></Svg>
+              <Svg width={8} height={8} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill={colors.bg} /></Svg>
               <Text className="text-[8px] font-black uppercase tracking-widest mb-1" style={{ color: primaryColor }}>
                 Delivering to
               </Text>
@@ -463,16 +489,18 @@ export default function CheckoutScreen() {
           )}
 
           {/* Authorize finalize */}
-          <View className="bg-secondary/40 border border-white/10 rounded-2xl p-6 items-center gap-4">
+          <View className="rounded-none p-6 items-center gap-4 relative overflow-hidden border" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
+            <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 12,0 0,12" fill={colors.bg} /></Svg>
+            <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="12,12 0,12 12,0" fill={colors.bg} /></Svg>
             <Text className="text-3xl">🛡️</Text>
             <Text className="text-[10px] font-black uppercase tracking-widest text-foreground italic text-center">
-              Authorize Final Handshake
+              Confirm Delivery Address
             </Text>
             <Text className="text-[10px] text-muted-foreground italic text-center leading-relaxed">
-              By finalizing, you authorize the secure transfer of maritime assets to your designated coordinates.
+              By finalizing, you confirm the secure delivery of fresh seafood to your address.
             </Text>
             <Button
-              label={isPlacing ? "PROCESSING..." : "FINALIZE HARVEST"}
+              label={isPlacing ? "PROCESSING..." : "PLACE ORDER"}
               onPress={handlePlaceOrder}
               disabled={isPlacing}
               className="w-full"
@@ -480,10 +508,11 @@ export default function CheckoutScreen() {
             {isPlacing && <ActivityIndicator color={primaryColor} />}
           </View>
         </StepCard>
+        <FssaiBanner />
       </ScrollView>
 
       {/* ── Sticky bottom summary ───────────────────────────────────── */}
-      <View className="absolute bottom-0 left-0 right-0 border-t border-white/10 bg-background/95 px-4 py-3">
+      <View className="absolute bottom-0 left-0 right-0 border-t px-4 py-3" style={{ borderTopColor: colors.border, backgroundColor: colors.isDark ? "rgba(13, 21, 39, 0.95)" : "rgba(255, 255, 255, 0.95)" }}>
         <View className="flex-row items-center justify-between mb-2">
           <Text className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
             {items.length} item{items.length !== 1 ? "s" : ""} · {selectedPayment}
@@ -500,7 +529,9 @@ export default function CheckoutScreen() {
             className="w-full"
           />
         ) : (
-          <View className="w-full py-3 rounded-xl border border-white/10 bg-secondary/40 items-center">
+          <View className="w-full py-3 rounded-none border items-center relative overflow-hidden" style={{ borderColor: colors.border, backgroundColor: colors.bgAlt }}>
+            <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 6,0 0,6" fill={colors.bg} /></Svg>
+            <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="6,6 0,6 6,0" fill={colors.bg} /></Svg>
             <Text className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
               Complete steps above to place order
             </Text>
@@ -530,51 +561,51 @@ function StepCard({ stepNum, label, active, done, summary, onEdit, children }: S
 
   return (
     <View
-      className="rounded-2xl border overflow-hidden"
+      className="rounded-none border overflow-hidden relative"
       style={{
         borderColor: active
           ? colors.primary + "66"
-          : "rgba(255, 255, 255, 0.1)"
+          : colors.border
       }}
     >
+      <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 12,0 0,12" fill={colors.bg} /></Svg>
+      <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="12,12 0,12 12,0" fill={colors.bg} /></Svg>
       {/* Header */}
       <View
         className="flex-row items-center justify-between px-4 py-3"
         style={{
           backgroundColor: active
             ? colors.primary + "0D"
-            : "rgba(30, 41, 59, 0.3)"
+            : colors.isDark ? "rgba(30, 41, 59, 0.3)" : colors.bgAlt
         }}
       >
         <View className="flex-row items-center gap-3">
           <View
-            className="w-6 h-6 rounded-full items-center justify-center"
+            className="w-6 h-6 rounded-none items-center justify-center relative overflow-hidden"
             style={done ? {
               backgroundColor: "#10B981"
             } : active ? {
               backgroundColor: primaryColor
             } : {
-              backgroundColor: "rgba(255, 255, 255, 0.1)"
+              backgroundColor: colors.isDark ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.05)"
             }}
           >
+            <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={colors.bg} /></Svg>
+            <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill={colors.bg} /></Svg>
             {done ? (
               <Text className="text-[9px] font-black text-white">✓</Text>
             ) : (
               <Text
-                className={cn(
-                  "text-[9px] font-black",
-                  active ? "text-foreground" : "text-muted-foreground"
-                )}
+                className="text-[9px] font-black"
+                style={{ color: active ? "#FFFFFF" : colors.textMuted }}
               >
                 {stepNum}
               </Text>
             )}
           </View>
           <Text
-            className={cn(
-              "text-sm font-black uppercase",
-              active ? "text-foreground" : "text-muted-foreground"
-            )}
+            className="text-sm font-black uppercase"
+            style={{ color: active ? colors.text : colors.textMuted }}
           >
             {label}
           </Text>
@@ -590,7 +621,7 @@ function StepCard({ stepNum, label, active, done, summary, onEdit, children }: S
 
       {/* Collapsed summary */}
       {!active && done && summary ? (
-        <View className="px-6 py-3 border-t border-white/5">
+        <View className="px-6 py-3 border-t" style={{ borderTopColor: colors.border }}>
           <Text className="text-xs font-bold italic text-muted-foreground">
             {summary}
           </Text>
@@ -599,8 +630,9 @@ function StepCard({ stepNum, label, active, done, summary, onEdit, children }: S
 
       {/* Expanded content */}
       {active ? (
-        <View className="p-4 border-t border-white/5">{children}</View>
+        <View className="p-4 border-t" style={{ borderTopColor: colors.border }}>{children}</View>
       ) : null}
     </View>
   );
 }
+

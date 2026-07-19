@@ -11,6 +11,9 @@ export interface CartItem {
   sellerId?: string;
   sellerName?: string;
   metadata?: Record<string, unknown>;
+  isMarinated?: boolean;
+  selectedMarinade?: string;
+  cutOption?: string;
 }
 
 interface CartState {
@@ -19,6 +22,8 @@ interface CartState {
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
+  toggleMarination: (id: string) => void;
+  updateCutOption: (id: string, option: string) => void;
   getTotal: () => number;
   itemCount: () => number;
 }
@@ -47,8 +52,23 @@ export const useCartStore = create<CartState>()(
             .filter((i) => i.quantity > 0),
         }),
       clearCart: () => set({ items: [] }),
+      toggleMarination: (id) =>
+        set({
+          items: get().items.map((i) =>
+            i.id === id ? { ...i, isMarinated: !i.isMarinated, selectedMarinade: !i.isMarinated ? 'Tandoori Island Rub' : undefined } : i
+          ),
+        }),
+      updateCutOption: (id, option) =>
+        set({
+          items: get().items.map((i) =>
+            i.id === id ? { ...i, cutOption: option } : i
+          ),
+        }),
       getTotal: () =>
-        get().items.reduce((acc, item) => acc + item.price * item.quantity, 0),
+        get().items.reduce((acc, item) => {
+          const marinationPremium = item.isMarinated ? 150 : 0;
+          return acc + (item.price + marinationPremium) * item.quantity;
+        }, 0),
       itemCount: () => get().items.reduce((acc, i) => acc + i.quantity, 0),
     }),
     {

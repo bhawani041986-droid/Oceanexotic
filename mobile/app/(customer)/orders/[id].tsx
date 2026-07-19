@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, Pressable, Modal, TextInput, ActivityIndicator } from "react-native";
+import Svg, { Polygon, Path } from "react-native-svg";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { Button } from "@/components/ui/Button";
@@ -10,8 +11,13 @@ import { orderService, type OrderDetail } from "@/services/orderService";
 import api from "@/services/api";
 import { useAuthStore } from "@/store/authStore";
 import * as ImagePicker from "expo-image-picker";
+import { useTranslation } from "@/lib/i18n";
+import { SectionTitle } from "@/components/customer/SectionTitle";
+import { ChamferedBox } from "@/components/ui/ChamferedBox";
 
 export default function OrderDetailsScreen() {
+  const { t } = useTranslation();
+
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { toast, ToastHost } = useToast();
@@ -26,6 +32,7 @@ export default function OrderDetailsScreen() {
   const [images, setImages] = useState<string[]>([]);
   const [pickingImage, setPickingImage] = useState(false);
   const { user } = useAuthStore();
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
 
   const handlePickImage = async () => {
     setPickingImage(true);
@@ -44,11 +51,13 @@ export default function OrderDetailsScreen() {
         setImages(prev => [...prev, ...selectedBase64]);
       }
     } catch (err) {
-      toast("Failed to pick image.", "error");
+      toast(t('failed_pick_image'), "error");
     } finally {
       setPickingImage(false);
     }
   };
+
+  const [trackingData, setTrackingData] = useState<any>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -60,12 +69,43 @@ export default function OrderDetailsScreen() {
     load();
   }, [id]);
 
-  // Compute OTP from numeric part of order ID
+  useEffect(() => {
+    if (!id) return;
+    const fetchTelemetry = async () => {
+      try {
+        const { data } = await api.get(`/fleet?order_id=${id}`);
+        setTrackingData(data);
+      } catch (error) {
+        console.error("Telemetry Fetch Failed:", error);
+      }
+    };
+    fetchTelemetry();
+    const interval = setInterval(fetchTelemetry, 20000);
+    return () => clearInterval(interval);
+  }, [id]);
+
+  const getEstArrival = () => {
+    const status = (trackingData?.status ?? order?.status ?? "PROCESSING").toUpperCase();
+    if (status === "DELIVERED") {
+      return "Arrived";
+    }
+    if (status === "CANCELLED") {
+      return "--";
+    }
+    if (trackingData?.minutes_remaining !== undefined && trackingData?.minutes_remaining !== null) {
+      return `${trackingData.minutes_remaining} Mins`;
+    }
+    if (status === "OUT_FOR_DELIVERY" || status === "RIDER_ASSIGNED") {
+      return "25-35 Mins";
+    }
+    return "TBD";
+  };
+
   const otpNum = ((parseInt(String(id ?? "").replace(/[^0-9]/g, "") || "123") * 997 + 12345) % 900000) + 100000;
 
   const handleSubmitReview = async () => {
     if (!comment.trim()) {
-      toast("Please provide feedback.", "error");
+      toast(t('please_provide_feedback'), "error");
       return;
     }
     setSubmitting(true);
@@ -88,12 +128,12 @@ export default function OrderDetailsScreen() {
         photos: JSON.stringify(photosData),
       });
       if (res.data?.status === "success") {
-        toast("Review submitted successfully.", "success");
+        toast(t('review_success'), "success");
       } else {
-        toast("Review submitted successfully.", "success");
+        toast(t('review_success'), "success");
       }
     } catch {
-      toast("Review submitted successfully.", "success");
+      toast(t('review_success'), "success");
     } finally {
       setSubmitting(false);
       setReviewItem(null);
@@ -108,7 +148,7 @@ export default function OrderDetailsScreen() {
       <View className="flex-1 items-center justify-center" style={{ backgroundColor: colors.bg }}>
         <ActivityIndicator color={colors.primary} size="large" />
         <Text className="mt-4 text-[10px] font-black uppercase" style={{ color: colors.textMuted }}>
-          Loading order…
+          {t('loading_order')}
         </Text>
       </View>
     );
@@ -118,24 +158,19 @@ export default function OrderDetailsScreen() {
     return (
       <View className="flex-1 items-center justify-center p-6" style={{ backgroundColor: colors.bg }}>
         {ToastHost}
-        <Button variant="ghost" label="← BACK" onPress={() => router.back()} className="mb-4 self-start px-0" />
+        <Button variant="ghost" label={"← " + t('all').toUpperCase()} onPress={() => router.back()} className="mb-4 self-start px-4 h-10 rounded-none" />
         <View className="flex-1 items-center justify-center">
           <Text className="text-lg font-black uppercase tracking-widest text-red-500 mb-2">
-            Order Not Found
-          </Text>
-          <Text className="text-[10px] uppercase text-muted-foreground text-center mb-6" style={{ color: colors.textMuted }}>
-            Unable to synchronize or this order does not exist.
+            {t('order_not_found')}
           </Text>
         </View>
       </View>
     );
   }
 
-  // Fallback if order not found (show skeleton with ID)
   const isInTransit = !["DELIVERED", "CANCELLED"].includes(order?.status?.toUpperCase() ?? "");
   const isDelivered = order?.status?.toUpperCase().includes("DELIVERED");
 
-  // Correctly tally: subtotal + shipping + tax = total
   const displaySubtotal = order?.subtotal ?? order?.items?.reduce((s, it) => s + it.price * (it.qty ?? 1), 0) ?? 0;
   const displayShipping = order?.shipping ?? 0;
   const displayTax = order?.tax ?? 0;
@@ -144,279 +179,574 @@ export default function OrderDetailsScreen() {
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       {ToastHost}
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 56, paddingBottom: 120 }}>
 
-        {/* Header */}
-        <View className="mb-6 flex-row items-center justify-between">
-          <Button variant="ghost" label="← BACK" onPress={() => router.back()} className="px-0" />
-          {isInTransit && (
-            <Button
-              label="🚚 TRACK ORDER"
-              onPress={() =>
-                router.push({ pathname: "/orders/[id]/tracking", params: { id } } as never)
-              }
-              className="h-9 px-4 rounded-xl text-[9px]"
-            />
-          )}
-        </View>
+      <View className="flex-row items-center justify-between gap-3 px-4 pb-3 pt-3 border-b" style={{ backgroundColor: colors.bg, borderBottomColor: "rgba(255,255,255,0.05)", zIndex: 10 }}>
+        {isInTransit ? (
+          <>
+            <View className="flex-1">
+              <Button 
+                variant="ghost" 
+                label={"← " + t('all').toUpperCase()} 
+                onPress={() => router.back()} 
+                className="px-4 h-10 justify-center rounded-none text-[10px]" 
+              />
+            </View>
+            <View className="flex-1">
+              <Button
+                variant="ghost"
+                label={"🚚 " + t('track_order').toUpperCase()}
+                onPress={() =>
+                  router.push({ pathname: "/orders/[id]/tracking", params: { id } } as never)
+                }
+                className="h-10 px-4 rounded-none text-[10px]"
+              />
+            </View>
+          </>
+        ) : (
+          <View className="flex-1">
+            <Button variant="ghost" label={"← " + t('all').toUpperCase()} onPress={() => router.back()} className="px-4 h-10 self-start rounded-none" />
+          </View>
+        )}
+      </View>
 
-        {/* Title */}
-        <View className="mb-6 border-b pb-6" style={{ borderBottomColor: colors.border }}>
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 12, paddingBottom: 120 }}>
+
+        <View className="mb-4 border-b pb-4" style={{ borderBottomColor: colors.border }}>
           <View className="flex-row items-center gap-3 flex-wrap">
             <Text className="text-3xl font-black uppercase italic" style={{ color: colors.text }}>
               {id}
             </Text>
             <View
-              className="rounded px-2 py-1"
+              className="rounded-none px-2 py-1 relative overflow-hidden"
               style={{
                 backgroundColor: isDelivered ? "rgba(16,185,129,0.2)" : `${colors.primary}20`,
               }}
             >
+              <Svg width={4} height={4} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={colors.bg} /></Svg>
+              <Svg width={4} height={4} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill={colors.bg} /></Svg>
               <Text
-                className="text-[10px] font-black uppercase"
+                className="text-[10px] font-black uppercase relative z-10"
                 style={{ color: isDelivered ? "#34d399" : colors.primary }}
               >
                 {order?.status ?? "PROCESSING"}
               </Text>
             </View>
           </View>
-          <Text className="mt-2 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
-            Order Invoice • {order?.date ?? "—"}
-          </Text>
-        </View>
-
-        {/* 🚚 Live Cold-Chain Delivery Radar */}
-        <View
-          className="mb-6 rounded-2xl p-5"
-          style={{ backgroundColor: `${colors.primary}0D`, borderWidth: 1, borderColor: `${colors.primary}33` }}
-        >
-          <View className="flex-row items-center gap-3">
-            <View
-              className="h-10 w-10 items-center justify-center rounded-full"
-              style={{ backgroundColor: `${colors.primary}33`, borderWidth: 1, borderColor: `${colors.primary}50` }}
-            >
-              <Text className="text-lg">🚚</Text>
-            </View>
-            <View className="flex-1">
-              <Text className="text-xs font-black uppercase italic" style={{ color: colors.text }}>
-                Cold-Chain Delivery Radar
-              </Text>
-              <Text className="mt-0.5 text-[9px]" style={{ color: colors.textMuted }}>
-                Current Node: Port Blair Phoenix Bay Hub
-              </Text>
-            </View>
-          </View>
-          <View className="mt-4 flex-row flex-wrap items-center justify-between gap-2 border-t pt-3" style={{ borderTopColor: colors.border }}>
-            <View className="flex-row items-center gap-1.5 rounded-full px-2 py-1" style={{ backgroundColor: "rgba(59,130,246,0.1)", borderWidth: 1, borderColor: "rgba(59,130,246,0.3)" }}>
-              <View className="h-1.5 w-1.5 rounded-full bg-blue-400" />
-              <Text className="text-[9px] font-black uppercase text-blue-400">1.2°C Chilled</Text>
-            </View>
-            <Text className="text-[10px] font-black" style={{ color: colors.text }}>32 mins remaining</Text>
-          </View>
-        </View>
-
-        {/* 🔐 Secure Handoff Protocol */}
-        <View
-          className="mb-6 rounded-2xl p-5"
-          style={{ backgroundColor: "rgba(59,130,246,0.05)", borderWidth: 1, borderColor: "rgba(59,130,246,0.2)" }}
-        >
-          <View className="flex-row items-center gap-3">
-            <View
-              className="h-10 w-10 items-center justify-center rounded-full"
-              style={{ backgroundColor: "rgba(59,130,246,0.2)", borderWidth: 1, borderColor: "rgba(59,130,246,0.3)" }}
-            >
-              <Text className="text-lg">🔐</Text>
-            </View>
-            <View className="flex-1">
-              <Text className="text-xs font-black uppercase italic" style={{ color: colors.text }}>
-                Secure Handoff Protocol
-              </Text>
-              <Text className="mt-0.5 text-[9px]" style={{ color: colors.textMuted }}>
-                Show QR or provide OTP to delivery agent
-              </Text>
-            </View>
-          </View>
-          <View className="mt-4 items-center justify-center border-t pt-4" style={{ borderTopColor: colors.border }}>
-            <Image
-              source={{
-                uri: `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`https://oceanexotic.com/agent/confirm/${id}?otp=${otpNum}`)}`,
-              }}
-              style={{ width: 160, height: 160, borderRadius: 12, backgroundColor: "white", padding: 8 }}
-              contentFit="contain"
-            />
-            <Text className="mt-4 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
-              Verification OTP
+          <View className="flex-row items-center justify-between mt-3 flex-wrap gap-2">
+            <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
+              {t('order_invoice')} • {order?.date ?? "—"}
             </Text>
-            <Text className="mt-1 text-2xl font-black tracking-widest italic" style={{ color: colors.primary }}>
-              {otpNum}
-            </Text>
+            <Pressable
+              onPress={() => setShowInvoiceModal(true)}
+              className="px-3 py-1.5 border flex-row items-center gap-1.5 rounded-none"
+              style={{ backgroundColor: colors.card, borderColor: colors.primary }}
+            >
+              <Text className="text-[9px] font-black uppercase tracking-wider" style={{ color: colors.primary }}>
+                📄 {t('order_invoice').toUpperCase()}
+              </Text>
+            </Pressable>
           </View>
         </View>
 
-        {/* Manifest Items */}
-        <Text className="mb-4 text-xs font-black uppercase tracking-widest" style={{ color: colors.text }}>
-          Manifest Items
-        </Text>
-        <View className="mb-8 gap-4">
-          {(order?.items ?? []).map((item) => (
-            <View
-              key={item.id}
-              className="rounded-2xl p-4"
-              style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
-            >
-              <View className="flex-row gap-4">
-                <Image
-                  source={{ uri: item.image ?? "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400" }}
-                  style={{ width: 64, height: 64, borderRadius: 12 }}
-                  contentFit="cover"
-                />
-                <View className="flex-1 justify-center">
-                  <Text className="text-sm font-bold" style={{ color: colors.text }}>{item.name}</Text>
-                  <Text className="mt-1 text-[9px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
-                    QTY: {item.qty} • SKU: OF-{item.product_id}
-                  </Text>
-                  <Text className="mt-2 text-lg font-black" style={{ color: colors.text }}>
-                    ₹{(item.price * (item.qty ?? 1)).toLocaleString()}
-                  </Text>
-                </View>
+        <View
+          className="mb-6 rounded-none overflow-hidden relative"
+          style={{ backgroundColor: `${colors.primary}10`, borderWidth: 1, borderColor: `${colors.primary}33` }}
+        >
+          <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
+            <Polygon points="0,0 12,0 0,12" fill={colors.bg} />
+            <Path d="M12,0 L0,12" stroke={`${colors.primary}33`} strokeWidth={1} />
+          </Svg>
+          <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
+            <Polygon points="12,12 0,12 12,0" fill={colors.bg} />
+            <Path d="M0,12 L12,0" stroke={`${colors.primary}33`} strokeWidth={1} />
+          </Svg>
+          <View className="p-5 md:p-6 flex-col gap-4 border-b" style={{ borderBottomColor: "rgba(255,255,255,0.1)" }}>
+            <View className="flex-row items-center gap-4">
+              <View className="w-12 h-12 rounded-none items-center justify-center border shadow-lg relative overflow-hidden" style={{ backgroundColor: `${colors.primary}33`, borderColor: `${colors.primary}50` }}>
+                <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 6,0 0,6" fill={`${colors.primary}10`} /></Svg>
+                <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="6,6 0,6 6,0" fill={`${colors.primary}10`} /></Svg>
+                <Text className="text-2xl">🚚</Text>
               </View>
-              {isDelivered && (
-                <View className="mt-4 flex-row border-t pt-4" style={{ borderTopColor: colors.border }}>
-                  <Button
-                    variant="ghost"
-                    label="RATE PRODUCT"
-                    onPress={() => setReviewItem(item)}
-                    className="flex-1"
-                    style={{ borderWidth: 1, borderColor: colors.border }}
-                  />
-                </View>
-              )}
+              <View className="flex-1">
+                <Text className="text-sm font-black uppercase italic" style={{ color: colors.text }}>
+                  {t('delivery_radar')}
+                </Text>
+                <Text className="text-[10px]" style={{ color: colors.textMuted }}>
+                  {trackingData?.delivery_area ?? trackingData?.stage_label ?? trackingData?.status ?? order?.status ?? "Processing"}
+                </Text>
+              </View>
             </View>
+            <View className="flex-row items-center justify-between mt-2">
+              <View className="flex-row items-center gap-1.5 rounded-none px-3 py-1 relative overflow-hidden" style={{ backgroundColor: "rgba(59,130,246,0.1)", borderWidth: 1, borderColor: "rgba(59,130,246,0.3)" }}>
+                <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={`${colors.primary}10`} /></Svg>
+                <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill={`${colors.primary}10`} /></Svg>
+                <View className="h-2 w-2 rounded-none bg-blue-400" />
+                <Text className="text-[10px] font-black uppercase text-blue-400 relative z-10">{trackingData?.current_temp ?? trackingData?.temp ?? 1.2}°C {t('chilled')}</Text>
+              </View>
+              <View>
+                <Text className="text-[10px] font-black uppercase" style={{ color: colors.textMuted }}>Est. Arrival</Text>
+                <Text className="text-xs font-black text-right" style={{ color: colors.text }}>{getEstArrival()}</Text>
+              </View>
+            </View>
+          </View>
+          <View 
+            style={{ 
+              backgroundColor: colors.isDark ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.03)", 
+              paddingHorizontal: 8, 
+              paddingVertical: 12,
+              borderRadius: 8
+            }}
+            className="mb-4"
+          >
+            <View className="flex-row items-center justify-between w-full">
+              {[
+                "Placed",
+                "Accepted",
+                "Preparing",
+                "Packed",
+                "Assigned",
+                "Transit",
+                "Delivered"
+              ].map((stage, idx, arr) => {
+                const currentStatus = (trackingData?.status ?? order?.status ?? "PROCESSING").toUpperCase();
+                const backendStages = ["PROCESSING", "CONFIRMED", "PREPARING", "PACKED", "ASSIGNED", "OUT_FOR_DELIVERY", "DELIVERED"];
+                const currentStageIndex = backendStages.indexOf(currentStatus);
+                const isPassed = currentStageIndex === -1 ? idx <= 0 : idx <= currentStageIndex;
+
+                return (
+                  <React.Fragment key={idx}>
+                    <View className="items-center flex-1">
+                      {/* Circle bubble with tick */}
+                      <View 
+                        className="border items-center justify-center relative overflow-hidden"
+                        style={{ 
+                          width: 15,
+                          height: 15,
+                          backgroundColor: isPassed ? colors.primary : colors.bg,
+                          borderColor: isPassed ? colors.primary : colors.textMuted
+                        }} 
+                      >
+                        <Svg width={2} height={2} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 2,0 0,2" fill={colors.bg} /></Svg>
+                        <Svg width={2} height={2} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="2,2 0,2 2,0" fill={colors.bg} /></Svg>
+                        {isPassed && (
+                          <Text style={{ fontSize: 7, color: '#ffffff', fontWeight: '900', lineHeight: 9 }}>✓</Text>
+                        )}
+                      </View>
+                      
+                      {/* Short Label */}
+                      <Text 
+                        className="text-[6.5px] font-black uppercase text-center mt-1 w-12" 
+                        style={{ color: isPassed ? colors.primary : colors.textMuted }}
+                        numberOfLines={1}
+                        adjustsFontSizeToFit
+                      >
+                        {stage}
+                      </Text>
+                    </View>
+                    
+                    {/* Connecting line */}
+                    {idx < arr.length - 1 && (
+                      <View 
+                        className="h-0.5 flex-1" 
+                        style={{ 
+                          backgroundColor: isPassed ? colors.primary : colors.border,
+                          marginTop: -10, // align with bubbles
+                          marginHorizontal: -4
+                        }} 
+                      />
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </View>
+          </View>
+        </View>
+
+        <ChamferedBox 
+          fillColor={colors.card}
+          strokeColor="rgba(59,130,246,0.25)"
+          bevelSize={12}
+          className="mb-4"
+        >
+          <View className="p-5">
+            <View className="flex-row items-center gap-4 border-b pb-3 mb-3" style={{ borderBottomColor: "rgba(59,130,246,0.15)" }}>
+              <View 
+                className="h-10 w-10 items-center justify-center rounded"
+                style={{ backgroundColor: "rgba(59,130,246,0.12)", borderWidth: 1, borderColor: "rgba(59,130,246,0.25)" }}
+              >
+                <Text className="text-lg">🔐</Text>
+              </View>
+              <View className="flex-1">
+                <Text className="text-xs font-black uppercase italic" style={{ color: colors.text }}>
+                  {t('secure_handoff')}
+                </Text>
+                <Text className="mt-0.5 text-[9px]" style={{ color: colors.textMuted }}>
+                  {t('show_qr_otp')}
+                </Text>
+              </View>
+            </View>
+            <View className="items-center justify-center pt-2">
+              <Image
+                source={{
+                  uri: `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(`https://oceanexotic.com/agent/confirm/${id}?otp=${otpNum}`)}`,
+                }}
+                style={{ width: 150, height: 150, borderRadius: 0, backgroundColor: "white", padding: 8 }}
+                contentFit="contain"
+              />
+              <Text className="mt-3 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
+                {t('verification_otp')}
+              </Text>
+              <Text className="mt-1 text-2xl font-black tracking-widest italic" style={{ color: colors.primary }}>
+                {otpNum}
+              </Text>
+            </View>
+          </View>
+        </ChamferedBox>
+
+        <View className="mb-3">
+          <Text className="text-sm font-black uppercase italic tracking-tighter" style={{ color: colors.text }}>
+            📦 {t('manifest_items')}
+          </Text>
+          <View className="h-[2px] w-12 mt-1" style={{ backgroundColor: colors.primary }} />
+        </View>
+        <View className="mb-4 gap-3">
+          {(order?.items ?? []).map((item) => (
+            <ChamferedBox
+              key={item.id}
+              fillColor={colors.card}
+              strokeColor={colors.border}
+              bevelSize={10}
+              className="mb-2"
+            >
+              <View className="p-4">
+                <View className="flex-row gap-4">
+                  <Image
+                    source={{ uri: item.image ?? "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400" }}
+                    style={{ width: 64, height: 64, borderRadius: 4 }}
+                    contentFit="cover"
+                  />
+                  <View className="flex-1 justify-center">
+                    <Text className="text-sm font-bold" style={{ color: colors.text }}>{item.name}</Text>
+                    <Text className="mt-1 text-[9px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
+                      {t('qty')}: {item.qty} • {t('sku')}: OF-{item.product_id}
+                    </Text>
+                    <Text className="mt-2 text-lg font-black" style={{ color: colors.text }}>
+                      ₹{(item.price * (item.qty ?? 1)).toLocaleString()}
+                    </Text>
+                  </View>
+                </View>
+                {isDelivered && (
+                  <View className="mt-4 flex-row gap-2">
+                    <Button 
+                      label={t('rate_product')} 
+                      variant="ghost" 
+                      onPress={() => setReviewItem(item)} 
+                      className="flex-1 h-10 rounded-none text-[10px]" 
+                    />
+                    <Button 
+                      label={"📞 " + t('contact').toUpperCase()} 
+                      variant="ghost" 
+                      onPress={() => alert("Calling Harbor Control...")} 
+                      className="flex-1 h-10 rounded-none text-[10px]" 
+                    />
+                  </View>
+                )}
+              </View>
+            </ChamferedBox>
           ))}
         </View>
 
-        {/* 🔄 Reorder Hub */}
-        <View
-          className="mb-6 rounded-2xl p-5"
-          style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
+        <ChamferedBox 
+          fillColor={colors.card}
+          strokeColor={colors.border}
+          bevelSize={12}
+          className="mb-4"
         >
-          <View className="flex-row items-center gap-3">
-            <Text className="text-xl">🐟</Text>
-            <View className="flex-1">
-              <Text className="text-xs font-bold" style={{ color: colors.text }}>Re-order these items?</Text>
-              <Text className="text-[9px]" style={{ color: colors.textMuted }}>Instant one-click checkout for previous items.</Text>
+          <View className="p-4">
+            <View className="flex-row items-center gap-3">
+              <Text className="text-xl">🐟</Text>
+              <View className="flex-1">
+                <Text className="text-xs font-bold" style={{ color: colors.text }}>{t('reorder_question')}</Text>
+                <Text className="text-[9px]" style={{ color: colors.textMuted }}>{t('reorder_desc')}</Text>
+              </View>
             </View>
+            <Button
+              variant="ghost"
+              label={t('catch_again')}
+              onPress={() => toast(t('adding_to_cart'), "success")}
+              className="mt-3 w-full rounded-none"
+            />
           </View>
-          <Button
-            label="CATCH AGAIN"
-            onPress={() => toast("Adding previous items to cart...", "success")}
-            className="mt-4 w-full"
-          />
-        </View>
+        </ChamferedBox>
 
-        {/* Manifest Summary — correct tally */}
-        <View
-          className="mb-6 rounded-2xl p-5"
-          style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
+        <ChamferedBox 
+          fillColor={colors.card}
+          strokeColor={colors.border}
+          bevelSize={12}
+          className="mb-4"
         >
-          <Text className="mb-4 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
-            Manifest Summary
-          </Text>
-          <View className="gap-2">
-            <View className="flex-row justify-between">
-              <Text className="text-xs" style={{ color: colors.textMuted }}>Subtotal</Text>
-              <Text className="text-xs font-bold" style={{ color: colors.text }}>₹{displaySubtotal.toLocaleString()}</Text>
-            </View>
-            <View className="flex-row justify-between">
-              <Text className="text-xs" style={{ color: colors.textMuted }}>Maritime Transit</Text>
-              {displayShipping > 0 ? (
-                <Text className="text-xs font-bold" style={{ color: colors.text }}>₹{displayShipping.toLocaleString()}</Text>
-              ) : (
-                <Text className="text-[10px] font-black uppercase text-emerald-400">Complimentary</Text>
-              )}
-            </View>
-            <View className="mb-2 flex-row justify-between">
-              <Text className="text-xs" style={{ color: colors.textMuted }}>Settlement Tax</Text>
-              <Text className="text-xs font-bold" style={{ color: colors.text }}>₹{displayTax.toLocaleString()}</Text>
-            </View>
-            <View className="flex-row items-center justify-between border-t pt-3" style={{ borderTopColor: colors.border }}>
-              <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
-                Total Settlement
+          <View className="p-5">
+            <View className="mb-4">
+              <Text className="text-xs font-black uppercase italic tracking-tighter" style={{ color: colors.text }}>
+                🧾 {t('manifest_summary')}
               </Text>
-              <Text className="text-xl font-black italic" style={{ color: colors.primary }}>
-                ₹{displayTotal.toLocaleString()}
+              <View className="h-[2px] w-12 mt-1" style={{ backgroundColor: colors.secondary }} />
+            </View>
+            <View className="gap-2">
+              <View className="flex-row justify-between">
+                <Text className="text-xs" style={{ color: colors.textMuted }}>{t('subtotal')}</Text>
+                <Text className="text-xs font-bold" style={{ color: colors.text }}>₹{displaySubtotal.toLocaleString()}</Text>
+              </View>
+              <View className="flex-row justify-between">
+                <Text className="text-xs" style={{ color: colors.textMuted }}>{t('delivery_fee')}</Text>
+                {displayShipping > 0 ? (
+                  <Text className="text-xs font-bold" style={{ color: colors.text }}>₹{displayShipping.toLocaleString()}</Text>
+                ) : (
+                  <Text className="text-[10px] font-black uppercase text-emerald-400">{t('complimentary')}</Text>
+                )}
+              </View>
+              <View className="mb-2 flex-row justify-between">
+                <Text className="text-xs" style={{ color: colors.textMuted }}>{t('tax')}</Text>
+                <Text className="text-xs font-bold" style={{ color: colors.text }}>₹{displayTax.toLocaleString()}</Text>
+              </View>
+              <View className="flex-row items-center justify-between border-t pt-3" style={{ borderTopColor: colors.border }}>
+                <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
+                  {t('total_settlement')}
+                </Text>
+                <Text className="text-xl font-black italic" style={{ color: colors.primary }}>
+                  ₹{displayTotal.toLocaleString()}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </ChamferedBox>
+
+        <ChamferedBox 
+          fillColor={colors.card}
+          strokeColor={colors.border}
+          bevelSize={12}
+          className="mb-4"
+        >
+          <View className="p-5">
+            <View className="mb-3">
+              <Text className="text-xs font-black uppercase italic tracking-tighter" style={{ color: colors.text }}>
+                📍 {t('destination_port')}
+              </Text>
+              <View className="h-[2px] w-12 mt-1" style={{ backgroundColor: colors.accent }} />
+            </View>
+            <Text className="text-xs font-bold uppercase italic" style={{ color: colors.text }}>
+              {order?.address?.name}
+            </Text>
+            <Text className="mt-1 text-[11px] leading-tight" style={{ color: colors.textMuted }}>
+              {order?.address?.line1}
+              {"\n"}
+              {order?.address?.city}, {order?.address?.state} {order?.address?.zip}
+            </Text>
+          </View>
+        </ChamferedBox>
+
+        <ChamferedBox 
+          fillColor={colors.card}
+          strokeColor={colors.border}
+          bevelSize={12}
+          className="mb-4"
+        >
+          <View className="p-5">
+            <View className="mb-3">
+              <Text className="text-xs font-black uppercase italic tracking-tighter" style={{ color: colors.text }}>
+                🍳 {t('culinary_ledger')}
+              </Text>
+              <View className="h-[2px] w-12 mt-1" style={{ backgroundColor: colors.primary }} />
+            </View>
+            <View className="mb-3 border-b pb-3" style={{ borderBottomColor: colors.border }}>
+              <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>
+                ❄️ {t('thawing_protocol')}
+              </Text>
+              <Text className="mt-1 text-[10px] leading-normal" style={{ color: colors.textMuted }}>
+                {t('thawing_desc')}
+              </Text>
+            </View>
+            <View>
+              <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>
+                👨‍🍳 {t('culinary_guide')}
+              </Text>
+              <Text className="mt-1 text-[10px] leading-normal" style={{ color: colors.textMuted }}>
+                {t('culinary_desc')}
               </Text>
             </View>
           </View>
-        </View>
+        </ChamferedBox>
 
-        {/* Port of Destination */}
-        <View
-          className="rounded-2xl p-5"
-          style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
+        <ChamferedBox 
+          fillColor={colors.card}
+          strokeColor={colors.border}
+          bevelSize={12}
+          className="mb-4"
         >
-          <Text className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
-            Port of Destination
-          </Text>
-          <Text className="text-xs font-bold uppercase italic" style={{ color: colors.text }}>
-            {order?.address?.name}
-          </Text>
-          <Text className="mt-1 text-[11px] leading-tight" style={{ color: colors.textMuted }}>
-            {order?.address?.line1}
-            {"\n"}
-            {order?.address?.city}, {order?.address?.state} {order?.address?.zip}
-          </Text>
-        </View>
-
-        {/* Culinary Prep & Storage */}
-        <View
-          className="mt-6 rounded-2xl p-5"
-          style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
-        >
-          <Text className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
-            🍳 Culinary Prep & Storage Ledger
-          </Text>
-          <View className="mb-3 border-b pb-3" style={{ borderBottomColor: colors.border }}>
-            <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>
-              ❄️ Thawing & Storage
-            </Text>
-            <Text className="mt-1 text-[10px] leading-normal" style={{ color: colors.textMuted }}>
-              Keep vacuum-sealed items chilled at 0-2°C (consume within 24h) or freeze at -18°C.
+          <View className="p-5">
+            <View className="mb-3">
+              <Text className="text-xs font-black uppercase italic tracking-tighter" style={{ color: colors.text }}>
+                ⚓ {t('fleet_sustainability')}
+              </Text>
+              <View className="h-[2px] w-12 mt-1" style={{ backgroundColor: colors.primary }} />
+            </View>
+            <View className="flex-row justify-between mb-1">
+              <Text className="text-[10px]" style={{ color: colors.textMuted }}>{t('harvest_method')}</Text>
+              <Text className="text-[10px] font-black uppercase italic" style={{ color: colors.text }}>{t('line_caught')}</Text>
+            </View>
+            <View className="flex-row justify-between mb-2">
+              <Text className="text-[10px]" style={{ color: colors.textMuted }}>{t('vessel_impact')}</Text>
+              <Text className="text-[10px] font-black" style={{ color: colors.text }}>₹340 {t('crew_support')}</Text>
+            </View>
+            <Text className="mt-1 border-t pt-2 text-[9px] leading-normal italic" style={{ borderTopColor: colors.border, color: colors.textMuted }}>
+              {t('sustainability_desc')}
             </Text>
           </View>
-          <View>
-            <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: colors.primary }}>
-              👨‍🍳 Culinary Guide
-            </Text>
-            <Text className="mt-1 text-[10px] leading-normal" style={{ color: colors.textMuted }}>
-              Pan-sear scallops with garlic herb butter for 2 mins per side. Serve Bluefin Tuna lightly seasoned.
-            </Text>
-          </View>
-        </View>
-
-        {/* Fleet Sustainability */}
-        <View
-          className="mt-6 rounded-2xl p-5"
-          style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
-        >
-          <Text className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
-            ⚓ Fleet Sustainability
-          </Text>
-          <View className="flex-row justify-between mb-1">
-            <Text className="text-[10px]" style={{ color: colors.textMuted }}>Harvest Method</Text>
-            <Text className="text-[10px] font-black uppercase italic" style={{ color: colors.text }}>100% Line-Caught</Text>
-          </View>
-          <View className="flex-row justify-between mb-2">
-            <Text className="text-[10px]" style={{ color: colors.textMuted }}>Vessel Impact</Text>
-            <Text className="text-[10px] font-black" style={{ color: colors.text }}>₹340 Crew Support</Text>
-          </View>
-          <Text className="mt-1 border-t pt-2 text-[9px] leading-normal italic" style={{ borderTopColor: colors.border, color: colors.textMuted }}>
-            Your purchase directly contributes to local artisanal fisherman groups at Junglighat & Phoenix Bay.
-          </Text>
-        </View>
+        </ChamferedBox>
       </ScrollView>
 
-      {/* Review Modal */}
+      {/* Invoice Generator Modal */}
+      <Modal
+        visible={showInvoiceModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setShowInvoiceModal(false)}
+      >
+        <View 
+          className="flex-1 justify-center items-center p-4" 
+          style={{ backgroundColor: 'rgba(2, 6, 23, 0.85)' }}
+        >
+          <View 
+            className="w-full max-w-md border overflow-hidden" 
+            style={{ backgroundColor: colors.card, borderColor: colors.border, borderRadius: 16 }}
+          >
+            {/* Modal Header */}
+            <View className="px-5 py-4 border-b flex-row justify-between items-center" style={{ borderBottomColor: colors.border, backgroundColor: colors.bg }}>
+              <Text className="text-sm font-black uppercase tracking-wider" style={{ color: colors.text }}>
+                📄 {t('order_invoice').toUpperCase()}
+              </Text>
+              <Pressable onPress={() => setShowInvoiceModal(false)} className="p-1">
+                <Text className="text-sm font-bold" style={{ color: colors.textMuted }}>✕</Text>
+              </Pressable>
+            </View>
+
+            {/* Invoice Scroll Content */}
+            <ScrollView className="p-5 max-h-[480px]">
+              {/* Brand logo & header */}
+              <View className="items-center mb-6">
+                <Text className="text-xl font-black tracking-widest text-primary italic">
+                  OCEANEXOTIC GLOBAL
+                </Text>
+                <Text className="text-[7px] font-black tracking-widest text-muted-foreground uppercase mt-1">
+                  Premium Cold-Chain Maritime Harvest
+                </Text>
+                <Text className="text-[7px] font-medium text-muted-foreground/60 uppercase">
+                  FSSAI LIC NO. 12423999000142
+                </Text>
+              </View>
+
+              {/* Invoice Meta details */}
+              <View className="flex-row justify-between mb-4 border-b pb-3" style={{ borderBottomColor: colors.border }}>
+                <View>
+                  <Text className="text-[7px] font-black text-muted-foreground uppercase">Invoice To:</Text>
+                  <Text className="text-[10px] font-black uppercase mt-0.5" style={{ color: colors.text }}>
+                    {order?.address?.name}
+                  </Text>
+                  <Text className="text-[8px] text-muted-foreground mt-0.5 leading-normal">
+                    {order?.address?.line1}, {order?.address?.city}
+                  </Text>
+                </View>
+                <View className="items-end">
+                  <Text className="text-[7px] font-black text-muted-foreground uppercase">Invoice details:</Text>
+                  <Text className="text-[9px] font-black mt-0.5" style={{ color: colors.primary }}>
+                    #INV-{id?.replace(/[^a-zA-Z0-9]/g, '')}
+                  </Text>
+                  <Text className="text-[8px] text-muted-foreground mt-0.5">
+                    Date: {order?.date ?? '—'}
+                  </Text>
+                </View>
+              </View>
+
+              {/* Items List */}
+              <Text className="text-[8px] font-black text-muted-foreground uppercase mb-2">Manifest Description</Text>
+              <View className="mb-4">
+                {(order?.items ?? []).map((item, idx) => (
+                  <View key={idx} className="flex-row justify-between items-center py-2 border-b" style={{ borderBottomColor: colors.border + '33' }}>
+                    <View className="flex-1 pr-4">
+                      <Text className="text-[10px] font-bold" style={{ color: colors.text }}>{item.name}</Text>
+                      <Text className="text-[8px] text-muted-foreground mt-0.5">Qty: {item.qty} × ₹{item.price.toLocaleString()}</Text>
+                    </View>
+                    <Text className="text-[10px] font-black" style={{ color: colors.text }}>
+                      ₹{(item.qty * item.price).toLocaleString()}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+
+              {/* Totals Breakdown */}
+              <View className="align-end gap-1.5 border-b pb-3 mb-4" style={{ borderBottomColor: colors.border }}>
+                <View className="flex-row justify-between">
+                  <Text className="text-[9px]" style={{ color: colors.textMuted }}>Subtotal</Text>
+                  <Text className="text-[9px] font-bold" style={{ color: colors.text }}>₹{displaySubtotal.toLocaleString()}</Text>
+                </View>
+                <View className="flex-row justify-between">
+                  <Text className="text-[9px]" style={{ color: colors.textMuted }}>Delivery Fee</Text>
+                  <Text className="text-[9px] font-bold" style={{ color: colors.text }}>
+                    {displayShipping > 0 ? `₹${displayShipping.toLocaleString()}` : 'COMPLIMENTARY'}
+                  </Text>
+                </View>
+                <View className="flex-row justify-between">
+                  <Text className="text-[9px]" style={{ color: colors.textMuted }}>Tax & Duties</Text>
+                  <Text className="text-[9px] font-bold" style={{ color: colors.text }}>₹{displayTax.toLocaleString()}</Text>
+                </View>
+              </View>
+
+              <View className="flex-row justify-between items-center mb-6">
+                <Text className="text-[9px] font-black uppercase tracking-wider" style={{ color: colors.text }}>Total Paid</Text>
+                <Text className="text-base font-black italic" style={{ color: colors.primary }}>
+                  ₹{displayTotal.toLocaleString()}
+                </Text>
+              </View>
+
+              {/* Sustainability seal & disclaimer */}
+              <View className="items-center p-3 mb-6 bg-emerald-500/5 border border-emerald-500/10">
+                <Text className="text-[8px] font-black text-emerald-400 uppercase tracking-widest">
+                  ⚓ HARBOR SUSTAINABILITY ASSURED
+                </Text>
+                <Text className="text-[7px] text-emerald-400/80 text-center mt-1">
+                  100% Traceable Line Caught Harvest • Temperature Logged Cold-Chain Delivery
+                </Text>
+              </View>
+            </ScrollView>
+
+            {/* Bottom Actions */}
+            <View className="p-4 border-t flex-row gap-3 bg-secondary/5" style={{ borderTopColor: colors.border }}>
+              <Pressable
+                onPress={() => setShowInvoiceModal(false)}
+                className="flex-1 py-2.5 border items-center justify-center rounded-none"
+                style={{ borderColor: colors.border, backgroundColor: colors.card }}
+              >
+                <Text className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
+                  ✕ CLOSE
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  setShowInvoiceModal(false);
+                  toast(t('review_success'), "success");
+                }}
+                className="flex-1 py-2.5 items-center justify-center rounded-none"
+                style={{ backgroundColor: colors.primary }}
+              >
+                <Text className="text-[10px] font-black uppercase text-white tracking-widest">
+                  📥 DOWNLOAD
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       <Modal
         visible={!!reviewItem}
         transparent
@@ -427,31 +757,37 @@ export default function OrderDetailsScreen() {
           className="flex-1 justify-end px-4 pb-12 pt-20"
           style={{ backgroundColor: `${colors.bg}E6` }}
         >
-          <View
-            className="rounded-3xl p-6 shadow-2xl"
+          <View 
+            className="rounded-none p-6 shadow-2xl relative overflow-hidden"
             style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card }}
           >
+            <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 12,0 0,12" fill={colors.bg} /><Path d="M12,0 L0,12" stroke={colors.border} strokeWidth={1} /></Svg>
+            <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="12,12 0,12 12,0" fill={colors.bg} /><Path d="M0,12 L12,0" stroke={colors.border} strokeWidth={1} /></Svg>
             <View className="mb-6 flex-row items-center justify-between">
               <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
-                Rate Harvest
+                {t('rate_harvest')}
               </Text>
-              <Pressable
+              <Pressable 
                 onPress={() => setReviewItem(null)}
-                className="rounded-full p-2"
-                style={{ backgroundColor: colors.bg }}
+                className="rounded-none p-2 relative overflow-hidden"
+                style={{ backgroundColor: `${colors.primary}15` }}
               >
+                <Svg width={4} height={4} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={colors.card} /></Svg>
+                <Svg width={4} height={4} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill={colors.card} /></Svg>
                 <Text className="text-xs font-black" style={{ color: colors.text }}>✕</Text>
               </Pressable>
             </View>
 
             {reviewItem && (
-              <View
-                className="mb-6 flex-row items-center gap-4 rounded-2xl p-3"
+              <View 
+                className="mb-6 flex-row items-center gap-4 rounded-none p-3 relative overflow-hidden"
                 style={{ borderWidth: 1, borderColor: colors.border, backgroundColor: `${colors.bg}80` }}
               >
+                <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 6,0 0,6" fill={colors.card} /><Path d="M6,0 L0,6" stroke={colors.border} strokeWidth={1} /></Svg>
+                <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="6,6 0,6 6,0" fill={colors.card} /><Path d="M0,6 L6,0" stroke={colors.border} strokeWidth={1} /></Svg>
                 <Image
                   source={{ uri: reviewItem.image ?? "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=400" }}
-                  style={{ width: 48, height: 48, borderRadius: 12 }}
+                  style={{ width: 48, height: 48, borderRadius: 0 }}
                   contentFit="cover"
                 />
                 <View className="flex-1">
@@ -465,7 +801,7 @@ export default function OrderDetailsScreen() {
 
             <View className="mb-6 items-center">
               <Text className="mb-3 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
-                Quality Rating
+                {t('quality_rating')}
               </Text>
               <View className="flex-row gap-2">
                 {[1, 2, 3, 4, 5].map((s) => (
@@ -478,38 +814,43 @@ export default function OrderDetailsScreen() {
               </View>
             </View>
 
-            <View className="mb-6">
+            <View className="mb-6 relative overflow-hidden">
               <Text className="mb-2 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
-                Harvest Notes
+                {t('harvest_notes')}
               </Text>
               <TextInput
-                placeholder="Share your experience..."
+                placeholder={t('share_experience')}
                 placeholderTextColor={colors.textMuted}
                 value={comment}
                 onChangeText={setComment}
                 multiline
                 style={{
-                  height: 96, borderRadius: 16, borderWidth: 1,
-                  borderColor: colors.border, backgroundColor: `${colors.bg}80`,
+                  height: 96, borderRadius: 0, borderWidth: 1,
+                  borderColor: colors.border, backgroundColor: colors.bg,
                   padding: 16, fontSize: 14, color: colors.text, textAlignVertical: "top",
                 }}
               />
+              <Svg width={8} height={8} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill={colors.card} /><Path d="M8,0 L0,8" stroke={colors.border} strokeWidth={1} /></Svg>
+              <Svg width={8} height={8} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill={colors.card} /><Path d="M0,8 L8,0" stroke={colors.border} strokeWidth={1} /></Svg>
             </View>
 
-            {/* Evidence Picker */}
             <View className="mb-6">
               <Text className="mb-2 text-[10px] font-black uppercase tracking-widest" style={{ color: colors.text }}>
-                Evidence Gallery (Optional)
+                {t('evidence_gallery')}
               </Text>
               {images.length > 0 && (
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }} className="flex-row mb-3">
                   {images.map((img, idx) => (
-                    <View key={idx} className="relative w-16 h-16 rounded-xl overflow-hidden border" style={{ borderColor: colors.border }}>
+                    <View key={idx} className="relative w-16 h-16 rounded-none overflow-hidden border" style={{ borderColor: colors.border }}>
+                      <Svg width={4} height={4} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={colors.card} /><Path d="M4,0 L0,4" stroke={colors.border} strokeWidth={1} /></Svg>
+                      <Svg width={4} height={4} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill={colors.card} /><Path d="M0,4 L4,0" stroke={colors.border} strokeWidth={1} /></Svg>
                       <Image source={{ uri: img }} style={{ width: "100%", height: "100%" }} contentFit="cover" />
                       <Pressable
                         onPress={() => setImages(prev => prev.filter((_, i) => i !== idx))}
-                        className="absolute right-1 top-1 bg-black/60 rounded-full w-5 h-5 items-center justify-center"
+                        className="absolute right-1 top-1 bg-black/60 rounded-none w-5 h-5 items-center justify-center relative overflow-hidden"
                       >
+                        <Svg width={3} height={3} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}><Polygon points="0,0 3,0 0,3" fill={colors.card} /></Svg>
+                        <Svg width={3} height={3} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}><Polygon points="3,3 0,3 3,0" fill={colors.card} /></Svg>
                         <Text className="text-white text-[8px] font-black">✕</Text>
                       </Pressable>
                     </View>
@@ -518,17 +859,16 @@ export default function OrderDetailsScreen() {
               )}
               <Button
                 variant="ghost"
-                label={pickingImage ? "SELECTING…" : "➕ ADD PHOTO / EVIDENCE"}
+                label={pickingImage ? t('selecting') : "➕ " + t('add_photo_evidence')}
                 onPress={handlePickImage}
-                style={{ borderStyle: "dashed", borderWidth: 1, borderColor: colors.border }}
-                className="w-full h-10 rounded-xl"
+                className="w-full h-10 rounded-none"
               />
             </View>
 
             <Button
-              label={submitting ? "SUBMITTING…" : "SUBMIT REVIEW"}
+              label={submitting ? t('submitting') : t('submit_review')}
               onPress={handleSubmitReview}
-              className="w-full"
+              className="w-full rounded-none"
             />
           </View>
         </View>

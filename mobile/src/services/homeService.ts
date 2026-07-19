@@ -6,6 +6,7 @@ export interface CmsItem {
   sector?: string;
   title?: string;
   image_url?: string;
+  metadata?: any;
 }
 
 export interface Territory {
@@ -15,7 +16,7 @@ export interface Territory {
 }
 
 export interface TodaysCatchItem {
-  catch_id: string;
+  id: string;
   product_id: string;
   name: string;
   seller_name: string;
@@ -38,27 +39,32 @@ export interface CutOption {
 
 export const homeService = {
   fetchCms: async (): Promise<CmsItem[]> => {
-    const { data } = await api.get("/system/cms.php");
+    const { data } = await api.get("/system/cms");
     if (data.status === "success") return data.content || [];
     return [];
   },
 
   fetchTerritories: async (): Promise<Territory[]> => {
-    const { data } = await api.get("/system/get_territories.php");
+    const { data } = await api.get("/system/get_territories");
     return Array.isArray(data) ? data : [];
   },
 
   fetchTodaysCatch: async (): Promise<TodaysCatchItem[]> => {
-    const { data } = await api.get("/products/todays_catch.php");
+    const { data } = await api.get("/products/todays_catch");
     if (data.status === "success") return data.items || [];
     return [];
   },
 
   fetchCutOptions: async (productId: string, area?: string): Promise<CutOption[]> => {
-    const { data } = await api.get("/products/cut_options.php", {
+    const { data } = await api.get("/products/cut_options", {
       params: { product_id: productId, area },
     });
     if (data.status === "success") return data.cut_options || [];
     return [];
+  },
+
+  subscribeNewsletter: async (email: string): Promise<{ success: boolean; message?: string; error?: string }> => {
+    const { data } = await api.post("/newsletter/subscribe", { email });
+    return data;
   },
 };

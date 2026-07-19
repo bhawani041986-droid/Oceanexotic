@@ -35,21 +35,28 @@ function buildApiUrl(host: string, port: string = DEFAULT_API_PORT): string {
  * - Override anytime with EXPO_PUBLIC_API_URL in mobile/.env
  */
 export function resolveApiBaseUrl(): string {
+  // Production build: ALWAYS use live server — env vars baked at build time can't be trusted
+  if (!__DEV__) {
+    return "https://oceanexotic.com/api";
+  }
+
+  // Development: respect the .env override (useful for pointing to your local PC IP)
   const envUrl = process.env.EXPO_PUBLIC_API_URL?.trim();
+  if (envUrl) {
+    return envUrl.replace(/\/$/, "");
+  }
+
   const extraUrl = Constants.expoConfig?.extra?.apiUrl as string | undefined;
 
   if (Platform.OS === "web") {
-    const browserHost = typeof window !== "undefined" && window.location.hostname 
-      ? window.location.hostname 
+    const browserHost = typeof window !== "undefined" && window.location.hostname
+      ? window.location.hostname
       : "localhost";
     const resolvedHost = browserHost === "localhost" ? "127.0.0.1" : browserHost;
     return `http://${resolvedHost}:3000/api`;
   }
 
-  if (envUrl && !envUrl.includes("localhost") && !envUrl.includes("127.0.0.1")) {
-    return envUrl.replace(/\/$/, "");
-  }
-
+  // Auto-detect LAN IP from Metro bundler (Expo Go / dev client)
   const lanHost = getExpoDevMachineHost();
   if (lanHost) {
     return buildApiUrl(lanHost);
@@ -60,7 +67,50 @@ export function resolveApiBaseUrl(): string {
     return buildApiUrl("10.0.2.2");
   }
 
-  return (envUrl ?? extraUrl ?? buildApiUrl("127.0.0.1")).replace(/\/$/, "");
+  return (extraUrl ?? buildApiUrl("127.0.0.1")).replace(/\/$/, "");
 }
 
 export const FULL_API_URL = resolveApiBaseUrl();
+
+export function resolveWebAdminUrl(): string {
+  if (!__DEV__) {
+    return "https://oceanexotic.com";
+  }
+
+  const envUrl = process.env.EXPO_PUBLIC_WEB_ADMIN_URL?.trim();
+
+  if (Platform.OS === "web") {
+    const browserHost = typeof window !== "undefined" && window.location.hostname 
+      ? window.location.hostname 
+      : "localhost";
+    return `http://${browserHost}:3000`;
+  }
+
+  if (envUrl) {
+    return envUrl.replace(/\/$/, "");
+  }
+
+  const lanHost = getExpoDevMachineHost();
+  if (lanHost) {
+    return `http://${lanHost}:3000`;
+  }
+
+  // Android emulator → host machine
+  if (Platform.OS === "android" && !Constants.isDevice) {
+    return "http://10.0.2.2:3000";
+  }
+
+  return "http://127.0.0.1:3000";
+}
+
+export const FULL_WEB_ADMIN_URL = resolveWebAdminUrl();
+
+export function resolvePhpBaseUrl(): string {
+  const apiUrl = resolveApiBaseUrl();
+  // Strip the '/api' suffix (and any trailing slashes)
+  return apiUrl.replace(/\/api\/?$/, "");
+}
+
+export const FULL_PHP_BASE_URL = resolvePhpBaseUrl();
+
+

@@ -6,6 +6,18 @@ import { settingsService } from "@/services/settingsService";
 export interface CustomerAssets {
   logo: string;
   hero: string;
+  mobileHero?: string;
+  heroBadge?: string;
+  heroTitle1?: string;
+  heroTitle2?: string;
+  heroSubtitle?: string;
+  hero2?: string;
+  hero3?: string;
+  heroOverlayOpacity?: number;
+  heroBadgeColor?: string;
+  heroTitle1Color?: string;
+  heroTitle2Color?: string;
+  heroSubtitleColor?: string;
   favicon: string;
   appleIcon: string;
   promo: string;
@@ -15,21 +27,43 @@ export interface CustomerAssets {
 }
 
 interface SettingsState {
-  language: string;
   marketplaceName: string;
   flashDealActive: boolean;
+  flashDealStart: string;
   flashDealEnd: string;
+  flashDealTitle: string;
+  flashDealSector: string;
+  flashDealFont: string;
+  flashDealCarousel?: { image_url: string; product_link: string }[];
   theme: string;
+  /** Current UI language code (e.g. 'en', 'hi', 'bn', 'ta') */
+  language: string;
+  /** Convenience alias so components can read `settings.language` */
+  settings: { language: string };
   customerAssets: CustomerAssets;
   topSellers?: { id: string; name: string; rating: number; speed: string; image: string; products: string[] }[];
+  productCategories?: { id: string; label: string; iconName: string; status: string; imageUrl?: string }[];
+  homeSectionOrder?: string[];
   fetchSettings: () => Promise<void>;
-  setSettings: (partial: Partial<SettingsState>) => void;
+  setSettings: (partial: Partial<Omit<SettingsState, 'settings'>>) => void;
 }
 
 const defaultAssets: CustomerAssets = {
   logo: "",
   hero: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80",
-  favicon: "/logo-icon.svg",
+  mobileHero: "/images/premium_mobile_hero.png",
+  heroBadge: "Premium Seafood Market",
+  heroTitle1: "Seafood",
+  heroTitle2: "Redefined.",
+  heroSubtitle: "Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers.",
+  hero2: "",
+  hero3: "",
+  heroOverlayOpacity: 60,
+  heroBadgeColor: "",
+  heroTitle1Color: "",
+  heroTitle2Color: "",
+  heroSubtitleColor: "",
+  favicon: "/favicon.ico",
   appleIcon: "/logo-icon.svg",
   promo: "https://images.unsplash.com/photo-1551970634-747846a548cb?auto=format&fit=crop&q=80",
   promoSecondary: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80",
@@ -40,11 +74,21 @@ const defaultAssets: CustomerAssets = {
 export const useSettingsStore = create<SettingsState>()(
   persist(
     (set, get) => ({
-      language: "en",
       marketplaceName: "OceanExotic Global",
       flashDealActive: true,
+      flashDealStart: new Date().toISOString(),
       flashDealEnd: new Date(Date.now() + 1000 * 60 * 60 * 3).toISOString(),
-      theme: "theme-zomato-passion",
+      flashDealTitle: "Flash Deals.",
+      flashDealSector: "Flash Product",
+      flashDealFont: "font-inter",
+      flashDealCarousel: [
+        { image_url: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80", product_link: "/products" },
+        { image_url: "https://images.unsplash.com/photo-1599084993091-1cb5c0721cc6?auto=format&fit=crop&q=80", product_link: "/products" },
+        { image_url: "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?auto=format&fit=crop&q=80", product_link: "/products" }
+      ],
+      theme: "theme-ocean-global-light",
+      language: "en",
+      settings: { language: "en" },
       customerAssets: { ...defaultAssets },
       topSellers: [
         { id: "SEL-002", name: "Devansh Fish Hub", rating: 4.6, speed: "45 min", image: "⚓", products: ["🦞", "🦀", "🦐"] },
@@ -52,8 +96,16 @@ export const useSettingsStore = create<SettingsState>()(
         { id: "SEL-2002", name: "Deep Sea Catch", rating: 4.8, speed: "45 min", image: "⚓", products: ["🦞", "🦀", "🦐"] },
         { id: "SEL-004", name: "Rig Fishing", rating: 4.8, speed: "45 min", image: "🚢", products: ["🦞", "🦀", "🦐"] },
       ],
+      productCategories: [],
+      homeSectionOrder: ["HERO", "CATEGORIES", "TODAYS_CATCH", "FEATURED", "RECIPES", "PROMO", "SELLERS", "RADAR", "REVIEWS", "NEWSLETTER", "QUALITY_CHECKED", "FSSAI"],
 
-      setSettings: (partial) => set((s) => ({ ...s, ...partial })),
+      setSettings: (partial) =>
+        set((s) => {
+          const next = { ...s, ...partial };
+          // Keep `settings` object in sync with `language`
+          next.settings = { language: next.language ?? s.language };
+          return next;
+        }),
 
       fetchSettings: async () => {
         try {
@@ -63,9 +115,9 @@ export const useSettingsStore = create<SettingsState>()(
           const assets = (settings.customerAssets as CustomerAssets) || get().customerAssets;
           const sanitized = { ...defaultAssets, ...assets };
           Object.keys(sanitized).forEach((key) => {
-            const val = (sanitized as Record<string, string>)[key];
+            const val = (sanitized as any)[key];
             if (typeof val === "string" && val.startsWith("blob:")) {
-              (sanitized as Record<string, string>)[key] = "";
+              (sanitized as any)[key] = "";
             }
           });
 
@@ -75,10 +127,31 @@ export const useSettingsStore = create<SettingsState>()(
               settings.flashDealActive !== undefined
                 ? Boolean(settings.flashDealActive)
                 : get().flashDealActive,
+            flashDealStart: (settings.flashDealStart as string) || get().flashDealStart,
             flashDealEnd: (settings.flashDealEnd as string) || get().flashDealEnd,
+            flashDealTitle: (settings.flashDealTitle as string) || get().flashDealTitle,
+            flashDealSector: (settings.flashDealSector as string) || get().flashDealSector,
+            flashDealFont: (settings.flashDealFont as string) || get().flashDealFont,
+            flashDealCarousel: (settings.flashDealCarousel as any) || get().flashDealCarousel,
             theme: (settings.customerTheme as string) || (settings.theme as string) || get().theme,
             customerAssets: sanitized,
             topSellers: (settings.topSellers as any) || get().topSellers,
+            productCategories: (settings.PRODUCT_CATEGORIES as any) || get().productCategories,
+            homeSectionOrder: (() => {
+              let order = (settings.HOME_SECTION_ORDER as any) || get().homeSectionOrder;
+              if (Array.isArray(order)) {
+                if (order.includes("TRUST")) {
+                  const trustIndex = order.indexOf("TRUST");
+                  order = [
+                    ...order.slice(0, trustIndex),
+                    "QUALITY_CHECKED",
+                    "FSSAI",
+                    ...order.slice(trustIndex + 1)
+                  ];
+                }
+              }
+              return order;
+            })(),
           });
         } catch {
           /* keep persisted defaults */
@@ -88,6 +161,28 @@ export const useSettingsStore = create<SettingsState>()(
     {
       name: "oceanexotic-settings",
       storage: createJSONStorage(() => AsyncStorage),
+      // Exclude the computed `settings` object from persistence to avoid stale data
+      partialize: (state) => ({
+        marketplaceName: state.marketplaceName,
+        flashDealActive: state.flashDealActive,
+        flashDealStart: state.flashDealStart,
+        flashDealEnd: state.flashDealEnd,
+        flashDealTitle: state.flashDealTitle,
+        flashDealSector: state.flashDealSector,
+        flashDealFont: state.flashDealFont,
+        flashDealCarousel: state.flashDealCarousel,
+        theme: state.theme,
+        language: state.language,
+        customerAssets: state.customerAssets,
+        topSellers: state.topSellers,
+        productCategories: state.productCategories,
+        homeSectionOrder: state.homeSectionOrder,
+      }),
+      onRehydrateStorage: () => (state) => {
+        if (state) {
+          state.settings = { language: state.language ?? "en" };
+        }
+      },
     }
   )
 );

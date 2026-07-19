@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, ActivityIndicator, Pressable } from "react-native";
-import { useRouter } from "expo-router";
-import { ArrowLeft, Bell } from "lucide-react-native";
-import { useAuthStore } from "@/store/authStore";
+import { View, Text, ScrollView, ActivityIndicator, Pressable } from "react-native";
 import { useThemeColors } from "@/hooks/useThemeColors";
+import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "@/lib/i18n";
+import { useSettingsStore } from "@/store/settingsStore";
+import { useAuthStore } from "@/store/authStore";
 import { FULL_API_URL } from "@/config/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNotificationStore } from "@/store/notificationStore";
 
 export default function NotificationsScreen() {
-  const router = useRouter();
+  const { t } = useTranslation();
+
   const colors = useThemeColors();
+  const currentLanguage = useSettingsStore((s) => s.language);
   const { user } = useAuthStore();
   const { setUnreadCount } = useNotificationStore();
-  
+
   const [notifications, setNotifications] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -71,58 +74,88 @@ export default function NotificationsScreen() {
     } catch (e) { console.warn(e); }
   };
 
-  const renderItem = ({ item }: { item: any }) => (
-    <Pressable 
-      onPress={() => handleNotificationClick(item.id)}
-      className="p-4 border-b flex-row gap-3"
-      style={{ borderBottomColor: colors.border, backgroundColor: item.read ? colors.bg : colors.card }}
-    >
-      <View className="mt-1">
-        <Bell size={20} color={colors.primary} />
-      </View>
-      <View className="flex-1">
-        <Text className="text-sm font-bold" style={{ color: colors.text }}>{item.title}</Text>
-        <Text className="text-xs mt-1" style={{ color: colors.textMuted }}>{item.message}</Text>
-        <Text className="text-[10px] mt-2 font-bold uppercase" style={{ color: colors.textMuted }}>
-          {item.time}
-        </Text>
-      </View>
-    </Pressable>
-  );
+  const getIconForType = (type: string) => {
+    switch (type) {
+      case 'ORDER': return 'boat-outline';
+      case 'PROMO': return 'flash-outline';
+      case 'SYSTEM': return 'information-circle-outline';
+      default: return 'water-outline';
+    }
+  };
 
   return (
-    <View className="flex-1" style={{ backgroundColor: colors.bg }}>
-      <View 
-        className="h-16 flex-row items-center px-4 border-b"
-        style={{ backgroundColor: colors.card, borderBottomColor: colors.border }}
+    <ScrollView
+      className="flex-1"
+      style={{ backgroundColor: colors.bg }}
+      contentContainerStyle={{ padding: 16, paddingBottom: 100 }}
+    >
+      <Text
+        className="text-2xl font-black uppercase mb-6"
+        style={{ color: colors.text }}
       >
-        <Pressable onPress={() => router.back()} className="mr-3 p-2">
-          <ArrowLeft color={colors.text} size={24} />
-        </Pressable>
-        <Text className="text-lg font-black uppercase italic" style={{ color: colors.text }}>
-          Notifications
-        </Text>
-      </View>
+        {t('notifications')}
+      </Text>
 
       {loading ? (
-        <View className="flex-1 items-center justify-center">
-          <ActivityIndicator color={colors.primary} />
-        </View>
+        <ActivityIndicator color={colors.primary} style={{ marginTop: 40 }} />
       ) : notifications.length === 0 ? (
-        <View className="flex-1 items-center justify-center p-8 opacity-50">
-          <Bell size={48} color={colors.textMuted} />
+        <View className="items-center justify-center p-8 opacity-50 mt-10">
+          <Ionicons name="notifications-off-outline" size={48} color={colors.textMuted} />
           <Text className="text-sm font-black uppercase text-center mt-4 tracking-widest" style={{ color: colors.textMuted }}>
             No pending notifications
           </Text>
         </View>
       ) : (
-        <FlatList
-          data={notifications}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderItem}
-          contentContainerStyle={{ paddingBottom: 24 }}
-        />
+        <View className="gap-4">
+          {notifications.map((notif) => (
+            <Pressable
+              key={notif.id}
+              onPress={() => handleNotificationClick(notif.id)}
+              className="flex-row p-4 rounded-none border"
+              style={{
+                backgroundColor: !notif.read ? colors.primary + "10" : colors.card,
+                borderColor: !notif.read ? colors.primary + "30" : colors.border,
+              }}
+            >
+              <View
+                className="w-10 h-10 rounded-none items-center justify-center mr-4 border"
+                style={{
+                  backgroundColor: !notif.read ? colors.primary + "20" : colors.bgAlt,
+                  borderColor: !notif.read ? colors.primary + "40" : colors.border,
+                }}
+              >
+                <Ionicons
+                  name={getIconForType(notif.type) as any}
+                  size={20}
+                  color={!notif.read ? colors.primary : colors.textMuted}
+                />
+              </View>
+              <View className="flex-1">
+                <View className="flex-row justify-between items-start mb-1">
+                  <Text
+                    className="text-sm font-bold uppercase tracking-wide flex-1 mr-2"
+                    style={{ color: colors.text }}
+                  >
+                    {notif.title}
+                  </Text>
+                  <Text
+                    className="text-[10px] font-bold"
+                    style={{ color: colors.textMuted }}
+                  >
+                    {notif.time}
+                  </Text>
+                </View>
+                <Text
+                  className="text-xs leading-relaxed"
+                  style={{ color: colors.textMuted }}
+                >
+                  {notif.message}
+                </Text>
+              </View>
+            </Pressable>
+          ))}
+        </View>
       )}
-    </View>
+    </ScrollView>
   );
 }
