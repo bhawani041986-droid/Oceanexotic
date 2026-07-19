@@ -44,6 +44,8 @@ import { useToast } from "@/components/ui/Toast";
 import MainLayout from "@/components/layouts/MainLayout";
 import { useAuthStore } from "@/store/authStore";
 
+import { WebAddressMapPicker } from "@/components/customer/WebAddressMapPicker";
+
 export default function CustomerProfilePage() {
   const { toast } = useToast();
   const [mounted, setMounted] = React.useState(false);
@@ -306,108 +308,119 @@ export default function CustomerProfilePage() {
                         </>
                      )}
 
-                     {modalType === "address" && (
-                        <>
-                           <div className="grid grid-cols-2 gap-3 md:gap-4">
-                              <div className="space-y-1.5">
-                                 <label className="text-[9px] font-black uppercase tracking-widest text-text-secondary italic">ADDRESS TYPE</label>
-                                 <select value={formData.type || "HOME"} onChange={(e) => setFormData({...formData, type: e.target.value})} className="w-full h-12 md:h-14 bg-[#1A1F2C] border border-[var(--foreground)]/5 rounded-xl md:rounded-2xl px-4 text-[var(--foreground)] italic appearance-none">
-                                    <option value="HOME" className="bg-[#1A1F2C]">HOME</option>
-                                    <option value="HOTEL" className="bg-[#1A1F2C]">HOTEL / RESORT</option>
-                                    <option value="WORK" className="bg-[#1A1F2C]">OFFICE</option>
-                                 </select>
-                              </div>
-                              <div className="space-y-1.5">
-                                 <label className="text-[9px] font-black uppercase tracking-widest text-text-secondary italic">DELIVERY JETTY</label>
-                                 <select value={formData.jetty || ""} onChange={(e) => setFormData({...formData, jetty: e.target.value})} className="w-full h-12 md:h-14 bg-[#1A1F2C] border border-[var(--foreground)]/5 rounded-xl md:rounded-2xl px-4 text-[var(--foreground)] italic appearance-none">
-                                    <option value="" className="bg-[#1A1F2C]">SELECT JETTY</option>
-                                    <option value="Havelock No.1" className="bg-[#1A1F2C]">HAVELOCK NO.1</option>
-                                    <option value="Port Blair Phoenix" className="bg-[#1A1F2C]">PORT BLAIR PHOENIX</option>
-                                    <option value="Neil Island Jetty" className="bg-[#1A1F2C]">NEIL ISLAND JETTY</option>
-                                 </select>
-                              </div>
-                           </div>
-                           <div className="space-y-1.5">
-                              <label className="text-[9px] font-black uppercase tracking-widest text-text-secondary italic">ESTABLISHMENT NAME</label>
-                              <Input value={formData.hotel_name || ""} onChange={(e) => setFormData({...formData, hotel_name: e.target.value})} placeholder="e.g. Taj Exotica" className="h-12 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 rounded-xl md:rounded-2xl italic" />
-                           </div>
-                           <div className="grid grid-cols-2 gap-3 md:gap-4">
-                              <div className="space-y-1.5">
-                                 <label className="text-[9px] font-black uppercase tracking-widest text-text-secondary italic">ROOM / HOUSE NO.</label>
-                                 <Input value={formData.room_no || ""} onChange={(e) => setFormData({...formData, room_no: e.target.value})} placeholder="e.g. 302" className="h-12 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 rounded-xl md:rounded-2xl italic" />
-                              </div>
-                              <div className="space-y-1.5">
-                                 <label className="text-[9px] font-black uppercase tracking-widest text-text-secondary italic">CONTACT PHONE</label>
-                                 <Input value={formData.phone || ""} onChange={(e) => setFormData({...formData, phone: e.target.value})} placeholder="Emergency Comms" className="h-12 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 rounded-xl md:rounded-2xl italic" />
-                              </div>
-                           </div>
-                           <div className="space-y-3">
-                              <div className="flex items-center justify-between">
-                                 <label className="text-[9px] font-black uppercase tracking-widest text-text-secondary italic">PRIMARY MARITIME COORDINATES</label>
-                                 <button onClick={() => {
-                                    setFormData({ ...formData, address: "Connecting to Satellite...", locality: "Locating" });
-                                    if ("geolocation" in navigator) {
-                                      navigator.geolocation.getCurrentPosition(async (position) => {
-                                        try {
-                                          const { latitude, longitude } = position.coords;
-                                          let targetLat = latitude;
-                                          let targetLng = longitude;
-                                          
-                                          // Enforce Andaman & Nicobar Bounding Box
-                                          const isAndaman = latitude >= 6.0 && latitude <= 14.0 && longitude >= 92.0 && longitude <= 94.0;
-                                          if (!isAndaman) {
-                                            targetLat = 11.6234;
-                                            targetLng = 92.7265;
-                                            toast("Device GPS outside Andaman. Map centered on Port Blair Harbour.", "info");
-                                          }
+                      {modalType === "address" && (
+                         <div className="space-y-4">
+                            {/* Type Selection */}
+                            <div>
+                               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-1.5">Type / Label</label>
+                               <div className="flex gap-2">
+                                  {["HOME", "WORK", "HOTEL", "OTHER"].map((t) => (
+                                     <button
+                                        key={t}
+                                        type="button"
+                                        onClick={() => setFormData({ ...formData, type: t })}
+                                        className={`flex-1 py-2 rounded-lg text-[10px] font-black border transition-all ${formData.type === t ? "border-primary bg-primary/20 text-white" : "border-slate-800 bg-slate-900 text-slate-400"}`}
+                                     >
+                                        {t}
+                                     </button>
+                                  ))}
+                               </div>
+                            </div>
 
-                                          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${targetLat}&lon=${targetLng}`);
-                                          const data = await res.json();
-                                          if (data && data.display_name) {
-                                            // The formData update must merge cleanly
-                                            setFormData((prev: any) => ({ ...prev, address: data.display_name, locality: data.address?.city || data.address?.town || data.address?.suburb || "Live Node" }));
-                                            toast("Coordinates Locked & Synced.", "success");
-                                          } else {
-                                            throw new Error("Geocoding failed");
-                                          }
-                                        } catch (err) {
-                                          setFormData((prev: any) => ({ ...prev, address: "Failed to reverse geocode coordinates." }));
-                                          toast("Satellite Sync Failed", "error");
-                                        }
-                                      }, (error) => {
-                                        setFormData((prev: any) => ({ ...prev, address: "Location access denied or unavailable." }));
-                                        toast("Location Access Denied.", "error");
-                                      });
-                                    } else {
-                                      setFormData((prev: any) => ({ ...prev, address: "Geolocation not supported by browser." }));
-                                      toast("System Incompatible.", "error");
-                                    }
-                                 }} className="text-[8px] font-black uppercase text-primary flex items-center gap-1 hover:brightness-125 transition-all">
-                                    <Zap className="w-3 h-3" /> SYNC WITH SATELLITE
-                                 </button>
-                              </div>
-                              <div className="relative w-full h-32 md:h-40 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-2xl overflow-hidden group">
-                                 <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1526778548025-fa2f459cd5ce?auto=format&fit=crop&q=80')] opacity-20 grayscale group-hover:grayscale-0 transition-all duration-700 bg-cover bg-center" />
-                                 <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120] to-transparent" />
-                                 <div className="absolute inset-0 flex items-center justify-center">
-                                    <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center animate-pulse border border-primary/40">
-                                       <MapPin className="w-4 h-4 text-primary" />
-                                    </div>
-                                 </div>
-                                 <div className="absolute bottom-3 left-3 flex items-center gap-2">
-                                    <div className="px-2 py-1 bg-black/40 backdrop-blur-md rounded-md border border-white/5 text-[7px] font-black text-white uppercase italic">Active Satellite Link</div>
-                                 </div>
-                              </div>
-                              <div className="flex gap-2">
-                                <Input value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Search Location (e.g. Diglipur)" className="flex-1 h-12 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 rounded-xl md:rounded-2xl italic" />
-                                <Button onClick={handleManualSearch} disabled={isSearching} className="h-12 md:h-14 px-6 rounded-xl md:rounded-2xl text-[10px] font-black uppercase shadow-glow-purple">
-                                  {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
-                                </Button>
-                              </div>
-                              <Input value={formData.address || ""} onChange={(e) => setFormData({...formData, address: e.target.value})} placeholder="Full Street / Area" className="h-12 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 rounded-xl md:rounded-2xl italic" />
-                           </div>
-                        </>
-                     )}
+                            {/* Pinpoint Location Leaflet Google Hybrid Satellite Map */}
+                            <div>
+                               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-1.5">
+                                  Pinpoint Map Coordinates & Location Search
+                               </label>
+                               <WebAddressMapPicker
+                                  initialLat={formData.latitude || 11.6234}
+                                  initialLng={formData.longitude || 92.7265}
+                                  onLocationSelect={(nLat, nLng, addressName, nLandmark) => {
+                                     setFormData((prev: any) => ({
+                                        ...prev,
+                                        latitude: nLat,
+                                        longitude: nLng,
+                                        landmark: nLandmark || prev.landmark,
+                                        address: addressName || prev.address
+                                     }));
+                                  }}
+                               />
+                            </div>
+
+                            {/* Nearby Landmark / Hotspot */}
+                            <div>
+                               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-1">
+                                  Nearby Landmark / Hotspot (Auto-detected)
+                               </label>
+                               <Input
+                                  value={formData.landmark || ""}
+                                  onChange={(e) => setFormData({ ...formData, landmark: e.target.value })}
+                                  placeholder="e.g. Phoenix Bay Jetty / Aberdeen Clock Tower"
+                                  className="h-11 bg-slate-900 border-slate-700 text-white placeholder-slate-500 rounded-xl"
+                               />
+                            </div>
+
+                            {/* Delivery Zone (1 Hub / 4 Active Zones) */}
+                            <div>
+                               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-1">
+                                  Delivery Zone (Dollygunj Hub PB-DOL-01)
+                               </label>
+                               <select
+                                  value={formData.zone || "Dollygunj (Zone 2)"}
+                                  onChange={(e) => setFormData({ ...formData, zone: e.target.value })}
+                                  className="w-full h-11 px-3 bg-slate-900 border border-slate-700 rounded-xl text-sm font-bold text-white focus:outline-none focus:border-primary"
+                               >
+                                  <option value="Minibay (Zone 1)">📍 Minibay (Zone 1)</option>
+                                  <option value="Dollygunj (Zone 2)">📍 Dollygunj (Zone 2)</option>
+                                  <option value="Atamphad (Zone 3)">📍 Atamphad (Zone 3)</option>
+                                  <option value="Bhatubasti (Zone 4)">📍 Bhatubasti (Zone 4)</option>
+                               </select>
+                            </div>
+
+                            {/* Establishment / Hotel Name */}
+                            <div>
+                               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-1">Hotel / Resort / Building Name</label>
+                               <Input
+                                  value={formData.hotel_name || ""}
+                                  onChange={(e) => setFormData({ ...formData, hotel_name: e.target.value })}
+                                  placeholder="e.g. Symphony Palms Resort"
+                                  className="h-11 bg-slate-900 border-slate-700 text-white placeholder-slate-500 rounded-xl"
+                               />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                               <div>
+                                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-1">Room / House No.</label>
+                                  <Input
+                                     value={formData.room_no || ""}
+                                     onChange={(e) => setFormData({ ...formData, room_no: e.target.value })}
+                                     placeholder="e.g. 302"
+                                     className="h-11 bg-slate-900 border-slate-700 text-white placeholder-slate-500 rounded-xl"
+                                  />
+                               </div>
+                               <div>
+                                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-1">Contact Phone *</label>
+                                  <Input
+                                     value={formData.phone || ""}
+                                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                     placeholder="e.g. +91 9876543210"
+                                     className="h-11 bg-slate-900 border-slate-700 text-white placeholder-slate-500 rounded-xl"
+                                  />
+                               </div>
+                            </div>
+
+                            {/* Full Address */}
+                            <div>
+                               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-1">Delivery Address *</label>
+                               <Input
+                                  value={formData.address || ""}
+                                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                                  placeholder="e.g. Govind Nagar Beach No 3, Havelock"
+                                  className="h-11 bg-slate-900 border-slate-700 text-white placeholder-slate-500 rounded-xl"
+                               />
+                            </div>
+                         </div>
+                      )}
 
                      {modalType === "card" && (
                         <>
