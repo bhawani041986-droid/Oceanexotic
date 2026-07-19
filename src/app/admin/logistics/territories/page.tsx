@@ -38,6 +38,47 @@ export default function TerritoryWizardPage() {
 
   // Search filter
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLReady, setIsLReady] = useState(false);
+  const [isDrawReady, setIsDrawReady] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if ((window as any).L) {
+      setIsLReady(true);
+      if ((window as any).L.Draw) {
+        setIsDrawReady(true);
+      } else {
+        loadLeafletDraw();
+      }
+      return;
+    }
+
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    document.head.appendChild(link);
+
+    const script = document.createElement('script');
+    script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+    script.onload = () => {
+      setIsLReady(true);
+      loadLeafletDraw();
+    };
+    document.head.appendChild(script);
+  }, []);
+
+  const loadLeafletDraw = () => {
+    if (typeof window === 'undefined') return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css';
+    document.head.appendChild(link);
+
+    const script = document.createElement('script');
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js";
+    script.onload = () => setIsDrawReady(true);
+    document.head.appendChild(script);
+  };
 
   // Modal / Editor State
   const [editorModal, setEditorModal] = useState<{
@@ -57,11 +98,121 @@ export default function TerritoryWizardPage() {
     eta_mins?: number;
     allowed_slots?: string[];
     custom_slots?: Record<string, string>;
+    polygon_coordinates?: [number, number][];
   } | null>(null);
 
   useEffect(() => {
     fetchTerritories();
   }, []);
+
+  useEffect(() => {
+    if (!editorModal || !isLReady || typeof window === 'undefined') return;
+
+    const timer = setTimeout(() => {
+      const L = (window as any).L;
+      const container = document.getElementById('editor-leaflet-map');
+      if (!container || (container as any)._leaflet_id) return;
+
+      const defaultCenter = [11.635017, 92.707942] as [number, number];
+      let initialCenter = defaultCenter;
+
+      if (editorModal.coordinates) {
+        const [lat, lng] = editorModal.coordinates.split(",").map(Number);
+        if (!isNaN(lat) && !isNaN(lng) && lat !== 0) {
+          initialCenter = [lat, lng];
+        }
+      }
+
+      const map = L.map('editor-leaflet-map').setView(initialCenter, 14);
+      (container as any)._leaflet_map = map;
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO'
+      }).addTo(map);
+
+      const drawnItems = new L.FeatureGroup();
+      map.addLayer(drawnItems);
+
+      if (editorModal.type === "ADMIN_HUB") {
+        const marker = L.marker(initialCenter, { draggable: true }).addTo(map);
+        marker.on('dragend', () => {
+          const latlng = marker.getLatLng();
+          setEditorModal(prev => {
+            if (!prev) return null;
+            return {
+              ...prev,
+              coordinates: `${latlng.lat.toFixed(6)}, ${latlng.lng.toFixed(6)}`
+            };
+          });
+        });
+      } else if (editorModal.type === "DELIVERY_ZONE") {
+        if (editorModal.polygon_coordinates && editorModal.polygon_coordinates.length > 0) {
+          const polygon = L.polygon(editorModal.polygon_coordinates, { color: '#6366f1' }).addTo(drawnItems);
+          map.fitBounds(polygon.getBounds());
+        }
+
+        if (L.Draw) {
+          const drawControl = new L.Control.Draw({
+            edit: {
+              featureGroup: drawnItems
+            },
+            draw: {
+              polygon: {
+                allowIntersection: false,
+                shapeOptions: { color: '#6366f1' }
+              },
+              polyline: false,
+              circle: false,
+              rectangle: false,
+              circlemarker: false,
+              marker: false
+            }
+          });
+          map.addControl(drawControl);
+
+          map.on(L.Draw.Event.CREATED, (e: any) => {
+            const layer = e.layer;
+            drawnItems.clearLayers();
+            drawnItems.addLayer(layer);
+            
+            const latlngs = layer.getLatLngs()[0];
+            const coords = latlngs.map((pt: any) => [pt.lat, pt.lng]);
+            setEditorModal(prev => {
+              if (!prev) return null;
+              return {
+                ...prev,
+                polygon_coordinates: coords
+              };
+            });
+          });
+
+          map.on(L.Draw.Event.EDITED, (e: any) => {
+            const layers = e.layers;
+            layers.eachLayer((layer: any) => {
+              const latlngs = layer.getLatLngs()[0];
+              const coords = latlngs.map((pt: any) => [pt.lat, pt.lng]);
+              setEditorModal(prev => {
+                if (!prev) return null;
+                return {
+                  ...prev,
+                  polygon_coordinates: coords
+                };
+              });
+            });
+          });
+        }
+      }
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      const container = document.getElementById('editor-leaflet-map');
+      if (container && (container as any)._leaflet_map) {
+        (container as any)._leaflet_map.remove();
+        delete (container as any)._leaflet_map;
+      }
+    };
+  }, [editorModal, isLReady, isDrawReady]);
 
   useEffect(() => {
     if (territories.length === 0) return;
@@ -282,6 +433,21 @@ export default function TerritoryWizardPage() {
       }
     }
 
+    let polygonCoords: [number, number][] = [];
+    if (existingNode?.coordinates && type === "DELIVERY_ZONE") {
+      if (existingNode.coordinates.includes("POLYGON")) {
+        const polyPart = existingNode.coordinates.substring(existingNode.coordinates.indexOf("POLYGON"));
+        const matches = polyPart.match(/\(\((.*?)\)\)/);
+        if (matches && matches[1]) {
+          const pointsStr = matches[1].split(",");
+          polygonCoords = pointsStr.map((ptStr: string) => {
+            const [lat, lng] = ptStr.trim().split(/\s+/).map(Number);
+            return [lat, lng] as [number, number];
+          }).filter((pt: any) => !isNaN(pt[0]) && !isNaN(pt[1]));
+        }
+      }
+    }
+
     setEditorModal({
       isOpen: true,
       type,
@@ -297,7 +463,8 @@ export default function TerritoryWizardPage() {
       minimum_order: minOrder,
       eta_mins: eta,
       allowed_slots: allowedSlots,
-      custom_slots: customSlots
+      custom_slots: customSlots,
+      polygon_coordinates: polygonCoords
     });
   };
 
@@ -320,7 +487,11 @@ export default function TerritoryWizardPage() {
         const [lat, lng] = (editorModal.coordinates || "0, 0").split(",");
         coordVal = `${(lat || "0").trim()}, ${(lng || "0").trim()}, ${editorModal.hub_code || ""}, ${editorModal.manager_name || ""}, ${editorModal.rider_capacity || 0}, ${(editorModal.allowed_slots || []).join("|")}, ${customSlotsStr}`;
       } else if (editorModal.type === "DELIVERY_ZONE") {
-        coordVal = `${editorModal.delivery_charge || 0}, ${editorModal.minimum_order || 0}, ${editorModal.eta_mins || 30}, ${(editorModal.allowed_slots || []).join("|")}, ${customSlotsStr}`;
+        let polyWkt = "";
+        if (editorModal.polygon_coordinates && editorModal.polygon_coordinates.length > 0) {
+          polyWkt = `, POLYGON((${editorModal.polygon_coordinates.map(pt => `${pt[0]} ${pt[1]}`).join(", ")}))`;
+        }
+        coordVal = `${editorModal.delivery_charge || 0}, ${editorModal.minimum_order || 0}, ${editorModal.eta_mins || 30}, ${(editorModal.allowed_slots || []).join("|")}, ${customSlotsStr}${polyWkt}`;
       }
 
       const payload: any = {
@@ -917,6 +1088,18 @@ export default function TerritoryWizardPage() {
                       })}
                     </div>
                   </div>
+                </div>
+              )}
+              {/* Geofence Map Drawer for Hubs & Zones */}
+              {(editorModal.type === "ADMIN_HUB" || editorModal.type === "DELIVERY_ZONE") && (
+                <div className="space-y-2 pt-4 border-t border-[var(--foreground)]/5">
+                  <label className="text-[10px] font-black text-primary uppercase tracking-widest block">Geofence Boundary Map</label>
+                  <p className="text-[9px] text-muted-foreground">
+                    {editorModal.type === "ADMIN_HUB" 
+                      ? "Drag the marker on the map to set the exact logistics hub coordinates." 
+                      : "Use the draw polygon tool on the right side of the map to outline the strict geofence boundary."}
+                  </p>
+                  <div id="editor-leaflet-map" className="w-full h-[220px] bg-[var(--foreground)]/5 rounded-xl border border-[var(--foreground)]/10 overflow-hidden relative" />
                 </div>
               )}
             </div>

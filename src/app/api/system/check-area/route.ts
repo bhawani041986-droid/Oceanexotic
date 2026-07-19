@@ -25,6 +25,30 @@ function findHubName(zone: any, allNodes: any[]): string {
   return hub ? hub.name : 'Dollygunj Hub';
 }
 
+// Ray-Casting algorithm for point-in-polygon check
+function isPointInPolygon(lat: number, lng: number, polygonStr: string): boolean {
+  const matches = polygonStr.match(/\(\((.*?)\)\)/);
+  if (!matches || !matches[1]) return false;
+  
+  const points = matches[1].split(',').map(ptStr => {
+    const [pLat, pLng] = ptStr.trim().split(/\s+/).map(Number);
+    return [pLat, pLng];
+  }).filter(pt => !isNaN(pt[0]) && !isNaN(pt[1]));
+
+  if (points.length < 3) return false;
+
+  let inside = false;
+  for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
+    const xi = points[i][0], yi = points[i][1];
+    const xj = points[j][0], yj = points[j][1];
+
+    const intersect = ((yi > lng) !== (yj > lng))
+        && (lat < (xj - xi) * (lng - yi) / (yj - yi) + xi);
+    if (intersect) inside = !inside;
+  }
+  return inside;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -62,6 +86,70 @@ export async function GET(request: NextRequest) {
 
     // ── Check by GPS coordinates ──────────────────────
     if (!isNaN(lat) && !isNaN(lng)) {
+      let matchedZone: any = null;
+      let matchedZonePolygon = false;
+
+      // Check if location falls inside any active geofenced polygon boundary
+      for (const zone of activeZones) {
+        if (zone.coordinates && zone.coordinates.includes('POLYGON')) {
+          if (isPointInPolygon(lat, lng, zone.coordinates)) {
+            matchedZone = zone;
+            matchedZonePolygon = true;
+            break;
+          }
+        }
+      }
+
+      if (matchedZonePolygon && matchedZone) {
+        let delivery_charge = 0;
+        let minimum_order = 0;
+        let eta_mins = 45;
+        let allowed_slots: string[] = [];
+        let custom_slots: Record<string, string> = {};
+
+        const parts = matchedZone.coordinates.split(',').map((p: string) => p.trim());
+        delivery_charge = parseFloat(parts[0]) || 0;
+        minimum_order = parseFloat(parts[1]) || 0;
+        eta_mins = parseInt(parts[2]) || 45;
+        if (parts[3]) {
+          allowed_slots = parts[3].split('|').map((s: string) => s.trim()).filter(Boolean);
+        }
+        if (parts[4]) {
+          parts[4].split('|').forEach((pair: string) => {
+            const [key, val] = pair.split(':').map((s: string) => s.trim());
+            if (key && val) {
+              custom_slots[key] = val;
+            }
+          });
+        }
+
+        const hubName = findHubName(matchedZone, allNodes);
+        return NextResponse.json({
+          deliverable: true,
+          method: 'gps_polygon',
+          distanceKm: null,
+          estimatedMinutes: eta_mins,
+          delivery_charge,
+          minimum_order,
+          allowed_slots: allowed_slots.length > 0 ? allowed_slots : ['TODAY_AM', 'TODAY_PM', 'TOMORROW'],
+          custom_slots,
+          message: availableMsg,
+          hubName,
+        });
+      }
+
+      // If at least one active polygon is drawn in the database, enforce strict boundary check!
+      const anyPolygonConfigured = activeZones.some(z => z.coordinates && z.coordinates.includes('POLYGON'));
+      if (anyPolygonConfigured) {
+        return NextResponse.json({
+          deliverable: false,
+          method: 'gps_polygon',
+          message: unavailableMsg,
+          hubName: 'Dollygunj Hub',
+        });
+      }
+
+      // Fallback: If no polygons exist in the DB, calculate distance from active hubs
       let closestHub: any = null;
       let minDistance = Infinity;
 
@@ -78,7 +166,6 @@ export async function GET(request: NextRequest) {
         }
       });
 
-      // Fallback if no hub coordinates resolved
       if (!closestHub) {
         minDistance = haversineKm(lat, lng, hubLat, hubLng);
       }
