@@ -44,6 +44,7 @@ export function ServiceAreaChecker({ className, compact = false }: ServiceAreaCh
   const [result, setResult] = useState<CheckResult | null>(null);
   const [notifyEmail, setNotifyEmail] = useState("");
   const [notifySent, setNotifySent] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleAreaInput = (val: string) => {
     setAreaInput(val);
@@ -173,175 +174,195 @@ export function ServiceAreaChecker({ className, compact = false }: ServiceAreaCh
 
   // ── Redesigned Slim & Premium Amazon-Style Widget ──
   return (
-    <div className={cn(
-      "w-full max-w-2xl mx-auto bg-gradient-to-b from-[var(--c-bg-alt)]/30 to-[var(--c-bg-alt)]/10 border border-[var(--foreground)]/10 rounded-2xl p-4 shadow-sm",
-      className
-    )}>
-      {/* Search Input and GPS buttons container */}
-      <div className="flex flex-col sm:flex-row gap-2.5 items-stretch relative">
-        <div className="relative flex-1 flex items-center bg-[var(--c-bg)] border border-[var(--foreground)]/15 hover:border-[var(--foreground)]/30 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 rounded-xl transition-all h-11">
-          <MapPin className="w-4 h-4 text-primary shrink-0 ml-3" />
-          <input
-            type="text"
-            value={areaInput}
-            onChange={(e) => handleAreaInput(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && checkByArea()}
-            placeholder="Enter your delivery area or address..."
-            className="w-full pl-2 pr-8 text-xs font-bold bg-transparent text-[var(--c-text-primary)] placeholder-[var(--c-text-secondary)]/60 outline-none h-full"
-          />
-          {areaInput && (
-            <button 
-              onClick={() => { setAreaInput(""); setResult(null); }}
-              className="absolute right-3 p-0.5 hover:text-primary transition-colors text-[var(--c-text-secondary)]"
-            >
-              <X className="w-3.5 h-3.5" />
-            </button>
-          )}
+    <div className={cn("w-full max-w-md mx-auto relative", className)}>
+      {/* 1. Amazon-style Location selector Trigger Button */}
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center gap-2.5 px-4 py-2 border border-[var(--foreground)]/15 hover:border-primary/40 rounded-xl transition-all text-left bg-bg-secondary w-full select-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary/20 hover:bg-bg-secondary/80 group"
+      >
+        <MapPin className="w-5.5 h-5.5 text-primary shrink-0 transition-transform group-hover:scale-110" />
+        <div className="flex flex-col leading-tight">
+          <span className="text-[9px] text-muted-foreground font-semibold uppercase tracking-wider">
+            {result?.deliverable 
+              ? `Delivering to ${areaInput}` 
+              : "Delivering to Port Blair"}
+          </span>
+          <span className="text-xs font-black text-[var(--c-text-primary)] uppercase tracking-widest flex items-center gap-1">
+            {result?.deliverable ? "Change location" : "Update location"} 
+            <ChevronRight className={cn("w-3 h-3 text-primary transition-transform", isOpen && "rotate-90")} />
+          </span>
         </div>
+      </button>
 
-        {/* Buttons Group */}
-        <div className="flex gap-2 sm:shrink-0">
-          <button
-            onClick={() => checkByArea()}
-            disabled={isChecking || !areaInput.trim()}
-            className={cn(
-              "flex-1 sm:flex-initial h-11 px-5 rounded-xl font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5",
-              "bg-primary text-black hover:bg-primary/95 hover:shadow-glow-purple",
-              (isChecking || !areaInput.trim()) && "opacity-40 cursor-not-allowed"
-            )}
-          >
-            {isChecking ? <Loader2 className="w-4 h-4 animate-spin text-black" /> : "Check"}
-          </button>
-
-          <button
-            onClick={checkByGPS}
-            disabled={isGPSLoading}
-            className={cn(
-              "h-11 px-4 rounded-xl border border-[var(--foreground)]/15 text-[var(--c-text-primary)] hover:border-primary/40 hover:text-primary transition-all flex items-center justify-center gap-1.5 bg-[var(--c-bg)] font-semibold text-xs",
-              isGPSLoading && "opacity-60 cursor-not-allowed"
-            )}
-            title="Use current GPS location"
-          >
-            {isGPSLoading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Navigation className="w-4 h-4" />
-            )}
-            <span className="hidden md:inline">Use Location</span>
-          </button>
-        </div>
-
-        {/* Autocomplete dropdown dropdown */}
-        <AnimatePresence>
-          {suggestions.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              className="absolute top-full left-0 right-0 mt-1 z-50 bg-[var(--c-bg)] border border-[var(--foreground)]/10 rounded-xl shadow-xl overflow-hidden"
-            >
-              {suggestions.map((s) => (
-                <button
-                  key={s}
-                  onClick={() => selectSuggestion(s)}
-                  className="w-full text-left px-4 py-2.5 text-xs font-bold hover:bg-primary/5 hover:text-primary transition-colors flex items-center gap-2 border-b border-[var(--foreground)]/5 last:border-b-0"
-                >
-                  <MapPin className="w-3 h-3 text-primary" />
-                  {s}, Port Blair
-                </button>
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* ── Dynamic Result Box ── */}
+      {/* 2. Interactive Input Panel Drawer */}
       <AnimatePresence>
-        {result && (
+        {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 6 }}
+            initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 6 }}
-            className="mt-3"
+            exit={{ opacity: 0, y: -6 }}
+            className="absolute top-full left-0 right-0 mt-2 z-[100] bg-bg-secondary border border-[var(--foreground)]/10 rounded-2xl p-4 shadow-premium space-y-3"
           >
-            {result.deliverable ? (
-              /* Slim Success Row */
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 p-3 bg-emerald-500/10 border border-emerald-500/25 rounded-xl">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-full bg-emerald-500 flex items-center justify-center shrink-0">
-                    <CheckCircle2 className="w-4 h-4 text-black font-black" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-black text-emerald-300 uppercase tracking-tight flex items-center gap-1.5">
-                      <span>✅ Delivery Available!</span>
-                      {result.estimatedMinutes !== null && (
-                        <span className="normal-case text-[11px] font-bold text-emerald-400">
-                          (ETA: ~{result.estimatedMinutes} mins)
-                        </span>
-                      )}
-                    </p>
-                    <p className="text-[11px] text-emerald-200/80 font-medium">
-                      {result.message}
-                    </p>
-                  </div>
-                </div>
+            {/* Header label & Close */}
+            <div className="flex items-center justify-between pb-2 border-b border-[var(--foreground)]/5">
+              <span className="text-[10px] font-black text-primary uppercase tracking-widest">
+                Choose Location
+              </span>
+              <button 
+                onClick={() => setIsOpen(false)}
+                className="text-muted-foreground hover:text-[var(--foreground)] transition-colors p-0.5"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
 
-                <a
-                  href="/customer/products"
-                  className="h-8 px-4 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-black font-black text-[10px] uppercase tracking-wider transition-all flex items-center justify-center gap-1 shrink-0"
-                >
-                  Order Now <ChevronRight className="w-3 h-3 text-black" />
-                </a>
-              </div>
-            ) : (
-              /* Slim Out of Area Alert */
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 p-3 bg-red-500/5 border border-red-500/25 rounded-xl">
-                <div className="flex items-start gap-2.5">
-                  <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-xs font-black text-red-400 uppercase tracking-tight">
-                      ❌ Not Available Yet
-                    </p>
-                    <p className="text-[11px] text-red-300/80 font-medium leading-relaxed">
-                      We don't deliver to {areaInput || "this location"} yet, but we are expanding soon!
-                    </p>
-                  </div>
-                </div>
-
-                {/* Inline Notify Email field */}
-                {notifySent ? (
-                  <span className="text-[10px] font-black text-emerald-400 uppercase bg-emerald-500/10 px-2.5 py-1 rounded-lg">
-                    ✓ Notified
-                  </span>
-                ) : (
-                  <div className="flex gap-1.5 items-center w-full md:w-auto mt-2 md:mt-0">
-                    <input
-                      type="email"
-                      value={notifyEmail}
-                      onChange={(e) => setNotifyEmail(e.target.value)}
-                      placeholder="Enter email to notify"
-                      className="flex-1 md:w-44 h-8 px-2.5 rounded-lg border border-red-500/20 text-xs font-semibold bg-[var(--c-bg)] text-[var(--c-text-primary)] outline-none focus:border-red-400"
-                    />
-                    <button
-                      onClick={handleNotify}
-                      disabled={!notifyEmail.includes("@")}
-                      className="h-8 px-3 rounded-lg bg-red-500 hover:bg-red-600 text-white font-black text-[9px] uppercase tracking-widest disabled:opacity-40 transition-all shrink-0"
-                    >
-                      Notify
-                    </button>
-                  </div>
+            {/* Input Row */}
+            <div className="flex gap-2 relative">
+              <div className="relative flex-1 flex items-center bg-[var(--c-bg)] border border-[var(--foreground)]/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20 rounded-xl transition-all h-10">
+                <input
+                  type="text"
+                  value={areaInput}
+                  onChange={(e) => handleAreaInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && checkByArea()}
+                  placeholder="Enter area or address..."
+                  className="w-full px-3 text-xs font-bold bg-transparent text-[var(--c-text-primary)] placeholder-[var(--c-text-secondary)]/50 outline-none h-full"
+                />
+                {areaInput && (
+                  <button 
+                    onClick={() => { setAreaInput(""); setResult(null); }}
+                    className="absolute right-2.5 p-0.5 hover:text-primary transition-colors text-muted-foreground"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
                 )}
               </div>
-            )}
+
+              <button
+                onClick={() => checkByArea()}
+                disabled={isChecking || !areaInput.trim()}
+                className={cn(
+                  "h-10 px-4 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all flex items-center justify-center gap-1 bg-primary text-black hover:bg-primary/95",
+                  (isChecking || !areaInput.trim()) && "opacity-40 cursor-not-allowed"
+                )}
+              >
+                {isChecking ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : "Check"}
+              </button>
+
+              <button
+                onClick={checkByGPS}
+                disabled={isGPSLoading}
+                className={cn(
+                  "h-10 px-3 rounded-xl border border-[var(--foreground)]/15 text-[var(--c-text-primary)] hover:border-primary/45 hover:text-primary transition-all flex items-center justify-center bg-[var(--c-bg)]",
+                  isGPSLoading && "opacity-60 cursor-not-allowed"
+                )}
+                title="Use GPS coordinates"
+              >
+                {isGPSLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Navigation className="w-4 h-4" />
+                )}
+              </button>
+
+              {/* Suggestions List */}
+              <AnimatePresence>
+                {suggestions.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    className="absolute top-full left-0 right-0 mt-1 z-[110] bg-[var(--c-bg)] border border-[var(--foreground)]/10 rounded-xl shadow-xl overflow-hidden"
+                  >
+                    {suggestions.map((s) => (
+                      <button
+                        key={s}
+                        onClick={() => selectSuggestion(s)}
+                        className="w-full text-left px-3 py-2 text-xs font-bold hover:bg-primary/5 hover:text-primary transition-colors flex items-center gap-2 border-b border-[var(--foreground)]/5 last:border-b-0"
+                      >
+                        <MapPin className="w-3 h-3 text-primary shrink-0" />
+                        <span>{s}, Port Blair</span>
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Results Display */}
+            <AnimatePresence>
+              {result && (
+                <motion.div
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 4 }}
+                  className="pt-1"
+                >
+                  {result.deliverable ? (
+                    <div className="flex flex-col gap-2 p-2.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-black text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                          <span>✓ Available</span>
+                          {result.estimatedMinutes !== null && (
+                            <span className="normal-case text-[10px] font-bold text-emerald-500">
+                              (ETA: ~{result.estimatedMinutes} mins)
+                            </span>
+                          )}
+                        </span>
+                        <a
+                          href="/customer/products"
+                          className="h-6 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-black font-black text-[9px] uppercase tracking-wider transition-all flex items-center justify-center shrink-0"
+                        >
+                          Order Now
+                        </a>
+                      </div>
+                      <p className="text-[10px] text-emerald-200/80 font-medium">
+                        {result.message}
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-2 p-2.5 bg-red-500/5 border border-red-500/20 rounded-xl">
+                      <span className="text-[10px] font-black text-red-400 uppercase tracking-wider">
+                        ✗ Coming Soon
+                      </span>
+                      <p className="text-[10px] text-red-300/80 font-medium">
+                        We don't deliver to {areaInput || "this location"} yet. Join waitlist:
+                      </p>
+                      {notifySent ? (
+                        <span className="text-[9px] font-black text-emerald-400 uppercase bg-emerald-500/10 px-2 py-1 rounded-lg text-center">
+                          ✓ Notified
+                        </span>
+                      ) : (
+                        <div className="flex gap-1.5 items-center w-full">
+                          <input
+                            type="email"
+                            value={notifyEmail}
+                            onChange={(e) => setNotifyEmail(e.target.value)}
+                            placeholder="Email address"
+                            className="flex-1 h-7 px-2 rounded-lg border border-red-500/20 text-xs font-medium bg-[var(--c-bg)] text-[var(--c-text-primary)] outline-none"
+                          />
+                          <button
+                            onClick={handleNotify}
+                            disabled={!notifyEmail.includes("@")}
+                            className="h-7 px-3 rounded-lg bg-red-500 hover:bg-red-600 text-white font-black text-[8px] uppercase tracking-widest disabled:opacity-40 transition-all shrink-0"
+                          >
+                            Join
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Footer metadata */}
+            <div className="flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2 text-[8px] font-bold text-muted-foreground uppercase tracking-widest">
+              <span>📍 Sri Vijayapuram Hub</span>
+              <span>Radius: 8 km</span>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Sleek inline info footer */}
-      <div className="mt-3 flex items-center justify-between border-t border-[var(--foreground)]/5 pt-2.5 text-[9px] font-bold text-[var(--c-text-secondary)] uppercase tracking-wider">
-        <span>📍 Sri Vijayapuram Hub</span>
-        <span>Radius: 8 km</span>
-      </div>
     </div>
   );
 }
