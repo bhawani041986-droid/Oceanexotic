@@ -102,6 +102,7 @@ export default function CheckoutPage() {
   const [deliverySlots, setDeliverySlots] = useState<DeliverySlot[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<string>("");
   const [allowedSlots, setAllowedSlots] = useState<string[]>([]);
+  const [customSlots, setCustomSlots] = useState<Record<string, string>>({});
 
   // Payment state (prepaid only — NO COD)
   const [selectedPayment, setSelectedPayment] = useState<string>("UPI");
@@ -152,6 +153,7 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (!selectedAddress) {
       setAllowedSlots([]);
+      setCustomSlots({});
       return;
     }
     fetch(`/api/system/check-area?area=${encodeURIComponent(selectedAddress.address || selectedAddress.address_line1 || selectedAddress.hotel_name)}`)
@@ -163,12 +165,19 @@ export default function CheckoutPage() {
           } else {
             setAllowedSlots(["TODAY_AM", "TODAY_PM", "TOMORROW"]);
           }
+          if (data.custom_slots) {
+            setCustomSlots(data.custom_slots);
+          } else {
+            setCustomSlots({});
+          }
         } else {
           setAllowedSlots([]);
+          setCustomSlots({});
         }
       })
       .catch(() => {
         setAllowedSlots(["TODAY_AM", "TODAY_PM", "TOMORROW"]);
+        setCustomSlots({});
       });
   }, [selectedAddress]);
 
@@ -563,7 +572,7 @@ export default function CheckoutPage() {
                           </div>
                           <p className={cn("text-xs font-semibold",
                             selected ? "text-primary/80" : "text-[var(--c-text-secondary)]")}>
-                            {slot.slot_time}
+                            {customSlots[slot.slot_key] || slot.slot_time}
                           </p>
                           {slot.slot_key !== "TOMORROW" && (
                             <p className="text-[9px] font-bold text-[var(--c-text-secondary)] uppercase tracking-widest mt-1 opacity-60">

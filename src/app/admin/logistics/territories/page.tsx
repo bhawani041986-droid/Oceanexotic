@@ -56,6 +56,7 @@ export default function TerritoryWizardPage() {
     minimum_order?: number;
     eta_mins?: number;
     allowed_slots?: string[];
+    custom_slots?: Record<string, string>;
   } | null>(null);
 
   useEffect(() => {
@@ -234,6 +235,7 @@ export default function TerritoryWizardPage() {
     parentId: number | null,
     existingNode?: any
   ) => {
+    let customSlots: Record<string, string> = { TODAY_AM: "", TODAY_PM: "", TOMORROW: "" };
     let allowedSlots: string[] = ["TODAY_AM", "TODAY_PM", "TOMORROW"];
     let hubCode = existingNode?.hub_code || "";
     let managerName = existingNode?.manager_name || "";
@@ -254,6 +256,12 @@ export default function TerritoryWizardPage() {
           if (parts[5] && parts[5].trim()) {
             allowedSlots = parts[5].split("|").map((s: string) => s.trim()).filter(Boolean);
           }
+          if (parts[6] && parts[6].trim()) {
+            parts[6].split("|").forEach((pair: string) => {
+              const [k, v] = pair.split(":").map((s: string) => s.trim());
+              if (k) customSlots[k] = v || "";
+            });
+          }
         }
       } else if (type === "DELIVERY_ZONE") {
         const parts = existingNode.coordinates.split(",");
@@ -263,6 +271,12 @@ export default function TerritoryWizardPage() {
           eta = parseInt(parts[2]) || eta;
           if (parts[3] && parts[3].trim()) {
             allowedSlots = parts[3].split("|").map((s: string) => s.trim()).filter(Boolean);
+          }
+          if (parts[4] && parts[4].trim()) {
+            parts[4].split("|").forEach((pair: string) => {
+              const [k, v] = pair.split(":").map((s: string) => s.trim());
+              if (k) customSlots[k] = v || "";
+            });
           }
         }
       }
@@ -282,7 +296,8 @@ export default function TerritoryWizardPage() {
       delivery_charge: delCharge,
       minimum_order: minOrder,
       eta_mins: eta,
-      allowed_slots: allowedSlots
+      allowed_slots: allowedSlots,
+      custom_slots: customSlots
     });
   };
 
@@ -295,11 +310,17 @@ export default function TerritoryWizardPage() {
       setLoading(true);
 
       let coordVal = editorModal.coordinates || null;
+      const customSlotsStr = [
+        `TODAY_AM:${editorModal.custom_slots?.TODAY_AM || ""}`,
+        `TODAY_PM:${editorModal.custom_slots?.TODAY_PM || ""}`,
+        `TOMORROW:${editorModal.custom_slots?.TOMORROW || ""}`
+      ].join("|");
+
       if (editorModal.type === "ADMIN_HUB") {
         const [lat, lng] = (editorModal.coordinates || "0, 0").split(",");
-        coordVal = `${(lat || "0").trim()}, ${(lng || "0").trim()}, ${editorModal.hub_code || ""}, ${editorModal.manager_name || ""}, ${editorModal.rider_capacity || 0}, ${(editorModal.allowed_slots || []).join("|")}`;
+        coordVal = `${(lat || "0").trim()}, ${(lng || "0").trim()}, ${editorModal.hub_code || ""}, ${editorModal.manager_name || ""}, ${editorModal.rider_capacity || 0}, ${(editorModal.allowed_slots || []).join("|")}, ${customSlotsStr}`;
       } else if (editorModal.type === "DELIVERY_ZONE") {
-        coordVal = `${editorModal.delivery_charge || 0}, ${editorModal.minimum_order || 0}, ${editorModal.eta_mins || 30}, ${(editorModal.allowed_slots || []).join("|")}`;
+        coordVal = `${editorModal.delivery_charge || 0}, ${editorModal.minimum_order || 0}, ${editorModal.eta_mins || 30}, ${(editorModal.allowed_slots || []).join("|")}, ${customSlotsStr}`;
       }
 
       const payload: any = {
@@ -777,7 +798,7 @@ export default function TerritoryWizardPage() {
 
                   <div>
                     <label className="text-[10px] font-black text-primary uppercase tracking-widest block mb-2">Allowed Delivery Slots</label>
-                    <div className="grid grid-cols-1 gap-2.5 bg-[var(--foreground)]/5 p-4 rounded-xl border border-[var(--foreground)]/10">
+                    <div className="grid grid-cols-1 gap-3 bg-[var(--foreground)]/5 p-4 rounded-xl border border-[var(--foreground)]/10">
                       {[
                         { key: "TODAY_AM", label: "Today Morning (10:00 AM – 12:00 PM)" },
                         { key: "TODAY_PM", label: "Today Evening (4:00 PM – 7:00 PM)" },
@@ -785,20 +806,33 @@ export default function TerritoryWizardPage() {
                       ].map(slot => {
                         const isChecked = (editorModal.allowed_slots || []).includes(slot.key);
                         return (
-                          <label key={slot.key} className="flex items-center gap-3 cursor-pointer text-xs font-bold text-[var(--foreground)] hover:text-primary transition-colors">
-                            <input 
-                              type="checkbox"
-                              checked={isChecked}
-                              onChange={e => {
-                                const newSlots = e.target.checked 
-                                  ? [...(editorModal.allowed_slots || []), slot.key]
-                                  : (editorModal.allowed_slots || []).filter(k => k !== slot.key);
-                                setEditorModal({ ...editorModal, allowed_slots: newSlots });
-                              }}
-                              className="rounded border-[var(--foreground)]/20 text-primary focus:ring-primary focus:ring-offset-bg bg-[var(--foreground)]/5 w-4 h-4"
-                            />
-                            <span>{slot.label}</span>
-                          </label>
+                          <div key={slot.key} className="space-y-1.5 pb-1 border-b border-[var(--foreground)]/5 last:border-b-0 last:pb-0">
+                            <label className="flex items-center gap-3 cursor-pointer text-xs font-bold text-[var(--foreground)] hover:text-primary transition-colors">
+                              <input 
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={e => {
+                                  const newSlots = e.target.checked 
+                                    ? [...(editorModal.allowed_slots || []), slot.key]
+                                    : (editorModal.allowed_slots || []).filter(k => k !== slot.key);
+                                  setEditorModal({ ...editorModal, allowed_slots: newSlots });
+                                }}
+                                className="rounded border-[var(--foreground)]/20 text-primary focus:ring-primary focus:ring-offset-bg bg-[var(--foreground)]/5 w-4 h-4"
+                              />
+                              <span>{slot.label}</span>
+                            </label>
+                            {isChecked && (
+                              <input 
+                                value={editorModal.custom_slots?.[slot.key] || ""}
+                                onChange={e => {
+                                  const newCustom = { ...(editorModal.custom_slots || {}), [slot.key]: e.target.value };
+                                  setEditorModal({ ...editorModal, custom_slots: newCustom });
+                                }}
+                                placeholder="Override Time (e.g. 6:00 AM – 7:00 AM)"
+                                className="w-full max-w-[280px] bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 p-2 rounded-lg text-[var(--foreground)] outline-none focus:border-primary/50 text-[11px] mt-1 ml-7 block"
+                              />
+                            )}
+                          </div>
                         );
                       })}
                     </div>
@@ -844,7 +878,7 @@ export default function TerritoryWizardPage() {
 
                   <div>
                     <label className="text-[10px] font-black text-primary uppercase tracking-widest block mb-2">Allowed Delivery Slots</label>
-                    <div className="grid grid-cols-1 gap-2.5 bg-[var(--foreground)]/5 p-4 rounded-xl border border-[var(--foreground)]/10">
+                    <div className="grid grid-cols-1 gap-3 bg-[var(--foreground)]/5 p-4 rounded-xl border border-[var(--foreground)]/10">
                       {[
                         { key: "TODAY_AM", label: "Today Morning (10:00 AM – 12:00 PM)" },
                         { key: "TODAY_PM", label: "Today Evening (4:00 PM – 7:00 PM)" },
@@ -852,20 +886,33 @@ export default function TerritoryWizardPage() {
                       ].map(slot => {
                         const isChecked = (editorModal.allowed_slots || []).includes(slot.key);
                         return (
-                          <label key={slot.key} className="flex items-center gap-3 cursor-pointer text-xs font-bold text-[var(--foreground)] hover:text-primary transition-colors">
-                            <input 
-                              type="checkbox"
-                              checked={isChecked}
-                              onChange={e => {
-                                const newSlots = e.target.checked 
-                                  ? [...(editorModal.allowed_slots || []), slot.key]
-                                  : (editorModal.allowed_slots || []).filter(k => k !== slot.key);
-                                setEditorModal({ ...editorModal, allowed_slots: newSlots });
-                              }}
-                              className="rounded border-[var(--foreground)]/20 text-primary focus:ring-primary focus:ring-offset-bg bg-[var(--foreground)]/5 w-4 h-4"
-                            />
-                            <span>{slot.label}</span>
-                          </label>
+                          <div key={slot.key} className="space-y-1.5 pb-1 border-b border-[var(--foreground)]/5 last:border-b-0 last:pb-0">
+                            <label className="flex items-center gap-3 cursor-pointer text-xs font-bold text-[var(--foreground)] hover:text-primary transition-colors">
+                              <input 
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={e => {
+                                  const newSlots = e.target.checked 
+                                    ? [...(editorModal.allowed_slots || []), slot.key]
+                                    : (editorModal.allowed_slots || []).filter(k => k !== slot.key);
+                                  setEditorModal({ ...editorModal, allowed_slots: newSlots });
+                                }}
+                                className="rounded border-[var(--foreground)]/20 text-primary focus:ring-primary focus:ring-offset-bg bg-[var(--foreground)]/5 w-4 h-4"
+                              />
+                              <span>{slot.label}</span>
+                            </label>
+                            {isChecked && (
+                              <input 
+                                value={editorModal.custom_slots?.[slot.key] || ""}
+                                onChange={e => {
+                                  const newCustom = { ...(editorModal.custom_slots || {}), [slot.key]: e.target.value };
+                                  setEditorModal({ ...editorModal, custom_slots: newCustom });
+                                }}
+                                placeholder="Override Time (e.g. 6:00 AM – 7:00 AM)"
+                                className="w-full max-w-[280px] bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 p-2 rounded-lg text-[var(--foreground)] outline-none focus:border-primary/50 text-[11px] mt-1 ml-7 block"
+                              />
+                            )}
+                          </div>
                         );
                       })}
                     </div>

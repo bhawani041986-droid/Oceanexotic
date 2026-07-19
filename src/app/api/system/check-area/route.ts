@@ -109,6 +109,8 @@ export async function GET(request: NextRequest) {
       let delivery_charge = 0;
       let minimum_order = 0;
       let eta_mins = 45;
+      let allowed_slots: string[] = [];
+      let custom_slots: Record<string, string> = {};
 
       if (matchedZone) {
         if (matchedZone.delivery_charge !== undefined && matchedZone.delivery_charge !== null) {
@@ -120,6 +122,17 @@ export async function GET(request: NextRequest) {
           delivery_charge = parseFloat(parts[0]) || 0;
           minimum_order = parseFloat(parts[1]) || 0;
           eta_mins = parseInt(parts[2]) || 45;
+          if (parts[3]) {
+            allowed_slots = parts[3].split('|').map((s: string) => s.trim()).filter(Boolean);
+          }
+          if (parts[4]) {
+            parts[4].split('|').forEach((pair: string) => {
+              const [key, val] = pair.split(':').map((s: string) => s.trim());
+              if (key && val) {
+                custom_slots[key] = val;
+              }
+            });
+          }
         }
       }
 
@@ -130,6 +143,8 @@ export async function GET(request: NextRequest) {
         estimatedMinutes: eta_mins,
         delivery_charge,
         minimum_order,
+        allowed_slots: allowed_slots.length > 0 ? allowed_slots : ['TODAY_AM', 'TODAY_PM', 'TOMORROW'],
+        custom_slots,
         message: matched ? availableMsg : unavailableMsg,
         hubName,
         areaQueried: areaQuery,
