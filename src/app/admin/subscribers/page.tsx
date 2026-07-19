@@ -170,6 +170,8 @@ export default function AdminSubscribersPage() {
                 <TableHeader>
                   <TableRow className="border-[var(--foreground)]/5 bg-[var(--foreground)]/5">
                     <TableHead className="text-[8px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary py-3 md:py-6 pl-4 md:pl-10">Email Node</TableHead>
+                    <TableHead className="text-[8px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Source</TableHead>
+                    <TableHead className="text-[8px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Target Area</TableHead>
                     <TableHead className="text-[8px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Commissioned</TableHead>
                     <TableHead className="text-[8px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Signal</TableHead>
                     <TableHead className="text-right text-[8px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary pr-4 md:pr-10">Control</TableHead>
@@ -185,6 +187,12 @@ export default function AdminSubscribersPage() {
                            </div>
                            <span className="font-black text-[var(--foreground)] italic tracking-tighter text-[10px] md:text-base group-hover/row:text-primary transition-colors">{sub.email}</span>
                         </div>
+                      </TableCell>
+                      <TableCell>
+                        <span className="font-black text-[var(--foreground)] uppercase text-[9px] md:text-[10px] opacity-75">{sub.source || 'newsletter'}</span>
+                      </TableCell>
+                      <TableCell>
+                        <span className="font-black text-primary uppercase text-[9px] md:text-[10px]">{sub.area || 'ALL AREAS'}</span>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-1.5 text-[8px] md:text-xs font-black text-text-secondary italic">
@@ -218,7 +226,7 @@ export default function AdminSubscribersPage() {
                   ))}
                   {filteredSubscribers.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={4} className="py-20 text-center">
+                      <TableCell colSpan={6} className="py-20 text-center">
                         <div className="space-y-4">
                            <div className="text-6xl grayscale opacity-10">🚢</div>
                            <p className="text-[10px] font-black uppercase tracking-widest text-text-secondary italic">No signal nodes detected in this sector.</p>
@@ -235,11 +243,17 @@ export default function AdminSubscribersPage() {
               {filteredSubscribers.map((sub) => (
                 <div key={sub.id} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
                   <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-lg bg-[var(--foreground)]/5 flex items-center justify-center text-text-secondary">
-                        <Mail className="w-3.5 h-3.5" />
+                    <div className="flex flex-col gap-1.5">
+                      <div className="flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-lg bg-[var(--foreground)]/5 flex items-center justify-center text-text-secondary">
+                          <Mail className="w-3.5 h-3.5" />
+                        </div>
+                        <span className="font-black text-[var(--foreground)] italic tracking-tighter text-sm truncate max-w-[150px]">{sub.email}</span>
                       </div>
-                      <span className="font-black text-[var(--foreground)] italic tracking-tighter text-sm truncate max-w-[180px]">{sub.email}</span>
+                      {sub.area && (
+                        <span className="text-[9px] font-black text-primary uppercase tracking-widest pl-8">📍 Waitlist: {sub.area}</span>
+                      )}
+                      <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest pl-8">Source: {sub.source || 'newsletter'}</span>
                     </div>
                     <Badge className={cn("text-[8px] font-black italic uppercase tracking-widest", sub.status === 'ACTIVE' ? "bg-success/10 text-success border-success/20" : "bg-danger/10 text-danger border-danger/20")}>
                       {sub.status || 'ACTIVE'}

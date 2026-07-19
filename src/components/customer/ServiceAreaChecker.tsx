@@ -134,7 +134,7 @@ export function ServiceAreaChecker({ className, compact = false }: ServiceAreaCh
   const handleNotify = async () => {
     if (!notifyEmail.includes("@")) return;
     try {
-      await fetch("/api/newsletter", {
+      await fetch("/api/newsletter/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

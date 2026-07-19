@@ -8,12 +8,11 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 async function test() {
   const { data, error } = await supabase
-    .from('chat_messages')
+    .from('subscribers')
     .select('*')
-    .order('created_at', { ascending: false })
-    .limit(5);
+    .limit(15);
 
-  console.log("Recent messages:", data);
+  console.log("Recent subscribers:", data);
   if (error) console.error("Error:", error);
   process.exit(0);
 }
