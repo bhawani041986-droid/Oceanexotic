@@ -333,7 +333,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
         {/* Removed HOME, MARKET, ORDERS Menu list below search bar */}
       </View>
 
-      {/* Slide-out Left Navigation Drawer */}
+      {/* Slide-out Left Navigation Drawer — Ultra-Stylish Dynamic UI */}
       <Modal
         visible={isMenuOpen}
         transparent
@@ -342,89 +342,138 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
         onRequestClose={() => setIsMenuOpen(false)}
       >
         <View style={{ flex: 1, flexDirection: 'row' }}>
-          {/* Dim backdrop */}
+          {/* Backdrop with smooth dark blur overlay */}
           <Pressable
-            style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: 'rgba(0,0,0,0.55)' }}
+            style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, backgroundColor: 'rgba(2, 6, 23, 0.65)' }}
             onPress={() => setIsMenuOpen(false)}
           />
 
-          {/* Drawer Panel — uses paddingTop to clear status bar */}
+          {/* Drawer Panel */}
           <View
             style={{
-              width: 300,
+              width: 310,
               height: '100%',
-              backgroundColor: '#ffffff',
+              backgroundColor: '#050b14',
               borderRightWidth: 1,
-              borderRightColor: colors.border,
-              shadowColor: '#000',
+              borderRightColor: '#0f2942',
+              shadowColor: '#00D1FF',
               shadowOffset: { width: 4, height: 0 },
-              shadowOpacity: 0.18,
-              shadowRadius: 16,
-              elevation: 24,
-              paddingTop: insets.top + 8,  // real device status bar height + breathing room
+              shadowOpacity: 0.15,
+              shadowRadius: 20,
+              elevation: 25,
+              paddingTop: Math.max(insets.top + 8, 44),
               flexDirection: 'column',
             }}
           >
-            {/* ── HEADER: Logo + close button ── */}
+            {/* ── HEADER: Dynamic Logo + Close Button ── */}
             <View style={{
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
-              paddingHorizontal: 16,
-              paddingBottom: 12,
+              paddingHorizontal: 18,
+              paddingBottom: 14,
               borderBottomWidth: 1,
-              borderBottomColor: colors.border,
+              borderBottomColor: 'rgba(255, 255, 255, 0.06)',
             }}>
               <Pressable onPress={() => navigateTo('/home')}>
-                <Logo size="sm" style={{ width: 148, height: 42 }} />
+                <Logo size="sm" style={{ width: 148, height: 40 }} />
               </Pressable>
               <Pressable
                 onPress={() => setIsMenuOpen(false)}
                 style={{
-                  width: 32, height: 32, borderRadius: 8,
-                  backgroundColor: getRgba(primaryColor, 0.1),
-                  borderWidth: 1, borderColor: getRgba(primaryColor, 0.25),
+                  width: 32, height: 32, borderRadius: 10,
+                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                  borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.12)',
                   alignItems: 'center', justifyContent: 'center',
                 }}
               >
-                <MaterialCommunityIcons name="close" size={18} color={primaryColor} />
+                <MaterialCommunityIcons name="close" size={18} color="#94a3b8" />
               </Pressable>
             </View>
 
-            {/* ── DELIVERY AREA SELECTOR ── */}
+            {/* ── USER PROFILE CARD (Dynamic) ── */}
+            <View style={{
+              marginHorizontal: 16,
+              marginTop: 14,
+              padding: 12,
+              borderRadius: 14,
+              backgroundColor: 'rgba(6, 182, 212, 0.06)',
+              borderWidth: 1,
+              borderColor: 'rgba(6, 182, 212, 0.18)',
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 12,
+            }}>
+              <View style={{
+                width: 38, height: 38, borderRadius: 19,
+                backgroundColor: 'rgba(6, 182, 212, 0.15)',
+                borderWidth: 1.5, borderColor: '#06b6d4',
+                alignItems: 'center', justifyContent: 'center',
+                overflow: 'hidden',
+              }}>
+                {user?.avatar ? (
+                  <Image source={{ uri: resolveMediaUrl(user.avatar) }} style={{ width: '100%', height: '100%' }} contentFit="cover" />
+                ) : (
+                  <MaterialCommunityIcons name="account" size={20} color="#06b6d4" />
+                )}
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontSize: 13, fontWeight: '800', color: '#f8fafc' }} numberOfLines={1}>
+                  {user?.name || "Customer Account"}
+                </Text>
+                <Text style={{ fontSize: 10, fontWeight: '600', color: '#06b6d4' }} numberOfLines={1}>
+                  {user?.email || "Guest Mode"}
+                </Text>
+              </View>
+              <View style={{
+                paddingHorizontal: 7, paddingVertical: 2, borderRadius: 6,
+                backgroundColor: 'rgba(6, 182, 212, 0.15)',
+              }}>
+                <Text style={{ fontSize: 8, fontWeight: '800', color: '#06b6d4', textTransform: 'uppercase' }}>
+                  {user?.role || "GUEST"}
+                </Text>
+              </View>
+            </View>
+
+            {/* ── DELIVERING TO LOCATION SELECTOR ── */}
             <Pressable
               onPress={() => { setIsMenuOpen(false); setIsLocationModalOpen(true); }}
               style={{
+                marginHorizontal: 16,
+                marginTop: 10,
+                paddingHorizontal: 12,
+                paddingVertical: 10,
+                borderRadius: 12,
+                backgroundColor: '#0a1929',
+                borderWidth: 1,
+                borderColor: '#1e3a5f',
                 flexDirection: 'row',
                 alignItems: 'center',
-                marginHorizontal: 16,
-                marginTop: 12,
-                marginBottom: 4,
-                paddingHorizontal: 12,
-                paddingVertical: 9,
-                borderRadius: 10,
-                backgroundColor: getRgba(primaryColor, 0.06),
-                borderWidth: 1,
-                borderColor: getRgba(primaryColor, 0.18),
-                gap: 8,
+                gap: 10,
               }}
             >
-              <MaterialCommunityIcons name="map-marker" size={16} color={primaryColor} />
+              <View style={{
+                width: 28, height: 28, borderRadius: 8,
+                backgroundColor: 'rgba(6, 182, 212, 0.15)',
+                alignItems: 'center', justifyContent: 'center',
+              }}>
+                <MaterialCommunityIcons name="map-marker-radius" size={16} color="#06b6d4" />
+              </View>
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 9, fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: 0.8 }}>
                   Delivering to
                 </Text>
-                <Text style={{ fontSize: 12, fontWeight: '800', color: '#0f172a' }} numberOfLines={1}>
+                <Text style={{ fontSize: 12, fontWeight: '800', color: '#38bdf8' }} numberOfLines={1}>
                   {activeHubName}
                 </Text>
               </View>
-              <MaterialCommunityIcons name="chevron-right" size={16} color={primaryColor} />
+              <MaterialCommunityIcons name="chevron-right" size={16} color="#06b6d4" />
             </Pressable>
 
-            {/* ── DELIVERY AREAS ── */}
-            <View style={{ paddingHorizontal: 16, paddingBottom: 4 }}>
+            {/* ── DELIVERY AREA QUICK CHIPS ── */}
+            <View style={{ paddingHorizontal: 16, marginTop: 10 }}>
               <Text style={{ fontSize: 9, fontWeight: '700', color: '#64748b', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.8 }}>
-                We deliver to these areas:
+                Available Delivery Areas:
               </Text>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
                 {['Atamphad', 'Bhatubasti', 'Dollygunj', 'Minibay'].map((area) => (
@@ -435,31 +484,30 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                       setIsLocationModalOpen(true);
                     }}
                     style={{
-                      paddingHorizontal: 10, paddingVertical: 5,
-                      borderRadius: 20, borderWidth: 1,
-                      borderColor: getRgba(primaryColor, 0.2),
-                      backgroundColor: getRgba(primaryColor, 0.05),
+                      paddingHorizontal: 9, paddingVertical: 4,
+                      borderRadius: 16, borderWidth: 1,
+                      borderColor: 'rgba(6, 182, 212, 0.3)',
+                      backgroundColor: 'rgba(6, 182, 212, 0.08)',
                       flexDirection: 'row', alignItems: 'center', gap: 4,
                     }}
                   >
-                    <Text style={{ fontSize: 11 }}>🚚</Text>
-                    <Text style={{ fontSize: 10, fontWeight: '700', color: primaryColor }}>{area}</Text>
+                    <Text style={{ fontSize: 10 }}>🚚</Text>
+                    <Text style={{ fontSize: 10, fontWeight: '700', color: '#38bdf8' }}>{area}</Text>
                   </Pressable>
                 ))}
               </View>
             </View>
 
-            {/* ── SECTION LABEL ── */}
+            {/* ── NAVIGATION SECTION ── */}
             <Text style={{
-              fontSize: 9, fontWeight: '900', color: '#94a3b8',
+              fontSize: 9, fontWeight: '900', color: '#475569',
               textTransform: 'uppercase', letterSpacing: 1.5,
-              paddingHorizontal: 16, paddingTop: 8, paddingBottom: 6,
+              paddingHorizontal: 18, paddingTop: 14, paddingBottom: 6,
             }}>
-              Quick Links
+              Navigation
             </Text>
 
-            {/* ── NAV ITEMS ── */}
-            <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingHorizontal: 16, gap: 5 }}>
+            <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingHorizontal: 16, gap: 6 }}>
               {MENU_ITEMS.map((item) => {
                 const active = isItemActive(item.href);
                 return (
@@ -469,38 +517,38 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                     style={{
                       flexDirection: 'row',
                       alignItems: 'center',
-                      paddingHorizontal: 12,
-                      paddingVertical: 10,
-                      borderRadius: 10,
-                      backgroundColor: active ? getRgba(primaryColor, 0.08) : '#f8fafc',
+                      paddingHorizontal: 14,
+                      paddingVertical: 11,
+                      borderRadius: 12,
+                      backgroundColor: active ? 'rgba(6, 182, 212, 0.12)' : '#071526',
                       borderWidth: 1,
-                      borderColor: active ? getRgba(primaryColor, 0.2) : '#e2e8f0',
-                      gap: 10,
+                      borderColor: active ? 'rgba(6, 182, 212, 0.35)' : '#0f2742',
+                      gap: 12,
                     }}
                   >
                     <View style={{
-                      width: 28, height: 28, borderRadius: 8,
-                      backgroundColor: active ? getRgba(primaryColor, 0.15) : '#f1f5f9',
+                      width: 30, height: 30, borderRadius: 8,
+                      backgroundColor: active ? 'rgba(6, 182, 212, 0.25)' : '#0d2238',
                       alignItems: 'center', justifyContent: 'center',
                     }}>
                       <MaterialCommunityIcons
                         name={item.icon as any}
-                        size={15}
-                        color={active ? primaryColor : '#64748b'}
+                        size={16}
+                        color={active ? '#06b6d4' : '#64748b'}
                       />
                     </View>
                     <Text style={{
                       flex: 1,
                       fontSize: 12,
                       fontWeight: '700',
-                      color: active ? primaryColor : '#334155',
+                      color: active ? '#ffffff' : '#cbd5e1',
                     }}>
                       {t(item.label.toLowerCase().replace('my orders', 'my_orders').replace('chat with us', 'chat').replace('recipes', 'view_recipes'))}
                     </Text>
                     <MaterialCommunityIcons
                       name="chevron-right"
                       size={14}
-                      color={active ? primaryColor : '#94a3b8'}
+                      color={active ? '#06b6d4' : '#475569'}
                     />
                   </Pressable>
                 );
@@ -516,22 +564,22 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                 style={{
                   flexDirection: 'row',
                   alignItems: 'center',
-                  paddingHorizontal: 12,
-                  paddingVertical: 10,
-                  borderRadius: 10,
-                  backgroundColor: 'rgba(239,68,68,0.05)',
+                  paddingHorizontal: 14,
+                  paddingVertical: 11,
+                  borderRadius: 12,
+                  backgroundColor: 'rgba(239, 68, 68, 0.08)',
                   borderWidth: 1,
-                  borderColor: 'rgba(239,68,68,0.15)',
-                  gap: 10,
-                  marginTop: 8,
+                  borderColor: 'rgba(239, 68, 68, 0.25)',
+                  gap: 12,
+                  marginTop: 6,
                 }}
               >
                 <View style={{
-                  width: 28, height: 28, borderRadius: 8,
-                  backgroundColor: 'rgba(239,68,68,0.1)',
+                  width: 30, height: 30, borderRadius: 8,
+                  backgroundColor: 'rgba(239, 68, 68, 0.15)',
                   alignItems: 'center', justifyContent: 'center',
                 }}>
-                  <MaterialCommunityIcons name="logout" size={15} color="#ef4444" />
+                  <MaterialCommunityIcons name="logout" size={16} color="#ef4444" />
                 </View>
                 <Text style={{ flex: 1, fontSize: 12, fontWeight: '700', color: '#ef4444' }}>
                   Sign Out
@@ -545,10 +593,10 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               paddingHorizontal: 16,
               paddingVertical: 14,
               borderTopWidth: 1,
-              borderTopColor: colors.border,
+              borderTopColor: 'rgba(255, 255, 255, 0.06)',
             }}>
-              <Text style={{ fontSize: 9, fontWeight: '700', color: '#94a3b8', textAlign: 'center', letterSpacing: 0.8 }}>
-                📍 Sri Vijayapuram Hub  •  Delivery Radius: 8 km
+              <Text style={{ fontSize: 9, fontWeight: '700', color: '#475569', textAlign: 'center', letterSpacing: 0.8 }}>
+                📍 Sri Vijayapuram Hub  •  OceanExotic v1.4
               </Text>
             </View>
           </View>
