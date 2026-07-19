@@ -28,11 +28,13 @@ export function toAuthUser(raw: {
   name: string;
   email: string;
   role: string;
+  avatar?: string;
 }): User {
   return {
     id: String(raw.id),
     name: raw.name,
     email: raw.email,
     role: normalizeRole(raw.role),
+    avatar: raw.avatar,
   };
 }

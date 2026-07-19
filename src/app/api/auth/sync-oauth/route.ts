@@ -25,6 +25,7 @@ export async function POST(request: Request) {
 
     const email = user.email;
     const name = user.user_metadata?.full_name || user.user_metadata?.name || email.split('@')[0];
+    const avatar = user.user_metadata?.avatar_url || user.user_metadata?.picture || null;
 
     // Check if user exists in our public schema
     let { data: dbUser } = await supabase
@@ -41,6 +42,7 @@ export async function POST(request: Request) {
         .insert({
           email: email,
           name: name,
+          avatar: avatar,
           role: 'customer',
           status: 'ACTIVE',
           password: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
@@ -55,6 +57,15 @@ export async function POST(request: Request) {
       isNewUser = true;
     } else if (dbUser.status === 'INACTIVE' || dbUser.status === 'PENDING') {
       return NextResponse.json({ success: false, message: "Account Suspended" }, { status: 403 });
+    } else if (avatar && !dbUser.avatar) {
+      // Update existing user with avatar if they didn't have one
+      const { data: updatedUser } = await supabase
+        .from('users')
+        .update({ avatar })
+        .eq('id', dbUser.id)
+        .select()
+        .single();
+      if (updatedUser) dbUser = updatedUser;
     }
 
     // Generate custom JWT/token for the app
@@ -74,7 +85,8 @@ export async function POST(request: Request) {
         id: dbUser.id,
         name: dbUser.name,
         email: dbUser.email,
-        role: dbUser.role.toLowerCase()
+        role: dbUser.role.toLowerCase(),
+        avatar: dbUser.avatar
       },
       redirectUrl
     });
@@ -85,7 +97,8 @@ export async function POST(request: Request) {
       id: dbUser.id,
       name: dbUser.name,
       email: dbUser.email,
-      role: dbUser.role.toLowerCase()
+      role: dbUser.role.toLowerCase(),
+      avatar: dbUser.avatar
     }), { path: '/', maxAge: 60 * 60 * 24 * 7 });
 
     return response;
