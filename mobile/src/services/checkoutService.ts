@@ -12,6 +12,8 @@ export interface SavedAddress {
   address_line1?: string;
   phone: string;
   is_default: boolean | number;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface PlaceOrderPayload {

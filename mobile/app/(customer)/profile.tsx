@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { useToast } from "@/components/ui/Toast";
 import { checkoutService, type SavedAddress } from "@/services/checkoutService";
+import { AddressMapPicker } from "@/components/customer/AddressMapPicker";
 import { cn } from "@/lib/utils";
 import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
@@ -63,6 +64,8 @@ export default function ProfileScreen() {
   const [addrLine, setAddrLine] = useState("");
   const [addrPhone, setAddrPhone] = useState("");
   const [addrDefault, setAddrDefault] = useState(true);
+  const [addrLat, setAddrLat] = useState<number | undefined>(undefined);
+  const [addrLng, setAddrLng] = useState<number | undefined>(undefined);
 
   const loadData = async () => {
     if (!user?.id) return;
@@ -203,6 +206,8 @@ export default function ProfileScreen() {
         address: addrLine,
         phone: addrPhone,
         is_default: addrDefault ? 1 : 0,
+        latitude: addrLat,
+        longitude: addrLng,
       });
       toast("Address commissioned to vault", "success");
       setAddressModalVisible(false);
@@ -213,6 +218,8 @@ export default function ProfileScreen() {
       setAddrPhone("");
       setAddrType("HOME");
       setAddrDefault(true);
+      setAddrLat(undefined);
+      setAddrLng(undefined);
       // Reload address vault list
       const freshList = await checkoutService.fetchAddresses(user.id);
       setAddresses(freshList);
@@ -613,6 +620,17 @@ export default function ProfileScreen() {
                         <Text className="text-[11px] font-semibold text-slate-600">{addr.phone}</Text>
                       </View>
                     </View>
+                    {addr.latitude && addr.longitude ? (
+                      <View className="mt-2.5 flex-row items-center gap-1.5 px-2.5 py-1 rounded bg-teal-500/10 border border-teal-500/20 self-start">
+                        <Svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={colors.primary} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <Path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z" />
+                          <Circle cx="12" cy="10" r="3" />
+                        </Svg>
+                        <Text className="text-[9px] font-black text-teal-600 uppercase tracking-widest">
+                          GPS: {Number(addr.latitude).toFixed(4)}, {Number(addr.longitude).toFixed(4)}
+                        </Text>
+                      </View>
+                    ) : null}
                   </View>
                 ))}
               </View>
@@ -723,6 +741,27 @@ export default function ProfileScreen() {
                   </Pressable>
                 ))}
               </View>
+            </View>
+
+            <View className="mb-4">
+              <Text 
+                className="mb-2 text-[10px] font-black uppercase tracking-widest" 
+                style={{ color: colors.text }}
+              >
+                Pinpoint Map Location
+              </Text>
+              <AddressMapPicker
+                onLocationSelect={(lat, lng) => {
+                  setAddrLat(lat);
+                  setAddrLng(lng);
+                }}
+                primaryColor={primaryColor}
+              />
+              {addrLat && addrLng ? (
+                <Text className="text-[10px] font-bold text-teal-600 mb-2">
+                  ✓ Selected Coordinates: {addrLat}, {addrLng}
+                </Text>
+              ) : null}
             </View>
 
             <View className="mb-4">
