@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { View, Text, Pressable, TextInput, Modal, StyleSheet, ScrollView } from "react-native";
 import { useRouter, usePathname } from "expo-router";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path, Circle, Polygon } from "react-native-svg";
 import { Image } from "expo-image";
 import { Logo } from "@/components/ui/Logo";
@@ -95,6 +95,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
   }, [user?.id, setUnreadCount]);
 
   const colors = useThemeColors();
+  const insets = useSafeAreaInsets();
   const primaryColor = colors.primary;
   const currentLanguage = useSettingsStore((s) => s.language); // trigger re-render on language change
 
@@ -360,7 +361,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               shadowOpacity: 0.18,
               shadowRadius: 16,
               elevation: 24,
-              paddingTop: 44,         // clears iOS status bar; on Android statusBarTranslucent handles it
+              paddingTop: insets.top + 8,  // real device status bar height + breathing room
               flexDirection: 'column',
             }}
           >
