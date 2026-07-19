@@ -14,6 +14,8 @@ export interface SavedAddress {
   is_default: boolean | number;
   latitude?: number;
   longitude?: number;
+  landmark?: string;
+  zone?: string;
 }
 
 export interface PlaceOrderPayload {

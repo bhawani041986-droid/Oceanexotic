@@ -36,7 +36,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { user_id, type, hotel_name, room_no, jetty, address, phone, is_default, latitude, longitude } = body;
+    const { user_id, type, hotel_name, room_no, jetty, address, phone, is_default, latitude, longitude, landmark, zone } = body;
 
     if (!user_id || !address) return NextResponse.json({ error: "Missing Coordinate Nodes" }, { status: 400 });
 
@@ -45,13 +45,15 @@ export async function POST(request: Request) {
       await supabase.from('user_addresses').update({ is_default: 0 }).eq('user_id', user_id);
     }
 
+    const fullAddress = landmark ? `${address} (Landmark: ${landmark})` : address;
+
     const insertPayload: any = {
       user_id,
       label: type || 'HOME',
       hotel_name: hotel_name || '',
       room_no: room_no || '',
-      jetty: jetty || '',
-      address_line1: address,
+      jetty: jetty || zone || '',
+      address_line1: fullAddress,
       phone: phone || '',
       is_default: is_default ? 1 : 0
     };

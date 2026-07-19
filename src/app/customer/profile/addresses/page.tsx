@@ -27,6 +27,7 @@ export default function CustomerAddressesPage() {
   // Form Fields
   const [type, setType] = useState("HOME");
   const [zone, setZone] = useState("Dollygunj (Zone 2)");
+  const [landmark, setLandmark] = useState("");
   const [hotelName, setHotelName] = useState("");
   const [roomNo, setRoomNo] = useState("");
   const [jetty, setJetty] = useState("Phoenix Bay Jetty");
@@ -91,6 +92,8 @@ export default function CustomerAddressesPage() {
           is_default: isDefault,
           latitude: lat,
           longitude: lng,
+          landmark,
+          zone,
         }),
       });
 
@@ -98,6 +101,7 @@ export default function CustomerAddressesPage() {
       setHotelName("");
       setRoomNo("");
       setAddressLine("");
+      setLandmark("");
       setPhone("");
       fetchAddresses();
     } catch (e) {
@@ -223,7 +227,7 @@ export default function CustomerAddressesPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm animate-fade-in">
           <div className="w-full max-w-lg bg-[#0f172a] border border-slate-700 rounded-2xl p-6 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-lg font-black uppercase tracking-tight text-white italic">Register Delivery Node</h3>
+              <h3 className="text-lg font-black uppercase tracking-tight text-white italic">Add Address</h3>
               <button onClick={() => setModalOpen(false)} className="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white">
                 <X className="w-4 h-4" />
               </button>
@@ -255,13 +259,28 @@ export default function CustomerAddressesPage() {
                 <WebAddressMapPicker
                   initialLat={lat}
                   initialLng={lng}
-                  onLocationSelect={(nLat, nLng, addressName) => {
+                  onLocationSelect={(nLat, nLng, addressName, nLandmark) => {
                     setLat(nLat);
                     setLng(nLng);
+                    if (nLandmark) setLandmark(nLandmark);
                     if (addressName && !addressLine) {
                       setAddressLine(addressName);
                     }
                   }}
+                />
+              </div>
+
+              {/* Nearby Landmark / Hotspot */}
+              <div>
+                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-1">
+                  Nearby Landmark / Hotspot (Auto-detected)
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Phoenix Bay Jetty / Aberdeen Clock Tower"
+                  value={landmark}
+                  onChange={(e) => setLandmark(e.target.value)}
+                  className="w-full h-11 px-3 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:border-primary"
                 />
               </div>
 

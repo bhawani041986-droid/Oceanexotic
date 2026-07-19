@@ -59,6 +59,7 @@ export default function ProfileScreen() {
   // New Address Form Fields
   const [addrType, setAddrType] = useState("HOME");
   const [addrZone, setAddrZone] = useState("Dollygunj (Zone 2)");
+  const [addrLandmark, setAddrLandmark] = useState("");
   const [addrHotel, setAddrHotel] = useState("");
   const [addrRoom, setAddrRoom] = useState("");
   const [addrJetty, setAddrJetty] = useState("Phoenix Bay Jetty");
@@ -209,6 +210,8 @@ export default function ProfileScreen() {
         is_default: addrDefault ? 1 : 0,
         latitude: addrLat,
         longitude: addrLng,
+        landmark: addrLandmark,
+        zone: addrZone,
       });
       toast("Address commissioned to vault", "success");
       setAddressModalVisible(false);
@@ -216,6 +219,7 @@ export default function ProfileScreen() {
       setAddrHotel("");
       setAddrRoom("");
       setAddrLine("");
+      setAddrLandmark("");
       setAddrPhone("");
       setAddrType("HOME");
       setAddrDefault(true);
@@ -706,7 +710,7 @@ export default function ProfileScreen() {
           >
             <View className="mb-6 flex-row items-center justify-between">
               <Text className="text-xl font-black uppercase italic" style={{ color: colors.text }}>
-                Register Node
+                Add Address
               </Text>
               <Pressable
                 onPress={() => setAddressModalVisible(false)}
@@ -784,9 +788,10 @@ export default function ProfileScreen() {
                 Pinpoint Map Location
               </Text>
               <AddressMapPicker
-                onLocationSelect={(lat, lng, addressName) => {
+                onLocationSelect={(lat, lng, addressName, landmark) => {
                   setAddrLat(lat);
                   setAddrLng(lng);
+                  if (landmark) setAddrLandmark(landmark);
                   if (addressName && !addrLine) {
                     setAddrLine(addressName);
                   }
@@ -798,6 +803,17 @@ export default function ProfileScreen() {
                   ✓ Selected Coordinates: {addrLat}, {addrLng}
                 </Text>
               ) : null}
+            </View>
+
+            <View className="mb-4">
+              <Text className="mb-1 text-[10px] font-black uppercase" style={{ color: colors.text }}>
+                Nearby Landmark / Hotspot (Auto-detected)
+              </Text>
+              <Input
+                placeholder="e.g. Phoenix Bay Jetty / Aberdeen Clock Tower"
+                value={addrLandmark}
+                onChangeText={setAddrLandmark}
+              />
             </View>
 
             <View className="mb-4">

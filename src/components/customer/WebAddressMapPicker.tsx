@@ -6,7 +6,31 @@ import { MapPin, Navigation, Maximize2, Minimize2, Search } from "lucide-react";
 interface WebAddressMapPickerProps {
   initialLat?: number;
   initialLng?: number;
-  onLocationSelect: (lat: number, lng: number, addressName?: string) => void;
+  onLocationSelect: (lat: number, lng: number, addressName?: string, landmark?: string) => void;
+}
+
+const PORT_BLAIR_LANDMARKS = [
+  { name: 'Phoenix Bay Jetty', lat: 11.6744, lng: 92.7365 },
+  { name: 'Dollygunj Junction & Hub', lat: 11.6350, lng: 92.7079 },
+  { name: 'Aberdeen Clock Tower', lat: 11.6710, lng: 92.7410 },
+  { name: 'Junglighat Fish Landing', lat: 11.6605, lng: 92.7280 },
+  { name: 'Haddo Port', lat: 11.6826, lng: 92.7202 },
+  { name: 'Bhatubasti Market', lat: 11.6320, lng: 92.7260 },
+  { name: 'Minibay Junction', lat: 11.6210, lng: 92.7150 },
+  { name: 'Atamphad Crossing', lat: 11.6370, lng: 92.7030 }
+];
+
+function findNearestLandmark(lat: number, lng: number): string {
+  let minDistance = Infinity;
+  let nearestName = 'Port Blair Landmark';
+  PORT_BLAIR_LANDMARKS.forEach((lm) => {
+    const d = Math.sqrt(Math.pow(lat - lm.lat, 2) + Math.pow(lng - lm.lng, 2));
+    if (d < minDistance) {
+      minDistance = d;
+      nearestName = lm.name;
+    }
+  });
+  return nearestName;
 }
 
 export const WebAddressMapPicker: React.FC<WebAddressMapPickerProps> = ({
@@ -17,7 +41,7 @@ export const WebAddressMapPicker: React.FC<WebAddressMapPickerProps> = ({
   const [lat, setLat] = useState<number>(initialLat);
   const [lng, setLng] = useState<number>(initialLng);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
-  const [layerType, setLayerType] = useState<"y" | "m">("y"); // 'y' = Google Hybrid, 'm' = Streets
+  const [layerType, setLayerType] = useState<"y" | "m">("y");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searching, setSearching] = useState(false);
@@ -26,9 +50,10 @@ export const WebAddressMapPicker: React.FC<WebAddressMapPickerProps> = ({
   const triggerSelect = (newLat: number, newLng: number, name?: string) => {
     const formattedLat = Number(newLat.toFixed(6));
     const formattedLng = Number(newLng.toFixed(6));
+    const landmark = findNearestLandmark(formattedLat, formattedLng);
     setLat(formattedLat);
     setLng(formattedLng);
-    onLocationSelect(formattedLat, formattedLng, name);
+    onLocationSelect(formattedLat, formattedLng, name, landmark);
   };
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -167,9 +192,9 @@ export const WebAddressMapPicker: React.FC<WebAddressMapPickerProps> = ({
             <body>
               <div id="map"></div>
               <script>
-                var map = L.map('map', { zoomControl: false }).setView([${lat}, ${lng}], 16);
+                var map = L.map('map', { zoomControl: false }).setView([${lat}], [${lng}], 16);
                 L.tileLayer('https://mt1.google.com/vt/lyrs=${layerType}&x={x}&y={y}&z={z}', { maxZoom: 19 }).addTo(map);
-                var marker = L.marker([${lat}, ${lng}], { draggable: true }).addTo(map);
+                var marker = L.marker([${lat}], [${lng}], { draggable: true }).addTo(map);
                 
                 marker.on('dragend', function(e) {
                   var pos = marker.getLatLng();
@@ -200,7 +225,7 @@ export const WebAddressMapPicker: React.FC<WebAddressMapPickerProps> = ({
 
       <div className="flex items-center justify-between text-[10px] font-bold text-teal-400 px-1">
         <span>📍 Coordinates Locked: {lat}, {lng}</span>
-        <span className="text-slate-500">Google Hybrid Satellite + Buildings</span>
+        <span className="text-slate-400">Nearest Landmark: {findNearestLandmark(lat, lng)}</span>
       </div>
     </div>
   );

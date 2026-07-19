@@ -6,7 +6,7 @@ import Svg, { Path, Circle } from "react-native-svg";
 interface AddressMapPickerProps {
   initialLat?: number;
   initialLng?: number;
-  onLocationSelect: (lat: number, lng: number, addressName?: string) => void;
+  onLocationSelect: (lat: number, lng: number, addressName?: string, landmark?: string) => void;
   primaryColor?: string;
 }
 
@@ -148,6 +148,30 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
       <div id="map"></div>
 
       <script>
+        var PORT_BLAIR_LANDMARKS = [
+          { name: 'Phoenix Bay Jetty', lat: 11.6744, lng: 92.7365 },
+          { name: 'Dollygunj Junction & Hub', lat: 11.6350, lng: 92.7079 },
+          { name: 'Aberdeen Clock Tower', lat: 11.6710, lng: 92.7410 },
+          { name: 'Junglighat Fish Landing', lat: 11.6605, lng: 92.7280 },
+          { name: 'Haddo Port', lat: 11.6826, lng: 92.7202 },
+          { name: 'Bhatubasti Market', lat: 11.6320, lng: 92.7260 },
+          { name: 'Minibay Junction', lat: 11.6210, lng: 92.7150 },
+          { name: 'Atamphad Crossing', lat: 11.6370, lng: 92.7030 }
+        ];
+
+        function findNearestLandmark(lat, lng) {
+          var minDistance = Infinity;
+          var nearestName = 'Port Blair Landmark';
+          PORT_BLAIR_LANDMARKS.forEach(function(lm) {
+            var d = Math.sqrt(Math.pow(lat - lm.lat, 2) + Math.pow(lng - lm.lng, 2));
+            if (d < minDistance) {
+              minDistance = d;
+              nearestName = lm.name;
+            }
+          });
+          return nearestName;
+        }
+
         var map = L.map('map', { 
           zoomControl: false,
           touchZoom: true,
@@ -188,12 +212,14 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
         var marker = L.marker([${defaultLat}, ${defaultLng}], { icon: customIcon, draggable: true }).addTo(map);
 
         function sendCoords(lat, lng, name) {
+          var landmark = findNearestLandmark(lat, lng);
           if (window.ReactNativeWebView) {
             window.ReactNativeWebView.postMessage(JSON.stringify({ 
               type: 'COORDINATES_SELECTED', 
               lat: lat, 
               lng: lng,
-              name: name || '' 
+              name: name || '',
+              landmark: landmark
             }));
           }
         }
@@ -302,7 +328,8 @@ export const AddressMapPicker: React.FC<AddressMapPickerProps> = ({
         onLocationSelect(
           Number(data.lat.toFixed(6)),
           Number(data.lng.toFixed(6)),
-          data.name
+          data.name,
+          data.landmark
         );
       }
     } catch {
@@ -373,8 +400,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#334155",
     marginBottom: 16,
-    transitionProperty: "height",
-    transitionDuration: "300ms",
   },
   containerExpanded: {
     height: 480,
