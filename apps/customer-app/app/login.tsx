@@ -49,7 +49,7 @@ export default function LoginScreen() {
   const { login } = useAuthStore();
   const loginMutation = useLogin();
   const { toast, ToastHost } = useToast();
-  const { handleGoogleSignIn } = useGoogleAuth();
+  const { handleGoogleSignIn, isGoogleLoading } = useGoogleAuth();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
   
@@ -282,12 +282,26 @@ export default function LoginScreen() {
                 {/* Google Auth Button */}
                 <Pressable 
                   onPress={handleGoogleSignIn}
-                  className="w-full h-14 bg-[#0a1929] border border-[#1a3852] rounded-xl flex-row items-center justify-center gap-3 active:opacity-80"
+                  disabled={isGoogleLoading}
+                  className={`w-full h-14 bg-[#0a1929] border border-[#1a3852] rounded-xl flex-row items-center justify-center gap-3 ${
+                    isGoogleLoading ? 'opacity-60' : 'active:opacity-80'
+                  }`}
                 >
-                  <GoogleIcon />
-                  <Text className="text-white font-semibold text-[13px] tracking-wide">
-                    {t('continue_with_google') || "Continue with Google"}
-                  </Text>
+                  {isGoogleLoading ? (
+                    <>
+                      <Ionicons name="sync-outline" size={18} color="#06b6d4" />
+                      <Text className="text-[#06b6d4] font-semibold text-[13px] tracking-wide">
+                        Signing you in…
+                      </Text>
+                    </>
+                  ) : (
+                    <>
+                      <GoogleIcon />
+                      <Text className="text-white font-semibold text-[13px] tracking-wide">
+                        {t('continue_with_google') || "Continue with Google"}
+                      </Text>
+                    </>
+                  )}
                 </Pressable>
 
                 {/* Sign Up Link */}

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Platform, Alert } from 'react-native';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
@@ -6,146 +7,177 @@ import { useAuthStore } from '@/store/authStore';
 import { setAuthToken, setAuthUser } from '@/lib/storage';
 import { toAuthUser, getPostLoginRoute } from '@/lib/auth/roles';
 import { FULL_API_URL } from '@/config/api';
-import * as WebBrowser from "expo-web-browser";
-import * as Linking from "expo-linking";
-import Constants, { ExecutionEnvironment } from "expo-constants";
+import * as WebBrowser from 'expo-web-browser';
+import * as Linking from 'expo-linking';
+import Constants from 'expo-constants';
 
+// Needed for the in-app browser session to close cleanly after OAuth redirect
 WebBrowser.maybeCompleteAuthSession();
 
-// Conditionally require GoogleSignin so Expo Go does not crash
-let GoogleSigninNative: any = null;
-let NativeStatusCodes: any = {};
-const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
+// Detect if we are running inside Expo Go (store client)
+// executionEnvironment === 'storeClient' means Expo Go
+const isExpoGo = Constants.executionEnvironment === 'storeClient';
 
-if (!isExpoGo && Platform.OS !== "web") {
+// Lazily load the native module only on real builds — avoids crash in Expo Go
+let GoogleSignin: any = null;
+let statusCodes: any = {};
+
+if (!isExpoGo && Platform.OS !== 'web') {
   try {
-    const GoogleAuthModule = require("@react-native-google-signin/google-signin");
-    GoogleSigninNative = GoogleAuthModule.GoogleSignin;
-    NativeStatusCodes = GoogleAuthModule.statusCodes || {};
-    
-    GoogleSigninNative.configure({
+    const mod = require('@react-native-google-signin/google-signin');
+    GoogleSignin = mod.GoogleSignin;
+    statusCodes = mod.statusCodes ?? {};
+
+    GoogleSignin.configure({
+      // Replace with your actual web client ID from Google Cloud Console
       webClientId: '843916088941-9kbsr70p54u5ob8spu816grl17bq3enq.apps.googleusercontent.com',
       offlineAccess: true,
     });
-  } catch (err) {
-    console.warn("Failed to initialize GoogleSignin:", err);
+  } catch (e) {
+    console.warn('[GoogleAuth] Native module not available:', e);
   }
+}
+
+const SUPABASE_URL = 'https://kyqmhibffbwoqlpdplfu.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cW1oaWJmZmJ3b3FscGRwbGZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1OTY4NzQsImV4cCI6MjA5NjE3Mjg3NH0.hZ1WiT_8CX4O85mWVhtpFLrGxCGSSTPL1sS-Q6z5L9g';
+
+async function exchangeIdTokenWithSupabase(idToken: string): Promise<string> {
+  const res = await axios.post(
+    `${SUPABASE_URL}/auth/v1/token?grant_type=id_token`,
+    { provider: 'google', id_token: idToken },
+    {
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+  const token = res.data?.access_token;
+  if (!token) throw new Error('No access_token returned from Supabase');
+  return token;
+}
+
+async function syncOAuthUser(supabaseToken: string) {
+  const res = await axios.post(`${FULL_API_URL}/auth/sync-oauth`, {
+    access_token: supabaseToken,
+  });
+  if (!res.data?.success) {
+    throw new Error(res.data?.message || 'Failed to sync OAuth user with backend');
+  }
+  return res.data;
 }
 
 export function useGoogleAuth() {
   const { toast } = useToast();
   const router = useRouter();
   const { login } = useAuthStore();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleGoogleSignIn = async () => {
     if (Platform.OS === 'web') {
-      toast("Native Google Sign-In is active. Use the web app for web login.", "error");
+      toast('Please use the web app for browser login.', 'error');
       return;
     }
-    
+
+    setIsLoading(true);
+
     try {
-      if (isExpoGo || !GoogleSigninNative) {
-        // EXPO GO FALLBACK
-        const redirectUrl = Linking.createURL("oauth-callback");
-        const proxyUrl = `https://oceanexotic.com/mobile-auth?expoUrl=${encodeURIComponent(redirectUrl)}`;
-        const authUrl = `https://kyqmhibffbwoqlpdplfu.supabase.co/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(proxyUrl)}`;
-        
-        const result = await WebBrowser.openAuthSessionAsync(authUrl, redirectUrl);
-        
-        if (result.type === "success" && result.url) {
-          const hashIndex = result.url.indexOf('#');
-          if (hashIndex !== -1) {
-            const hash = result.url.substring(hashIndex + 1);
-            const params = new URLSearchParams(hash);
-            const accessToken = params.get('access_token');
-            
-            if (accessToken) {
-              const syncResponse = await axios.post(`${FULL_API_URL}/auth/sync-oauth`, { access_token: accessToken });
-              if (syncResponse.data.success) {
-                const { token, user } = syncResponse.data;
-                const authUser = toAuthUser(user);
-                await setAuthToken(token);
-                await setAuthUser(authUser);
-                login(authUser);
-                router.replace(getPostLoginRoute(authUser.role) as never);
-                toast(`Welcome back, ${authUser.name}!`, "success");
-              } else {
-                toast(syncResponse.data.message || "Failed to sync OAuth token.", "error");
-              }
-            }
-          }
-        } else if (result.type === 'cancel' || result.type === 'dismiss') {
-          toast("Login cancelled", "error");
+      // ── PATH A: Native Google Sign-In (Production APK / AAB) ──────────────
+      if (!isExpoGo && GoogleSignin) {
+        await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+        const response = await GoogleSignin.signIn();
+
+        if (response.type === 'cancelled') {
+          toast('Sign in was cancelled.', 'error');
+          return;
         }
+
+        if (response.type !== 'success' || !response.data?.idToken) {
+          toast('Could not get Google credentials. Please try again.', 'error');
+          return;
+        }
+
+        const supabaseToken = await exchangeIdTokenWithSupabase(response.data.idToken);
+        const { token, user } = await syncOAuthUser(supabaseToken);
+
+        const authUser = toAuthUser(user);
+        await setAuthToken(token);
+        await setAuthUser(authUser);
+        login(authUser);
+
+        toast(`Welcome, ${authUser.name}! 👋`, 'success');
+        router.replace(getPostLoginRoute(authUser.role) as never);
         return;
       }
 
-      // TRUE NATIVE FLOW
-      await GoogleSigninNative.hasPlayServices({ showPlayServicesUpdateDialog: true });
-      const response = await GoogleSigninNative.signIn();
-      
-      if (response.type === 'success' && response.data?.idToken) {
-        const idToken = response.data.idToken;
-        const SUPABASE_URL = "https://kyqmhibffbwoqlpdplfu.supabase.co";
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt5cW1oaWJmZmJ3b3FscGRwbGZ1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4MDU5Njg3NCwiZXhwIjoyMDk2MTcyODc0fQ.kEpSJdXULNm_9lzXE6UvqIXPc2L-UB38BFwVhR9OcPs";
+      // ── PATH B: Expo Go fallback — in-app browser session ─────────────────
+      // This path only runs inside Expo Go during development testing.
+      // The in-app WebBrowser session stays INSIDE the app — it does NOT open
+      // the system browser. When auth completes, the redirect URL brings the
+      // user back to the oauth-callback screen automatically.
+      const redirectUrl = Linking.createURL('oauth-callback');
+      const proxyUrl = `https://oceanexotic.com/mobile-auth?expoUrl=${encodeURIComponent(redirectUrl)}`;
+      const authUrl = `${SUPABASE_URL}/auth/v1/authorize?provider=google&redirect_to=${encodeURIComponent(proxyUrl)}`;
 
-        const sbResponse = await axios.post(
-          `${SUPABASE_URL}/auth/v1/token?grant_type=id_token`,
-          {
-            provider: "google",
-            id_token: idToken,
-          },
-          {
-            headers: { 
-              "apikey": SUPABASE_ANON_KEY,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+      const result = await WebBrowser.openAuthSessionAsync(authUrl, redirectUrl, {
+        showInRecents: false,
+        createTask: false,          // Android: keeps session in same task, no new tab
+        preferEphemeralSession: true, // iOS: no cookie carryover, cleaner UX
+      });
 
-        const supabaseToken = sbResponse.data.access_token;
-        
-        if (supabaseToken) {
-          const syncResponse = await axios.post(`${FULL_API_URL}/auth/sync-oauth`, {
-            access_token: supabaseToken
-          });
-          
-          if (syncResponse.data.success) {
-            const { token, user } = syncResponse.data;
-            const authUser = toAuthUser(user);
-            await setAuthToken(token);
-            await setAuthUser(authUser);
-            login(authUser);
-            
-            const destination = getPostLoginRoute(authUser.role);
-            router.replace(destination as never);
-            toast(`Welcome back, ${authUser.name}!`, "success");
-          } else {
-            throw new Error(syncResponse.data.message || "Failed to sync OAuth user");
-          }
-        }
-      } else if (response.type === 'cancelled') {
-        toast("Login cancelled", "error");
-      } else {
-        Alert.alert("Google Sign In", `Response returned: ${response.type}`);
+      if (result.type === 'cancel' || result.type === 'dismiss') {
+        toast('Sign in was cancelled.', 'error');
+        return;
       }
+
+      if (result.type !== 'success' || !result.url) {
+        toast('Something went wrong during sign in. Please try again.', 'error');
+        return;
+      }
+
+      // Parse access_token from the hash fragment in the redirect URL
+      const hashIndex = result.url.indexOf('#');
+      if (hashIndex === -1) {
+        toast('Invalid response from Google. Please try again.', 'error');
+        return;
+      }
+
+      const params = new URLSearchParams(result.url.substring(hashIndex + 1));
+      const accessToken = params.get('access_token');
+
+      if (!accessToken) {
+        toast('Could not retrieve your sign-in token. Please try again.', 'error');
+        return;
+      }
+
+      const { token, user } = await syncOAuthUser(accessToken);
+      const authUser = toAuthUser(user);
+      await setAuthToken(token);
+      await setAuthUser(authUser);
+      login(authUser);
+
+      toast(`Welcome, ${authUser.name}! 👋`, 'success');
+      router.replace(getPostLoginRoute(authUser.role) as never);
+
     } catch (err: any) {
-      console.error("Google login failed:", err);
-      const responseError = err.response?.data ? JSON.stringify(err.response.data) : null;
-      const exactError = responseError || (err.code ? `Code: ${err.code}` : err.message);
-      Alert.alert("Google Error", `Details: ${exactError}`);
-      
-      if (err.code === NativeStatusCodes.SIGN_IN_CANCELLED) {
-        toast("Login cancelled", "error");
-      } else if (err.code === NativeStatusCodes.IN_PROGRESS) {
-        toast("Login already in progress", "error");
-      } else if (err.code === NativeStatusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        toast("Play services not available or outdated", "error");
+      console.error('[GoogleAuth] Error:', err);
+
+      // Handle known native error codes gracefully
+      if (err.code === statusCodes?.SIGN_IN_CANCELLED) {
+        toast('Sign in was cancelled.', 'error');
+      } else if (err.code === statusCodes?.IN_PROGRESS) {
+        toast('A sign in is already in progress. Please wait.', 'error');
+      } else if (err.code === statusCodes?.PLAY_SERVICES_NOT_AVAILABLE) {
+        toast('Google Play Services is not available on this device.', 'error');
       } else {
-        toast("Google login failed. Try again.", "error");
+        // Show a clean human-readable message — no raw JSON alerts
+        const message = err.response?.data?.message || err.message || 'Google sign in failed. Please try again.';
+        toast(message, 'error');
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  return { handleGoogleSignIn };
+  return { handleGoogleSignIn, isGoogleLoading: isLoading };
 }
