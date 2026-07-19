@@ -117,10 +117,20 @@ export default function CustomerAddressesPage() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
-          setLat(Number(pos.coords.latitude.toFixed(6)));
-          setLng(Number(pos.coords.longitude.toFixed(6)));
+          let latitude = pos.coords.latitude;
+          let longitude = pos.coords.longitude;
+          const isAndaman = latitude >= 6.0 && latitude <= 14.0 && longitude >= 92.0 && longitude <= 94.0;
+          if (!isAndaman) {
+            latitude = 11.6234;
+            longitude = 92.7265;
+          }
+          setLat(Number(latitude.toFixed(6)));
+          setLng(Number(longitude.toFixed(6)));
         },
-        (err) => console.warn("Geolocation error", err)
+        (err) => {
+          setLat(11.6234);
+          setLng(92.7265);
+        }
       );
     }
   };

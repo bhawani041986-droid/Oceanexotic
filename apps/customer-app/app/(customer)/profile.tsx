@@ -751,9 +751,12 @@ export default function ProfileScreen() {
                 Pinpoint Map Location
               </Text>
               <AddressMapPicker
-                onLocationSelect={(lat, lng) => {
+                onLocationSelect={(lat, lng, addressName) => {
                   setAddrLat(lat);
                   setAddrLng(lng);
+                  if (addressName && !addrLine) {
+                    setAddrLine(addressName);
+                  }
                 }}
                 primaryColor={primaryColor}
               />

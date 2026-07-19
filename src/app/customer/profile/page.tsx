@@ -350,16 +350,18 @@ export default function CustomerProfilePage() {
                                       navigator.geolocation.getCurrentPosition(async (position) => {
                                         try {
                                           const { latitude, longitude } = position.coords;
+                                          let targetLat = latitude;
+                                          let targetLng = longitude;
                                           
                                           // Enforce Andaman & Nicobar Bounding Box
                                           const isAndaman = latitude >= 6.0 && latitude <= 14.0 && longitude >= 92.0 && longitude <= 94.0;
                                           if (!isAndaman) {
-                                            setFormData((prev: any) => ({ ...prev, address: "" }));
-                                            toast("Satellite deviation detected. Location falls outside the Andaman Maritime Zone. Please search manually.", "error");
-                                            return;
+                                            targetLat = 11.6234;
+                                            targetLng = 92.7265;
+                                            toast("Device GPS outside Andaman. Map centered on Port Blair Harbour.", "info");
                                           }
 
-                                          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+                                          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${targetLat}&lon=${targetLng}`);
                                           const data = await res.json();
                                           if (data && data.display_name) {
                                             // The formData update must merge cleanly
