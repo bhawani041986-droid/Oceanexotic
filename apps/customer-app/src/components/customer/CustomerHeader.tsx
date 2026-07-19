@@ -302,7 +302,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                   <View className="absolute inset-0 flex-row items-center px-2">
                     <MaterialCommunityIcons name="map-marker" size={14} color="#ffffff" />
                     <Text className="ml-1 text-[10px] font-bold text-white tracking-wide" numberOfLines={1}>
-                      {activeHubName} <Text className="font-normal opacity-90">• {t('active_fishing_zones') || "Active Fishing Zones"}</Text>
+                      {activeHubName} <Text className="font-normal opacity-90">• Atamphad, Bhatubasti, Dollygunj, Minibay</Text>
                     </Text>
                   </View>
                 </View>
@@ -390,7 +390,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               </Pressable>
             </View>
 
-            {/* ── DELIVERY ZONE SELECTOR ── */}
+            {/* ── DELIVERY AREA SELECTOR ── */}
             <Pressable
               onPress={() => { setIsMenuOpen(false); setIsLocationModalOpen(true); }}
               style={{
@@ -411,7 +411,7 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               <MaterialCommunityIcons name="map-marker" size={16} color={primaryColor} />
               <View style={{ flex: 1 }}>
                 <Text style={{ fontSize: 9, fontWeight: '700', color: '#64748b', textTransform: 'uppercase', letterSpacing: 0.8 }}>
-                  Delivery To
+                  Delivering to
                 </Text>
                 <Text style={{ fontSize: 12, fontWeight: '800', color: '#0f172a' }} numberOfLines={1}>
                   {activeHubName}
@@ -420,25 +420,32 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               <MaterialCommunityIcons name="chevron-right" size={16} color={primaryColor} />
             </Pressable>
 
-            {/* ── QUICK ZONE CHIPS ── */}
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, paddingHorizontal: 16, paddingVertical: 8 }}>
-              {['Atamphad', 'Bhatubasti', 'Dollygunj', 'Minibay'].map((zone) => (
-                <Pressable
-                  key={zone}
-                  onPress={() => {
-                    setIsMenuOpen(false);
-                    setIsLocationModalOpen(true);
-                  }}
-                  style={{
-                    paddingHorizontal: 10, paddingVertical: 4,
-                    borderRadius: 20, borderWidth: 1,
-                    borderColor: getRgba(primaryColor, 0.2),
-                    backgroundColor: getRgba(primaryColor, 0.05),
-                  }}
-                >
-                  <Text style={{ fontSize: 10, fontWeight: '700', color: primaryColor }}>🚚 {zone}</Text>
-                </Pressable>
-              ))}
+            {/* ── DELIVERY AREAS ── */}
+            <View style={{ paddingHorizontal: 16, paddingBottom: 4 }}>
+              <Text style={{ fontSize: 9, fontWeight: '700', color: '#64748b', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.8 }}>
+                We deliver to these areas:
+              </Text>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+                {['Atamphad', 'Bhatubasti', 'Dollygunj', 'Minibay'].map((area) => (
+                  <Pressable
+                    key={area}
+                    onPress={() => {
+                      setIsMenuOpen(false);
+                      setIsLocationModalOpen(true);
+                    }}
+                    style={{
+                      paddingHorizontal: 10, paddingVertical: 5,
+                      borderRadius: 20, borderWidth: 1,
+                      borderColor: getRgba(primaryColor, 0.2),
+                      backgroundColor: getRgba(primaryColor, 0.05),
+                      flexDirection: 'row', alignItems: 'center', gap: 4,
+                    }}
+                  >
+                    <Text style={{ fontSize: 11 }}>🚚</Text>
+                    <Text style={{ fontSize: 10, fontWeight: '700', color: primaryColor }}>{area}</Text>
+                  </Pressable>
+                ))}
+              </View>
             </View>
 
             {/* ── SECTION LABEL ── */}
