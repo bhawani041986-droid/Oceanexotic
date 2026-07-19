@@ -291,16 +291,21 @@ export function ServiceAreaChecker({ className, compact = false }: ServiceAreaCh
             {/* Quick Zones Selector */}
             <div className="space-y-1.5 pt-1.5 border-t border-[var(--foreground)]/5">
               <span className="text-[8px] font-black text-muted-foreground uppercase tracking-widest block">
-                Active Delivery Zones:
+                Active Delivery Zones (Dollygunj Hub):
               </span>
               <div className="flex flex-wrap gap-1.5">
-                {["Atamphad", "Bhatubasti", "Dollygunj", "Minibay"].map((zone) => (
+                {[
+                  { label: "Minibay (Zone 1)", query: "Minibay" },
+                  { label: "Dollygunj (Zone 2)", query: "Dollygunj" },
+                  { label: "Atamphad (Zone 3)", query: "Atamphad" },
+                  { label: "Bhatubasti (Zone 4)", query: "Bhatubasti" }
+                ].map((item) => (
                   <button
-                    key={zone}
-                    onClick={() => selectSuggestion(zone)}
+                    key={item.query}
+                    onClick={() => selectSuggestion(item.query)}
                     className="px-2.5 py-1.5 rounded-lg border border-[var(--foreground)]/10 bg-[var(--foreground)]/5 text-[9px] font-black uppercase tracking-wider text-[var(--c-text-primary)] hover:border-primary/45 hover:text-primary transition-all flex items-center gap-1 cursor-pointer select-none"
                   >
-                    🚚 <span>{zone}</span>
+                    🚚 <span>{item.label}</span>
                   </button>
                 ))}
               </div>
