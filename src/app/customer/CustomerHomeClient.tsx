@@ -1355,8 +1355,8 @@ const Pro3DMarketHero = () => {
     <section
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative flex flex-col overflow-hidden text-white border-b border-cyan-500/20 my-0"
-      style={{ minHeight: "92vh", background: "linear-gradient(160deg, #010d1a 0%, #021825 40%, #010f1e 70%, #000d18 100%)", perspective: "1200px" }}
+      className="relative flex flex-col overflow-hidden text-white border-b border-cyan-500/20 my-0 min-h-[380px] lg:min-h-[88vh]"
+      style={{ background: "linear-gradient(160deg, #010d1a 0%, #021825 40%, #010f1e 70%, #000d18 100%)", perspective: "1200px" }}
     >
       <div className="relative z-30 w-full bg-black/60 border-b border-cyan-500/25 backdrop-blur-lg py-2.5 px-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 text-[11px] font-bold">
@@ -1415,7 +1415,7 @@ const Pro3DMarketHero = () => {
       <motion.div
         style={{ rotateX: tilt.x, rotateY: tilt.y, transformStyle: "preserve-3d" }}
         transition={{ type: "spring", stiffness: 140, damping: 18 }}
-        className="relative z-20 flex-1 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-center px-4 sm:px-6 py-6 lg:py-10"
+        className="relative z-20 flex-1 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-2 lg:gap-6 items-center px-3 sm:px-6 py-2 lg:py-10"
       >
         <div
           className="hidden lg:flex lg:col-span-6 flex-col gap-6 text-left relative z-10"
@@ -1485,8 +1485,8 @@ const Pro3DMarketHero = () => {
 
         {/* Right column — 3D Floating Fish Stage */}
         <div
-          className="w-full lg:col-span-6 relative flex items-center justify-center overflow-visible min-h-[460px] sm:min-h-[500px]"
-          style={{ transform: "translateZ(100px)", minHeight: "520px" }}
+          className="w-full lg:col-span-6 relative flex items-center justify-center overflow-visible min-h-[330px] sm:min-h-[420px] lg:min-h-[500px]"
+          style={{ transform: "translateZ(100px)" }}
         >
           {/* Dynamic multi-layer glowing ambient orb behind active fish */}
           <motion.div
@@ -1511,9 +1511,9 @@ const Pro3DMarketHero = () => {
               ry: number; rz: number; z: number;
               opacity: number; imgW: string;
             }> = {
-              0: { x: 0,    y: -5,  scale: 1.0,  ry: 0,   rz: -2,  z: 30, opacity: 1.0,  imgW: "290px" },
-              1: { x: 130,  y: 40,  scale: 0.72, ry: -15, rz: -5,  z: 20, opacity: 0.88, imgW: "220px" },
-              2: { x: -130, y: 45,  scale: 0.65, ry: 15,  rz: 4,   z: 10, opacity: 0.78, imgW: "190px" },
+              0: { x: 0,    y: -5,  scale: 1.0,  ry: 0,   rz: -2,  z: 30, opacity: 1.0,  imgW: "240px" },
+              1: { x: 110,  y: 35,  scale: 0.70, ry: -14, rz: -5,  z: 20, opacity: 0.88, imgW: "180px" },
+              2: { x: -110, y: 40,  scale: 0.62, ry: 14,  rz: 4,   z: 10, opacity: 0.78, imgW: "160px" },
             };
             const s = slot[offset] ?? { x: 0, y: 0, scale: 0.4, ry: 0, rz: 0, z: 1, opacity: 0, imgW: "120px" };
 
@@ -1586,7 +1586,7 @@ const Pro3DMarketHero = () => {
                       initial={{ opacity: 0, y: 12 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.35, ease: "easeOut" }}
-                      className="mt-4 flex items-center gap-3 px-4 py-3 rounded-2xl border backdrop-blur-2xl"
+                      className="mt-1.5 sm:mt-4 flex items-center gap-2.5 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl border backdrop-blur-2xl"
                       style={{
                         background: "rgba(0,6,18,0.90)",
                         borderColor: `${fish.badgeColor}55`,
@@ -1684,7 +1684,7 @@ const Pro3DMarketHero = () => {
       </motion.div>
 
       {/* Pagination dots */}
-      <div className="relative z-30 flex items-center justify-center gap-2 pb-4">
+      <div className="relative z-30 flex items-center justify-center gap-2 pb-1.5 sm:pb-4">
         {fishItems.map((fish, idx) => (
           <button
             key={`dot-${idx}`}
@@ -2113,7 +2113,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
       <Pro3DMarketHero />
 
       {/* MARITIME WAVE DIVIDER - MOBILE SPACED */}
-      <div>
+      <div className="hidden lg:block">
          <MaritimeWaveDivider />
       </div>
 
