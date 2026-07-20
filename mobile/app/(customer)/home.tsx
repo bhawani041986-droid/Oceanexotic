@@ -1049,7 +1049,7 @@ export default function CustomerHomeScreen() {
             case "FEATURED":
               return (
                 <View key="FEATURED" className="border-y px-4 py-4" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
-                  <SectionTitle title={t('featured_seafood') || "Featured Seafood"} subtitle={t('certified_daily_catches') || "Premium Fresh Quality"} />
+                  <SectionTitle title={t('featured_seafood') || "Best Selling Fish"} subtitle={t('premium_fresh_quality') || "From Top Fisherman"} />
                   {featured.length > 0 ? (
                     <View className="mt-4 flex-row flex-wrap justify-between gap-y-3">
                       {featured.map((p) => (

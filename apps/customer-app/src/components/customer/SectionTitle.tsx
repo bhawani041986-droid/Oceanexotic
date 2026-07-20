@@ -34,7 +34,7 @@ export function AnimatedHeaderUnderline({ width = 85, height = 3.5 }: { width?: 
   });
 
   return (
-    <View style={{ height, width, borderRadius: 999, overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.08)', marginTop: 3, marginBottom: 3 }}>
+    <View style={{ height, width, borderRadius: 999, overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.08)', marginTop: 3, marginBottom: 2 }}>
       <Animated.View style={[{ flex: 1, width: '140%' }, animatedStyle]}>
         <LinearGradient
           colors={['#FF3E3E', '#FFD700', '#00F3FF', '#FF5E36']}
@@ -47,17 +47,49 @@ export function AnimatedHeaderUnderline({ width = 85, height = 3.5 }: { width?: 
   );
 }
 
+/**
+ * Compact section header matching the Today's Catch arrangement:
+ *  Row 1: [Title] [Subtitle pill]
+ *  Row 2: Animated shimmer underline
+ */
 export function SectionTitle({ title, subtitle }: { title: string; subtitle: string }) {
   const colors = useThemeColors();
   return (
-    <View className="gap-0.5">
-      <Text className="text-lg font-black uppercase tracking-tight italic" style={{ color: colors.primary }}>
-        {title}
-      </Text>
+    <View style={{ alignSelf: 'flex-start' }}>
+      {/* Row 1: title + subtitle pill inline */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+        <Text
+          className="text-lg font-black uppercase italic tracking-tight"
+          style={{ color: colors.primary }}
+        >
+          {title}
+        </Text>
+        <View
+          style={{
+            paddingHorizontal: 8,
+            paddingVertical: 2,
+            borderRadius: 999,
+            backgroundColor: 'rgba(255,255,255,0.06)',
+            borderWidth: 1,
+            borderColor: 'rgba(255,255,255,0.12)',
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 8,
+              fontWeight: '800',
+              textTransform: 'uppercase',
+              letterSpacing: 1.2,
+              color: colors.textMuted,
+            }}
+          >
+            {subtitle}
+          </Text>
+        </View>
+      </View>
+
+      {/* Row 2: Animated shimmer underline */}
       <AnimatedHeaderUnderline width={85} height={3.5} />
-      <Text className="text-[9.5px] font-extrabold uppercase tracking-widest mt-0.5" style={{ color: colors.textMuted }}>
-        {subtitle}
-      </Text>
     </View>
   );
 }
