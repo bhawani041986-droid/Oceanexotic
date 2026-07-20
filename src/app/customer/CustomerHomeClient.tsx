@@ -355,6 +355,56 @@ const SakuSVG = () => (
   </svg>
 );
 
+// --- High-Definition Vector SVG Reef Flora & Corals ---
+const BranchingCoralSVG = ({ color1 = "#ff007f", color2 = "#e11d48", height = 48 }) => (
+  <svg width={height * 0.8} height={height} viewBox="0 0 80 100" fill="none" className="drop-shadow-[0_0_10px_rgba(255,0,127,0.7)]">
+    <defs>
+      <linearGradient id={`coralGrad-${color1}`} x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0%" stopColor={color2} />
+        <stop offset="100%" stopColor={color1} />
+      </linearGradient>
+    </defs>
+    <path d="M40 100 C40 70 30 60 20 40 C10 20 5 15 10 5 C15 -5 25 10 25 25 C25 35 35 45 40 50 C45 35 40 20 50 5 C55 -5 65 5 60 20 C55 35 45 55 40 100 Z" fill={`url(#coralGrad-${color1})`} />
+    <path d="M40 70 C50 60 60 50 70 30 C75 20 85 25 75 35 C65 50 48 68 40 70 Z" fill={color1} opacity="0.9" />
+    <circle cx="10" cy="5" r="3" fill="#ffffff" opacity="0.8" />
+    <circle cx="50" cy="5" r="4" fill="#ffffff" opacity="0.8" />
+    <circle cx="75" cy="25" r="3" fill="#ffffff" opacity="0.8" />
+  </svg>
+);
+
+const SwayingKelpSVG = ({ color1 = "#00f5d4", color2 = "#059669", height = 56, isLeft = false }) => (
+  <svg width={height * 0.5} height={height} viewBox="0 0 50 100" fill="none" className={isLeft ? "animate-sway-seaweed-left" : "animate-sway-seaweed-right"}>
+    <defs>
+      <linearGradient id={`kelpGrad-${color1}`} x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0%" stopColor={color2} />
+        <stop offset="100%" stopColor={color1} />
+      </linearGradient>
+    </defs>
+    <path d="M25 100 Q 5 70 25 40 Q 45 15 25 0 Q 30 15 15 40 Q 35 70 25 100 Z" fill={`url(#kelpGrad-${color1})`} />
+    <path d="M20 100 Q 35 75 20 45 Q 5 20 20 5 Q 15 20 28 45 Q 10 75 20 100 Z" fill={color1} opacity="0.6" />
+  </svg>
+);
+
+const NeonAnemoneSVG = ({ color = "#00f3ff", height = 40 }) => (
+  <svg width={height * 1.1} height={height} viewBox="0 0 90 80" fill="none" className="animate-pulse-coral-glow">
+    <path d="M45 80 L35 40 Q20 30 10 15 C5 5 15 0 20 10 Q30 25 40 40 Z" fill={color} opacity="0.8" />
+    <path d="M45 80 L42 35 Q30 20 25 5 C20 -5 30 -5 33 5 Q40 20 44 35 Z" fill={color} opacity="0.9" />
+    <path d="M45 80 L48 35 Q60 20 65 5 C70 -5 80 -5 77 5 Q70 20 46 35 Z" fill={color} opacity="0.9" />
+    <path d="M45 80 L55 40 Q70 30 80 15 C85 5 75 0 70 10 Q60 25 50 40 Z" fill={color} opacity="0.8" />
+    <circle cx="45" cy="70" r="10" fill="#ffffff" className="animate-ping" opacity="0.5" />
+    <circle cx="45" cy="70" r="6" fill="#00f3ff" />
+  </svg>
+);
+
+const PearlClamSVG = ({ height = 32 }) => (
+  <svg width={height * 1.2} height={height} viewBox="0 0 60 50" fill="none" className="drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]">
+    <path d="M5 45 C 5 20, 55 20, 55 45 Z" fill="#94a3b8" stroke="#cbd5e1" strokeWidth="2" />
+    <path d="M10 40 C 10 10, 50 10, 50 40 Z" fill="#e2e8f0" opacity="0.9" />
+    <circle cx="30" cy="32" r="7" fill="#ffffff" className="animate-pulse" />
+    <circle cx="30" cy="32" r="9" fill="#00f3ff" opacity="0.4" />
+  </svg>
+);
+
 const MaritimeWaveDivider = () => {
   const [finFish, setFinFish] = React.useState<any[]>([
     { name: "Red Snapper", image: "/ICONS/Red-snapper.webp", swimRight: -1, swimLeft: 1 },
@@ -424,7 +474,7 @@ const MaritimeWaveDivider = () => {
       </div>
 
       {/* 4. ULTRA-DENSE OXYGEN BUBBLE CHIMNEYS */}
-      {[3, 11, 19, 27, 36, 44, 52, 61, 69, 77, 85, 93].map((x, streamIdx) => (
+      {[2, 9, 16, 23, 31, 39, 47, 55, 63, 71, 79, 87, 94].map((x, streamIdx) => (
         <div key={`bubble-stream-${streamIdx}`} className="absolute bottom-0 h-full z-15 pointer-events-none" style={{ left: x + "%" }}>
           {[...Array(5)].map((_, i) => (
             <div
@@ -435,55 +485,34 @@ const MaritimeWaveDivider = () => {
                 height: (i % 2 === 0 ? "6px" : "10px"),
                 bottom: (i * 22) + "px", 
                 left: (i % 2 === 0 ? "-6px" : "6px"),
-                animationDelay: `${(streamIdx * 0.25) + (i * 0.6)}s`,
-                animationDuration: `${2.8 + (i * 0.4)}s`
+                animationDelay: `${(streamIdx * 0.2) + (i * 0.5)}s`,
+                animationDuration: `${2.6 + (i * 0.4)}s`
               }}
             />
           ))}
         </div>
       ))}
 
-      {/* 5. DENSE COLORFUL CORAL REEF & FLORA BED (24 DENSE MARINE ELEMENTS) */}
+      {/* 5. HIGH-DEFINITION VECTOR SVG REEF FLORA & CORALS BED */}
       <div className="absolute inset-0 z-20 pointer-events-none flex items-end justify-between px-1 pb-0.5 overflow-hidden">
-        {[
-          { icon: "🌺", name: "Magenta Coral", scale: 1.5, left: "1%", animate: "animate-pulse" },
-          { icon: "🌿", name: "Teal Kelp", scale: 1.7, left: "5%", animate: "animate-sway-kelp" },
-          { icon: "🪸", name: "Branching Reef", scale: 1.6, left: "9%", animate: "animate-pulse" },
-          { icon: "🌾", name: "Sea Grass", scale: 1.4, left: "13%", animate: "animate-sway-kelp" },
-          { icon: "🐚", name: "Pearl Shell", scale: 1.3, left: "17%", animate: "animate-bounce" },
-          { icon: "⭐", name: "Golden Starfish", scale: 1.4, left: "21%", animate: "animate-pulse" },
-          { icon: "🦐", name: "Tiger Prawn", scale: 1.3, left: "25%", animate: "animate-bounce" },
-          { icon: "🌿", name: "Deep Kelp", scale: 1.8, left: "29%", animate: "animate-sway-kelp" },
-          { icon: "🌺", name: "Neon Anemone", scale: 1.6, left: "34%", animate: "animate-pulse" },
-          { icon: "🦀", name: "Reef Crab", scale: 1.4, left: "38%", animate: "animate-bounce" },
-          { icon: "🪸", name: "Pink Reef", scale: 1.7, left: "42%", animate: "animate-pulse" },
-          { icon: "🦞", name: "Spiny Lobster", scale: 1.5, left: "47%", animate: "animate-bounce" },
-          { icon: "🌿", name: "Swaying Kelp", scale: 1.9, left: "51%", animate: "animate-sway-kelp" },
-          { icon: "🐙", name: "Octopus", scale: 1.5, left: "56%", animate: "animate-bounce" },
-          { icon: "🦪", name: "Oyster Pearl", scale: 1.3, left: "60%", animate: "animate-pulse" },
-          { icon: "🌺", name: "Violet Anemone", scale: 1.6, left: "65%", animate: "animate-pulse" },
-          { icon: "🐌", name: "Sea Snail", scale: 1.2, left: "69%", animate: "animate-bounce" },
-          { icon: "🌾", name: "Aqua Grass", scale: 1.5, left: "73%", animate: "animate-sway-kelp" },
-          { icon: "🪸", name: "Red Reef", scale: 1.7, left: "77%", animate: "animate-pulse" },
-          { icon: "🐡", name: "Puffer Reef", scale: 1.4, left: "82%", animate: "animate-bounce" },
-          { icon: "🌺", name: "Cyan Coral", scale: 1.6, left: "86%", animate: "animate-pulse" },
-          { icon: "🌿", name: "Harbor Seaweed", scale: 1.8, left: "90%", animate: "animate-sway-kelp" },
-          { icon: "🐢", name: "Sea Turtle", scale: 1.5, left: "94%", animate: "animate-bounce" },
-          { icon: "⭐", name: "Red Starfish", scale: 1.4, left: "97.5%", animate: "animate-pulse" },
-        ].map((item, i) => (
-          <div
-            key={`coral-reef-${i}`}
-            className={cn("absolute origin-bottom drop-shadow-[0_0_12px_rgba(0,243,255,0.6)] transition-all", item.animate)}
-            style={{ 
-              fontSize: `${16 * item.scale}px`, 
-              left: item.left, 
-              bottom: "4px", 
-              animationDuration: `${2.5 + (i % 3)}s`
-            }}
-          >
-            {item.icon}
-          </div>
-        ))}
+        {/* Layered SVG Vector Corals & Swaying Seaweeds */}
+        <div className="absolute bottom-1 left-[1%]"><BranchingCoralSVG color1="#ff007f" color2="#9333ea" height={52} /></div>
+        <div className="absolute bottom-1 left-[6%]"><SwayingKelpSVG color1="#00f5d4" color2="#059669" height={60} isLeft={true} /></div>
+        <div className="absolute bottom-1 left-[12%]"><NeonAnemoneSVG color="#00f3ff" height={44} /></div>
+        <div className="absolute bottom-1 left-[18%]"><PearlClamSVG height={34} /></div>
+        <div className="absolute bottom-1 left-[24%]"><BranchingCoralSVG color1="#f43f5e" color2="#be123c" height={48} /></div>
+        <div className="absolute bottom-1 left-[30%]"><SwayingKelpSVG color1="#10b981" color2="#047857" height={64} isLeft={false} /></div>
+        <div className="absolute bottom-1 left-[36%]"><NeonAnemoneSVG color="#ec4899" height={42} /></div>
+        <div className="absolute bottom-1 left-[42%]"><BranchingCoralSVG color1="#a855f7" color2="#6b21a8" height={56} /></div>
+        <div className="absolute bottom-1 left-[48%]"><SwayingKelpSVG color1="#06b6d4" color2="#0e7490" height={58} isLeft={true} /></div>
+        <div className="absolute bottom-1 left-[54%]"><PearlClamSVG height={32} /></div>
+        <div className="absolute bottom-1 left-[60%]"><BranchingCoralSVG color1="#ff007f" color2="#e11d48" height={50} /></div>
+        <div className="absolute bottom-1 left-[66%]"><NeonAnemoneSVG color="#00f5d4" height={46} /></div>
+        <div className="absolute bottom-1 left-[72%]"><SwayingKelpSVG color1="#14b8a6" color2="#0f766e" height={62} isLeft={false} /></div>
+        <div className="absolute bottom-1 left-[78%]"><BranchingCoralSVG color1="#eab308" color2="#ca8a04" height={48} /></div>
+        <div className="absolute bottom-1 left-[84%]"><NeonAnemoneSVG color="#38bdf8" height={44} /></div>
+        <div className="absolute bottom-1 left-[90%]"><SwayingKelpSVG color1="#059669" color2="#022c22" height={60} isLeft={true} /></div>
+        <div className="absolute bottom-1 left-[95%]"><BranchingCoralSVG color1="#f43f5e" color2="#881337" height={52} /></div>
       </div>
 
       {/* 6. MARINE SNOW (Bioluminescent Floating Particles) */}

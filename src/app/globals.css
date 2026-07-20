@@ -479,3 +479,32 @@ body {
   transform-origin: bottom center;
   animation: swayKelp 3.5s ease-in-out infinite;
 }
+
+@keyframes swaySeaweedLeft {
+  0%, 100% { transform: rotate(0deg) skewX(0deg); }
+  50% { transform: rotate(-10deg) skewX(-5deg); }
+}
+
+@keyframes swaySeaweedRight {
+  0%, 100% { transform: rotate(0deg) skewX(0deg); }
+  50% { transform: rotate(12deg) skewX(6deg); }
+}
+
+@keyframes pulseCoralGlow {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(0,243,255,0.6)); }
+  50% { filter: drop-shadow(0 0 16px rgba(255,0,127,0.9)); }
+}
+
+.animate-sway-seaweed-left {
+  transform-origin: bottom center;
+  animation: swaySeaweedLeft 4s ease-in-out infinite;
+}
+
+.animate-sway-seaweed-right {
+  transform-origin: bottom center;
+  animation: swaySeaweedRight 4.5s ease-in-out infinite;
+}
+
+.animate-pulse-coral-glow {
+  animation: pulseCoralGlow 3s ease-in-out infinite;
+}
