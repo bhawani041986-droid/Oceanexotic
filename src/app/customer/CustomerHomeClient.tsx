@@ -1287,18 +1287,19 @@ const FALLBACK_REVIEWS = [
   { id: "REV-3", user_name: "Rajesh M.", comment: "Professional service and verifiable freshness. OceanExotic Global is the future.", rating: 4.9 },
 ];
 
-// --- PRO UI/UX 3D DYNAMIC FISH MARKET HERO SECTION ---
+// --- PRO UI/UX 3D HYBRID DIGITAL FISH MARKET HERO (HOLOGRAPHIC VAULT + LIVE HARBOR RADAR) ---
 const Pro3DMarketHero = () => {
   const [tilt, setTilt] = React.useState({ x: 0, y: 0 });
   const [activeCard, setActiveCard] = React.useState(1);
   const [isHovered, setIsHovered] = React.useState(false);
+  const [xrayActive, setXrayActive] = React.useState(false);
 
   // Auto-cycle carousel every 5 seconds when not hovered
   React.useEffect(() => {
     if (isHovered) return;
     const interval = setInterval(() => {
       setActiveCard(prev => (prev + 1) % 3);
-    }, 5000);
+    }, 5500);
     return () => clearInterval(interval);
   }, [isHovered]);
 
@@ -1327,7 +1328,8 @@ const Pro3DMarketHero = () => {
       icon: "🐟",
       image: "/ICONS/Red-snapper.webp",
       desc: "Caught 3 hours ago • Ice-chilled instantly",
-      gradient: "from-cyan-950/90 via-teal-950/95 to-slate-950"
+      gradient: "from-cyan-950/90 via-teal-950/95 to-slate-950",
+      telemetry: { omega3: "16.8%", temp: "3.6°C", dock: "Dock #2 - Arabian Sea", cut: "Fresh Whole / Fillet" }
     },
     {
       id: "hero-fish-2",
@@ -1340,7 +1342,8 @@ const Pro3DMarketHero = () => {
       icon: "👑",
       image: "/ICONS/kingfish.webp",
       desc: "Pristine steak cut • High Omega-3 rich",
-      gradient: "from-blue-950/90 via-indigo-950/95 to-slate-950"
+      gradient: "from-blue-950/90 via-indigo-950/95 to-slate-950",
+      telemetry: { omega3: "19.2%", temp: "3.8°C", dock: "Dock #4 - Deep Ocean", cut: "Prime Steak Cut" }
     },
     {
       id: "hero-fish-3",
@@ -1353,7 +1356,8 @@ const Pro3DMarketHero = () => {
       icon: "🦐",
       image: "/images/categories/prawns.png",
       desc: "Jumbo size • Cleaned & deveined",
-      gradient: "from-orange-950/90 via-amber-950/95 to-slate-950"
+      gradient: "from-orange-950/90 via-amber-950/95 to-slate-950",
+      telemetry: { omega3: "14.5%", temp: "4.0°C", dock: "Dock #1 - Gulf Harbor", cut: "Cleaned & Deveined" }
     }
   ];
 
@@ -1361,9 +1365,29 @@ const Pro3DMarketHero = () => {
     <section 
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative min-h-[80vh] lg:min-h-[88vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#020617] via-[#041d33] to-[#011427] text-white px-4 py-10 lg:py-14 border-b border-cyan-500/30 my-0"
+      className="relative min-h-[82vh] lg:min-h-[90vh] flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#020617] via-[#041d33] to-[#011427] text-white border-b border-cyan-500/30 my-0 pt-0 pb-10"
       style={{ perspective: "1200px" }}
     >
+      {/* 1. TOP LIVE HARBOR BOURSE RADAR TICKER */}
+      <div className="w-full bg-slate-950/90 border-b border-cyan-500/30 backdrop-blur-md py-2 px-4 z-30 overflow-hidden">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 text-xs font-semibold">
+          <div className="flex items-center gap-2 text-cyan-300">
+            <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
+            <span className="font-black uppercase tracking-wider">LIVE HARBOR RADAR</span>
+          </div>
+          <div className="hidden md:flex items-center gap-6 text-slate-300 font-mono text-[11px]">
+            <span className="flex items-center gap-1.5"><span className="text-emerald-400">SURMAI</span> ₹920/kg <span className="text-emerald-400 font-bold">↑ 2.4%</span></span>
+            <span className="text-slate-600">|</span>
+            <span className="flex items-center gap-1.5"><span className="text-cyan-400">RED SNAPPER</span> ₹650/kg <span className="text-cyan-400 font-bold">↑ 1.8%</span></span>
+            <span className="text-slate-600">|</span>
+            <span className="flex items-center gap-1.5"><span className="text-amber-400">TIGER PRAWNS</span> ₹780/500g <span className="text-amber-400 font-bold">⚡ FRESH</span></span>
+          </div>
+          <div className="flex items-center gap-2 text-emerald-400 font-bold text-[11px] uppercase">
+            <span>🛥️ DOCK #4 LANDING NOW</span>
+          </div>
+        </div>
+      </div>
+
       {/* 3D LIGHTING & WATER CAUSTICS BACKGROUND WITH DYNAMIC CATCH GLOW */}
       <div className="absolute inset-0 pointer-events-none opacity-35 transition-colors duration-700">
         <div 
@@ -1401,7 +1425,7 @@ const Pro3DMarketHero = () => {
           transformStyle: "preserve-3d"
         }}
         transition={{ type: "spring", stiffness: 150, damping: 15 }}
-        className="relative z-20 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center"
+        className="relative z-20 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center px-4 my-auto pt-6"
       >
         {/* LEFT COLUMN: HERO HEADLINE & LIVE TELEMETRY */}
         <div className="lg:col-span-6 space-y-6 text-center lg:text-left" style={{ transform: "translateZ(30px)" }}>
@@ -1440,33 +1464,39 @@ const Pro3DMarketHero = () => {
             </div>
           </div>
 
-          {/* HERO CTA BUTTONS */}
-          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
+          {/* HERO CTA BUTTONS & X-RAY TOGGLE */}
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
             <a 
               href="/customer/products" 
-              className="px-8 py-3.5 rounded-xl font-black text-sm md:text-base uppercase tracking-wider bg-gradient-to-r from-[#00F3FF] to-[#00f5d4] text-slate-950 shadow-[0_0_30px_rgba(0,243,255,0.6)] hover:shadow-[0_0_45px_rgba(0,243,255,0.9)] hover:scale-105 transition-all duration-300"
+              className="px-7 py-3.5 rounded-xl font-black text-sm md:text-base uppercase tracking-wider bg-gradient-to-r from-[#00F3FF] to-[#00f5d4] text-slate-950 shadow-[0_0_30px_rgba(0,243,255,0.6)] hover:shadow-[0_0_45px_rgba(0,243,255,0.9)] hover:scale-105 transition-all duration-300"
             >
               🛒 Order Fresh Catch
             </a>
-            <a 
-              href="/customer/categories" 
-              className="px-7 py-3.5 rounded-xl font-bold text-sm md:text-base uppercase tracking-wider bg-slate-900/90 border border-cyan-400/50 text-cyan-300 backdrop-blur-md hover:bg-cyan-950/60 hover:border-cyan-300 transition-all duration-300"
+            <button 
+              onClick={() => setXrayActive(!xrayActive)}
+              className={cn(
+                "px-6 py-3.5 rounded-xl font-bold text-sm md:text-base uppercase tracking-wider border backdrop-blur-md transition-all duration-300 flex items-center gap-2",
+                xrayActive 
+                  ? "bg-cyan-400 text-slate-950 border-cyan-300 shadow-[0_0_25px_#00f3ff]" 
+                  : "bg-slate-900/90 border-cyan-400/50 text-cyan-300 hover:bg-cyan-950/60"
+              )}
             >
-              ⚓ Explore Categories
-            </a>
+              <span>🔍</span>
+              <span>{xrayActive ? "X-Ray Active" : "X-Ray Inspector"}</span>
+            </button>
           </div>
         </div>
 
-        {/* RIGHT COLUMN: ELEGANT 3D FLOATING SHOWCASE STAGE */}
+        {/* RIGHT COLUMN: HOLOGRAPHIC 3D VAULT SHOWCASE STAGE */}
         <div className="lg:col-span-6 relative flex flex-col items-center justify-center py-6" style={{ transform: "translateZ(60px)" }}>
           
           {/* 3D CAROUSEL STAGE CONTAINER */}
-          <div className="relative w-full max-w-lg min-h-[380px] sm:min-h-[420px] flex items-center justify-center overflow-visible">
+          <div className="relative w-full max-w-lg min-h-[390px] sm:min-h-[430px] flex items-center justify-center overflow-visible">
             {showcaseItems.map((item, idx) => {
               const isActive = idx === activeCard;
               const offset = idx - activeCard;
               
-              // Calculate bounded circular 3D stage positioning (NEVER bleeds into left text column)
+              // Bounded circular 3D stage positioning (NEVER bleeds into left text column)
               let desktopX = 0;
               let desktopRotateY = 0;
               let desktopScale = 1;
@@ -1474,21 +1504,18 @@ const Pro3DMarketHero = () => {
               let desktopZ = 40;
 
               if (offset === 0) {
-                // Active Card (Front & Centered)
                 desktopX = 0;
                 desktopRotateY = 0;
                 desktopScale = 1.05;
                 desktopOpacity = 1;
                 desktopZ = 40;
               } else if (offset === 1 || offset === -2) {
-                // Right Flank Card (or wrapped to right)
                 desktopX = 95;
                 desktopRotateY = -18;
                 desktopScale = 0.84;
                 desktopOpacity = 0.72;
                 desktopZ = -40;
               } else {
-                // Left Flank Card (offset === -1 or 2) - clamped to -95px so it NEVER touches the left text column!
                 desktopX = -95;
                 desktopRotateY = 18;
                 desktopScale = 0.84;
@@ -1509,16 +1536,23 @@ const Pro3DMarketHero = () => {
                   }}
                   transition={{ type: "spring", stiffness: 180, damping: 22 }}
                   className={cn(
-                    "absolute w-64 sm:w-72 md:w-80 rounded-2xl p-5 border cursor-pointer backdrop-blur-xl transition-all duration-300 shadow-2xl bg-gradient-to-b",
+                    "absolute w-64 sm:w-72 md:w-80 rounded-2xl p-5 border cursor-pointer backdrop-blur-xl transition-all duration-300 shadow-2xl bg-gradient-to-b overflow-hidden",
                     item.gradient,
                     isActive 
-                      ? "border-cyan-400 shadow-[0_0_45px_rgba(0,243,255,0.6)] ring-1 ring-cyan-300/40" 
+                      ? xrayActive 
+                        ? "border-cyan-300 shadow-[0_0_55px_rgba(0,243,255,0.8)] ring-2 ring-cyan-400" 
+                        : "border-cyan-400 shadow-[0_0_45px_rgba(0,243,255,0.6)] ring-1 ring-cyan-300/40" 
                       : "border-slate-700/80 hover:border-cyan-500/60 hover:opacity-95"
                   )}
                   style={{ transformStyle: "preserve-3d" }}
                 >
+                  {/* X-RAY HOLOGRAPHIC SCAN OVERLAY */}
+                  {xrayActive && isActive && (
+                    <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,243,255,0.15)_50%,transparent_100%)] pointer-events-none animate-pulse z-20" />
+                  )}
+
                   {/* BADGE */}
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center justify-between mb-3 relative z-10">
                     <span 
                       className="px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-wider"
                       style={{ backgroundColor: `${item.badgeColor}25`, color: item.badgeColor, border: `1px solid ${item.badgeColor}70` }}
@@ -1528,18 +1562,40 @@ const Pro3DMarketHero = () => {
                     <span className="text-xs text-slate-400 font-semibold">{item.category}</span>
                   </div>
 
-                  {/* 3D PRODUCT IMAGE */}
+                  {/* 3D PRODUCT IMAGE WITH X-RAY TELEMETRY HUD NODES */}
                   <div className="relative h-40 sm:h-48 my-2 flex items-center justify-center group">
                     <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/10 to-transparent rounded-xl" />
                     <img 
                       src={item.image} 
                       alt={item.name} 
-                      className="h-full object-contain drop-shadow-[0_15px_25px_rgba(0,0,0,0.85)] group-hover:scale-110 transition-transform duration-500"
+                      className={cn(
+                        "h-full object-contain drop-shadow-[0_15px_25px_rgba(0,0,0,0.85)] group-hover:scale-110 transition-all duration-500",
+                        xrayActive && isActive && "brightness-125 contrast-125 saturate-150 filter drop-shadow-[0_0_20px_#00f3ff]"
+                      )}
                     />
+
+                    {/* HOLOGRAPHIC X-RAY TELEMETRY TOOLTIPS */}
+                    {xrayActive && isActive && (
+                      <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="absolute inset-0 pointer-events-none z-30 flex flex-col justify-between p-2 font-mono text-[9px] sm:text-[10px]"
+                      >
+                        <div className="self-start px-2 py-1 bg-cyan-950/90 border border-cyan-400 text-cyan-300 rounded shadow-[0_0_10px_#00f3ff]">
+                          🧬 OMEGA-3: {item.telemetry.omega3}
+                        </div>
+                        <div className="self-end px-2 py-1 bg-cyan-950/90 border border-cyan-400 text-cyan-300 rounded shadow-[0_0_10px_#00f3ff]">
+                          🧊 TEMP: {item.telemetry.temp}
+                        </div>
+                        <div className="self-start px-2 py-1 bg-emerald-950/90 border border-emerald-400 text-emerald-300 rounded shadow-[0_0_10px_#10b981]">
+                          ⚓ DOCK: {item.telemetry.dock}
+                        </div>
+                      </motion.div>
+                    )}
                   </div>
 
                   {/* DETAILS */}
-                  <div className="mt-3 space-y-1">
+                  <div className="mt-3 space-y-1 relative z-10">
                     <div className="text-[11px] sm:text-xs text-slate-400 font-medium">{item.desc}</div>
                     <div className="flex items-center justify-between pt-2">
                       <div>
