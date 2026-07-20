@@ -413,12 +413,13 @@ function NewsletterSection() {
 
   return (
     <View
-      className="mx-4 mb-0 overflow-hidden"
+      className="mx-4"
       style={{
         borderRadius: 4,
         borderWidth: 1,
         borderColor: 'rgba(0,180,180,0.25)',
         backgroundColor: colors.isDark ? '#07131f' : '#f0fbff',
+        marginBottom: 8,
       }}
     >
       {/* Top decorative stripe */}
@@ -506,18 +507,18 @@ function NewsletterSection() {
         {/* Subscribe button */}
         <Pressable
           onPress={handleSubscribeNewsletter}
-          style={({ pressed }) => ({
+          style={{
             flexDirection: 'row',
             alignItems: 'center',
             justifyContent: 'center',
             gap: 8,
-            height: 46,
+            height: 48,
             borderRadius: 3,
-            backgroundColor: pressed ? '#0d9488' : '#14b8a6',
-          })}
+            backgroundColor: '#14b8a6',
+          }}
         >
           <MaterialCommunityIcons name="send" size={16} color="#ffffff" />
-          <Text style={{ fontSize: 12, fontWeight: '900', letterSpacing: 2, color: '#ffffff', textTransform: 'uppercase' }}>
+          <Text style={{ fontSize: 13, fontWeight: '900', letterSpacing: 2.5, color: '#ffffff', textTransform: 'uppercase' }}>
             {t('subscribe_now') || "SUBSCRIBE NOW"}
           </Text>
         </Pressable>
