@@ -380,57 +380,42 @@ const MaritimeWaveDivider = () => {
   }, []);
 
   return (
-    <div className="relative h-12 overflow-hidden bg-gradient-to-r from-[#002147] via-[#00509d] to-[#002147] border-y border-[var(--c-primary)]/50 shadow-[inset_0_0_25px_rgba(0,0,0,0.5)] group/tank">
-      {/* 1. TANK DEPTH & LIGHTING */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-[var(--foreground)]/20 z-50" />
-      <div className="absolute inset-0 z-0 opacity-10 pointer-events-none">
-        {[...Array(6)].map((_, i) => (
+    <div className="relative h-28 md:h-36 overflow-hidden bg-gradient-to-b from-[#020617] via-[#032b45] to-[#001427] border-y border-[var(--c-primary)]/50 shadow-[inset_0_0_35px_rgba(0,0,0,0.8)] group/tank my-2">
+      {/* 1. TOP WATER DIVIDER WAVE GRAPHIC */}
+      <div className="absolute top-0 left-0 right-0 z-30 pointer-events-none opacity-40">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-4 text-[#00F3FF]">
+          <path d="M0,0 C150,90 350,-40 500,40 C650,120 900,10 1200,30 L1200,0 L0,0 Z" fill="currentColor" opacity="0.25" />
+          <path d="M0,0 C200,30 400,10 600,50 C800,90 1000,20 1200,40 L1200,0 L0,0 Z" fill="currentColor" opacity="0.15" />
+        </svg>
+      </div>
+
+      {/* 2. TANK CAUSTICS & LIGHTING BEAMS */}
+      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
+        {[...Array(8)].map((_, i) => (
           <motion.div
             key={`ray-${i}`}
-            animate={{ opacity: [0.1, 0.4, 0.1], x: ["-2%", "2%"] }}
-            transition={{ duration: 8 + i, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute top-[-50%] w-24 h-[200%] bg-[var(--foreground)]/10 rotate-[30deg]"
-            style={{ left: (i * 20) + "%" }}
+            animate={{ opacity: [0.15, 0.45, 0.15], x: ["-4%", "4%"] }}
+            transition={{ duration: 6 + i, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[-50%] w-32 h-[220%] bg-gradient-to-b from-cyan-300/30 via-teal-400/10 to-transparent rotate-[25deg]"
+            style={{ left: (i * 15) + "%" }}
           />
         ))}
       </div>
 
-      {/* 2. RESPONSIVE SEABED COVERAGE (Mobile vs Desktop Density) */}
-      {/* 2. OPTIMIZED SEABED (Reduced DOM count for performance) */}
-      <div className="absolute bottom-0 left-0 right-0 h-2 flex items-end px-0 gap-0 opacity-80 z-10 overflow-hidden lg:hidden">
-        {/* Mobile View: 15 Optimized Stones */}
-        {[...Array(15)].map((_, i) => {
-          const isGem = i % 3 === 0;
-          const gemColors = ['#ff0055', '#00f5d4', '#00bbf9', '#fee440', '#ffffff'];
+      {/* 3. DENSE SEABED PEBBLES & GEMSTONES */}
+      <div className="absolute bottom-0 left-0 right-0 h-3 flex items-end px-0 gap-0 opacity-90 z-10 overflow-hidden">
+        {[...Array(45)].map((_, i) => {
+          const isGem = i % 4 === 0;
+          const gemColors = ['#ff007f', '#00f5d4', '#00bbf9', '#fee440', '#9333ea', '#ffffff'];
           const gemColor = gemColors[i % gemColors.length];
           return (
             <div 
-              key={`pebble-mob-${i}`} 
-              className="w-[6.66%] min-w-[5px] rounded-t-full flex-shrink-0"
+              key={`pebble-${i}`} 
+              className="w-[2.22%] min-w-[4px] rounded-t-full flex-shrink-0"
               style={{ 
-                height: (isGem ? (3 + (i % 3)) : (4 + (i % 5))) + 'px',
-                backgroundColor: isGem ? gemColor : ['#fecaca', '#bfdbfe', '#bbf7d0', '#fef08a'][i % 4],
-                filter: isGem ? `brightness(1.6) drop-shadow(0 0 5px ${gemColor})` : 'brightness(0.95) contrast(1.1)',
-                transform: isGem ? "rotate(45deg)" : "none",
-              }}
-            />
-          );
-        })}
-      </div>
-      <div className="absolute bottom-0 left-0 right-0 h-2 flex items-end px-0 gap-0 opacity-80 z-10 overflow-hidden hidden lg:flex">
-        {/* Desktop View: 40 Optimized Stones */}
-        {[...Array(40)].map((_, i) => {
-          const isGem = i % 5 === 0;
-          const gemColors = ['#ff0055', '#00f5d4', '#00bbf9', '#fee440', '#ffffff'];
-          const gemColor = gemColors[i % gemColors.length];
-          return (
-            <div 
-              key={`pebble-desk-${i}`} 
-              className="w-[2.5%] min-w-[4px] rounded-t-full flex-shrink-0"
-              style={{ 
-                height: (isGem ? (3 + (i % 3)) : (4 + (i % 5))) + 'px',
-                backgroundColor: isGem ? gemColor : ['#fecaca', '#bfdbfe', '#bbf7d0', '#fef08a', '#e9d5ff'][i % 5],
-                filter: isGem ? `brightness(1.6) drop-shadow(0 0 5px ${gemColor})` : 'brightness(0.95) contrast(1.1)',
+                height: (isGem ? (4 + (i % 4)) : (5 + (i % 6))) + 'px',
+                backgroundColor: isGem ? gemColor : ['#fecaca', '#bfdbfe', '#bbf7d0', '#fef08a', '#e9d5ff', '#cbd5e1'][i % 6],
+                filter: isGem ? `brightness(1.8) drop-shadow(0 0 6px ${gemColor})` : 'brightness(0.9) contrast(1.2)',
                 transform: isGem ? "rotate(45deg)" : "none",
               }}
             />
@@ -438,73 +423,77 @@ const MaritimeWaveDivider = () => {
         })}
       </div>
 
-      {/* 4. SHIMMER BUBBLES */}
-      {[20, 50, 80].map((x, streamIdx) => (
-        <div key={`bubble-stream-${streamIdx}`} className="absolute bottom-0 h-full z-15" style={{ left: x + "%" }}>
-          {[...Array(2)].map((_, i) => (
+      {/* 4. RISING BUBBLE STREAMS */}
+      {[8, 22, 38, 55, 72, 88].map((x, streamIdx) => (
+        <div key={`bubble-stream-${streamIdx}`} className="absolute bottom-1 h-full z-15 pointer-events-none" style={{ left: x + "%" }}>
+          {[...Array(3)].map((_, i) => (
             <div
               key={`bubble-${streamIdx}-${i}`}
-              className="absolute w-0.5 h-0.5 bg-[var(--foreground)]/40 rounded-full blur-[0.3px] animate-pulse"
-              style={{ bottom: (i * 20) + "px", left: (i % 2 === 0 ? "-2px" : "2px") }}
+              className="absolute w-1.5 h-1.5 md:w-2 md:h-2 bg-cyan-200/60 rounded-full border border-white/80 shadow-[0_0_6px_rgba(0,243,255,0.8)] animate-rise-bubble"
+              style={{ 
+                bottom: (i * 28) + "px", 
+                left: (i % 2 === 0 ? "-4px" : "4px"),
+                animationDelay: `${(streamIdx * 0.4) + (i * 0.8)}s`,
+                animationDuration: `${3.5 + (i * 0.5)}s`
+              }}
             />
           ))}
         </div>
       ))}
 
-      {/* 5. RESPONSIVE REEF COVERAGE (Seaweed, Corals, Shells, etc.) */}
-      <div className="absolute inset-0 z-20 pointer-events-none lg:hidden">
-        {/* Mobile View: 8 Items */}
-        {[...Array(8)].map((_, i) => {
-          const assets = ["🌺", "🌿", "🐚", "⭐", "🐙"];
-          const asset = assets[i % assets.length];
-          const leftPct = (i * 12) + 5;
-          return (
-            <div
-              key={`asset-mob-${i}`}
-              className="absolute origin-bottom drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] animate-bounce"
-              style={{ fontSize: (12 + (i % 4)) + "px", left: leftPct + "%", bottom: "4px", animationDuration: `${3 + (i % 3)}s` }}
-            >
-              {asset}
-            </div>
-          );
-        })}
-      </div>
-      <div className="absolute inset-0 z-20 pointer-events-none hidden lg:block">
-        {/* Desktop View: 25 Items */}
-        {[...Array(25)].map((_, i) => {
-          const assets = ["🌺", "🌿", "🐚", "⭐", "🐙", "🐌", "🦀"];
-          const asset = assets[i % assets.length];
-          const leftPct = (i * 4);
-          return (
-            <div
-              key={`asset-desk-${i}`}
-              className="absolute origin-bottom drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] animate-pulse"
-              style={{ fontSize: (12 + (i % 6)) + "px", left: leftPct + "%", bottom: "4px", animationDuration: `${3 + (i % 4)}s` }}
-            >
-              {asset}
-            </div>
-          );
-        })}
+      {/* 5. DENSE COLORFUL CORAL REEF & FLORA BED */}
+      <div className="absolute inset-0 z-20 pointer-events-none flex items-end justify-between px-2 pb-1 overflow-hidden">
+        {/* Branching Corals, Swaying Kelp, Anemones & Marine Assets */}
+        {[
+          { icon: "🌺", name: "Magenta Coral", scale: 1.4, left: "2%", animate: "animate-pulse", color: "#ff007f" },
+          { icon: "🌿", name: "Teal Kelp", scale: 1.6, left: "7%", animate: "animate-sway-kelp", color: "#00f5d4" },
+          { icon: "🪸", name: "Branching Reef", scale: 1.5, left: "14%", animate: "animate-pulse", color: "#f43f5e" },
+          { icon: "🐚", name: "Pearl Shell", scale: 1.2, left: "21%", animate: "animate-bounce", color: "#ffffff" },
+          { icon: "⭐", name: "Golden Starfish", scale: 1.3, left: "28%", animate: "animate-pulse", color: "#eab308" },
+          { icon: "🌿", name: "Deep Kelp", scale: 1.7, left: "35%", animate: "animate-sway-kelp", color: "#10b981" },
+          { icon: "🌺", name: "Neon Anemone", scale: 1.5, left: "42%", animate: "animate-pulse", color: "#00f3ff" },
+          { icon: "🦀", name: "Reef Crab", scale: 1.3, left: "49%", animate: "animate-bounce", color: "#ef4444" },
+          { icon: "🪸", name: "Pink Reef", scale: 1.6, left: "56%", animate: "animate-pulse", color: "#ec4899" },
+          { icon: "🌿", name: "Swaying Kelp", scale: 1.8, left: "63%", animate: "animate-sway-kelp", color: "#14b8a6" },
+          { icon: "🐙", name: "Mini Octopus", scale: 1.4, left: "70%", animate: "animate-bounce", color: "#a855f7" },
+          { icon: "🐚", name: "Clam", scale: 1.2, left: "77%", animate: "animate-pulse", color: "#f87171" },
+          { icon: "🌺", name: "Cyan Anemone", scale: 1.5, left: "84%", animate: "animate-pulse", color: "#06b6d4" },
+          { icon: "🌿", name: "Harbor Seaweed", scale: 1.7, left: "91%", animate: "animate-sway-kelp", color: "#059669" },
+          { icon: "⭐", name: "Red Starfish", scale: 1.3, left: "96%", animate: "animate-pulse", color: "#f43f5e" },
+        ].map((item, i) => (
+          <div
+            key={`coral-reef-${i}`}
+            className={cn("absolute origin-bottom drop-shadow-[0_0_10px_rgba(0,243,255,0.5)] transition-all", item.animate)}
+            style={{ 
+              fontSize: `${16 * item.scale}px`, 
+              left: item.left, 
+              bottom: "4px", 
+              animationDuration: `${3 + (i % 3)}s`
+            }}
+          >
+            {item.icon}
+          </div>
+        ))}
       </div>
 
-      {/* 5. MARINE SNOW (Subtle Particles) */}
-      <div className="absolute inset-0 z-5 opacity-20">
-        {[...Array(8)].map((_, i) => (
+      {/* 6. MARINE SNOW (Bioluminescent Floating Particles) */}
+      <div className="absolute inset-0 z-5 opacity-30 pointer-events-none">
+        {[...Array(12)].map((_, i) => (
           <div
             key={`snow-${i}`}
-            className="absolute w-0.5 h-0.5 bg-white rounded-full animate-ping"
-            style={{ left: (i * 12) + "%", top: "20%", animationDuration: `${4 + i}s` }}
+            className="absolute w-1 h-1 bg-cyan-200 rounded-full animate-ping shadow-[0_0_6px_#00f3ff]"
+            style={{ left: (i * 8.5) + "%", top: (15 + (i * 7) % 65) + "%", animationDuration: `${3.5 + (i % 3)}s` }}
           />
         ))}
       </div>
 
-      {/* 6. DYNAMIC FISH FLEET (LOCKED DIRECTIONAL LOGIC) */}
+      {/* 7. DYNAMIC FISH FLEET (LOCKED DIRECTIONAL LOGIC & MULTI-DEPTH) */}
       {finFish.map((fish, i) => {
-        const yBase = 5 + ((i * 15) % 45); 
-        const cycleDuration = 120 + ((i * 20) % 60); // Dramatically slower for Zen-like speed
+        const yBase = 12 + ((i * 18) % 55); 
+        const cycleDuration = 120 + ((i * 20) % 60); // Zen-like speed
         const delay = i * 4;
-        const depthScale = 0.75 + ((i * 0.1) % 0.55); 
-        const zIndex = 30 + i;
+        const depthScale = 0.85 + ((i * 0.12) % 0.45); 
+        const zIndex = 35 + i;
         
         const leftPath = ["-15%", "115%", "115%", "-15%", "-15%"];
         const leftTimes = [0, 0.46, 0.5, 0.96, 1];
@@ -516,7 +505,7 @@ const MaritimeWaveDivider = () => {
             initial={{ left: "-15%", top: yBase + "%" }}
             animate={{ 
               left: leftPath,
-              top: [yBase + "%", (yBase - 6) + "%", yBase + "%", (yBase + 6) + "%", yBase + "%"]
+              top: [yBase + "%", (yBase - 8) + "%", yBase + "%", (yBase + 8) + "%", yBase + "%"]
             }}
             transition={{
               left: { duration: cycleDuration, repeat: Infinity, ease: "easeInOut", delay, times: leftTimes },
@@ -541,9 +530,9 @@ const MaritimeWaveDivider = () => {
               <img 
                 src={fish.image} 
                 alt={fish.name} 
-                className="w-12 h-12 md:w-16 md:h-16 object-contain"
+                className="w-14 h-14 md:w-20 md:h-20 object-contain drop-shadow-[0_0_12px_rgba(0,243,255,0.4)]"
                 style={{ 
-                  filter: `brightness(1.0) contrast(1.1)`,
+                  filter: `brightness(1.05) contrast(1.15)`,
                   mixBlendMode: 'normal',
                   transform: 'translateY(-25%)'
                 }}
