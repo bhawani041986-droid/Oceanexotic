@@ -765,6 +765,18 @@ const MaritimeWaveDivider = () => {
       onMouseMove={handleTankMouseMove}
       className="relative h-28 md:h-36 overflow-hidden bg-gradient-to-b from-[#020617] via-[#032b45] to-[#001427] border-y border-[var(--c-primary)]/50 shadow-[inset_0_0_35px_rgba(0,0,0,0.8)] group/tank my-2 cursor-pointer"
     >
+      {/* 0. SVG AQUATIC DISPLACEMENT FILTER FOR FIN & TAIL RIPPLE */}
+      <svg style={{ position: 'absolute', width: 0, height: 0, pointerEvents: 'none' }}>
+        <defs>
+          <filter id="aquaticTailWave" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.018 0.07" numOctaves="1" result="noise">
+              <animate attributeName="baseFrequency" values="0.018 0.07; 0.028 0.04; 0.018 0.07" dur="1.4s" repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+      </svg>
+
       {/* 0. INTERACTIVE CURSOR RIPPLE RINGS */}
       {ripples.map(r => (
         <div
@@ -912,17 +924,22 @@ const MaritimeWaveDivider = () => {
             }}
             className="absolute pointer-events-none"
             style={{ zIndex }}
-          >
-            <motion.div
+          >            <motion.div
               animate={{ 
                 scaleX: orientationPath,
                 rotateZ: pitchAngles,
-                skewY: [-2.5, 2.5, -2.5, 2.5, -2.5]
+                rotateY: [-10, 10, -10, 10, -10],
+                scaleY: [0.96, 1.04, 0.96, 1.04, 0.96],
+                skewY: [-2.5, 2.5, -2.5, 2.5, -2.5],
+                skewX: [-3, 3, -3, 3, -3]
               }}
               transition={{
                 scaleX: { duration: cycleDuration, repeat: Infinity, ease: "linear", delay, times: leftTimes },
                 rotateZ: { duration: cycleDuration, repeat: Infinity, ease: "easeInOut", delay, times: leftTimes },
-                skewY: { duration: 0.8, repeat: Infinity, ease: "easeInOut" }
+                rotateY: { duration: 1.2, repeat: Infinity, ease: "easeInOut" },
+                scaleY: { duration: 1.6, repeat: Infinity, ease: "easeInOut" },
+                skewY: { duration: 0.8, repeat: Infinity, ease: "easeInOut" },
+                skewX: { duration: 1.0, repeat: Infinity, ease: "easeInOut" }
               }}
               style={{ scale: depthScale, transformOrigin: "center center" }}
             >
@@ -931,7 +948,7 @@ const MaritimeWaveDivider = () => {
                 alt={fish.name} 
                 className="w-14 h-14 md:w-20 md:h-20 object-contain drop-shadow-[0_0_14px_rgba(0,243,255,0.5)] transition-transform"
                 style={{ 
-                  filter: `brightness(1.08) contrast(1.15)`,
+                  filter: `url(#aquaticTailWave) brightness(1.08) contrast(1.15)`,
                   mixBlendMode: 'normal',
                   transform: 'translateY(-25%)'
                 }}
