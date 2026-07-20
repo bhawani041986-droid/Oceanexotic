@@ -1287,14 +1287,12 @@ const FALLBACK_REVIEWS = [
   { id: "REV-3", user_name: "Rajesh M.", comment: "Professional service and verifiable freshness. OceanExotic Global is the future.", rating: 4.9 },
 ];
 
-// --- PRO UI/UX 3D HYBRID DIGITAL FISH MARKET HERO (HOLOGRAPHIC VAULT + LIVE HARBOR RADAR) ---
+// --- PRO UI/UX 3D FLOATING FISH OCEAN STAGE HERO ---
 const Pro3DMarketHero = () => {
   const [tilt, setTilt] = React.useState({ x: 0, y: 0 });
   const [activeCard, setActiveCard] = React.useState(1);
   const [isHovered, setIsHovered] = React.useState(false);
-  const [xrayActive, setXrayActive] = React.useState(false);
 
-  // Auto-cycle carousel every 5 seconds when not hovered
   React.useEffect(() => {
     if (isHovered) return;
     const interval = setInterval(() => {
@@ -1307,7 +1305,7 @@ const Pro3DMarketHero = () => {
     const rect = e.currentTarget.getBoundingClientRect();
     const px = (e.clientX - rect.left) / rect.width - 0.5;
     const py = (e.clientY - rect.top) / rect.height - 0.5;
-    setTilt({ x: -py * 10, y: px * 10 });
+    setTilt({ x: -py * 8, y: px * 8 });
     setIsHovered(true);
   };
 
@@ -1316,341 +1314,336 @@ const Pro3DMarketHero = () => {
     setIsHovered(false);
   };
 
-  const showcaseItems = [
+  const fishItems = [
     {
-      id: "hero-fish-1",
+      id: "fish-1",
       name: "Wild Red Snapper",
       category: "Seawater Harbor",
-      price: "₹650",
-      unit: "kg",
+      price: "₹650", unit: "kg",
       badge: "⚡ DOCK FRESH",
       badgeColor: "#00f3ff",
       icon: "🐟",
-      image: "/ICONS/Red-snapper.webp",
-      desc: "Caught 3 hours ago • Ice-chilled instantly",
-      gradient: "from-cyan-950/90 via-teal-950/95 to-slate-950",
-      telemetry: { omega3: "16.8%", temp: "3.6°C", dock: "Dock #2 - Arabian Sea", cut: "Fresh Whole / Fillet" }
+      image: "/ICONS/Red-snapper.png",
+      desc: "Caught 3h ago · Ice-chilled instantly",
     },
     {
-      id: "hero-fish-2",
+      id: "fish-2",
       name: "Kingfish / Surmai",
       category: "Harbor Special",
-      price: "₹920",
-      unit: "kg",
+      price: "₹920", unit: "kg",
       badge: "🔥 TOP SELLER",
-      badgeColor: "#ff007f",
+      badgeColor: "#ff6eb4",
       icon: "👑",
-      image: "/ICONS/kingfish.webp",
-      desc: "Pristine steak cut • High Omega-3 rich",
-      gradient: "from-blue-950/90 via-indigo-950/95 to-slate-950",
-      telemetry: { omega3: "19.2%", temp: "3.8°C", dock: "Dock #4 - Deep Ocean", cut: "Prime Steak Cut" }
+      image: "/ICONS/kingfish.png",
+      desc: "Prime steak cut · High Omega-3",
     },
     {
-      id: "hero-fish-3",
+      id: "fish-3",
       name: "Tiger Prawns",
       category: "Exotic Catch",
-      price: "₹780",
-      unit: "500g",
+      price: "₹780", unit: "500g",
       badge: "✨ CHILLED ICE",
-      badgeColor: "#fee440",
+      badgeColor: "#ffd60a",
       icon: "🦐",
-      image: "/images/categories/prawns.png",
-      desc: "Jumbo size • Cleaned & deveined",
-      gradient: "from-orange-950/90 via-amber-950/95 to-slate-950",
-      telemetry: { omega3: "14.5%", temp: "4.0°C", dock: "Dock #1 - Gulf Harbor", cut: "Cleaned & Deveined" }
+      image: "/ICONS/tiger-prawns.png",
+      desc: "Jumbo · Cleaned & Deveined",
     }
   ];
 
+  const activeFish = fishItems[activeCard];
+
   return (
-    <section 
+    <section
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative min-h-[82vh] lg:min-h-[90vh] flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#020617] via-[#041d33] to-[#011427] text-white border-b border-cyan-500/30 my-0 pt-0 pb-10"
-      style={{ perspective: "1200px" }}
+      className="relative flex flex-col overflow-hidden text-white border-b border-cyan-500/20 my-0"
+      style={{ minHeight: "92vh", background: "linear-gradient(160deg, #010d1a 0%, #021825 40%, #010f1e 70%, #000d18 100%)", perspective: "1200px" }}
     >
-      {/* 1. TOP LIVE HARBOR BOURSE RADAR TICKER */}
-      <div className="w-full bg-slate-950/90 border-b border-cyan-500/30 backdrop-blur-md py-2 px-4 z-30 overflow-hidden">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 text-xs font-semibold">
-          <div className="flex items-center gap-2 text-cyan-300">
-            <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
-            <span className="font-black uppercase tracking-wider">LIVE HARBOR RADAR</span>
+      {/* ── LIVE HARBOR BOURSE TICKER ── */}
+      <div className="relative z-30 w-full bg-black/60 border-b border-cyan-500/25 backdrop-blur-lg py-2.5 px-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 text-[11px] font-bold">
+          <div className="flex items-center gap-2 text-cyan-300 shrink-0">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+            <span className="uppercase tracking-widest font-black">LIVE HARBOR</span>
           </div>
-          <div className="hidden md:flex items-center gap-6 text-slate-300 font-mono text-[11px]">
-            <span className="flex items-center gap-1.5"><span className="text-emerald-400">SURMAI</span> ₹920/kg <span className="text-emerald-400 font-bold">↑ 2.4%</span></span>
-            <span className="text-slate-600">|</span>
-            <span className="flex items-center gap-1.5"><span className="text-cyan-400">RED SNAPPER</span> ₹650/kg <span className="text-cyan-400 font-bold">↑ 1.8%</span></span>
-            <span className="text-slate-600">|</span>
-            <span className="flex items-center gap-1.5"><span className="text-amber-400">TIGER PRAWNS</span> ₹780/500g <span className="text-amber-400 font-bold">⚡ FRESH</span></span>
+          <div className="hidden sm:flex items-center gap-5 font-mono text-[10px] overflow-hidden">
+            <span className="flex items-center gap-1.5 text-emerald-300"><span className="font-black">SURMAI</span> ₹920/kg <span className="text-emerald-400">↑2.4%</span></span>
+            <span className="text-slate-700">│</span>
+            <span className="flex items-center gap-1.5 text-cyan-300"><span className="font-black">SNAPPER</span> ₹650/kg <span className="text-cyan-400">↑1.8%</span></span>
+            <span className="text-slate-700">│</span>
+            <span className="flex items-center gap-1.5 text-amber-300"><span className="font-black">PRAWNS</span> ₹780/500g <span className="text-amber-400">⚡ FRESH</span></span>
           </div>
-          <div className="flex items-center gap-2 text-emerald-400 font-bold text-[11px] uppercase">
-            <span>🛥️ DOCK #4 LANDING NOW</span>
+          <div className="flex items-center gap-1.5 text-emerald-400 font-black text-[10px] uppercase shrink-0">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span>DOCK #4 LANDING</span>
           </div>
         </div>
       </div>
 
-      {/* 3D LIGHTING & WATER CAUSTICS BACKGROUND WITH DYNAMIC CATCH GLOW */}
-      <div className="absolute inset-0 pointer-events-none opacity-35 transition-colors duration-700">
-        <div 
-          className="absolute top-0 left-1/4 w-96 h-96 rounded-full blur-[110px] transition-colors duration-700 animate-pulse"
-          style={{ backgroundColor: `${showcaseItems[activeCard].badgeColor}35` }} 
+      {/* ── DEEP OCEAN ATMOSPHERE LAYERS ── */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        {/* Dark radial vignette - critical for text readability */}
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 90% at 28% 55%, transparent 20%, rgba(0,8,18,0.75) 70%, rgba(0,5,12,0.95) 100%)" }} />
+        {/* Left column strong dark scrim for text */}
+        <div className="absolute left-0 top-0 w-[55%] h-full" style={{ background: "linear-gradient(to right, rgba(0,6,14,0.92) 0%, rgba(0,6,14,0.75) 60%, transparent 100%)" }} />
+        {/* Active fish dynamic glow (right side) */}
+        <motion.div
+          animate={{ backgroundColor: `${activeFish.badgeColor}14` }}
+          transition={{ duration: 1.2 }}
+          className="absolute right-0 top-0 w-[65%] h-full blur-[90px]"
         />
-        <div 
-          className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full blur-[110px] transition-colors duration-700 animate-pulse" 
-          style={{ backgroundColor: `${showcaseItems[activeCard].badgeColor}20`, animationDelay: "1s" }} 
+        {/* Top blue depth bloom */}
+        <div className="absolute -top-32 right-1/4 w-[500px] h-[500px] rounded-full bg-cyan-900/15 blur-[120px]" />
+        {/* Bottom deep teal */}
+        <div className="absolute -bottom-20 right-10 w-[400px] h-[400px] rounded-full bg-teal-900/12 blur-[100px]" />
+        {/* Mid center depth fill */}
+        <div className="absolute top-1/2 right-[25%] w-[300px] h-[300px] -translate-y-1/2 rounded-full blur-[80px] transition-all duration-1000"
+          style={{ backgroundColor: `${activeFish.badgeColor}0c` }}
         />
       </div>
 
-      {/* FLOATING 3D ICE CRYSTAL PARTICLES */}
-      <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden opacity-40">
+      {/* Water caustic grid shimmer */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.03]"
+        style={{
+          backgroundImage: `repeating-linear-gradient(0deg,transparent,transparent 48px,rgba(0,243,255,1) 48px,rgba(0,243,255,1) 49px),
+                            repeating-linear-gradient(90deg,transparent,transparent 48px,rgba(0,243,255,1) 48px,rgba(0,243,255,1) 49px)`
+        }}
+      />
+
+      {/* Rising bubbles */}
+      <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
         {[...Array(12)].map((_, i) => (
           <motion.div
-            key={`ice-part-${i}`}
-            animate={{ 
-              y: ["0px", "-40px", "0px"],
-              rotate: [0, 15, -15, 0],
-              opacity: [0.3, 0.7, 0.3]
-            }}
-            transition={{ duration: 4 + (i % 3), repeat: Infinity, ease: "easeInOut", delay: i * 0.4 }}
-            className="absolute w-3 h-3 md:w-4 md:h-4 bg-cyan-200/30 border border-white/60 rounded-sm backdrop-blur-sm shadow-[0_0_10px_#00f3ff]"
-            style={{ left: `${(i * 8.5) % 95}%`, top: `${(i * 12) % 80}%` }}
+            key={`b-${i}`}
+            animate={{ y: ["110vh", "-60px"], opacity: [0, 0.4, 0.4, 0] }}
+            transition={{ duration: 7 + (i * 1.2) % 6, repeat: Infinity, ease: "easeOut", delay: i * 0.65 }}
+            className="absolute rounded-full border border-cyan-300/30 bg-cyan-400/5"
+            style={{ width: `${5 + (i * 4) % 14}px`, height: `${5 + (i * 4) % 14}px`, left: `${(i * 8.1) % 94}%` }}
           />
         ))}
       </div>
 
-      {/* 3D PERSPECTIVE CONTAINER */}
-      <motion.div 
-        style={{
-          rotateX: tilt.x,
-          rotateY: tilt.y,
-          transformStyle: "preserve-3d"
-        }}
-        transition={{ type: "spring", stiffness: 150, damping: 15 }}
-        className="relative z-20 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center px-4 my-auto pt-6"
+      {/* ── MAIN 3D CONTENT GRID ── */}
+      <motion.div
+        style={{ rotateX: tilt.x, rotateY: tilt.y, transformStyle: "preserve-3d" }}
+        transition={{ type: "spring", stiffness: 140, damping: 18 }}
+        className="relative z-20 flex-1 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-11 gap-4 items-center px-5 py-8"
       >
-        {/* LEFT COLUMN: HERO HEADLINE & LIVE TELEMETRY */}
-        <div className="lg:col-span-6 space-y-6 text-center lg:text-left" style={{ transform: "translateZ(30px)" }}>
-          {/* LIVE HARBOR BADGE */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-950/80 border border-cyan-400/50 shadow-[0_0_20px_rgba(0,243,255,0.4)] text-xs md:text-sm font-semibold tracking-wider text-cyan-300 uppercase">
-            <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
-            <span>LIVE HARBOR MARKET • COLD-CHAIN PRESERVED</span>
+
+        {/* ════════════════════════════════════ */}
+        {/*  LEFT: HERO TEXT — FULLY LEGIBLE    */}
+        {/* ════════════════════════════════════ */}
+        <div
+          className="lg:col-span-5 flex flex-col gap-5 text-center lg:text-left relative z-10"
+          style={{ transform: "translateZ(40px)" }}
+        >
+          {/* Live badge */}
+          <div className="inline-flex items-center self-center lg:self-start gap-2 px-4 py-1.5 rounded-full border text-[10px] sm:text-xs font-black tracking-widest uppercase"
+            style={{ background: "rgba(0,8,20,0.95)", borderColor: "rgba(0,243,255,0.45)", color: "#00f3ff", boxShadow: "0 0 22px rgba(0,243,255,0.25), inset 0 0 10px rgba(0,243,255,0.05)" }}>
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+            LIVE HARBOR MARKET · COLD-CHAIN VERIFIED
           </div>
 
-          {/* MAIN HEADLINE */}
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black uppercase italic tracking-tight leading-[1.08]">
-            THE ULTIMATE <br />
-            <span className="bg-gradient-to-r from-[#00F3FF] via-[#00F5D4] to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_0_25px_rgba(0,243,255,0.6)]">
+          {/* Headline */}
+          <h1 className="text-4xl sm:text-5xl lg:text-[3.4rem] xl:text-[3.8rem] font-black uppercase italic tracking-tight leading-[1.06]"
+            style={{ textShadow: "0 2px 40px rgba(0,0,0,1), 0 0 60px rgba(0,0,0,0.9)" }}>
+            <span className="block text-white">THE ULTIMATE</span>
+            <span className="block" style={{
+              background: "linear-gradient(90deg, #00F3FF 0%, #00E5FF 45%, #00F5D4 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              filter: "drop-shadow(0 0 32px rgba(0,243,255,0.7))"
+            }}>
               OCEAN FRESH
-            </span> <br />
-            MARKETPLACE
+            </span>
+            <span className="block text-white">MARKETPLACE</span>
           </h1>
 
-          <p className="text-slate-300 text-sm sm:text-base md:text-lg max-w-xl mx-auto lg:mx-0 font-medium leading-relaxed">
-            Directly from dock harbor to your kitchen in 30 minutes. Verifiable 4°C ice-chilled freshness with zero chemical preservation.
+          {/* Subtext */}
+          <p className="text-slate-200 text-sm sm:text-base lg:text-lg max-w-md mx-auto lg:mx-0 font-medium leading-relaxed"
+            style={{ textShadow: "0 1px 20px rgba(0,0,0,1)" }}>
+            Dock-to-door in <span className="text-cyan-300 font-bold">30 minutes</span>. Every catch GPS-tracked, 4°C ice-chilled and FSSAI verified — <span className="text-cyan-300 font-bold">zero chemicals, zero compromise</span>.
           </p>
 
-          {/* LIVE TELEMETRY METRICS STRIP */}
-          <div className="grid grid-cols-3 gap-3 pt-2 max-w-md mx-auto lg:mx-0">
-            <div className="p-3 rounded-xl bg-slate-900/80 border border-cyan-500/30 backdrop-blur-md text-center">
-              <div className="text-xl md:text-2xl font-black text-cyan-400">4°C</div>
-              <div className="text-[10px] md:text-xs text-slate-400 font-semibold uppercase">Ice Chilled</div>
-            </div>
-            <div className="p-3 rounded-xl bg-slate-900/80 border border-cyan-500/30 backdrop-blur-md text-center">
-              <div className="text-xl md:text-2xl font-black text-emerald-400">#04</div>
-              <div className="text-[10px] md:text-xs text-slate-400 font-semibold uppercase">Harbor Dock</div>
-            </div>
-            <div className="p-3 rounded-xl bg-slate-900/80 border border-cyan-500/30 backdrop-blur-md text-center">
-              <div className="text-xl md:text-2xl font-black text-amber-400">30m</div>
-              <div className="text-[10px] md:text-xs text-slate-400 font-semibold uppercase">Express Delivery</div>
-            </div>
-          </div>
 
-          {/* HERO CTA BUTTONS & X-RAY TOGGLE */}
-          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
-            <a 
-              href="/customer/products" 
-              className="px-7 py-3.5 rounded-xl font-black text-sm md:text-base uppercase tracking-wider bg-gradient-to-r from-[#00F3FF] to-[#00f5d4] text-slate-950 shadow-[0_0_30px_rgba(0,243,255,0.6)] hover:shadow-[0_0_45px_rgba(0,243,255,0.9)] hover:scale-105 transition-all duration-300"
-            >
-              🛒 Order Fresh Catch
-            </a>
-            <button 
-              onClick={() => setXrayActive(!xrayActive)}
-              className={cn(
-                "px-6 py-3.5 rounded-xl font-bold text-sm md:text-base uppercase tracking-wider border backdrop-blur-md transition-all duration-300 flex items-center gap-2",
-                xrayActive 
-                  ? "bg-cyan-400 text-slate-950 border-cyan-300 shadow-[0_0_25px_#00f3ff]" 
-                  : "bg-slate-900/90 border-cyan-400/50 text-cyan-300 hover:bg-cyan-950/60"
-              )}
-            >
-              <span>🔍</span>
-              <span>{xrayActive ? "X-Ray Active" : "X-Ray Inspector"}</span>
-            </button>
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN: HOLOGRAPHIC 3D VAULT SHOWCASE STAGE */}
-        <div className="lg:col-span-6 relative flex flex-col items-center justify-center py-6" style={{ transform: "translateZ(60px)" }}>
-          
-          {/* 3D CAROUSEL STAGE CONTAINER */}
-          <div className="relative w-full max-w-lg min-h-[390px] sm:min-h-[430px] flex items-center justify-center overflow-visible">
-            {showcaseItems.map((item, idx) => {
-              const isActive = idx === activeCard;
-              const offset = idx - activeCard;
-              
-              // Bounded circular 3D stage positioning (NEVER bleeds into left text column)
-              let desktopX = 0;
-              let desktopRotateY = 0;
-              let desktopScale = 1;
-              let desktopOpacity = 1;
-              let desktopZ = 40;
-
-              if (offset === 0) {
-                desktopX = 0;
-                desktopRotateY = 0;
-                desktopScale = 1.05;
-                desktopOpacity = 1;
-                desktopZ = 40;
-              } else if (offset === 1 || offset === -2) {
-                desktopX = 95;
-                desktopRotateY = -18;
-                desktopScale = 0.84;
-                desktopOpacity = 0.72;
-                desktopZ = -40;
-              } else {
-                desktopX = -95;
-                desktopRotateY = 18;
-                desktopScale = 0.84;
-                desktopOpacity = 0.72;
-                desktopZ = -40;
-              }
-
-              return (
-                <motion.div
-                  key={item.id}
-                  onClick={() => setActiveCard(idx)}
-                  animate={{
-                    scale: desktopScale,
-                    x: desktopX,
-                    rotateY: desktopRotateY,
-                    zIndex: isActive ? 30 : 10 - Math.abs(offset),
-                    opacity: desktopOpacity
-                  }}
-                  transition={{ type: "spring", stiffness: 180, damping: 22 }}
-                  className={cn(
-                    "absolute w-64 sm:w-72 md:w-80 rounded-2xl p-5 border cursor-pointer backdrop-blur-xl transition-all duration-300 shadow-2xl bg-gradient-to-b overflow-hidden",
-                    item.gradient,
-                    isActive 
-                      ? xrayActive 
-                        ? "border-cyan-300 shadow-[0_0_55px_rgba(0,243,255,0.8)] ring-2 ring-cyan-400" 
-                        : "border-cyan-400 shadow-[0_0_45px_rgba(0,243,255,0.6)] ring-1 ring-cyan-300/40" 
-                      : "border-slate-700/80 hover:border-cyan-500/60 hover:opacity-95"
-                  )}
-                  style={{ transformStyle: "preserve-3d" }}
-                >
-                  {/* X-RAY HOLOGRAPHIC SCAN OVERLAY */}
-                  {xrayActive && isActive && (
-                    <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,243,255,0.15)_50%,transparent_100%)] pointer-events-none animate-pulse z-20" />
-                  )}
-
-                  {/* BADGE */}
-                  <div className="flex items-center justify-between mb-3 relative z-10">
-                    <span 
-                      className="px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-wider"
-                      style={{ backgroundColor: `${item.badgeColor}25`, color: item.badgeColor, border: `1px solid ${item.badgeColor}70` }}
-                    >
-                      {item.badge}
-                    </span>
-                    <span className="text-xs text-slate-400 font-semibold">{item.category}</span>
-                  </div>
-
-                  {/* 3D PRODUCT IMAGE WITH X-RAY TELEMETRY HUD NODES */}
-                  <div className="relative h-40 sm:h-48 my-2 flex items-center justify-center group">
-                    <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/10 to-transparent rounded-xl" />
-                    <img 
-                      src={item.image} 
-                      alt={item.name} 
-                      className={cn(
-                        "h-full object-contain drop-shadow-[0_15px_25px_rgba(0,0,0,0.85)] group-hover:scale-110 transition-all duration-500",
-                        xrayActive && isActive && "brightness-125 contrast-125 saturate-150 filter drop-shadow-[0_0_20px_#00f3ff]"
-                      )}
-                    />
-
-                    {/* HOLOGRAPHIC X-RAY TELEMETRY TOOLTIPS */}
-                    {xrayActive && isActive && (
-                      <motion.div 
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="absolute inset-0 pointer-events-none z-30 flex flex-col justify-between p-2 font-mono text-[9px] sm:text-[10px]"
-                      >
-                        <div className="self-start px-2 py-1 bg-cyan-950/90 border border-cyan-400 text-cyan-300 rounded shadow-[0_0_10px_#00f3ff]">
-                          🧬 OMEGA-3: {item.telemetry.omega3}
-                        </div>
-                        <div className="self-end px-2 py-1 bg-cyan-950/90 border border-cyan-400 text-cyan-300 rounded shadow-[0_0_10px_#00f3ff]">
-                          🧊 TEMP: {item.telemetry.temp}
-                        </div>
-                        <div className="self-start px-2 py-1 bg-emerald-950/90 border border-emerald-400 text-emerald-300 rounded shadow-[0_0_10px_#10b981]">
-                          ⚓ DOCK: {item.telemetry.dock}
-                        </div>
-                      </motion.div>
-                    )}
-                  </div>
-
-                  {/* DETAILS */}
-                  <div className="mt-3 space-y-1 relative z-10">
-                    <div className="text-[11px] sm:text-xs text-slate-400 font-medium">{item.desc}</div>
-                    <div className="flex items-center justify-between pt-2">
-                      <div>
-                        <h3 className="text-base sm:text-lg font-black uppercase italic tracking-tight text-white">{item.name}</h3>
-                        <div className="text-lg sm:text-xl font-black text-cyan-300">{item.price} <span className="text-xs text-slate-400 font-normal">/ {item.unit}</span></div>
-                      </div>
-                      <a 
-                        href="/customer/products"
-                        className="px-3.5 py-2 rounded-lg bg-gradient-to-r from-cyan-400 to-cyan-500 text-slate-950 font-black text-xs uppercase tracking-wider hover:brightness-110 transition-all shadow-[0_0_15px_rgba(0,243,255,0.4)]"
-                      >
-                        + Add
-                      </a>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          {/* INTERACTIVE SPECIES SELECTOR PILLS & NAVIGATION */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mt-4 z-40">
-            {showcaseItems.map((item, idx) => (
-              <button
-                key={`pill-${item.id}`}
-                onClick={() => setActiveCard(idx)}
-                className={cn(
-                  "px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-300 flex items-center gap-1.5 border backdrop-blur-md",
-                  activeCard === idx
-                    ? "bg-cyan-950/90 text-cyan-300 border-cyan-400 shadow-[0_0_20px_rgba(0,243,255,0.5)] scale-105"
-                    : "bg-slate-900/60 text-slate-400 border-slate-700/60 hover:border-slate-500 hover:text-white"
-                )}
-              >
-                <span>{item.icon}</span>
-                <span>{item.name.split("/")[0]}</span>
-              </button>
+          {/* Stats strip */}
+          <div className="grid grid-cols-3 gap-2.5 max-w-xs sm:max-w-sm mx-auto lg:mx-0">
+            {[
+              { v: "4°C",  l: "Ice Chilled",  c: "#00f3ff" },
+              { v: "#04",  l: "Harbor Dock",   c: "#34d399" },
+              { v: "30m",  l: "Delivery ETA",  c: "#fbbf24" }
+            ].map(s => (
+              <div key={s.l} className="p-3 rounded-2xl text-center border"
+                style={{ background: "rgba(0,5,15,0.92)", borderColor: "rgba(0,243,255,0.18)", boxShadow: "0 4px 20px rgba(0,0,0,0.5)" }}>
+                <div className="text-xl sm:text-2xl font-black" style={{ color: s.c }}>{s.v}</div>
+                <div className="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">{s.l}</div>
+              </div>
             ))}
           </div>
 
-          {/* PAGINATION DOTS */}
-          <div className="flex items-center gap-2 mt-3 z-40">
-            {showcaseItems.map((_, idx) => (
-              <button
-                key={`dot-${idx}`}
+          {/* CTAs */}
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
+            <a href="/customer/products"
+              className="px-7 py-3.5 rounded-xl font-black text-sm sm:text-base uppercase tracking-wider text-slate-950 transition-all duration-300 hover:scale-105"
+              style={{ background: "linear-gradient(135deg, #00F3FF, #00d4e8)", boxShadow: "0 0 32px rgba(0,243,255,0.5), 0 4px 20px rgba(0,0,0,0.4)" }}>
+              🛒 Order Fresh Catch
+            </a>
+            <a href="/customer/categories"
+              className="px-6 py-3.5 rounded-xl font-bold text-sm sm:text-base uppercase tracking-wider text-cyan-300 border border-cyan-400/40 transition-all duration-300 hover:border-cyan-300 hover:bg-cyan-950/30"
+              style={{ background: "rgba(0,5,15,0.85)", boxShadow: "0 4px 20px rgba(0,0,0,0.5)" }}>
+              ⚓ Explore
+            </a>
+          </div>
+        </div>
+
+        {/* ════════════════════════════════════════════════ */}
+        {/*  RIGHT: 3D FLOATING PNG FISH STAGE (NO CARDS)  */}
+        {/* ════════════════════════════════════════════════ */}
+        <div
+          className="lg:col-span-6 relative flex items-center justify-center"
+          style={{ transform: "translateZ(70px)", minHeight: "440px" }}
+        >
+          {fishItems.map((fish, idx) => {
+            const offset = ((idx - activeCard) + 3) % 3;
+            const isActive = offset === 0;
+
+            const slot: Record<number, { x: number; y: number; scale: number; ry: number; rz: number; z: number; opacity: number; blur: string; imgW: string }> = {
+              0: { x: 0,    y: -10, scale: 1,    ry: 0,   rz: -5,  z: 30, opacity: 1,    blur: "none",  imgW: "260px" },
+              1: { x: 155,  y: 50,  scale: 0.68, ry: -22, rz: -12, z: 15, opacity: 0.80, blur: "none",  imgW: "180px" },
+              2: { x: -140, y: 65,  scale: 0.56, ry: 25,  rz: 8,   z: 5,  opacity: 0.50, blur: "2px",   imgW: "150px" }
+            };
+            const s = slot[offset] ?? { x: 0, y: 0, scale: 0.5, ry: 0, rz: 0, z: 5, opacity: 0, blur: "4px", imgW: "120px" };
+
+            return (
+              <motion.div
+                key={fish.id}
                 onClick={() => setActiveCard(idx)}
-                className={cn(
-                  "h-2 rounded-full transition-all duration-300",
-                  activeCard === idx 
-                    ? "w-7 bg-cyan-400 shadow-[0_0_10px_#00f3ff]" 
-                    : "w-2 bg-slate-600 hover:bg-slate-400"
-                )}
-              />
+                className="absolute cursor-pointer"
+                animate={{ x: s.x, y: s.y, scale: s.scale, rotateY: s.ry, zIndex: s.z, opacity: s.opacity }}
+                transition={{ type: "spring", stiffness: 155, damping: 22 }}
+                style={{ transformStyle: "preserve-3d" }}
+              >
+                <motion.div
+                  animate={{ y: ["0px", isActive ? "-22px" : "-12px", "0px"] }}
+                  transition={{ duration: isActive ? 3.0 : 3.8 + idx * 0.7, repeat: Infinity, ease: "easeInOut", delay: idx * 1.1 }}
+                  className="relative flex flex-col items-center"
+                  style={{ filter: `blur(${s.blur})` }}
+                >
+                  {/* Radial glow beneath fish */}
+                  <div
+                    className="absolute -bottom-3 left-1/2 -translate-x-1/2 rounded-full blur-xl transition-all duration-700"
+                    style={{
+                      width: isActive ? "75%" : "55%",
+                      height: "20px",
+                      backgroundColor: fish.badgeColor,
+                      opacity: isActive ? 0.55 : 0.18
+                    }}
+                  />
+
+                  {/* The PNG fish — no card box */}
+                  <img
+                    src={fish.image}
+                    alt={fish.name}
+                    draggable={false}
+                    style={{
+                      width: s.imgW,
+                      objectFit: "contain",
+                      transform: `rotateZ(${s.rz}deg)`,
+                      filter: isActive
+                        ? `drop-shadow(0 24px 48px rgba(0,0,0,0.85)) drop-shadow(0 0 36px ${fish.badgeColor}60)`
+                        : "drop-shadow(0 16px 32px rgba(0,0,0,0.7))",
+                      userSelect: "none",
+                      transition: "filter 0.6s"
+                    }}
+                    className={isActive ? "hover:scale-105 transition-transform duration-400" : ""}
+                  />
+
+                  {/* Active fish info tag — floating below fish, no card */}
+                  {isActive && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 14, scale: 0.92 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 14 }}
+                      transition={{ duration: 0.38, ease: "easeOut" }}
+                      className="mt-5 flex items-center gap-3 px-4 py-2.5 rounded-2xl border"
+                      style={{
+                        background: "rgba(0,6,18,0.92)",
+                        borderColor: `${fish.badgeColor}45`,
+                        boxShadow: `0 0 32px ${fish.badgeColor}20, 0 8px 40px rgba(0,0,0,0.7)`,
+                        backdropFilter: "blur(16px)"
+                      }}
+                    >
+                      <span
+                        className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full shrink-0"
+                        style={{ background: `${fish.badgeColor}18`, color: fish.badgeColor, border: `1px solid ${fish.badgeColor}45` }}
+                      >
+                        {fish.badge}
+                      </span>
+                      <div className="text-left min-w-0">
+                        <div className="text-white font-black text-xs sm:text-sm uppercase tracking-tight truncate">{fish.name}</div>
+                        <div className="font-black text-sm sm:text-base leading-tight" style={{ color: fish.badgeColor }}>
+                          {fish.price} <span className="text-slate-400 text-[9px] font-normal">/ {fish.unit}</span>
+                        </div>
+                      </div>
+                      <a
+                        href="/customer/products"
+                        onClick={e => e.stopPropagation()}
+                        className="ml-auto px-3 py-1.5 rounded-lg font-black text-[10px] sm:text-xs uppercase tracking-wider text-slate-950 hover:brightness-110 transition-all shrink-0"
+                        style={{ background: `linear-gradient(135deg, ${fish.badgeColor}, ${fish.badgeColor}cc)` }}
+                      >
+                        + Add
+                      </a>
+                    </motion.div>
+                  )}
+
+                  {/* Price badge on right flank fish */}
+                  {offset === 1 && (
+                    <div
+                      className="absolute -top-1 -right-2 px-2 py-0.5 rounded-lg text-[8px] sm:text-[9px] font-black font-mono border"
+                      style={{ background: "rgba(0,6,18,0.9)", borderColor: `${fish.badgeColor}40`, color: fish.badgeColor }}
+                    >
+                      {fish.price}
+                    </div>
+                  )}
+                </motion.div>
+              </motion.div>
+            );
+          })}
+
+          {/* Species selector pills */}
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex items-center gap-2 z-50 pb-1">
+            {fishItems.map((fish, idx) => (
+              <button
+                key={`pill-${fish.id}`}
+                onClick={() => setActiveCard(idx)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold border transition-all duration-300"
+                style={activeCard === idx
+                  ? { background: `${fish.badgeColor}15`, borderColor: fish.badgeColor, color: fish.badgeColor, boxShadow: `0 0 16px ${fish.badgeColor}40`, transform: "scale(1.1)" }
+                  : { background: "rgba(0,5,15,0.75)", borderColor: "rgba(71,85,105,0.5)", color: "rgb(148,163,184)" }
+                }
+              >
+                <span>{fish.icon}</span>
+                <span>{fish.name.split("/")[0].trim()}</span>
+              </button>
             ))}
           </div>
         </div>
       </motion.div>
+
+      {/* Pagination dots */}
+      <div className="relative z-30 flex items-center justify-center gap-2 pb-4">
+        {fishItems.map((fish, idx) => (
+          <button
+            key={`dot-${idx}`}
+            onClick={() => setActiveCard(idx)}
+            className="h-1.5 rounded-full transition-all duration-300"
+            style={activeCard === idx
+              ? { width: "28px", backgroundColor: fish.badgeColor, boxShadow: `0 0 10px ${fish.badgeColor}` }
+              : { width: "8px", backgroundColor: "rgb(51,65,85)" }
+            }
+          />
+        ))}
+      </div>
     </section>
   );
 };
