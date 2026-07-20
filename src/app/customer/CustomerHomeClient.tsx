@@ -1291,16 +1291,28 @@ const FALLBACK_REVIEWS = [
 const Pro3DMarketHero = () => {
   const [tilt, setTilt] = React.useState({ x: 0, y: 0 });
   const [activeCard, setActiveCard] = React.useState(1);
+  const [isHovered, setIsHovered] = React.useState(false);
+
+  // Auto-cycle carousel every 5 seconds when not hovered
+  React.useEffect(() => {
+    if (isHovered) return;
+    const interval = setInterval(() => {
+      setActiveCard(prev => (prev + 1) % 3);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [isHovered]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const px = (e.clientX - rect.left) / rect.width - 0.5;
     const py = (e.clientY - rect.top) / rect.height - 0.5;
-    setTilt({ x: -py * 12, y: px * 12 });
+    setTilt({ x: -py * 10, y: px * 10 });
+    setIsHovered(true);
   };
 
   const handleMouseLeave = () => {
     setTilt({ x: 0, y: 0 });
+    setIsHovered(false);
   };
 
   const showcaseItems = [
@@ -1312,6 +1324,7 @@ const Pro3DMarketHero = () => {
       unit: "kg",
       badge: "⚡ DOCK FRESH",
       badgeColor: "#00f3ff",
+      icon: "🐟",
       image: "/ICONS/Red-snapper.webp",
       desc: "Caught 3 hours ago • Ice-chilled instantly",
       gradient: "from-cyan-950/90 via-teal-950/95 to-slate-950"
@@ -1324,6 +1337,7 @@ const Pro3DMarketHero = () => {
       unit: "kg",
       badge: "🔥 TOP SELLER",
       badgeColor: "#ff007f",
+      icon: "👑",
       image: "/ICONS/kingfish.webp",
       desc: "Pristine steak cut • High Omega-3 rich",
       gradient: "from-blue-950/90 via-indigo-950/95 to-slate-950"
@@ -1336,6 +1350,7 @@ const Pro3DMarketHero = () => {
       unit: "500g",
       badge: "✨ CHILLED ICE",
       badgeColor: "#fee440",
+      icon: "🦐",
       image: "/images/categories/prawns.png",
       desc: "Jumbo size • Cleaned & deveined",
       gradient: "from-orange-950/90 via-amber-950/95 to-slate-950"
@@ -1346,7 +1361,7 @@ const Pro3DMarketHero = () => {
     <section 
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative min-h-[75vh] lg:min-h-[85vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#020617] via-[#041d33] to-[#011427] text-white px-4 py-8 lg:py-12 border-b border-cyan-500/30 my-0"
+      className="relative min-h-[80vh] lg:min-h-[88vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#020617] via-[#041d33] to-[#011427] text-white px-4 py-10 lg:py-14 border-b border-cyan-500/30 my-0"
       style={{ perspective: "1200px" }}
     >
       {/* 3D LIGHTING & WATER CAUSTICS BACKGROUND */}
@@ -1436,38 +1451,47 @@ const Pro3DMarketHero = () => {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: 3D FLOATING PRODUCT SHOWCASE CAROUSEL */}
-        <div className="lg:col-span-6 relative flex items-center justify-center py-6" style={{ transform: "translateZ(60px)" }}>
-          <div className="relative w-full max-w-md aspect-[4/5] sm:aspect-square flex items-center justify-center">
+        {/* RIGHT COLUMN: ELEGANT 3D FLOATING SHOWCASE STAGE */}
+        <div className="lg:col-span-6 relative flex flex-col items-center justify-center py-6" style={{ transform: "translateZ(60px)" }}>
+          
+          {/* 3D CAROUSEL STAGE CONTAINER */}
+          <div className="relative w-full max-w-lg min-h-[380px] sm:min-h-[420px] flex items-center justify-center overflow-visible">
             {showcaseItems.map((item, idx) => {
               const isActive = idx === activeCard;
               const offset = idx - activeCard;
+              
+              // Calculate distinct desktop 3D positioning
+              const desktopX = offset * 210;
+              const desktopRotateY = offset * -22;
+              const desktopScale = isActive ? 1.05 : 0.82;
+              const desktopOpacity = isActive ? 1 : 0.72;
+
               return (
                 <motion.div
                   key={item.id}
                   onClick={() => setActiveCard(idx)}
                   animate={{
-                    scale: isActive ? 1 : 0.88,
-                    x: offset * 55,
-                    rotateY: offset * -18,
+                    scale: desktopScale,
+                    x: desktopX,
+                    rotateY: desktopRotateY,
                     zIndex: isActive ? 30 : 10 - Math.abs(offset),
-                    opacity: isActive ? 1 : 0.65
+                    opacity: desktopOpacity
                   }}
-                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                  transition={{ type: "spring", stiffness: 180, damping: 22 }}
                   className={cn(
-                    "absolute w-72 sm:w-80 rounded-2xl p-5 border cursor-pointer backdrop-blur-xl transition-all duration-300 shadow-2xl bg-gradient-to-b",
+                    "absolute w-64 sm:w-72 md:w-80 rounded-2xl p-5 border cursor-pointer backdrop-blur-xl transition-all duration-300 shadow-2xl bg-gradient-to-b",
                     item.gradient,
                     isActive 
-                      ? "border-cyan-400 shadow-[0_0_40px_rgba(0,243,255,0.5)]" 
-                      : "border-slate-700/60 hover:border-slate-500"
+                      ? "border-cyan-400 shadow-[0_0_45px_rgba(0,243,255,0.6)] ring-1 ring-cyan-300/40" 
+                      : "border-slate-700/80 hover:border-cyan-500/60 hover:opacity-95"
                   )}
                   style={{ transformStyle: "preserve-3d" }}
                 >
                   {/* BADGE */}
                   <div className="flex items-center justify-between mb-3">
                     <span 
-                      className="px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider"
-                      style={{ backgroundColor: `${item.badgeColor}20`, color: item.badgeColor, border: `1px solid ${item.badgeColor}60` }}
+                      className="px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-black uppercase tracking-wider"
+                      style={{ backgroundColor: `${item.badgeColor}25`, color: item.badgeColor, border: `1px solid ${item.badgeColor}70` }}
                     >
                       {item.badge}
                     </span>
@@ -1475,26 +1499,26 @@ const Pro3DMarketHero = () => {
                   </div>
 
                   {/* 3D PRODUCT IMAGE */}
-                  <div className="relative h-44 sm:h-52 my-2 flex items-center justify-center group">
+                  <div className="relative h-40 sm:h-48 my-2 flex items-center justify-center group">
                     <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/10 to-transparent rounded-xl" />
                     <img 
                       src={item.image} 
                       alt={item.name} 
-                      className="h-full object-contain drop-shadow-[0_15px_25px_rgba(0,0,0,0.8)] group-hover:scale-110 transition-transform duration-500"
+                      className="h-full object-contain drop-shadow-[0_15px_25px_rgba(0,0,0,0.85)] group-hover:scale-110 transition-transform duration-500"
                     />
                   </div>
 
                   {/* DETAILS */}
                   <div className="mt-3 space-y-1">
-                    <div className="text-xs text-slate-400 font-medium">{item.desc}</div>
+                    <div className="text-[11px] sm:text-xs text-slate-400 font-medium">{item.desc}</div>
                     <div className="flex items-center justify-between pt-2">
                       <div>
-                        <h3 className="text-lg font-black uppercase italic tracking-tight text-white">{item.name}</h3>
-                        <div className="text-xl font-black text-cyan-300">{item.price} <span className="text-xs text-slate-400 font-normal">/ {item.unit}</span></div>
+                        <h3 className="text-base sm:text-lg font-black uppercase italic tracking-tight text-white">{item.name}</h3>
+                        <div className="text-lg sm:text-xl font-black text-cyan-300">{item.price} <span className="text-xs text-slate-400 font-normal">/ {item.unit}</span></div>
                       </div>
                       <a 
                         href="/customer/products"
-                        className="px-3.5 py-2 rounded-lg bg-cyan-500 text-slate-950 font-black text-xs uppercase tracking-wider hover:bg-cyan-300 transition-colors"
+                        className="px-3.5 py-2 rounded-lg bg-gradient-to-r from-cyan-400 to-cyan-500 text-slate-950 font-black text-xs uppercase tracking-wider hover:brightness-110 transition-all shadow-[0_0_15px_rgba(0,243,255,0.4)]"
                       >
                         + Add
                       </a>
@@ -1503,6 +1527,41 @@ const Pro3DMarketHero = () => {
                 </motion.div>
               );
             })}
+          </div>
+
+          {/* INTERACTIVE SPECIES SELECTOR PILLS & NAVIGATION */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mt-4 z-40">
+            {showcaseItems.map((item, idx) => (
+              <button
+                key={`pill-${item.id}`}
+                onClick={() => setActiveCard(idx)}
+                className={cn(
+                  "px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-300 flex items-center gap-1.5 border backdrop-blur-md",
+                  activeCard === idx
+                    ? "bg-cyan-950/90 text-cyan-300 border-cyan-400 shadow-[0_0_20px_rgba(0,243,255,0.5)] scale-105"
+                    : "bg-slate-900/60 text-slate-400 border-slate-700/60 hover:border-slate-500 hover:text-white"
+                )}
+              >
+                <span>{item.icon}</span>
+                <span>{item.name.split("/")[0]}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* PAGINATION DOTS */}
+          <div className="flex items-center gap-2 mt-3 z-40">
+            {showcaseItems.map((_, idx) => (
+              <button
+                key={`dot-${idx}`}
+                onClick={() => setActiveCard(idx)}
+                className={cn(
+                  "h-2 rounded-full transition-all duration-300",
+                  activeCard === idx 
+                    ? "w-7 bg-cyan-400 shadow-[0_0_10px_#00f3ff]" 
+                    : "w-2 bg-slate-600 hover:bg-slate-400"
+                )}
+              />
+            ))}
           </div>
         </div>
       </motion.div>
