@@ -23,7 +23,9 @@ import Animated, {
   withRepeat, 
   withSequence, 
   withTiming, 
-  withSpring 
+  withDelay,
+  withSpring,
+  Easing,
 } from "react-native-reanimated";
 
 interface AnimatedCategoryTileProps {
@@ -527,6 +529,254 @@ function NewsletterSection() {
   );
 }
 
+
+// --- ANIMATED QUALITY CHECKED SECTION ---
+function QualityCheckedSection() {
+  const { t } = useTranslation();
+  const colors = useThemeColors();
+
+  const items = [
+    { icon: <ShieldCheckIcon size={20} color="#0d9488" />, title: t('quality_checked') || "100% QUALITY\nCHECKED", subtitle: t('verified_seller') || "VERIFIED SELLER", color: "#0d9488", bg: "#e2f0ec", border: "#a7f3d0", barColor: "#0d9488" },
+    { icon: <InstantClockIcon size={20} color="#ea580c" />, title: t('instant') || "INSTANT", subtitle: t('min_dispatch') || "90 MIN DISPATCH", color: "#ea580c", bg: "#ffedd5", border: "#fed7aa", barColor: "#ea580c" },
+    { icon: <ColdChainIcon size={20} color="#0284c7" />, title: t('cold_chain') || "COLD CHAIN", subtitle: t('controlled_temp') || "0°C CONTROLLED", color: "#0284c7", bg: "#e0f2fe", border: "#bae6fd", barColor: "#0284c7" },
+    { icon: <LocalCatchIcon size={20} color="#e11d48" />, title: t('local_catch') || "LOCAL CATCH", subtitle: t('harbor_hub') || "PORT BLAIR HUB", color: "#e11d48", bg: "#ffe4e6", border: "#fecdd3", barColor: "#e11d48" },
+  ];
+
+  // Per-tile shared values for entrance + float + bar
+  const tiles = items.map((_, idx) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const slideY = useSharedValue(28);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const opacity = useSharedValue(0);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const iconScale = useSharedValue(1);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const barWidth = useSharedValue(0);
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+      const delay = idx * 120;
+      // Entrance
+      slideY.value = withDelay(delay, withTiming(0, { duration: 420, easing: Easing.out(Easing.back(1.4)) }));
+      opacity.value = withDelay(delay, withTiming(1, { duration: 380 }));
+      barWidth.value = withDelay(delay + 300, withTiming(14, { duration: 500 }));
+      // Float pulse — staggered by tile
+      iconScale.value = withDelay(
+        delay + 600,
+        withRepeat(
+          withSequence(
+            withTiming(1.10, { duration: 700 }),
+            withTiming(1.0, { duration: 700 }),
+          ),
+          -1,
+          true,
+        ),
+      );
+    }, []);
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const tileStyle = useAnimatedStyle(() => ({
+      opacity: opacity.value,
+      transform: [{ translateY: slideY.value }],
+    }));
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const iconStyle = useAnimatedStyle(() => ({
+      transform: [{ scale: iconScale.value }],
+    }));
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const barStyle = useAnimatedStyle(() => ({
+      width: barWidth.value,
+    }));
+
+    return { tileStyle, iconStyle, barStyle };
+  });
+
+  return (
+    <View className="mx-4 mb-4 flex-row justify-between" style={{ gap: 6, marginTop: -10 }}>
+      {items.map((item, idx) => {
+        const { tileStyle, iconStyle, barStyle } = tiles[idx];
+        return (
+          <Animated.View key={idx} style={[{ flex: 1 }, tileStyle]}>
+            <ChamferedBox
+              bevelSize={10}
+              fillColor={colors.card === '#020617' ? '#0b1329' : '#f8fafc'}
+              strokeColor={colors.card === '#020617' ? '#1e293b' : '#e2e8f0'}
+              style={{ flex: 1, padding: 6, alignItems: 'center', minHeight: 130 }}
+            >
+              {/* Animated icon box */}
+              <Animated.View style={[{ marginTop: 4, marginBottom: 8 }, iconStyle]}>
+                <ChamferedBox
+                  bevelSize={6}
+                  fillColor={item.bg}
+                  strokeColor={item.border}
+                  style={{ width: 34, height: 34, alignItems: 'center', justifyContent: 'center' }}
+                >
+                  {item.icon}
+                </ChamferedBox>
+              </Animated.View>
+
+              <Text
+                numberOfLines={2}
+                className="text-[7.5px] font-black italic uppercase text-center leading-tight"
+                style={{ color: colors.text, minHeight: 20 }}
+              >
+                {item.title}
+              </Text>
+
+              {/* Animated expanding bar */}
+              <Animated.View
+                style={[{ height: 1.5, backgroundColor: item.barColor, marginVertical: 4, borderRadius: 999 }, barStyle]}
+              />
+
+              <Text
+                numberOfLines={2}
+                className="text-[6px] font-bold text-center uppercase leading-tight"
+                style={{ color: colors.textMuted }}
+              >
+                {item.subtitle}
+              </Text>
+            </ChamferedBox>
+          </Animated.View>
+        );
+      })}
+    </View>
+  );
+}
+
+// --- ANIMATED FSSAI BANNER SECTION ---
+function FssaiBanner() {
+  const { t } = useTranslation();
+  const colors = useThemeColors();
+
+  // FSSAI shimmer animation
+  const shimmer = useSharedValue(-1);
+  // Badge pill pop-in (3 pills)
+  const badge0Scale = useSharedValue(0.6);
+  const badge0Op = useSharedValue(0);
+  const badge1Scale = useSharedValue(0.6);
+  const badge1Op = useSharedValue(0);
+  const badge2Scale = useSharedValue(0.6);
+  const badge2Op = useSharedValue(0);
+  // FSSAI card border glow
+  const glowOp = useSharedValue(0.4);
+
+  useEffect(() => {
+    // Shimmer sweep — repeating every 3s
+    shimmer.value = withRepeat(
+      withSequence(
+        withTiming(1, { duration: 900 }),
+        withDelay(2100, withTiming(-1, { duration: 0 })),
+      ),
+      -1,
+      false,
+    );
+    // Badge pop-ins (staggered)
+    badge0Scale.value = withDelay(100, withTiming(1, { duration: 380, easing: Easing.out(Easing.back(1.6)) }));
+    badge0Op.value = withDelay(100, withTiming(1, { duration: 300 }));
+    badge1Scale.value = withDelay(250, withTiming(1, { duration: 380, easing: Easing.out(Easing.back(1.6)) }));
+    badge1Op.value = withDelay(250, withTiming(1, { duration: 300 }));
+    badge2Scale.value = withDelay(400, withTiming(1, { duration: 380, easing: Easing.out(Easing.back(1.6)) }));
+    badge2Op.value = withDelay(400, withTiming(1, { duration: 300 }));
+    // Border glow pulse
+    glowOp.value = withRepeat(
+      withSequence(
+        withTiming(1, { duration: 1400 }),
+        withTiming(0.25, { duration: 1400 }),
+      ),
+      -1,
+      true,
+    );
+  }, []);
+
+  const shimmerStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: shimmer.value * 120 }],
+  }));
+  const b0Style = useAnimatedStyle(() => ({ opacity: badge0Op.value, transform: [{ scale: badge0Scale.value }] }));
+  const b1Style = useAnimatedStyle(() => ({ opacity: badge1Op.value, transform: [{ scale: badge1Scale.value }] }));
+  const b2Style = useAnimatedStyle(() => ({ opacity: badge2Op.value, transform: [{ scale: badge2Scale.value }] }));
+  const glowStyle = useAnimatedStyle(() => ({
+    borderColor: `rgba(251,146,60,${glowOp.value})`,
+  }));
+
+  const badgeStyles = [b0Style, b1Style, b2Style];
+  const badges = [
+    { icon: <ColdChainIcon size={12} color="#0284c7" />, label: t('cold_chain') || 'COLD CHAIN', fill: '#f0f9ff', stroke: '#bae6fd', textColor: '#0284c7' },
+    { icon: <LeafIcon size={12} color="#0f766e" />, label: t('sustainable') || 'SUSTAINABLE', fill: '#f0fdf4', stroke: '#bbf7d0', textColor: '#0f766e' },
+    { icon: <TruckIcon size={12} color="#0d9488" />, label: t('rapid_delivery') ? t('rapid_delivery').replace(' ', '\n') : 'RAPID\nDELIVERY', fill: '#f0fdfa', stroke: '#99f6e4', textColor: '#0d9488' },
+  ];
+
+  return (
+    <ChamferedBox
+      key="FSSAI"
+      bevelSize={12}
+      fillColor={colors.card === '#020617' ? '#081125' : '#f8fafc'}
+      strokeColor={colors.card === '#020617' ? '#1e293b' : '#cbd5e1'}
+      style={{ marginHorizontal: 16, padding: 6, marginBottom: 16, marginTop: -6 }}
+      contentStyle={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 4 }}
+    >
+      {/* FSSAI Card with shimmer + glow border */}
+      <Animated.View
+        style={[{
+          flex: 1.1,
+          borderRadius: 6,
+          borderWidth: 1.5,
+          overflow: 'hidden',
+        }, glowStyle]}
+      >
+        <ChamferedBox
+          bevelSize={6}
+          fillColor="#fff7ed"
+          strokeColor="transparent"
+          style={{ flex: 1, paddingVertical: 4, alignItems: 'center', justifyContent: 'center' }}
+        >
+          <View className="flex-row items-baseline -mt-[2px]">
+            <Text className="text-[12px] italic leading-none" style={{ color: '#0c3f87', fontWeight: '800', fontFamily: 'serif', letterSpacing: -0.5 }}>fssa</Text>
+            <Text className="text-[12px] italic leading-none" style={{ color: '#ea580c', fontWeight: '800', fontFamily: 'serif' }}>i</Text>
+            <Text style={{ fontSize: 7, marginLeft: 1 }}>🍃</Text>
+          </View>
+          <Text className="text-[4.5px] font-black text-[#ea580c] mt-0.5" numberOfLines={1}>
+            Reg. No. 22926204000077
+          </Text>
+          {/* Shimmer sweep */}
+          <Animated.View
+            pointerEvents="none"
+            style={[{
+              position: 'absolute',
+              top: 0,
+              left: -60,
+              width: 50,
+              height: '100%',
+              backgroundColor: 'rgba(255,255,255,0.55)',
+              transform: [{ skewX: '-20deg' }],
+            }, shimmerStyle]}
+          />
+        </ChamferedBox>
+      </Animated.View>
+
+      {/* Animated badge pills */}
+      {badges.map((badge, idx) => (
+        <Animated.View key={idx} style={[{ flex: 1 }, badgeStyles[idx]]}>
+          <ChamferedBox
+            bevelSize={6}
+            fillColor={badge.fill}
+            strokeColor={badge.stroke}
+            style={{ flex: 1, paddingVertical: 4 }}
+            contentStyle={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 3, height: '100%' }}
+          >
+            {badge.icon}
+            <Text
+              className="text-[7.5px] font-black uppercase text-center leading-none"
+              style={{ color: badge.textColor }}
+              numberOfLines={2}
+            >
+              {badge.label}
+            </Text>
+          </ChamferedBox>
+        </Animated.View>
+      ))}
+    </ChamferedBox>
+  );
+}
 
 export default function CustomerHomeScreen() {
   const { t } = useTranslation();
@@ -1464,125 +1714,9 @@ export default function CustomerHomeScreen() {
                 <AndamanMaritimeTelemetry key="RADAR" territories={territories.data ?? []} />
               );
             case "QUALITY_CHECKED":
-              {
-                const qualityWidth = width - 32;
-                return (
-                  <View key="QUALITY_CHECKED" className="mx-4 mb-4 flex-row justify-between" style={{ width: qualityWidth, gap: 6, marginTop: -10 }}>
-                    {[
-                      { icon: <ShieldCheckIcon size={20} color="#0d9488" />, title: t('quality_checked') || "QUALITY CHECKED", subtitle: t('verified_seller') || "VERIFIED SELLER", color: "#0d9488", bg: "#e2f0ec", border: "#a7f3d0", barColor: "#0d9488" },
-                      { icon: <InstantClockIcon size={20} color="#ea580c" />, title: t('instant') || "INSTANT", subtitle: t('min_dispatch') || "90 MIN DISPATCH", color: "#ea580c", bg: "#ffedd5", border: "#fed7aa", barColor: "#ea580c" },
-                      { icon: <ColdChainIcon size={20} color="#0284c7" />, title: t('cold_chain') || "COLD-CHAIN", subtitle: t('controlled_temp') || "0°C CONTROLLED", color: "#0284c7", bg: "#e0f2fe", border: "#bae6fd", barColor: "#0284c7" },
-                      { icon: <LocalCatchIcon size={20} color="#e11d48" />, title: t('local_catch') || "LOCAL CATCH", subtitle: t('harbor_hub') || "PORT BLAIR HUB", color: "#e11d48", bg: "#ffe4e6", border: "#fecdd3", barColor: "#e11d48" }
-                    ].map((item, idx) => (
-                      <ChamferedBox
-                        key={idx}
-                        bevelSize={10}
-                        fillColor={colors.card === '#020617' ? '#0b1329' : '#f8fafc'}
-                        strokeColor={colors.card === '#020617' ? '#1e293b' : '#e2e8f0'}
-                        style={{ flex: 1, padding: 6, alignItems: "center", minHeight: 130 }}
-                      >
-                        {/* Icon Background bevel */}
-                        <ChamferedBox
-                          bevelSize={6}
-                          fillColor={item.bg}
-                          strokeColor={item.border}
-                          style={{ width: 34, height: 34, alignItems: "center", justifyContent: "center", marginTop: 4, marginBottom: 8 }}
-                        >
-                          {item.icon}
-                        </ChamferedBox>
-
-                        <Text 
-                          numberOfLines={2}
-                          className="text-[7.5px] font-black italic uppercase text-center leading-tight" 
-                          style={{ color: colors.text, minHeight: 20 }}
-                        >
-                          {item.title}
-                        </Text>
-
-                        {/* Line Decorator */}
-                        <View style={{ width: 14, height: 1.5, backgroundColor: item.barColor, marginVertical: 4 }} />
-
-                        <Text 
-                          numberOfLines={2}
-                          className="text-[6px] font-bold text-center uppercase leading-tight" 
-                          style={{ color: colors.textMuted }}
-                        >
-                          {item.subtitle}
-                        </Text>
-                      </ChamferedBox>
-                    ))}
-                  </View>
-                );
-              }
+              return <QualityCheckedSection key="QUALITY_CHECKED" />;
             case "FSSAI":
-              {
-                const fssaiWidth = width - 32;
-                return (
-                  <ChamferedBox
-                    key="FSSAI"
-                    bevelSize={12}
-                    fillColor={colors.card === '#020617' ? '#081125' : '#f8fafc'}
-                    strokeColor={colors.card === '#020617' ? '#1e293b' : '#cbd5e1'}
-                    style={{ marginHorizontal: 16, padding: 6, marginBottom: 16, marginTop: -6, width: fssaiWidth }}
-                    contentStyle={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 4 }}
-                  >
-                    {/* 1. FSSAI Card */}
-                    <ChamferedBox
-                      bevelSize={6}
-                      fillColor="#fff7ed"
-                      strokeColor="#fed7aa"
-                      style={{ flex: 1.1, paddingVertical: 4, alignItems: "center", justifyContent: "center" }}
-                    >
-                      <View className="flex-row items-baseline -mt-[2px]">
-                        <Text className="text-[12px] italic leading-none" style={{ color: "#0c3f87", fontWeight: '800', fontFamily: 'serif', letterSpacing: -0.5 }}>fssa</Text>
-                        <Text className="text-[12px] italic leading-none" style={{ color: "#ea580c", fontWeight: '800', fontFamily: 'serif' }}>i</Text>
-                        <Text style={{ fontSize: 7, marginLeft: 1 }}>🍃</Text>
-                      </View>
-                      <Text className="text-[4.5px] font-black text-[#ea580c] mt-0.5" numberOfLines={1}>
-                        Reg. No. 22926204000077
-                      </Text>
-                    </ChamferedBox>
-
-                    {/* 2. Cold Chain Card */}
-                    <ChamferedBox
-                      bevelSize={6}
-                      fillColor="#f0f9ff"
-                      strokeColor="#bae6fd"
-                      style={{ flex: 1, paddingVertical: 4 }}
-                      contentStyle={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 3, height: "100%" }}
-                    >
-                      <ColdChainIcon size={12} color="#0284c7" />
-                      <Text className="text-[7.5px] font-black text-[#0284c7] uppercase">{t('cold_chain') || "COLD-CHAIN"}</Text>
-                    </ChamferedBox>
-
-                    {/* 3. Sustainable Card */}
-                    <ChamferedBox
-                      bevelSize={6}
-                      fillColor="#f0fdf4"
-                      strokeColor="#bbf7d0"
-                      style={{ flex: 1, paddingVertical: 4 }}
-                      contentStyle={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 3, height: "100%" }}
-                    >
-                      <LeafIcon size={12} color="#0f766e" />
-                      <Text className="text-[7.5px] font-black text-[#0f766e] uppercase">{t('sustainable') || "SUSTAINABLE"}</Text>
-                    </ChamferedBox>
-
-                    {/* 4. Rapid Delivery Card */}
-                    <ChamferedBox
-                      bevelSize={6}
-                      fillColor="#f0fdfa"
-                      strokeColor="#99f6e4"
-                      style={{ flex: 1, paddingVertical: 4 }}
-                      contentStyle={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 3, height: "100%" }}
-                    >
-                      <TruckIcon size={12} color="#0d9488" />
-                      <Text className="text-[7.5px] font-black text-[#0d9488] uppercase text-center leading-none" numberOfLines={2}>
-                        {t('rapid_delivery') ? t('rapid_delivery').replace(' ', '\n') : "RAPID\nDELIVERY"}
-                      </Text>
-                    </ChamferedBox>
-                  </ChamferedBox>
-                );
-              }
+              return <FssaiBanner key="FSSAI" />;
             case "REVIEWS":
               return (
                 <View key="REVIEWS" className="pb-4">
