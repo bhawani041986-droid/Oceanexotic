@@ -20,6 +20,34 @@ export interface AmazonHeroCardConfig {
   items: AmazonHeroCardItem[];
 }
 
+export interface SwiggyBannerSlide {
+  id: string;
+  title: string;
+  subtitle: string;
+  ctaText: string;
+  ctaLink: string;
+  imageUrl: string;
+  badge: string;
+}
+
+export interface ZomatoHeroConfig {
+  backdropUrl: string;
+  titleLine1: string;
+  titleLine2: string;
+  subtitle: string;
+  badgeText: string;
+  overlayOpacity: number;
+  trustBadge1: string;
+  trustBadge2: string;
+  trustBadge3: string;
+}
+
+export interface CompactStripConfig {
+  tickerText: string;
+  bgColor: string;
+  textColor: string;
+}
+
 interface SettingsState {
   marketplaceName: string;
   currency: string;
@@ -42,6 +70,9 @@ interface SettingsState {
   customerTheme: string;
   heroStyle?: 'AMAZON_CARD_GRID' | 'SWIGGY_DYNAMIC_BANNER' | 'ZOMATO_HIGH_IMPACT' | 'COMPACT_MINIMAL_STRIP';
   amazonHeroCards?: AmazonHeroCardConfig[];
+  swiggyBanners?: SwiggyBannerSlide[];
+  zomatoHeroConfig?: ZomatoHeroConfig;
+  compactStripConfig?: CompactStripConfig;
   logoTextColor?: string;
   logoPrimaryColor?: string;
   logoSecondaryColor?: string;
@@ -165,6 +196,45 @@ export const DEFAULT_AMAZON_HERO_CARDS: AmazonHeroCardConfig[] = [
   }
 ];
 
+export const DEFAULT_SWIGGY_BANNERS: SwiggyBannerSlide[] = [
+  {
+    id: "swiggy-1",
+    title: "FRESH SURMAI & SALMON FESTIVAL",
+    subtitle: "Direct landed catch from Port Blair Harbour. Delivered chilled in under 90 minutes.",
+    ctaText: "SHOP FRESH SEAFOOD",
+    ctaLink: "/products?search=surmai",
+    imageUrl: "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?auto=format&fit=crop&q=80",
+    badge: "Port Blair Dock"
+  },
+  {
+    id: "swiggy-2",
+    title: "KING JUMBO PRAWNS & ROCK LOBSTER",
+    subtitle: "Sustainably harvested seawater crustaceans. Perfect for weekend grills.",
+    ctaText: "EXPLORE CRUSTACEANS",
+    ctaLink: "/products?search=prawn",
+    imageUrl: "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&q=80",
+    badge: "Limited Catch"
+  }
+];
+
+export const DEFAULT_ZOMATO_HERO: ZomatoHeroConfig = {
+  backdropUrl: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80",
+  titleLine1: "FRESHNESS",
+  titleLine2: "REDEFINED.",
+  subtitle: "Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers.",
+  badgeText: "PREMIUM SEAFOOD MARKET",
+  overlayOpacity: 60,
+  trustBadge1: "🛡️ FSSAI Quality Certified",
+  trustBadge2: "⏱️ 90-Min Superfast Express",
+  trustBadge3: "❄️ 100% Cold Chain Sealed"
+};
+
+export const DEFAULT_COMPACT_STRIP: CompactStripConfig = {
+  tickerText: "🔥 20% OFF ALL SEAWATER FISH TODAY | FREE EXPRESS DELIVERY ON ORDERS OVER ₹499",
+  bgColor: "#0d5c3a",
+  textColor: "#FFFFFF"
+};
+
 export const useSettingsStore = create<SettingsState>()(
   persist(
     (set, get) => ({
@@ -179,6 +249,9 @@ export const useSettingsStore = create<SettingsState>()(
       customerTheme: "theme-ocean-neon",
       heroStyle: "AMAZON_CARD_GRID",
       amazonHeroCards: DEFAULT_AMAZON_HERO_CARDS,
+      swiggyBanners: DEFAULT_SWIGGY_BANNERS,
+      zomatoHeroConfig: DEFAULT_ZOMATO_HERO,
+      compactStripConfig: DEFAULT_COMPACT_STRIP,
       logoTextColor: "#00D1FF",
       logoPrimaryColor: "#00D1FF",
       logoSecondaryColor: "#F0ABFC",
@@ -285,6 +358,9 @@ export const useSettingsStore = create<SettingsState>()(
             customerTheme: state.customerTheme,
             heroStyle: state.heroStyle,
             amazonHeroCards: state.amazonHeroCards,
+            swiggyBanners: state.swiggyBanners,
+            zomatoHeroConfig: state.zomatoHeroConfig,
+            compactStripConfig: state.compactStripConfig,
             logoTextColor: state.logoTextColor,
             logoPrimaryColor: state.logoPrimaryColor,
             logoSecondaryColor: state.logoSecondaryColor,

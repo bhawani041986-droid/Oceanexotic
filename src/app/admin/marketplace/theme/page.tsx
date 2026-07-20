@@ -1,7 +1,17 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { useSettingsStore, DEFAULT_AMAZON_HERO_CARDS, AmazonHeroCardConfig } from "@/store/settingsStore";
+import { 
+  useSettingsStore, 
+  DEFAULT_AMAZON_HERO_CARDS, 
+  AmazonHeroCardConfig,
+  DEFAULT_SWIGGY_BANNERS,
+  DEFAULT_ZOMATO_HERO,
+  DEFAULT_COMPACT_STRIP,
+  SwiggyBannerSlide,
+  ZomatoHeroConfig,
+  CompactStripConfig
+} from "@/store/settingsStore";
 import { CUSTOMER_THEMES, CustomerTheme } from "@/config/customerThemes";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -32,7 +42,7 @@ import { useToast } from "@/components/ui/Toast";
 import { Logo } from "@/components/ui/Logo";
 
 export default function MarketplaceThemeControl() {
-  const { customerTheme, heroStyle, amazonHeroCards, logoTextColor, logoPrimaryColor, logoSecondaryColor, atmosphericGlow, heroOverlayOpacity, customerAssets, setSettings, pushSettings, fetchSettings } = useSettingsStore();
+  const { customerTheme, heroStyle, amazonHeroCards, swiggyBanners, zomatoHeroConfig, compactStripConfig, logoTextColor, logoPrimaryColor, logoSecondaryColor, atmosphericGlow, heroOverlayOpacity, customerAssets, setSettings, pushSettings, fetchSettings } = useSettingsStore();
   const { toast } = useToast();
   const [selectedThemeId, setSelectedThemeId] = useState(customerTheme);
   const [tempAssets, setTempAssets] = useState(customerAssets);
@@ -40,10 +50,12 @@ export default function MarketplaceThemeControl() {
   const [tempHeroOpacity, setTempHeroOpacity] = useState(heroOverlayOpacity ?? 80);
   const [tempHeroStyle, setTempHeroStyle] = useState(heroStyle || "AMAZON_CARD_GRID");
   const [tempAmazonCards, setTempAmazonCards] = useState<AmazonHeroCardConfig[]>(amazonHeroCards || DEFAULT_AMAZON_HERO_CARDS);
+  const [tempSwiggyBanners, setTempSwiggyBanners] = useState<SwiggyBannerSlide[]>(swiggyBanners || DEFAULT_SWIGGY_BANNERS);
+  const [tempZomatoHero, setTempZomatoHero] = useState<ZomatoHeroConfig>(zomatoHeroConfig || DEFAULT_ZOMATO_HERO);
+  const [tempCompactStrip, setTempCompactStrip] = useState<CompactStripConfig>(compactStripConfig || DEFAULT_COMPACT_STRIP);
   const [tempLogoTextColor, setTempLogoTextColor] = useState(logoTextColor || "#00D1FF");
   const [tempLogoPrimaryColor, setTempLogoPrimaryColor] = useState(logoPrimaryColor || "#00D1FF");
   const [tempLogoSecondaryColor, setTempLogoSecondaryColor] = useState(logoSecondaryColor || "#F0ABFC");
-  const [editingCardId, setEditingCardId] = useState<string | null>("card-1");
   const [isCommitting, setIsCommitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [activeStation, setActiveStation] = useState<string | null>(null);
@@ -60,19 +72,27 @@ export default function MarketplaceThemeControl() {
     setTempGlow(atmosphericGlow);
     setTempHeroOpacity(heroOverlayOpacity ?? 80);
     setTempHeroStyle(heroStyle || "AMAZON_CARD_GRID");
-    if (amazonHeroCards && amazonHeroCards.length > 0) {
-      setTempAmazonCards(amazonHeroCards);
-    }
+    if (amazonHeroCards && amazonHeroCards.length > 0) setTempAmazonCards(amazonHeroCards);
+    if (swiggyBanners && swiggyBanners.length > 0) setTempSwiggyBanners(swiggyBanners);
+    if (zomatoHeroConfig) setTempZomatoHero(zomatoHeroConfig);
+    if (compactStripConfig) setTempCompactStrip(compactStripConfig);
     setTempLogoTextColor(logoTextColor || "#00D1FF");
     setTempLogoPrimaryColor(logoPrimaryColor || "#00D1FF");
     setTempLogoSecondaryColor(logoSecondaryColor || "#F0ABFC");
-  }, [customerAssets, customerTheme, atmosphericGlow, heroOverlayOpacity, heroStyle, amazonHeroCards, logoTextColor, logoPrimaryColor, logoSecondaryColor]);
+  }, [customerAssets, customerTheme, atmosphericGlow, heroOverlayOpacity, heroStyle, amazonHeroCards, swiggyBanners, zomatoHeroConfig, compactStripConfig, logoTextColor, logoPrimaryColor, logoSecondaryColor]);
 
   const isDirty = selectedThemeId !== customerTheme || 
                   tempGlow !== atmosphericGlow || 
                   tempHeroOpacity !== (heroOverlayOpacity ?? 80) ||
                   tempHeroStyle !== heroStyle ||
                   JSON.stringify(tempAmazonCards) !== JSON.stringify(amazonHeroCards || DEFAULT_AMAZON_HERO_CARDS) ||
+                  JSON.stringify(tempSwiggyBanners) !== JSON.stringify(swiggyBanners || DEFAULT_SWIGGY_BANNERS) ||
+                  JSON.stringify(tempZomatoHero) !== JSON.stringify(zomatoHeroConfig || DEFAULT_ZOMATO_HERO) ||
+                  JSON.stringify(tempCompactStrip) !== JSON.stringify(compactStripConfig || DEFAULT_COMPACT_STRIP) ||
+                  tempLogoTextColor !== logoTextColor ||
+                  tempLogoPrimaryColor !== logoPrimaryColor ||
+                  tempLogoSecondaryColor !== logoSecondaryColor ||
+                  JSON.stringify(tempAssets) !== JSON.stringify(customerAssets);
                   tempLogoTextColor !== logoTextColor ||
                   tempLogoPrimaryColor !== logoPrimaryColor ||
                   tempLogoSecondaryColor !== logoSecondaryColor ||
@@ -132,6 +152,9 @@ export default function MarketplaceThemeControl() {
       heroOverlayOpacity: tempHeroOpacity,
       heroStyle: tempHeroStyle,
       amazonHeroCards: tempAmazonCards,
+      swiggyBanners: tempSwiggyBanners,
+      zomatoHeroConfig: tempZomatoHero,
+      compactStripConfig: tempCompactStrip,
       logoTextColor: tempLogoTextColor,
       logoPrimaryColor: tempLogoPrimaryColor,
       logoSecondaryColor: tempLogoSecondaryColor
@@ -396,7 +419,6 @@ export default function MarketplaceThemeControl() {
                         ]
                      };
                      setTempAmazonCards([...tempAmazonCards, newCard]);
-                     setEditingCardId(newId);
                      toast("Created new Amazon Hero Card!", "success");
                   }}
                   className="px-4 py-2 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-black uppercase tracking-wider hover:bg-emerald-500/30 transition-all flex items-center gap-1.5"
@@ -641,6 +663,253 @@ export default function MarketplaceThemeControl() {
                >
                   <span>+</span> Add Another Amazon Hero Card
                </button>
+            </div>
+         </div>
+
+         {/* ⚡ MODE 2: SWIGGY ANIMATED BANNERS CUSTOMIZER PANEL */}
+         <div className="space-y-6 bg-slate-900/90 border border-slate-700 rounded-3xl p-6 md:p-8 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+               <div>
+                  <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-white flex items-center gap-2">
+                     <Zap className="w-5 h-5 text-blue-400" /> Swiggy Animated Banners Slide Customizer
+                  </h3>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                     Manage full-bleed banner slides, CTA button texts, target links, & background images for Swiggy Mode.
+                  </p>
+               </div>
+               <button
+                  type="button"
+                  onClick={() => {
+                     const newSlide: SwiggyBannerSlide = {
+                        id: `swiggy-${Date.now()}`,
+                        title: "NEW SEAFOOD ARRIVAL",
+                        subtitle: "Direct fresh catch delivered in under 90 minutes.",
+                        ctaText: "EXPLORE NOW",
+                        ctaLink: "/products",
+                        imageUrl: "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?auto=format&fit=crop&q=80",
+                        badge: "Port Blair Dock"
+                     };
+                     setTempSwiggyBanners([...tempSwiggyBanners, newSlide]);
+                     toast("Added new Swiggy Banner Slide!", "success");
+                  }}
+                  className="px-4 py-2 rounded-xl bg-blue-500/20 text-blue-400 border border-blue-500/30 text-xs font-black uppercase tracking-wider hover:bg-blue-500/30 transition-all flex items-center gap-1.5"
+               >
+                  <span>+</span> Add Swiggy Banner Slide
+               </button>
+            </div>
+
+            <div className="space-y-4">
+               {(tempSwiggyBanners && tempSwiggyBanners.length > 0 ? tempSwiggyBanners : DEFAULT_SWIGGY_BANNERS).map((slide, sIdx) => (
+                  <div key={slide.id || sIdx} className="bg-slate-950 border border-blue-500/30 rounded-2xl p-4 space-y-3">
+                     <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <span className="text-xs font-black text-blue-400 uppercase tracking-wider">
+                           Swiggy Slide #{sIdx + 1}: {slide.title}
+                        </span>
+                        {tempSwiggyBanners.length > 1 && (
+                           <button
+                              type="button"
+                              onClick={() => {
+                                 setTempSwiggyBanners(tempSwiggyBanners.filter(s => s.id !== slide.id));
+                                 toast("Removed slide.", "info");
+                              }}
+                              className="text-[10px] font-bold text-rose-400 hover:text-rose-300 underline"
+                           >
+                              Delete Slide
+                           </button>
+                        )}
+                     </div>
+
+                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                           <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">Slide Main Title</label>
+                           <input
+                              type="text"
+                              value={slide.title}
+                              onChange={(e) => {
+                                 const updated = tempSwiggyBanners.map(s => s.id === slide.id ? { ...s, title: e.target.value } : s);
+                                 setTempSwiggyBanners(updated);
+                              }}
+                              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-bold"
+                           />
+                        </div>
+                        <div>
+                           <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">Sector Badge</label>
+                           <input
+                              type="text"
+                              value={slide.badge}
+                              onChange={(e) => {
+                                 const updated = tempSwiggyBanners.map(s => s.id === slide.id ? { ...s, badge: e.target.value } : s);
+                                 setTempSwiggyBanners(updated);
+                              }}
+                              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white font-bold"
+                           />
+                        </div>
+                        <div>
+                           <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">CTA Button Text</label>
+                           <input
+                              type="text"
+                              value={slide.ctaText}
+                              onChange={(e) => {
+                                 const updated = tempSwiggyBanners.map(s => s.id === slide.id ? { ...s, ctaText: e.target.value } : s);
+                                 setTempSwiggyBanners(updated);
+                              }}
+                              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-blue-400 font-bold"
+                           />
+                        </div>
+                        <div>
+                           <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">CTA Target Link</label>
+                           <input
+                              type="text"
+                              value={slide.ctaLink}
+                              onChange={(e) => {
+                                 const updated = tempSwiggyBanners.map(s => s.id === slide.id ? { ...s, ctaLink: e.target.value } : s);
+                                 setTempSwiggyBanners(updated);
+                              }}
+                              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-300 font-mono"
+                           />
+                        </div>
+                        <div className="sm:col-span-2">
+                           <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">Banner Image URL</label>
+                           <input
+                              type="text"
+                              value={slide.imageUrl}
+                              onChange={(e) => {
+                                 const updated = tempSwiggyBanners.map(s => s.id === slide.id ? { ...s, imageUrl: e.target.value } : s);
+                                 setTempSwiggyBanners(updated);
+                              }}
+                              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-[10px] text-slate-300 font-mono"
+                           />
+                        </div>
+                     </div>
+                  </div>
+               ))}
+            </div>
+         </div>
+
+         {/* 🌟 MODE 3: ZOMATO HIGH-IMPACT HERO CUSTOMIZER PANEL */}
+         <div className="space-y-6 bg-slate-900/90 border border-slate-700 rounded-3xl p-6 md:p-8 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+               <div>
+                  <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-white flex items-center gap-2">
+                     <Sparkles className="w-5 h-5 text-purple-400" /> Zomato High-Impact Hero Customizer
+                  </h3>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                     Configure atmospheric backdrop photo/video, title lines, opacity slider, & trust telemetry badges.
+                  </p>
+               </div>
+            </div>
+
+            <div className="space-y-4">
+               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                     <label className="text-[9px] font-extrabold uppercase tracking-wider text-slate-300 block mb-1">
+                        Hero Main Title Line 1
+                     </label>
+                     <input
+                        type="text"
+                        value={tempZomatoHero.titleLine1}
+                        onChange={(e) => setTempZomatoHero({ ...tempZomatoHero, titleLine1: e.target.value })}
+                        className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold"
+                     />
+                  </div>
+                  <div>
+                     <label className="text-[9px] font-extrabold uppercase tracking-wider text-slate-300 block mb-1">
+                        Hero Main Title Line 2 (Accent Color)
+                     </label>
+                     <input
+                        type="text"
+                        value={tempZomatoHero.titleLine2}
+                        onChange={(e) => setTempZomatoHero({ ...tempZomatoHero, titleLine2: e.target.value })}
+                        className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-purple-400 font-bold"
+                     />
+                  </div>
+                  <div className="sm:col-span-2">
+                     <label className="text-[9px] font-extrabold uppercase tracking-wider text-slate-300 block mb-1">
+                        Subtitle Description
+                     </label>
+                     <input
+                        type="text"
+                        value={tempZomatoHero.subtitle}
+                        onChange={(e) => setTempZomatoHero({ ...tempZomatoHero, subtitle: e.target.value })}
+                        className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-medium"
+                     />
+                  </div>
+                  <div className="sm:col-span-2">
+                     <label className="text-[9px] font-extrabold uppercase tracking-wider text-slate-300 block mb-1">
+                        Backdrop Image / Video URL
+                     </label>
+                     <input
+                        type="text"
+                        value={tempZomatoHero.backdropUrl}
+                        onChange={(e) => setTempZomatoHero({ ...tempZomatoHero, backdropUrl: e.target.value })}
+                        className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-[10px] text-slate-300 font-mono"
+                     />
+                  </div>
+               </div>
+
+               {/* Trust Badges Config */}
+               <div className="pt-3 border-t border-slate-800 space-y-3">
+                  <span className="text-xs font-black uppercase text-purple-400 tracking-wider block">
+                     🛡️ 3 Trust Telemetry Badges
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                     <div>
+                        <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">Trust Badge #1</label>
+                        <input
+                           type="text"
+                           value={tempZomatoHero.trustBadge1}
+                           onChange={(e) => setTempZomatoHero({ ...tempZomatoHero, trustBadge1: e.target.value })}
+                           className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white font-bold"
+                        />
+                     </div>
+                     <div>
+                        <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">Trust Badge #2</label>
+                        <input
+                           type="text"
+                           value={tempZomatoHero.trustBadge2}
+                           onChange={(e) => setTempZomatoHero({ ...tempZomatoHero, trustBadge2: e.target.value })}
+                           className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white font-bold"
+                        />
+                     </div>
+                     <div>
+                        <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">Trust Badge #3</label>
+                        <input
+                           type="text"
+                           value={tempZomatoHero.trustBadge3}
+                           onChange={(e) => setTempZomatoHero({ ...tempZomatoHero, trustBadge3: e.target.value })}
+                           className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white font-bold"
+                        />
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+
+         {/* 🏷️ MODE 4: COMPACT MINIMAL STRIP CUSTOMIZER PANEL */}
+         <div className="space-y-6 bg-slate-900/90 border border-slate-700 rounded-3xl p-6 md:p-8 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+               <div>
+                  <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-white flex items-center gap-2">
+                     <Layout className="w-5 h-5 text-amber-400" /> Compact Minimal Strip Customizer
+                  </h3>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                     Configure announcement marquee ticker text & colors for high-density product browsing mode.
+                  </p>
+               </div>
+            </div>
+
+            <div className="space-y-4">
+               <div>
+                  <label className="text-[9px] font-extrabold uppercase tracking-wider text-slate-300 block mb-1">
+                     Announcement Marquee Ticker Text
+                  </label>
+                  <input
+                     type="text"
+                     value={tempCompactStrip.tickerText}
+                     onChange={(e) => setTempCompactStrip({ ...tempCompactStrip, tickerText: e.target.value })}
+                     className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-amber-300 font-bold"
+                  />
+               </div>
             </div>
          </div>
 

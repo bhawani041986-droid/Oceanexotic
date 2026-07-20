@@ -574,20 +574,84 @@ export default function CustomerHomeScreen() {
                   </View>
                 );
               }
-              return (
-                <View key="HERO" className="relative min-h-[224px] overflow-hidden">
-                  {heroSlides.length > 0 ? (
-                    <AnimatedImage
-                      key={currentHeroIndex} // Key forces re-render for entering/exiting animations
-                      entering={FadeIn.duration(1000)}
-                      exiting={FadeOut.duration(1000)}
-                      source={{ uri: heroSlides[currentHeroIndex] }}
-                      className="absolute inset-0 h-full w-full"
-                      style={{ opacity: imageOpacity }}
+
+              if (settings.heroStyle === "COMPACT_MINIMAL_STRIP") {
+                const stripConf = settings.compactStripConfig || { tickerText: "🔥 20% OFF ALL SEAWATER FISH TODAY | FREE EXPRESS DELIVERY OVER ₹499" };
+                return (
+                  <View key="HERO" className="mx-4 my-2 p-3.5 rounded-2xl bg-teal-900/90 border border-teal-500/40 shadow-lg flex-row items-center gap-3">
+                    <View className="w-8 h-8 rounded-full bg-emerald-500/20 items-center justify-center border border-emerald-500/40">
+                      <MaterialCommunityIcons name="lightning-bolt" size={18} color="#10b981" />
+                    </View>
+                    <Text className="flex-1 text-xs font-black text-white" numberOfLines={2}>
+                      {stripConf.tickerText}
+                    </Text>
+                  </View>
+                );
+              }
+
+              if (settings.heroStyle === "SWIGGY_DYNAMIC_BANNER") {
+                const banners = (settings.swiggyBanners && settings.swiggyBanners.length > 0) ? settings.swiggyBanners : [
+                  { id: "s1", title: "FRESH SURMAI & SALMON FESTIVAL", subtitle: "Direct landed catch from Port Blair Harbour. Delivered chilled in 90 min.", ctaText: "SHOP FRESH", ctaLink: "/products?search=surmai", imageUrl: "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?auto=format&fit=crop&q=80", badge: "Port Blair Dock" }
+                ];
+                const activeSlide = banners[currentHeroIndex % banners.length] || banners[0];
+                return (
+                  <View key="HERO" className="relative min-h-[220px] overflow-hidden rounded-2xl mx-4 my-2 border border-slate-800 shadow-xl">
+                    <Image
+                      source={{ uri: resolveMediaUrl(activeSlide.imageUrl) }}
+                      className="absolute inset-0 h-full w-full opacity-60"
                       contentFit="cover"
-                      priority="high"
                     />
-                  ) : null}
+                    <View className="relative z-10 p-5 flex-1 justify-between bg-slate-950/40">
+                      <View className="self-start px-2.5 py-1 rounded-full bg-teal-500/20 border border-teal-500/40">
+                        <Text className="text-[9px] font-black uppercase tracking-widest text-teal-300">
+                          {activeSlide.badge}
+                        </Text>
+                      </View>
+                      <View className="my-2">
+                        <Text className="text-xl font-black uppercase text-white tracking-tight leading-tight">
+                          {activeSlide.title}
+                        </Text>
+                        <Text className="text-xs font-medium text-slate-200 mt-1" numberOfLines={2}>
+                          {activeSlide.subtitle}
+                        </Text>
+                      </View>
+                      <Pressable
+                        onPress={() => handleCMSNavigation(activeSlide.ctaLink)}
+                        className="self-start px-5 py-2.5 rounded-full bg-teal-500 shadow-lg shadow-teal-500/40"
+                      >
+                        <Text className="text-xs font-black uppercase tracking-wider text-slate-950">
+                          {activeSlide.ctaText || "SHOP NOW"} →
+                        </Text>
+                      </Pressable>
+                    </View>
+                  </View>
+                );
+              }
+
+              // Default Fallback: Zomato High-Impact Hero
+              const zomatoConf = settings.zomatoHeroConfig || {
+                backdropUrl: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80",
+                titleLine1: "FRESHNESS",
+                titleLine2: "REDEFINED.",
+                subtitle: "Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers.",
+                badgeText: "PREMIUM SEAFOOD MARKET",
+                trustBadge1: "🛡️ FSSAI Quality Certified",
+                trustBadge2: "⏱️ 90-Min Superfast Express",
+                trustBadge3: "❄️ 100% Cold Chain Sealed"
+              };
+
+              return (
+                <View key="HERO" className="relative min-h-[230px] overflow-hidden">
+                  <AnimatedImage
+                    key={currentHeroIndex}
+                    entering={FadeIn.duration(1000)}
+                    exiting={FadeOut.duration(1000)}
+                    source={{ uri: resolveMediaUrl(zomatoConf.backdropUrl) }}
+                    className="absolute inset-0 h-full w-full"
+                    style={{ opacity: imageOpacity }}
+                    contentFit="cover"
+                    priority="high"
+                  />
                   <View className="relative z-10 px-4 pb-5 pt-3 flex-1">
                     <Animated.View entering={FadeInDown.duration(800).delay(200)} className="flex-1">
                       <View 
@@ -598,18 +662,18 @@ export default function CustomerHomeScreen() {
                         }}
                       >
                         <Text numberOfLines={1} ellipsizeMode="tail" className="text-[8px] font-black uppercase tracking-[0.2em]" style={{ color: heroBadgeColor }}>
-                          {settings.customerAssets?.heroBadge || (banner?.sector ? `${banner.sector} Seafood Market` : "Premium Seafood Market")}
+                          {zomatoConf.badgeText}
                         </Text>
                       </View>
                       <Text className="mt-2 text-2xl font-black uppercase italic leading-tight" style={{ color: heroTitle1Color }}>
-                        {settings.customerAssets?.heroTitle1 || heroTitle} <Text style={{ color: heroTitle2Color }}>{settings.customerAssets?.heroTitle2 || heroAccent}</Text>
+                        {zomatoConf.titleLine1} <Text style={{ color: heroTitle2Color }}>{zomatoConf.titleLine2}</Text>
                       </Text>
                       <Text className="mt-1.5 text-xs font-medium italic drop-shadow-md" style={{ color: heroSubtitleColor }}>
-                        {settings.customerAssets?.heroSubtitle || "Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers."}
+                        {zomatoConf.subtitle}
                       </Text>
                     </Animated.View>
 
-                    {/* Pagination Fish Icons (Absolute Bottom Left) */}
+                    {/* Pagination Fish Icons */}
                     {heroSlides.length > 1 && (
                       <View className="absolute bottom-4 left-4 flex-row items-center gap-1.5 z-30">
                         {heroSlides.map((_, idx) => (
@@ -627,7 +691,7 @@ export default function CustomerHomeScreen() {
                       </View>
                     )}
 
-                    {/* Relocated Pre-Orders Banner Widget (Absolute Top Right Compacted) */}
+                    {/* Compact Pre-Orders Banner Widget */}
                     <View className="absolute top-2 right-2 w-[38%] z-30 pointer-events-auto" style={{ aspectRatio: 3.737, elevation: 3, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.15, shadowRadius: 4 }}>
                       <Image
                         source={require("../../assets/pre_orders_mockup.jpg")}
