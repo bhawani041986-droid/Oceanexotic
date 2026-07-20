@@ -32,6 +32,9 @@ export interface AmazonHeroCardItem {
   oldPrice?: string;
   image: string;
   query: string;
+  productId?: string;
+  stockStatus?: 'IN_STOCK' | 'OUT_OF_STOCK' | 'LOW_STOCK' | string;
+  stockCount?: number;
 }
 
 export interface AmazonHeroCardConfig {

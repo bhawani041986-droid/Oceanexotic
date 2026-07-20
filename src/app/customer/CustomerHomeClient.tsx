@@ -62,7 +62,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Input } from "@/components/ui/Input";
-import { useSettingsStore } from "@/store/settingsStore";
+import { useSettingsStore, DEFAULT_AMAZON_HERO_CARDS } from "@/store/settingsStore";
 import { useCartStore } from "@/store/cartStore";
 import { useToast } from "@/components/ui/Toast";
 import { Logo } from "@/components/ui/Logo";
@@ -1707,6 +1707,71 @@ const Pro3DMarketHero = ({ heroItems }: { heroItems?: typeof DEFAULT_FISH_ITEMS 
   );
 };
 
+const AmazonWebHeroSection = ({ cards }: { cards?: any[] }) => {
+  const activeCards = (cards && cards.length > 0 ? cards : DEFAULT_AMAZON_HERO_CARDS).filter((c: any) => c.active !== false);
+  if (activeCards.length === 0) return null;
+
+  return (
+    <div className="w-full bg-slate-950/90 py-6 px-4 border-b border-cyan-500/20">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {activeCards.map((card: any, cIdx: number) => (
+          <div
+            key={card.id || cIdx}
+            className="rounded-2xl p-4 space-y-3 border border-white/20 shadow-2xl relative flex flex-col justify-between"
+            style={{ backgroundColor: card.themeColor || "#0d5c3a" }}
+          >
+            <div className="flex items-center justify-between border-b border-white/10 pb-2">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                <h3 className="text-sm font-black text-white uppercase tracking-tight truncate">{card.title}</h3>
+              </div>
+              {card.badge && (
+                <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-white/20 text-white border border-white/30">
+                  {card.badge}
+                </span>
+              )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              {(card.items || []).slice(0, 4).map((item: any, iIdx: number) => {
+                const href = item.productId ? `/customer/products/${item.productId}` : `/customer/products?search=${encodeURIComponent(item.query || item.name)}`;
+                const isOutOfStock = item.stockStatus === 'OUT_OF_STOCK';
+
+                return (
+                  <Link
+                    key={iIdx}
+                    href={href}
+                    className="bg-white rounded-xl p-2 group hover:scale-[1.02] transition-transform relative flex flex-col justify-between"
+                  >
+                    {isOutOfStock && (
+                      <span className="absolute top-1.5 left-1.5 z-10 bg-rose-600 text-white text-[7px] font-black px-1.5 py-0.5 rounded uppercase">
+                        OUT OF STOCK
+                      </span>
+                    )}
+                    <div className="w-full aspect-square rounded-lg overflow-hidden bg-slate-100 mb-1.5">
+                      <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                    </div>
+                    <p className="text-[11px] font-bold text-slate-900 truncate leading-tight">{item.name}</p>
+                    <div className="flex items-baseline gap-1 mt-0.5">
+                      <span className="text-xs font-black text-sky-600">{item.price}</span>
+                      {item.oldPrice && <span className="text-[9px] text-slate-400 line-through">{item.oldPrice}</span>}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+            <Link href="/customer/products" className="inline-flex items-center gap-1 text-[11px] font-bold text-white/90 hover:text-white pt-1">
+              Explore all deals & products →
+            </Link>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+
 const RECIPES = [
   { id: "REC-1", title: "Pan-Seared King Salmon", time: "20 min", difficulty: "Easy", image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&q=80" },
   { id: "REC-2", title: "Spicy Garlic Tiger Prawns", time: "15 min", difficulty: "Medium", image: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80" },
@@ -2114,7 +2179,10 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
 
   return (
     <div className="w-full">
-      {/* 3. PRO UI/UX 3D DYNAMIC FISH MARKET HERO SECTION */}
+      {/* 3. PRO UI/UX DYNAMIC FISH MARKET HERO SECTIONS */}
+      {settings.heroStyle === 'AMAZON_CARD_GRID' && (
+         <AmazonWebHeroSection cards={settings.amazonHeroCards} />
+      )}
       <Pro3DMarketHero heroItems={settings.customerAssets?.hero3dItems as any} />
 
 

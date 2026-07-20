@@ -133,15 +133,24 @@ export function AmazonHeroCardGrid({ products = [] }: AmazonHeroCardGridProps) {
                   }
                 }
 
+                const isOutOfStock = item.stockStatus === 'OUT_OF_STOCK';
+
                 return (
                   <Pressable
                     key={idx}
-                    onPress={() =>
-                      router.push({
-                        pathname: "/products",
-                        params: { search: item.query || item.name },
-                      })
-                    }
+                    onPress={() => {
+                      if (item.productId) {
+                        router.push({
+                          pathname: "/product/[id]",
+                          params: { id: String(item.productId) },
+                        });
+                      } else {
+                        router.push({
+                          pathname: "/products",
+                          params: { search: item.query || item.name },
+                        });
+                      }
+                    }}
                     style={{
                       width: "48.5%",
                       backgroundColor: "#FFFFFF",
@@ -155,8 +164,23 @@ export function AmazonHeroCardGrid({ products = [] }: AmazonHeroCardGridProps) {
                       position: "relative",
                     }}
                   >
-                    {/* Discount Tag Badge */}
-                    {discountTag && (
+                    {/* Stock & Discount Tag Badges */}
+                    {isOutOfStock ? (
+                      <View style={{
+                        position: "absolute",
+                        top: 8,
+                        left: 8,
+                        zIndex: 10,
+                        backgroundColor: "#ef4444",
+                        paddingHorizontal: 4,
+                        paddingVertical: 1.5,
+                        borderRadius: 5,
+                      }}>
+                        <Text style={{ fontSize: 7, fontWeight: "900", color: "#ffffff" }}>
+                          OUT OF STOCK
+                        </Text>
+                      </View>
+                    ) : discountTag ? (
                       <View style={{
                         position: "absolute",
                         top: 8,
@@ -171,7 +195,7 @@ export function AmazonHeroCardGrid({ products = [] }: AmazonHeroCardGridProps) {
                           {discountTag}
                         </Text>
                       </View>
-                    )}
+                    ) : null}
 
                     <View style={{ width: "100%", aspectRatio: 1.15, borderRadius: 10, overflow: "hidden", backgroundColor: "#f8fafc" }}>
                       <Image

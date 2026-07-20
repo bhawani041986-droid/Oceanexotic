@@ -144,10 +144,19 @@ export default function MarketplaceThemeControl() {
   const [tempHero3d, setTempHero3d] = useState<Hero3DFishItem[]>(
     (customerAssets as any)?.hero3dItems || DEFAULT_HERO3D
   );
+  const [availableProducts, setAvailableProducts] = useState<any[]>([]);
 
-  // Fetch settings on mount
+  // Fetch settings & products on mount
   useEffect(() => {
     fetchSettings();
+    fetch('/api/products/list')
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'success' && Array.isArray(data.products)) {
+          setAvailableProducts(data.products);
+        }
+      })
+      .catch(err => console.error("Error fetching products for theme control:", err));
   }, [fetchSettings]);
 
   // Sync with store when hydrated or updated
@@ -490,31 +499,67 @@ export default function MarketplaceThemeControl() {
                      Add, customize titles, change theme colors, and configure 2x2 product grids for all Amazon Hero Cards.
                   </p>
                </div>
-               <button
-                  type="button"
-                  onClick={() => {
-                     const newId = `card-${Date.now()}`;
-                     const newCard: AmazonHeroCardConfig = {
-                        id: newId,
-                        title: "Custom Seafood Collection",
-                        badge: "Special Deal",
-                        themeColor: "#0d5c3a",
-                        accentColor: "#10B981",
-                        active: true,
-                        items: [
-                           { name: "Surmai Steaks", price: "₹1,899", oldPrice: "₹2,299", image: "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?auto=format&fit=crop&q=80", query: "Surmai" },
-                           { name: "King Jumbo Prawns", price: "₹6,989", oldPrice: "₹7,999", image: "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&q=80", query: "Prawn" },
-                           { name: "Seawater Crabs", price: "₹2,799", oldPrice: "₹3,499", image: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80", query: "Crab" },
-                           { name: "Red Snapper Fillet", price: "₹798", oldPrice: "₹999", image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80", query: "Snapper" },
-                        ]
-                     };
-                     setTempAmazonCards([...tempAmazonCards, newCard]);
-                     toast("Created new Amazon Hero Card!", "success");
-                  }}
-                  className="px-4 py-2 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-black uppercase tracking-wider hover:bg-emerald-500/30 transition-all flex items-center gap-1.5"
-               >
-                  <span>+</span> Add New Hero Card
-               </button>
+               <div className="flex items-center gap-2">
+                  {availableProducts.length > 0 && (
+                     <button
+                        type="button"
+                        onClick={() => {
+                           const currentCards = tempAmazonCards.length > 0 ? tempAmazonCards : DEFAULT_AMAZON_HERO_CARDS;
+                           const prodMap = new Map(availableProducts.map(p => [p.id, p]));
+                           let syncedCount = 0;
+                           const updated = currentCards.map(c => ({
+                              ...c,
+                              items: c.items.map(item => {
+                                 const matched = item.productId ? prodMap.get(item.productId) : availableProducts.find(p => p.name.toLowerCase() === item.name.toLowerCase());
+                                 if (matched) {
+                                    syncedCount++;
+                                    return {
+                                       ...item,
+                                       productId: matched.id,
+                                       name: matched.name,
+                                       price: `₹${matched.price}`,
+                                       image: matched.image_url || matched.image || item.image,
+                                       stockStatus: (matched.stock ?? 10) > 0 ? 'IN_STOCK' : 'OUT_OF_STOCK',
+                                       stockCount: matched.stock ?? 10
+                                    };
+                                 }
+                                 return item;
+                              })
+                           }));
+                           setTempAmazonCards(updated);
+                           toast(`Synced ${syncedCount} products with live catalog & stock telemetry!`, "success");
+                        }}
+                        className="px-3 py-2 rounded-xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 text-xs font-black uppercase tracking-wider hover:bg-cyan-500/30 transition-all flex items-center gap-1.5"
+                     >
+                        <span>⚡</span> Sync Catalog Stock
+                     </button>
+                  )}
+                  <button
+                     type="button"
+                     onClick={() => {
+                        const newId = `card-${Date.now()}`;
+                        const newCard: AmazonHeroCardConfig = {
+                           id: newId,
+                           title: "Custom Seafood Collection",
+                           badge: "Special Deal",
+                           themeColor: "#0d5c3a",
+                           accentColor: "#10B981",
+                           active: true,
+                           items: [
+                              { name: "Surmai Steaks", price: "₹1,899", oldPrice: "₹2,299", image: "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?auto=format&fit=crop&q=80", query: "Surmai" },
+                              { name: "King Jumbo Prawns", price: "₹6,989", oldPrice: "₹7,999", image: "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&q=80", query: "Prawn" },
+                              { name: "Seawater Crabs", price: "₹2,799", oldPrice: "₹3,499", image: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80", query: "Crab" },
+                              { name: "Red Snapper Fillet", price: "₹798", oldPrice: "₹999", image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80", query: "Snapper" },
+                           ]
+                        };
+                        setTempAmazonCards([...tempAmazonCards, newCard]);
+                        toast("Created new Amazon Hero Card!", "success");
+                     }}
+                     className="px-4 py-2 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-black uppercase tracking-wider hover:bg-emerald-500/30 transition-all flex items-center gap-1.5"
+                  >
+                     <span>+</span> Add New Hero Card
+                  </button>
+               </div>
             </div>
 
             {/* List of Configured Amazon Hero Cards */}
@@ -646,13 +691,68 @@ export default function MarketplaceThemeControl() {
                            </div>
 
                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                              {(card.items || []).slice(0, 4).map((item, itemIdx) => (
-                                 <div key={itemIdx} className="bg-slate-900/90 border border-slate-800 rounded-xl p-3 space-y-2">
+                              {(card.items || []).slice(0, 4).map((item, itemIdx) => {
+                                 const matchedProd = availableProducts.find(p => p.id === item.productId || (item.name && p.name?.toLowerCase() === item.name.toLowerCase()));
+                                 const isOutOfStock = item.stockStatus === 'OUT_OF_STOCK' || (matchedProd && matchedProd.stock <= 0);
+
+                                 return (
+                                 <div key={itemIdx} className="bg-slate-900/90 border border-slate-800 rounded-xl p-3 space-y-2 relative">
                                     <div className="flex items-center justify-between border-b border-slate-800 pb-1.5">
                                        <span className="text-[10px] font-extrabold text-emerald-400 uppercase">
                                           Grid Position #{itemIdx + 1}
                                        </span>
+                                       <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded ${isOutOfStock ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'}`}>
+                                          {isOutOfStock ? '✕ OUT OF STOCK' : '⚡ IN STOCK'}
+                                       </span>
                                     </div>
+
+                                    {/* Live Product Search / Dropdown Selector */}
+                                    {availableProducts.length > 0 && (
+                                       <div>
+                                          <label className="text-[8.5px] font-bold text-cyan-400 uppercase block mb-0.5">📦 Pick Live Catalog Product</label>
+                                          <select
+                                             value={item.productId || ""}
+                                             onChange={(e) => {
+                                                const selectedId = e.target.value;
+                                                const selectedProd = availableProducts.find(p => p.id === selectedId);
+                                                const newItems = [...card.items];
+                                                if (selectedProd) {
+                                                   let calculatedOldPrice = "";
+                                                   if (selectedProd.discount_percent && selectedProd.discount_percent > 0) {
+                                                      const orig = Math.round(selectedProd.price / (1 - selectedProd.discount_percent / 100));
+                                                      calculatedOldPrice = `₹${orig.toLocaleString('en-IN')}`;
+                                                   }
+                                                   newItems[itemIdx] = {
+                                                      ...newItems[itemIdx],
+                                                      productId: selectedProd.id,
+                                                      name: selectedProd.name,
+                                                      price: `₹${selectedProd.price}`,
+                                                      oldPrice: calculatedOldPrice || newItems[itemIdx].oldPrice,
+                                                      image: selectedProd.image_url || selectedProd.image || newItems[itemIdx].image,
+                                                      query: selectedProd.name,
+                                                      stockStatus: (selectedProd.stock ?? 10) > 0 ? 'IN_STOCK' : 'OUT_OF_STOCK',
+                                                      stockCount: selectedProd.stock ?? 10
+                                                   };
+                                                } else {
+                                                   newItems[itemIdx] = { ...newItems[itemIdx], productId: undefined };
+                                                }
+                                                const currentCards = tempAmazonCards.length > 0 ? tempAmazonCards : DEFAULT_AMAZON_HERO_CARDS;
+                                                const updated = currentCards.map(c => c.id === card.id ? { ...c, items: newItems } : c);
+                                                setTempAmazonCards(updated);
+                                                if (selectedProd) toast(`Linked ${selectedProd.name} to Grid Position #${itemIdx + 1}!`, "success");
+                                             }}
+                                             className="w-full bg-slate-950 border border-cyan-800/60 rounded-lg px-2.5 py-1.5 text-[10px] text-cyan-300 font-bold"
+                                          >
+                                             <option value="">-- Choose Live Product to Auto-Fill --</option>
+                                             {availableProducts.map(p => (
+                                                <option key={p.id} value={p.id}>
+                                                   {p.name} — ₹{p.price} ({p.stock > 0 ? `Stock: ${p.stock}` : 'OUT OF STOCK'})
+                                                </option>
+                                             ))}
+                                          </select>
+                                       </div>
+                                    )}
+
                                     <div>
                                        <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">Product Name</label>
                                        <input
@@ -703,6 +803,24 @@ export default function MarketplaceThemeControl() {
                                           />
                                        </div>
                                     </div>
+
+                                    <div>
+                                       <label className="text-[8.5px] font-bold text-cyan-400 uppercase block mb-0.5">⚡ Product ID (Direct Detail Link)</label>
+                                       <input
+                                          type="text"
+                                          placeholder="e.g. PRD-101 or Supabase Product ID"
+                                          value={item.productId || ""}
+                                          onChange={(e) => {
+                                             const newItems = [...card.items];
+                                             newItems[itemIdx] = { ...newItems[itemIdx], productId: e.target.value || undefined };
+                                             const currentCards = tempAmazonCards.length > 0 ? tempAmazonCards : DEFAULT_AMAZON_HERO_CARDS;
+                                             const updated = currentCards.map(c => c.id === card.id ? { ...c, items: newItems } : c);
+                                             setTempAmazonCards(updated);
+                                          }}
+                                          className="w-full bg-slate-950 border border-cyan-900/60 rounded-lg px-2.5 py-1.5 text-xs text-cyan-300 font-mono font-bold"
+                                       />
+                                    </div>
+
                                     <ImageUploaderBox
                                        label="Product Image File / URL"
                                        value={item.image}
@@ -716,7 +834,8 @@ export default function MarketplaceThemeControl() {
                                        aspect="square"
                                     />
                                  </div>
-                              ))}
+                                 );
+                              })}
                            </div>
                         </div>
                      </div>
