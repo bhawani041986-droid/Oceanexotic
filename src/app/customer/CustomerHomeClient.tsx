@@ -1356,7 +1356,7 @@ const Pro3DMarketHero = () => {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className="relative flex flex-col overflow-hidden text-white border-b border-cyan-500/20 my-0 min-h-[380px] lg:min-h-[88vh]"
-      style={{ background: "linear-gradient(160deg, #010d1a 0%, #021825 40%, #010f1e 70%, #000d18 100%)", perspective: "1200px" }}
+      style={{ background: "linear-gradient(165deg, #03213d 0%, #053b5c 40%, #032745 75%, #01162b 100%)", perspective: "1200px" }}
     >
       <div className="relative z-30 w-full bg-black/60 border-b border-cyan-500/25 backdrop-blur-lg py-2.5 px-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 text-[11px] font-bold">
@@ -1379,14 +1379,14 @@ const Pro3DMarketHero = () => {
       </div>
 
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 90% at 28% 55%, transparent 20%, rgba(0,8,18,0.75) 70%, rgba(0,5,12,0.95) 100%)" }} />
+        <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 90% at 50% 40%, rgba(0,243,255,0.15) 0%, rgba(1,22,43,0.3) 60%, rgba(0,10,22,0.7) 100%)" }} />
         <div className="absolute left-0 top-0 w-[55%] h-full" style={{ background: "linear-gradient(to right, rgba(0,6,14,0.92) 0%, rgba(0,6,14,0.75) 60%, transparent 100%)" }} />
         <motion.div
           animate={{ backgroundColor: `${activeFish.badgeColor}14` }}
           transition={{ duration: 1.2 }}
           className="absolute right-0 top-0 w-[65%] h-full blur-[90px]"
         />
-        <div className="absolute -top-32 right-1/4 w-[500px] h-[500px] rounded-full bg-cyan-900/15 blur-[120px]" />
+        <div className="absolute -top-32 right-1/4 w-[500px] h-[500px] rounded-full bg-cyan-400/25 blur-[100px]" />
         <div className="absolute -bottom-20 right-10 w-[400px] h-[400px] rounded-full bg-teal-900/12 blur-[100px]" />
         <div className="absolute top-1/2 right-[25%] w-[300px] h-[300px] -translate-y-1/2 rounded-full blur-[80px] transition-all duration-1000"
           style={{ backgroundColor: `${activeFish.badgeColor}0c` }}
@@ -1490,13 +1490,13 @@ const Pro3DMarketHero = () => {
         >
           {/* Dynamic multi-layer glowing ambient orb behind active fish */}
           <motion.div
-            animate={{ backgroundColor: `${fishItems[activeCard].badgeColor}1a` }}
+            animate={{ backgroundColor: `${fishItems[activeCard].badgeColor}33` }}
             transition={{ duration: 1 }}
             className="absolute w-[360px] h-[360px] rounded-full blur-[80px] pointer-events-none"
             style={{ top: "50%", left: "50%", transform: "translate(-50%,-60%)" }}
           />
           <motion.div
-            animate={{ backgroundColor: `${fishItems[activeCard].badgeColor}0d` }}
+            animate={{ backgroundColor: `${fishItems[activeCard].badgeColor}1f` }}
             transition={{ duration: 1 }}
             className="absolute w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none"
             style={{ top: "50%", left: "50%", transform: "translate(-50%,-55%)" }}
@@ -1583,49 +1583,48 @@ const Pro3DMarketHero = () => {
                   {isActive && (
                     <motion.div
                       key={`tag-${fish.id}`}
-                      initial={{ opacity: 0, y: 12 }}
+                      initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.35, ease: "easeOut" }}
-                      className="mt-1.5 sm:mt-4 flex items-center gap-2.5 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-xl sm:rounded-2xl border backdrop-blur-2xl"
+                      className="mt-1 sm:mt-3 flex items-center justify-between gap-1.5 sm:gap-3 px-2.5 sm:px-4 py-1.5 sm:py-2.5 rounded-xl sm:rounded-2xl border backdrop-blur-2xl w-[92%] sm:w-auto max-w-[310px] sm:max-w-none"
                       style={{
-                        background: "rgba(0,6,18,0.90)",
-                        borderColor: `${fish.badgeColor}55`,
-                        boxShadow: `0 0 40px ${fish.badgeColor}25, 0 8px 32px rgba(0,0,0,0.65)`,
-                        minWidth: "260px",
+                        background: "rgba(1,15,30,0.92)",
+                        borderColor: `${fish.badgeColor}65`,
+                        boxShadow: `0 0 35px ${fish.badgeColor}35, 0 8px 30px rgba(0,0,0,0.7)`,
                       }}
                     >
                       {/* Badge */}
                       <span
-                        className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full shrink-0 whitespace-nowrap"
+                        className="text-[8px] sm:text-[10px] font-black uppercase tracking-wider px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full shrink-0 whitespace-nowrap"
                         style={{
-                          background: `${fish.badgeColor}20`,
+                          background: `${fish.badgeColor}25`,
                           color: fish.badgeColor,
-                          border: `1px solid ${fish.badgeColor}55`,
+                          border: `1px solid ${fish.badgeColor}60`,
                         }}
                       >
                         {fish.badge}
                       </span>
                       {/* Name + price */}
-                      <div className="text-left flex-1 min-w-0">
-                        <div className="text-white font-black text-xs sm:text-sm uppercase tracking-tight leading-none truncate">
+                      <div className="text-left flex-1 min-w-0 mx-1">
+                        <div className="text-white font-black text-[11px] sm:text-sm uppercase tracking-tight leading-tight truncate">
                           {fish.name}
                         </div>
                         <div
-                          className="font-black text-base sm:text-lg leading-tight mt-0.5"
+                          className="font-black text-xs sm:text-base leading-tight mt-0.5"
                           style={{ color: fish.badgeColor }}
                         >
                           {fish.price}
-                          <span className="text-slate-400 text-[9px] font-normal ml-1">/ {fish.unit}</span>
+                          <span className="text-slate-300 text-[8px] sm:text-[9px] font-normal ml-0.5">/ {fish.unit}</span>
                         </div>
                       </div>
                       {/* CTA */}
                       <a
                         href="/customer/products"
                         onClick={e => e.stopPropagation()}
-                        className="px-3.5 py-2 rounded-xl font-black text-[10px] sm:text-xs uppercase tracking-wider text-slate-950 hover:brightness-110 transition-all shrink-0"
+                        className="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg sm:rounded-xl font-black text-[9px] sm:text-xs uppercase tracking-wider text-slate-950 hover:brightness-110 transition-all shrink-0 whitespace-nowrap"
                         style={{
-                          background: `linear-gradient(135deg, ${fish.badgeColor}, ${fish.badgeColor}bb)`,
-                          boxShadow: `0 0 16px ${fish.badgeColor}50`,
+                          background: `linear-gradient(135deg, ${fish.badgeColor}, ${fish.badgeColor}dd)`,
+                          boxShadow: `0 0 14px ${fish.badgeColor}60`,
                         }}
                       >
                         + Add
@@ -1653,12 +1652,12 @@ const Pro3DMarketHero = () => {
           })}
 
           {/* Species selector pills */}
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2 z-50">
+          <div className="absolute bottom-0 sm:bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1.5 sm:gap-2 z-50 w-max max-w-[95%]">
             {fishItems.map((fish, idx) => (
               <button
                 key={`pill-${fish.id}`}
                 onClick={() => setActiveCard(idx)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold border transition-all duration-300"
+                className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[9px] sm:text-xs font-bold border transition-all duration-300"
                 style={
                   activeCard === idx
                     ? {
