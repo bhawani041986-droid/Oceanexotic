@@ -423,52 +423,62 @@ const MaritimeWaveDivider = () => {
         })}
       </div>
 
-      {/* 4. RISING BUBBLE STREAMS */}
-      {[8, 22, 38, 55, 72, 88].map((x, streamIdx) => (
-        <div key={`bubble-stream-${streamIdx}`} className="absolute bottom-1 h-full z-15 pointer-events-none" style={{ left: x + "%" }}>
-          {[...Array(3)].map((_, i) => (
+      {/* 4. ULTRA-DENSE OXYGEN BUBBLE CHIMNEYS */}
+      {[3, 11, 19, 27, 36, 44, 52, 61, 69, 77, 85, 93].map((x, streamIdx) => (
+        <div key={`bubble-stream-${streamIdx}`} className="absolute bottom-0 h-full z-15 pointer-events-none" style={{ left: x + "%" }}>
+          {[...Array(5)].map((_, i) => (
             <div
               key={`bubble-${streamIdx}-${i}`}
-              className="absolute w-1.5 h-1.5 md:w-2 md:h-2 bg-cyan-200/60 rounded-full border border-white/80 shadow-[0_0_6px_rgba(0,243,255,0.8)] animate-rise-bubble"
+              className="absolute bg-cyan-100/70 rounded-full border border-white/90 shadow-[0_0_8px_rgba(0,243,255,0.9)] animate-rise-bubble"
               style={{ 
-                bottom: (i * 28) + "px", 
-                left: (i % 2 === 0 ? "-4px" : "4px"),
-                animationDelay: `${(streamIdx * 0.4) + (i * 0.8)}s`,
-                animationDuration: `${3.5 + (i * 0.5)}s`
+                width: (i % 2 === 0 ? "6px" : "10px"),
+                height: (i % 2 === 0 ? "6px" : "10px"),
+                bottom: (i * 22) + "px", 
+                left: (i % 2 === 0 ? "-6px" : "6px"),
+                animationDelay: `${(streamIdx * 0.25) + (i * 0.6)}s`,
+                animationDuration: `${2.8 + (i * 0.4)}s`
               }}
             />
           ))}
         </div>
       ))}
 
-      {/* 5. DENSE COLORFUL CORAL REEF & FLORA BED */}
-      <div className="absolute inset-0 z-20 pointer-events-none flex items-end justify-between px-2 pb-1 overflow-hidden">
-        {/* Branching Corals, Swaying Kelp, Anemones & Marine Assets */}
+      {/* 5. DENSE COLORFUL CORAL REEF & FLORA BED (24 DENSE MARINE ELEMENTS) */}
+      <div className="absolute inset-0 z-20 pointer-events-none flex items-end justify-between px-1 pb-0.5 overflow-hidden">
         {[
-          { icon: "🌺", name: "Magenta Coral", scale: 1.4, left: "2%", animate: "animate-pulse", color: "#ff007f" },
-          { icon: "🌿", name: "Teal Kelp", scale: 1.6, left: "7%", animate: "animate-sway-kelp", color: "#00f5d4" },
-          { icon: "🪸", name: "Branching Reef", scale: 1.5, left: "14%", animate: "animate-pulse", color: "#f43f5e" },
-          { icon: "🐚", name: "Pearl Shell", scale: 1.2, left: "21%", animate: "animate-bounce", color: "#ffffff" },
-          { icon: "⭐", name: "Golden Starfish", scale: 1.3, left: "28%", animate: "animate-pulse", color: "#eab308" },
-          { icon: "🌿", name: "Deep Kelp", scale: 1.7, left: "35%", animate: "animate-sway-kelp", color: "#10b981" },
-          { icon: "🌺", name: "Neon Anemone", scale: 1.5, left: "42%", animate: "animate-pulse", color: "#00f3ff" },
-          { icon: "🦀", name: "Reef Crab", scale: 1.3, left: "49%", animate: "animate-bounce", color: "#ef4444" },
-          { icon: "🪸", name: "Pink Reef", scale: 1.6, left: "56%", animate: "animate-pulse", color: "#ec4899" },
-          { icon: "🌿", name: "Swaying Kelp", scale: 1.8, left: "63%", animate: "animate-sway-kelp", color: "#14b8a6" },
-          { icon: "🐙", name: "Mini Octopus", scale: 1.4, left: "70%", animate: "animate-bounce", color: "#a855f7" },
-          { icon: "🐚", name: "Clam", scale: 1.2, left: "77%", animate: "animate-pulse", color: "#f87171" },
-          { icon: "🌺", name: "Cyan Anemone", scale: 1.5, left: "84%", animate: "animate-pulse", color: "#06b6d4" },
-          { icon: "🌿", name: "Harbor Seaweed", scale: 1.7, left: "91%", animate: "animate-sway-kelp", color: "#059669" },
-          { icon: "⭐", name: "Red Starfish", scale: 1.3, left: "96%", animate: "animate-pulse", color: "#f43f5e" },
+          { icon: "🌺", name: "Magenta Coral", scale: 1.5, left: "1%", animate: "animate-pulse" },
+          { icon: "🌿", name: "Teal Kelp", scale: 1.7, left: "5%", animate: "animate-sway-kelp" },
+          { icon: "🪸", name: "Branching Reef", scale: 1.6, left: "9%", animate: "animate-pulse" },
+          { icon: "🌾", name: "Sea Grass", scale: 1.4, left: "13%", animate: "animate-sway-kelp" },
+          { icon: "🐚", name: "Pearl Shell", scale: 1.3, left: "17%", animate: "animate-bounce" },
+          { icon: "⭐", name: "Golden Starfish", scale: 1.4, left: "21%", animate: "animate-pulse" },
+          { icon: "🦐", name: "Tiger Prawn", scale: 1.3, left: "25%", animate: "animate-bounce" },
+          { icon: "🌿", name: "Deep Kelp", scale: 1.8, left: "29%", animate: "animate-sway-kelp" },
+          { icon: "🌺", name: "Neon Anemone", scale: 1.6, left: "34%", animate: "animate-pulse" },
+          { icon: "🦀", name: "Reef Crab", scale: 1.4, left: "38%", animate: "animate-bounce" },
+          { icon: "🪸", name: "Pink Reef", scale: 1.7, left: "42%", animate: "animate-pulse" },
+          { icon: "🦞", name: "Spiny Lobster", scale: 1.5, left: "47%", animate: "animate-bounce" },
+          { icon: "🌿", name: "Swaying Kelp", scale: 1.9, left: "51%", animate: "animate-sway-kelp" },
+          { icon: "🐙", name: "Octopus", scale: 1.5, left: "56%", animate: "animate-bounce" },
+          { icon: "🦪", name: "Oyster Pearl", scale: 1.3, left: "60%", animate: "animate-pulse" },
+          { icon: "🌺", name: "Violet Anemone", scale: 1.6, left: "65%", animate: "animate-pulse" },
+          { icon: "🐌", name: "Sea Snail", scale: 1.2, left: "69%", animate: "animate-bounce" },
+          { icon: "🌾", name: "Aqua Grass", scale: 1.5, left: "73%", animate: "animate-sway-kelp" },
+          { icon: "🪸", name: "Red Reef", scale: 1.7, left: "77%", animate: "animate-pulse" },
+          { icon: "🐡", name: "Puffer Reef", scale: 1.4, left: "82%", animate: "animate-bounce" },
+          { icon: "🌺", name: "Cyan Coral", scale: 1.6, left: "86%", animate: "animate-pulse" },
+          { icon: "🌿", name: "Harbor Seaweed", scale: 1.8, left: "90%", animate: "animate-sway-kelp" },
+          { icon: "🐢", name: "Sea Turtle", scale: 1.5, left: "94%", animate: "animate-bounce" },
+          { icon: "⭐", name: "Red Starfish", scale: 1.4, left: "97.5%", animate: "animate-pulse" },
         ].map((item, i) => (
           <div
             key={`coral-reef-${i}`}
-            className={cn("absolute origin-bottom drop-shadow-[0_0_10px_rgba(0,243,255,0.5)] transition-all", item.animate)}
+            className={cn("absolute origin-bottom drop-shadow-[0_0_12px_rgba(0,243,255,0.6)] transition-all", item.animate)}
             style={{ 
               fontSize: `${16 * item.scale}px`, 
               left: item.left, 
               bottom: "4px", 
-              animationDuration: `${3 + (i % 3)}s`
+              animationDuration: `${2.5 + (i % 3)}s`
             }}
           >
             {item.icon}
@@ -477,12 +487,12 @@ const MaritimeWaveDivider = () => {
       </div>
 
       {/* 6. MARINE SNOW (Bioluminescent Floating Particles) */}
-      <div className="absolute inset-0 z-5 opacity-30 pointer-events-none">
-        {[...Array(12)].map((_, i) => (
+      <div className="absolute inset-0 z-5 opacity-35 pointer-events-none">
+        {[...Array(16)].map((_, i) => (
           <div
             key={`snow-${i}`}
-            className="absolute w-1 h-1 bg-cyan-200 rounded-full animate-ping shadow-[0_0_6px_#00f3ff]"
-            style={{ left: (i * 8.5) + "%", top: (15 + (i * 7) % 65) + "%", animationDuration: `${3.5 + (i % 3)}s` }}
+            className="absolute w-1.5 h-1.5 bg-cyan-200 rounded-full animate-ping shadow-[0_0_8px_#00f3ff]"
+            style={{ left: (i * 6.2) + "%", top: (10 + (i * 7) % 75) + "%", animationDuration: `${3 + (i % 3)}s` }}
           />
         ))}
       </div>
