@@ -370,25 +370,25 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'space-between',
-              paddingHorizontal: 18,
-              paddingVertical: 14,
+              paddingHorizontal: 16,
+              paddingVertical: 8,
               borderBottomWidth: 1,
               borderBottomColor: 'rgba(255, 255, 255, 0.08)',
               backgroundColor: '#030812',
             }}>
               <Pressable onPress={() => navigateTo('/home')}>
-                <Logo size="sm" style={{ width: 148, height: 40 }} />
+                <Logo size="sm" style={{ width: 136, height: 34 }} />
               </Pressable>
               <Pressable
                 onPress={() => setIsMenuOpen(false)}
                 style={{
-                  width: 34, height: 34, borderRadius: 10,
+                  width: 30, height: 30, borderRadius: 8,
                   backgroundColor: 'rgba(255, 255, 255, 0.06)',
                   borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.12)',
                   alignItems: 'center', justifyContent: 'center',
                 }}
               >
-                <MaterialCommunityIcons name="close" size={18} color="#94a3b8" />
+                <MaterialCommunityIcons name="close" size={16} color="#94a3b8" />
               </Pressable>
             </View>
 
@@ -396,71 +396,71 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
             <ScrollView 
               style={{ flex: 1 }} 
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{ paddingBottom: 20 }}
+              contentContainerStyle={{ paddingBottom: 16 }}
             >
-              {/* 1. USER PROFILE GLASS CARD (Interactive) */}
+              {/* 1. USER PROFILE GLASS CARD (Compact) */}
               <Pressable
                 onPress={() => navigateTo('/profile')}
                 style={{
-                  marginHorizontal: 16,
-                  marginTop: 14,
-                  padding: 12,
-                  borderRadius: 16,
+                  marginHorizontal: 14,
+                  marginTop: 10,
+                  padding: 9,
+                  borderRadius: 14,
                   backgroundColor: 'rgba(6, 182, 212, 0.08)',
                   borderWidth: 1,
                   borderColor: 'rgba(6, 182, 212, 0.25)',
                   flexDirection: 'row',
                   alignItems: 'center',
-                  gap: 12,
+                  gap: 10,
                   shadowColor: '#06b6d4',
-                  shadowOffset: { width: 0, height: 2 },
+                  shadowOffset: { width: 0, height: 1 },
                   shadowOpacity: 0.1,
-                  shadowRadius: 8,
+                  shadowRadius: 4,
                 }}
               >
                 <View style={{
-                  width: 42, height: 42, borderRadius: 21,
+                  width: 34, height: 34, borderRadius: 17,
                   backgroundColor: 'rgba(6, 182, 212, 0.18)',
-                  borderWidth: 2, borderColor: '#06b6d4',
+                  borderWidth: 1.5, borderColor: '#06b6d4',
                   alignItems: 'center', justifyContent: 'center',
                   overflow: 'hidden',
                 }}>
                   {user?.avatar ? (
                     <Image source={{ uri: resolveMediaUrl(user.avatar) }} style={{ width: '100%', height: '100%' }} contentFit="cover" />
                   ) : (
-                    <MaterialCommunityIcons name="account" size={24} color="#06b6d4" />
+                    <MaterialCommunityIcons name="account" size={20} color="#06b6d4" />
                   )}
                 </View>
                 <View style={{ flex: 1 }}>
-                  <Text style={{ fontSize: 13, fontWeight: '800', color: '#f8fafc' }} numberOfLines={1}>
+                  <Text style={{ fontSize: 12, fontWeight: '800', color: '#f8fafc' }} numberOfLines={1}>
                     {user?.name || "Customer Account"}
                   </Text>
-                  <Text style={{ fontSize: 10, fontWeight: '600', color: '#38bdf8' }} numberOfLines={1}>
+                  <Text style={{ fontSize: 9.5, fontWeight: '600', color: '#38bdf8' }} numberOfLines={1}>
                     {user?.email || "Tap to Manage Profile"}
                   </Text>
                 </View>
                 <View style={{
-                  paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8,
+                  paddingHorizontal: 7, paddingVertical: 2, borderRadius: 6,
                   backgroundColor: 'rgba(6, 182, 212, 0.2)',
                   borderWidth: 1, borderColor: 'rgba(6, 182, 212, 0.3)',
                 }}>
-                  <Text style={{ fontSize: 8, fontWeight: '900', color: '#38bdf8', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                  <Text style={{ fontSize: 7.5, fontWeight: '900', color: '#38bdf8', textTransform: 'uppercase', letterSpacing: 0.5 }}>
                     {user?.role || "GUEST"}
                   </Text>
                 </View>
               </Pressable>
 
-              {/* 2. DELIVERING TO LOCATION SELECTOR CARD */}
+              {/* 2. DELIVERING TO LOCATION SELECTOR CARD (Compact) */}
               <View
                 style={{
-                  marginHorizontal: 16,
-                  marginTop: 12,
-                  padding: 12,
-                  borderRadius: 16,
+                  marginHorizontal: 14,
+                  marginTop: 8,
+                  padding: 9,
+                  borderRadius: 14,
                   backgroundColor: '#081729',
                   borderWidth: 1,
                   borderColor: '#132f4c',
-                  gap: 8,
+                  gap: 6,
                 }}
               >
                 <Pressable
@@ -468,33 +468,30 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',
-                    gap: 10,
+                    gap: 8,
                   }}
                 >
                   <View style={{
-                    width: 32, height: 32, borderRadius: 10,
+                    width: 26, height: 26, borderRadius: 8,
                     backgroundColor: 'rgba(6, 182, 212, 0.15)',
                     alignItems: 'center', justifyContent: 'center',
                   }}>
-                    <MaterialCommunityIcons name="map-marker-radius" size={18} color="#06b6d4" />
+                    <MaterialCommunityIcons name="map-marker-radius" size={15} color="#06b6d4" />
                   </View>
                   <View style={{ flex: 1 }}>
-                    <Text style={{ fontSize: 9, fontWeight: '800', color: '#64748b', textTransform: 'uppercase', letterSpacing: 0.8 }}>
+                    <Text style={{ fontSize: 8.5, fontWeight: '800', color: '#64748b', textTransform: 'uppercase', letterSpacing: 0.6 }}>
                       Delivering To Hub
                     </Text>
-                    <Text style={{ fontSize: 12, fontWeight: '800', color: '#38bdf8' }} numberOfLines={1}>
+                    <Text style={{ fontSize: 11, fontWeight: '800', color: '#38bdf8' }} numberOfLines={1}>
                       {activeHubName}
                     </Text>
                   </View>
-                  <MaterialCommunityIcons name="chevron-right" size={18} color="#06b6d4" />
+                  <MaterialCommunityIcons name="chevron-right" size={16} color="#06b6d4" />
                 </Pressable>
 
                 {/* 4 Active Delivery Zones Chips */}
-                <View style={{ borderTopWidth: 1, borderTopColor: 'rgba(255, 255, 255, 0.06)', paddingTop: 8 }}>
-                  <Text style={{ fontSize: 8, fontWeight: '800', color: '#475569', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 6 }}>
-                    Active Coverage Zones:
-                  </Text>
-                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6 }}>
+                <View style={{ borderTopWidth: 1, borderTopColor: 'rgba(255, 255, 255, 0.06)', paddingTop: 6 }}>
+                  <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 5 }}>
                     {['Minibay', 'Dollygunj', 'Atamphad', 'Bhatubasti'].map((area) => (
                       <Pressable
                         key={area}
@@ -503,22 +500,22 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                           setIsLocationModalOpen(true);
                         }}
                         style={{
-                          paddingHorizontal: 8, paddingVertical: 4,
-                          borderRadius: 12, borderWidth: 1,
+                          paddingHorizontal: 7, paddingVertical: 2.5,
+                          borderRadius: 10, borderWidth: 1,
                           borderColor: 'rgba(6, 182, 212, 0.25)',
                           backgroundColor: 'rgba(6, 182, 212, 0.08)',
-                          flexDirection: 'row', alignItems: 'center', gap: 4,
+                          flexDirection: 'row', alignItems: 'center', gap: 3,
                         }}
                       >
-                        <Text style={{ fontSize: 9 }}>🚚</Text>
-                        <Text style={{ fontSize: 9, fontWeight: '800', color: '#38bdf8' }}>{area}</Text>
+                        <Text style={{ fontSize: 8 }}>🚚</Text>
+                        <Text style={{ fontSize: 8.5, fontWeight: '800', color: '#38bdf8' }}>{area}</Text>
                       </Pressable>
                     ))}
                   </View>
                 </View>
               </View>
 
-              {/* 3. GROUPED NAVIGATION CATEGORIES */}
+              {/* 3. GROUPED NAVIGATION CATEGORIES (Compact) */}
               {[
                 {
                   title: "STOREFRONT & SHOPPING",
@@ -545,15 +542,15 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                   ]
                 }
               ].map((section) => (
-                <View key={section.title} style={{ marginTop: 16 }}>
+                <View key={section.title} style={{ marginTop: 10 }}>
                   <Text style={{
-                    fontSize: 9, fontWeight: '900', color: '#64748b',
-                    textTransform: 'uppercase', letterSpacing: 1.2,
-                    paddingHorizontal: 20, marginBottom: 6,
+                    fontSize: 8.5, fontWeight: '900', color: '#64748b',
+                    textTransform: 'uppercase', letterSpacing: 1.1,
+                    paddingHorizontal: 18, marginBottom: 4,
                   }}>
                     {section.title}
                   </Text>
-                  <View style={{ paddingHorizontal: 16, gap: 6 }}>
+                  <View style={{ paddingHorizontal: 14, gap: 4 }}>
                     {section.items.map((item) => {
                       const active = isItemActive(item.href);
                       return (
@@ -563,36 +560,36 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                           style={{
                             flexDirection: 'row',
                             alignItems: 'center',
-                            paddingHorizontal: 12,
-                            paddingVertical: 10,
-                            borderRadius: 14,
+                            paddingHorizontal: 10,
+                            paddingVertical: 7,
+                            borderRadius: 12,
                             backgroundColor: active ? 'rgba(6, 182, 212, 0.14)' : '#071526',
                             borderWidth: 1,
                             borderColor: active ? 'rgba(6, 182, 212, 0.4)' : '#0f2742',
-                            gap: 12,
+                            gap: 10,
                           }}
                         >
                           <View style={{
-                            width: 34, height: 34, borderRadius: 10,
+                            width: 28, height: 28, borderRadius: 8,
                             backgroundColor: active ? 'rgba(6, 182, 212, 0.25)' : '#0d2238',
                             alignItems: 'center', justifyContent: 'center',
                           }}>
                             <MaterialCommunityIcons
                               name={item.icon as any}
-                              size={18}
+                              size={16}
                               color={active ? '#06b6d4' : '#94a3b8'}
                             />
                           </View>
                           <View style={{ flex: 1 }}>
                             <Text style={{
-                              fontSize: 12,
+                              fontSize: 11.5,
                               fontWeight: '800',
                               color: active ? '#ffffff' : '#e2e8f0',
                             }}>
                               {item.label}
                             </Text>
                             {item.subtitle && (
-                              <Text style={{ fontSize: 9, fontWeight: '600', color: '#64748b' }} numberOfLines={1}>
+                              <Text style={{ fontSize: 8.5, fontWeight: '600', color: '#64748b' }} numberOfLines={1}>
                                 {item.subtitle}
                               </Text>
                             )}
@@ -601,18 +598,18 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                           {/* Badge or Chevron */}
                           {item.badge ? (
                             <View style={{
-                              paddingHorizontal: 8, paddingVertical: 2, borderRadius: 10,
+                              paddingHorizontal: 7, paddingVertical: 1.5, borderRadius: 8,
                               backgroundColor: '#06b6d4', shadowColor: '#06b6d4',
-                              shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.4, shadowRadius: 4,
+                              shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.4, shadowRadius: 3,
                             }}>
-                              <Text style={{ fontSize: 9, fontWeight: '900', color: '#030812' }}>
+                              <Text style={{ fontSize: 8.5, fontWeight: '900', color: '#030812' }}>
                                 {item.badge}
                               </Text>
                             </View>
                           ) : (
                             <MaterialCommunityIcons
                               name="chevron-right"
-                              size={16}
+                              size={14}
                               color={active ? '#06b6d4' : '#475569'}
                             />
                           )}
@@ -623,8 +620,8 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                 </View>
               ))}
 
-              {/* 4. SIGN OUT ACTION CARD */}
-              <View style={{ paddingHorizontal: 16, marginTop: 18 }}>
+              {/* 4. SIGN OUT ACTION CARD (Compact) */}
+              <View style={{ paddingHorizontal: 14, marginTop: 12 }}>
                 <Pressable
                   onPress={() => {
                     setIsMenuOpen(false);
@@ -634,44 +631,44 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
                   style={{
                     flexDirection: 'row',
                     alignItems: 'center',
-                    paddingHorizontal: 12,
-                    paddingVertical: 11,
-                    borderRadius: 14,
+                    paddingHorizontal: 10,
+                    paddingVertical: 8,
+                    borderRadius: 12,
                     backgroundColor: 'rgba(239, 68, 68, 0.08)',
                     borderWidth: 1,
                     borderColor: 'rgba(239, 68, 68, 0.25)',
-                    gap: 12,
+                    gap: 10,
                   }}
                 >
                   <View style={{
-                    width: 34, height: 34, borderRadius: 10,
+                    width: 28, height: 28, borderRadius: 8,
                     backgroundColor: 'rgba(239, 68, 68, 0.15)',
                     alignItems: 'center', justifyContent: 'center',
                   }}>
-                    <MaterialCommunityIcons name="logout" size={18} color="#ef4444" />
+                    <MaterialCommunityIcons name="logout" size={16} color="#ef4444" />
                   </View>
                   <View style={{ flex: 1 }}>
-                    <Text style={{ fontSize: 12, fontWeight: '800', color: '#ef4444' }}>
+                    <Text style={{ fontSize: 11.5, fontWeight: '800', color: '#ef4444' }}>
                       Sign Out
                     </Text>
-                    <Text style={{ fontSize: 9, fontWeight: '600', color: 'rgba(239, 68, 68, 0.7)' }}>
+                    <Text style={{ fontSize: 8.5, fontWeight: '600', color: 'rgba(239, 68, 68, 0.7)' }}>
                       End Active Customer Session
                     </Text>
                   </View>
-                  <MaterialCommunityIcons name="chevron-right" size={16} color="#ef4444" />
+                  <MaterialCommunityIcons name="chevron-right" size={14} color="#ef4444" />
                 </Pressable>
               </View>
             </ScrollView>
 
             {/* ── FOOTER TELEMETRY ── */}
             <View style={{
-              paddingHorizontal: 16,
-              paddingVertical: 12,
+              paddingHorizontal: 14,
+              paddingVertical: 10,
               borderTopWidth: 1,
               borderTopColor: 'rgba(255, 255, 255, 0.08)',
               backgroundColor: '#030812',
             }}>
-              <Text style={{ fontSize: 9, fontWeight: '800', color: '#475569', textAlign: 'center', letterSpacing: 0.8 }}>
+              <Text style={{ fontSize: 8.5, fontWeight: '800', color: '#475569', textAlign: 'center', letterSpacing: 0.8 }}>
                 📍 Sri Vijayapuram Hub (PB-DOL-01)  •  OceanExotic v1.4
               </Text>
             </View>
