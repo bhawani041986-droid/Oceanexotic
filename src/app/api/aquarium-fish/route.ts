@@ -4,11 +4,11 @@ import { supabase } from '@/lib/supabase';
 export const dynamic = 'force-dynamic';
 
 const DEFAULT_FLEET = [
-  { name: "Red Snapper", image: "/ICONS/Red-snapper.webp", swimRight: -1, swimLeft: 1 },
-  { name: "Kingfish", image: "/ICONS/kingfish.webp", swimRight: -1, swimLeft: 1 },
-  { name: "White Pomfret", image: "/ICONS/white-pomfret.webp", swimRight: -1, swimLeft: 1 },
-  { name: "Grouper", image: "/ICONS/grouper.webp", swimRight: -1, swimLeft: 1 },
-  { name: "Mackerel", image: "/ICONS/mackerel.webp", swimRight: -1, swimLeft: 1 }
+  { name: "Red Snapper", image: "/ICONS/Red-snapper.webp", swimRight: 1, swimLeft: -1 },
+  { name: "Kingfish", image: "/ICONS/kingfish.webp", swimRight: 1, swimLeft: -1 },
+  { name: "White Pomfret", image: "/ICONS/white-pomfret.webp", swimRight: 1, swimLeft: -1 },
+  { name: "Grouper", image: "/ICONS/grouper.webp", swimRight: 1, swimLeft: -1 },
+  { name: "Mackerel", image: "/ICONS/mackerel.webp", swimRight: 1, swimLeft: -1 }
 ];
 
 export async function GET(req: NextRequest) {
