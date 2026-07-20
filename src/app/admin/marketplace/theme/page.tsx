@@ -40,6 +40,80 @@ import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useToast } from "@/components/ui/Toast";
 import { Logo } from "@/components/ui/Logo";
+interface ImageUploaderBoxProps {
+  label: string;
+  value: string;
+  onChange: (url: string) => void;
+  aspect?: "square" | "banner";
+}
+
+function ImageUploaderBox({ label, value, onChange, aspect = "square" }: ImageUploaderBoxProps) {
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const response = await fetch("/api/system/upload", {
+        method: "POST",
+        body: formData
+      });
+      const data = await response.json();
+      if (data.status === "success" && data.url) {
+        onChange(data.url);
+      } else {
+        alert(data.message || "Failed to upload image.");
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("Failed to upload image.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-1">
+      <label className="text-[8.5px] font-bold text-slate-400 uppercase block">{label}</label>
+      <div className="flex items-center gap-2">
+        {value ? (
+          <div className={`relative rounded-lg overflow-hidden border border-slate-700 bg-slate-950 flex-shrink-0 ${aspect === 'banner' ? 'w-16 h-10' : 'w-10 h-10'}`}>
+            <img src={value} alt="Preview" className="w-full h-full object-cover" />
+          </div>
+        ) : null}
+        
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          className="hidden"
+        />
+
+        <button
+          type="button"
+          disabled={isUploading}
+          onClick={() => fileInputRef.current?.click()}
+          className="px-2.5 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-[10px] font-black uppercase hover:bg-emerald-500/30 transition-all flex items-center gap-1 flex-shrink-0"
+        >
+          {isUploading ? "Uploading..." : "📤 Upload File"}
+        </button>
+
+        <input
+          type="text"
+          placeholder="https://... or uploaded URL"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-[10px] text-slate-300 font-mono"
+        />
+      </div>
+    </div>
+  );
+}
 
 export default function MarketplaceThemeControl() {
   const { customerTheme, heroStyle, amazonHeroCards, swiggyBanners, zomatoHeroConfig, compactStripConfig, logoTextColor, logoPrimaryColor, logoSecondaryColor, atmosphericGlow, heroOverlayOpacity, customerAssets, setSettings, pushSettings, fetchSettings } = useSettingsStore();
@@ -769,15 +843,14 @@ export default function MarketplaceThemeControl() {
                            />
                         </div>
                         <div className="sm:col-span-2">
-                           <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">Banner Image URL</label>
-                           <input
-                              type="text"
+                           <ImageUploaderBox
+                              label="Banner Image File / URL"
                               value={slide.imageUrl}
-                              onChange={(e) => {
-                                 const updated = tempSwiggyBanners.map(s => s.id === slide.id ? { ...s, imageUrl: e.target.value } : s);
+                              onChange={(url) => {
+                                 const updated = tempSwiggyBanners.map(s => s.id === slide.id ? { ...s, imageUrl: url } : s);
                                  setTempSwiggyBanners(updated);
                               }}
-                              className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1.5 text-[10px] text-slate-300 font-mono"
+                              aspect="banner"
                            />
                         </div>
                      </div>
@@ -835,14 +908,11 @@ export default function MarketplaceThemeControl() {
                      />
                   </div>
                   <div className="sm:col-span-2">
-                     <label className="text-[9px] font-extrabold uppercase tracking-wider text-slate-300 block mb-1">
-                        Backdrop Image / Video URL
-                     </label>
-                     <input
-                        type="text"
+                     <ImageUploaderBox
+                        label="Backdrop Image / Video File / URL"
                         value={tempZomatoHero.backdropUrl}
-                        onChange={(e) => setTempZomatoHero({ ...tempZomatoHero, backdropUrl: e.target.value })}
-                        className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-[10px] text-slate-300 font-mono"
+                        onChange={(url) => setTempZomatoHero({ ...tempZomatoHero, backdropUrl: url })}
+                        aspect="banner"
                      />
                   </div>
                </div>
