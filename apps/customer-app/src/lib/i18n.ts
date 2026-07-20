@@ -51,7 +51,7 @@ const translations: Record<string, Record<string, string>> = {
     enter_email_address: "Please enter your email address",
     enter_valid_email: "Please enter a valid email address",
     subscribed_to_newsletter: "Subscribed to newsletter!",
-    live_harbor_arrival: "Live Harbor Arrival • Freshness Guaranteed",
+    live_harbor_arrival: "Freshness Guaranteed",
     premium_steaks_fillets: "Premium Steaks & Fillets",
     dry_fish: "Dry Fish",
     mutton: "Mutton",

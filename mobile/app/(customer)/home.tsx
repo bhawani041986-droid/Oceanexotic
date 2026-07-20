@@ -957,56 +957,39 @@ export default function CustomerHomeScreen() {
               );
             case "TODAYS_CATCH":
               return (
-                <View key="TODAYS_CATCH" className="px-4 py-4">
-                  <View className="mb-6 flex-col gap-4">
-                    <View className="gap-1">
-                      <View>
-                        <Text className="text-xl font-black uppercase italic" style={{ color: '#FF5E36' }}>
-                          {t('todays_catch')}
-                        </Text>
-                        <View className="mt-1.5 mb-3" style={{ height: 3, width: 80, borderRadius: 999, overflow: 'hidden' }}>
-                          <LinearGradient
-                            colors={['#FF3E3E', '#FFD700', '#00F3FF']} // Red -> Gold -> Cyan
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                            style={{ flex: 1 }}
-                          />
-                        </View>
-                      </View>
-                      <Text className="text-[10px] font-medium uppercase tracking-widest" style={{ color: colors.textMuted }}>
-                        {t('live_harbor_arrival')}
+                <View key="TODAYS_CATCH" className="px-4 py-2">
+                  <View className="mb-3 flex-row items-center justify-between gap-2 flex-wrap">
+                    <View className="flex-row items-center gap-2">
+                      <Text className="text-lg font-black uppercase italic tracking-tight" style={{ color: '#FF5E36' }}>
+                        {t('todays_catch')}
                       </Text>
+                      <View className="px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30">
+                        <Text className="text-[8px] font-extrabold uppercase tracking-wider text-emerald-400">
+                          {t('live_harbor_arrival')}
+                        </Text>
+                      </View>
                     </View>
-                     <View 
-                       className="flex-row flex-wrap rounded-none border p-1"
-                       style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}
-                     >
+
+                    {/* Compact Filter Tabs */}
+                    <View 
+                      className="flex-row items-center rounded-lg border p-0.5"
+                      style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}
+                    >
                       {(["ALL", "MORNING", "AFTERNOON", "EVENING"] as BatchFilter[]).map((batch) => (
                         <Pressable
                           key={batch}
                           onPress={() => setActiveBatch(batch)}
-                          className="rounded-none px-3 py-2 relative overflow-hidden"
+                          className="rounded-md px-2.5 py-1"
                           style={activeBatch === batch ? { backgroundColor: primaryColor } : undefined}
                         >
                           <Text
-                            className="text-[9px] font-black uppercase tracking-widest"
+                            className="text-[8px] font-black uppercase tracking-wider"
                             style={{
                               color: activeBatch === batch ? (isLightColor(primaryColor) ? "#000000" : "#FFFFFF") : colors.textMuted
                             }}
                           >
                             {t(batch.toLowerCase())}
                           </Text>
-                          {/* Cut-corner bevel overlays on active filter tab */}
-                          {activeBatch === batch && (
-                            <>
-                              <Svg width={5} height={5} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
-                                <Path d="M0,0 L5,0 L0,5 Z" fill={colors.bg} />
-                              </Svg>
-                              <Svg width={5} height={5} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
-                                <Path d="M5,5 L0,5 L5,0 Z" fill={colors.bg} />
-                              </Svg>
-                            </>
-                          )}
                         </Pressable>
                       ))}
                     </View>
