@@ -592,7 +592,7 @@ function QualityCheckedSection() {
   });
 
   return (
-    <View style={{ flexDirection: 'row', marginHorizontal: 16, marginBottom: 12, marginTop: 4, gap: 6 }}>
+    <View style={{ flexDirection: 'row', marginHorizontal: 16, marginBottom: 10, marginTop: 8, gap: 5 }}>
       {items.map((item, idx) => {
         const { tileStyle, iconStyle, barStyle } = tiles[idx];
         return (
@@ -601,48 +601,51 @@ function QualityCheckedSection() {
               bevelSize={8}
               fillColor={colors.card === '#020617' ? '#0b1329' : '#f8fafc'}
               strokeColor={colors.card === '#020617' ? '#1e293b' : '#e2e8f0'}
-              style={{ paddingHorizontal: 5, paddingVertical: 10, alignItems: 'center' }}
+              style={{ height: 108, paddingHorizontal: 4, paddingVertical: 8, alignItems: 'center', justifyContent: 'center' }}
             >
               {/* Animated icon box */}
-              <Animated.View style={[{ marginBottom: 7 }, iconStyle]}>
+              <Animated.View style={[{ marginBottom: 6 }, iconStyle]}>
                 <ChamferedBox
                   bevelSize={5}
                   fillColor={item.bg}
                   strokeColor={item.border}
-                  style={{ width: 32, height: 32, alignItems: 'center', justifyContent: 'center' }}
+                  style={{ width: 28, height: 28, alignItems: 'center', justifyContent: 'center' }}
                 >
                   {item.icon}
                 </ChamferedBox>
               </Animated.View>
 
-              <Text
-                numberOfLines={2}
-                style={{
-                  fontSize: 7,
-                  fontWeight: '900',
-                  fontStyle: 'italic',
-                  textTransform: 'uppercase',
-                  textAlign: 'center',
-                  lineHeight: 9.5,
-                  color: colors.text,
-                }}
-              >
-                {item.title}
-              </Text>
+              {/* Fixed 2-line height so all tiles stay equal */}
+              <View style={{ height: 19 }}>
+                <Text
+                  numberOfLines={2}
+                  style={{
+                    fontSize: 6.5,
+                    fontWeight: '900',
+                    fontStyle: 'italic',
+                    textTransform: 'uppercase',
+                    textAlign: 'center',
+                    lineHeight: 9,
+                    color: colors.text,
+                  }}
+                >
+                  {item.title}
+                </Text>
+              </View>
 
               {/* Animated expanding bar */}
               <Animated.View
-                style={[{ height: 1.5, backgroundColor: item.barColor, marginVertical: 4, borderRadius: 999 }, barStyle]}
+                style={[{ height: 1.5, backgroundColor: item.barColor, marginVertical: 3, borderRadius: 999 }, barStyle]}
               />
 
               <Text
-                numberOfLines={2}
+                numberOfLines={1}
                 style={{
-                  fontSize: 6,
+                  fontSize: 5.5,
                   fontWeight: '700',
                   textTransform: 'uppercase',
                   textAlign: 'center',
-                  lineHeight: 8,
+                  lineHeight: 7,
                   color: colors.textMuted,
                 }}
               >
@@ -713,9 +716,9 @@ function FssaiBanner() {
 
   const badgeStyles = [b0Style, b1Style, b2Style];
   const badges = [
-    { icon: <ColdChainIcon size={12} color="#0284c7" />, label: t('cold_chain') || 'COLD CHAIN', fill: '#f0f9ff', stroke: '#bae6fd', textColor: '#0284c7' },
-    { icon: <LeafIcon size={12} color="#0f766e" />, label: t('sustainable') || 'SUSTAINABLE', fill: '#f0fdf4', stroke: '#bbf7d0', textColor: '#0f766e' },
-    { icon: <TruckIcon size={12} color="#0d9488" />, label: t('rapid_delivery') ? t('rapid_delivery').replace(' ', '\n') : 'RAPID\nDELIVERY', fill: '#f0fdfa', stroke: '#99f6e4', textColor: '#0d9488' },
+    { icon: <ColdChainIcon size={11} color="#0284c7" />, label: t('cold_chain') || 'COLD CHAIN', fill: '#f0f9ff', stroke: '#bae6fd', textColor: '#0284c7' },
+    { icon: <LeafIcon size={11} color="#0f766e" />, label: t('sustainable') || 'SUSTAINABLE', fill: '#f0fdf4', stroke: '#bbf7d0', textColor: '#0f766e' },
+    { icon: <TruckIcon size={11} color="#0d9488" />, label: t('rapid_delivery') || 'RAPID DELIVERY', fill: '#f0fdfa', stroke: '#99f6e4', textColor: '#0d9488' },
   ];
 
   return (
@@ -770,17 +773,24 @@ function FssaiBanner() {
       {badges.map((badge, idx) => (
         <Animated.View key={idx} style={[{ flex: 1 }, badgeStyles[idx]]}>
           <ChamferedBox
-            bevelSize={6}
+            bevelSize={5}
             fillColor={badge.fill}
             strokeColor={badge.stroke}
-            style={{ flex: 1, paddingVertical: 4 }}
-            contentStyle={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 3, height: '100%' }}
+            style={{ flex: 1, height: 36 }}
+            contentStyle={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 3, paddingHorizontal: 3 }}
           >
             {badge.icon}
             <Text
-              className="text-[7.5px] font-black uppercase text-center leading-none"
-              style={{ color: badge.textColor }}
-              numberOfLines={2}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              style={{
+                fontSize: 7,
+                fontWeight: '800',
+                textTransform: 'uppercase',
+                textAlign: 'center',
+                color: badge.textColor,
+                flexShrink: 1,
+              }}
             >
               {badge.label}
             </Text>
