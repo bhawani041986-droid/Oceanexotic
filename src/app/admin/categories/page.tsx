@@ -36,6 +36,7 @@ export default function AdminCategoriesPage() {
     label: "",
     iconName: "Fish",
     status: "ACTIVE",
+    badgeTag: "",
     imageUrl: "",
     colorHex: "#14B8A6"
   });
@@ -60,13 +61,13 @@ export default function AdminCategoriesPage() {
   }, []);
 
   const handleAdd = () => {
-    setFormData({ id: "", label: "", iconName: "Fish", status: "ACTIVE", imageUrl: "", colorHex: "#14B8A6" });
+    setFormData({ id: "", label: "", iconName: "Fish", status: "ACTIVE", badgeTag: "", imageUrl: "", colorHex: "#14B8A6" });
     setOriginalId("");
     setIsModalOpen(true);
   };
 
   const handleEdit = (cat: any) => {
-    setFormData({ id: cat.id, label: cat.label, iconName: cat.iconName || "Fish", status: cat.status || "ACTIVE", imageUrl: cat.imageUrl || "", colorHex: cat.colorHex || "#14B8A6" });
+    setFormData({ id: cat.id, label: cat.label, iconName: cat.iconName || "Fish", status: cat.status || "ACTIVE", badgeTag: cat.badgeTag || "", imageUrl: cat.imageUrl || "", colorHex: cat.colorHex || "#14B8A6" });
     setOriginalId(cat.id);
     setIsModalOpen(true);
   };
@@ -129,7 +130,7 @@ export default function AdminCategoriesPage() {
         setCategories(updatedCategories);
         toast("Category saved successfully", "success");
         setIsModalOpen(false);
-        setFormData({ id: "", label: "", iconName: "Fish", status: "ACTIVE", imageUrl: "", colorHex: "#14B8A6" });
+        setFormData({ id: "", label: "", iconName: "Fish", status: "ACTIVE", badgeTag: "", imageUrl: "", colorHex: "#14B8A6" });
         setOriginalId("");
       } else {
         toast("Failed to save category", "error");
@@ -437,17 +438,33 @@ export default function AdminCategoriesPage() {
                       <Input value={formData.iconName} onChange={(e) => setFormData({...formData, iconName: e.target.value})} placeholder="e.g. Anchor, Fish, Star" className="h-11 md:h-14 bg-[var(--foreground)]/5 border-[var(--foreground)]/5 italic rounded-lg md:rounded-xl text-sm" />
                    </div>
                  </div>
-                 <div className="space-y-1.5 md:space-y-2">
-                    <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Status</label>
-                    <select 
-                      value={formData.status || "ACTIVE"} 
-                      onChange={(e) => setFormData({...formData, status: e.target.value})} 
-                      className="w-full h-11 md:h-14 bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 rounded-lg md:rounded-xl px-4 text-xs font-black uppercase text-[var(--foreground)] outline-none italic cursor-pointer font-black"
-                    >
-                      <option value="ACTIVE" className="bg-bg-secondary text-[var(--foreground)]">ACTIVE</option>
-                      <option value="INACTIVE" className="bg-bg-secondary text-[var(--foreground)]">INACTIVE</option>
-                    </select>
-                 </div>
+                 <div className="grid grid-cols-2 gap-4">
+                     <div className="space-y-1.5 md:space-y-2">
+                        <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Status</label>
+                        <select 
+                          value={formData.status || "ACTIVE"} 
+                          onChange={(e) => setFormData({...formData, status: e.target.value})} 
+                          className="w-full h-11 md:h-14 bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 rounded-lg md:rounded-xl px-4 text-xs font-black uppercase text-[var(--foreground)] outline-none italic cursor-pointer"
+                        >
+                          <option value="ACTIVE" className="bg-bg-secondary text-[var(--foreground)]">ACTIVE</option>
+                          <option value="INACTIVE" className="bg-bg-secondary text-[var(--foreground)]">INACTIVE</option>
+                        </select>
+                     </div>
+                     <div className="space-y-1.5 md:space-y-2">
+                        <label className="text-[8px] md:text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest ml-1 italic opacity-60">Telemetry Badge Tag</label>
+                        <select 
+                          value={formData.badgeTag || ""} 
+                          onChange={(e) => setFormData({...formData, badgeTag: e.target.value})} 
+                          className="w-full h-11 md:h-14 bg-[var(--foreground)]/5 border border-[var(--foreground)]/5 rounded-lg md:rounded-xl px-4 text-xs font-black uppercase text-[var(--foreground)] outline-none italic cursor-pointer"
+                        >
+                          <option value="" className="bg-bg-secondary text-[var(--foreground)]">NONE (AUTO)</option>
+                          <option value="🔥 HOT" className="bg-bg-secondary text-[var(--foreground)]">🔥 HOT</option>
+                          <option value="⚡ FRESH" className="bg-bg-secondary text-[var(--foreground)]">⚡ FRESH</option>
+                          <option value="✨ CHILLED" className="bg-bg-secondary text-[var(--foreground)]">✨ CHILLED</option>
+                          <option value="🎉 20% OFF" className="bg-bg-secondary text-[var(--foreground)]">🎉 20% OFF</option>
+                        </select>
+                     </div>
+                  </div>
               </div>
               <div className="flex gap-2 md:gap-4 pt-2 md:pt-4">
                  <Button variant="ghost" className="flex-1 h-11 md:h-12 uppercase text-[9px] md:text-[10px] font-black italic" onClick={() => setIsModalOpen(false)}>CANCEL</Button>

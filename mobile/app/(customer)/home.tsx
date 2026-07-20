@@ -885,16 +885,17 @@ export default function CustomerHomeScreen() {
               );
             case "CATEGORIES":
               return (
-                <View key="CATEGORIES">
+                <View key="CATEGORIES" style={{ overflow: 'visible' }}>
                   {/* Maritime Wave Divider */}
                   <MaritimeWaveDivider />
 
                   {/* Dynamic Category Scroll */}
-                  <View className="w-full mt-2">
+                  <View className="w-full mt-2 pt-3" style={{ overflow: 'visible' }}>
                     <ScrollView 
                       horizontal 
                       showsHorizontalScrollIndicator={false} 
-                      contentContainerStyle={{ paddingHorizontal: 16, gap: 10 }}
+                      contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 8, paddingBottom: 4, gap: 12 }}
+                      style={{ overflow: 'visible' }}
                       scrollEventThrottle={16}
                       onScroll={(event) => {
                         const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
