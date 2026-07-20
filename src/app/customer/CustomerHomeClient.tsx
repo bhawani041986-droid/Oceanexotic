@@ -1431,67 +1431,73 @@ const Pro3DMarketHero = () => {
       >
 
         {/* ════════════════════════════════════ */}
-        {/*  LEFT: HERO TEXT — FULLY LEGIBLE    */}
+        {/*  LEFT: HERO TEXT — 3D EXTRUDED TEXT  */}
         {/* ════════════════════════════════════ */}
         <div
-          className="lg:col-span-5 flex flex-col gap-5 text-center lg:text-left relative z-10"
-          style={{ transform: "translateZ(40px)" }}
+          className="lg:col-span-5 flex flex-col gap-6 text-center lg:text-left relative z-10"
+          style={{ transform: "translateZ(60px)" }}
         >
           {/* Live badge */}
-          <div className="inline-flex items-center self-center lg:self-start gap-2 px-4 py-1.5 rounded-full border text-[10px] sm:text-xs font-black tracking-widest uppercase"
-            style={{ background: "rgba(0,8,20,0.95)", borderColor: "rgba(0,243,255,0.45)", color: "#00f3ff", boxShadow: "0 0 22px rgba(0,243,255,0.25), inset 0 0 10px rgba(0,243,255,0.05)" }}>
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-            LIVE HARBOR MARKET · COLD-CHAIN VERIFIED
+          <div className="inline-flex items-center self-center lg:self-start gap-2 px-3.5 py-1.5 rounded-full border text-[10px] font-black tracking-widest uppercase"
+            style={{ 
+              background: "rgba(0,4,12,0.95)", 
+              borderColor: "rgba(0,243,255,0.4)", 
+              color: "#00f3ff", 
+              boxShadow: "0 0 20px rgba(0,243,255,0.15)" 
+            }}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+            LIVE HARBOR TELEMETRY
           </div>
 
-          {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl lg:text-[3.4rem] xl:text-[3.8rem] font-black uppercase italic tracking-tight leading-[1.06]"
-            style={{ textShadow: "0 2px 40px rgba(0,0,0,1), 0 0 60px rgba(0,0,0,0.9)" }}>
-            <span className="block text-white">THE ULTIMATE</span>
-            <span className="block" style={{
-              background: "linear-gradient(90deg, #00F3FF 0%, #00E5FF 45%, #00F5D4 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              filter: "drop-shadow(0 0 32px rgba(0,243,255,0.7))"
-            }}>
+          {/* 3D Extruded Block Headline */}
+          <h1 className="text-4xl sm:text-5xl lg:text-[3.6rem] xl:text-[4.2rem] font-black uppercase italic tracking-tight leading-[1.04]">
+            <span 
+              className="block text-white"
+              style={{
+                textShadow: "0 1px 0 #d1d5db, 0 2px 0 #9ca3af, 0 3px 0 #4b5563, 0 4px 0 #1f2937, 0 5px 0 #111827, 0 10px 25px rgba(0,0,0,0.85)"
+              }}
+            >
+              THE ULTIMATE
+            </span>
+            <span 
+              className="block my-1.5"
+              style={{
+                background: "linear-gradient(90deg, #00F3FF 0%, #00E5FF 55%, #00F5D4 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                filter: "drop-shadow(0 2px 10px rgba(0,0,0,0.5))",
+                textShadow: `0 1px 0 ${activeFish.badgeColor}cc, 0 2px 0 ${activeFish.badgeColor}99, 0 3px 0 ${activeFish.badgeColor}66, 0 4px 0 #0f172a, 0 5px 0 #020617, 0 10px 30px rgba(0,243,255,0.3)`
+              }}
+            >
               OCEAN FRESH
             </span>
-            <span className="block text-white">MARKETPLACE</span>
+            <span 
+              className="block text-white"
+              style={{
+                textShadow: "0 1px 0 #d1d5db, 0 2px 0 #9ca3af, 0 3px 0 #4b5563, 0 4px 0 #1f2937, 0 5px 0 #111827, 0 10px 25px rgba(0,0,0,0.85)"
+              }}
+            >
+              MARKETPLACE
+            </span>
           </h1>
 
-          {/* Subtext */}
-          <p className="text-slate-200 text-sm sm:text-base lg:text-lg max-w-md mx-auto lg:mx-0 font-medium leading-relaxed"
-            style={{ textShadow: "0 1px 20px rgba(0,0,0,1)" }}>
-            Dock-to-door in <span className="text-cyan-300 font-bold">30 minutes</span>. Every catch GPS-tracked, 4°C ice-chilled and FSSAI verified — <span className="text-cyan-300 font-bold">zero chemicals, zero compromise</span>.
-          </p>
-
-
-          {/* Stats strip */}
-          <div className="grid grid-cols-3 gap-2.5 max-w-xs sm:max-w-sm mx-auto lg:mx-0">
-            {[
-              { v: "4°C",  l: "Ice Chilled",  c: "#00f3ff" },
-              { v: "#04",  l: "Harbor Dock",   c: "#34d399" },
-              { v: "30m",  l: "Delivery ETA",  c: "#fbbf24" }
-            ].map(s => (
-              <div key={s.l} className="p-3 rounded-2xl text-center border"
-                style={{ background: "rgba(0,5,15,0.92)", borderColor: "rgba(0,243,255,0.18)", boxShadow: "0 4px 20px rgba(0,0,0,0.5)" }}>
-                <div className="text-xl sm:text-2xl font-black" style={{ color: s.c }}>{s.v}</div>
-                <div className="text-[9px] sm:text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">{s.l}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* CTAs */}
-          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3">
+          {/* Simplified CTAs */}
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mt-2">
             <a href="/customer/products"
-              className="px-7 py-3.5 rounded-xl font-black text-sm sm:text-base uppercase tracking-wider text-slate-950 transition-all duration-300 hover:scale-105"
-              style={{ background: "linear-gradient(135deg, #00F3FF, #00d4e8)", boxShadow: "0 0 32px rgba(0,243,255,0.5), 0 4px 20px rgba(0,0,0,0.4)" }}>
+              className="px-8 py-3.5 rounded-xl font-black text-sm sm:text-base uppercase tracking-wider text-slate-950 transition-all duration-300 hover:scale-105"
+              style={{ 
+                background: "linear-gradient(135deg, #00F3FF, #00d4e8)", 
+                boxShadow: "0 0 30px rgba(0,243,255,0.4), 0 4px 15px rgba(0,0,0,0.4)" 
+              }}
+            >
               🛒 Order Fresh Catch
             </a>
             <a href="/customer/categories"
               className="px-6 py-3.5 rounded-xl font-bold text-sm sm:text-base uppercase tracking-wider text-cyan-300 border border-cyan-400/40 transition-all duration-300 hover:border-cyan-300 hover:bg-cyan-950/30"
-              style={{ background: "rgba(0,5,15,0.85)", boxShadow: "0 4px 20px rgba(0,0,0,0.5)" }}>
-              ⚓ Explore
+              style={{ background: "rgba(0,4,12,0.8)", boxShadow: "0 4px 15px rgba(0,0,0,0.4)" }}
+            >
+              ⚓ Explore Categories
             </a>
           </div>
         </div>
@@ -1501,7 +1507,7 @@ const Pro3DMarketHero = () => {
         {/* ════════════════════════════════════════════════ */}
         <div
           className="lg:col-span-6 relative flex items-center justify-center overflow-visible"
-          style={{ transform: "translateZ(70px)", minHeight: "520px" }}
+          style={{ transform: "translateZ(100px)", minHeight: "520px" }}
         >
           {/* ACTIVE FISH SPOTLIGHT — bright radial bloom directly behind main fish */}
           <motion.div
