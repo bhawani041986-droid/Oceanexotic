@@ -223,7 +223,9 @@ export default function MainLayout({ children }: MainLayoutProps) {
             <button onClick={() => router.push('/customer/notifications')} className="p-1 sm:p-1.5 md:p-2 text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] relative shrink-0">
               <Bell className="w-4 h-4 sm:w-5 sm:h-5 md:w-5 md:h-5" />
               {mounted && unreadCount > 0 && (
-                <span className="absolute top-0.5 right-0.5 w-2 h-2 bg-red-500 rounded-full border border-[var(--c-bg)] animate-pulse" />
+                <span className="absolute -top-1 -right-1 min-w-[16px] h-4 rounded-full bg-[var(--c-primary)] text-slate-950 font-black text-[9px] flex items-center justify-center px-1 border border-[var(--c-bg)] shadow-sm">
+                  {unreadCount > 99 ? '99+' : unreadCount}
+                </span>
               )}
             </button>
             <Link href="/customer/cart" className="p-1 sm:p-1.5 md:px-2.5 md:py-1.5 bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/20 rounded-full flex items-center gap-1 md:gap-2 relative transition-all shrink-0">

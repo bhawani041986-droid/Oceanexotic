@@ -140,106 +140,82 @@ export function CustomerHeader({ showSearch = true }: CustomerHeaderProps) {
 
   return (
     <SafeAreaView edges={["top"]} className="border-b" style={{ backgroundColor: colors.bg, borderBottomColor: colors.border }}>
-      <View className="px-3 pb-2 pt-1">
-        <View className="flex-row items-center justify-between h-[54px]">
+      <View className="px-3 pb-2 pt-1.5">
+        <View className="flex-row items-center justify-between h-[58px]">
           <View className="flex-row items-center gap-2.5">
             <Pressable 
               onPress={() => setIsMenuOpen(true)} 
-              className="h-9 w-9 items-center justify-center rounded-none border active:opacity-70"
+              className="h-9 w-9 items-center justify-center rounded-xl border active:opacity-70"
               style={{
-                borderColor: colors.border,
-                backgroundColor: colors.card
+                borderColor: getRgba(primaryColor, 0.25),
+                backgroundColor: getRgba(primaryColor, 0.08)
               }}
             >
               <MenuIcon color={primaryColor} />
-              {/* Cut-corner bevel overlays */}
-              <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
-                <Polygon points="0,0 6,0 0,6" fill={colors.bg} />
-              </Svg>
-              <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
-                <Polygon points="6,6 0,6 6,0" fill={colors.bg} />
-              </Svg>
             </Pressable>
             <Pressable onPress={() => router.push("/home")} className="justify-center">
               <Logo size="sm" style={{ width: 144, height: 40 }} />
             </Pressable>
           </View>
-          <View className="flex-row items-center gap-[6px]">
+          <View className="flex-row items-center gap-2">
             <LanguageSelector />
             <Pressable
               onPress={handleNotificationPress}
-              className="relative h-9 w-9 items-center justify-center rounded-none border active:opacity-70"
+              className="relative h-9 w-9 items-center justify-center rounded-xl border active:opacity-70"
               style={{
                 borderColor: colors.border,
                 backgroundColor: colors.card
               }}
             >
               <NotificationIcon color={colors.text} />
-              {/* Active notification beacon */}
+              {/* Glowing numeric notification unread badge */}
               {unreadCount > 0 && (
                 <View 
-                  className="absolute right-2.5 top-2.5 h-2 w-2 rounded-none border" 
+                  className="absolute -right-1.5 -top-1.5 min-w-[18px] h-4 rounded-full px-1 items-center justify-center border shadow-sm" 
                   style={{ 
                     backgroundColor: primaryColor,
-                    borderColor: colors.card
+                    borderColor: colors.bg
                   }} 
-                />
+                >
+                  <Text className="text-center text-[8.5px] font-black text-slate-950">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </Text>
+                </View>
               )}
-              {/* Cut-corner bevel overlays */}
-              <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
-                <Polygon points="0,0 6,0 0,6" fill={colors.bg} />
-              </Svg>
-              <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
-                <Polygon points="6,6 0,6 6,0" fill={colors.bg} />
-              </Svg>
             </Pressable>
 
             <Pressable
               onPress={() => router.push("/cart")}
-              className="relative h-9 w-9 items-center justify-center rounded-none border active:opacity-70"
+              className="relative h-9 w-9 items-center justify-center rounded-xl border active:opacity-70"
               style={{
-                borderColor: getRgba(primaryColor, 0.3),
-                backgroundColor: getRgba(primaryColor, 0.1)
+                borderColor: getRgba(primaryColor, 0.35),
+                backgroundColor: getRgba(primaryColor, 0.12)
               }}
             >
               <CartIcon color={primaryColor} />
               {cartCount > 0 ? (
                 <View 
-                  className="absolute -right-1 -top-1 min-w-[16px] h-4 rounded-none px-1 items-center justify-center"
-                  style={{ backgroundColor: primaryColor }}
+                  className="absolute -right-1.5 -top-1.5 min-w-[18px] h-4 rounded-full px-1 items-center justify-center border shadow-sm"
+                  style={{ backgroundColor: primaryColor, borderColor: colors.bg }}
                 >
-                  <Text className="text-center text-[8px] font-black text-white">{cartCount}</Text>
+                  <Text className="text-center text-[8.5px] font-black text-slate-950">{cartCount}</Text>
                 </View>
               ) : null}
-              {/* Cut-corner bevel overlays */}
-              <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
-                <Polygon points="0,0 6,0 0,6" fill={colors.bg} />
-              </Svg>
-              <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
-                <Polygon points="6,6 0,6 6,0" fill={colors.bg} />
-              </Svg>
             </Pressable>
 
             <Pressable
               onPress={() => router.push("/profile")}
-              className="h-9 w-9 rounded-none border overflow-hidden items-center justify-center active:opacity-70"
+              className="h-9 w-9 rounded-xl border overflow-hidden items-center justify-center active:opacity-70"
               style={{
-                borderColor: colors.border,
+                borderColor: getRgba(primaryColor, 0.3),
                 backgroundColor: colors.card
               }}
             >
               <Image 
                 source={{ uri: resolveMediaUrl(user?.avatar) || "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80" }} 
-                className="h-full w-full rounded-none"
+                className="h-full w-full rounded-xl"
                 contentFit="cover"
               />
-              {/* Cut-corner bevel overlays (rendered above image) */}
-              <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}>
-                <Polygon points="0,0 6,0 0,6" fill={colors.bg} />
-              </Svg>
-              <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}>
-                <Polygon points="6,6 0,6 6,0" fill={colors.bg} />
-              </Svg>
             </Pressable>
           </View>
         </View>
