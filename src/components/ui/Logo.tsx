@@ -1,5 +1,6 @@
 import React, { useId } from 'react';
 import { cn } from '@/lib/utils';
+import { useSettingsStore } from '@/store/settingsStore';
 
 interface LogoProps {
   className?: string;
@@ -23,6 +24,8 @@ export const Logo: React.FC<LogoProps> = ({
   subtext
 }) => {
   const id = useId().replace(/:/g, '');
+  const { logoTextColor, logoPrimaryColor, logoSecondaryColor } = useSettingsStore();
+
   const containerSizes = {
     sm: { width: '144px', height: '36px' },
     md: { width: '216px', height: '54px' },
@@ -30,9 +33,9 @@ export const Logo: React.FC<LogoProps> = ({
     xl: { width: '432px', height: '108px' },
   };
 
-  const textFill = textColor || (variant === 'light' ? '#FFFFFF' : variant === 'dark' ? '#000000' : 'var(--foreground)');
-  const primaryFill = primaryColor || (variant === 'light' ? '#FFFFFF' : variant === 'dark' ? '#000000' : 'var(--primary, #00D1FF)');
-  const secondaryColorVal = secondaryColor || '#00D1FF';
+  const textFill = textColor || (variant === 'light' ? '#FFFFFF' : variant === 'dark' ? '#000000' : (logoTextColor || '#00D1FF'));
+  const primaryFill = primaryColor || (variant === 'light' ? '#FFFFFF' : variant === 'dark' ? '#000000' : (logoPrimaryColor || '#00D1FF'));
+  const secondaryColorVal = secondaryColor || logoSecondaryColor || '#F0ABFC';
   const accentColorVal = accentColor || '#F0ABFC';
 
   return (

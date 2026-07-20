@@ -31,12 +31,15 @@ import { useToast } from "@/components/ui/Toast";
 import { Logo } from "@/components/ui/Logo";
 
 export default function MarketplaceThemeControl() {
-  const { customerTheme, atmosphericGlow, heroOverlayOpacity, customerAssets, setSettings, pushSettings, fetchSettings } = useSettingsStore();
+  const { customerTheme, logoTextColor, logoPrimaryColor, logoSecondaryColor, atmosphericGlow, heroOverlayOpacity, customerAssets, setSettings, pushSettings, fetchSettings } = useSettingsStore();
   const { toast } = useToast();
   const [selectedThemeId, setSelectedThemeId] = useState(customerTheme);
   const [tempAssets, setTempAssets] = useState(customerAssets);
   const [tempGlow, setTempGlow] = useState(atmosphericGlow);
   const [tempHeroOpacity, setTempHeroOpacity] = useState(heroOverlayOpacity ?? 80);
+  const [tempLogoTextColor, setTempLogoTextColor] = useState(logoTextColor || "#00D1FF");
+  const [tempLogoPrimaryColor, setTempLogoPrimaryColor] = useState(logoPrimaryColor || "#00D1FF");
+  const [tempLogoSecondaryColor, setTempLogoSecondaryColor] = useState(logoSecondaryColor || "#F0ABFC");
   const [isCommitting, setIsCommitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [activeStation, setActiveStation] = useState<string | null>(null);
@@ -52,13 +55,18 @@ export default function MarketplaceThemeControl() {
     setSelectedThemeId(customerTheme);
     setTempGlow(atmosphericGlow);
     setTempHeroOpacity(heroOverlayOpacity ?? 80);
-  }, [customerAssets, customerTheme, atmosphericGlow, heroOverlayOpacity]);
+    setTempLogoTextColor(logoTextColor || "#00D1FF");
+    setTempLogoPrimaryColor(logoPrimaryColor || "#00D1FF");
+    setTempLogoSecondaryColor(logoSecondaryColor || "#F0ABFC");
+  }, [customerAssets, customerTheme, atmosphericGlow, heroOverlayOpacity, logoTextColor, logoPrimaryColor, logoSecondaryColor]);
 
   const isDirty = selectedThemeId !== customerTheme || 
                   tempGlow !== atmosphericGlow || 
                   tempHeroOpacity !== (heroOverlayOpacity ?? 80) ||
-                  JSON.stringify(tempAssets) !== JSON.stringify(customerAssets
-  );
+                  tempLogoTextColor !== logoTextColor ||
+                  tempLogoPrimaryColor !== logoPrimaryColor ||
+                  tempLogoSecondaryColor !== logoSecondaryColor ||
+                  JSON.stringify(tempAssets) !== JSON.stringify(customerAssets);
 
   const handleThemeSelect = (themeId: string) => {
     setSelectedThemeId(themeId);
@@ -106,19 +114,18 @@ export default function MarketplaceThemeControl() {
   };
 
   const handleCommit = async () => {
-    setIsCommitting(true
-  );
+    setIsCommitting(true);
     setSettings({
       customerTheme: selectedThemeId,
       customerAssets: tempAssets,
       atmosphericGlow: tempGlow,
-      heroOverlayOpacity: tempHeroOpacity
-    }
-  );
-    const success = await pushSettings(
-  );
-    setIsCommitting(false
-  );
+      heroOverlayOpacity: tempHeroOpacity,
+      logoTextColor: tempLogoTextColor,
+      logoPrimaryColor: tempLogoPrimaryColor,
+      logoSecondaryColor: tempLogoSecondaryColor
+    });
+    const success = await pushSettings();
+    setIsCommitting(false);
     if (success) {
       toast("Marketplace protocols synchronized to System Registry.", "success"
   );
@@ -255,6 +262,145 @@ export default function MarketplaceThemeControl() {
   );
              })}
            </div>
+
+         {/* 🚀 ADMIN LOGO BRAND COLOR & NEON GLOW CONTROL PANEL */}
+         <div className="space-y-6 bg-slate-900/90 border border-slate-700 rounded-3xl p-6 md:p-8 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+               <div>
+                  <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-white flex items-center gap-2">
+                     <Palette className="w-5 h-5 text-primary" /> Logo Brand Color & Neon Glow Control
+                  </h3>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                     Customize the OCEANEXOTIC main text logo color, emblem accent, and neon stroke glow live across Web & Mobile.
+                  </p>
+               </div>
+               <Badge className="bg-primary/20 text-primary border border-primary/30 text-[9px] font-black uppercase tracking-wider">
+                  Real-time Theme Engine
+               </Badge>
+            </div>
+
+            {/* Live Interactive Logo Preview Box */}
+            <div className="p-6 rounded-2xl bg-[#020617] border border-slate-800 flex flex-col items-center justify-center space-y-3 relative overflow-hidden shadow-inner">
+               <div className="absolute top-3 left-3 text-[9px] font-black text-slate-500 uppercase tracking-widest">
+                  Live Interactive Storefront Preview
+               </div>
+               <div className="py-4">
+                  <Logo 
+                     size="lg" 
+                     textColor={tempLogoTextColor} 
+                     primaryColor={tempLogoPrimaryColor} 
+                     secondaryColor={tempLogoSecondaryColor} 
+                  />
+               </div>
+               <div className="flex items-center gap-4 text-[10px] font-bold text-slate-400">
+                  <span>Text: <strong style={{ color: tempLogoTextColor }}>{tempLogoTextColor}</strong></span>
+                  <span>Primary: <strong style={{ color: tempLogoPrimaryColor }}>{tempLogoPrimaryColor}</strong></span>
+                  <span>Glow: <strong style={{ color: tempLogoSecondaryColor }}>{tempLogoSecondaryColor}</strong></span>
+               </div>
+            </div>
+
+            {/* Quick Vibrant Color Presets */}
+            <div className="space-y-2">
+               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block">
+                  Quick Vibrant Color Presets
+               </label>
+               <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5">
+                  {[
+                     { name: "⚡ Electric Cyan", text: "#00D1FF", primary: "#00D1FF", secondary: "#F0ABFC" },
+                     { name: "🔥 Neon Coral", text: "#FF385C", primary: "#FF385C", secondary: "#F59E0B" },
+                     { name: "💎 White Pearl", text: "#FFFFFF", primary: "#00D1FF", secondary: "#A855F7" },
+                     { name: "🟢 Emerald Wave", text: "#10B981", primary: "#10B981", secondary: "#06B6D4" },
+                     { name: "🟣 Deep Violet", text: "#A855F7", primary: "#A855F7", secondary: "#F43F5E" },
+                     { name: "🟡 Golden Amber", text: "#F59E0B", primary: "#F59E0B", secondary: "#10B981" }
+                  ].map((preset) => (
+                     <button
+                        key={preset.name}
+                        type="button"
+                        onClick={() => {
+                           setTempLogoTextColor(preset.text);
+                           setTempLogoPrimaryColor(preset.primary);
+                           setTempLogoSecondaryColor(preset.secondary);
+                           toast(`Applied ${preset.name} logo preset! Click SYNCHRONIZE to publish live.`, "info");
+                        }}
+                        className={`p-3 rounded-xl border text-left transition-all flex items-center justify-between ${
+                           tempLogoTextColor === preset.text 
+                              ? "border-primary bg-primary/20 shadow-lg" 
+                              : "border-slate-800 bg-slate-950/60 hover:border-slate-700"
+                        }`}
+                     >
+                        <span className="text-[10px] font-black uppercase text-white tracking-wider">{preset.name}</span>
+                        <div className="flex items-center gap-1">
+                           <span className="w-3.5 h-3.5 rounded-full border border-white/20 shadow" style={{ backgroundColor: preset.text }} />
+                           <span className="w-3.5 h-3.5 rounded-full border border-white/20 shadow" style={{ backgroundColor: preset.secondary }} />
+                        </div>
+                     </button>
+                  ))}
+               </div>
+            </div>
+
+            {/* Custom Hex Color Pickers */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 border-t border-slate-800">
+               <div className="space-y-1.5">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block">
+                     Main Text Color (OCEANEXOTIC)
+                  </label>
+                  <div className="flex items-center gap-2 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2">
+                     <input 
+                        type="color" 
+                        value={tempLogoTextColor} 
+                        onChange={(e) => setTempLogoTextColor(e.target.value)} 
+                        className="w-8 h-8 rounded border-0 cursor-pointer bg-transparent"
+                     />
+                     <input 
+                        type="text" 
+                        value={tempLogoTextColor} 
+                        onChange={(e) => setTempLogoTextColor(e.target.value)} 
+                        className="bg-transparent text-xs font-mono font-bold text-white uppercase outline-none w-full"
+                     />
+                  </div>
+               </div>
+
+               <div className="space-y-1.5">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block">
+                     Primary Emblem Color (Fish Icon)
+                  </label>
+                  <div className="flex items-center gap-2 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2">
+                     <input 
+                        type="color" 
+                        value={tempLogoPrimaryColor} 
+                        onChange={(e) => setTempLogoPrimaryColor(e.target.value)} 
+                        className="w-8 h-8 rounded border-0 cursor-pointer bg-transparent"
+                     />
+                     <input 
+                        type="text" 
+                        value={tempLogoPrimaryColor} 
+                        onChange={(e) => setTempLogoPrimaryColor(e.target.value)} 
+                        className="bg-transparent text-xs font-mono font-bold text-white uppercase outline-none w-full"
+                     />
+                  </div>
+               </div>
+
+               <div className="space-y-1.5">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block">
+                     Secondary Neon Stroke & Eye Glow
+                  </label>
+                  <div className="flex items-center gap-2 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2">
+                     <input 
+                        type="color" 
+                        value={tempLogoSecondaryColor} 
+                        onChange={(e) => setTempLogoSecondaryColor(e.target.value)} 
+                        className="w-8 h-8 rounded border-0 cursor-pointer bg-transparent"
+                     />
+                     <input 
+                        type="text" 
+                        value={tempLogoSecondaryColor} 
+                        onChange={(e) => setTempLogoSecondaryColor(e.target.value)} 
+                        className="bg-transparent text-xs font-mono font-bold text-white uppercase outline-none w-full"
+                     />
+                  </div>
+               </div>
+            </div>
+         </div>
         </div>
 
         {/* SIDEBAR: Registry Status */}

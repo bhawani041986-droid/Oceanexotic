@@ -22,6 +22,9 @@ interface SettingsState {
   
   // Customer Theme Engine
   customerTheme: string;
+  logoTextColor?: string;
+  logoPrimaryColor?: string;
+  logoSecondaryColor?: string;
   iosAppUrl?: string;
   androidAppUrl?: string;
   agentAppUrl?: string;
@@ -95,6 +98,9 @@ export const useSettingsStore = create<SettingsState>()(
       theme: "theme-ocean-neon",
       font: "font-inter",
       customerTheme: "theme-ocean-neon",
+      logoTextColor: "#00D1FF",
+      logoPrimaryColor: "#00D1FF",
+      logoSecondaryColor: "#F0ABFC",
       iosAppUrl: "",
       androidAppUrl: "https://expo.dev/accounts/bhawani-ocean/projects/oceanexotic-customer/builds/current",
       agentAppUrl: "https://expo.dev/accounts/bhawani-ocean/projects/oceanexotic-agent/builds/e9861ee7-d27a-43cf-97d5-83be278d0240",
@@ -196,6 +202,9 @@ export const useSettingsStore = create<SettingsState>()(
             marketplaceName: state.marketplaceName,
             currency: state.currency,
             customerTheme: state.customerTheme,
+            logoTextColor: state.logoTextColor,
+            logoPrimaryColor: state.logoPrimaryColor,
+            logoSecondaryColor: state.logoSecondaryColor,
             iosAppUrl: state.iosAppUrl,
             androidAppUrl: state.androidAppUrl,
             agentAppUrl: state.agentAppUrl,
