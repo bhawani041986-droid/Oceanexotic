@@ -592,24 +592,24 @@ function QualityCheckedSection() {
   });
 
   return (
-    <View className="mx-4 mb-4 flex-row justify-between" style={{ gap: 6, marginTop: -10 }}>
+    <View style={{ flexDirection: 'row', marginHorizontal: 16, marginBottom: 12, marginTop: 4, gap: 6 }}>
       {items.map((item, idx) => {
         const { tileStyle, iconStyle, barStyle } = tiles[idx];
         return (
           <Animated.View key={idx} style={[{ flex: 1 }, tileStyle]}>
             <ChamferedBox
-              bevelSize={10}
+              bevelSize={8}
               fillColor={colors.card === '#020617' ? '#0b1329' : '#f8fafc'}
               strokeColor={colors.card === '#020617' ? '#1e293b' : '#e2e8f0'}
-              style={{ flex: 1, padding: 6, alignItems: 'center', minHeight: 130 }}
+              style={{ paddingHorizontal: 5, paddingVertical: 10, alignItems: 'center' }}
             >
               {/* Animated icon box */}
-              <Animated.View style={[{ marginTop: 4, marginBottom: 8 }, iconStyle]}>
+              <Animated.View style={[{ marginBottom: 7 }, iconStyle]}>
                 <ChamferedBox
-                  bevelSize={6}
+                  bevelSize={5}
                   fillColor={item.bg}
                   strokeColor={item.border}
-                  style={{ width: 34, height: 34, alignItems: 'center', justifyContent: 'center' }}
+                  style={{ width: 32, height: 32, alignItems: 'center', justifyContent: 'center' }}
                 >
                   {item.icon}
                 </ChamferedBox>
@@ -617,8 +617,15 @@ function QualityCheckedSection() {
 
               <Text
                 numberOfLines={2}
-                className="text-[7.5px] font-black italic uppercase text-center leading-tight"
-                style={{ color: colors.text, minHeight: 20 }}
+                style={{
+                  fontSize: 7,
+                  fontWeight: '900',
+                  fontStyle: 'italic',
+                  textTransform: 'uppercase',
+                  textAlign: 'center',
+                  lineHeight: 9.5,
+                  color: colors.text,
+                }}
               >
                 {item.title}
               </Text>
@@ -630,8 +637,14 @@ function QualityCheckedSection() {
 
               <Text
                 numberOfLines={2}
-                className="text-[6px] font-bold text-center uppercase leading-tight"
-                style={{ color: colors.textMuted }}
+                style={{
+                  fontSize: 6,
+                  fontWeight: '700',
+                  textTransform: 'uppercase',
+                  textAlign: 'center',
+                  lineHeight: 8,
+                  color: colors.textMuted,
+                }}
               >
                 {item.subtitle}
               </Text>
