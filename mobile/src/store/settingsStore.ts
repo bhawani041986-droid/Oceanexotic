@@ -28,6 +28,9 @@ export interface CustomerAssets {
 
 interface SettingsState {
   marketplaceName: string;
+  logoTextColor?: string;
+  logoPrimaryColor?: string;
+  logoSecondaryColor?: string;
   flashDealActive: boolean;
   flashDealStart: string;
   flashDealEnd: string;
@@ -123,6 +126,9 @@ export const useSettingsStore = create<SettingsState>()(
 
           set({
             marketplaceName: (settings.marketplaceName as string) || get().marketplaceName,
+            logoTextColor: (settings.logoTextColor as string) || get().logoTextColor || "#00D1FF",
+            logoPrimaryColor: (settings.logoPrimaryColor as string) || get().logoPrimaryColor || "#00D1FF",
+            logoSecondaryColor: (settings.logoSecondaryColor as string) || get().logoSecondaryColor || "#F0ABFC",
             flashDealActive:
               settings.flashDealActive !== undefined
                 ? Boolean(settings.flashDealActive)
@@ -164,6 +170,9 @@ export const useSettingsStore = create<SettingsState>()(
       // Exclude the computed `settings` object from persistence to avoid stale data
       partialize: (state) => ({
         marketplaceName: state.marketplaceName,
+        logoTextColor: state.logoTextColor,
+        logoPrimaryColor: state.logoPrimaryColor,
+        logoSecondaryColor: state.logoSecondaryColor,
         flashDealActive: state.flashDealActive,
         flashDealStart: state.flashDealStart,
         flashDealEnd: state.flashDealEnd,

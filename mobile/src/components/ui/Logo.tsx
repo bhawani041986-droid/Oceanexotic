@@ -37,10 +37,11 @@ export function Logo({ size = "md", className, style, iconOnly }: LogoProps) {
   const uid = useMemo(() => `logo${Math.random().toString(36).slice(2, 9)}`, []);
   const dims = SIZES[size];
   const colors = useThemeColors();
-  const textFill = colors.text;
+  const { logoTextColor, logoPrimaryColor, logoSecondaryColor } = useSettingsStore();
 
-  const primaryFill = colors.primary;
-  const accentCyan = colors.secondary;
+  const textFill = logoTextColor || colors.text;
+  const primaryFill = logoPrimaryColor || colors.primary;
+  const accentCyan = logoSecondaryColor || colors.secondary;
   const accentPink = colors.accent;
 
   // Core Animated Loop Values
