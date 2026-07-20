@@ -41,6 +41,7 @@ interface SettingsState {
   // Customer Theme Engine
   customerTheme: string;
   heroStyle?: 'AMAZON_CARD_GRID' | 'SWIGGY_DYNAMIC_BANNER' | 'ZOMATO_HIGH_IMPACT' | 'COMPACT_MINIMAL_STRIP';
+  amazonHeroCards?: AmazonHeroCardConfig[];
   logoTextColor?: string;
   logoPrimaryColor?: string;
   logoSecondaryColor?: string;

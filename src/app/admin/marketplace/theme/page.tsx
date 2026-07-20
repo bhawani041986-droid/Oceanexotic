@@ -23,7 +23,8 @@ import {
   Megaphone,
   Box,
   Droplets,
-  ChevronRight
+  ChevronRight,
+  Layers
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
