@@ -10,7 +10,8 @@ import {
   DEFAULT_COMPACT_STRIP,
   SwiggyBannerSlide,
   ZomatoHeroConfig,
-  CompactStripConfig
+  CompactStripConfig,
+  Hero3DFishItem
 } from "@/store/settingsStore";
 import { CUSTOMER_THEMES, CustomerTheme } from "@/config/customerThemes";
 import { Card } from "@/components/ui/Card";
@@ -135,6 +136,15 @@ export default function MarketplaceThemeControl() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [activeStation, setActiveStation] = useState<string | null>(null);
 
+  const DEFAULT_HERO3D: Hero3DFishItem[] = [
+    { id: "fish-1", name: "Wild Red Snapper", category: "Seawater Harbor", price: "₹650", unit: "kg", badge: "⚡ DOCK FRESH", badgeColor: "#00f3ff", icon: "🐟", image: "/ICONS/Red-snapper.webp", desc: "Caught 3h ago · Ice-chilled instantly" },
+    { id: "fish-2", name: "Kingfish / Surmai", category: "Harbor Special", price: "₹920", unit: "kg", badge: "🔥 TOP SELLER", badgeColor: "#ff6eb4", icon: "👑", image: "/ICONS/kingfish.webp", desc: "Prime steak cut · High Omega-3" },
+    { id: "fish-3", name: "Tiger Prawns", category: "Exotic Catch", price: "₹780", unit: "500g", badge: "✨ CHILLED ICE", badgeColor: "#ffd60a", icon: "🦐", image: "/ICONS/tiger-prawns.webp", desc: "Jumbo · Cleaned & Deveined" },
+  ];
+  const [tempHero3d, setTempHero3d] = useState<Hero3DFishItem[]>(
+    (customerAssets as any)?.hero3dItems || DEFAULT_HERO3D
+  );
+
   // Fetch settings on mount
   useEffect(() => {
     fetchSettings();
@@ -155,6 +165,8 @@ export default function MarketplaceThemeControl() {
     setTempLogoTextColor(logoTextColor || "#00D1FF");
     setTempLogoPrimaryColor(logoPrimaryColor || "#00D1FF");
     setTempLogoSecondaryColor(logoSecondaryColor || "#F0ABFC");
+    const stored3d = (customerAssets as any)?.hero3dItems;
+    if (stored3d && stored3d.length > 0) setTempHero3d(stored3d);
   }, [customerAssets, customerTheme, atmosphericGlow, heroOverlayOpacity, heroStyle, categoryAnimationMode, amazonHeroCards, swiggyBanners, zomatoHeroConfig, compactStripConfig, logoTextColor, logoPrimaryColor, logoSecondaryColor]);
 
   const isDirty = selectedThemeId !== customerTheme || 
@@ -168,7 +180,8 @@ export default function MarketplaceThemeControl() {
                   tempLogoTextColor !== logoTextColor ||
                   tempLogoPrimaryColor !== logoPrimaryColor ||
                   tempLogoSecondaryColor !== logoSecondaryColor ||
-                  JSON.stringify(tempAssets) !== JSON.stringify(customerAssets);
+                  JSON.stringify(tempAssets) !== JSON.stringify(customerAssets) ||
+                  JSON.stringify(tempHero3d) !== JSON.stringify((customerAssets as any)?.hero3dItems || DEFAULT_HERO3D);
                   tempLogoTextColor !== logoTextColor ||
                   tempLogoPrimaryColor !== logoPrimaryColor ||
                   tempLogoSecondaryColor !== logoSecondaryColor ||
@@ -223,7 +236,7 @@ export default function MarketplaceThemeControl() {
     setIsCommitting(true);
     setSettings({
       customerTheme: selectedThemeId,
-      customerAssets: tempAssets,
+      customerAssets: { ...tempAssets, hero3dItems: tempHero3d } as any,
       atmosphericGlow: tempGlow,
       heroOverlayOpacity: tempHeroOpacity,
       heroStyle: tempHeroStyle,
@@ -234,7 +247,7 @@ export default function MarketplaceThemeControl() {
       compactStripConfig: tempCompactStrip,
       logoTextColor: tempLogoTextColor,
       logoPrimaryColor: tempLogoPrimaryColor,
-      logoSecondaryColor: tempLogoSecondaryColor
+      logoSecondaryColor: tempLogoSecondaryColor,
     });
     const success = await pushSettings();
     setIsCommitting(false);
@@ -1081,7 +1094,150 @@ export default function MarketplaceThemeControl() {
              </div>
           </div>
 
-         {/* 🚀 ADMIN LOGO BRAND COLOR & NEON GLOW CONTROL PANEL */}
+         {/* 🐠 3D HERO STAGE EDITOR */}
+         <div className="space-y-6 bg-slate-900/90 border border-cyan-700/50 rounded-3xl p-6 md:p-8 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+               <div>
+                  <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-white flex items-center gap-2">
+                     <Sparkles className="w-5 h-5 text-cyan-400" /> 3D Hero Stage Control
+                  </h3>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                     Configure the 3 fish items shown in the animated 3D hero. Upload fish image, set price, badge and link to a real product.
+                  </p>
+               </div>
+               <Badge className="bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 text-[9px] font-black uppercase tracking-wider">
+                  3 Slots Active
+               </Badge>
+            </div>
+
+            <div className="space-y-6">
+               {tempHero3d.map((fish, idx) => (
+                  <div key={fish.id} className="bg-slate-950/70 border border-slate-800 rounded-2xl p-4 space-y-4">
+                     {/* Slot header */}
+                     <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                        <span className="text-xs font-black uppercase tracking-widest" style={{ color: fish.badgeColor || "#00f3ff" }}>
+                           {fish.icon || "🐟"} Slot {idx + 1} — {fish.name}
+                        </span>
+                        {fish.image && (
+                           <img src={fish.image} alt={fish.name} className="w-10 h-10 rounded-xl object-contain bg-slate-900 border border-slate-700" />
+                        )}
+                     </div>
+
+                     {/* Fish image uploader */}
+                     <ImageUploaderBox
+                        label="Fish Image (WebP/PNG recommended)"
+                        value={fish.image}
+                        aspect="square"
+                        onChange={(url) => {
+                           const updated = tempHero3d.map((f, i) => i === idx ? { ...f, image: url } : f);
+                           setTempHero3d(updated);
+                        }}
+                     />
+
+                     {/* Row 1: Name + Icon */}
+                     <div className="grid grid-cols-2 gap-3">
+                        <div>
+                           <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">Fish Name</label>
+                           <input
+                              type="text" placeholder="e.g. Wild Red Snapper"
+                              value={fish.name}
+                              onChange={(e) => setTempHero3d(tempHero3d.map((f, i) => i === idx ? { ...f, name: e.target.value } : f))}
+                              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white font-bold"
+                           />
+                        </div>
+                        <div>
+                           <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">Icon Emoji</label>
+                           <input
+                              type="text" placeholder="🐟"
+                              value={fish.icon}
+                              onChange={(e) => setTempHero3d(tempHero3d.map((f, i) => i === idx ? { ...f, icon: e.target.value } : f))}
+                              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white font-bold"
+                           />
+                        </div>
+                     </div>
+
+                     {/* Row 2: Price + Unit */}
+                     <div className="grid grid-cols-2 gap-3">
+                        <div>
+                           <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">Price (e.g. ₹650)</label>
+                           <input
+                              type="text" placeholder="₹650"
+                              value={fish.price}
+                              onChange={(e) => setTempHero3d(tempHero3d.map((f, i) => i === idx ? { ...f, price: e.target.value } : f))}
+                              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-emerald-400 font-bold"
+                           />
+                        </div>
+                        <div>
+                           <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">Unit (e.g. kg / 500g)</label>
+                           <input
+                              type="text" placeholder="kg"
+                              value={fish.unit}
+                              onChange={(e) => setTempHero3d(tempHero3d.map((f, i) => i === idx ? { ...f, unit: e.target.value } : f))}
+                              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white font-bold"
+                           />
+                        </div>
+                     </div>
+
+                     {/* Row 3: Badge text + Badge color */}
+                     <div className="grid grid-cols-2 gap-3">
+                        <div>
+                           <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">Badge Label</label>
+                           <input
+                              type="text" placeholder="⚡ DOCK FRESH"
+                              value={fish.badge}
+                              onChange={(e) => setTempHero3d(tempHero3d.map((f, i) => i === idx ? { ...f, badge: e.target.value } : f))}
+                              className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white font-bold"
+                           />
+                        </div>
+                        <div>
+                           <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">Badge Color</label>
+                           <div className="flex items-center gap-2 bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1">
+                              <input
+                                 type="color"
+                                 value={fish.badgeColor}
+                                 onChange={(e) => setTempHero3d(tempHero3d.map((f, i) => i === idx ? { ...f, badgeColor: e.target.value } : f))}
+                                 className="w-7 h-7 rounded border-0 cursor-pointer bg-transparent"
+                              />
+                              <input
+                                 type="text"
+                                 value={fish.badgeColor}
+                                 onChange={(e) => setTempHero3d(tempHero3d.map((f, i) => i === idx ? { ...f, badgeColor: e.target.value } : f))}
+                                 className="bg-transparent text-[10px] font-mono font-bold text-white uppercase outline-none w-full"
+                              />
+                           </div>
+                        </div>
+                     </div>
+
+                     {/* Description */}
+                     <div>
+                        <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">Short Description</label>
+                        <input
+                           type="text" placeholder="Caught 3h ago · Ice-chilled instantly"
+                           value={fish.desc}
+                           onChange={(e) => setTempHero3d(tempHero3d.map((f, i) => i === idx ? { ...f, desc: e.target.value } : f))}
+                           className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-300 font-bold"
+                        />
+                     </div>
+
+                     {/* Product ID — direct link */}
+                     <div>
+                        <label className="text-[8.5px] font-bold text-cyan-400 uppercase block mb-0.5">⚡ Product ID (for direct “Add” link)</label>
+                        <input
+                           type="text" placeholder="e.g. PRD-101 or Supabase UUID (leave blank for /products)"
+                           value={fish.productId || ""}
+                           onChange={(e) => setTempHero3d(tempHero3d.map((f, i) => i === idx ? { ...f, productId: e.target.value || undefined } : f))}
+                           className="w-full bg-slate-950 border border-cyan-800/50 rounded-lg px-2.5 py-1.5 text-xs text-cyan-300 font-mono font-bold"
+                        />
+                        <p className="text-[8px] text-slate-500 mt-0.5">
+                           When set, clicking &quot;+ Add&quot; in the hero opens <code className="text-cyan-400">/customer/products/&#123;productId&#125;</code> directly.
+                        </p>
+                     </div>
+                  </div>
+               ))}
+            </div>
+         </div>
+
+          {/* 🚀 ADMIN LOGO BRAND COLOR & NEON GLOW CONTROL PANEL */}
          <div className="space-y-6 bg-slate-900/90 border border-slate-700 rounded-3xl p-6 md:p-8 shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-800 pb-4">
                <div>

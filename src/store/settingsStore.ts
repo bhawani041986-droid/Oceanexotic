@@ -43,6 +43,20 @@ export interface ZomatoHeroConfig {
   trustBadge3: string;
 }
 
+export interface Hero3DFishItem {
+  id: string;
+  name: string;
+  category: string;
+  price: string;
+  unit: string;
+  badge: string;
+  badgeColor: string;
+  icon: string;
+  image: string;
+  desc: string;
+  productId?: string;   // Links to a real product detail page
+}
+
 export interface CompactStripConfig {
   tickerText: string;
   bgColor: string;
@@ -116,6 +130,7 @@ interface SettingsState {
     agentAppIcon?: string;
     sellerAppIcon?: string;
     adminAppIcon?: string;
+    hero3dItems?: Hero3DFishItem[];
   };
 
   // PayU Registry

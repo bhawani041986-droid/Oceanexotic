@@ -1287,10 +1287,51 @@ const FALLBACK_REVIEWS = [
   { id: "REV-3", user_name: "Rajesh M.", comment: "Professional service and verifiable freshness. OceanExotic Global is the future.", rating: 4.9 },
 ];
 
-const Pro3DMarketHero = () => {
+const DEFAULT_FISH_ITEMS = [
+  {
+    id: "fish-1",
+    name: "Wild Red Snapper",
+    category: "Seawater Harbor",
+    price: "₹650", unit: "kg",
+    badge: "⚡ DOCK FRESH",
+    badgeColor: "#00f3ff",
+    icon: "🐟",
+    image: "/ICONS/Red-snapper.webp",
+    desc: "Caught 3h ago · Ice-chilled instantly",
+    productId: undefined as string | undefined,
+  },
+  {
+    id: "fish-2",
+    name: "Kingfish / Surmai",
+    category: "Harbor Special",
+    price: "₹920", unit: "kg",
+    badge: "🔥 TOP SELLER",
+    badgeColor: "#ff6eb4",
+    icon: "👑",
+    image: "/ICONS/kingfish.webp",
+    desc: "Prime steak cut · High Omega-3",
+    productId: undefined as string | undefined,
+  },
+  {
+    id: "fish-3",
+    name: "Tiger Prawns",
+    category: "Exotic Catch",
+    price: "₹780", unit: "500g",
+    badge: "✨ CHILLED ICE",
+    badgeColor: "#ffd60a",
+    icon: "🦐",
+    image: "/ICONS/tiger-prawns.webp",
+    desc: "Jumbo · Cleaned & Deveined",
+    productId: undefined as string | undefined,
+  }
+];
+
+const Pro3DMarketHero = ({ heroItems }: { heroItems?: typeof DEFAULT_FISH_ITEMS }) => {
   const [tilt, setTilt] = React.useState({ x: 0, y: 0 });
   const [activeCard, setActiveCard] = React.useState(1);
   const [isHovered, setIsHovered] = React.useState(false);
+
+  const fishItems = (heroItems && heroItems.length > 0) ? heroItems : DEFAULT_FISH_ITEMS;
 
   React.useEffect(() => {
     if (isHovered) return;
@@ -1313,41 +1354,7 @@ const Pro3DMarketHero = () => {
     setIsHovered(false);
   };
 
-  const fishItems = [
-    {
-      id: "fish-1",
-      name: "Wild Red Snapper",
-      category: "Seawater Harbor",
-      price: "₹650", unit: "kg",
-      badge: "⚡ DOCK FRESH",
-      badgeColor: "#00f3ff",
-      icon: "🐟",
-      image: "/ICONS/Red-snapper.webp",
-      desc: "Caught 3h ago · Ice-chilled instantly",
-    },
-    {
-      id: "fish-2",
-      name: "Kingfish / Surmai",
-      category: "Harbor Special",
-      price: "₹920", unit: "kg",
-      badge: "🔥 TOP SELLER",
-      badgeColor: "#ff6eb4",
-      icon: "👑",
-      image: "/ICONS/kingfish.webp",
-      desc: "Prime steak cut · High Omega-3",
-    },
-    {
-      id: "fish-3",
-      name: "Tiger Prawns",
-      category: "Exotic Catch",
-      price: "₹780", unit: "500g",
-      badge: "✨ CHILLED ICE",
-      badgeColor: "#ffd60a",
-      icon: "🦐",
-      image: "/ICONS/tiger-prawns.webp",
-      desc: "Jumbo · Cleaned & Deveined",
-    }
-  ];
+
 
   const activeFish = fishItems[activeCard];
 
@@ -1617,18 +1624,17 @@ const Pro3DMarketHero = () => {
                           <span className="text-slate-300 text-[8px] sm:text-[9px] font-normal ml-0.5">/ {fish.unit}</span>
                         </div>
                       </div>
-                      {/* CTA */}
                       <a
-                        href="/customer/products"
-                        onClick={e => e.stopPropagation()}
-                        className="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg sm:rounded-xl font-black text-[9px] sm:text-xs uppercase tracking-wider text-slate-950 hover:brightness-110 transition-all shrink-0 whitespace-nowrap"
-                        style={{
-                          background: `linear-gradient(135deg, ${fish.badgeColor}, ${fish.badgeColor}dd)`,
-                          boxShadow: `0 0 14px ${fish.badgeColor}60`,
-                        }}
-                      >
-                        + Add
-                      </a>
+                         href={fish.productId ? `/customer/products/${fish.productId}` : `/customer/products`}
+                         onClick={e => e.stopPropagation()}
+                         className="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg sm:rounded-xl font-black text-[9px] sm:text-xs uppercase tracking-wider text-slate-950 hover:brightness-110 transition-all shrink-0 whitespace-nowrap"
+                         style={{
+                           background: `linear-gradient(135deg, ${fish.badgeColor}, ${fish.badgeColor}dd)`,
+                           boxShadow: `0 0 14px ${fish.badgeColor}60`,
+                         }}
+                       >
+                         + Add
+                       </a>
                     </motion.div>
                   )}
 
@@ -2109,7 +2115,8 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
   return (
     <div className="w-full">
       {/* 3. PRO UI/UX 3D DYNAMIC FISH MARKET HERO SECTION */}
-      <Pro3DMarketHero />
+      <Pro3DMarketHero heroItems={settings.customerAssets?.hero3dItems as any} />
+
 
       {/* MARITIME WAVE DIVIDER - MOBILE SPACED */}
       <div className="hidden lg:block">
