@@ -355,55 +355,371 @@ const SakuSVG = () => (
   </svg>
 );
 
-// --- High-Definition Vector SVG Reef Flora & Corals ---
-const BranchingCoralSVG = ({ color1 = "#ff007f", color2 = "#e11d48", height = 48 }) => (
-  <svg width={height * 0.8} height={height} viewBox="0 0 80 100" fill="none" className="drop-shadow-[0_0_10px_rgba(255,0,127,0.7)]">
-    <defs>
-      <linearGradient id={`coralGrad-${color1}`} x1="0" y1="1" x2="0" y2="0">
-        <stop offset="0%" stopColor={color2} />
-        <stop offset="100%" stopColor={color1} />
-      </linearGradient>
-    </defs>
-    <path d="M40 100 C40 70 30 60 20 40 C10 20 5 15 10 5 C15 -5 25 10 25 25 C25 35 35 45 40 50 C45 35 40 20 50 5 C55 -5 65 5 60 20 C55 35 45 55 40 100 Z" fill={`url(#coralGrad-${color1})`} />
-    <path d="M40 70 C50 60 60 50 70 30 C75 20 85 25 75 35 C65 50 48 68 40 70 Z" fill={color1} opacity="0.9" />
-    <circle cx="10" cy="5" r="3" fill="#ffffff" opacity="0.8" />
-    <circle cx="50" cy="5" r="4" fill="#ffffff" opacity="0.8" />
-    <circle cx="75" cy="25" r="3" fill="#ffffff" opacity="0.8" />
+// --- ALL 51 CUSTOM SVG CORAL & SEAWEED COMPONENTS ---
+const Coral1 = ({ h = 48 }) => (
+  <svg width={h * 0.8} height={h} viewBox="0 0 80 100" className="drop-shadow-[0_0_10px_rgba(244,114,182,0.8)]">
+    <path d="M40 100 C40 70 25 60 15 40 C5 20 10 15 15 5 C20 15 25 25 35 45 C35 30 25 15 35 5 C40 15 45 30 40 50 C45 35 55 20 65 5 C70 15 65 30 55 55 Z" fill="#86efac" />
+    <path d="M15 40 C5 20 10 15 15 5 C20 15 25 25 35 45 Z" fill="#f472b6" />
+    <path d="M55 55 C65 30 70 15 65 5 C55 20 45 35 40 50 Z" fill="#f472b6" />
   </svg>
 );
 
-const SwayingKelpSVG = ({ color1 = "#00f5d4", color2 = "#059669", height = 56, isLeft = false }) => (
-  <svg width={height * 0.5} height={height} viewBox="0 0 50 100" fill="none" className={isLeft ? "animate-sway-seaweed-left" : "animate-sway-seaweed-right"}>
-    <defs>
-      <linearGradient id={`kelpGrad-${color1}`} x1="0" y1="1" x2="0" y2="0">
-        <stop offset="0%" stopColor={color2} />
-        <stop offset="100%" stopColor={color1} />
-      </linearGradient>
-    </defs>
-    <path d="M25 100 Q 5 70 25 40 Q 45 15 25 0 Q 30 15 15 40 Q 35 70 25 100 Z" fill={`url(#kelpGrad-${color1})`} />
-    <path d="M20 100 Q 35 75 20 45 Q 5 20 20 5 Q 15 20 28 45 Q 10 75 20 100 Z" fill={color1} opacity="0.6" />
+const Coral2 = ({ h = 44 }) => (
+  <svg width={h * 1.1} height={h} viewBox="0 0 90 80" className="drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]">
+    <path d="M10 70 C10 40 30 30 45 20 C60 30 80 40 80 70 C70 75 20 75 10 70 Z" fill="#1e3a8a" />
+    <path d="M15 60 C25 45 45 35 75 60 Z" fill="#2563eb" />
+    <path d="M25 50 C35 38 55 38 65 50 Z" fill="#60a5fa" />
   </svg>
 );
 
-const NeonAnemoneSVG = ({ color = "#00f3ff", height = 40 }) => (
-  <svg width={height * 1.1} height={height} viewBox="0 0 90 80" fill="none" className="animate-pulse-coral-glow">
-    <path d="M45 80 L35 40 Q20 30 10 15 C5 5 15 0 20 10 Q30 25 40 40 Z" fill={color} opacity="0.8" />
-    <path d="M45 80 L42 35 Q30 20 25 5 C20 -5 30 -5 33 5 Q40 20 44 35 Z" fill={color} opacity="0.9" />
-    <path d="M45 80 L48 35 Q60 20 65 5 C70 -5 80 -5 77 5 Q70 20 46 35 Z" fill={color} opacity="0.9" />
-    <path d="M45 80 L55 40 Q70 30 80 15 C85 5 75 0 70 10 Q60 25 50 40 Z" fill={color} opacity="0.8" />
-    <circle cx="45" cy="70" r="10" fill="#ffffff" className="animate-ping" opacity="0.5" />
-    <circle cx="45" cy="70" r="6" fill="#00f3ff" />
+const Coral3 = ({ h = 56 }) => (
+  <svg width={h * 0.45} height={h} viewBox="0 0 40 100" className="animate-sway-seaweed-left">
+    <path d="M20 100 Q 0 75 20 50 Q 40 25 20 0 Q 30 25 10 50 Q 30 75 20 100 Z" fill="#6ee7b7" />
   </svg>
 );
 
-const PearlClamSVG = ({ height = 32 }) => (
-  <svg width={height * 1.2} height={height} viewBox="0 0 60 50" fill="none" className="drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]">
-    <path d="M5 45 C 5 20, 55 20, 55 45 Z" fill="#94a3b8" stroke="#cbd5e1" strokeWidth="2" />
-    <path d="M10 40 C 10 10, 50 10, 50 40 Z" fill="#e2e8f0" opacity="0.9" />
-    <circle cx="30" cy="32" r="7" fill="#ffffff" className="animate-pulse" />
-    <circle cx="30" cy="32" r="9" fill="#00f3ff" opacity="0.4" />
+const Coral4 = ({ h = 58 }) => (
+  <svg width={h * 0.5} height={h} viewBox="0 0 50 100" className="animate-sway-seaweed-right">
+    <path d="M25 100 Q 5 70 25 35 Q 40 15 25 0 Q 35 20 15 45 Q 35 70 25 100 Z" fill="#047857" />
   </svg>
 );
+
+const Coral5 = ({ h = 52 }) => (
+  <svg width={h * 0.7} height={h} viewBox="0 0 70 100" className="animate-sway-seaweed-left">
+    <path d="M20 100 Q 5 60 20 20 Q 30 40 10 70 Z" fill="#10b981" />
+    <path d="M35 100 Q 20 50 35 10 Q 45 30 25 70 Z" fill="#eab308" />
+    <path d="M50 100 Q 40 60 50 25 Q 60 45 45 75 Z" fill="#6ee7b7" />
+  </svg>
+);
+
+const Coral6 = ({ h = 54 }) => (
+  <svg width={h * 0.6} height={h} viewBox="0 0 60 100" className="animate-sway-seaweed-right">
+    <path d="M30 100 Q 5 75 35 45 Q 55 20 30 0 Q 20 20 40 45 Q 10 75 30 100 Z" fill="#ec4899" />
+    <path d="M25 90 Q 45 65 20 35 Q 40 15 25 5 Z" fill="#38bdf8" opacity="0.8" />
+  </svg>
+);
+
+const Coral7 = ({ h = 42 }) => (
+  <svg width={h * 1.2} height={h} viewBox="0 0 100 80" className="drop-shadow-[0_0_8px_rgba(37,99,235,0.8)]">
+    <path d="M10 60 C10 20 90 20 90 60 C80 75 20 75 10 60 Z" fill="#1d4ed8" />
+    <path d="M20 50 Q 35 30 50 50 Q 65 30 80 50 Q 65 65 50 50 Q 35 65 20 50 Z" stroke="#93c5fd" strokeWidth="4" fill="none" />
+  </svg>
+);
+
+const Coral8 = ({ h = 56 }) => (
+  <svg width={h * 0.8} height={h} viewBox="0 0 80 100" className="drop-shadow-[0_0_8px_rgba(16,185,129,0.7)]">
+    <rect x="10" y="30" width="14" height="65" rx="7" fill="#10b981" />
+    <rect x="28" y="10" width="16" height="85" rx="8" fill="#34d399" />
+    <rect x="48" y="20" width="14" height="75" rx="7" fill="#059669" />
+    <ellipse cx="17" cy="30" rx="6" ry="3" fill="#064e3b" />
+    <ellipse cx="36" cy="10" rx="7" ry="3.5" fill="#064e3b" />
+    <ellipse cx="55" cy="20" rx="6" ry="3" fill="#064e3b" />
+    <line x1="30" y1="25" x2="42" y2="25" stroke="#ffffff" strokeWidth="2" opacity="0.6" />
+    <line x1="30" y1="45" x2="42" y2="45" stroke="#ffffff" strokeWidth="2" opacity="0.6" />
+  </svg>
+);
+
+const Coral9 = ({ h = 52 }) => (
+  <svg width={h * 0.9} height={h} viewBox="0 0 90 100" className="drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]">
+    <path d="M45 100 L45 70 M45 70 L20 40 M45 70 L70 40 M20 40 L10 20 M20 40 L30 20 M70 40 L60 20 M70 40 L80 20" stroke="#ef4444" strokeWidth="3" fill="none" />
+    <path d="M10 20 Q 45 10 80 20 M15 30 Q 45 20 75 30 M25 50 Q 45 40 65 50 M30 65 Q 45 55 60 65" stroke="#ef4444" strokeWidth="1.5" fill="none" opacity="0.8" />
+  </svg>
+);
+
+const Coral10 = ({ h = 48 }) => (
+  <svg width={h * 0.85} height={h} viewBox="0 0 85 100" className="drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]">
+    <path d="M42 100 L42 50 L20 25 L10 5 L25 15 L35 35 L42 50 L50 35 L60 15 L75 5 L65 25 L42 50 Z" fill="#eab308" />
+  </svg>
+);
+
+const Coral11 = ({ h = 46 }) => (
+  <svg width={h * 1.1} height={h} viewBox="0 0 90 80" className="animate-pulse-coral-glow">
+    <path d="M25 80 C25 45 65 45 65 80 Z" fill="#dc2626" />
+    <circle cx="35" cy="65" r="2" fill="#ffffff" />
+    <circle cx="50" cy="60" r="2" fill="#ffffff" />
+    <path d="M30 45 Q 15 25 5 10 M35 45 Q 25 15 20 0 M45 45 L45 0 M55 45 Q 65 15 70 0 M60 45 Q 75 25 85 10" stroke="#f97316" strokeWidth="4" strokeLinecap="round" />
+  </svg>
+);
+
+const Coral12 = ({ h = 40 }) => (
+  <svg width={h * 1.1} height={h} viewBox="0 0 80 70" className="drop-shadow-[0_0_8px_rgba(244,63,94,0.7)]">
+    <path d="M10 50 C 10 20, 70 20, 70 50 C 60 65, 20 65, 10 50 Z" fill="#f43f5e" />
+    <path d="M20 40 C 20 25, 60 25, 60 40 C 50 50, 30 50, 20 40 Z" fill="#9f1239" />
+  </svg>
+);
+
+const Coral13 = ({ h = 44 }) => (
+  <svg width={h * 0.9} height={h} viewBox="0 0 70 80">
+    <path d="M10 70 L25 30 L5 10 L35 15 L45 70 Z" fill="#ca8a04" />
+    <path d="M35 70 L50 25 L35 5 L65 10 L60 70 Z" fill="#eab308" />
+    <ellipse cx="20" cy="12" rx="15" ry="5" fill="#854d0e" />
+    <ellipse cx="50" cy="8" rx="15" ry="5" fill="#854d0e" />
+  </svg>
+);
+
+const Coral14 = ({ h = 50 }) => (
+  <svg width={h * 0.85} height={h} viewBox="0 0 80 90" className="drop-shadow-[0_0_10px_rgba(56,189,248,0.8)]">
+    <path d="M40 90 Q 10 50 10 25 Q 40 5 70 25 Q 70 50 40 90 Z" fill="#38bdf8" opacity="0.85" />
+    <circle cx="30" cy="35" r="4" fill="#0284c7" />
+    <circle cx="50" cy="35" r="4" fill="#0284c7" />
+    <circle cx="40" cy="50" r="5" fill="#0284c7" />
+  </svg>
+);
+
+const Coral15 = ({ h = 48 }) => (
+  <svg width={h * 0.8} height={h} viewBox="0 0 75 90" className="drop-shadow-[0_0_8px_rgba(244,114,182,0.8)]">
+    <path d="M37 90 L37 60 L15 35 L5 15 M15 35 L25 15 M37 60 L60 35 L50 15 M60 35 L70 15" stroke="#f472b6" strokeWidth="3.5" fill="none" strokeLinecap="round" />
+  </svg>
+);
+
+const Coral16 = ({ h = 48 }) => (
+  <svg width={h * 1.0} height={h} viewBox="0 0 90 80" className="animate-sway-seaweed-left">
+    <path d="M10 70 Q 5 30 25 10 Q 40 30 35 70 Z" fill="#14b8a6" />
+    <path d="M30 70 Q 25 20 50 5 Q 70 20 55 70 Z" fill="#0d9488" />
+    <circle cx="22" cy="30" r="2" fill="#ffffff" />
+    <circle cx="45" cy="25" r="2" fill="#ffffff" />
+  </svg>
+);
+
+const Coral17 = ({ h = 50 }) => (
+  <svg width={h * 0.8} height={h} viewBox="0 0 75 95" className="drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]">
+    <path d="M37 95 L37 50 L15 30 L5 10 M37 50 L60 30 L70 10 M37 50 L37 15" stroke="#ef4444" strokeWidth="4" strokeDasharray="6 4" fill="none" strokeLinecap="round" />
+  </svg>
+);
+
+const Coral18 = ({ h = 46 }) => (
+  <svg width={h * 0.8} height={h} viewBox="0 0 75 90">
+    <path d="M37 90 L37 50 L15 30 L37 50 L60 30 M37 50 L37 20" stroke="#f472b6" strokeWidth="4" strokeLinecap="round" fill="none" />
+    <circle cx="15" cy="30" r="4" fill="#a855f7" />
+    <circle cx="60" cy="30" r="4" fill="#a855f7" />
+    <circle cx="37" cy="20" r="4" fill="#a855f7" />
+  </svg>
+);
+
+const Coral19 = ({ h = 50 }) => (
+  <svg width={h * 0.85} height={h} viewBox="0 0 80 95" className="drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]">
+    <path d="M40 95 C40 65 15 50 10 25 C20 35 30 45 40 55 C40 35 25 20 35 5 C45 20 40 35 40 55 C50 45 60 35 70 25 C65 50 40 65 40 95 Z" fill="#9333ea" />
+  </svg>
+);
+
+const Coral20 = ({ h = 44 }) => (
+  <svg width={h * 0.9} height={h} viewBox="0 0 85 80" className="drop-shadow-[0_0_8px_rgba(225,29,72,0.8)]">
+    <path d="M42 80 Q 10 40 20 15 Q 42 35 42 80 Q 42 35 65 15 Q 75 40 42 80 Z" fill="#e11d48" />
+  </svg>
+);
+
+const Coral21 = ({ h = 48 }) => (
+  <svg width={h * 0.75} height={h} viewBox="0 0 70 90">
+    <rect x="10" y="30" width="12" height="60" rx="6" fill="#34d399" />
+    <rect x="26" y="10" width="14" height="80" rx="7" fill="#6ee7b7" />
+    <rect x="44" y="20" width="12" height="70" rx="6" fill="#059669" />
+    <ellipse cx="16" cy="30" rx="5" ry="2.5" fill="#064e3b" />
+    <ellipse cx="33" cy="10" rx="6" ry="3" fill="#064e3b" />
+    <ellipse cx="50" cy="20" rx="5" ry="2.5" fill="#064e3b" />
+  </svg>
+);
+
+const Coral22 = ({ h = 46 }) => (
+  <svg width={h * 0.8} height={h} viewBox="0 0 75 90">
+    <path d="M37 90 L37 45 L15 25 M37 45 L60 25 M37 45 L37 15" stroke="#1e3a8a" strokeWidth="5" fill="none" strokeLinecap="round" />
+    <circle cx="15" cy="25" r="3.5" fill="#ec4899" />
+    <circle cx="60" cy="25" r="3.5" fill="#ec4899" />
+  </svg>
+);
+
+const Coral23 = ({ h = 42 }) => (
+  <svg width={h * 1.0} height={h} viewBox="0 0 85 75" className="animate-pulse-coral-glow">
+    <rect x="15" y="35" width="16" height="40" rx="8" fill="#f43f5e" />
+    <rect x="35" y="20" width="18" height="55" rx="9" fill="#f472b6" />
+    <path d="M18 35 Q 10 20 5 10 M38 20 Q 30 5 25 0 M50 20 Q 55 5 60 0" stroke="#000000" strokeWidth="2.5" strokeLinecap="round" />
+  </svg>
+);
+
+const Coral24 = ({ h = 54 }) => (
+  <svg width={h * 0.85} height={h} viewBox="0 0 80 100" className="drop-shadow-[0_0_10px_rgba(37,99,235,0.8)]">
+    <path d="M40 100 L40 60 L15 35 L5 15 M15 35 L25 10 M40 60 L65 35 L55 10 L40 20 L50 5" stroke="#2563eb" strokeWidth="3" fill="none" strokeLinecap="round" />
+  </svg>
+);
+
+const Coral25 = ({ h = 48 }) => (
+  <svg width={h * 0.75} height={h} viewBox="0 0 70 90">
+    <rect x="10" y="20" width="12" height="70" rx="6" fill="#ec4899" />
+    <rect x="26" y="5" width="14" height="85" rx="7" fill="#f472b6" />
+  </svg>
+);
+
+const Coral26 = ({ h = 50 }) => (
+  <svg width={h * 0.8} height={h} viewBox="0 0 75 95" className="drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]">
+    <path d="M15 95 Q 5 50 15 25 C20 15 30 25 25 45 Q 15 70 15 95 Z" fill="#10b981" />
+    <path d="M35 95 Q 20 40 35 10 C42 0 50 10 45 35 Q 30 70 35 95 Z" fill="#34d399" />
+  </svg>
+);
+
+const Coral27 = ({ h = 54 }) => (
+  <svg width={h * 0.5} height={h} viewBox="0 0 50 100" className="animate-sway-seaweed-right">
+    <path d="M25 100 Q 5 75 35 45 Q 50 20 25 0 Q 15 20 35 45 Q 10 75 25 100 Z" fill="#1d4ed8" />
+  </svg>
+);
+
+const Coral28 = ({ h = 42 }) => (
+  <svg width={h * 1.1} height={h} viewBox="0 0 85 75" className="drop-shadow-[0_0_8px_rgba(244,114,182,0.8)]">
+    <path d="M20 65 Q 5 45 20 30 Q 35 15 50 30 Q 65 15 75 35 Q 85 55 65 65 Z" fill="#f472b6" />
+  </svg>
+);
+
+const Coral29 = ({ h = 48 }) => (
+  <svg width={h * 0.9} height={h} viewBox="0 0 80 90" className="animate-sway-seaweed-left">
+    <path d="M40 90 L20 40 Q 5 20 25 10 Q 40 30 40 90 Z" fill="#2563eb" />
+  </svg>
+);
+
+const Coral30 = ({ h = 60 }) => (
+  <svg width={h * 0.45} height={h} viewBox="0 0 45 110" className="animate-sway-seaweed-right">
+    <path d="M22 0 L22 110" stroke="#10b981" strokeWidth="2" fill="none" />
+    <circle cx="14" cy="20" r="4" fill="#34d399" />
+    <circle cx="30" cy="35" r="4" fill="#34d399" />
+  </svg>
+);
+
+const Coral31 = ({ h = 48 }) => (
+  <svg width={h * 0.8} height={h} viewBox="0 0 75 90" className="drop-shadow-[0_0_8px_rgba(37,99,235,0.8)]">
+    <path d="M37 90 L37 45 L15 20 L5 5 L20 20 L37 45 L60 20 L70 5 L55 20 L37 45 Z" fill="#2563eb" />
+  </svg>
+);
+
+const Coral32 = ({ h = 52 }) => (
+  <svg width={h * 0.5} height={h} viewBox="0 0 50 100" className="animate-sway-seaweed-left">
+    <path d="M25 100 Q 5 75 25 50 Q 45 25 25 0 Q 35 25 15 50 Q 35 75 25 100 Z" fill="#d946ef" />
+  </svg>
+);
+
+const Coral33 = ({ h = 54 }) => (
+  <svg width={h * 0.4} height={h} viewBox="0 0 40 100" className="animate-sway-seaweed-right">
+    <line x1="20" y1="100" x2="20" y2="0" stroke="#059669" strokeWidth="2.5" />
+    <circle cx="20" cy="30" r="5" fill="#34d399" />
+    <circle cx="20" cy="60" r="5" fill="#34d399" />
+  </svg>
+);
+
+const Coral34 = ({ h = 50 }) => (
+  <svg width={h * 0.5} height={h} viewBox="0 0 50 95" className="animate-sway-seaweed-left">
+    <path d="M25 95 Q 5 65 25 35 Q 40 15 25 0 Q 30 20 15 40 Q 35 65 25 95 Z" fill="#0284c7" />
+  </svg>
+);
+
+const Coral35 = ({ h = 52 }) => (
+  <svg width={h * 0.5} height={h} viewBox="0 0 50 100" className="animate-sway-seaweed-right">
+    <line x1="25" y1="100" x2="25" y2="0" stroke="#ec4899" strokeWidth="2" />
+    <path d="M25 80 Q 10 70 15 60 M25 60 Q 40 50 35 40 M25 40 Q 10 30 15 20" stroke="#f472b6" strokeWidth="3" fill="none" />
+  </svg>
+);
+
+const Coral36 = ({ h = 46 }) => (
+  <svg width={h * 0.8} height={h} viewBox="0 0 75 85" className="drop-shadow-[0_0_8px_rgba(244,114,182,0.8)]">
+    <path d="M37 85 L37 55 L15 35 L5 15 M15 35 L25 15 M37 55 L60 35 L50 15" stroke="#f472b6" strokeWidth="3" fill="none" strokeLinecap="round" />
+  </svg>
+);
+
+const Coral37 = ({ h = 48 }) => (
+  <svg width={h * 0.6} height={h} viewBox="0 0 60 90" className="animate-sway-seaweed-left">
+    <path d="M15 90 Q 5 50 15 10" stroke="#10b981" strokeWidth="3" fill="none" strokeLinecap="round" />
+    <path d="M30 90 Q 25 40 30 0" stroke="#34d399" strokeWidth="3" fill="none" strokeLinecap="round" />
+  </svg>
+);
+
+const Coral38 = ({ h = 48 }) => (
+  <svg width={h * 0.8} height={h} viewBox="0 0 75 90" className="drop-shadow-[0_0_8px_rgba(236,72,153,0.8)]">
+    <path d="M37 90 L37 50 L15 30 L5 10 M37 50 L60 30 L70 10 M37 50 L37 15" stroke="#ec4899" strokeWidth="4.5" fill="none" strokeLinecap="round" />
+  </svg>
+);
+
+const Coral39 = ({ h = 54 }) => (
+  <svg width={h * 0.6} height={h} viewBox="0 0 60 100" className="animate-sway-seaweed-right">
+    <path d="M15 100 Q 0 65 15 30 Q 30 10 15 0" stroke="#059669" strokeWidth="3.5" fill="none" />
+    <path d="M30 100 Q 45 65 30 30 Q 15 10 30 0" stroke="#10b981" strokeWidth="3.5" fill="none" />
+  </svg>
+);
+
+const Coral40 = ({ h = 50 }) => (
+  <svg width={h * 0.8} height={h} viewBox="0 0 75 95" className="drop-shadow-[0_0_8px_rgba(37,99,235,0.8)]">
+    <path d="M37 95 L37 50 L15 25 L5 5 L20 20 L37 50 L60 25 L70 5 L55 20 Z" fill="#1d4ed8" />
+  </svg>
+);
+
+const Coral41 = ({ h = 46 }) => (
+  <svg width={h * 0.85} height={h} viewBox="0 0 80 85" className="drop-shadow-[0_0_8px_rgba(244,114,182,0.8)]">
+    <path d="M40 85 Q 10 45 20 15 Q 40 35 40 85 Q 40 35 60 15 Q 70 45 40 85 Z" fill="#fb7185" />
+  </svg>
+);
+
+const Coral42 = ({ h = 48 }) => (
+  <svg width={h * 0.8} height={h} viewBox="0 0 75 90">
+    <path d="M37 90 L37 45 L15 20 L5 5 M37 45 L60 20 L70 5 M37 45 L37 10" stroke="#84cc16" strokeWidth="4.5" strokeLinecap="round" fill="none" />
+  </svg>
+);
+
+const Coral43 = ({ h = 50 }) => (
+  <svg width={h * 0.85} height={h} viewBox="0 0 80 90" className="drop-shadow-[0_0_10px_rgba(56,189,248,0.8)]">
+    <path d="M40 90 Q 10 50 10 25 Q 40 5 70 25 Q 70 50 40 90 Z" fill="#7dd3fc" opacity="0.85" />
+  </svg>
+);
+
+const Coral44 = ({ h = 52 }) => (
+  <svg width={h * 0.5} height={h} viewBox="0 0 50 100" className="animate-sway-seaweed-left">
+    <path d="M25 100 Q 5 70 25 35 Q 40 15 25 0 Q 35 20 15 45 Q 35 70 25 100 Z" fill="#84cc16" />
+  </svg>
+);
+
+const Coral45 = ({ h = 48 }) => (
+  <svg width={h * 0.8} height={h} viewBox="0 0 75 90" className="drop-shadow-[0_0_8px_rgba(79,70,229,0.8)]">
+    <path d="M37 90 C37 60 15 40 10 15 C25 25 35 35 37 50 C40 35 55 25 65 10 C60 35 37 60 37 90 Z" fill="#4f46e5" />
+  </svg>
+);
+
+const Coral46 = ({ h = 46 }) => (
+  <svg width={h * 0.9} height={h} viewBox="0 0 85 85" className="drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]">
+    <path d="M42 85 Q 10 45 20 15 Q 42 35 42 85 Q 42 35 65 15 Q 75 45 42 85 Z" fill="#ef4444" />
+  </svg>
+);
+
+const Coral47 = ({ h = 44 }) => (
+  <svg width={h * 0.8} height={h} viewBox="0 0 75 80">
+    <path d="M37 80 L37 45 L15 25 L5 10 M37 45 L60 25 L70 10 M37 45 L37 15" stroke="#dc2626" strokeWidth="4" fill="none" strokeLinecap="round" />
+  </svg>
+);
+
+const Coral48 = ({ h = 54 }) => (
+  <svg width={h * 0.5} height={h} viewBox="0 0 50 100" className="animate-sway-seaweed-right">
+    <path d="M25 100 Q 5 75 25 45 Q 45 20 25 0 Q 30 20 15 45 Q 35 75 25 100 Z" fill="#1e40af" />
+  </svg>
+);
+
+const Coral49 = ({ h = 50 }) => (
+  <svg width={h * 0.85} height={h} viewBox="0 0 80 95" className="drop-shadow-[0_0_10px_rgba(185,28,28,0.8)]">
+    <path d="M40 95 L40 55 L15 30 L5 10 M15 30 L25 10 M40 55 L65 30 L75 10 M65 30 L55 10 M40 55 L40 15" stroke="#b91c1c" strokeWidth="4" fill="none" strokeLinecap="round" />
+  </svg>
+);
+
+const Coral50 = ({ h = 48 }) => (
+  <svg width={h * 0.85} height={h} viewBox="0 0 80 90">
+    <path d="M40 90 Q 10 50 10 25 Q 40 5 70 25 Q 70 50 40 90 Z" fill="#a7f3d0" opacity="0.85" />
+  </svg>
+);
+
+const Coral51 = ({ h = 52 }) => (
+  <svg width={h * 0.55} height={h} viewBox="0 0 55 100" className="animate-sway-seaweed-left">
+    <path d="M27 100 Q 5 75 27 45 Q 45 20 27 0 Q 35 20 15 45 Q 35 75 27 100 Z" fill="#eab308" />
+    <path d="M27 90 Q 40 65 20 35 Q 35 15 27 5 Z" fill="#ef4444" opacity="0.85" />
+  </svg>
+);
+
+const ALL_51_CORALS = [
+  Coral1, Coral2, Coral3, Coral4, Coral5, Coral6, Coral7, Coral8, Coral9, Coral10,
+  Coral11, Coral12, Coral13, Coral14, Coral15, Coral16, Coral17, Coral18, Coral19, Coral20,
+  Coral21, Coral22, Coral23, Coral24, Coral25, Coral26, Coral27, Coral28, Coral29, Coral30,
+  Coral31, Coral32, Coral33, Coral34, Coral35, Coral36, Coral37, Coral38, Coral39, Coral40,
+  Coral41, Coral42, Coral43, Coral44, Coral45, Coral46, Coral47, Coral48, Coral49, Coral50, Coral51
+];
 
 const MaritimeWaveDivider = () => {
   const [finFish, setFinFish] = React.useState<any[]>([
@@ -493,26 +809,21 @@ const MaritimeWaveDivider = () => {
         </div>
       ))}
 
-      {/* 5. HIGH-DEFINITION VECTOR SVG REEF FLORA & CORALS BED */}
-      <div className="absolute inset-0 z-20 pointer-events-none flex items-end justify-between px-1 pb-0.5 overflow-hidden">
-        {/* Layered SVG Vector Corals & Swaying Seaweeds */}
-        <div className="absolute bottom-1 left-[1%]"><BranchingCoralSVG color1="#ff007f" color2="#9333ea" height={52} /></div>
-        <div className="absolute bottom-1 left-[6%]"><SwayingKelpSVG color1="#00f5d4" color2="#059669" height={60} isLeft={true} /></div>
-        <div className="absolute bottom-1 left-[12%]"><NeonAnemoneSVG color="#00f3ff" height={44} /></div>
-        <div className="absolute bottom-1 left-[18%]"><PearlClamSVG height={34} /></div>
-        <div className="absolute bottom-1 left-[24%]"><BranchingCoralSVG color1="#f43f5e" color2="#be123c" height={48} /></div>
-        <div className="absolute bottom-1 left-[30%]"><SwayingKelpSVG color1="#10b981" color2="#047857" height={64} isLeft={false} /></div>
-        <div className="absolute bottom-1 left-[36%]"><NeonAnemoneSVG color="#ec4899" height={42} /></div>
-        <div className="absolute bottom-1 left-[42%]"><BranchingCoralSVG color1="#a855f7" color2="#6b21a8" height={56} /></div>
-        <div className="absolute bottom-1 left-[48%]"><SwayingKelpSVG color1="#06b6d4" color2="#0e7490" height={58} isLeft={true} /></div>
-        <div className="absolute bottom-1 left-[54%]"><PearlClamSVG height={32} /></div>
-        <div className="absolute bottom-1 left-[60%]"><BranchingCoralSVG color1="#ff007f" color2="#e11d48" height={50} /></div>
-        <div className="absolute bottom-1 left-[66%]"><NeonAnemoneSVG color="#00f5d4" height={46} /></div>
-        <div className="absolute bottom-1 left-[72%]"><SwayingKelpSVG color1="#14b8a6" color2="#0f766e" height={62} isLeft={false} /></div>
-        <div className="absolute bottom-1 left-[78%]"><BranchingCoralSVG color1="#eab308" color2="#ca8a04" height={48} /></div>
-        <div className="absolute bottom-1 left-[84%]"><NeonAnemoneSVG color="#38bdf8" height={44} /></div>
-        <div className="absolute bottom-1 left-[90%]"><SwayingKelpSVG color1="#059669" color2="#022c22" height={60} isLeft={true} /></div>
-        <div className="absolute bottom-1 left-[95%]"><BranchingCoralSVG color1="#f43f5e" color2="#881337" height={52} /></div>
+      {/* 5. HIGH-DEFINITION VECTOR SVG REEF FLORA & CORALS BED (ALL 51 CORALS & SEAWEEDS RENDERED) */}
+      <div className="absolute inset-0 z-20 pointer-events-none flex items-end justify-between px-0.5 pb-0.5 overflow-hidden">
+        {ALL_51_CORALS.map((CoralComp, i) => {
+          const leftPct = (i * 1.92).toFixed(2);
+          const coralHeight = 38 + ((i % 5) * 4);
+          return (
+            <div 
+              key={`coral-item-${i}`} 
+              className="absolute bottom-0.5 transition-all origin-bottom"
+              style={{ left: `${leftPct}%` }}
+            >
+              <CoralComp h={coralHeight} />
+            </div>
+          );
+        })}
       </div>
 
       {/* 6. MARINE SNOW (Bioluminescent Floating Particles) */}
