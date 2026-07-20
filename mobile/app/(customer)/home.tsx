@@ -181,7 +181,7 @@ import type { Product } from "@/services/productService";
 import { useSettingsStore } from "@/store/settingsStore";
 import { useCartStore } from "@/store/cartStore";
 import { CATEGORIES, getSortedCategories } from "@/constants/categories";
-import { SectionTitle } from "@/components/customer/SectionTitle";
+import { SectionTitle, AnimatedHeaderUnderline } from "@/components/customer/SectionTitle";
 import { CutSelectionModal } from "@/components/customer/CutSelectionModal";
 import { MaritimeWaveDivider } from "@/components/customer/MaritimeWaveDivider";
 import { AndamanMaritimeTelemetry } from "@/components/customer/AndamanMaritimeTelemetry";
@@ -959,15 +959,18 @@ export default function CustomerHomeScreen() {
               return (
                 <View key="TODAYS_CATCH" className="px-4 py-2">
                   <View className="mb-3 flex-row items-center justify-between gap-2 flex-wrap">
-                    <View className="flex-row items-center gap-2">
-                      <Text className="text-lg font-black uppercase italic tracking-tight" style={{ color: '#FF5E36' }}>
-                        {t('todays_catch')}
-                      </Text>
-                      <View className="px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30">
-                        <Text className="text-[8px] font-extrabold uppercase tracking-wider text-emerald-400">
-                          {t('live_harbor_arrival')}
+                    <View className="flex-col">
+                      <View className="flex-row items-center gap-2">
+                        <Text className="text-lg font-black uppercase italic tracking-tight" style={{ color: '#FF5E36' }}>
+                          {t('todays_catch')}
                         </Text>
+                        <View className="px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30">
+                          <Text className="text-[8px] font-extrabold uppercase tracking-wider text-emerald-400">
+                            {t('live_harbor_arrival')}
+                          </Text>
+                        </View>
                       </View>
+                      <AnimatedHeaderUnderline width={75} height={3} />
                     </View>
 
                     {/* Compact Filter Tabs */}
@@ -1138,7 +1141,7 @@ export default function CustomerHomeScreen() {
                                 <Text className="text-[8px] font-black uppercase text-muted-foreground relative z-10">{meta.time || recipe.time || '25m'}</Text>
                               </ChamferedBox>
                             </View>
-                            <Text className="text-sm font-black uppercase italic text-foreground" numberOfLines={2}>{recipe.title}</Text>
+                            <Text className="text-sm font-black uppercase italic text-amber-400" numberOfLines={2}>{recipe.title}</Text>
                             <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: primaryColor }}>{t('view_recipe')}</Text>
                           </View>
                         </ChamferedBox>

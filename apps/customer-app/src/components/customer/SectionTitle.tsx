@@ -10,8 +10,7 @@ import Animated, {
   withTiming 
 } from "react-native-reanimated";
 
-export function SectionTitle({ title, subtitle }: { title: string; subtitle: string }) {
-  const colors = useThemeColors();
+export function AnimatedHeaderUnderline({ width = 85, height = 3.5 }: { width?: number; height?: number }) {
   const shimmerAnim = useSharedValue(0);
 
   useEffect(() => {
@@ -35,23 +34,28 @@ export function SectionTitle({ title, subtitle }: { title: string; subtitle: str
   });
 
   return (
-    <View className="gap-1">
-      <View>
-        <Text className="text-lg font-black uppercase tracking-tight italic" style={{ color: colors.primary }}>
-          {title}
-        </Text>
-        <View className="mt-1.5 mb-1.5" style={{ height: 3.5, width: 85, borderRadius: 999, overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.08)' }}>
-          <Animated.View style={[{ flex: 1, width: '140%' }, animatedStyle]}>
-            <LinearGradient
-              colors={['#FF3E3E', '#FFD700', '#00F3FF', '#FF5E36']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={{ flex: 1 }}
-            />
-          </Animated.View>
-        </View>
-      </View>
-      <Text className="text-[9.5px] font-extrabold uppercase tracking-widest" style={{ color: colors.textMuted }}>
+    <View style={{ height, width, borderRadius: 999, overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.08)', marginTop: 3, marginBottom: 3 }}>
+      <Animated.View style={[{ flex: 1, width: '140%' }, animatedStyle]}>
+        <LinearGradient
+          colors={['#FF3E3E', '#FFD700', '#00F3FF', '#FF5E36']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={{ flex: 1 }}
+        />
+      </Animated.View>
+    </View>
+  );
+}
+
+export function SectionTitle({ title, subtitle }: { title: string; subtitle: string }) {
+  const colors = useThemeColors();
+  return (
+    <View className="gap-0.5">
+      <Text className="text-lg font-black uppercase tracking-tight italic" style={{ color: colors.primary }}>
+        {title}
+      </Text>
+      <AnimatedHeaderUnderline width={85} height={3.5} />
+      <Text className="text-[9.5px] font-extrabold uppercase tracking-widest mt-0.5" style={{ color: colors.textMuted }}>
         {subtitle}
       </Text>
     </View>
