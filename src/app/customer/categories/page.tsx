@@ -40,15 +40,27 @@ export default function CustomerCategoriesPage() {
   const { categories: ALL_CATEGORIES } = useCategories();
   const PRODUCT_CATEGORIES = ALL_CATEGORIES.filter(cat => (cat.status || "ACTIVE") === "ACTIVE");
   
-  const CATEGORIES = PRODUCT_CATEGORIES.map(cat => ({
-     id: cat.id,
-     name: cat.label,
-     imageUrl: cat.imageUrl,
-     count: MASTER_PRODUCT_REGISTRY.filter(p => p.category === cat.id).length,
-     icon: CATEGORY_UI_MAPPING[cat.id]?.icon || "🐟",
-     desc: CATEGORY_UI_MAPPING[cat.id]?.desc || "Premium maritime product.",
-     color: CATEGORY_UI_MAPPING[cat.id]?.color || "from-blue-500/20"
-  }));
+  const CATEGORIES = PRODUCT_CATEGORIES.map((cat, idx) => {
+    const labelLower = (cat.label || "").toLowerCase();
+    let badgeTag = cat.badgeTag || null;
+    if (!badgeTag) {
+      if (labelLower.includes("surmai") || labelLower.includes("prawn") || labelLower.includes("shrimp")) badgeTag = "🔥 HOT";
+      else if (labelLower.includes("seawater") || labelLower.includes("crab") || labelLower.includes("freshwater")) badgeTag = "⚡ FRESH";
+      else if (labelLower.includes("steak") || labelLower.includes("exotic")) badgeTag = "✨ CHILLED";
+      else if (labelLower.includes("cook") || labelLower.includes("ready")) badgeTag = "✨ CHILLED";
+      else badgeTag = "⚡ FRESH";
+    }
+    return {
+      id: cat.id,
+      name: cat.label,
+      imageUrl: cat.imageUrl,
+      badgeTag,
+      count: MASTER_PRODUCT_REGISTRY.filter(p => p.category === cat.id).length,
+      icon: CATEGORY_UI_MAPPING[cat.id]?.icon || "🐟",
+      desc: CATEGORY_UI_MAPPING[cat.id]?.desc || "Premium maritime product.",
+      color: CATEGORY_UI_MAPPING[cat.id]?.color || "from-blue-500/20"
+    };
+  });
   return (
 
     <div className="space-y-[10px] md:space-y-16 pt-4 md:pt-10 pb-10 animate-fade-in px-4 md:px-0">
@@ -74,21 +86,31 @@ export default function CustomerCategoriesPage() {
 
       {/* Categories Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[10px] md:gap-10">
-        {CATEGORIES.map((cat) => (
+        {CATEGORIES.map((cat, idx) => (
           <Link key={cat.id} href={`/customer/products?category=${cat.name}`}>
-            <Card className={`p-[4px] md:p-1 group cursor-pointer transition-all hover:border-primary/40 bg-gradient-to-br ${cat.color} to-bg-secondary/40 border-[var(--foreground)]/5 rounded-[20px] md:rounded-[32px]`}>
+            <Card 
+              className={`p-[4px] md:p-1 group cursor-pointer transition-all hover:border-primary/40 bg-gradient-to-br ${cat.color} to-bg-secondary/40 border-[var(--foreground)]/5 rounded-[20px] md:rounded-[32px] animate-underwater-float`}
+              style={{ animationDelay: `${(idx % 3) * 0.25}s` }}
+            >
               <div className="p-4 md:p-10 space-y-4 md:space-y-10">
                  <div className="flex items-center justify-between">
-                    <div className="w-14 h-14 md:w-20 md:h-20 rounded-xl md:rounded-[24px] bg-teal-950/20 border border-teal-500/30 flex items-center justify-center shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 overflow-hidden">
+                    <div className="w-14 h-14 md:w-20 md:h-20 rounded-xl md:rounded-[24px] bg-teal-950/20 border border-teal-500/30 flex items-center justify-center shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 overflow-hidden animate-breathing-zoom">
                        {cat.imageUrl ? (
                          <img src={cat.imageUrl} alt={cat.name} className="w-full h-full object-cover" />
                        ) : (
                          <span className="text-2xl md:text-4xl">{cat.icon}</span>
                        )}
                     </div>
-                    <Badge variant="glass" className="bg-[var(--foreground)]/5 text-[var(--foreground)] border-[var(--foreground)]/10 uppercase text-[8px] md:text-[9px] tracking-widest px-3 md:px-4">
-                       {cat.count} HARVESTS
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                       {cat.badgeTag && (
+                         <Badge variant="glass" className="bg-[#0F172A]/90 text-[#00F3FF] border-[#00F3FF]/50 uppercase text-[8px] md:text-[9px] tracking-widest px-2.5 py-0.5 shadow-[0_0_8px_rgba(0,243,255,0.4)] font-black">
+                           {cat.badgeTag}
+                         </Badge>
+                       )}
+                       <Badge variant="glass" className="bg-[var(--foreground)]/5 text-[var(--foreground)] border-[var(--foreground)]/10 uppercase text-[8px] md:text-[9px] tracking-widest px-3 md:px-4">
+                          {cat.count} HARVESTS
+                       </Badge>
+                    </div>
                  </div>
                  <div className="space-y-2 md:space-y-4">
                     <div className="space-y-0.5 md:space-y-1">

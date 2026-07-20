@@ -431,3 +431,22 @@ body {
 body {
     top: 0 !important;
 }
+
+/* Underwater Sine-Wave Floating & Breathing Animations for Categories */
+@keyframes underwaterFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes breathingZoom {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.animate-underwater-float {
+  animation: underwaterFloat 2.8s ease-in-out infinite;
+}
+
+.animate-breathing-zoom {
+  animation: breathingZoom 2.8s ease-in-out infinite;
+}

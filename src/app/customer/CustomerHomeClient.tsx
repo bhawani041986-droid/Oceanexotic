@@ -810,17 +810,18 @@ const CATEGORIES: {
   glowColor: string;
   slug: string;
   isTransparent?: boolean;
+  badgeTag: string;
 }[] = [
-  { name: "Seawater Fish", image: "/images/categories/seawater.png", color: "from-blue-500/40 to-indigo-900/60", glowColor: "#0284c7", slug: "SEAWATER FISH", isTransparent: true },
-  { name: "Freshwater Fish", image: "/images/categories/freshwater.png", color: "from-cyan-500/40 to-teal-900/60", glowColor: "#0d9488", slug: "FRESHWATER FISH", isTransparent: true },
-  { name: "Prawns & Shrimps", image: "/images/categories/prawns.png", color: "from-orange-500/40 to-amber-900/60", glowColor: "#ea580c", slug: "PRAWNS & SHRIMPS", isTransparent: true },
-  { name: "Crabs & Lobsters", image: "/images/categories/crabs.png", color: "from-emerald-800/40 to-teal-950/60", glowColor: "#059669", slug: "CRABS & LOBSTERS", isTransparent: true },
-  { name: "Steaks & Fillets", image: "/images/categories/steaks.png", color: "from-rose-600/40 to-red-900/60", glowColor: "#e11d48", slug: "STEAKS & FILLETS", isTransparent: true },
-  { name: "Exotic Catch", image: "/images/categories/exotic.png", color: "from-purple-500/40 to-indigo-900/60", glowColor: "#8b5cf6", slug: "EXOTIC CATCH", isTransparent: true },
-  { name: "Ready To Cook", image: "/images/categories/ready_to_cook.png", color: "from-amber-500/40 to-amber-800/60", glowColor: "#d97706", slug: "READY TO COOK", isTransparent: true },
-  { name: "Dry Fish", image: "/images/categories/dry_fish.png", color: "from-yellow-600/40 to-amber-900/60", glowColor: "#ca8a04", slug: "DRY FISH", isTransparent: true },
-  { name: "Mutton", image: "/images/categories/mutton.png", color: "from-red-800/40 to-stone-900/60", glowColor: "#b91c1c", slug: "MUTTON", isTransparent: true },
-  { name: "Chicken", image: "/images/categories/chicken.png", color: "from-amber-600/40 to-stone-900/60", glowColor: "#d97706", slug: "CHICKEN", isTransparent: true },
+  { name: "Seawater Fish", image: "/images/categories/seawater.png", color: "from-blue-500/40 to-indigo-900/60", glowColor: "#0284c7", slug: "SEAWATER FISH", isTransparent: true, badgeTag: "⚡ FRESH" },
+  { name: "Freshwater Fish", image: "/images/categories/freshwater.png", color: "from-cyan-500/40 to-teal-900/60", glowColor: "#0d9488", slug: "FRESHWATER FISH", isTransparent: true, badgeTag: "⚡ FRESH" },
+  { name: "Prawns & Shrimps", image: "/images/categories/prawns.png", color: "from-orange-500/40 to-amber-900/60", glowColor: "#ea580c", slug: "PRAWNS & SHRIMPS", isTransparent: true, badgeTag: "🔥 HOT" },
+  { name: "Crabs & Lobsters", image: "/images/categories/crabs.png", color: "from-emerald-800/40 to-teal-950/60", glowColor: "#059669", slug: "CRABS & LOBSTERS", isTransparent: true, badgeTag: "✨ CHILLED" },
+  { name: "Steaks & Fillets", image: "/images/categories/steaks.png", color: "from-rose-600/40 to-red-900/60", glowColor: "#e11d48", slug: "STEAKS & FILLETS", isTransparent: true, badgeTag: "⚡ FRESH" },
+  { name: "Exotic Catch", image: "/images/categories/exotic.png", color: "from-purple-500/40 to-indigo-900/60", glowColor: "#8b5cf6", slug: "EXOTIC CATCH", isTransparent: true, badgeTag: "🔥 HOT" },
+  { name: "Ready To Cook", image: "/images/categories/ready_to_cook.png", color: "from-amber-500/40 to-amber-800/60", glowColor: "#d97706", slug: "READY TO COOK", isTransparent: true, badgeTag: "✨ CHILLED" },
+  { name: "Dry Fish", image: "/images/categories/dry_fish.png", color: "from-yellow-600/40 to-amber-900/60", glowColor: "#ca8a04", slug: "DRY FISH", isTransparent: true, badgeTag: "⚡ FRESH" },
+  { name: "Mutton", image: "/images/categories/mutton.png", color: "from-red-800/40 to-stone-900/60", glowColor: "#b91c1c", slug: "MUTTON", isTransparent: true, badgeTag: "🥩 FRESH" },
+  { name: "Chicken", image: "/images/categories/chicken.png", color: "from-amber-600/40 to-stone-900/60", glowColor: "#d97706", slug: "CHICKEN", isTransparent: true, badgeTag: "🍗 FRESH" },
 ];
 
 const FEATURED_PRODUCTS = [
@@ -1422,23 +1423,34 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
       {/* 4. CATEGORY VAULT (RIBBON TYPE) */}
       <section className="py-2 container mx-auto px-0 md:px-10">
          <div className="grid grid-cols-5 md:grid-cols-10 gap-0 border-y border-[var(--foreground)]/5 overflow-hidden">
-            {CATEGORIES.map((cat) => (
+            {CATEGORIES.map((cat, idx) => (
               <Link key={cat.name} href={`/customer/products?category=${cat.slug}`} className="w-full">
                 <div 
-                   className="aspect-[1/1.5] md:aspect-square flex flex-col bg-[var(--c-bg-alt)]/20 relative overflow-hidden group hover:bg-[var(--c-bg-alt)]/40 transition-all border-r border-[var(--foreground)]/5"
+                   className="aspect-[1/1.5] md:aspect-square flex flex-col bg-[var(--c-bg-alt)]/20 relative overflow-hidden group hover:bg-[var(--c-bg-alt)]/40 transition-all border-r border-[var(--foreground)]/5 animate-underwater-float"
                    style={{ 
                      clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)',
                      border: `0.5px solid ${cat.glowColor}40`,
-                     boxShadow: `inset 0 0 20px ${cat.glowColor}20`
+                     boxShadow: `inset 0 0 20px ${cat.glowColor}20`,
+                     animationDelay: `${(idx % 3) * 0.25}s`
                    }}
                 >
+                  {/* Floating Micro Telemetry Badge */}
+                  {cat.badgeTag && (
+                    <div className="absolute top-1 right-1 z-30 bg-[#0F172A]/90 backdrop-blur-md px-1 py-0.5 rounded border border-[#00F3FF]/60 shadow-[0_0_8px_rgba(0,243,255,0.4)]">
+                      <span className="text-[6.5px] md:text-[8.5px] font-black text-[#00F3FF] tracking-tighter uppercase leading-none">
+                        {cat.badgeTag}
+                      </span>
+                    </div>
+                  )}
+
                   {/* Subtle Gradient Glow */}
                   <div className={cn("absolute inset-0 opacity-25 group-hover:opacity-45 transition-opacity bg-gradient-to-br", cat.color)} />
                   
                   {/* FIXED IMAGE/ICON AREA */}
                   <div className="flex-1 flex items-center justify-center relative z-10 pt-1">
                     <div 
-                      className="w-12 h-12 md:w-24 md:h-24 group-hover:scale-110 transition-transform duration-500 flex items-center justify-center overflow-hidden"
+                      className="w-12 h-12 md:w-24 md:h-24 group-hover:scale-110 transition-transform duration-500 flex items-center justify-center overflow-hidden animate-breathing-zoom"
+                      style={{ animationDelay: `${(idx % 3) * 0.25}s` }}
                     >
                       <img 
                         src={cat.image} 
