@@ -1510,10 +1510,10 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
 
 
       {/* 4. CATEGORY VAULT (RIBBON TYPE) */}
-      <section className="py-2 container mx-auto px-0 md:px-10">
-         <div className="grid grid-cols-5 md:grid-cols-10 gap-0 border-y border-[var(--foreground)]/5 overflow-hidden">
+      <section className="py-2 container mx-auto px-2 md:px-10 flex justify-center">
+         <div className="flex flex-wrap items-center justify-center gap-1.5 md:gap-2 w-full max-w-7xl mx-auto border-y border-[var(--foreground)]/5 py-2">
             {(dynamicActiveCategories.length > 0 ? dynamicActiveCategories : CATEGORIES).map((cat, idx) => (
-              <Link key={cat.name} href={`/customer/products?category=${cat.slug}`} className="w-full">
+              <Link key={cat.name} href={`/customer/products?category=${cat.slug}`} className="w-[calc(20%-6px)] md:w-[calc(10%-8px)] min-w-[68px] max-w-[125px]">
                 <div 
                    className="aspect-[1/1.5] md:aspect-square flex flex-col bg-[var(--c-bg-alt)]/20 relative overflow-hidden group hover:bg-[var(--c-bg-alt)]/40 transition-all border-r border-[var(--foreground)]/5 animate-underwater-float"
                    style={{ 

@@ -128,9 +128,9 @@ export default function CustomerCategoriesPage() {
       </div>
 
       {/* Categories Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[10px] md:gap-10">
+      <div className="flex flex-wrap justify-center items-center gap-[10px] md:gap-10 max-w-7xl mx-auto">
         {CATEGORIES.map((cat, idx) => (
-          <Link key={cat.id} href={`/customer/products?category=${cat.name}`}>
+          <Link key={cat.id} href={`/customer/products?category=${cat.name}`} className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.33%-28px)] max-w-md">
             <Card 
               className={`p-[4px] md:p-1 group cursor-pointer transition-all hover:border-primary/40 bg-gradient-to-br ${cat.color} to-bg-secondary/40 border-[var(--foreground)]/5 rounded-[20px] md:rounded-[32px] animate-underwater-float`}
               style={{ animationDelay: `${(idx % 3) * 0.25}s` }}
