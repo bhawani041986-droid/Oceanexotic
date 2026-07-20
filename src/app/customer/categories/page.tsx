@@ -19,9 +19,52 @@ const OceanReelsFeed = dynamic(
   { ssr: false }
 );
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 import { useCategories } from "@/hooks/useCategories";
 import { MASTER_PRODUCT_REGISTRY } from "@/constants/products";
+
+const getBadgeStyle = (tag: string) => {
+  if (tag.includes("HOT") || tag.includes("🔥")) {
+    return {
+      bg: "bg-gradient-to-r from-red-600 via-rose-500 to-amber-500",
+      border: "border-amber-300/90",
+      glow: "shadow-[0_0_12px_rgba(244,63,94,0.95)] animate-pulse",
+      text: "text-white"
+    };
+  }
+  if (tag.includes("CHILLED") || tag.includes("✨")) {
+    return {
+      bg: "bg-gradient-to-r from-sky-500 via-cyan-500 to-teal-400",
+      border: "border-cyan-200/90",
+      glow: "shadow-[0_0_12px_rgba(6,182,212,0.95)]",
+      text: "text-slate-950 font-black"
+    };
+  }
+  if (tag.includes("MEAT") || tag.includes("🥩")) {
+    return {
+      bg: "bg-gradient-to-r from-red-700 via-rose-600 to-red-500",
+      border: "border-rose-300/90",
+      glow: "shadow-[0_0_12px_rgba(225,29,72,0.9)]",
+      text: "text-white"
+    };
+  }
+  if (tag.includes("CHICKEN") || tag.includes("🍗")) {
+    return {
+      bg: "bg-gradient-to-r from-amber-600 via-orange-500 to-yellow-400",
+      border: "border-amber-200/90",
+      glow: "shadow-[0_0_12px_rgba(217,119,6,0.9)]",
+      text: "text-slate-950 font-black"
+    };
+  }
+  // Default FRESH (⚡)
+  return {
+    bg: "bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400",
+    border: "border-emerald-200/90",
+    glow: "shadow-[0_0_12px_rgba(16,185,129,0.95)]",
+    text: "text-slate-950 font-black"
+  };
+};
 
 const CATEGORY_UI_MAPPING: Record<string, { desc: string, icon: string, color: string }> = {
   'FRESHWATER FISH': { icon: "🐟", color: "from-cyan-500/20", desc: "Freshwater river catch and aquaculture species." },
@@ -101,13 +144,16 @@ export default function CustomerCategoriesPage() {
                          <span className="text-2xl md:text-4xl">{cat.icon}</span>
                        )}
                     </div>
-                    <div className="flex items-center gap-2">
-                       {cat.badgeTag && (
-                         <Badge variant="glass" className="bg-[#0F172A]/90 text-[#00F3FF] border-[#00F3FF]/50 uppercase text-[8px] md:text-[9px] tracking-widest px-2.5 py-0.5 shadow-[0_0_8px_rgba(0,243,255,0.4)] font-black">
-                           {cat.badgeTag}
-                         </Badge>
-                       )}
-                       <Badge variant="glass" className="bg-[var(--foreground)]/5 text-[var(--foreground)] border-[var(--foreground)]/10 uppercase text-[8px] md:text-[9px] tracking-widest px-3 md:px-4">
+                     <div className="flex items-center gap-2">
+                        {cat.badgeTag && (() => {
+                          const bStyle = getBadgeStyle(cat.badgeTag);
+                          return (
+                            <Badge variant="glass" className={cn("border uppercase text-[8px] md:text-[9.5px] tracking-widest px-2.5 py-0.5 font-black shadow-lg", bStyle.bg, bStyle.border, bStyle.glow, bStyle.text)}>
+                              {cat.badgeTag}
+                            </Badge>
+                          );
+                        })()}
+                        <Badge variant="glass" className="bg-[var(--foreground)]/5 text-[var(--foreground)] border-[var(--foreground)]/10 uppercase text-[8px] md:text-[9px] tracking-widest px-3 md:px-4">
                           {cat.count} HARVESTS
                        </Badge>
                     </div>

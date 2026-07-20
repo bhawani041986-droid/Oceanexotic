@@ -802,7 +802,47 @@ const LobsterSVG = () => (
       ))}
     </motion.g>
   </svg>
-);
+const getBadgeStyle = (tag: string) => {
+  if (tag.includes("HOT") || tag.includes("🔥")) {
+    return {
+      bg: "bg-gradient-to-r from-red-600 via-rose-500 to-amber-500",
+      border: "border-amber-300/90",
+      glow: "shadow-[0_0_12px_rgba(244,63,94,0.95)] animate-pulse",
+      text: "text-white"
+    };
+  }
+  if (tag.includes("CHILLED") || tag.includes("✨")) {
+    return {
+      bg: "bg-gradient-to-r from-sky-500 via-cyan-500 to-teal-400",
+      border: "border-cyan-200/90",
+      glow: "shadow-[0_0_12px_rgba(6,182,212,0.95)]",
+      text: "text-slate-950 font-black"
+    };
+  }
+  if (tag.includes("MEAT") || tag.includes("🥩")) {
+    return {
+      bg: "bg-gradient-to-r from-red-700 via-rose-600 to-red-500",
+      border: "border-rose-300/90",
+      glow: "shadow-[0_0_12px_rgba(225,29,72,0.9)]",
+      text: "text-white"
+    };
+  }
+  if (tag.includes("CHICKEN") || tag.includes("🍗")) {
+    return {
+      bg: "bg-gradient-to-r from-amber-600 via-orange-500 to-yellow-400",
+      border: "border-amber-200/90",
+      glow: "shadow-[0_0_12px_rgba(217,119,6,0.9)]",
+      text: "text-slate-950 font-black"
+    };
+  }
+  // Default FRESH (⚡)
+  return {
+    bg: "bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400",
+    border: "border-emerald-200/90",
+    glow: "shadow-[0_0_12px_rgba(16,185,129,0.95)]",
+    text: "text-slate-950 font-black"
+  };
+};
 
 const CATEGORIES: {
   name: string;
@@ -1484,13 +1524,21 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                    }}
                 >
                   {/* Floating Micro Telemetry Badge */}
-                  {cat.badgeTag && (
-                    <div className="absolute top-1 right-1 z-30 bg-[#0F172A]/90 backdrop-blur-md px-1 py-0.5 rounded border border-[#00F3FF]/60 shadow-[0_0_8px_rgba(0,243,255,0.4)]">
-                      <span className="text-[6.5px] md:text-[8.5px] font-black text-[#00F3FF] tracking-tighter uppercase leading-none">
-                        {cat.badgeTag}
-                      </span>
-                    </div>
-                  )}
+                  {cat.badgeTag && (() => {
+                    const bStyle = getBadgeStyle(cat.badgeTag);
+                    return (
+                      <div className={cn(
+                        "absolute top-1 right-1 z-30 px-1.5 py-0.5 rounded-full border shadow-md flex items-center justify-center transition-all group-hover:scale-110",
+                        bStyle.bg,
+                        bStyle.border,
+                        bStyle.glow
+                      )}>
+                        <span className={cn("text-[6.5px] md:text-[8.5px] font-black tracking-wider uppercase leading-none drop-shadow-sm", bStyle.text)}>
+                          {cat.badgeTag}
+                        </span>
+                      </div>
+                    );
+                  })()}
 
                   {/* Subtle Gradient Glow */}
                   <div className={cn("absolute inset-0 opacity-25 group-hover:opacity-45 transition-opacity bg-gradient-to-br", cat.color)} />
