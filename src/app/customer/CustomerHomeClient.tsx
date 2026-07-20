@@ -809,27 +809,18 @@ const CATEGORIES: {
   color: string;
   glowColor: string;
   slug: string;
-  blendMode?: string;
-  isFlipped?: boolean;
-  swimRight: number;
-  swimLeft: number;
   isTransparent?: boolean;
 }[] = [
-  // FIN FISH SECTOR
-  { name: "Red Snapper", image: "/ICONS/Red-snapper.webp", color: "from-rose-600/40 to-red-900/60", glowColor: "#e11d48", slug: "snapper", blendMode: "screen", isFlipped: false, swimRight: -1, swimLeft: 1 },
-  { name: "Kingfish", image: "/ICONS/kingfish.webp", color: "from-blue-500/40 to-indigo-900/60", glowColor: "#3b82f6", slug: "kingfish", isFlipped: true, swimRight: -1, swimLeft: 1 },
-  { name: "White Pomfret", image: "/ICONS/white-pomfret.webp", color: "from-slate-300/40 to-slate-600/60", glowColor: "#cbd5e1", slug: "pomfret", isFlipped: true, swimRight: -1, swimLeft: 1 },
-  { name: "Grouper", image: "/ICONS/grouper.webp", color: "from-amber-800/40 to-amber-950/60", glowColor: "#92400e", slug: "grouper", isFlipped: true, swimRight: -1, swimLeft: 1 },
-  { name: "Mackerel", image: "/ICONS/mackerel.webp", color: "from-cyan-500/40 to-blue-800/60", glowColor: "#06b6d4", slug: "mackerel", isFlipped: true, swimRight: -1, swimLeft: 1 },
-  
-  // EXOTIC / SHELLFISH SECTOR
-  { name: "Tiger Prawns", image: "/ICONS/tiger-prawns.webp", color: "from-orange-500/40 to-orange-800/60", glowColor: "#f97316", slug: "prawns", isFlipped: true, swimRight: -1, swimLeft: 1 },
-  { name: "Mud Crab", image: "/ICONS/mud-cram.webp", color: "from-emerald-800/40 to-emerald-950/60", glowColor: "#065f46", slug: "crab", isFlipped: false, swimRight: 1, swimLeft: -1 },
-  { name: "Spiny Lobster", image: "/ICONS/spiny-lobster.webp", color: "from-red-700/40 to-red-950/60", glowColor: "#b91c1c", slug: "lobster", isFlipped: true, swimRight: -1, swimLeft: 1 },
-
-  // MEAT & POULTRY SECTOR
-  { name: "Mutton", image: "/ICONS/mutton.png", color: "from-red-800/40 to-stone-900/60", glowColor: "#b91c1c", slug: "mutton", isTransparent: true, swimRight: -1, swimLeft: 1 },
-  { name: "Chicken", image: "/ICONS/chicken.png", color: "from-amber-600/40 to-stone-900/60", glowColor: "#d97706", slug: "chicken", isTransparent: true, swimRight: -1, swimLeft: 1 },
+  { name: "Seawater Fish", image: "/images/categories/seawater.png", color: "from-blue-500/40 to-indigo-900/60", glowColor: "#0284c7", slug: "SEAWATER FISH", isTransparent: true },
+  { name: "Freshwater Fish", image: "/images/categories/freshwater.png", color: "from-cyan-500/40 to-teal-900/60", glowColor: "#0d9488", slug: "FRESHWATER FISH", isTransparent: true },
+  { name: "Prawns & Shrimps", image: "/images/categories/prawns.png", color: "from-orange-500/40 to-amber-900/60", glowColor: "#ea580c", slug: "PRAWNS & SHRIMPS", isTransparent: true },
+  { name: "Crabs & Lobsters", image: "/images/categories/crabs.png", color: "from-emerald-800/40 to-teal-950/60", glowColor: "#059669", slug: "CRABS & LOBSTERS", isTransparent: true },
+  { name: "Steaks & Fillets", image: "/images/categories/steaks.png", color: "from-rose-600/40 to-red-900/60", glowColor: "#e11d48", slug: "STEAKS & FILLETS", isTransparent: true },
+  { name: "Exotic Catch", image: "/images/categories/exotic.png", color: "from-purple-500/40 to-indigo-900/60", glowColor: "#8b5cf6", slug: "EXOTIC CATCH", isTransparent: true },
+  { name: "Ready To Cook", image: "/images/categories/ready_to_cook.png", color: "from-amber-500/40 to-amber-800/60", glowColor: "#d97706", slug: "READY TO COOK", isTransparent: true },
+  { name: "Dry Fish", image: "/images/categories/dry_fish.png", color: "from-yellow-600/40 to-amber-900/60", glowColor: "#ca8a04", slug: "DRY FISH", isTransparent: true },
+  { name: "Mutton", image: "/images/categories/mutton.png", color: "from-red-800/40 to-stone-900/60", glowColor: "#b91c1c", slug: "MUTTON", isTransparent: true },
+  { name: "Chicken", image: "/images/categories/chicken.png", color: "from-amber-600/40 to-stone-900/60", glowColor: "#d97706", slug: "CHICKEN", isTransparent: true },
 ];
 
 const FEATURED_PRODUCTS = [
@@ -1447,17 +1438,12 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
                   {/* FIXED IMAGE/ICON AREA */}
                   <div className="flex-1 flex items-center justify-center relative z-10 pt-1">
                     <div 
-                      className="text-xl md:text-6xl group-hover:scale-110 transition-transform duration-500 flex items-center justify-center overflow-hidden"
-                      style={cat.blendMode === 'screen' ? { mixBlendMode: 'screen' } : cat.isTransparent ? {} : { filter: 'invert(1)', mixBlendMode: 'screen' }}
+                      className="w-12 h-12 md:w-24 md:h-24 group-hover:scale-110 transition-transform duration-500 flex items-center justify-center overflow-hidden"
                     >
                       <img 
                         src={cat.image} 
                         alt={cat.name} 
-                        className="w-12 h-12 md:w-24 md:h-24 object-contain" 
-                        style={{ 
-                          filter: `${cat.blendMode === 'screen' || cat.isTransparent ? '' : 'invert(1) '}brightness(1.2) contrast(1.1) drop-shadow(0 0 10px ${cat.glowColor}) drop-shadow(0 0 25px ${cat.glowColor}70)`,
-                          transform: cat.isFlipped ? 'scaleX(-1)' : 'none'
-                        }}
+                        className="w-full h-full object-contain filter drop-shadow-[0_0_12px_rgba(0,243,255,0.3)]" 
                       />
                     </div>
                   </div>
