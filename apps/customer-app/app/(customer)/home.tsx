@@ -631,6 +631,10 @@ export default function CustomerHomeScreen() {
               // Default Fallback: Zomato High-Impact Hero
               const zomatoConf = settings.zomatoHeroConfig || {
                 backdropUrl: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80",
+                backdrops: [
+                  "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80",
+                  "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?auto=format&fit=crop&q=80"
+                ],
                 titleLine1: "FRESHNESS",
                 titleLine2: "REDEFINED.",
                 subtitle: "Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers.",
@@ -640,19 +644,23 @@ export default function CustomerHomeScreen() {
                 trustBadge3: "❄️ 100% Cold Chain Sealed"
               };
 
+              const zomatoBackdrops = (zomatoConf.backdrops && zomatoConf.backdrops.length > 0)
+                ? zomatoConf.backdrops
+                : [zomatoConf.backdropUrl];
+              const activeBackdrop = zomatoBackdrops[currentHeroIndex % zomatoBackdrops.length] || zomatoConf.backdropUrl;
+
               return (
-                <View key="HERO" className="relative min-h-[230px] overflow-hidden">
+                <View key="HERO" className="relative min-h-[240px] overflow-hidden">
                   <AnimatedImage
                     key={currentHeroIndex}
                     entering={FadeIn.duration(1000)}
                     exiting={FadeOut.duration(1000)}
-                    source={{ uri: resolveMediaUrl(zomatoConf.backdropUrl) }}
-                    className="absolute inset-0 h-full w-full"
-                    style={{ opacity: imageOpacity }}
+                    source={{ uri: resolveMediaUrl(activeBackdrop) }}
+                    className="absolute inset-0 h-full w-full opacity-70"
                     contentFit="cover"
                     priority="high"
                   />
-                  <View className="relative z-10 px-4 pb-5 pt-3 flex-1">
+                  <View className="relative z-10 px-4 pb-4 pt-3 flex-1 justify-between bg-slate-950/35">
                     <Animated.View entering={FadeInDown.duration(800).delay(200)} className="flex-1">
                       <View 
                         className="self-start rounded-none border px-2.5 py-1"
@@ -668,23 +676,42 @@ export default function CustomerHomeScreen() {
                       <Text className="mt-2 text-2xl font-black uppercase italic leading-tight" style={{ color: heroTitle1Color }}>
                         {zomatoConf.titleLine1} <Text style={{ color: heroTitle2Color }}>{zomatoConf.titleLine2}</Text>
                       </Text>
-                      <Text className="mt-1.5 text-xs font-medium italic drop-shadow-md" style={{ color: heroSubtitleColor }}>
+                      <Text className="mt-1 text-xs font-medium italic drop-shadow-md" style={{ color: heroSubtitleColor }}>
                         {zomatoConf.subtitle}
                       </Text>
+
+                      {/* 🛡️ 3 Trust Telemetry Badges Strip */}
+                      <View className="flex-row items-center gap-1.5 mt-3 flex-wrap">
+                        {zomatoConf.trustBadge1 ? (
+                          <View className="px-2 py-0.5 rounded-md bg-slate-950/70 border border-emerald-500/40">
+                            <Text className="text-[9px] font-extrabold text-emerald-400">{zomatoConf.trustBadge1}</Text>
+                          </View>
+                        ) : null}
+                        {zomatoConf.trustBadge2 ? (
+                          <View className="px-2 py-0.5 rounded-md bg-slate-950/70 border border-sky-500/40">
+                            <Text className="text-[9px] font-extrabold text-sky-400">{zomatoConf.trustBadge2}</Text>
+                          </View>
+                        ) : null}
+                        {zomatoConf.trustBadge3 ? (
+                          <View className="px-2 py-0.5 rounded-md bg-slate-950/70 border border-purple-500/40">
+                            <Text className="text-[9px] font-extrabold text-purple-300">{zomatoConf.trustBadge3}</Text>
+                          </View>
+                        ) : null}
+                      </View>
                     </Animated.View>
 
                     {/* Pagination Fish Icons */}
-                    {heroSlides.length > 1 && (
-                      <View className="absolute bottom-4 left-4 flex-row items-center gap-1.5 z-30">
-                        {heroSlides.map((_, idx) => (
+                    {zomatoBackdrops.length > 1 && (
+                      <View className="flex-row items-center gap-1.5 mt-2 z-30">
+                        {zomatoBackdrops.map((_, idx) => (
                           <Pressable
                             key={idx}
                             onPress={() => setCurrentHeroIndex(idx)}
                           >
                             <MaterialCommunityIcons 
                               name="fish" 
-                              size={currentHeroIndex === idx ? 24 : 18} 
-                              color={currentHeroIndex === idx ? primaryColor : "rgba(255,255,255,0.5)"} 
+                              size={currentHeroIndex % zomatoBackdrops.length === idx ? 22 : 16} 
+                              color={currentHeroIndex % zomatoBackdrops.length === idx ? primaryColor : "rgba(255,255,255,0.5)"} 
                             />
                           </Pressable>
                         ))}

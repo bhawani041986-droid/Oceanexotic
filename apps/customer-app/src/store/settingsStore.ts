@@ -115,6 +115,7 @@ export interface SwiggyBannerSlide {
 
 export interface ZomatoHeroConfig {
   backdropUrl: string;
+  backdrops?: string[];
   titleLine1: string;
   titleLine2: string;
   subtitle: string;
@@ -154,6 +155,11 @@ export const DEFAULT_SWIGGY_BANNERS: SwiggyBannerSlide[] = [
 
 export const DEFAULT_ZOMATO_HERO: ZomatoHeroConfig = {
   backdropUrl: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80",
+  backdrops: [
+    "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&q=80"
+  ],
   titleLine1: "FRESHNESS",
   titleLine2: "REDEFINED.",
   subtitle: "Delivered Fresh in Under 90 Minutes. Trusted by 50,000+ Customers.",

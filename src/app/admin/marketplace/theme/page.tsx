@@ -687,22 +687,18 @@ export default function MarketplaceThemeControl() {
                                           />
                                        </div>
                                     </div>
-                                    <div>
-                                       <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">Image URL</label>
-                                       <input
-                                          type="text"
-                                          placeholder="https://..."
-                                          value={item.image}
-                                          onChange={(e) => {
-                                             const newItems = [...card.items];
-                                             newItems[itemIdx] = { ...newItems[itemIdx], image: e.target.value };
-                                             const currentCards = tempAmazonCards.length > 0 ? tempAmazonCards : DEFAULT_AMAZON_HERO_CARDS;
-                                             const updated = currentCards.map(c => c.id === card.id ? { ...c, items: newItems } : c);
-                                             setTempAmazonCards(updated);
-                                          }}
-                                          className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-[10px] text-slate-300 font-mono"
-                                       />
-                                    </div>
+                                    <ImageUploaderBox
+                                       label="Product Image File / URL"
+                                       value={item.image}
+                                       onChange={(url) => {
+                                          const newItems = [...card.items];
+                                          newItems[itemIdx] = { ...newItems[itemIdx], image: url };
+                                          const currentCards = tempAmazonCards.length > 0 ? tempAmazonCards : DEFAULT_AMAZON_HERO_CARDS;
+                                          const updated = currentCards.map(c => c.id === card.id ? { ...c, items: newItems } : c);
+                                          setTempAmazonCards(updated);
+                                       }}
+                                       aspect="square"
+                                    />
                                  </div>
                               ))}
                            </div>
@@ -907,13 +903,67 @@ export default function MarketplaceThemeControl() {
                         className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-medium"
                      />
                   </div>
-                  <div className="sm:col-span-2">
-                     <ImageUploaderBox
-                        label="Backdrop Image / Video File / URL"
-                        value={tempZomatoHero.backdropUrl}
-                        onChange={(url) => setTempZomatoHero({ ...tempZomatoHero, backdropUrl: url })}
-                        aspect="banner"
-                     />
+                  <div className="sm:col-span-2 space-y-3 pt-2 border-t border-slate-800">
+                     <div className="flex items-center justify-between">
+                        <span className="text-xs font-black uppercase text-purple-400 tracking-wider">
+                           🖼️ Rotating Hero Backdrop Slides Manager ({ (tempZomatoHero.backdrops || [tempZomatoHero.backdropUrl]).length } Slides)
+                        </span>
+                        <button
+                           type="button"
+                           onClick={() => {
+                              const current = tempZomatoHero.backdrops || [tempZomatoHero.backdropUrl];
+                              setTempZomatoHero({
+                                 ...tempZomatoHero,
+                                 backdrops: [...current, "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?auto=format&fit=crop&q=80"]
+                              });
+                              toast("Added new Backdrop Slide!", "success");
+                           }}
+                           className="px-3 py-1 rounded-lg bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[10px] font-black uppercase hover:bg-purple-500/30"
+                        >
+                           + Add Backdrop Slide
+                        </button>
+                     </div>
+
+                     <div className="space-y-2">
+                        {(tempZomatoHero.backdrops || [tempZomatoHero.backdropUrl]).map((bgUrl, bgIdx) => (
+                           <div key={bgIdx} className="bg-slate-950 border border-purple-500/20 rounded-xl p-3 flex items-center gap-3">
+                              <span className="text-[10px] font-black text-purple-400">Slide #{bgIdx + 1}</span>
+                              <div className="flex-1">
+                                 <ImageUploaderBox
+                                    label={`Hero Backdrop Image Slide #${bgIdx + 1}`}
+                                    value={bgUrl}
+                                    onChange={(url) => {
+                                       const current = [...(tempZomatoHero.backdrops || [tempZomatoHero.backdropUrl])];
+                                       current[bgIdx] = url;
+                                       setTempZomatoHero({
+                                          ...tempZomatoHero,
+                                          backdropUrl: current[0],
+                                          backdrops: current
+                                       });
+                                    }}
+                                    aspect="banner"
+                                 />
+                              </div>
+                              {(tempZomatoHero.backdrops || []).length > 1 && (
+                                 <button
+                                    type="button"
+                                    onClick={() => {
+                                       const current = (tempZomatoHero.backdrops || []).filter((_, i) => i !== bgIdx);
+                                       setTempZomatoHero({
+                                          ...tempZomatoHero,
+                                          backdropUrl: current[0] || tempZomatoHero.backdropUrl,
+                                          backdrops: current
+                                       });
+                                       toast("Removed backdrop slide.", "info");
+                                    }}
+                                    className="text-[10px] font-bold text-rose-400 hover:text-rose-300 underline"
+                                 >
+                                    Delete
+                                 </button>
+                              )}
+                           </div>
+                        ))}
+                     </div>
                   </div>
                </div>
 
