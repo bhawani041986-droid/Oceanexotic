@@ -356,11 +356,11 @@ const SakuSVG = () => (
 
 const MaritimeWaveDivider = () => {
   const [finFish, setFinFish] = React.useState<any[]>([
-    { name: "Seawater Fish", image: "/images/categories/seawater.png", swimRight: -1, swimLeft: 1 },
-    { name: "Freshwater Fish", image: "/images/categories/freshwater.png", swimRight: -1, swimLeft: 1 },
-    { name: "Prawns & Shrimps", image: "/images/categories/prawns.png", swimRight: -1, swimLeft: 1 },
-    { name: "Crabs & Lobsters", image: "/images/categories/crabs.png", swimRight: -1, swimLeft: 1 },
-    { name: "Steaks & Fillets", image: "/images/categories/steaks.png", swimRight: -1, swimLeft: 1 }
+    { name: "Red Snapper", image: "/ICONS/Red-snapper.webp", swimRight: -1, swimLeft: 1 },
+    { name: "Kingfish", image: "/ICONS/kingfish.webp", swimRight: -1, swimLeft: 1 },
+    { name: "White Pomfret", image: "/ICONS/white-pomfret.webp", swimRight: -1, swimLeft: 1 },
+    { name: "Grouper", image: "/ICONS/grouper.webp", swimRight: -1, swimLeft: 1 },
+    { name: "Mackerel", image: "/ICONS/mackerel.webp", swimRight: -1, swimLeft: 1 }
   ]);
 
   React.useEffect(() => {
