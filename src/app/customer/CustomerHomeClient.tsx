@@ -1510,6 +1510,12 @@ const Pro3DMarketHero = () => {
   );
 };
 
+const RECIPES = [
+  { id: "REC-1", title: "Pan-Seared King Salmon", time: "20 min", difficulty: "Easy", image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&q=80" },
+  { id: "REC-2", title: "Spicy Garlic Tiger Prawns", time: "15 min", difficulty: "Medium", image: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80" },
+  { id: "REC-3", title: "Grilled Surmai Steak", time: "25 min", difficulty: "Medium", image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80" }
+];
+
 export default function CustomerHomeClient({ initialAssets }: { initialAssets?: any }) {
   const settings = useSettingsStore();
   const cart = useCartStore();
