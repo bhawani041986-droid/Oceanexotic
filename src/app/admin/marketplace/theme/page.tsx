@@ -31,16 +31,18 @@ import { useToast } from "@/components/ui/Toast";
 import { Logo } from "@/components/ui/Logo";
 
 export default function MarketplaceThemeControl() {
-  const { customerTheme, heroStyle, logoTextColor, logoPrimaryColor, logoSecondaryColor, atmosphericGlow, heroOverlayOpacity, customerAssets, setSettings, pushSettings, fetchSettings } = useSettingsStore();
+  const { customerTheme, heroStyle, amazonHeroCards, logoTextColor, logoPrimaryColor, logoSecondaryColor, atmosphericGlow, heroOverlayOpacity, customerAssets, setSettings, pushSettings, fetchSettings } = useSettingsStore();
   const { toast } = useToast();
   const [selectedThemeId, setSelectedThemeId] = useState(customerTheme);
   const [tempAssets, setTempAssets] = useState(customerAssets);
   const [tempGlow, setTempGlow] = useState(atmosphericGlow);
   const [tempHeroOpacity, setTempHeroOpacity] = useState(heroOverlayOpacity ?? 80);
   const [tempHeroStyle, setTempHeroStyle] = useState(heroStyle || "AMAZON_CARD_GRID");
+  const [tempAmazonCards, setTempAmazonCards] = useState<AmazonHeroCardConfig[]>(amazonHeroCards || DEFAULT_AMAZON_HERO_CARDS);
   const [tempLogoTextColor, setTempLogoTextColor] = useState(logoTextColor || "#00D1FF");
   const [tempLogoPrimaryColor, setTempLogoPrimaryColor] = useState(logoPrimaryColor || "#00D1FF");
   const [tempLogoSecondaryColor, setTempLogoSecondaryColor] = useState(logoSecondaryColor || "#F0ABFC");
+  const [editingCardId, setEditingCardId] = useState<string | null>("card-1");
   const [isCommitting, setIsCommitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [activeStation, setActiveStation] = useState<string | null>(null);
@@ -57,15 +59,19 @@ export default function MarketplaceThemeControl() {
     setTempGlow(atmosphericGlow);
     setTempHeroOpacity(heroOverlayOpacity ?? 80);
     setTempHeroStyle(heroStyle || "AMAZON_CARD_GRID");
+    if (amazonHeroCards && amazonHeroCards.length > 0) {
+      setTempAmazonCards(amazonHeroCards);
+    }
     setTempLogoTextColor(logoTextColor || "#00D1FF");
     setTempLogoPrimaryColor(logoPrimaryColor || "#00D1FF");
     setTempLogoSecondaryColor(logoSecondaryColor || "#F0ABFC");
-  }, [customerAssets, customerTheme, atmosphericGlow, heroOverlayOpacity, heroStyle, logoTextColor, logoPrimaryColor, logoSecondaryColor]);
+  }, [customerAssets, customerTheme, atmosphericGlow, heroOverlayOpacity, heroStyle, amazonHeroCards, logoTextColor, logoPrimaryColor, logoSecondaryColor]);
 
   const isDirty = selectedThemeId !== customerTheme || 
                   tempGlow !== atmosphericGlow || 
                   tempHeroOpacity !== (heroOverlayOpacity ?? 80) ||
                   tempHeroStyle !== heroStyle ||
+                  JSON.stringify(tempAmazonCards) !== JSON.stringify(amazonHeroCards || DEFAULT_AMAZON_HERO_CARDS) ||
                   tempLogoTextColor !== logoTextColor ||
                   tempLogoPrimaryColor !== logoPrimaryColor ||
                   tempLogoSecondaryColor !== logoSecondaryColor ||
@@ -124,6 +130,7 @@ export default function MarketplaceThemeControl() {
       atmosphericGlow: tempGlow,
       heroOverlayOpacity: tempHeroOpacity,
       heroStyle: tempHeroStyle,
+      amazonHeroCards: tempAmazonCards,
       logoTextColor: tempLogoTextColor,
       logoPrimaryColor: tempLogoPrimaryColor,
       logoSecondaryColor: tempLogoSecondaryColor
@@ -353,6 +360,230 @@ export default function MarketplaceThemeControl() {
                            <ChevronRight className={`w-3.5 h-3.5 ${isActive ? "text-primary" : "text-slate-600"}`} />
                         </div>
                      </button>
+                  );
+               })}
+            </div>
+         </div>
+
+         {/* 🛒 ADMIN AMAZON HERO CARDS CUSTOMIZER & MANAGER PANEL */}
+         <div className="space-y-6 bg-slate-900/90 border border-slate-700 rounded-3xl p-6 md:p-8 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+               <div>
+                  <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-white flex items-center gap-2">
+                     <Layers className="w-5 h-5 text-emerald-400" /> Amazon Hero Card Customizer & 2x2 Grid Manager
+                  </h3>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                     Add, customize titles, change theme colors, and configure 2x2 product grids for all Amazon Hero Cards.
+                  </p>
+               </div>
+               <button
+                  type="button"
+                  onClick={() => {
+                     const newId = `card-${Date.now()}`;
+                     const newCard: AmazonHeroCardConfig = {
+                        id: newId,
+                        title: "Custom Seafood Collection",
+                        badge: "Special Deal",
+                        themeColor: "#0d5c3a",
+                        accentColor: "#10B981",
+                        active: true,
+                        items: [
+                           { name: "Surmai Steaks", price: "₹1,899", oldPrice: "₹2,299", image: "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?auto=format&fit=crop&q=80", query: "Surmai" },
+                           { name: "King Jumbo Prawns", price: "₹6,989", oldPrice: "₹7,999", image: "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&q=80", query: "Prawn" },
+                           { name: "Seawater Crabs", price: "₹2,799", oldPrice: "₹3,499", image: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80", query: "Crab" },
+                           { name: "Red Snapper Fillet", price: "₹798", oldPrice: "₹999", image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80", query: "Snapper" },
+                        ]
+                     };
+                     setTempAmazonCards([...tempAmazonCards, newCard]);
+                     setEditingCardId(newId);
+                     toast("Created new Amazon Hero Card!", "success");
+                  }}
+                  className="px-4 py-2 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-black uppercase tracking-wider hover:bg-emerald-500/30 transition-all flex items-center gap-1.5"
+               >
+                  <span>+</span> Add New Hero Card
+               </button>
+            </div>
+
+            {/* List of Configured Amazon Hero Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+               {tempAmazonCards.map((card, index) => {
+                  const isEditing = editingCardId === card.id;
+                  return (
+                     <div 
+                        key={card.id || index}
+                        className={`rounded-2xl border p-4 transition-all ${
+                           isEditing ? "border-emerald-500 bg-slate-950 shadow-xl" : "border-slate-800 bg-slate-950/50 hover:border-slate-700"
+                        }`}
+                     >
+                        <div className="flex items-center justify-between">
+                           <div className="flex items-center gap-2.5">
+                              <div 
+                                 className="w-4 h-4 rounded-full border border-white/20"
+                                 style={{ backgroundColor: card.themeColor || "#0d5c3a" }}
+                              />
+                              <span className="text-xs font-black text-white uppercase tracking-wider">
+                                 #{index + 1}: {card.title}
+                              </span>
+                           </div>
+                           <div className="flex items-center gap-2">
+                              <button
+                                 type="button"
+                                 onClick={() => {
+                                    const updated = tempAmazonCards.map(c => c.id === card.id ? { ...c, active: !c.active } : c);
+                                    setTempAmazonCards(updated);
+                                 }}
+                                 className={`px-2 py-0.5 rounded-md text-[8px] font-black uppercase border ${
+                                    card.active !== false
+                                       ? "bg-teal-500/20 text-teal-400 border-teal-500/30"
+                                       : "bg-rose-500/20 text-rose-400 border-rose-500/30"
+                                 }`}
+                              >
+                                 {card.active !== false ? "ACTIVE" : "DISABLED"}
+                              </button>
+                              <button
+                                 type="button"
+                                 onClick={() => setEditingCardId(isEditing ? null : card.id)}
+                                 className="text-xs font-bold text-slate-400 hover:text-white underline"
+                              >
+                                 {isEditing ? "Done" : "Edit Card"}
+                              </button>
+                           </div>
+                        </div>
+
+                        {/* Expandable Editing Panel for Card */}
+                        {isEditing && (
+                           <div className="mt-4 pt-4 border-t border-slate-800 space-y-4">
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                 <div>
+                                    <label className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1">
+                                       Card Title
+                                    </label>
+                                    <input
+                                       type="text"
+                                       value={card.title}
+                                       onChange={(e) => {
+                                          const updated = tempAmazonCards.map(c => c.id === card.id ? { ...c, title: e.target.value } : c);
+                                          setTempAmazonCards(updated);
+                                       }}
+                                       className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white font-bold"
+                                    />
+                                 </div>
+                                 <div>
+                                    <label className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1">
+                                       Badge Text
+                                    </label>
+                                    <input
+                                       type="text"
+                                       value={card.badge}
+                                       onChange={(e) => {
+                                          const updated = tempAmazonCards.map(c => c.id === card.id ? { ...c, badge: e.target.value } : c);
+                                          setTempAmazonCards(updated);
+                                       }}
+                                       className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white font-bold"
+                                    />
+                                 </div>
+                              </div>
+
+                              {/* Card Theme Color Selector */}
+                              <div>
+                                 <label className="text-[9px] font-extrabold uppercase tracking-wider text-slate-400 block mb-1.5">
+                                    Card Theme Color Preset
+                                 </label>
+                                 <div className="flex items-center gap-2">
+                                    {[
+                                       { label: "Green", color: "#0d5c3a", accent: "#10B981" },
+                                       { label: "Blue", color: "#034873", accent: "#38BDF8" },
+                                       { label: "Red", color: "#7c1d1d", accent: "#F43F5E" },
+                                       { label: "Violet", color: "#581c87", accent: "#C084FC" },
+                                       { label: "Amber", color: "#78350f", accent: "#F59E0B" },
+                                    ].map((preset) => (
+                                       <button
+                                          key={preset.label}
+                                          type="button"
+                                          onClick={() => {
+                                             const updated = tempAmazonCards.map(c => c.id === card.id ? { ...c, themeColor: preset.color, accentColor: preset.accent } : c);
+                                             setTempAmazonCards(updated);
+                                          }}
+                                          style={{ backgroundColor: preset.color }}
+                                          className={`px-3 py-1 rounded-lg border text-[9px] font-black text-white ${
+                                             card.themeColor === preset.color ? "border-white shadow-lg scale-105" : "border-transparent opacity-70"
+                                          }`}
+                                       >
+                                          {preset.label}
+                                       </button>
+                                    ))}
+                                 </div>
+                              </div>
+
+                              {/* 2x2 Product Grid Editor */}
+                              <div className="space-y-2 pt-2 border-t border-slate-800/80">
+                                 <span className="text-[10px] font-black uppercase text-emerald-400 tracking-wider block">
+                                    2x2 Product Items Editor (4 Items Max)
+                                 </span>
+                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                    {(card.items || []).slice(0, 4).map((item, itemIdx) => (
+                                       <div key={itemIdx} className="bg-slate-900 border border-slate-800 rounded-xl p-2.5 space-y-1.5">
+                                          <span className="text-[8px] font-bold text-slate-500 uppercase">Item #{itemIdx + 1}</span>
+                                          <input
+                                             type="text"
+                                             placeholder="Product Name"
+                                             value={item.name}
+                                             onChange={(e) => {
+                                                const newItems = [...card.items];
+                                                newItems[itemIdx] = { ...newItems[itemIdx], name: e.target.value };
+                                                const updated = tempAmazonCards.map(c => c.id === card.id ? { ...c, items: newItems } : c);
+                                                setTempAmazonCards(updated);
+                                             }}
+                                             className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-[11px] text-white font-bold"
+                                          />
+                                          <div className="flex gap-2">
+                                             <input
+                                                type="text"
+                                                placeholder="Offer Price (e.g. ₹1,899)"
+                                                value={item.price}
+                                                onChange={(e) => {
+                                                   const newItems = [...card.items];
+                                                   newItems[itemIdx] = { ...newItems[itemIdx], price: e.target.value };
+                                                   const updated = tempAmazonCards.map(c => c.id === card.id ? { ...c, items: newItems } : c);
+                                                   setTempAmazonCards(updated);
+                                                }}
+                                                className="w-1/2 bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-[10px] text-emerald-400 font-bold"
+                                             />
+                                             <input
+                                                type="text"
+                                                placeholder="MRP Old Price (e.g. ₹2,299)"
+                                                value={item.oldPrice || ""}
+                                                onChange={(e) => {
+                                                   const newItems = [...card.items];
+                                                   newItems[itemIdx] = { ...newItems[itemIdx], oldPrice: e.target.value };
+                                                   const updated = tempAmazonCards.map(c => c.id === card.id ? { ...c, items: newItems } : c);
+                                                   setTempAmazonCards(updated);
+                                                }}
+                                                className="w-1/2 bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-[10px] text-slate-400 line-through"
+                                             />
+                                          </div>
+                                       </div>
+                                    ))}
+                                 </div>
+                              </div>
+
+                              {/* Delete Card Button */}
+                              {tempAmazonCards.length > 1 && (
+                                 <button
+                                    type="button"
+                                    onClick={() => {
+                                       setTempAmazonCards(tempAmazonCards.filter(c => c.id !== card.id));
+                                       setEditingCardId(null);
+                                       toast("Removed card from hero list.", "info");
+                                    }}
+                                    className="text-[10px] font-bold text-rose-400 hover:text-rose-300 underline pt-1 block"
+                                 >
+                                    Delete This Hero Card
+                                 </button>
+                              )}
+                           </div>
+                        )}
+                     </div>
                   );
                })}
             </div>

@@ -2,6 +2,24 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { FULL_API_URL as API_BASE_URL } from '@/config/api';
 
+export interface AmazonHeroCardItem {
+  name: string;
+  price: string;
+  oldPrice?: string;
+  image: string;
+  query: string;
+}
+
+export interface AmazonHeroCardConfig {
+  id: string;
+  title: string;
+  badge: string;
+  themeColor: string;
+  accentColor: string;
+  active: boolean;
+  items: AmazonHeroCardItem[];
+}
+
 interface SettingsState {
   marketplaceName: string;
   currency: string;
@@ -87,6 +105,65 @@ interface SettingsState {
   pushSettings: () => Promise<boolean>;
 }
 
+export const DEFAULT_AMAZON_HERO_CARDS: AmazonHeroCardConfig[] = [
+  {
+    id: "card-1",
+    title: "Continue Shopping Deals",
+    badge: "Exclusive",
+    themeColor: "#0d5c3a",
+    accentColor: "#10B981",
+    active: true,
+    items: [
+      { name: "Surmai Steaks", price: "₹1,899", oldPrice: "₹2,299", image: "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?auto=format&fit=crop&q=80", query: "Surmai" },
+      { name: "King Jumbo Prawns", price: "₹6,989", oldPrice: "₹7,999", image: "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&q=80", query: "Prawn" },
+      { name: "Seawater Crabs", price: "₹2,799", oldPrice: "₹3,499", image: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80", query: "Crab" },
+      { name: "Red Snapper Fillet", price: "₹798", oldPrice: "₹999", image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80", query: "Snapper" },
+    ]
+  },
+  {
+    id: "card-2",
+    title: "Today's Fresh Landed Catch",
+    badge: "Landed Today",
+    themeColor: "#034873",
+    accentColor: "#38BDF8",
+    active: true,
+    items: [
+      { name: "Black Pomfret", price: "₹1,299", oldPrice: "₹1,599", image: "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?auto=format&fit=crop&q=80", query: "Pomfret" },
+      { name: "Cleaned Squid", price: "₹798", oldPrice: "₹950", image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80", query: "Squid" },
+      { name: "Rock Lobster", price: "₹2,450", oldPrice: "₹2,999", image: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80", query: "Lobster" },
+      { name: "Yellowfin Tuna", price: "₹890", oldPrice: "₹1,100", image: "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?auto=format&fit=crop&q=80", query: "Tuna" },
+    ]
+  },
+  {
+    id: "card-3",
+    title: "Chef's Ready-to-Cook Specials",
+    badge: "Quick Cook",
+    themeColor: "#7c1d1d",
+    accentColor: "#F43F5E",
+    active: true,
+    items: [
+      { name: "Fish Fry Cut", price: "₹450", oldPrice: "₹550", image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80", query: "Fry" },
+      { name: "Prawn Biryani Cut", price: "₹850", oldPrice: "₹999", image: "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&q=80", query: "Prawn" },
+      { name: "Grill Steaks", price: "₹1,150", oldPrice: "₹1,399", image: "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?auto=format&fit=crop&q=80", query: "Steak" },
+      { name: "Crab Lollipop", price: "₹650", oldPrice: "₹799", image: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80", query: "Crab" },
+    ]
+  },
+  {
+    id: "card-4",
+    title: "Flash Seafood Discounts",
+    badge: "30% OFF",
+    themeColor: "#581c87",
+    accentColor: "#C084FC",
+    active: true,
+    items: [
+      { name: "Tiger Prawns", price: "₹990", oldPrice: "₹1,290", image: "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&q=80", query: "Tiger" },
+      { name: "Silver Pomfret", price: "₹1,450", oldPrice: "₹1,800", image: "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?auto=format&fit=crop&q=80", query: "Pomfret" },
+      { name: "Anjal Slices", price: "₹1,120", oldPrice: "₹1,399", image: "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?auto=format&fit=crop&q=80", query: "Anjal" },
+      { name: "Asian Sea Bass", price: "₹780", oldPrice: "₹950", image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80", query: "Bass" },
+    ]
+  }
+];
+
 export const useSettingsStore = create<SettingsState>()(
   persist(
     (set, get) => ({
@@ -100,6 +177,7 @@ export const useSettingsStore = create<SettingsState>()(
       font: "font-inter",
       customerTheme: "theme-ocean-neon",
       heroStyle: "AMAZON_CARD_GRID",
+      amazonHeroCards: DEFAULT_AMAZON_HERO_CARDS,
       logoTextColor: "#00D1FF",
       logoPrimaryColor: "#00D1FF",
       logoSecondaryColor: "#F0ABFC",
@@ -205,6 +283,7 @@ export const useSettingsStore = create<SettingsState>()(
             currency: state.currency,
             customerTheme: state.customerTheme,
             heroStyle: state.heroStyle,
+            amazonHeroCards: state.amazonHeroCards,
             logoTextColor: state.logoTextColor,
             logoPrimaryColor: state.logoPrimaryColor,
             logoSecondaryColor: state.logoSecondaryColor,
