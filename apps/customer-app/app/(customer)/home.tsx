@@ -382,7 +382,9 @@ function NewsletterSection() {
   const { t } = useTranslation();
   const { width } = Dimensions.get("window");
   const { toast } = useToast();
+  const colors = useThemeColors();
   const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [focused, setFocused] = useState(false);
 
   const handleSubscribeNewsletter = async () => {
     const trimmedEmail = newsletterEmail.trim();
@@ -409,53 +411,121 @@ function NewsletterSection() {
     }
   };
 
-  const newsletterWidth = width - 32;
-  const newsletterHeight = newsletterWidth / 1.469;
-
   return (
-    <View 
-      className="mx-4 mb-0 relative overflow-hidden" 
-      style={{ width: newsletterWidth, height: newsletterHeight, marginBottom: 0 }}
+    <View
+      className="mx-4 mb-0 overflow-hidden"
+      style={{
+        borderRadius: 4,
+        borderWidth: 1,
+        borderColor: 'rgba(0,180,180,0.25)',
+        backgroundColor: colors.isDark ? '#07131f' : '#f0fbff',
+      }}
     >
-      <Image
-        source={IMG_NEWSLETTER_BANNER}
-        style={{ width: "100%", height: "100%" }}
-        contentFit="cover"
-      />
-      <TextInput
-        value={newsletterEmail}
-        onChangeText={setNewsletterEmail}
-        placeholder={(t('email_address') || "ENTER YOUR EMAIL ADDRESS").toUpperCase()}
-        placeholderTextColor="#94A3B8"
-        keyboardType="email-address"
-        autoCapitalize="none"
-        autoCorrect={false}
-        style={{
-          position: 'absolute',
-          top: '48.5%',
-          left: '21%',
-          width: '68%',
-          height: '11%',
-          fontSize: newsletterWidth * 0.028,
-          color: '#1E293B',
-          backgroundColor: 'transparent',
-          paddingHorizontal: 8,
-          fontStyle: 'italic',
-        }}
-      />
-      <Pressable
-        onPress={handleSubscribeNewsletter}
-        style={{
-          position: 'absolute',
-          top: '66%',
-          left: '6%',
-          width: '88%',
-          height: '15%',
-        }}
-      />
+      {/* Top decorative stripe */}
+      <View style={{ height: 2, backgroundColor: '#14b8a6' }} />
+
+      <View style={{ paddingHorizontal: 20, paddingVertical: 22, gap: 4 }}>
+        {/* Tagline row */}
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+          <MaterialCommunityIcons name="earth" size={13} color="#14b8a6" />
+          <Text style={{ fontSize: 9, fontWeight: '800', letterSpacing: 2.5, color: '#14b8a6', textTransform: 'uppercase' }}>
+            {t('global_dispatch_subscription') || "GLOBAL DISPATCH SUBSCRIPTION"}
+          </Text>
+        </View>
+
+        {/* Main heading */}
+        <Text
+          style={{
+            fontSize: 26,
+            fontWeight: '900',
+            fontStyle: 'italic',
+            letterSpacing: -0.5,
+            color: colors.isDark ? '#e2f8f5' : '#0d2d40',
+            lineHeight: 30,
+          }}
+        >
+          {(t('join_our_newsletter') || "JOIN OUR NEWSLETTER").toUpperCase()}
+          <Text style={{ color: '#14b8a6' }}>.</Text>
+        </Text>
+
+        {/* Sub-heading */}
+        <Text
+          style={{
+            fontSize: 11,
+            color: colors.isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)',
+            marginTop: 2,
+            marginBottom: 14,
+            fontStyle: 'italic',
+          }}
+        >
+          {t('newsletter_sub') || "Join our newsletter for the latest fresh catches and exclusive offers."}
+        </Text>
+
+        {/* Email input row */}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            borderWidth: 1.5,
+            borderColor: focused ? '#14b8a6' : (colors.isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.14)'),
+            borderRadius: 3,
+            backgroundColor: colors.isDark ? 'rgba(255,255,255,0.04)' : '#ffffff',
+            paddingHorizontal: 12,
+            height: 46,
+            marginBottom: 10,
+          }}
+        >
+          <MaterialCommunityIcons
+            name="email-outline"
+            size={17}
+            color={focused ? '#14b8a6' : (colors.isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)')}
+            style={{ marginRight: 10 }}
+          />
+          <View style={{ width: 1, height: 20, backgroundColor: colors.isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)', marginRight: 10 }} />
+          <TextInput
+            value={newsletterEmail}
+            onChangeText={setNewsletterEmail}
+            onFocus={() => setFocused(true)}
+            onBlur={() => setFocused(false)}
+            placeholder={(t('email_address') || "ENTER YOUR EMAIL ADDRESS").toUpperCase()}
+            placeholderTextColor={colors.isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.25)'}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
+            style={{
+              flex: 1,
+              fontSize: 11,
+              fontWeight: '700',
+              letterSpacing: 1,
+              color: colors.isDark ? '#e2f8f5' : '#0d2d40',
+              paddingVertical: 0,
+            }}
+          />
+        </View>
+
+        {/* Subscribe button */}
+        <Pressable
+          onPress={handleSubscribeNewsletter}
+          style={({ pressed }) => ({
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 8,
+            height: 46,
+            borderRadius: 3,
+            backgroundColor: pressed ? '#0d9488' : '#14b8a6',
+          })}
+        >
+          <MaterialCommunityIcons name="send" size={16} color="#ffffff" />
+          <Text style={{ fontSize: 12, fontWeight: '900', letterSpacing: 2, color: '#ffffff', textTransform: 'uppercase' }}>
+            {t('subscribe_now') || "SUBSCRIBE NOW"}
+          </Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
+
 
 export default function CustomerHomeScreen() {
   const { t } = useTranslation();
