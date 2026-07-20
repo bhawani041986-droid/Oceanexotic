@@ -4,11 +4,11 @@ import { supabase } from '@/lib/supabase';
 export const dynamic = 'force-dynamic';
 
 const DEFAULT_FLEET = [
-  { name: "Red Snapper", image: "/ICONS/Red-snapper.webp", swimRight: 1, swimLeft: -1 },
-  { name: "Kingfish", image: "/ICONS/kingfish.webp", swimRight: 1, swimLeft: -1 },
-  { name: "White Pomfret", image: "/ICONS/white-pomfret.webp", swimRight: 1, swimLeft: -1 },
-  { name: "Grouper", image: "/ICONS/grouper.webp", swimRight: 1, swimLeft: -1 },
-  { name: "Mackerel", image: "/ICONS/mackerel.webp", swimRight: 1, swimLeft: -1 }
+  { name: "Red Snapper", image: "/ICONS/Red-snapper.webp", swimRight: -1, swimLeft: 1 },
+  { name: "Kingfish", image: "/ICONS/kingfish.webp", swimRight: -1, swimLeft: 1 },
+  { name: "White Pomfret", image: "/ICONS/white-pomfret.webp", swimRight: -1, swimLeft: 1 },
+  { name: "Grouper", image: "/ICONS/grouper.webp", swimRight: -1, swimLeft: 1 },
+  { name: "Mackerel", image: "/ICONS/mackerel.webp", swimRight: -1, swimLeft: 1 }
 ];
 
 export async function GET(req: NextRequest) {
@@ -27,7 +27,14 @@ export async function GET(req: NextRequest) {
     if (!Array.isArray(fleet)) {
       return NextResponse.json(DEFAULT_FLEET);
     }
-    return NextResponse.json(fleet);
+    
+    // Always normalize swimRight to -1 and swimLeft to 1 because source PNG images face LEFT
+    const normalized = fleet.map((f: any) => ({
+      ...f,
+      swimRight: -1,
+      swimLeft: 1
+    }));
+    return NextResponse.json(normalized);
   } catch (error) {
     console.error("GET aquarium-fish error:", error);
     return NextResponse.json(DEFAULT_FLEET);

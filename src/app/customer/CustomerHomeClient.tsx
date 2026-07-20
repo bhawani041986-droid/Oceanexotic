@@ -723,11 +723,11 @@ const ALL_51_CORALS = [
 
 const MaritimeWaveDivider = () => {
   const [finFish, setFinFish] = React.useState<any[]>([
-    { name: "Red Snapper", image: "/ICONS/Red-snapper.webp", swimRight: 1, swimLeft: -1 },
-    { name: "Kingfish", image: "/ICONS/kingfish.webp", swimRight: 1, swimLeft: -1 },
-    { name: "White Pomfret", image: "/ICONS/white-pomfret.webp", swimRight: 1, swimLeft: -1 },
-    { name: "Grouper", image: "/ICONS/grouper.webp", swimRight: 1, swimLeft: -1 },
-    { name: "Mackerel", image: "/ICONS/mackerel.webp", swimRight: 1, swimLeft: -1 }
+    { name: "Red Snapper", image: "/ICONS/Red-snapper.webp", swimRight: -1, swimLeft: 1 },
+    { name: "Kingfish", image: "/ICONS/kingfish.webp", swimRight: -1, swimLeft: 1 },
+    { name: "White Pomfret", image: "/ICONS/white-pomfret.webp", swimRight: -1, swimLeft: 1 },
+    { name: "Grouper", image: "/ICONS/grouper.webp", swimRight: -1, swimLeft: 1 },
+    { name: "Mackerel", image: "/ICONS/mackerel.webp", swimRight: -1, swimLeft: 1 }
   ]);
   const [ripples, setRipples] = React.useState<{ id: number; x: number; y: number }[]>([]);
 
@@ -737,7 +737,12 @@ const MaritimeWaveDivider = () => {
       .then(res => res.json())
       .then(data => {
         if (active && Array.isArray(data)) {
-          setFinFish(data);
+          const normalized = data.map((f: any) => ({
+            ...f,
+            swimRight: -1,
+            swimLeft: 1
+          }));
+          setFinFish(normalized);
         }
       })
       .catch(err => console.warn("Failed to load aquarium fish:", err));
@@ -862,8 +867,8 @@ const MaritimeWaveDivider = () => {
       {/* 7. REALISTIC FISH KINETICS (BURST-AND-GLIDE, PITCH BANKING & TAIL WIGGLE) */}
       {finFish.map((fish, i) => {
         const yBase = 15 + ((i * 16) % 50); 
-        const cycleDuration = 75 + ((i * 15) % 45); // Graceful, relaxing aquatic speed
-        const delay = i * 4;
+        const cycleDuration = 140 + ((i * 20) % 60); // Very slow, majestic, peaceful aquatic speed
+        const delay = i * 5;
         const depthScale = 0.82 + ((i * 0.14) % 0.48); 
         const zIndex = 35 + i;
         
