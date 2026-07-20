@@ -1415,10 +1415,10 @@ const Pro3DMarketHero = () => {
       <motion.div
         style={{ rotateX: tilt.x, rotateY: tilt.y, transformStyle: "preserve-3d" }}
         transition={{ type: "spring", stiffness: 140, damping: 18 }}
-        className="relative z-20 flex-1 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-11 gap-4 items-center px-5 py-8"
+        className="relative z-20 flex-1 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 items-center px-4 sm:px-6 py-6 lg:py-10"
       >
         <div
-          className="hidden lg:flex lg:col-span-5 flex-col gap-6 text-center lg:text-left relative z-10"
+          className="hidden lg:flex lg:col-span-6 flex-col gap-6 text-left relative z-10"
           style={{ transform: "translateZ(60px)" }}
         >
           <div className="inline-flex items-center self-center lg:self-start gap-2 px-3.5 py-1.5 rounded-full border text-[10px] font-black tracking-widest uppercase"
@@ -1485,7 +1485,7 @@ const Pro3DMarketHero = () => {
 
         {/* Right column — 3D Floating Fish Stage */}
         <div
-          className="w-full lg:col-span-7 relative flex items-center justify-center overflow-visible"
+          className="w-full lg:col-span-6 relative flex items-center justify-center overflow-visible min-h-[460px] sm:min-h-[500px]"
           style={{ transform: "translateZ(100px)", minHeight: "520px" }}
         >
           {/* Dynamic multi-layer glowing ambient orb behind active fish */}
@@ -1511,9 +1511,9 @@ const Pro3DMarketHero = () => {
               ry: number; rz: number; z: number;
               opacity: number; imgW: string;
             }> = {
-              0: { x: 0,    y: 0,   scale: 1.0,  ry: 0,   rz: -3,  z: 30, opacity: 1.0,  imgW: "320px" },
-              1: { x: 170,  y: 60,  scale: 0.78, ry: -18, rz: -6,  z: 20, opacity: 0.92, imgW: "260px" },
-              2: { x: -155, y: 70,  scale: 0.66, ry: 18,  rz: 5,   z: 10, opacity: 0.80, imgW: "220px" },
+              0: { x: 0,    y: -5,  scale: 1.0,  ry: 0,   rz: -2,  z: 30, opacity: 1.0,  imgW: "290px" },
+              1: { x: 130,  y: 40,  scale: 0.72, ry: -15, rz: -5,  z: 20, opacity: 0.88, imgW: "220px" },
+              2: { x: -130, y: 45,  scale: 0.65, ry: 15,  rz: 4,   z: 10, opacity: 0.78, imgW: "190px" },
             };
             const s = slot[offset] ?? { x: 0, y: 0, scale: 0.4, ry: 0, rz: 0, z: 1, opacity: 0, imgW: "120px" };
 
