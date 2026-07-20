@@ -1364,10 +1364,16 @@ const Pro3DMarketHero = () => {
       className="relative min-h-[80vh] lg:min-h-[88vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#020617] via-[#041d33] to-[#011427] text-white px-4 py-10 lg:py-14 border-b border-cyan-500/30 my-0"
       style={{ perspective: "1200px" }}
     >
-      {/* 3D LIGHTING & WATER CAUSTICS BACKGROUND */}
-      <div className="absolute inset-0 pointer-events-none opacity-30">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-[100px] animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: "1s" }} />
+      {/* 3D LIGHTING & WATER CAUSTICS BACKGROUND WITH DYNAMIC CATCH GLOW */}
+      <div className="absolute inset-0 pointer-events-none opacity-35 transition-colors duration-700">
+        <div 
+          className="absolute top-0 left-1/4 w-96 h-96 rounded-full blur-[110px] transition-colors duration-700 animate-pulse"
+          style={{ backgroundColor: `${showcaseItems[activeCard].badgeColor}35` }} 
+        />
+        <div 
+          className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full blur-[110px] transition-colors duration-700 animate-pulse" 
+          style={{ backgroundColor: `${showcaseItems[activeCard].badgeColor}20`, animationDelay: "1s" }} 
+        />
       </div>
 
       {/* FLOATING 3D ICE CRYSTAL PARTICLES */}
@@ -1460,11 +1466,35 @@ const Pro3DMarketHero = () => {
               const isActive = idx === activeCard;
               const offset = idx - activeCard;
               
-              // Calculate distinct desktop 3D positioning
-              const desktopX = offset * 210;
-              const desktopRotateY = offset * -22;
-              const desktopScale = isActive ? 1.05 : 0.82;
-              const desktopOpacity = isActive ? 1 : 0.72;
+              // Calculate bounded circular 3D stage positioning (NEVER bleeds into left text column)
+              let desktopX = 0;
+              let desktopRotateY = 0;
+              let desktopScale = 1;
+              let desktopOpacity = 1;
+              let desktopZ = 40;
+
+              if (offset === 0) {
+                // Active Card (Front & Centered)
+                desktopX = 0;
+                desktopRotateY = 0;
+                desktopScale = 1.05;
+                desktopOpacity = 1;
+                desktopZ = 40;
+              } else if (offset === 1 || offset === -2) {
+                // Right Flank Card (or wrapped to right)
+                desktopX = 95;
+                desktopRotateY = -18;
+                desktopScale = 0.84;
+                desktopOpacity = 0.72;
+                desktopZ = -40;
+              } else {
+                // Left Flank Card (offset === -1 or 2) - clamped to -95px so it NEVER touches the left text column!
+                desktopX = -95;
+                desktopRotateY = 18;
+                desktopScale = 0.84;
+                desktopOpacity = 0.72;
+                desktopZ = -40;
+              }
 
               return (
                 <motion.div
