@@ -729,6 +729,7 @@ const MaritimeWaveDivider = () => {
     { name: "Grouper", image: "/ICONS/grouper.webp", swimRight: -1, swimLeft: 1 },
     { name: "Mackerel", image: "/ICONS/mackerel.webp", swimRight: -1, swimLeft: 1 }
   ]);
+  const [ripples, setRipples] = React.useState<{ id: number; x: number; y: number }[]>([]);
 
   React.useEffect(() => {
     let active = true;
@@ -745,8 +746,29 @@ const MaritimeWaveDivider = () => {
     };
   }, []);
 
+  const handleTankMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    if (Math.random() > 0.4) {
+      setRipples(prev => [...prev.slice(-6), { id: Date.now() + Math.random(), x, y }]);
+    }
+  };
+
   return (
-    <div className="relative h-28 md:h-36 overflow-hidden bg-gradient-to-b from-[#020617] via-[#032b45] to-[#001427] border-y border-[var(--c-primary)]/50 shadow-[inset_0_0_35px_rgba(0,0,0,0.8)] group/tank my-2">
+    <div 
+      onMouseMove={handleTankMouseMove}
+      className="relative h-28 md:h-36 overflow-hidden bg-gradient-to-b from-[#020617] via-[#032b45] to-[#001427] border-y border-[var(--c-primary)]/50 shadow-[inset_0_0_35px_rgba(0,0,0,0.8)] group/tank my-2 cursor-pointer"
+    >
+      {/* 0. INTERACTIVE CURSOR RIPPLE RINGS */}
+      {ripples.map(r => (
+        <div
+          key={r.id}
+          className="absolute w-12 h-12 rounded-full border border-cyan-300/80 shadow-[0_0_12px_#00f3ff] pointer-events-none animate-ripple-ring z-40"
+          style={{ left: r.x - 24, top: r.y - 24 }}
+        />
+      ))}
+
       {/* 1. TOP WATER DIVIDER WAVE GRAPHIC */}
       <div className="absolute top-0 left-0 right-0 z-30 pointer-events-none opacity-40">
         <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-4 text-[#00F3FF]">
@@ -837,29 +859,51 @@ const MaritimeWaveDivider = () => {
         ))}
       </div>
 
-      {/* 7. DYNAMIC FISH FLEET (LOCKED DIRECTIONAL LOGIC & MULTI-DEPTH) */}
+      {/* 7. REALISTIC FISH KINETICS (BURST-AND-GLIDE, PITCH BANKING & TAIL WIGGLE) */}
       {finFish.map((fish, i) => {
-        const yBase = 12 + ((i * 18) % 55); 
-        const cycleDuration = 120 + ((i * 20) % 60); // Zen-like speed
-        const delay = i * 4;
-        const depthScale = 0.85 + ((i * 0.12) % 0.45); 
+        const yBase = 15 + ((i * 16) % 50); 
+        const cycleDuration = 45 + ((i * 12) % 35); // Realistic aquatic speed
+        const delay = i * 3.5;
+        const depthScale = 0.82 + ((i * 0.14) % 0.48); 
         const zIndex = 35 + i;
         
-        const leftPath = ["-15%", "115%", "115%", "-15%", "-15%"];
-        const leftTimes = [0, 0.46, 0.5, 0.96, 1];
-        const orientationPath = [fish.swimRight, fish.swimRight, fish.swimLeft, fish.swimLeft, fish.swimRight];
+        // Burst & glide waypoints
+        const leftPath = ["-15%", "18%", "35%", "62%", "88%", "115%", "115%", "88%", "62%", "35%", "18%", "-15%", "-15%"];
+        const leftTimes = [0, 0.08, 0.18, 0.28, 0.40, 0.48, 0.50, 0.58, 0.68, 0.78, 0.90, 0.98, 1];
         
+        // Direction & pitch tilt paths
+        const orientationPath = [
+          fish.swimRight, fish.swimRight, fish.swimRight, fish.swimRight, fish.swimRight, fish.swimRight,
+          fish.swimLeft, fish.swimLeft, fish.swimLeft, fish.swimLeft, fish.swimLeft, fish.swimLeft, fish.swimRight
+        ];
+        
+        const pitchAngles = [0, -8, 10, -6, 8, 0, 0, -8, 10, -6, 8, 0, 0];
+
         return (
           <motion.div
             key={`swim-${i}`}
             initial={{ left: "-15%", top: yBase + "%" }}
             animate={{ 
               left: leftPath,
-              top: [yBase + "%", (yBase - 8) + "%", yBase + "%", (yBase + 8) + "%", yBase + "%"]
+              top: [
+                yBase + "%", 
+                (yBase - 12) + "%", 
+                (yBase + 14) + "%", 
+                (yBase - 8) + "%", 
+                (yBase + 10) + "%", 
+                yBase + "%",
+                yBase + "%",
+                (yBase - 12) + "%", 
+                (yBase + 14) + "%", 
+                (yBase - 8) + "%", 
+                (yBase + 10) + "%", 
+                yBase + "%",
+                yBase + "%"
+              ]
             }}
             transition={{
               left: { duration: cycleDuration, repeat: Infinity, ease: "easeInOut", delay, times: leftTimes },
-              top: { duration: 6, repeat: Infinity, ease: "easeInOut" }
+              top: { duration: cycleDuration, repeat: Infinity, ease: "easeInOut", delay, times: leftTimes }
             }}
             className="absolute pointer-events-none"
             style={{ zIndex }}
@@ -867,22 +911,23 @@ const MaritimeWaveDivider = () => {
             <motion.div
               animate={{ 
                 scaleX: orientationPath,
-                rotate: [-4, 4, -4],
-                skewY: [-1.5, 1.5, -1.5]
+                rotateZ: pitchAngles,
+                skewY: [-2.5, 2.5, -2.5]
               }}
               transition={{
                 scaleX: { duration: cycleDuration, repeat: Infinity, ease: "linear", delay, times: leftTimes },
-                rotate: { duration: 0.8, repeat: Infinity, ease: "easeInOut" },
-                skewY: { duration: 1.2, repeat: Infinity, ease: "easeInOut" }
+                rotateZ: { duration: cycleDuration, repeat: Infinity, ease: "easeInOut", delay, times: leftTimes },
+                skewY: { duration: 0.6, repeat: Infinity, ease: "easeInOut" }
               }}
+              className="animate-caudal-wiggle"
               style={{ scale: depthScale }}
             >
               <img 
                 src={fish.image} 
                 alt={fish.name} 
-                className="w-14 h-14 md:w-20 md:h-20 object-contain drop-shadow-[0_0_12px_rgba(0,243,255,0.4)]"
+                className="w-14 h-14 md:w-20 md:h-20 object-contain drop-shadow-[0_0_14px_rgba(0,243,255,0.5)] transition-transform"
                 style={{ 
-                  filter: `brightness(1.05) contrast(1.15)`,
+                  filter: `brightness(1.08) contrast(1.15)`,
                   mixBlendMode: 'normal',
                   transform: 'translateY(-25%)'
                 }}
