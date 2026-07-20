@@ -43,6 +43,7 @@ export default function CustomerCategoriesPage() {
   const CATEGORIES = PRODUCT_CATEGORIES.map(cat => ({
      id: cat.id,
      name: cat.label,
+     imageUrl: cat.imageUrl,
      count: MASTER_PRODUCT_REGISTRY.filter(p => p.category === cat.id).length,
      icon: CATEGORY_UI_MAPPING[cat.id]?.icon || "🐟",
      desc: CATEGORY_UI_MAPPING[cat.id]?.desc || "Premium maritime product.",
@@ -78,8 +79,12 @@ export default function CustomerCategoriesPage() {
             <Card className={`p-[4px] md:p-1 group cursor-pointer transition-all hover:border-primary/40 bg-gradient-to-br ${cat.color} to-bg-secondary/40 border-[var(--foreground)]/5 rounded-[20px] md:rounded-[32px]`}>
               <div className="p-4 md:p-10 space-y-4 md:space-y-10">
                  <div className="flex items-center justify-between">
-                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-[24px] bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 flex items-center justify-center text-2xl md:text-4xl shadow-inner group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
-                       {cat.icon}
+                    <div className="w-14 h-14 md:w-20 md:h-20 rounded-xl md:rounded-[24px] bg-teal-950/20 border border-teal-500/30 flex items-center justify-center shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 overflow-hidden">
+                       {cat.imageUrl ? (
+                         <img src={cat.imageUrl} alt={cat.name} className="w-full h-full object-cover" />
+                       ) : (
+                         <span className="text-2xl md:text-4xl">{cat.icon}</span>
+                       )}
                     </div>
                     <Badge variant="glass" className="bg-[var(--foreground)]/5 text-[var(--foreground)] border-[var(--foreground)]/10 uppercase text-[8px] md:text-[9px] tracking-widest px-3 md:px-4">
                        {cat.count} HARVESTS

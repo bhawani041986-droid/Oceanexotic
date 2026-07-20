@@ -14,7 +14,14 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(FALLBACK_CATEGORIES);
     }
 
-    const categories = JSON.parse(data.setting_value);
+    const rawCategories = JSON.parse(data.setting_value);
+    const categories = Array.isArray(rawCategories) ? rawCategories.map((c: any) => {
+      const fallback = FALLBACK_CATEGORIES.find(f => f.id === c.id || f.label?.toLowerCase() === c.label?.toLowerCase());
+      return {
+        ...c,
+        imageUrl: c.imageUrl || fallback?.imageUrl || ''
+      };
+    }) : FALLBACK_CATEGORIES;
     return NextResponse.json(categories);
   } catch (error) {
     return NextResponse.json(FALLBACK_CATEGORIES);

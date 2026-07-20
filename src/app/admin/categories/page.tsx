@@ -263,7 +263,7 @@ export default function AdminCategoriesPage() {
                 <TableHeader>
                   <TableRow className="border-[var(--foreground)]/5">
                     <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Category Details</TableHead>
-                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Icon</TableHead>
+                    <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Image Preview</TableHead>
                     <TableHead className="text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Status</TableHead>
                     <TableHead className="text-right text-[9px] md:text-[10px] font-black uppercase tracking-widest italic text-text-secondary">Actions</TableHead>
                   </TableRow>
@@ -272,12 +272,29 @@ export default function AdminCategoriesPage() {
                   {categories.map((cat, idx) => (
                     <TableRow key={cat.id} className="group/row border-[var(--foreground)]/5 hover:bg-[var(--foreground)]/5 transition-all">
                       <TableCell>
-                        <div className="space-y-0.5 md:space-y-1">
-                          <p className="font-black text-[var(--foreground)] text-xs md:text-sm uppercase tracking-tighter group-hover/row:text-primary transition-colors italic">{cat.label}</p>
-                          <p className="text-[7px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">ID: {cat.id}</p>
+                        <div className="flex items-center gap-3">
+                          {cat.imageUrl ? (
+                            <div className="w-10 h-10 rounded-xl bg-teal-950/30 border border-teal-500/30 overflow-hidden shrink-0 shadow-md">
+                              <img src={cat.imageUrl} alt={cat.label} className="w-full h-full object-cover" />
+                            </div>
+                          ) : (
+                            <div className="w-10 h-10 rounded-xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 flex items-center justify-center text-primary font-black text-xs shrink-0">
+                              {cat.label?.charAt(0) || 'C'}
+                            </div>
+                          )}
+                          <div className="space-y-0.5 md:space-y-1">
+                            <p className="font-black text-[var(--foreground)] text-xs md:text-sm uppercase tracking-tighter group-hover/row:text-primary transition-colors italic">{cat.label}</p>
+                            <p className="text-[7px] md:text-[9px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">ID: {cat.id}</p>
+                          </div>
                         </div>
                       </TableCell>
-                      <TableCell className="text-[10px] md:text-xs font-black text-text-secondary italic opacity-40">{cat.iconName}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[9px] font-mono font-bold text-text-secondary bg-[var(--foreground)]/5 px-2 py-0.5 rounded border border-[var(--foreground)]/10 text-ellipsis overflow-hidden max-w-[180px] inline-block" title={cat.imageUrl}>
+                            {cat.imageUrl || "No Image"}
+                          </span>
+                        </div>
+                      </TableCell>
                       <TableCell>
                         <Badge variant={(cat.status || "ACTIVE") === "ACTIVE" ? "success" : "secondary"} className="italic uppercase text-[8px] md:text-[10px] px-2">
                           {cat.status || "ACTIVE"}
@@ -327,10 +344,17 @@ export default function AdminCategoriesPage() {
             <div className="lg:hidden space-y-3 p-4">
               {categories.map((cat, idx) => (
                 <div key={cat.id} className="p-4 rounded-xl border border-[var(--foreground)]/5 bg-bg-card/40 space-y-3">
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-0.5">
-                      <p className="font-black text-[var(--foreground)] italic text-sm tracking-tighter uppercase">{cat.label}</p>
-                      <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">{cat.id} • Icon: {cat.iconName}</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      {cat.imageUrl && (
+                        <div className="w-10 h-10 rounded-lg bg-teal-950/30 border border-teal-500/30 overflow-hidden shrink-0">
+                          <img src={cat.imageUrl} alt={cat.label} className="w-full h-full object-cover" />
+                        </div>
+                      )}
+                      <div className="space-y-0.5">
+                        <p className="font-black text-[var(--foreground)] italic text-sm tracking-tighter uppercase">{cat.label}</p>
+                        <p className="text-[8px] font-black text-text-secondary uppercase tracking-widest italic opacity-60">{cat.id}</p>
+                      </div>
                     </div>
                     <Badge variant={(cat.status || "ACTIVE") === "ACTIVE" ? "success" : "secondary"} className="italic uppercase text-[8px] px-2">
                       {cat.status || "ACTIVE"}
