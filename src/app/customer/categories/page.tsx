@@ -38,7 +38,7 @@ const CATEGORY_UI_MAPPING: Record<string, { desc: string, icon: string, color: s
 
 export default function CustomerCategoriesPage() {
   const { categories: ALL_CATEGORIES } = useCategories();
-  const PRODUCT_CATEGORIES = ALL_CATEGORIES.filter(cat => (cat.status || "ACTIVE") === "ACTIVE");
+  const PRODUCT_CATEGORIES = ALL_CATEGORIES.filter(cat => (cat.status || "ACTIVE").toUpperCase() !== "INACTIVE");
   
   const CATEGORIES = PRODUCT_CATEGORIES.map((cat, idx) => {
     const labelLower = (cat.label || "").toLowerCase();

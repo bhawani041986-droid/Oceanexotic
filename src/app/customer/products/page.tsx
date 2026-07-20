@@ -259,7 +259,7 @@ import { Suspense } from "react";
 
 function ProductListingContent() {
   const { categories: ALL_CATEGORIES } = useCategories();
-  const PRODUCT_CATEGORIES = ALL_CATEGORIES.filter(c => (c.status || "ACTIVE") === "ACTIVE");
+  const PRODUCT_CATEGORIES = ALL_CATEGORIES.filter(c => (c.status || "ACTIVE").toUpperCase() !== "INACTIVE");
   const CATEGORIES = ["All Seafood", ...PRODUCT_CATEGORIES.map(c => c.label)];
 
   const router = useRouter();

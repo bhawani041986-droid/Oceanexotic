@@ -74,6 +74,7 @@ const OceanReelsFeed = dynamic(
 );
 import { FULL_API_URL as API_BASE_URL } from "@/config/api";
 import { ServiceAreaChecker } from "@/components/customer/ServiceAreaChecker";
+import { useCategories } from "@/hooks/useCategories";
 
 // --- Components ---
 
@@ -850,6 +851,54 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
   const { toast } = useToast();
   const router = useRouter();
   const pathname = usePathname();
+  const { categories: fetchedCategories } = useCategories();
+
+  const dynamicActiveCategories = React.useMemo(() => {
+    if (!Array.isArray(fetchedCategories) || fetchedCategories.length === 0) return [];
+    const activeRaw = fetchedCategories.filter((c: any) => (c.status || "ACTIVE").toUpperCase() !== "INACTIVE");
+    return activeRaw.map((cat: any) => {
+      const l = (cat.label || cat.id || "").toLowerCase();
+      let image = cat.imageUrl;
+      if (!image) {
+        if (l.includes("freshwater")) image = "/images/categories/freshwater.png";
+        else if (l.includes("prawn") || l.includes("shrimp")) image = "/images/categories/prawns.png";
+        else if (l.includes("crab") || l.includes("lobster")) image = "/images/categories/crabs.png";
+        else if (l.includes("steak") || l.includes("fillet")) image = "/images/categories/steaks.png";
+        else if (l.includes("exotic")) image = "/images/categories/exotic.png";
+        else if (l.includes("cook") || l.includes("ready")) image = "/images/categories/ready_to_cook.png";
+        else if (l.includes("dry")) image = "/images/categories/dry_fish.png";
+        else if (l.includes("mutton")) image = "/images/categories/mutton.png";
+        else if (l.includes("chicken")) image = "/images/categories/chicken.png";
+        else image = "/images/categories/seawater.png";
+      }
+
+      let badgeTag = cat.badgeTag || null;
+      if (!badgeTag) {
+        if (l.includes("surmai") || l.includes("prawn") || l.includes("shrimp")) badgeTag = "🔥 HOT";
+        else if (l.includes("seawater") || l.includes("crab") || l.includes("freshwater")) badgeTag = "⚡ FRESH";
+        else if (l.includes("steak") || l.includes("exotic")) badgeTag = "✨ CHILLED";
+        else if (l.includes("cook") || l.includes("ready")) badgeTag = "✨ CHILLED";
+        else badgeTag = "⚡ FRESH";
+      }
+
+      return {
+        name: cat.label || cat.id,
+        image,
+        color: l.includes("prawn") ? "from-orange-500/40 to-amber-900/60" :
+               l.includes("crab") ? "from-emerald-800/40 to-teal-950/60" :
+               l.includes("steak") ? "from-rose-600/40 to-red-900/60" :
+               l.includes("exotic") ? "from-purple-500/40 to-indigo-900/60" :
+               l.includes("freshwater") ? "from-cyan-500/40 to-teal-900/60" : "from-blue-500/40 to-indigo-900/60",
+        glowColor: l.includes("prawn") ? "#ea580c" :
+                   l.includes("crab") ? "#059669" :
+                   l.includes("steak") ? "#e11d48" :
+                   l.includes("exotic") ? "#8b5cf6" :
+                   l.includes("freshwater") ? "#0d9488" : "#0284c7",
+        slug: cat.id || cat.label,
+        badgeTag
+      };
+    });
+  }, [fetchedCategories]);
   
   // Use server-provided assets for initial render to guarantee SEO indexing
   const assets = settings.customerAssets?.heroTitle1 ? settings.customerAssets : (initialAssets || settings.customerAssets);
@@ -1423,7 +1472,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
       {/* 4. CATEGORY VAULT (RIBBON TYPE) */}
       <section className="py-2 container mx-auto px-0 md:px-10">
          <div className="grid grid-cols-5 md:grid-cols-10 gap-0 border-y border-[var(--foreground)]/5 overflow-hidden">
-            {CATEGORIES.map((cat, idx) => (
+            {(dynamicActiveCategories.length > 0 ? dynamicActiveCategories : CATEGORIES).map((cat, idx) => (
               <Link key={cat.name} href={`/customer/products?category=${cat.slug}`} className="w-full">
                 <div 
                    className="aspect-[1/1.5] md:aspect-square flex flex-col bg-[var(--c-bg-alt)]/20 relative overflow-hidden group hover:bg-[var(--c-bg-alt)]/40 transition-all border-r border-[var(--foreground)]/5 animate-underwater-float"
