@@ -31,12 +31,13 @@ import { useToast } from "@/components/ui/Toast";
 import { Logo } from "@/components/ui/Logo";
 
 export default function MarketplaceThemeControl() {
-  const { customerTheme, logoTextColor, logoPrimaryColor, logoSecondaryColor, atmosphericGlow, heroOverlayOpacity, customerAssets, setSettings, pushSettings, fetchSettings } = useSettingsStore();
+  const { customerTheme, heroStyle, logoTextColor, logoPrimaryColor, logoSecondaryColor, atmosphericGlow, heroOverlayOpacity, customerAssets, setSettings, pushSettings, fetchSettings } = useSettingsStore();
   const { toast } = useToast();
   const [selectedThemeId, setSelectedThemeId] = useState(customerTheme);
   const [tempAssets, setTempAssets] = useState(customerAssets);
   const [tempGlow, setTempGlow] = useState(atmosphericGlow);
   const [tempHeroOpacity, setTempHeroOpacity] = useState(heroOverlayOpacity ?? 80);
+  const [tempHeroStyle, setTempHeroStyle] = useState(heroStyle || "AMAZON_CARD_GRID");
   const [tempLogoTextColor, setTempLogoTextColor] = useState(logoTextColor || "#00D1FF");
   const [tempLogoPrimaryColor, setTempLogoPrimaryColor] = useState(logoPrimaryColor || "#00D1FF");
   const [tempLogoSecondaryColor, setTempLogoSecondaryColor] = useState(logoSecondaryColor || "#F0ABFC");
@@ -55,14 +56,16 @@ export default function MarketplaceThemeControl() {
     setSelectedThemeId(customerTheme);
     setTempGlow(atmosphericGlow);
     setTempHeroOpacity(heroOverlayOpacity ?? 80);
+    setTempHeroStyle(heroStyle || "AMAZON_CARD_GRID");
     setTempLogoTextColor(logoTextColor || "#00D1FF");
     setTempLogoPrimaryColor(logoPrimaryColor || "#00D1FF");
     setTempLogoSecondaryColor(logoSecondaryColor || "#F0ABFC");
-  }, [customerAssets, customerTheme, atmosphericGlow, heroOverlayOpacity, logoTextColor, logoPrimaryColor, logoSecondaryColor]);
+  }, [customerAssets, customerTheme, atmosphericGlow, heroOverlayOpacity, heroStyle, logoTextColor, logoPrimaryColor, logoSecondaryColor]);
 
   const isDirty = selectedThemeId !== customerTheme || 
                   tempGlow !== atmosphericGlow || 
                   tempHeroOpacity !== (heroOverlayOpacity ?? 80) ||
+                  tempHeroStyle !== heroStyle ||
                   tempLogoTextColor !== logoTextColor ||
                   tempLogoPrimaryColor !== logoPrimaryColor ||
                   tempLogoSecondaryColor !== logoSecondaryColor ||
@@ -120,6 +123,7 @@ export default function MarketplaceThemeControl() {
       customerAssets: tempAssets,
       atmosphericGlow: tempGlow,
       heroOverlayOpacity: tempHeroOpacity,
+      heroStyle: tempHeroStyle,
       logoTextColor: tempLogoTextColor,
       logoPrimaryColor: tempLogoPrimaryColor,
       logoSecondaryColor: tempLogoSecondaryColor
@@ -262,6 +266,97 @@ export default function MarketplaceThemeControl() {
   );
              })}
            </div>
+
+         {/* 🚀 ADMIN HERO LAYOUT THEME SWITCHER PANEL */}
+         <div className="space-y-6 bg-slate-900/90 border border-slate-700 rounded-3xl p-6 md:p-8 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+               <div>
+                  <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-white flex items-center gap-2">
+                     <Layout className="w-5 h-5 text-primary" /> Storefront Hero Layout Switcher Mode
+                  </h3>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                     Select and switch the active hero section layout displayed to customers on Web and Mobile App.
+                  </p>
+               </div>
+               <Badge className="bg-teal-500/20 text-teal-400 border border-teal-500/30 text-[9px] font-black uppercase tracking-wider">
+                  Active Mode: {tempHeroStyle}
+               </Badge>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+               {[
+                  {
+                     id: "AMAZON_CARD_GRID",
+                     title: "🛒 Amazon Multi-Card Grid",
+                     desc: "Horizontal snap carousel of themed cards with 2x2 product grids, thumbnails, & prices.",
+                     badge: "Recommended",
+                     color: "border-teal-500 bg-teal-950/40 text-teal-300"
+                  },
+                  {
+                     id: "SWIGGY_DYNAMIC_BANNER",
+                     title: "⚡ Swiggy Animated Banners",
+                     desc: "Full-bleed animated banner slides with CTA buttons, wave dividers, & fish pagination.",
+                     badge: "Dynamic",
+                     color: "border-blue-500 bg-blue-950/40 text-blue-300"
+                  },
+                  {
+                     id: "ZOMATO_HIGH_IMPACT",
+                     title: "🌟 Zomato High-Impact Hero",
+                     desc: "Atmospheric video/photo backdrop with embedded search bar overlay & trust badges.",
+                     badge: "High Impact",
+                     color: "border-purple-500 bg-purple-950/40 text-purple-300"
+                  },
+                  {
+                     id: "COMPACT_MINIMAL_STRIP",
+                     title: "🏷️ Compact Minimal Strip",
+                     desc: "Sleek compact banner strip for high-density product browsing.",
+                     badge: "Compact",
+                     color: "border-amber-500 bg-amber-950/40 text-amber-300"
+                  }
+               ].map((mode) => {
+                  const isActive = tempHeroStyle === mode.id;
+                  return (
+                     <button
+                        key={mode.id}
+                        type="button"
+                        onClick={() => {
+                           setTempHeroStyle(mode.id as any);
+                           toast(`Selected ${mode.title} layout! Click SYNCHRONIZE to publish live.`, "info");
+                        }}
+                        className={`p-5 rounded-2xl border text-left transition-all relative flex flex-col justify-between ${
+                           isActive 
+                              ? "border-primary bg-primary/20 shadow-xl scale-[1.02]" 
+                              : "border-slate-800 bg-slate-950/60 hover:border-slate-700 hover:bg-slate-950"
+                        }`}
+                     >
+                        {isActive && (
+                           <div className="absolute -top-2 -right-2 bg-primary text-slate-950 p-1 rounded-full shadow-lg">
+                              <Check className="w-4 h-4 font-black" />
+                           </div>
+                        )}
+                        <div className="space-y-2">
+                           <div className="flex items-center justify-between">
+                              <span className="text-xs font-black uppercase tracking-wider text-white">{mode.title}</span>
+                              <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full border ${mode.color}`}>
+                                 {mode.badge}
+                              </span>
+                           </div>
+                           <p className="text-[10px] text-slate-400 leading-relaxed font-medium">
+                              {mode.desc}
+                           </p>
+                        </div>
+
+                        <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-[9px] font-bold">
+                           <span className={isActive ? "text-primary" : "text-slate-500"}>
+                              {isActive ? "✓ SELECTED LAYOUT" : "SELECT MODE"}
+                           </span>
+                           <ChevronRight className={`w-3.5 h-3.5 ${isActive ? "text-primary" : "text-slate-600"}`} />
+                        </div>
+                     </button>
+                  );
+               })}
+            </div>
+         </div>
 
          {/* 🚀 ADMIN LOGO BRAND COLOR & NEON GLOW CONTROL PANEL */}
          <div className="space-y-6 bg-slate-900/90 border border-slate-700 rounded-3xl p-6 md:p-8 shadow-2xl">

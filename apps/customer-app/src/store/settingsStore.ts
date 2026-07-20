@@ -28,6 +28,7 @@ export interface CustomerAssets {
 
 interface SettingsState {
   marketplaceName: string;
+  heroStyle?: string;
   logoTextColor?: string;
   logoPrimaryColor?: string;
   logoSecondaryColor?: string;
@@ -126,6 +127,7 @@ export const useSettingsStore = create<SettingsState>()(
 
           set({
             marketplaceName: (settings.marketplaceName as string) || get().marketplaceName,
+            heroStyle: (settings.heroStyle as string) || get().heroStyle || "AMAZON_CARD_GRID",
             logoTextColor: (settings.logoTextColor as string) || get().logoTextColor || "#00D1FF",
             logoPrimaryColor: (settings.logoPrimaryColor as string) || get().logoPrimaryColor || "#00D1FF",
             logoSecondaryColor: (settings.logoSecondaryColor as string) || get().logoSecondaryColor || "#F0ABFC",
@@ -170,6 +172,7 @@ export const useSettingsStore = create<SettingsState>()(
       // Exclude the computed `settings` object from persistence to avoid stale data
       partialize: (state) => ({
         marketplaceName: state.marketplaceName,
+        heroStyle: state.heroStyle,
         logoTextColor: state.logoTextColor,
         logoPrimaryColor: state.logoPrimaryColor,
         logoSecondaryColor: state.logoSecondaryColor,

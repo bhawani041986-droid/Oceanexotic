@@ -22,6 +22,7 @@ interface SettingsState {
   
   // Customer Theme Engine
   customerTheme: string;
+  heroStyle?: 'AMAZON_CARD_GRID' | 'SWIGGY_DYNAMIC_BANNER' | 'ZOMATO_HIGH_IMPACT' | 'COMPACT_MINIMAL_STRIP';
   logoTextColor?: string;
   logoPrimaryColor?: string;
   logoSecondaryColor?: string;
@@ -98,6 +99,7 @@ export const useSettingsStore = create<SettingsState>()(
       theme: "theme-ocean-neon",
       font: "font-inter",
       customerTheme: "theme-ocean-neon",
+      heroStyle: "AMAZON_CARD_GRID",
       logoTextColor: "#00D1FF",
       logoPrimaryColor: "#00D1FF",
       logoSecondaryColor: "#F0ABFC",
@@ -202,6 +204,7 @@ export const useSettingsStore = create<SettingsState>()(
             marketplaceName: state.marketplaceName,
             currency: state.currency,
             customerTheme: state.customerTheme,
+            heroStyle: state.heroStyle,
             logoTextColor: state.logoTextColor,
             logoPrimaryColor: state.logoPrimaryColor,
             logoSecondaryColor: state.logoSecondaryColor,

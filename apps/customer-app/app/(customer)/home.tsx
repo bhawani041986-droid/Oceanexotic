@@ -38,6 +38,7 @@ import { AndamanMaritimeTelemetry } from "@/components/customer/AndamanMaritimeT
 import { OceanReelsFeed } from "@/components/customer/OceanReelsFeed";
 import { LiveTickerMarquee } from "@/components/customer/LiveTickerMarquee";
 import { FlashDealsBanner } from "@/components/customer/FlashDealsBanner";
+import { AmazonHeroCardGrid } from "@/components/customer/AmazonHeroCardGrid";
 import { Button } from "@/components/ui/Button";
 import { ChamferedBox } from "@/components/ui/ChamferedBox";
 import { useToast } from "@/components/ui/Toast";
@@ -566,6 +567,13 @@ export default function CustomerHomeScreen() {
         {homeSectionOrder.map((sectionId) => {
           switch (sectionId) {
             case "HERO":
+              if (!settings.heroStyle || settings.heroStyle === "AMAZON_CARD_GRID") {
+                return (
+                  <View key="HERO" className="w-full">
+                    <AmazonHeroCardGrid products={allProducts} />
+                  </View>
+                );
+              }
               return (
                 <View key="HERO" className="relative min-h-[224px] overflow-hidden">
                   {heroSlides.length > 0 ? (
