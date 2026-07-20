@@ -58,19 +58,28 @@ export function LanguageSelector({ showText = false }: LanguageSelectorProps) {
           <Text style={{ color: colors.text, fontSize: 10, marginLeft: 2 }}>▼</Text>
         </Pressable>
       ) : (
-        <ChamferedBox
-          fillColor={colors.card}
-          strokeColor={colors.border}
-          bevelSize={6}
-          style={{ height: 36, width: 36, minHeight: 36 }}
+        <Pressable 
+          onPress={() => setModalVisible(true)}
+          className="relative h-9 w-9 items-center justify-center rounded-xl border active:opacity-70"
+          style={{ 
+            borderColor: colors.border,
+            backgroundColor: colors.card
+          }}
         >
-          <Pressable 
-            onPress={() => setModalVisible(true)}
-            className="h-full w-full items-center justify-center active:opacity-70"
+          <Ionicons name="globe-outline" size={18} color={colors.text} />
+          {/* Active 2-letter language code badge */}
+          <View 
+            className="absolute -bottom-1 -right-1 px-1 py-[0.5px] rounded-md border shadow-sm" 
+            style={{ 
+              backgroundColor: colors.primary,
+              borderColor: colors.bg
+            }}
           >
-            <Ionicons name="globe-outline" size={18} color={colors.text} />
-          </Pressable>
-        </ChamferedBox>
+            <Text className="text-[7.5px] font-black uppercase text-slate-950">
+              {activeLang.code.slice(0, 2)}
+            </Text>
+          </View>
+        </Pressable>
       )}
 
       <Modal
