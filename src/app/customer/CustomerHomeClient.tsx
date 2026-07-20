@@ -802,6 +802,8 @@ const LobsterSVG = () => (
       ))}
     </motion.g>
   </svg>
+);
+
 const getBadgeStyle = (tag: string) => {
   if (tag.includes("HOT") || tag.includes("🔥")) {
     return {
