@@ -83,7 +83,7 @@ export default function CustomerCategoriesPage() {
   const { categories: ALL_CATEGORIES } = useCategories();
   const PRODUCT_CATEGORIES = ALL_CATEGORIES.filter(cat => (cat.status || "ACTIVE").toUpperCase() !== "INACTIVE");
   
-  const CATEGORIES = PRODUCT_CATEGORIES.map((cat, idx) => {
+  const CATEGORIES = PRODUCT_CATEGORIES.map((cat: any, idx: number) => {
     const labelLower = (cat.label || "").toLowerCase();
     let badgeTag = cat.badgeTag || null;
     if (!badgeTag) {

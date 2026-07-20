@@ -1282,12 +1282,11 @@ const FEATURED_PRODUCTS = [
 
 // Static fallback — shown only if no approved reviews exist in DB yet
 const FALLBACK_REVIEWS = [
-  { id: "REV-1", user_name: "Vikram S.", comment: "The Bluefin Tuna was absolutely pristine. Delivered in 40 minutes.", rating: 5 },
+{ id: "REV-1", user_name: "Vikram S.", comment: "The Bluefin Tuna was absolutely pristine. Delivered in 40 minutes.", rating: 5 },
   { id: "REV-2", user_name: "Ananya K.", comment: "Best lobster I've had in years. The cold-chain delivery is real.", rating: 5 },
   { id: "REV-3", user_name: "Rajesh M.", comment: "Professional service and verifiable freshness. OceanExotic Global is the future.", rating: 4.9 },
 ];
 
-// --- PRO UI/UX 3D FLOATING FISH OCEAN STAGE HERO ---
 const Pro3DMarketHero = () => {
   const [tilt, setTilt] = React.useState({ x: 0, y: 0 });
   const [activeCard, setActiveCard] = React.useState(1);
@@ -1359,7 +1358,6 @@ const Pro3DMarketHero = () => {
       className="relative flex flex-col overflow-hidden text-white border-b border-cyan-500/20 my-0"
       style={{ minHeight: "92vh", background: "linear-gradient(160deg, #010d1a 0%, #021825 40%, #010f1e 70%, #000d18 100%)", perspective: "1200px" }}
     >
-      {/* ── LIVE HARBOR BOURSE TICKER ── */}
       <div className="relative z-30 w-full bg-black/60 border-b border-cyan-500/25 backdrop-blur-lg py-2.5 px-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 text-[11px] font-bold">
           <div className="flex items-center gap-2 text-cyan-300 shrink-0">
@@ -1380,29 +1378,21 @@ const Pro3DMarketHero = () => {
         </div>
       </div>
 
-      {/* ── DEEP OCEAN ATMOSPHERE LAYERS ── */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* Dark radial vignette - critical for text readability */}
         <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 90% at 28% 55%, transparent 20%, rgba(0,8,18,0.75) 70%, rgba(0,5,12,0.95) 100%)" }} />
-        {/* Left column strong dark scrim for text */}
         <div className="absolute left-0 top-0 w-[55%] h-full" style={{ background: "linear-gradient(to right, rgba(0,6,14,0.92) 0%, rgba(0,6,14,0.75) 60%, transparent 100%)" }} />
-        {/* Active fish dynamic glow (right side) */}
         <motion.div
           animate={{ backgroundColor: `${activeFish.badgeColor}14` }}
           transition={{ duration: 1.2 }}
           className="absolute right-0 top-0 w-[65%] h-full blur-[90px]"
         />
-        {/* Top blue depth bloom */}
         <div className="absolute -top-32 right-1/4 w-[500px] h-[500px] rounded-full bg-cyan-900/15 blur-[120px]" />
-        {/* Bottom deep teal */}
         <div className="absolute -bottom-20 right-10 w-[400px] h-[400px] rounded-full bg-teal-900/12 blur-[100px]" />
-        {/* Mid center depth fill */}
         <div className="absolute top-1/2 right-[25%] w-[300px] h-[300px] -translate-y-1/2 rounded-full blur-[80px] transition-all duration-1000"
           style={{ backgroundColor: `${activeFish.badgeColor}0c` }}
         />
       </div>
 
-      {/* Water caustic grid shimmer */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.03]"
         style={{
           backgroundImage: `repeating-linear-gradient(0deg,transparent,transparent 48px,rgba(0,243,255,1) 48px,rgba(0,243,255,1) 49px),
@@ -1410,7 +1400,6 @@ const Pro3DMarketHero = () => {
         }}
       />
 
-      {/* Rising bubbles */}
       <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
         {[...Array(12)].map((_, i) => (
           <motion.div
@@ -1423,21 +1412,15 @@ const Pro3DMarketHero = () => {
         ))}
       </div>
 
-      {/* ── MAIN 3D CONTENT GRID ── */}
       <motion.div
         style={{ rotateX: tilt.x, rotateY: tilt.y, transformStyle: "preserve-3d" }}
         transition={{ type: "spring", stiffness: 140, damping: 18 }}
         className="relative z-20 flex-1 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-11 gap-4 items-center px-5 py-8"
       >
-
-        {/* ════════════════════════════════════ */}
-        {/*  LEFT: HERO TEXT — 3D EXTRUDED TEXT  */}
-        {/* ════════════════════════════════════ */}
         <div
-          className="lg:col-span-5 flex flex-col gap-6 text-center lg:text-left relative z-10"
+          className="hidden lg:flex lg:col-span-5 flex-col gap-6 text-center lg:text-left relative z-10"
           style={{ transform: "translateZ(60px)" }}
         >
-          {/* Live badge */}
           <div className="inline-flex items-center self-center lg:self-start gap-2 px-3.5 py-1.5 rounded-full border text-[10px] font-black tracking-widest uppercase"
             style={{ 
               background: "rgba(0,4,12,0.95)", 
@@ -1450,7 +1433,6 @@ const Pro3DMarketHero = () => {
             LIVE HARBOR TELEMETRY
           </div>
 
-          {/* 3D Extruded Block Headline */}
           <h1 className="text-4xl sm:text-5xl lg:text-[3.6rem] xl:text-[4.2rem] font-black uppercase italic tracking-tight leading-[1.04]">
             <span 
               className="block text-white"
@@ -1482,7 +1464,6 @@ const Pro3DMarketHero = () => {
             </span>
           </h1>
 
-          {/* Simplified CTAs */}
           <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 mt-2">
             <a href="/customer/products"
               className="px-8 py-3.5 rounded-xl font-black text-sm sm:text-base uppercase tracking-wider text-slate-950 transition-all duration-300 hover:scale-105"
@@ -1502,14 +1483,12 @@ const Pro3DMarketHero = () => {
           </div>
         </div>
 
-        {/* ════════════════════════════════════════════════ */}
-        {/*  RIGHT: 3D FLOATING PNG FISH STAGE (NO CARDS)  */}
-        {/* ════════════════════════════════════════════════ */}
+        {/* Right column — 3D Floating Fish Stage */}
         <div
-          className="lg:col-span-6 relative flex items-center justify-center overflow-visible"
+          className="w-full lg:col-span-7 relative flex items-center justify-center overflow-visible"
           style={{ transform: "translateZ(100px)", minHeight: "520px" }}
         >
-          {/* ACTIVE FISH SPOTLIGHT — bright radial bloom directly behind main fish */}
+          {/* Dynamic multi-layer glowing ambient orb behind active fish */}
           <motion.div
             animate={{ backgroundColor: `${fishItems[activeCard].badgeColor}1a` }}
             transition={{ duration: 1 }}
@@ -1527,17 +1506,13 @@ const Pro3DMarketHero = () => {
             const offset = ((idx - activeCard) + 3) % 3;
             const isActive = offset === 0;
 
-            // Slot layout — fish are large, close together, clearly visible
             const slot: Record<number, {
               x: number; y: number; scale: number;
               ry: number; rz: number; z: number;
               opacity: number; imgW: string;
             }> = {
-              // Active: front-center, large, slight lean
               0: { x: 0,    y: 0,   scale: 1.0,  ry: 0,   rz: -3,  z: 30, opacity: 1.0,  imgW: "320px" },
-              // Right flank: slightly right & below, medium, angled
               1: { x: 170,  y: 60,  scale: 0.78, ry: -18, rz: -6,  z: 20, opacity: 0.92, imgW: "260px" },
-              // Left rear: slightly left & below, smaller, slight forward lean
               2: { x: -155, y: 70,  scale: 0.66, ry: 18,  rz: 5,   z: 10, opacity: 0.80, imgW: "220px" },
             };
             const s = slot[offset] ?? { x: 0, y: 0, scale: 0.4, ry: 0, rz: 0, z: 1, opacity: 0, imgW: "120px" };
@@ -1552,6 +1527,7 @@ const Pro3DMarketHero = () => {
                   y: s.y,
                   scale: s.scale,
                   rotateY: s.ry,
+                  rotateZ: s.rz,
                   zIndex: s.z,
                   opacity: s.opacity,
                 }}
@@ -1676,7 +1652,7 @@ const Pro3DMarketHero = () => {
             );
           })}
 
-          {/* Species selector pills — anchored inside stage */}
+          {/* Species selector pills */}
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2 z-50">
             {fishItems.map((fish, idx) => (
               <button
@@ -1717,7 +1693,7 @@ const Pro3DMarketHero = () => {
             style={
               activeCard === idx
                 ? { width: "28px", backgroundColor: fish.badgeColor, boxShadow: `0 0 10px ${fish.badgeColor}` }
-                : { width: "8px", backgroundColor: "rgb(71,85,105)" }
+                : { width: "8px", backgroundColor: "rgb(51,65,85)" }
             }
           />
         ))}
