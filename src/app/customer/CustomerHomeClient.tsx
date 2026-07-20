@@ -878,8 +878,8 @@ const MaritimeWaveDivider = () => {
         
         // Direction & pitch tilt paths
         const orientationPath = [
-          fish.swimRight, fish.swimRight, fish.swimRight, fish.swimRight, fish.swimRight, fish.swimRight,
-          fish.swimLeft, fish.swimLeft, fish.swimLeft, fish.swimLeft, fish.swimLeft, fish.swimLeft, fish.swimRight
+          -1, -1, -1, -1, -1, -1,
+           1,  1,  1,  1,  1,  1, -1
         ];
         
         const pitchAngles = [0, -8, 10, -6, 8, 0, 0, -8, 10, -6, 8, 0, 0];
@@ -917,15 +917,14 @@ const MaritimeWaveDivider = () => {
               animate={{ 
                 scaleX: orientationPath,
                 rotateZ: pitchAngles,
-                skewY: [-2.5, 2.5, -2.5]
+                skewY: [-2.5, 2.5, -2.5, 2.5, -2.5]
               }}
               transition={{
                 scaleX: { duration: cycleDuration, repeat: Infinity, ease: "linear", delay, times: leftTimes },
                 rotateZ: { duration: cycleDuration, repeat: Infinity, ease: "easeInOut", delay, times: leftTimes },
-                skewY: { duration: 0.6, repeat: Infinity, ease: "easeInOut" }
+                skewY: { duration: 0.8, repeat: Infinity, ease: "easeInOut" }
               }}
-              className="animate-caudal-wiggle"
-              style={{ scale: depthScale }}
+              style={{ scale: depthScale, transformOrigin: "center center" }}
             >
               <img 
                 src={fish.image} 
