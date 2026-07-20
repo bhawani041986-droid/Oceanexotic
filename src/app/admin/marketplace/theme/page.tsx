@@ -116,13 +116,14 @@ function ImageUploaderBox({ label, value, onChange, aspect = "square" }: ImageUp
 }
 
 export default function MarketplaceThemeControl() {
-  const { customerTheme, heroStyle, amazonHeroCards, swiggyBanners, zomatoHeroConfig, compactStripConfig, logoTextColor, logoPrimaryColor, logoSecondaryColor, atmosphericGlow, heroOverlayOpacity, customerAssets, setSettings, pushSettings, fetchSettings } = useSettingsStore();
+  const { customerTheme, heroStyle, categoryAnimationMode, amazonHeroCards, swiggyBanners, zomatoHeroConfig, compactStripConfig, logoTextColor, logoPrimaryColor, logoSecondaryColor, atmosphericGlow, heroOverlayOpacity, customerAssets, setSettings, pushSettings, fetchSettings } = useSettingsStore();
   const { toast } = useToast();
   const [selectedThemeId, setSelectedThemeId] = useState(customerTheme);
   const [tempAssets, setTempAssets] = useState(customerAssets);
   const [tempGlow, setTempGlow] = useState(atmosphericGlow);
   const [tempHeroOpacity, setTempHeroOpacity] = useState(heroOverlayOpacity ?? 80);
   const [tempHeroStyle, setTempHeroStyle] = useState(heroStyle || "AMAZON_CARD_GRID");
+  const [tempCatAnimMode, setTempCatAnimMode] = useState(categoryAnimationMode || "PARALLAX_FLOAT");
   const [tempAmazonCards, setTempAmazonCards] = useState<AmazonHeroCardConfig[]>(amazonHeroCards || DEFAULT_AMAZON_HERO_CARDS);
   const [tempSwiggyBanners, setTempSwiggyBanners] = useState<SwiggyBannerSlide[]>(swiggyBanners || DEFAULT_SWIGGY_BANNERS);
   const [tempZomatoHero, setTempZomatoHero] = useState<ZomatoHeroConfig>(zomatoHeroConfig || DEFAULT_ZOMATO_HERO);
@@ -146,6 +147,7 @@ export default function MarketplaceThemeControl() {
     setTempGlow(atmosphericGlow);
     setTempHeroOpacity(heroOverlayOpacity ?? 80);
     setTempHeroStyle(heroStyle || "AMAZON_CARD_GRID");
+    setTempCatAnimMode(categoryAnimationMode || "PARALLAX_FLOAT");
     if (amazonHeroCards && amazonHeroCards.length > 0) setTempAmazonCards(amazonHeroCards);
     if (swiggyBanners && swiggyBanners.length > 0) setTempSwiggyBanners(swiggyBanners);
     if (zomatoHeroConfig) setTempZomatoHero(zomatoHeroConfig);
@@ -153,7 +155,7 @@ export default function MarketplaceThemeControl() {
     setTempLogoTextColor(logoTextColor || "#00D1FF");
     setTempLogoPrimaryColor(logoPrimaryColor || "#00D1FF");
     setTempLogoSecondaryColor(logoSecondaryColor || "#F0ABFC");
-  }, [customerAssets, customerTheme, atmosphericGlow, heroOverlayOpacity, heroStyle, amazonHeroCards, swiggyBanners, zomatoHeroConfig, compactStripConfig, logoTextColor, logoPrimaryColor, logoSecondaryColor]);
+  }, [customerAssets, customerTheme, atmosphericGlow, heroOverlayOpacity, heroStyle, categoryAnimationMode, amazonHeroCards, swiggyBanners, zomatoHeroConfig, compactStripConfig, logoTextColor, logoPrimaryColor, logoSecondaryColor]);
 
   const isDirty = selectedThemeId !== customerTheme || 
                   tempGlow !== atmosphericGlow || 
@@ -225,6 +227,7 @@ export default function MarketplaceThemeControl() {
       atmosphericGlow: tempGlow,
       heroOverlayOpacity: tempHeroOpacity,
       heroStyle: tempHeroStyle,
+      categoryAnimationMode: tempCatAnimMode,
       amazonHeroCards: tempAmazonCards,
       swiggyBanners: tempSwiggyBanners,
       zomatoHeroConfig: tempZomatoHero,
@@ -1031,7 +1034,52 @@ export default function MarketplaceThemeControl() {
                   />
                </div>
             </div>
-         </div>
+          </div>
+          {/* 🌊 CATEGORY ICONS 3D MOTION & TELEMETRY CUSTOMIZER PANEL */}
+          <div className="space-y-6 bg-slate-900/90 border border-slate-700 rounded-3xl p-6 md:p-8 shadow-2xl">
+             <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+                <div>
+                   <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-white flex items-center gap-2">
+                      <Sparkles className="w-5 h-5 text-cyan-400" /> Category Icons 3D Parallax & Telemetry Control
+                   </h3>
+                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                      Configure underwater 3D parallax floating micro-animations & live telemetry badges (🔥 HOT, ⚡ FRESH) for storefront categories.
+                   </p>
+                </div>
+             </div>
+
+             <div className="space-y-4">
+                <div>
+                   <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-300 block mb-2">
+                      Category Motion & Animation Mode
+                   </label>
+                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {[
+                         { id: "PARALLAX_FLOAT", label: "🌊 Underwater 3D Parallax & Float", desc: "Sine-wave vertical floating + inner image breathing motion (Recommended)" },
+                         { id: "PULSE_ZOOM", label: "⚡ Pulse & Zoom Motion", desc: "Rhythmic pulse zoom with neon border glow" },
+                         { id: "STATIC", label: "🏷️ Static Minimal", desc: "Clean static category icons without micro-motion" },
+                      ].map((mode) => (
+                         <button
+                            key={mode.id}
+                            type="button"
+                            onClick={() => {
+                               setTempCatAnimMode(mode.id as any);
+                               toast(`Selected ${mode.label} mode. Click SYNCHRONIZE to publish.`, "info");
+                            }}
+                            className={`p-4 rounded-2xl border text-left transition-all ${
+                               tempCatAnimMode === mode.id
+                                  ? "border-cyan-400 bg-cyan-500/10 shadow-lg shadow-cyan-500/20 ring-2 ring-cyan-400"
+                                  : "border-slate-800 bg-slate-950/60 hover:border-slate-700"
+                            }`}
+                         >
+                            <span className="text-xs font-black text-white uppercase block mb-1">{mode.label}</span>
+                            <span className="text-[10px] text-slate-400 font-medium block">{mode.desc}</span>
+                         </button>
+                      ))}
+                   </div>
+                </div>
+             </div>
+          </div>
 
          {/* 🚀 ADMIN LOGO BRAND COLOR & NEON GLOW CONTROL PANEL */}
          <div className="space-y-6 bg-slate-900/90 border border-slate-700 rounded-3xl p-6 md:p-8 shadow-2xl">

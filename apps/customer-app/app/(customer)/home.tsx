@@ -38,6 +38,7 @@ interface AnimatedCategoryTileProps {
 function AnimatedCategoryTile({ cat, idx, iconSource, onPress, colors, t }: AnimatedCategoryTileProps) {
   const floatAnim = useSharedValue(0);
   const scaleAnim = useSharedValue(1);
+  const imgZoomAnim = useSharedValue(1.0);
 
   useEffect(() => {
     // Staggered underwater sine-wave floating delay per category tile
@@ -51,19 +52,32 @@ function AnimatedCategoryTile({ cat, idx, iconSource, onPress, colors, t }: Anim
         -1,
         true
       );
+      // Anti-phase 3D inner image breathing motion
+      imgZoomAnim.value = withRepeat(
+        withSequence(
+          withTiming(1.08, { duration: 1400 }),
+          withTiming(1.0, { duration: 1400 })
+        ),
+        -1,
+        true
+      );
     }, delay);
 
     return () => clearTimeout(timeout);
   }, [idx]);
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        { translateY: floatAnim.value },
-        { scale: scaleAnim.value }
-      ]
-    };
-  });
+  const tileAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateY: floatAnim.value },
+      { scale: scaleAnim.value }
+    ]
+  }));
+
+  const imageAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      { scale: imgZoomAnim.value }
+    ]
+  }));
 
   const handlePressIn = () => {
     scaleAnim.value = withSpring(0.92, { damping: 15, stiffness: 200 });
@@ -73,16 +87,25 @@ function AnimatedCategoryTile({ cat, idx, iconSource, onPress, colors, t }: Anim
     scaleAnim.value = withSpring(1.0, { damping: 12, stiffness: 180 });
   };
 
+  // Determine dynamic telemetry badge label
+  const labelLower = (cat.label || "").toLowerCase();
+  let telemetryBadge: string | null = cat.badgeTag || null;
+  if (!telemetryBadge) {
+    if (labelLower.includes("surmai") || labelLower.includes("prawn")) telemetryBadge = "🔥 HOT";
+    else if (labelLower.includes("seawater") || labelLower.includes("crab")) telemetryBadge = "⚡ FRESH";
+    else if (labelLower.includes("steak") || labelLower.includes("exotic")) telemetryBadge = "✨ CHILLED";
+  }
+
   return (
     <Pressable
       onPress={onPress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
-      style={{ width: 66, alignItems: 'center' }}
+      style={{ width: 66, alignItems: 'center', position: 'relative' }}
     >
       <Animated.View
         style={[
-          animatedStyle,
+          tileAnimatedStyle,
           {
             width: 62,
             height: 62,
@@ -90,21 +113,46 @@ function AnimatedCategoryTile({ cat, idx, iconSource, onPress, colors, t }: Anim
             overflow: 'hidden',
             backgroundColor: '#0F172A',
             borderWidth: 1.5,
-            borderColor: 'rgba(0, 243, 255, 0.45)', // Neon Cyan Border
+            borderColor: 'rgba(0, 243, 255, 0.45)',
             shadowColor: '#00F3FF',
             shadowOffset: { width: 0, height: 3 },
             shadowOpacity: 0.35,
             shadowRadius: 6,
             elevation: 5,
+            position: 'relative',
           }
         ]}
       >
-        <Image
-          source={iconSource}
-          style={{ width: '100%', height: '100%' }}
-          contentFit="cover"
-        />
+        <Animated.View style={[{ width: '100%', height: '100%' }, imageAnimatedStyle]}>
+          <Image
+            source={iconSource}
+            style={{ width: '100%', height: '100%' }}
+            contentFit="cover"
+          />
+        </Animated.View>
       </Animated.View>
+
+      {/* Floating Micro Telemetry Badge */}
+      {telemetryBadge && (
+        <View style={{
+          position: 'absolute',
+          top: -4,
+          right: 0,
+          zIndex: 10,
+          backgroundColor: '#0F172A',
+          paddingHorizontal: 4,
+          paddingVertical: 1,
+          borderRadius: 6,
+          borderWidth: 1,
+          borderColor: 'rgba(0, 243, 255, 0.6)',
+          elevation: 4
+        }}>
+          <Text style={{ fontSize: 6.5, fontWeight: '900', color: '#00F3FF' }}>
+            {telemetryBadge}
+          </Text>
+        </View>
+      )}
+
       {cat.label && (
         <Text 
           className="text-[8px] font-black uppercase text-center mt-2 leading-tight tracking-tight" 

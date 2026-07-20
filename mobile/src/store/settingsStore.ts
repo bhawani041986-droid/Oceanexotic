@@ -179,6 +179,7 @@ export const DEFAULT_COMPACT_STRIP: CompactStripConfig = {
 interface SettingsState {
   marketplaceName: string;
   heroStyle?: string;
+  categoryAnimationMode?: string;
   amazonHeroCards?: AmazonHeroCardConfig[];
   swiggyBanners?: SwiggyBannerSlide[];
   zomatoHeroConfig?: ZomatoHeroConfig;

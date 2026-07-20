@@ -70,6 +70,7 @@ interface SettingsState {
   // Customer Theme Engine
   customerTheme: string;
   heroStyle?: 'AMAZON_CARD_GRID' | 'SWIGGY_DYNAMIC_BANNER' | 'ZOMATO_HIGH_IMPACT' | 'COMPACT_MINIMAL_STRIP';
+  categoryAnimationMode?: 'PARALLAX_FLOAT' | 'PULSE_ZOOM' | 'STATIC';
   amazonHeroCards?: AmazonHeroCardConfig[];
   swiggyBanners?: SwiggyBannerSlide[];
   zomatoHeroConfig?: ZomatoHeroConfig;
