@@ -427,7 +427,7 @@ function NewsletterSection() {
       {/* Top decorative stripe */}
       <View style={{ height: 2, backgroundColor: '#14b8a6' }} />
 
-      <View style={{ paddingHorizontal: 20, paddingVertical: 22, gap: 4 }}>
+      <View style={{ paddingHorizontal: 20, paddingVertical: 16, gap: 4 }}>
         {/* Tagline row */}
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 4 }}>
           <MaterialCommunityIcons name="earth" size={13} color="#14b8a6" />
@@ -457,7 +457,7 @@ function NewsletterSection() {
             fontSize: 11,
             color: colors.isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)',
             marginTop: 2,
-            marginBottom: 14,
+            marginBottom: 8,
             fontStyle: 'italic',
           }}
         >
@@ -727,7 +727,7 @@ function FssaiBanner() {
       bevelSize={12}
       fillColor={colors.card === '#020617' ? '#081125' : '#f8fafc'}
       strokeColor={colors.card === '#020617' ? '#1e293b' : '#cbd5e1'}
-      style={{ marginHorizontal: 16, padding: 6, marginBottom: 16, marginTop: -6 }}
+      style={{ marginHorizontal: 16, padding: 6, marginBottom: 10, marginTop: 2 }}
       contentStyle={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 4 }}
     >
       {/* FSSAI Card with shimmer + glow border */}
@@ -1234,11 +1234,11 @@ export default function CustomerHomeScreen() {
                   <MaritimeWaveDivider />
 
                   {/* Dynamic Category Scroll */}
-                  <View className="w-full mt-2 pt-3" style={{ overflow: 'visible' }}>
+                  <View className="w-full mt-0 pt-1" style={{ overflow: 'visible' }}>
                     <ScrollView 
                       horizontal 
                       showsHorizontalScrollIndicator={false} 
-                      contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 8, paddingBottom: 4, gap: 12 }}
+                      contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 4, paddingBottom: 2, gap: 12 }}
                       style={{ overflow: 'visible' }}
                       scrollEventThrottle={16}
                       onScroll={(event) => {
@@ -1282,7 +1282,7 @@ export default function CustomerHomeScreen() {
 
                     {/* Neon sliding scroll indicator */}
                     {(settings.productCategories || []).filter(c => c.status?.toUpperCase() !== "INACTIVE").length > 5 && (
-                      <View style={{ height: 3, width: 50, backgroundColor: '#E2E8F0', borderRadius: 1.5, alignSelf: 'center', marginTop: 10, overflow: 'hidden' }}>
+                      <View style={{ height: 3, width: 50, backgroundColor: '#E2E8F0', borderRadius: 1.5, alignSelf: 'center', marginTop: 6, overflow: 'hidden' }}>
                         <View 
                           style={{ 
                             height: '100%', 
@@ -1392,10 +1392,10 @@ export default function CustomerHomeScreen() {
               );
             case "FEATURED":
               return (
-                <View key="FEATURED" className="border-y px-4 py-4" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
+                <View key="FEATURED" className="border-y px-4 py-3" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
                   <SectionTitle title={t('featured_seafood') || "Best Selling Fish"} subtitle={t('premium_fresh_quality') || "From Top Fisherman"} />
                   {featured.length > 0 ? (
-                    <View className="mt-4 flex-row flex-wrap justify-between gap-y-3">
+                    <View className="mt-3 flex-row flex-wrap justify-between gap-y-2">
                       {featured.map((p) => (
                         <ProductCard key={p.id} product={p} compact onSelectCut={() => openCutModal({
                           id: p.id,
@@ -1418,8 +1418,8 @@ export default function CustomerHomeScreen() {
               );
             case "RECIPES":
               return (
-                <View key="RECIPES" className="px-4 py-4">
-                  <View className="flex-row justify-between items-end mb-4">
+                <View key="RECIPES" className="px-4 py-3">
+                  <View className="flex-row justify-between items-end mb-2">
                     <SectionTitle title={t('chefs_recipes') || "Chef's Recipes"} subtitle={t('chef_tested_recipes') || "Chef Tested Recipes"} />
                     <Pressable 
                       onPress={() => router.push("/recipe")}
@@ -1437,7 +1437,7 @@ export default function CustomerHomeScreen() {
                       </Svg>
                     </Pressable>
                   </View>
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-2">
                     {(cms.data?.filter(c => c.type === 'RECIPE' && c.status === 'PUBLISHED') || []).slice(0, 6).map((recipe: any) => {
                        const meta = recipe.metadata ? (typeof recipe.metadata === 'string' ? JSON.parse(recipe.metadata) : recipe.metadata) : {};
                        return (
@@ -1656,9 +1656,9 @@ export default function CustomerHomeScreen() {
               );
             case "SELLERS":
               return (
-                <View key="SELLERS" className="px-4 py-4">
+                <View key="SELLERS" className="px-4 py-3">
                   <SectionTitle title={t('premium_sellers') || "Premium Sellers"} subtitle={t('trusted_partners') || "Trusted Partners"} />
-                  <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-3">
                     {(settings.topSellers || []).map((seller) => {
                       return (
                         <Pressable
