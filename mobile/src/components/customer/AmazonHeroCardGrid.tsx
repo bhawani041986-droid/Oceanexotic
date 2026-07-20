@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, Text, ScrollView, Pressable, Dimensions, NativeSyntheticEvent, NativeScrollEvent } from "react-native";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
@@ -17,10 +17,30 @@ export function AmazonHeroCardGrid({ products = [] }: AmazonHeroCardGridProps) {
   const cardsData: AmazonHeroCardConfig[] = (settingsCards && settingsCards.length > 0 ? settingsCards : DEFAULT_AMAZON_HERO_CARDS).filter((c: AmazonHeroCardConfig) => c.active !== false);
 
   const screenWidth = Dimensions.get("window").width;
-  const cardWidth = Math.min(screenWidth * 0.86, 340);
-  const snapInterval = cardWidth + 12;
+  const cardWidth = Math.min(screenWidth * 0.85, 330);
+  const snapInterval = cardWidth + 10;
 
   const [activeIndex, setActiveIndex] = useState(0);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const isUserInteracting = useRef(false);
+
+  // Auto-Play Snap Carousel Engine (4-second interval)
+  useEffect(() => {
+    if (cardsData.length <= 1) return;
+
+    const timer = setInterval(() => {
+      if (!isUserInteracting.current && scrollViewRef.current) {
+        const nextIndex = (activeIndex + 1) % cardsData.length;
+        setActiveIndex(nextIndex);
+        scrollViewRef.current.scrollTo({
+          x: nextIndex * snapInterval,
+          animated: true,
+        });
+      }
+    }, 4000);
+
+    return () => clearInterval(timer);
+  }, [activeIndex, cardsData.length, snapInterval]);
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
@@ -31,8 +51,9 @@ export function AmazonHeroCardGrid({ products = [] }: AmazonHeroCardGridProps) {
   };
 
   return (
-    <View style={{ marginVertical: 8 }}>
+    <View style={{ marginVertical: 4 }}>
       <ScrollView
+        ref={scrollViewRef}
         horizontal
         pagingEnabled={false}
         snapToInterval={snapInterval}
@@ -40,7 +61,11 @@ export function AmazonHeroCardGrid({ products = [] }: AmazonHeroCardGridProps) {
         showsHorizontalScrollIndicator={false}
         onScroll={handleScroll}
         scrollEventThrottle={16}
-        contentContainerStyle={{ paddingHorizontal: 14, gap: 12 }}
+        onScrollBeginDrag={() => { isUserInteracting.current = true; }}
+        onScrollEndDrag={() => {
+          setTimeout(() => { isUserInteracting.current = false; }, 3000);
+        }}
+        contentContainerStyle={{ paddingHorizontal: 12, gap: 10 }}
       >
         {cardsData.map((card, cIdx) => (
           <View
@@ -48,26 +73,28 @@ export function AmazonHeroCardGrid({ products = [] }: AmazonHeroCardGridProps) {
             style={{
               width: cardWidth,
               backgroundColor: card.themeColor || "#0d5c3a",
-              borderRadius: 22,
-              padding: 14,
+              borderRadius: 18,
+              padding: 10,
               borderWidth: 1,
-              borderColor: "rgba(255, 255, 255, 0.2)",
+              borderColor: "rgba(255, 255, 255, 0.22)",
               shadowColor: "#000",
-              shadowOffset: { width: 0, height: 6 },
-              shadowOpacity: 0.3,
-              shadowRadius: 12,
-              elevation: 8,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.25,
+              shadowRadius: 8,
+              elevation: 5,
             }}
           >
-            {/* Card Header */}
-            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-              <View style={{ flex: 1, paddingRight: 6 }}>
+            {/* Card Header with Live Telemetry Pulse Badge */}
+            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+              <View style={{ flex: 1, flexDirection: "row", alignItems: "center", gap: 6 }}>
+                {/* Glowing Live Pulse Indicator */}
+                <View style={{ width: 7, height: 7, borderRadius: 3.5, backgroundColor: "#ef4444", shadowColor: "#ef4444", shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.9, shadowRadius: 4 }} />
                 <Text
                   style={{
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: "900",
                     color: "#FFFFFF",
-                    letterSpacing: -0.3,
+                    letterSpacing: -0.2,
                   }}
                   numberOfLines={1}
                 >
@@ -77,23 +104,23 @@ export function AmazonHeroCardGrid({ products = [] }: AmazonHeroCardGridProps) {
               {card.badge ? (
                 <View
                   style={{
-                    paddingHorizontal: 8,
-                    paddingVertical: 3,
-                    borderRadius: 10,
-                    backgroundColor: "rgba(255, 255, 255, 0.18)",
+                    paddingHorizontal: 7,
+                    paddingVertical: 2,
+                    borderRadius: 8,
+                    backgroundColor: "rgba(255, 255, 255, 0.2)",
                     borderWidth: 1,
-                    borderColor: "rgba(255, 255, 255, 0.3)",
+                    borderColor: "rgba(255, 255, 255, 0.35)",
                   }}
                 >
-                  <Text style={{ fontSize: 9, fontWeight: "900", color: "#FFFFFF", textTransform: "uppercase" }}>
+                  <Text style={{ fontSize: 8.5, fontWeight: "900", color: "#FFFFFF", textTransform: "uppercase", letterSpacing: 0.5 }}>
                     {card.badge}
                   </Text>
                 </View>
               ) : null}
             </View>
 
-            {/* 2x2 Product Grid Container */}
-            <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 10 }}>
+            {/* 2x2 Product Grid Container (Zero Blank Space Design) */}
+            <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between", rowGap: 6 }}>
               {(card.items || []).slice(0, 4).map((item, idx) => {
                 // Calculate discount percent if oldPrice is present
                 let discountTag: string | null = null;
@@ -116,37 +143,37 @@ export function AmazonHeroCardGrid({ products = [] }: AmazonHeroCardGridProps) {
                       })
                     }
                     style={{
-                      width: "48%",
+                      width: "48.5%",
                       backgroundColor: "#FFFFFF",
-                      borderRadius: 16,
-                      padding: 8,
+                      borderRadius: 14,
+                      padding: 6,
                       shadowColor: "#000",
                       shadowOffset: { width: 0, height: 2 },
-                      shadowOpacity: 0.12,
-                      shadowRadius: 5,
-                      elevation: 4,
+                      shadowOpacity: 0.1,
+                      shadowRadius: 3,
+                      elevation: 3,
                       position: "relative",
                     }}
                   >
-                    {/* Optional Discount Tag Badge */}
+                    {/* Discount Tag Badge */}
                     {discountTag && (
                       <View style={{
                         position: "absolute",
-                        top: 12,
-                        left: 12,
+                        top: 8,
+                        left: 8,
                         zIndex: 10,
                         backgroundColor: "#ef4444",
-                        paddingHorizontal: 5,
-                        paddingVertical: 2,
-                        borderRadius: 6,
+                        paddingHorizontal: 4,
+                        paddingVertical: 1.5,
+                        borderRadius: 5,
                       }}>
-                        <Text style={{ fontSize: 7.5, fontWeight: "900", color: "#ffffff" }}>
+                        <Text style={{ fontSize: 7, fontWeight: "900", color: "#ffffff" }}>
                           {discountTag}
                         </Text>
                       </View>
                     )}
 
-                    <View style={{ width: "100%", aspectRatio: 1, borderRadius: 12, overflow: "hidden", backgroundColor: "#f8fafc" }}>
+                    <View style={{ width: "100%", aspectRatio: 1.15, borderRadius: 10, overflow: "hidden", backgroundColor: "#f8fafc" }}>
                       <Image
                         source={{ uri: resolveMediaUrl(item.image) }}
                         style={{ width: "100%", height: "100%" }}
@@ -155,20 +182,20 @@ export function AmazonHeroCardGrid({ products = [] }: AmazonHeroCardGridProps) {
                     </View>
                     <Text
                       style={{
-                        fontSize: 11,
+                        fontSize: 10.5,
                         fontWeight: "800",
                         color: "#0f172a",
-                        marginTop: 6,
+                        marginTop: 4,
                       }}
                       numberOfLines={1}
                     >
                       {item.name}
                     </Text>
                     
-                    <View style={{ flexDirection: "row", alignItems: "baseline", gap: 4, marginTop: 2 }}>
+                    <View style={{ flexDirection: "row", alignItems: "baseline", gap: 3, marginTop: 1 }}>
                       <Text
                         style={{
-                          fontSize: 12,
+                          fontSize: 11.5,
                           fontWeight: "900",
                           color: "#0284c7",
                         }}
@@ -178,7 +205,7 @@ export function AmazonHeroCardGrid({ products = [] }: AmazonHeroCardGridProps) {
                       {item.oldPrice && (
                         <Text
                           style={{
-                            fontSize: 9.5,
+                            fontSize: 8.5,
                             fontWeight: "700",
                             color: "#94a3b8",
                             textDecorationLine: "line-through",
@@ -193,36 +220,36 @@ export function AmazonHeroCardGrid({ products = [] }: AmazonHeroCardGridProps) {
               })}
             </View>
 
-            {/* Bottom See More Bar */}
+            {/* Bottom See More Action Line */}
             <Pressable
               onPress={() => router.push("/products")}
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                marginTop: 12,
+                marginTop: 8,
                 gap: 4,
               }}
             >
-              <Text style={{ fontSize: 11, fontWeight: "800", color: card.accentColor || "#FFFFFF" }}>
-                See all deals & products
+              <Text style={{ fontSize: 10, fontWeight: "800", color: card.accentColor || "#FFFFFF" }}>
+                Explore all deals & products
               </Text>
-              <MaterialCommunityIcons name="chevron-right" size={14} color={card.accentColor || "#FFFFFF"} />
+              <MaterialCommunityIcons name="chevron-right" size={13} color={card.accentColor || "#FFFFFF"} />
             </Pressable>
           </View>
         ))}
       </ScrollView>
 
-      {/* Horizontal Carousel Progress Indicator Dots */}
+      {/* Horizontal Carousel Progress Dots */}
       {cardsData.length > 1 && (
-        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, marginTop: 8 }}>
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 5, marginTop: 6 }}>
           {cardsData.map((_, idx) => (
             <View
               key={idx}
               style={{
-                height: 4,
-                width: activeIndex === idx ? 18 : 6,
+                height: 3.5,
+                width: activeIndex === idx ? 16 : 5,
                 borderRadius: 2,
-                backgroundColor: activeIndex === idx ? "#06b6d4" : "rgba(255, 255, 255, 0.2)",
+                backgroundColor: activeIndex === idx ? "#06b6d4" : "rgba(255, 255, 255, 0.25)",
               }}
             />
           ))}
