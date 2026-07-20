@@ -1310,7 +1310,7 @@ export default function CustomerHomeScreen() {
             case "SELLERS":
               return (
                 <View key="SELLERS" className="px-4 py-4">
-                  <SectionTitle title={t('premium_sellers') || "Premium Sellers"} subtitle={t('certified_daily_catches') || "Top Rated Sellers"} />
+                  <SectionTitle title={t('premium_sellers') || "Premium Sellers"} subtitle={t('trusted_partners') || "Trusted Partners"} />
                   <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-4">
                     {(settings.topSellers || []).map((seller) => {
                       return (

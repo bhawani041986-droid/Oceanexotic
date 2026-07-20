@@ -1,25 +1,57 @@
+import React, { useEffect } from "react";
 import { View, Text } from "react-native";
 import { useThemeColors } from "@/hooks/useThemeColors";
 import { LinearGradient } from "expo-linear-gradient";
+import Animated, { 
+  useSharedValue, 
+  useAnimatedStyle, 
+  withRepeat, 
+  withSequence, 
+  withTiming 
+} from "react-native-reanimated";
 
 export function SectionTitle({ title, subtitle }: { title: string; subtitle: string }) {
   const colors = useThemeColors();
+  const shimmerAnim = useSharedValue(0);
+
+  useEffect(() => {
+    shimmerAnim.value = withRepeat(
+      withSequence(
+        withTiming(1, { duration: 1800 }),
+        withTiming(0, { duration: 1800 })
+      ),
+      -1,
+      true
+    );
+  }, []);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: 0.7 + shimmerAnim.value * 0.3,
+      transform: [
+        { translateX: -15 + shimmerAnim.value * 30 }
+      ]
+    };
+  });
+
   return (
     <View className="gap-1">
       <View>
-        <Text className="text-lg font-black uppercase tracking-tight" style={{ color: colors.primary }}>
+        <Text className="text-lg font-black uppercase tracking-tight italic" style={{ color: colors.primary }}>
           {title}
         </Text>
-        <View className="mt-1.5 mb-2" style={{ height: 3, width: 80, borderRadius: 999, overflow: 'hidden' }}>
-          <LinearGradient
-            colors={[colors.primary, '#00F3FF', '#FF5E36']} // Theme Primary -> Neon Cyan -> Neon Coral
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={{ flex: 1 }}
-          />
+        <View className="mt-1.5 mb-1.5" style={{ height: 3.5, width: 85, borderRadius: 999, overflow: 'hidden', backgroundColor: 'rgba(255,255,255,0.08)' }}>
+          <Animated.View style={[{ flex: 1, width: '140%' }, animatedStyle]}>
+            <LinearGradient
+              colors={['#FF3E3E', '#FFD700', '#00F3FF', '#FF5E36']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={{ flex: 1 }}
+            />
+          </Animated.View>
         </View>
       </View>
-      <Text className="text-[9px] font-semibold uppercase tracking-wider" style={{ color: colors.textMuted }}>
+      <Text className="text-[9.5px] font-extrabold uppercase tracking-widest" style={{ color: colors.textMuted }}>
         {subtitle}
       </Text>
     </View>
