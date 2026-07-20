@@ -259,41 +259,35 @@ export default function ProfileScreen() {
   return (
     <View className="flex-1" style={{ backgroundColor: colors.bg }}>
       {ToastHost}
-      <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 110 }}>
-        <View className="mb-4">
-          <Text className="text-[28px] font-black uppercase italic tracking-tight" style={{ color: colors.text }}>My Profile</Text>
+      <ScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 12, paddingBottom: 40 }}>
+        <View className="mb-2">
+          <Text className="text-[26px] font-black uppercase italic tracking-tight" style={{ color: colors.text }}>My Profile</Text>
           <LinearGradient
             colors={[colors.primary, colors.secondary || colors.accent, "transparent"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
-            style={{ height: 3, width: 120, marginTop: 4 }}
+            style={{ height: 3, width: 120, marginTop: 2 }}
           />
         </View>
-        <Text 
-          className="text-[12px] font-black uppercase tracking-[0.2em]" 
-          style={{ color: '#64748B' }}
-        >
-          {profile?.grade || "Customer"}
-        </Text>
 
         {/* Identity Head & Avatar */}
         <ChamferedBox 
           fillColor="#ffffff" 
           strokeColor="rgba(14, 165, 233, 0.25)" 
           bevelSize={16} 
-          className="mt-6 shadow-sm"
+          className="mt-2 shadow-sm"
           style={{ shadowColor: '#0ea5e9', shadowOpacity: 0.1, shadowRadius: 10 }}
         >
-          <View className="flex-row items-center p-5">
+          <View className="flex-row items-center p-4">
             <Pressable 
               onPress={handlePickImage} 
               disabled={uploadingAvatar}
-              className="relative w-[90px] h-[90px] mr-5"
+              className="relative w-[80px] h-[80px] mr-4"
             >
               <ChamferedBox fillColor="#0891b2" strokeColor="transparent" bevelSize={14} className="w-full h-full p-[2px]">
                 <ChamferedBox fillColor="#ffffff" strokeColor="transparent" bevelSize={12} className="w-full h-full overflow-hidden">
                   {uploadingAvatar ? (
-                    <ActivityIndicator color={primaryColor} size="small" className="mt-6" />
+                    <ActivityIndicator color={primaryColor} size="small" className="mt-5" />
                   ) : profile?.avatar_url ? (
                     <Image
                       source={{ uri: `${assetUrl(profile.avatar_url)}?t=${avatarTimestamp}` }}
@@ -302,15 +296,15 @@ export default function ProfileScreen() {
                     />
                   ) : (
                     <View className="w-full h-full bg-slate-100 items-center justify-center">
-                      <Text className="text-3xl font-black text-cyan-600">{name ? name.charAt(0).toUpperCase() : "M"}</Text>
+                      <Text className="text-2xl font-black text-cyan-600">{name ? name.charAt(0).toUpperCase() : "M"}</Text>
                     </View>
                   )}
                 </ChamferedBox>
               </ChamferedBox>
               
               {/* Camera Badge */}
-              <View className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-cyan-600 border-2 items-center justify-center shadow-sm">
-                <Svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <View className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-cyan-600 border-2 items-center justify-center shadow-sm">
+                <Svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <Path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
                   <Circle cx="12" cy="13" r="3" />
                 </Svg>
@@ -318,7 +312,7 @@ export default function ProfileScreen() {
             </Pressable>
 
             <View className="flex-1 justify-center">
-              <Text className="text-[22px] font-black uppercase leading-none mb-1" style={{ color: colors.text }}>{name || "John Doe"}</Text>
+              <Text className="text-[20px] font-black uppercase leading-none mb-1" style={{ color: colors.text }}>{name || "John Doe"}</Text>
               <View className="flex-row items-center gap-1.5 mt-1">
                 <Svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={colors.primary} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <Path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
@@ -331,22 +325,22 @@ export default function ProfileScreen() {
         </ChamferedBox>
 
         {/* Metrics Row */}
-        <View className="mt-4 flex-row gap-3">
+        <View className="mt-2.5 flex-row gap-2.5">
           <Pressable
             onPress={() => router.push("/orders")}
             className="flex-1"
           >
-            <ChamferedBox fillColor={colors.card} strokeColor={colors.border} bevelSize={12} className="p-4 flex-row items-center gap-3">
-              <View className="w-12 h-12 rounded-xl items-center justify-center" style={{ backgroundColor: colors.primary + "1A" }}>
-                <Svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0d9488" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <ChamferedBox fillColor={colors.card} strokeColor={colors.border} bevelSize={12} className="p-3.5 flex-row items-center gap-3">
+              <View className="w-10 h-10 rounded-xl items-center justify-center" style={{ backgroundColor: colors.primary + "1A" }}>
+                <Svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0d9488" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <Path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
                   <Path d="M3 6h18" />
                   <Path d="M16 10a4 4 0 0 1-8 0" />
                 </Svg>
               </View>
               <View>
-                <Text className="text-[26px] font-black leading-none" style={{ color: colors.primary }}>{orderCount}</Text>
-                <Text className="text-[10px] font-black uppercase text-slate-500 mt-1">Orders</Text>
+                <Text className="text-[22px] font-black leading-none" style={{ color: colors.primary }}>{orderCount}</Text>
+                <Text className="text-[9.5px] font-black uppercase text-slate-500 mt-0.5">Orders</Text>
               </View>
             </ChamferedBox>
           </Pressable>
@@ -355,44 +349,42 @@ export default function ProfileScreen() {
             onPress={() => router.push("/cart")}
             className="flex-1"
           >
-            <ChamferedBox fillColor={colors.card} strokeColor={colors.border} bevelSize={12} className="p-4 flex-row items-center gap-3">
-              <View className="w-12 h-12 rounded-xl items-center justify-center" style={{ backgroundColor: colors.secondary + "1A" }}>
-                <Svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <ChamferedBox fillColor={colors.card} strokeColor={colors.border} bevelSize={12} className="p-3.5 flex-row items-center gap-3">
+              <View className="w-10 h-10 rounded-xl items-center justify-center" style={{ backgroundColor: colors.secondary + "1A" }}>
+                <Svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <Circle cx="9" cy="21" r="1" />
                   <Circle cx="20" cy="21" r="1" />
                   <Path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
                 </Svg>
               </View>
               <View>
-                <Text className="text-[26px] font-black leading-none" style={{ color: colors.secondary }}>{cart.itemCount()}</Text>
-                <Text className="text-[10px] font-black uppercase text-slate-500 mt-1">Cart items</Text>
+                <Text className="text-[22px] font-black leading-none" style={{ color: colors.secondary }}>{cart.itemCount()}</Text>
+                <Text className="text-[9.5px] font-black uppercase text-slate-500 mt-0.5">Cart items</Text>
               </View>
             </ChamferedBox>
           </Pressable>
         </View>
 
-
-
         {/* Identity node */}
-        <ChamferedBox fillColor={colors.card} strokeColor={colors.border} bevelSize={12} className="mt-4">
-          <View className="p-5">
-            <View className="flex-row items-center gap-3 mb-6">
-              <View className="w-8 h-8 rounded-full bg-teal-600 items-center justify-center">
-                <Svg width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+        <ChamferedBox fillColor={colors.card} strokeColor={colors.border} bevelSize={12} className="mt-2.5">
+          <View className="p-4">
+            <View className="flex-row items-center gap-2.5 mb-3">
+              <View className="w-7 h-7 rounded-full bg-teal-600 items-center justify-center">
+                <Svg width="14" height="14" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
                   <Path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                   <Circle cx="12" cy="7" r="4" />
                 </Svg>
               </View>
-              <Text className="text-[14px] font-black uppercase text-slate-900 tracking-tight">
+              <Text className="text-[13px] font-black uppercase text-slate-900 tracking-tight">
                 Identity Node
               </Text>
             </View>
 
-            <View className="mb-4">
-              <Text className="mb-2 text-[10px] font-black uppercase text-slate-500">Name</Text>
-              <View className="flex-row rounded-lg border overflow-hidden h-[52px]" style={{ borderColor: colors.border, backgroundColor: colors.bg }}>
-                <View className="w-[52px] items-center justify-center rounded-l-lg" style={{ backgroundColor: colors.primary }}>
-                  <Svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <View className="mb-2.5">
+              <Text className="mb-1 text-[9.5px] font-black uppercase text-slate-500">Name</Text>
+              <View className="flex-row rounded-lg border overflow-hidden h-[46px]" style={{ borderColor: colors.border, backgroundColor: colors.bg }}>
+                <View className="w-[46px] items-center justify-center rounded-l-lg" style={{ backgroundColor: colors.primary }}>
+                  <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <Path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                     <Circle cx="12" cy="7" r="4" />
                   </Svg>
@@ -400,17 +392,17 @@ export default function ProfileScreen() {
                 <TextInput
                   value={name}
                   onChangeText={setName}
-                  className="flex-1 px-4 text-[15px] font-bold" style={{ color: colors.text }}
+                  className="flex-1 px-3.5 text-[14px] font-bold" style={{ color: colors.text }}
                   placeholderTextColor="#94A3B8"
                 />
               </View>
             </View>
 
-            <View className="mb-6">
-              <Text className="mb-2 text-[10px] font-black uppercase text-slate-500">Email</Text>
-              <View className="flex-row rounded-lg border overflow-hidden h-[52px]" style={{ borderColor: colors.border, backgroundColor: colors.bg }}>
-                <View className="w-[52px] items-center justify-center rounded-l-lg" style={{ backgroundColor: colors.primary + "E6" }}>
-                  <Svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <View className="mb-3.5">
+              <Text className="mb-1 text-[9.5px] font-black uppercase text-slate-500">Email</Text>
+              <View className="flex-row rounded-lg border overflow-hidden h-[46px]" style={{ borderColor: colors.border, backgroundColor: colors.bg }}>
+                <View className="w-[46px] items-center justify-center rounded-l-lg" style={{ backgroundColor: colors.primary + "E6" }}>
+                  <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <Rect width="20" height="16" x="2" y="4" rx="2" />
                     <Path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                   </Svg>
@@ -420,7 +412,7 @@ export default function ProfileScreen() {
                   onChangeText={setEmail}
                   keyboardType="email-address"
                   autoCapitalize="none"
-                  className="flex-1 px-4 text-[15px] text-slate-900 font-bold"
+                  className="flex-1 px-3.5 text-[14px] text-slate-900 font-bold"
                   placeholderTextColor="#94A3B8"
                 />
               </View>
@@ -439,17 +431,17 @@ export default function ProfileScreen() {
                   </SvgLinearGradient>
                 }
               >
-                <View className="flex-row items-center justify-center gap-3 py-4">
+                <View className="flex-row items-center justify-center gap-2.5 py-3">
                   {saving ? (
                     <ActivityIndicator color="white" />
                   ) : (
                     <>
-                      <Svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <Path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
                         <Path d="M17 21v-8H7v8" />
                         <Path d="M7 3v5h8" />
                       </Svg>
-                      <Text className="text-[14px] font-black text-white uppercase tracking-wider">Save Profile</Text>
+                      <Text className="text-[13px] font-black text-white uppercase tracking-wider">Save Profile</Text>
                     </>
                   )}
                 </View>
@@ -459,16 +451,16 @@ export default function ProfileScreen() {
         </ChamferedBox>
 
         {/* Change Password node */}
-        <ChamferedBox fillColor={colors.card} strokeColor={colors.border} bevelSize={12} className="mt-4">
-          <View className="p-5">
-            <View className="flex-row items-center gap-3 mb-6">
-              <View className="w-8 h-8 rounded-full bg-cyan-600 items-center justify-center">
-                <Svg width="14" height="14" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
+        <ChamferedBox fillColor={colors.card} strokeColor={colors.border} bevelSize={12} className="mt-2.5">
+          <View className="p-4">
+            <View className="flex-row items-center gap-2.5 mb-3">
+              <View className="w-7 h-7 rounded-full bg-cyan-600 items-center justify-center">
+                <Svg width="13" height="13" viewBox="0 0 24 24" fill="white" stroke="white" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
                   <Rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
                   <Path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </Svg>
               </View>
-              <Text className="text-[14px] font-black uppercase text-slate-900 tracking-tight">
+              <Text className="text-[13px] font-black uppercase text-slate-900 tracking-tight">
                 Security Credentials
               </Text>
             </View>
@@ -478,11 +470,11 @@ export default function ProfileScreen() {
               { label: "New Password", value: newPassword, setter: setNewPassword },
               { label: "Confirm New Password", value: confirmPassword, setter: setConfirmPassword },
             ].map((field, idx) => (
-              <View key={idx} className="mb-4">
-                <Text className="mb-2 text-[10px] font-black uppercase text-slate-500">{field.label}</Text>
-                <View className="flex-row rounded-lg border overflow-hidden h-[52px]" style={{ borderColor: colors.border, backgroundColor: colors.bg }}>
-                  <View className="w-[52px] items-center justify-center rounded-l-lg" style={{ backgroundColor: colors.secondary + "1A" }}>
-                    <Svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={colors.primary} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <View key={idx} className="mb-2.5">
+                <Text className="mb-1 text-[9.5px] font-black uppercase text-slate-500">{field.label}</Text>
+                <View className="flex-row rounded-lg border overflow-hidden h-[46px]" style={{ borderColor: colors.border, backgroundColor: colors.bg }}>
+                  <View className="w-[46px] items-center justify-center rounded-l-lg" style={{ backgroundColor: colors.secondary + "1A" }}>
+                    <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={colors.primary} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                       <Rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
                       <Path d="M7 11V7a5 5 0 0 1 10 0v4" />
                     </Svg>
@@ -492,11 +484,11 @@ export default function ProfileScreen() {
                     onChangeText={field.setter}
                     secureTextEntry
                     placeholder="••••••••"
-                    className="flex-1 px-4 text-[18px] font-bold tracking-widest" style={{ color: colors.text }}
+                    className="flex-1 px-3.5 text-[16px] font-bold tracking-widest" style={{ color: colors.text }}
                     placeholderTextColor="#94A3B8"
                   />
-                  <View className="w-[52px] items-center justify-center">
-                    <Svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <View className="w-[46px] items-center justify-center">
+                    <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <Path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
                       <Circle cx="12" cy="12" r="3" />
                     </Svg>
@@ -505,7 +497,7 @@ export default function ProfileScreen() {
               </View>
             ))}
 
-            <Pressable onPress={handleChangePassword} disabled={changingPassword} className="w-full mt-2">
+            <Pressable onPress={handleChangePassword} disabled={changingPassword} className="w-full mt-1">
               <ChamferedBox 
                 fillColor="url(#secGrad)" 
                 strokeColor="transparent" 
@@ -518,16 +510,16 @@ export default function ProfileScreen() {
                   </SvgLinearGradient>
                 }
               >
-                <View className="flex-row items-center justify-center gap-3 py-4">
+                <View className="flex-row items-center justify-center gap-2.5 py-3">
                   {changingPassword ? (
                     <ActivityIndicator color="white" />
                   ) : (
                     <>
-                      <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <Svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <Rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
                         <Path d="M7 11V7a5 5 0 0 1 10 0v4" />
                       </Svg>
-                      <Text className="text-[14px] font-black text-white uppercase tracking-wider">Change Password</Text>
+                      <Text className="text-[13px] font-black text-white uppercase tracking-wider">Change Password</Text>
                     </>
                   )}
                 </View>
@@ -537,7 +529,7 @@ export default function ProfileScreen() {
         </ChamferedBox>
 
         {/* Address Vault Manager */}
-        <ChamferedBox fillColor={colors.card} strokeColor={colors.border} bevelSize={12} className="mt-4">
+        <ChamferedBox fillColor={colors.card} strokeColor={colors.border} bevelSize={12} className="mt-2.5">
           <View className="p-5">
             <View className="flex-row items-center justify-between mb-4">
               <View className="flex-row items-center gap-3">
