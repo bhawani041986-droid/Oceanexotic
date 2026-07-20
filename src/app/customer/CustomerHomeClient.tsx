@@ -1287,10 +1287,228 @@ const FALLBACK_REVIEWS = [
   { id: "REV-3", user_name: "Rajesh M.", comment: "Professional service and verifiable freshness. OceanExotic Global is the future.", rating: 4.9 },
 ];
 
-const RECIPES = [
-  { id: "REC-1", title: "Pan-Seared King Salmon", time: "20 min", difficulty: "Easy", image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&q=80" },
-  { id: "REC-2", title: "Spicy Garlic Tiger Prawns", time: "15 min", difficulty: "Medium", image: "https://images.unsplash.com/photo-1559739511-e9987a55b4bf?auto=format&fit=crop&q=80" },
-];
+// --- PRO UI/UX 3D DYNAMIC FISH MARKET HERO SECTION ---
+const Pro3DMarketHero = () => {
+  const [tilt, setTilt] = React.useState({ x: 0, y: 0 });
+  const [activeCard, setActiveCard] = React.useState(1);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    setTilt({ x: -py * 12, y: px * 12 });
+  };
+
+  const handleMouseLeave = () => {
+    setTilt({ x: 0, y: 0 });
+  };
+
+  const showcaseItems = [
+    {
+      id: "hero-fish-1",
+      name: "Wild Red Snapper",
+      category: "Seawater Harbor",
+      price: "₹650",
+      unit: "kg",
+      badge: "⚡ DOCK FRESH",
+      badgeColor: "#00f3ff",
+      image: "/ICONS/Red-snapper.webp",
+      desc: "Caught 3 hours ago • Ice-chilled instantly",
+      gradient: "from-cyan-950/90 via-teal-950/95 to-slate-950"
+    },
+    {
+      id: "hero-fish-2",
+      name: "Kingfish / Surmai",
+      category: "Harbor Special",
+      price: "₹920",
+      unit: "kg",
+      badge: "🔥 TOP SELLER",
+      badgeColor: "#ff007f",
+      image: "/ICONS/kingfish.webp",
+      desc: "Pristine steak cut • High Omega-3 rich",
+      gradient: "from-blue-950/90 via-indigo-950/95 to-slate-950"
+    },
+    {
+      id: "hero-fish-3",
+      name: "Tiger Prawns",
+      category: "Exotic Catch",
+      price: "₹780",
+      unit: "500g",
+      badge: "✨ CHILLED ICE",
+      badgeColor: "#fee440",
+      image: "/images/categories/prawns.png",
+      desc: "Jumbo size • Cleaned & deveined",
+      gradient: "from-orange-950/90 via-amber-950/95 to-slate-950"
+    }
+  ];
+
+  return (
+    <section 
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative min-h-[75vh] lg:min-h-[85vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#020617] via-[#041d33] to-[#011427] text-white px-4 py-8 lg:py-12 border-b border-cyan-500/30 my-0"
+      style={{ perspective: "1200px" }}
+    >
+      {/* 3D LIGHTING & WATER CAUSTICS BACKGROUND */}
+      <div className="absolute inset-0 pointer-events-none opacity-30">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-[100px] animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: "1s" }} />
+      </div>
+
+      {/* FLOATING 3D ICE CRYSTAL PARTICLES */}
+      <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden opacity-40">
+        {[...Array(12)].map((_, i) => (
+          <motion.div
+            key={`ice-part-${i}`}
+            animate={{ 
+              y: ["0px", "-40px", "0px"],
+              rotate: [0, 15, -15, 0],
+              opacity: [0.3, 0.7, 0.3]
+            }}
+            transition={{ duration: 4 + (i % 3), repeat: Infinity, ease: "easeInOut", delay: i * 0.4 }}
+            className="absolute w-3 h-3 md:w-4 md:h-4 bg-cyan-200/30 border border-white/60 rounded-sm backdrop-blur-sm shadow-[0_0_10px_#00f3ff]"
+            style={{ left: `${(i * 8.5) % 95}%`, top: `${(i * 12) % 80}%` }}
+          />
+        ))}
+      </div>
+
+      {/* 3D PERSPECTIVE CONTAINER */}
+      <motion.div 
+        style={{
+          rotateX: tilt.x,
+          rotateY: tilt.y,
+          transformStyle: "preserve-3d"
+        }}
+        transition={{ type: "spring", stiffness: 150, damping: 15 }}
+        className="relative z-20 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center"
+      >
+        {/* LEFT COLUMN: HERO HEADLINE & LIVE TELEMETRY */}
+        <div className="lg:col-span-6 space-y-6 text-center lg:text-left" style={{ transform: "translateZ(30px)" }}>
+          {/* LIVE HARBOR BADGE */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-950/80 border border-cyan-400/50 shadow-[0_0_20px_rgba(0,243,255,0.4)] text-xs md:text-sm font-semibold tracking-wider text-cyan-300 uppercase">
+            <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
+            <span>LIVE HARBOR MARKET • COLD-CHAIN PRESERVED</span>
+          </div>
+
+          {/* MAIN HEADLINE */}
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black uppercase italic tracking-tight leading-[1.08]">
+            THE ULTIMATE <br />
+            <span className="bg-gradient-to-r from-[#00F3FF] via-[#00F5D4] to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_0_25px_rgba(0,243,255,0.6)]">
+              OCEAN FRESH
+            </span> <br />
+            MARKETPLACE
+          </h1>
+
+          <p className="text-slate-300 text-sm sm:text-base md:text-lg max-w-xl mx-auto lg:mx-0 font-medium leading-relaxed">
+            Directly from dock harbor to your kitchen in 30 minutes. Verifiable 4°C ice-chilled freshness with zero chemical preservation.
+          </p>
+
+          {/* LIVE TELEMETRY METRICS STRIP */}
+          <div className="grid grid-cols-3 gap-3 pt-2 max-w-md mx-auto lg:mx-0">
+            <div className="p-3 rounded-xl bg-slate-900/80 border border-cyan-500/30 backdrop-blur-md text-center">
+              <div className="text-xl md:text-2xl font-black text-cyan-400">4°C</div>
+              <div className="text-[10px] md:text-xs text-slate-400 font-semibold uppercase">Ice Chilled</div>
+            </div>
+            <div className="p-3 rounded-xl bg-slate-900/80 border border-cyan-500/30 backdrop-blur-md text-center">
+              <div className="text-xl md:text-2xl font-black text-emerald-400">#04</div>
+              <div className="text-[10px] md:text-xs text-slate-400 font-semibold uppercase">Harbor Dock</div>
+            </div>
+            <div className="p-3 rounded-xl bg-slate-900/80 border border-cyan-500/30 backdrop-blur-md text-center">
+              <div className="text-xl md:text-2xl font-black text-amber-400">30m</div>
+              <div className="text-[10px] md:text-xs text-slate-400 font-semibold uppercase">Express Delivery</div>
+            </div>
+          </div>
+
+          {/* HERO CTA BUTTONS */}
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
+            <a 
+              href="/customer/products" 
+              className="px-8 py-3.5 rounded-xl font-black text-sm md:text-base uppercase tracking-wider bg-gradient-to-r from-[#00F3FF] to-[#00f5d4] text-slate-950 shadow-[0_0_30px_rgba(0,243,255,0.6)] hover:shadow-[0_0_45px_rgba(0,243,255,0.9)] hover:scale-105 transition-all duration-300"
+            >
+              🛒 Order Fresh Catch
+            </a>
+            <a 
+              href="/customer/categories" 
+              className="px-7 py-3.5 rounded-xl font-bold text-sm md:text-base uppercase tracking-wider bg-slate-900/90 border border-cyan-400/50 text-cyan-300 backdrop-blur-md hover:bg-cyan-950/60 hover:border-cyan-300 transition-all duration-300"
+            >
+              ⚓ Explore Categories
+            </a>
+          </div>
+        </div>
+
+        {/* RIGHT COLUMN: 3D FLOATING PRODUCT SHOWCASE CAROUSEL */}
+        <div className="lg:col-span-6 relative flex items-center justify-center py-6" style={{ transform: "translateZ(60px)" }}>
+          <div className="relative w-full max-w-md aspect-[4/5] sm:aspect-square flex items-center justify-center">
+            {showcaseItems.map((item, idx) => {
+              const isActive = idx === activeCard;
+              const offset = idx - activeCard;
+              return (
+                <motion.div
+                  key={item.id}
+                  onClick={() => setActiveCard(idx)}
+                  animate={{
+                    scale: isActive ? 1 : 0.88,
+                    x: offset * 55,
+                    rotateY: offset * -18,
+                    zIndex: isActive ? 30 : 10 - Math.abs(offset),
+                    opacity: isActive ? 1 : 0.65
+                  }}
+                  transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                  className={cn(
+                    "absolute w-72 sm:w-80 rounded-2xl p-5 border cursor-pointer backdrop-blur-xl transition-all duration-300 shadow-2xl bg-gradient-to-b",
+                    item.gradient,
+                    isActive 
+                      ? "border-cyan-400 shadow-[0_0_40px_rgba(0,243,255,0.5)]" 
+                      : "border-slate-700/60 hover:border-slate-500"
+                  )}
+                  style={{ transformStyle: "preserve-3d" }}
+                >
+                  {/* BADGE */}
+                  <div className="flex items-center justify-between mb-3">
+                    <span 
+                      className="px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-wider"
+                      style={{ backgroundColor: `${item.badgeColor}20`, color: item.badgeColor, border: `1px solid ${item.badgeColor}60` }}
+                    >
+                      {item.badge}
+                    </span>
+                    <span className="text-xs text-slate-400 font-semibold">{item.category}</span>
+                  </div>
+
+                  {/* 3D PRODUCT IMAGE */}
+                  <div className="relative h-44 sm:h-52 my-2 flex items-center justify-center group">
+                    <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/10 to-transparent rounded-xl" />
+                    <img 
+                      src={item.image} 
+                      alt={item.name} 
+                      className="h-full object-contain drop-shadow-[0_15px_25px_rgba(0,0,0,0.8)] group-hover:scale-110 transition-transform duration-500"
+                    />
+                  </div>
+
+                  {/* DETAILS */}
+                  <div className="mt-3 space-y-1">
+                    <div className="text-xs text-slate-400 font-medium">{item.desc}</div>
+                    <div className="flex items-center justify-between pt-2">
+                      <div>
+                        <h3 className="text-lg font-black uppercase italic tracking-tight text-white">{item.name}</h3>
+                        <div className="text-xl font-black text-cyan-300">{item.price} <span className="text-xs text-slate-400 font-normal">/ {item.unit}</span></div>
+                      </div>
+                      <a 
+                        href="/customer/products"
+                        className="px-3.5 py-2 rounded-lg bg-cyan-500 text-slate-950 font-black text-xs uppercase tracking-wider hover:bg-cyan-300 transition-colors"
+                      >
+                        + Add
+                      </a>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </motion.div>
+    </section>
+  );
+};
 
 export default function CustomerHomeClient({ initialAssets }: { initialAssets?: any }) {
   const settings = useSettingsStore();
@@ -1777,137 +1995,8 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
               {isStoreOpen && settings.ordersEnabled ? (
                 <>
                   <p className="text-xs font-black text-emerald-400 uppercase italic tracking-tighter leading-none">● OPEN</p>
-                  <p className="text-[8px] text-emerald-100/90 font-bold uppercase tracking-wider">Fastest cold-chain</p>
-                </>
-              ) : (
-                <>
-                  <p className="text-xs font-black text-amber-400 uppercase italic tracking-tighter leading-none">● PRE-ORDERS</p>
-                  <p className="text-[8px] text-amber-100/90 font-bold uppercase tracking-wider">Immediate closed</p>
-                </>
-              )}
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Carousel Navigation Arrows */}
-        {heroSlides.length > 1 && (
-          <>
-            <button 
-              onClick={() => setCurrentHeroIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)}
-              className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 z-40 p-2 lg:p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white opacity-0 hover:opacity-100 lg:group-hover:opacity-100 transition-opacity hidden lg:flex"
-            >
-              <ChevronDown className="w-6 h-6 rotate-90" />
-            </button>
-            <button 
-              onClick={() => setCurrentHeroIndex((prev) => (prev + 1) % heroSlides.length)}
-              className="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 z-40 p-2 lg:p-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white opacity-0 hover:opacity-100 lg:group-hover:opacity-100 transition-opacity hidden lg:flex"
-            >
-              <ChevronDown className="w-6 h-6 -rotate-90" />
-            </button>
-          </>
-        )}
-
-        <div className="container mx-auto px-4 lg:px-6 relative z-20 flex flex-col items-center justify-center lg:min-h-[70vh] pb-24 lg:pb-0">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="space-y-1.5 lg:space-y-6 text-center max-w-4xl mx-auto flex flex-col items-center w-full">
-             <div className="space-y-1.5 lg:space-y-6 flex flex-col items-center">
-                {assets?.heroBadge && (
-                  <Badge 
-                    variant="outline" 
-                    className={cn(
-                      "whitespace-nowrap text-[9px] md:text-[12px] font-black tracking-[0.4em] px-3 md:px-6 py-1 md:py-2 uppercase shadow-[0_0_15px_rgba(var(--c-primary-rgb),0.1)]",
-                      !(assets as any).heroBadgeColor && "bg-[var(--c-primary)]/10 text-[var(--c-primary)] border-[var(--c-primary)]/20"
-                    )}
-                    style={(assets as any).heroBadgeColor ? { 
-                      color: (assets as any).heroBadgeColor, 
-                      borderColor: `${(assets as any).heroBadgeColor}40`, 
-                      backgroundColor: `${(assets as any).heroBadgeColor}1A` 
-                    } : undefined}
-                  >
-                     {assets.heroBadge}
-                  </Badge>
-                )}
-                <h1 className={cn("text-3xl md:text-5xl lg:text-7xl font-black uppercase italic leading-[1] md:leading-[0.85] text-center drop-shadow-2xl", !(assets as any).heroTitle1Color && "text-[var(--c-text-primary)]")} style={(assets as any).heroTitle1Color ? { color: (assets as any).heroTitle1Color } : undefined}>
-                   {assets?.heroTitle1 || 'Seafood'} <span className={(assets as any).heroTitle2Color ? "" : "text-transparent bg-clip-text bg-gradient-to-r from-[var(--c-primary)] to-[var(--c-accent)]"} style={(assets as any).heroTitle2Color ? { color: (assets as any).heroTitle2Color } : undefined}>{assets?.heroTitle2 || 'Redefined.'}</span>
-                </h1>
-             </div>
-             {assets?.heroSubtitle && (
-               <p className={cn("text-[10px] md:text-2xl font-medium italic max-w-2xl mx-auto leading-relaxed px-1 md:px-4 drop-shadow-2xl text-shadow-glow", !(assets as any).heroSubtitleColor && "text-white")} style={(assets as any).heroSubtitleColor ? { color: (assets as any).heroSubtitleColor } : undefined}>
-                  {assets.heroSubtitle}
-               </p>
-             )}
-          </motion.div>
-        </div>
-
-        {/* Carousel Pagination Fish Icons */}
-        {heroSlides.length > 1 && (
-          <div className="absolute bottom-6 left-6 z-30 flex items-center gap-3">
-            {heroSlides.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentHeroIndex(idx)}
-                className="group transition-all duration-500"
-              >
-                <Fish 
-                  className={cn(
-                    "transition-all duration-500",
-                    currentHeroIndex === idx 
-                      ? "text-[var(--c-primary)] w-7 h-7 drop-shadow-[0_0_10px_var(--c-primary)] scale-110" 
-                      : "text-white/60 w-5 h-5 group-hover:text-white group-hover:scale-105"
-                  )} 
-                />
-              </button>
-            ))}
-          </div>
-        )}
-
-            {/* Embedded Timing Card (Mobile Only - Slim Banner at Bottom Right) */}
-            <div className="block lg:hidden absolute bottom-4 right-4 z-40 w-auto max-w-[200px] pointer-events-auto">
-              <motion.div 
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                className={cn(
-                  "p-2.5 rounded-xl bg-[#0b0e14]/90 backdrop-blur-xl border flex flex-col gap-1.5 transition-all duration-300 w-full",
-                  isStoreOpen && settings.ordersEnabled
-                    ? "border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)]"
-                    : "border-amber-500/30 shadow-[0_0_15px_rgba(245,158,11,0.1)]"
-                )}
-              >
-                {/* Top Row: Status and Hours */}
-                <div className="flex items-center justify-between w-full">
-                  <div className="flex items-center gap-1.5">
-                    <span className={cn("w-1.5 h-1.5 rounded-full",
-                      isStoreOpen && settings.ordersEnabled ? "bg-emerald-500 animate-pulse" : "bg-amber-500 animate-pulse"
-                    )} />
-                    <p className={cn("text-[10px] font-black uppercase italic tracking-wider leading-none",
-                      isStoreOpen && settings.ordersEnabled ? "text-emerald-400" : "text-amber-400"
-                    )}>
-                      {isStoreOpen && settings.ordersEnabled ? "DELIVERY OPEN" : "PRE-ORDERS"}
-                    </p>
-                  </div>
-                  <div className="text-[9px] font-bold text-white uppercase tracking-wider">
-                    {formatTime12h(settings.ordersOpenTime || "09:00")} - {formatTime12h(settings.ordersCloseTime || "22:00")}
-                  </div>
-                </div>
-
-                {/* Bottom Row: Details */}
-                <div className="flex items-center justify-between w-full pt-1.5 border-t border-white/10">
-                   {isStoreOpen && settings.ordersEnabled ? (
-                      <span className="text-[8px] font-bold text-emerald-100/90 uppercase tracking-widest w-full text-center">
-                        Fastest cold-chain delivery
-                      </span>
-                   ) : (
-                      <div className="flex items-center justify-between w-full">
-                         <span className="text-[8px] font-black text-amber-300/90 uppercase tracking-widest">Next Dispatch</span>
-                         <span className="text-[8px] font-black text-white uppercase truncate">
-                           {settings.ordersNextOpenText || "Tomorrow at 09:00 AM"}
-                         </span>
-                      </div>
-                   )}
-                </div>
-              </motion.div>
-            </div>
-      </section>
+      {/* 3. PRO UI/UX 3D DYNAMIC FISH MARKET HERO SECTION */}
+      <Pro3DMarketHero />
 
       {/* MARITIME WAVE DIVIDER - MOBILE SPACED */}
       <div>
