@@ -14,7 +14,109 @@ import {
 } from "react-native";
 import Svg, { Polygon, Defs, LinearGradient as SvgLinearGradient, Stop, Path, ClipPath, Image as SvgImage, Line } from "react-native-svg";
 import { Image } from "expo-image";
-import Animated, { FadeIn, FadeOut, FadeInDown } from "react-native-reanimated";
+import Animated, { 
+  FadeIn, 
+  FadeOut, 
+  FadeInDown, 
+  useSharedValue, 
+  useAnimatedStyle, 
+  withRepeat, 
+  withSequence, 
+  withTiming, 
+  withSpring 
+} from "react-native-reanimated";
+
+interface AnimatedCategoryTileProps {
+  cat: any;
+  idx: number;
+  iconSource: any;
+  onPress: () => void;
+  colors: any;
+  t: (key: string) => string;
+}
+
+function AnimatedCategoryTile({ cat, idx, iconSource, onPress, colors, t }: AnimatedCategoryTileProps) {
+  const floatAnim = useSharedValue(0);
+  const scaleAnim = useSharedValue(1);
+
+  useEffect(() => {
+    // Staggered underwater sine-wave floating delay per category tile
+    const delay = (idx % 3) * 200;
+    const timeout = setTimeout(() => {
+      floatAnim.value = withRepeat(
+        withSequence(
+          withTiming(-3.5, { duration: 1400 }),
+          withTiming(3.5, { duration: 1400 })
+        ),
+        -1,
+        true
+      );
+    }, delay);
+
+    return () => clearTimeout(timeout);
+  }, [idx]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateY: floatAnim.value },
+        { scale: scaleAnim.value }
+      ]
+    };
+  });
+
+  const handlePressIn = () => {
+    scaleAnim.value = withSpring(0.92, { damping: 15, stiffness: 200 });
+  };
+
+  const handlePressOut = () => {
+    scaleAnim.value = withSpring(1.0, { damping: 12, stiffness: 180 });
+  };
+
+  return (
+    <Pressable
+      onPress={onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      style={{ width: 66, alignItems: 'center' }}
+    >
+      <Animated.View
+        style={[
+          animatedStyle,
+          {
+            width: 62,
+            height: 62,
+            borderRadius: 16,
+            overflow: 'hidden',
+            backgroundColor: '#0F172A',
+            borderWidth: 1.5,
+            borderColor: 'rgba(0, 243, 255, 0.45)', // Neon Cyan Border
+            shadowColor: '#00F3FF',
+            shadowOffset: { width: 0, height: 3 },
+            shadowOpacity: 0.35,
+            shadowRadius: 6,
+            elevation: 5,
+          }
+        ]}
+      >
+        <Image
+          source={iconSource}
+          style={{ width: '100%', height: '100%' }}
+          contentFit="cover"
+        />
+      </Animated.View>
+      {cat.label && (
+        <Text 
+          className="text-[8px] font-black uppercase text-center mt-2 leading-tight tracking-tight" 
+          style={{ color: colors.text }}
+          numberOfLines={2}
+        >
+          {t(cat.label.toLowerCase().replace(/ & /g, "_").replace(/ /g, "_")) || cat.label}
+        </Text>
+      )}
+    </Pressable>
+  );
+}
 import { LinearGradient } from "expo-linear-gradient";
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);
@@ -772,28 +874,15 @@ export default function CustomerHomeScreen() {
                           else if (cat.imageUrl) iconSource = { uri: cat.imageUrl };
 
                           return (
-                            <Pressable 
+                            <AnimatedCategoryTile
                               key={cat.id || idx}
+                              cat={cat}
+                              idx={idx}
+                              iconSource={iconSource}
                               onPress={() => router.push({ pathname: "/products", params: { category: cat.id } })}
-                              style={{ width: 62, alignItems: 'center' }}
-                            >
-                              <View style={{ width: 62, height: 62, borderRadius: 12, overflow: 'hidden', backgroundColor: '#F8FAFC', borderWidth: 1, borderColor: '#E2E8F0' }}>
-                                <Image
-                                  source={iconSource}
-                                  style={{ width: '100%', height: '100%' }}
-                                  contentFit="contain"
-                                />
-                              </View>
-                              {cat.label && (
-                                <Text 
-                                  className="text-[7.5px] font-black uppercase text-center mt-2 leading-tight" 
-                                  style={{ color: colors.text }}
-                                  numberOfLines={2}
-                                >
-                                  {t(cat.label.toLowerCase().replace(/ & /g, "_").replace(/ /g, "_")) || cat.label}
-                                </Text>
-                              )}
-                            </Pressable>
+                              colors={colors}
+                              t={t}
+                            />
                           );
                         })}
                     </ScrollView>
