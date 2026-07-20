@@ -1323,7 +1323,7 @@ const Pro3DMarketHero = () => {
       badge: "⚡ DOCK FRESH",
       badgeColor: "#00f3ff",
       icon: "🐟",
-      image: "/ICONS/Red-snapper.png",
+      image: "/ICONS/Red-snapper.webp",
       desc: "Caught 3h ago · Ice-chilled instantly",
     },
     {
@@ -1334,7 +1334,7 @@ const Pro3DMarketHero = () => {
       badge: "🔥 TOP SELLER",
       badgeColor: "#ff6eb4",
       icon: "👑",
-      image: "/ICONS/kingfish.png",
+      image: "/ICONS/kingfish.webp",
       desc: "Prime steak cut · High Omega-3",
     },
     {
@@ -1345,7 +1345,7 @@ const Pro3DMarketHero = () => {
       badge: "✨ CHILLED ICE",
       badgeColor: "#ffd60a",
       icon: "🦐",
-      image: "/ICONS/tiger-prawns.png",
+      image: "/ICONS/tiger-prawns.webp",
       desc: "Jumbo · Cleaned & Deveined",
     }
   ];
@@ -1500,107 +1500,167 @@ const Pro3DMarketHero = () => {
         {/*  RIGHT: 3D FLOATING PNG FISH STAGE (NO CARDS)  */}
         {/* ════════════════════════════════════════════════ */}
         <div
-          className="lg:col-span-6 relative flex items-center justify-center"
-          style={{ transform: "translateZ(70px)", minHeight: "440px" }}
+          className="lg:col-span-6 relative flex items-center justify-center overflow-visible"
+          style={{ transform: "translateZ(70px)", minHeight: "520px" }}
         >
+          {/* ACTIVE FISH SPOTLIGHT — bright radial bloom directly behind main fish */}
+          <motion.div
+            animate={{ backgroundColor: `${fishItems[activeCard].badgeColor}1a` }}
+            transition={{ duration: 1 }}
+            className="absolute w-[360px] h-[360px] rounded-full blur-[80px] pointer-events-none"
+            style={{ top: "50%", left: "50%", transform: "translate(-50%,-60%)" }}
+          />
+          <motion.div
+            animate={{ backgroundColor: `${fishItems[activeCard].badgeColor}0d` }}
+            transition={{ duration: 1 }}
+            className="absolute w-[500px] h-[500px] rounded-full blur-[120px] pointer-events-none"
+            style={{ top: "50%", left: "50%", transform: "translate(-50%,-55%)" }}
+          />
+
           {fishItems.map((fish, idx) => {
             const offset = ((idx - activeCard) + 3) % 3;
             const isActive = offset === 0;
 
-            const slot: Record<number, { x: number; y: number; scale: number; ry: number; rz: number; z: number; opacity: number; blur: string; imgW: string }> = {
-              0: { x: 0,    y: -10, scale: 1,    ry: 0,   rz: -5,  z: 30, opacity: 1,    blur: "none",  imgW: "260px" },
-              1: { x: 155,  y: 50,  scale: 0.68, ry: -22, rz: -12, z: 15, opacity: 0.80, blur: "none",  imgW: "180px" },
-              2: { x: -140, y: 65,  scale: 0.56, ry: 25,  rz: 8,   z: 5,  opacity: 0.50, blur: "2px",   imgW: "150px" }
+            // Slot layout — fish are large, close together, clearly visible
+            const slot: Record<number, {
+              x: number; y: number; scale: number;
+              ry: number; rz: number; z: number;
+              opacity: number; imgW: string;
+            }> = {
+              // Active: front-center, large, slight lean
+              0: { x: 0,    y: 0,   scale: 1.0,  ry: 0,   rz: -3,  z: 30, opacity: 1.0,  imgW: "320px" },
+              // Right flank: slightly right & below, medium, angled
+              1: { x: 170,  y: 60,  scale: 0.78, ry: -18, rz: -6,  z: 20, opacity: 0.92, imgW: "260px" },
+              // Left rear: slightly left & below, smaller, slight forward lean
+              2: { x: -155, y: 70,  scale: 0.66, ry: 18,  rz: 5,   z: 10, opacity: 0.80, imgW: "220px" },
             };
-            const s = slot[offset] ?? { x: 0, y: 0, scale: 0.5, ry: 0, rz: 0, z: 5, opacity: 0, blur: "4px", imgW: "120px" };
+            const s = slot[offset] ?? { x: 0, y: 0, scale: 0.4, ry: 0, rz: 0, z: 1, opacity: 0, imgW: "120px" };
 
             return (
               <motion.div
                 key={fish.id}
                 onClick={() => setActiveCard(idx)}
                 className="absolute cursor-pointer"
-                animate={{ x: s.x, y: s.y, scale: s.scale, rotateY: s.ry, zIndex: s.z, opacity: s.opacity }}
-                transition={{ type: "spring", stiffness: 155, damping: 22 }}
+                animate={{
+                  x: s.x,
+                  y: s.y,
+                  scale: s.scale,
+                  rotateY: s.ry,
+                  zIndex: s.z,
+                  opacity: s.opacity,
+                }}
+                transition={{ type: "spring", stiffness: 140, damping: 22 }}
                 style={{ transformStyle: "preserve-3d" }}
               >
+                {/* Sine-wave float — each fish on its own phase */}
                 <motion.div
-                  animate={{ y: ["0px", isActive ? "-22px" : "-12px", "0px"] }}
-                  transition={{ duration: isActive ? 3.0 : 3.8 + idx * 0.7, repeat: Infinity, ease: "easeInOut", delay: idx * 1.1 }}
+                  animate={{ y: ["0px", isActive ? "-20px" : "-10px", "0px"] }}
+                  transition={{
+                    duration: isActive ? 2.8 : 3.5 + idx * 0.6,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: idx * 0.9,
+                  }}
                   className="relative flex flex-col items-center"
-                  style={{ filter: `blur(${s.blur})` }}
                 >
-                  {/* Radial glow beneath fish */}
+                  {/* Fish shadow on "water surface" below */}
                   <div
-                    className="absolute -bottom-3 left-1/2 -translate-x-1/2 rounded-full blur-xl transition-all duration-700"
+                    className="absolute rounded-full blur-2xl pointer-events-none"
                     style={{
-                      width: isActive ? "75%" : "55%",
-                      height: "20px",
+                      bottom: isActive ? "-18px" : "-12px",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      width: isActive ? "80%" : "60%",
+                      height: "14px",
                       backgroundColor: fish.badgeColor,
-                      opacity: isActive ? 0.55 : 0.18
+                      opacity: isActive ? 0.65 : 0.35,
+                      transition: "all 0.6s ease",
                     }}
                   />
 
-                  {/* The PNG fish — no card box */}
+                  {/* ── THE FISH IMAGE — no card, pure WebP ── */}
                   <img
                     src={fish.image}
                     alt={fish.name}
                     draggable={false}
                     style={{
                       width: s.imgW,
+                      maxWidth: "100%",
                       objectFit: "contain",
                       transform: `rotateZ(${s.rz}deg)`,
                       filter: isActive
-                        ? `drop-shadow(0 24px 48px rgba(0,0,0,0.85)) drop-shadow(0 0 36px ${fish.badgeColor}60)`
-                        : "drop-shadow(0 16px 32px rgba(0,0,0,0.7))",
+                        ? `drop-shadow(0 15px 25px rgba(0,0,0,0.85)) drop-shadow(0 0 12px ${fish.badgeColor}45)`
+                        : `drop-shadow(0 8px 16px rgba(0,0,0,0.7))`,
                       userSelect: "none",
-                      transition: "filter 0.6s"
+                      transition: "filter 0.4s ease, transform 0.4s ease",
                     }}
-                    className={isActive ? "hover:scale-105 transition-transform duration-400" : ""}
+                    className={isActive ? "hover:scale-[1.04] transition-transform duration-300" : "hover:opacity-95"}
                   />
 
-                  {/* Active fish info tag — floating below fish, no card */}
+                  {/* Active fish — frosted info tag below */}
                   {isActive && (
                     <motion.div
-                      initial={{ opacity: 0, y: 14, scale: 0.92 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 14 }}
-                      transition={{ duration: 0.38, ease: "easeOut" }}
-                      className="mt-5 flex items-center gap-3 px-4 py-2.5 rounded-2xl border"
+                      key={`tag-${fish.id}`}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.35, ease: "easeOut" }}
+                      className="mt-4 flex items-center gap-3 px-4 py-3 rounded-2xl border backdrop-blur-2xl"
                       style={{
-                        background: "rgba(0,6,18,0.92)",
-                        borderColor: `${fish.badgeColor}45`,
-                        boxShadow: `0 0 32px ${fish.badgeColor}20, 0 8px 40px rgba(0,0,0,0.7)`,
-                        backdropFilter: "blur(16px)"
+                        background: "rgba(0,6,18,0.90)",
+                        borderColor: `${fish.badgeColor}55`,
+                        boxShadow: `0 0 40px ${fish.badgeColor}25, 0 8px 32px rgba(0,0,0,0.65)`,
+                        minWidth: "260px",
                       }}
                     >
+                      {/* Badge */}
                       <span
-                        className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full shrink-0"
-                        style={{ background: `${fish.badgeColor}18`, color: fish.badgeColor, border: `1px solid ${fish.badgeColor}45` }}
+                        className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full shrink-0 whitespace-nowrap"
+                        style={{
+                          background: `${fish.badgeColor}20`,
+                          color: fish.badgeColor,
+                          border: `1px solid ${fish.badgeColor}55`,
+                        }}
                       >
                         {fish.badge}
                       </span>
-                      <div className="text-left min-w-0">
-                        <div className="text-white font-black text-xs sm:text-sm uppercase tracking-tight truncate">{fish.name}</div>
-                        <div className="font-black text-sm sm:text-base leading-tight" style={{ color: fish.badgeColor }}>
-                          {fish.price} <span className="text-slate-400 text-[9px] font-normal">/ {fish.unit}</span>
+                      {/* Name + price */}
+                      <div className="text-left flex-1 min-w-0">
+                        <div className="text-white font-black text-xs sm:text-sm uppercase tracking-tight leading-none truncate">
+                          {fish.name}
+                        </div>
+                        <div
+                          className="font-black text-base sm:text-lg leading-tight mt-0.5"
+                          style={{ color: fish.badgeColor }}
+                        >
+                          {fish.price}
+                          <span className="text-slate-400 text-[9px] font-normal ml-1">/ {fish.unit}</span>
                         </div>
                       </div>
+                      {/* CTA */}
                       <a
                         href="/customer/products"
                         onClick={e => e.stopPropagation()}
-                        className="ml-auto px-3 py-1.5 rounded-lg font-black text-[10px] sm:text-xs uppercase tracking-wider text-slate-950 hover:brightness-110 transition-all shrink-0"
-                        style={{ background: `linear-gradient(135deg, ${fish.badgeColor}, ${fish.badgeColor}cc)` }}
+                        className="px-3.5 py-2 rounded-xl font-black text-[10px] sm:text-xs uppercase tracking-wider text-slate-950 hover:brightness-110 transition-all shrink-0"
+                        style={{
+                          background: `linear-gradient(135deg, ${fish.badgeColor}, ${fish.badgeColor}bb)`,
+                          boxShadow: `0 0 16px ${fish.badgeColor}50`,
+                        }}
                       >
                         + Add
                       </a>
                     </motion.div>
                   )}
 
-                  {/* Price badge on right flank fish */}
-                  {offset === 1 && (
+                  {/* Flanking fish — small price chip on top-right */}
+                  {!isActive && (
                     <div
-                      className="absolute -top-1 -right-2 px-2 py-0.5 rounded-lg text-[8px] sm:text-[9px] font-black font-mono border"
-                      style={{ background: "rgba(0,6,18,0.9)", borderColor: `${fish.badgeColor}40`, color: fish.badgeColor }}
+                      className="absolute -top-2 -right-3 px-2 py-0.5 rounded-lg font-black font-mono border text-[8px] sm:text-[9px]"
+                      style={{
+                        background: "rgba(0,6,18,0.92)",
+                        borderColor: `${fish.badgeColor}50`,
+                        color: fish.badgeColor,
+                        boxShadow: `0 0 10px ${fish.badgeColor}30`,
+                      }}
                     >
                       {fish.price}
                     </div>
@@ -1610,16 +1670,27 @@ const Pro3DMarketHero = () => {
             );
           })}
 
-          {/* Species selector pills */}
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex items-center gap-2 z-50 pb-1">
+          {/* Species selector pills — anchored inside stage */}
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-2 z-50">
             {fishItems.map((fish, idx) => (
               <button
                 key={`pill-${fish.id}`}
                 onClick={() => setActiveCard(idx)}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-bold border transition-all duration-300"
-                style={activeCard === idx
-                  ? { background: `${fish.badgeColor}15`, borderColor: fish.badgeColor, color: fish.badgeColor, boxShadow: `0 0 16px ${fish.badgeColor}40`, transform: "scale(1.1)" }
-                  : { background: "rgba(0,5,15,0.75)", borderColor: "rgba(71,85,105,0.5)", color: "rgb(148,163,184)" }
+                style={
+                  activeCard === idx
+                    ? {
+                        background: `${fish.badgeColor}18`,
+                        borderColor: fish.badgeColor,
+                        color: fish.badgeColor,
+                        boxShadow: `0 0 18px ${fish.badgeColor}45`,
+                        transform: "scale(1.1)",
+                      }
+                    : {
+                        background: "rgba(0,5,15,0.8)",
+                        borderColor: "rgba(71,85,105,0.5)",
+                        color: "rgb(148,163,184)",
+                      }
                 }
               >
                 <span>{fish.icon}</span>
@@ -1637,9 +1708,10 @@ const Pro3DMarketHero = () => {
             key={`dot-${idx}`}
             onClick={() => setActiveCard(idx)}
             className="h-1.5 rounded-full transition-all duration-300"
-            style={activeCard === idx
-              ? { width: "28px", backgroundColor: fish.badgeColor, boxShadow: `0 0 10px ${fish.badgeColor}` }
-              : { width: "8px", backgroundColor: "rgb(51,65,85)" }
+            style={
+              activeCard === idx
+                ? { width: "28px", backgroundColor: fish.badgeColor, boxShadow: `0 0 10px ${fish.badgeColor}` }
+                : { width: "8px", backgroundColor: "rgb(71,85,105)" }
             }
           />
         ))}
