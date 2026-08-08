@@ -187,16 +187,65 @@ export default function CustomerProfilePage() {
   const handleSaveProtocol = async () => {
     setIsSaving(true);
     try {
-      let endpoint = modalType === 'profile' ? '/api/user/profile' : (modalType === 'address' ? '/api/user/addresses' : '/api/user/payments');
-      const res = await fetch(endpoint, {
-        method: modalType === 'profile' ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      if (res.ok) {
-        toast("Profile Updated", "success");
-        fetchRegistry();
-        setIsModalOpen(false);
+      if (modalType === 'address') {
+        // Build the address payload matching the API schema
+        const payload = {
+          user_id: formData.user_id || userId,
+          type: formData.type,
+          hotel_name: formData.hotel_name || '',
+          room_no: formData.room_no || '',
+          jetty: formData.jetty || formData.zone || '',
+          address: formData.address || '',
+          phone: formData.phone || '',
+          is_default: formData.is_default ? 1 : 0,
+          latitude: formData.latitude,
+          longitude: formData.longitude,
+          landmark: formData.landmark || '',
+          zone: formData.zone || '',
+        };
+
+        if (editingItem) {
+          // UPDATE existing address via PUT
+          const res = await fetch(`/api/user/addresses?id=${editingItem.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          if (res.ok) {
+            toast("Address updated successfully", "success");
+            fetchRegistry();
+            setIsModalOpen(false);
+          } else {
+            toast("Failed to update address", "error");
+          }
+        } else {
+          // CREATE new address via POST
+          const res = await fetch('/api/user/addresses', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          if (res.ok) {
+            toast("Address added successfully", "success");
+            fetchRegistry();
+            setIsModalOpen(false);
+          } else {
+            toast("Failed to add address", "error");
+          }
+        }
+      } else {
+        // Profile or card — original logic
+        const endpoint = modalType === 'profile' ? '/api/user/profile' : '/api/user/payments';
+        const res = await fetch(endpoint, {
+          method: modalType === 'profile' ? 'PUT' : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+        if (res.ok) {
+          toast("Profile Updated", "success");
+          fetchRegistry();
+          setIsModalOpen(false);
+        }
       }
     } catch (err) {
       toast("Sync Failure", "error");
@@ -327,25 +376,34 @@ export default function CustomerProfilePage() {
                                </div>
                             </div>
 
-                            {/* Pinpoint Location Leaflet Google Hybrid Satellite Map */}
-                            <div>
-                               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-1.5">
-                                  Pinpoint Map Coordinates & Location Search
-                               </label>
-                               <WebAddressMapPicker
-                                  initialLat={formData.latitude || 11.6234}
-                                  initialLng={formData.longitude || 92.7265}
-                                  onLocationSelect={(nLat, nLng, addressName, nLandmark) => {
-                                     setFormData((prev: any) => ({
-                                        ...prev,
-                                        latitude: nLat,
-                                        longitude: nLng,
-                                        landmark: nLandmark || prev.landmark,
-                                        address: addressName || prev.address
-                                     }));
-                                  }}
-                               />
-                            </div>
+                            {/* Pinpoint Location Map */}
+                             <div>
+                                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-1.5">
+                                   Pinpoint Map Coordinates &amp; Location Search
+                                </label>
+                                <WebAddressMapPicker
+                                   initialLat={formData.latitude || 11.6234}
+                                   initialLng={formData.longitude || 92.7265}
+                                   onLocationSelect={(nLat, nLng, addressName, nLandmark) => {
+                                      setFormData((prev: any) => ({
+                                         ...prev,
+                                         latitude: nLat,
+                                         longitude: nLng,
+                                         landmark: nLandmark || prev.landmark,
+                                         address: addressName || prev.address
+                                      }));
+                                   }}
+                                />
+                                {/* GPS coordinate preview */}
+                                {(formData.latitude || formData.longitude) && (
+                                  <div className="mt-2 flex items-center gap-2 px-3 py-1.5 rounded-lg bg-teal-500/10 border border-teal-500/20">
+                                    <span className="text-teal-400 text-sm">📍</span>
+                                    <span className="text-[10px] font-black text-teal-400 uppercase tracking-wider">
+                                      GPS: {Number(formData.latitude).toFixed(6)}, {Number(formData.longitude).toFixed(6)}
+                                    </span>
+                                  </div>
+                                )}
+                             </div>
 
                             {/* Nearby Landmark / Hotspot */}
                             <div>
@@ -782,7 +840,23 @@ export default function CustomerProfilePage() {
                                   <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2">{addr.jetty && <p className="text-[8px] font-black text-primary uppercase tracking-widest italic">HUB JETTY: {addr.jetty}</p>}{addr.phone && <p className="text-[8px] font-black text-warning uppercase tracking-widest italic">COMMS: {addr.phone}</p>}</div>
                                </div>
                             </div>
-                            <button onClick={() => handleDeleteProtocol("address", addr.id)} className="p-2 md:p-3 bg-white/5 rounded-lg md:rounded-xl hover:bg-danger hover:text-white transition-all"><Trash2 className="w-3.5 h-3.5 md:w-4 md:h-4" /></button>
+                             {/* Actions: Edit + Delete */}
+                             <div className="flex flex-col gap-1.5 shrink-0">
+                                <button
+                                  onClick={() => handleOpenModal("address", addr)}
+                                  className="p-2 md:p-3 bg-primary/10 border border-primary/20 rounded-lg md:rounded-xl hover:bg-primary/20 hover:border-primary/40 text-primary transition-all"
+                                  title="Edit Address"
+                                >
+                                  <Pencil className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteProtocol("address", addr.id)}
+                                  className="p-2 md:p-3 bg-white/5 rounded-lg md:rounded-xl hover:bg-danger hover:text-white transition-all"
+                                  title="Delete Address"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
+                                </button>
+                             </div>
                          </Card>
                       ))}
                    </div>
