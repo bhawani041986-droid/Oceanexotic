@@ -78,6 +78,9 @@ export default function ProductDetailPage({
 
   // Initialize selected cuts properly
   const [selectedCuts, setSelectedCuts] = useState<any>(null);
+
+  // Live cut options — start with SSR-fetched, refetch client-side as fallback
+  const [liveCutOptions, setLiveCutOptions] = useState<any[]>(initialCutOptions || []);
   const [currentPrice, setCurrentPrice] = useState(product?.price || 0);
 
   const [baseSelectedPrice, setBaseSelectedPrice] = useState(product?.price || 0);
@@ -130,6 +133,20 @@ export default function ProductDetailPage({
     fetchLiveDetails();
   }, [productId]);
 
+  // Client-side cut options refetch (in case SSR service failed)
+  useEffect(() => {
+    if ((initialCutOptions || []).length === 0) {
+      fetch(`/api/products/cut_options?product_id=${encodeURIComponent(productId)}`)
+        .then(r => r.ok ? r.json() : null)
+        .then(data => {
+          if (data && Array.isArray(data.cut_options) && data.cut_options.length > 0) {
+            setLiveCutOptions(data.cut_options);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [productId, initialCutOptions]);
+
   // Dynamically update currentPrice based on selection & prep options additions
   useEffect(() => {
     const addPrice = selectedPrepOption ? parseFloat(selectedPrepOption.price_flat_add) : 0;
@@ -180,7 +197,7 @@ export default function ProductDetailPage({
     if (!product) return;
     
     // Check if cuts are required but not selected
-    if (initialCutOptions && initialCutOptions.length > 0 && !selectedCuts?.primary) {
+    if (liveCutOptions && liveCutOptions.length > 0 && !selectedCuts?.primary) {
       toast("Please select a cut type.", "error");
       return;
     }
@@ -215,7 +232,7 @@ export default function ProductDetailPage({
 
   const openCutSelection = () => {
     if (!product) return;
-    if (initialCutOptions && initialCutOptions.length > 0) {
+    if (liveCutOptions && liveCutOptions.length > 0) {
       setIsCutModalOpen(true);
     } else {
       // If no cut options, just add directly
@@ -1059,6 +1076,60 @@ export default function ProductDetailPage({
         </section>
 
       </div>
+
+      {/* ── Cut Options Modal ── */}
+      {isCutModalOpen && (
+        <Modal
+          isOpen={isCutModalOpen}
+          onClose={() => setIsCutModalOpen(false)}
+          title="Select Your Cut"
+        >
+          <div className="space-y-5 px-1 pb-2">
+            <CutOptionsSelector
+              cutOptions={liveCutOptions}
+              basePrice={baseSelectedPrice}
+              onSelectionChange={(cuts, finalPrice) => {
+                setSelectedCuts(cuts);
+                setCurrentPrice(finalPrice + (selectedPrepOption ? parseFloat(selectedPrepOption.price_flat_add) : 0));
+              }}
+            />
+
+            {/* Prep option mini-selector inside modal */}
+            {product.prep_options && product.prep_options.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-[9px] font-black text-[var(--c-text-secondary)] uppercase tracking-widest">Preparation Style</p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {product.prep_options.map((option: any) => (
+                    <button
+                      key={option.id}
+                      onClick={() => setSelectedPrepOption(option)}
+                      className={cn(
+                        "flex flex-col items-center justify-center py-3 px-2 transition-all border rounded-xl text-center text-[9px] font-black uppercase",
+                        selectedPrepOption?.id === option.id
+                          ? "bg-[var(--c-primary)]/10 border-[var(--c-primary)] text-[var(--foreground)]"
+                          : "bg-[var(--foreground)]/5 border-[var(--foreground)]/5 text-[var(--c-text-secondary)] hover:border-[var(--foreground)]/15"
+                      )}
+                    >
+                      <span className="text-lg mb-1">{option.prep_type === 'RAW' ? '🐟' : option.prep_type === 'MARINATED' ? '🧂' : option.prep_type === 'GRILLED' ? '🔥' : option.prep_type === 'FRIED' ? '🍳' : '🍽️'}</span>
+                      <p>{option.name}</p>
+                      <span className="text-[8px] opacity-70">{option.price_flat_add > 0 ? `+ ₹${option.price_flat_add}` : "Included"}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Confirm CTA */}
+            <button
+              onClick={handleAddToCart}
+              className="w-full py-3 rounded-xl bg-[var(--c-primary)] text-[var(--foreground)] font-black uppercase text-[11px] tracking-widest flex items-center justify-center gap-2 shadow-[var(--c-shadow-glow)] hover:opacity-90 transition-all active:scale-[0.98]"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              {selectedCuts?.primary ? `Add ${selectedCuts.primary.replace(/_/g, ' ')} to Cart` : 'Confirm & Add to Cart'}
+            </button>
+          </div>
+        </Modal>
+      )}
 
     </>
   );
