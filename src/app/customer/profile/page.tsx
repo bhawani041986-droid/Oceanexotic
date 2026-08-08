@@ -20,6 +20,7 @@ import {
   X,
   Camera,
   Edit3,
+  Pencil,
   Plus,
   Trash2,
   Zap,
