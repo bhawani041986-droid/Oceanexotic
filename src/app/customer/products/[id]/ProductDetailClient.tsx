@@ -648,11 +648,12 @@ export default function ProductDetailPage({
                 </div>
 
                <div className="space-y-[4px] w-full">
-                  {!initialCutOptions || initialCutOptions.length === 0 ? (
+                  {/* Weight / Variant Selector — always visible */}
+                  {product.variants && product.variants.length > 0 && (
                     <div className="space-y-[4px]">
-                      <p className="text-[8px] font-black text-[var(--c-text-secondary)] uppercase tracking-widest">Select Variant</p>
-                      <div className="grid grid-cols-2 gap-[2px]">
-                         {product.variants?.map((v: any) => (
+                      <p className="text-[8px] font-black text-[var(--c-text-secondary)] uppercase tracking-widest">Select Weight</p>
+                      <div className="grid grid-cols-2 gap-[4px]">
+                         {product.variants.map((v: any) => (
                            <button 
                              key={v.id} 
                              onClick={() => {
@@ -660,18 +661,41 @@ export default function ProductDetailPage({
                                setBaseSelectedPrice(v.price);
                              }} 
                              className={cn(
-                               "relative flex flex-col items-center justify-center py-2 px-1 transition-all group overflow-hidden",
-                               activeVariant?.id === v.id ? "bg-[var(--c-primary)] text-[var(--foreground)] shadow-[var(--c-shadow-glow)]" : "bg-[var(--foreground)]/5 text-[var(--c-text-secondary)] hover:bg-[var(--foreground)]/10"
+                               "relative flex flex-col items-center justify-center py-2.5 px-2 rounded-xl border-2 transition-all group overflow-hidden",
+                               activeVariant?.id === v.id
+                                 ? "border-[var(--c-primary)] bg-[var(--c-primary)]/10 text-[var(--foreground)] shadow-[var(--c-shadow-glow)]"
+                                 : "border-[var(--foreground)]/10 bg-[var(--foreground)]/5 text-[var(--c-text-secondary)] hover:border-[var(--foreground)]/30 hover:text-[var(--foreground)]"
                              )}
-                             style={{ clipPath: 'polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%)' }}
                            >
-                              <p className={cn("text-[8px] font-black uppercase italic leading-none", activeVariant?.id === v.id ? "text-[var(--foreground)]" : "group-hover:text-[var(--foreground)]")}>{v.label.split(' ')[0]}</p>
-                              <span className="text-[9px] font-black italic">₹{v.price.toLocaleString()}</span>
+                              <p className="text-[9px] font-black uppercase italic leading-none">{v.label}</p>
+                              <span className="text-[11px] font-black italic mt-0.5">₹{v.price.toLocaleString()}</span>
                            </button>
                          ))}
                       </div>
                     </div>
-                  ) : null}
+                  )}
+
+                  {/* Quantity Stepper */}
+                  <div className="flex items-center justify-between bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl px-4 py-2.5 mt-2">
+                    <p className="text-[8px] font-black text-[var(--c-text-secondary)] uppercase tracking-widest">Quantity</p>
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                        className="w-7 h-7 rounded-full bg-[var(--foreground)]/10 hover:bg-[var(--c-primary)]/20 border border-[var(--foreground)]/10 hover:border-[var(--c-primary)]/40 flex items-center justify-center text-[var(--foreground)] transition-all active:scale-95"
+                      >
+                        <Minus className="w-3 h-3" />
+                      </button>
+                      <span className="text-base font-black text-[var(--foreground)] min-w-[24px] text-center">{quantity}</span>
+                      <button
+                        type="button"
+                        onClick={() => setQuantity(q => Math.min(20, q + 1))}
+                        className="w-7 h-7 rounded-full bg-[var(--foreground)]/10 hover:bg-[var(--c-primary)]/20 border border-[var(--foreground)]/10 hover:border-[var(--c-primary)]/40 flex items-center justify-center text-[var(--foreground)] transition-all active:scale-95"
+                      >
+                        <Plus className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </div>
 
                   {/* Preparation & Cooking Customizations */}
                   {product.prep_options && product.prep_options.length > 0 && (
@@ -1084,7 +1108,34 @@ export default function ProductDetailPage({
           onClose={() => setIsCutModalOpen(false)}
           title="Select Your Cut"
         >
-          <div className="space-y-5 px-1 pb-2">
+          <div className="space-y-4 px-1 pb-2">
+
+            {/* Weight Selector inside modal */}
+            {product.variants && product.variants.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-[9px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.25em]">Select Weight</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {product.variants.map((v: any) => (
+                    <button
+                      key={v.id}
+                      type="button"
+                      onClick={() => { setActiveVariant(v); setBaseSelectedPrice(v.price); }}
+                      className={cn(
+                        "flex flex-col items-center justify-center py-2.5 px-2 rounded-xl border-2 text-center transition-all",
+                        activeVariant?.id === v.id
+                          ? "border-[var(--c-primary)] bg-[var(--c-primary)]/10 text-[var(--foreground)] shadow-[0_0_12px_rgba(0,200,150,0.2)]"
+                          : "border-[var(--foreground)]/10 bg-[var(--foreground)]/5 text-[var(--c-text-secondary)] hover:border-[var(--foreground)]/30"
+                      )}
+                    >
+                      <span className="text-[10px] font-black uppercase italic">{v.label}</span>
+                      <span className="text-[12px] font-black italic mt-0.5">₹{v.price.toLocaleString()}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Cut Options */}
             <CutOptionsSelector
               cutOptions={liveCutOptions}
               basePrice={baseSelectedPrice}
@@ -1119,13 +1170,49 @@ export default function ProductDetailPage({
               </div>
             )}
 
+            {/* Quantity Stepper inside modal */}
+            <div className="flex items-center justify-between bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl px-4 py-3">
+              <div>
+                <p className="text-[9px] font-black text-[var(--c-text-secondary)] uppercase tracking-widest">Quantity</p>
+                <p className="text-[8px] text-[var(--c-text-secondary)] opacity-60 mt-0.5">Total: ₹{(currentPrice * quantity).toLocaleString()}</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                  className="w-8 h-8 rounded-full bg-[var(--foreground)]/10 hover:bg-[var(--c-primary)]/20 border border-[var(--foreground)]/10 hover:border-[var(--c-primary)]/40 flex items-center justify-center text-[var(--foreground)] transition-all active:scale-95 font-black"
+                >
+                  <Minus className="w-3.5 h-3.5" />
+                </button>
+                <span className="text-xl font-black text-[var(--foreground)] min-w-[32px] text-center">{quantity}</span>
+                <button
+                  type="button"
+                  onClick={() => setQuantity(q => Math.min(20, q + 1))}
+                  className="w-8 h-8 rounded-full bg-[var(--foreground)]/10 hover:bg-[var(--c-primary)]/20 border border-[var(--foreground)]/10 hover:border-[var(--c-primary)]/40 flex items-center justify-center text-[var(--foreground)] transition-all active:scale-95 font-black"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Price Summary */}
+            <div className="flex items-center justify-between px-2 py-1 rounded-lg bg-[var(--c-primary)]/5 border border-[var(--c-primary)]/10">
+              <span className="text-[9px] font-black text-[var(--c-text-secondary)] uppercase tracking-widest">
+                {activeVariant?.label || product.weight} × {quantity} {quantity > 1 ? 'units' : 'unit'}
+              </span>
+              <span className="text-base font-black text-[var(--c-primary)] italic">₹{(currentPrice * quantity).toLocaleString()}</span>
+            </div>
+
             {/* Confirm CTA */}
             <button
               onClick={handleAddToCart}
-              className="w-full py-3 rounded-xl bg-[var(--c-primary)] text-[var(--foreground)] font-black uppercase text-[11px] tracking-widest flex items-center justify-center gap-2 shadow-[var(--c-shadow-glow)] hover:opacity-90 transition-all active:scale-[0.98]"
+              className="w-full py-3.5 rounded-xl bg-[var(--c-primary)] text-[var(--foreground)] font-black uppercase text-[11px] tracking-widest flex items-center justify-center gap-2 shadow-[var(--c-shadow-glow)] hover:opacity-90 transition-all active:scale-[0.98]"
             >
               <ShoppingCart className="w-4 h-4" />
-              {selectedCuts?.primary ? `Add ${selectedCuts.primary.replace(/_/g, ' ')} to Cart` : 'Confirm & Add to Cart'}
+              {selectedCuts?.primary
+                ? `Add ${quantity > 1 ? `${quantity}×` : ''} ${selectedCuts.primary.replace(/_/g, ' ')} · ₹${(currentPrice * quantity).toLocaleString()}`
+                : `Confirm & Add to Cart · ₹${(currentPrice * quantity).toLocaleString()}`
+              }
             </button>
           </div>
         </Modal>
