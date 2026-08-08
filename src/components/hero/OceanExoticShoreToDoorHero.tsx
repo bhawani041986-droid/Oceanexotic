@@ -49,7 +49,7 @@ interface OceanExoticShoreToDoorHeroProps {
   hero3dStages?: Hero3DStageConfig[];
 }
 
-// 🍔 ➔ 🐟 WORLD-CLASS 3D STACKED USER-PROVIDED SEAFOOD CUTOUT STAGES
+// 🍔 ➔ 🐟 WORLD-CLASS SENIOR UI/UX 3D STACKED USER SEAFOOD CUTOUT STAGES
 const DEFAULT_STAGES = [
   {
     id: "catch",
@@ -59,7 +59,7 @@ const DEFAULT_STAGES = [
     badge: "100% Ocean Wild Red Snapper",
     statusText: "Pristine Island Dock Landing",
     accentColor: "#00f3ff",
-    cutoutUrl: "/images/hero/user_fresh_fish.png",
+    cutoutUrl: "/images/hero/user_fresh_fish_transparent.png",
     icon: <Waves className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-cyan-400" />
   },
   {
@@ -67,10 +67,12 @@ const DEFAULT_STAGES = [
     step: "02",
     label: "PRECISION SLICED",
     title: "PRECISION SLICED",
-    badge: "Kingfish / Surmai 3D Deconstructed Cuts",
-    statusText: "Laser Sliced Fresh Steaks & Fillets",
+    badge: "Kingfish / Surmai Deconstructed Steaks",
+    statusText: "Laser Sliced Steaks & Fry Cuts",
     accentColor: "#f59e0b",
-    cutoutUrl: "/images/hero/user_sliced_steaks.jpg",
+    cutoutUrl: "/images/hero/user_sliced_steaks_transparent.png",
+    secondaryCutoutUrl: "/images/hero/user_fry_slice_cut_transparent.png",
+    skelCutoutUrl: "/images/hero/user_fish_head_cut_transparent.png",
     icon: <Scissors className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-amber-400" />
   },
   {
@@ -92,7 +94,7 @@ const DEFAULT_STAGES = [
     badge: "Tiger Prawns 0°C - 4°C Ice Lock",
     statusText: "Continuous Chilled Preservation",
     accentColor: "#10b981",
-    cutoutUrl: "/images/hero/user_tiger_prawn.jpg",
+    cutoutUrl: "/images/hero/user_tiger_prawn_transparent.png",
     icon: <ThermometerSnowflake className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-emerald-400" />
   },
   {
@@ -103,7 +105,7 @@ const DEFAULT_STAGES = [
     badge: "Fresh Mackerel 90 Min Route",
     statusText: "Cold Courier Velocity Tunnel",
     accentColor: "#a855f7",
-    cutoutUrl: "/images/hero/user_mackerel.png",
+    cutoutUrl: "/images/hero/user_mackerel_transparent.png",
     icon: <Truck className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-purple-400" />
   },
   {
@@ -111,10 +113,10 @@ const DEFAULT_STAGES = [
     step: "06",
     label: "DELIVERED TO DOOR",
     title: "DELIVERED TO YOUR DOOR",
-    badge: "Shore to Door Complete",
+    badge: "Gourmet Fry Cut Delivered",
     statusText: "Fresh Seafood Delivered Fresh",
     accentColor: "#00d1ff",
-    cutoutUrl: "/images/hero/user_fresh_fish.png",
+    cutoutUrl: "/images/hero/user_fry_slice_cut_transparent.png",
     icon: <Home className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-cyan-400" />
   }
 ];
@@ -128,6 +130,8 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
 
   const activeAdminFish = heroItems && heroItems.length > 0 ? heroItems[0] : null;
 
+  // 🎯 FIX: DO NOT OVERRIDE ALL STAGES WITH A SINGLE ADMIN FISH IMAGE!
+  // Map each stage uniquely so Stage 1, 2, 3, 4, 5, 6 display their exact uploaded cutouts!
   const STAGES = DEFAULT_STAGES.map((stg, i) => {
     const customStage = hero3dStages && hero3dStages[i];
     return {
@@ -135,8 +139,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
       title: customStage?.title || stg.title,
       badge: customStage?.badge || stg.badge,
       statusText: customStage?.statusText || stg.statusText,
-      // Priority: Admin uploaded transparent fish image > stage custom image > default transparent cutout
-      cutoutUrl: activeAdminFish?.image || customStage?.imageUrl || stg.cutoutUrl
+      cutoutUrl: customStage?.imageUrl || stg.cutoutUrl
     };
   });
 
@@ -327,7 +330,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full border border-white/15 bg-slate-900/95 backdrop-blur-md shadow-lg">
                   {currentStage.icon}
                   <span className="text-[9px] sm:text-xs font-black uppercase tracking-wider text-slate-200">
-                    {activeAdminFish ? `${activeAdminFish.name} // ${currentStage.badge}` : currentStage.badge}
+                    {currentStage.badge}
                   </span>
                 </div>
 
@@ -402,23 +405,52 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
                     <img
                       src={currentStage.cutoutUrl}
                       alt={currentStage.title}
-                      className="max-w-full max-h-full object-contain pointer-events-none transition-transform duration-700 group-hover:scale-110"
+                      className={cn(
+                        "max-w-full max-h-full object-contain pointer-events-none transition-transform duration-700 group-hover:scale-110",
+                        // If stage 3 or full background photo, apply smooth rounded corners
+                        currentStage.cutoutUrl.endsWith('.jpg') ? "rounded-2xl border border-cyan-500/40 shadow-2xl" : ""
+                      )}
                     />
 
-                    {/* 🔪 STAGE 2: 3D DECONSTRUCTION LASER CUT LINES OVER TRANSPARENT CUTOUT */}
+                    {/* 🔪 STAGE 2: MULTI-LAYER 3D DECONSTRUCTION WITH FLOATING FRY CUT PIECE & FISH HEAD */}
                     {activeStageIdx === 1 && (
                       <>
+                        {/* Floating Fry Cut Piece Layer */}
+                        {currentStage.secondaryCutoutUrl && (
+                          <motion.img
+                            src={currentStage.secondaryCutoutUrl}
+                            alt="Fry Slice Cut Piece"
+                            animate={{
+                              x: [0, 15, 0],
+                              y: [-10, -25, -10],
+                              rotate: [0, 12, 0]
+                            }}
+                            transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute -top-4 -left-4 w-28 sm:w-36 h-auto object-contain filter drop-shadow-[0_15px_30px_rgba(245,158,11,0.6)] z-20 pointer-events-none"
+                          />
+                        )}
+
+                        {/* Floating Fish Head Cut Layer */}
+                        {currentStage.skelCutoutUrl && (
+                          <motion.img
+                            src={currentStage.skelCutoutUrl}
+                            alt="Fish Head Cut"
+                            animate={{
+                              x: [0, -15, 0],
+                              y: [10, 25, 10],
+                              rotate: [0, -10, 0]
+                            }}
+                            transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+                            className="absolute -bottom-4 -right-4 w-32 sm:w-40 h-auto object-contain filter drop-shadow-[0_15px_30px_rgba(0,243,255,0.6)] z-20 pointer-events-none"
+                          />
+                        )}
+
+                        {/* Animated Laser Slice Line */}
                         <motion.div
                           initial={{ opacity: 0, x: "-100%" }}
                           animate={{ opacity: [0, 1, 1, 0], x: ["-100%", "40%", "80%", "120%"] }}
                           transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
                           className="absolute inset-y-0 w-2.5 bg-gradient-to-b from-transparent via-amber-400 to-transparent shadow-[0_0_35px_#f59e0b] transform -rotate-12 pointer-events-none z-30"
-                        />
-                        <motion.div
-                          initial={{ opacity: 0, scaleX: 0 }}
-                          animate={{ opacity: [0, 0.9, 0], scaleX: [0, 1, 0] }}
-                          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-                          className="absolute inset-x-0 h-1 bg-amber-400 shadow-[0_0_20px_#f59e0b] pointer-events-none z-30"
                         />
                       </>
                     )}
@@ -467,7 +499,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
                     <div className="flex items-center gap-1.5 sm:gap-2 truncate">
                       {currentStage.icon}
                       <span className="text-[9.5px] sm:text-xs font-black uppercase text-white tracking-wider truncate">
-                        {activeAdminFish ? activeAdminFish.name : currentStage.label}
+                        {currentStage.label}
                       </span>
                     </div>
                     <span className="text-[8px] sm:text-[10px] font-black uppercase px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 flex items-center gap-1 shrink-0">
