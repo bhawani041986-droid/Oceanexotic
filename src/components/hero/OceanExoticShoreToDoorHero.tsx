@@ -14,13 +14,11 @@ import {
   Play,
   Pause,
   RotateCcw,
-  CheckCircle2,
-  Sparkles,
-  ShieldCheck
+  CheckCircle2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// 🌊 6 STAGES OF THE SINGLE FISH JOURNEY (Minimal Text, Maximum Visual Animation)
+// 🌊 6 STAGES OF THE SINGLE FISH JOURNEY (Custom High-Res Generated Imagery & Auto-Play Engine)
 const STAGES = [
   {
     id: "catch",
@@ -30,6 +28,7 @@ const STAGES = [
     badge: "100% Ocean Fresh",
     statusText: "Landed at Port Blair Dock",
     accentColor: "#00f3ff",
+    fishImage: "/images/hero/hero_shore_catch.jpg",
     icon: <Waves className="w-5 h-5 text-cyan-400" />
   },
   {
@@ -40,6 +39,7 @@ const STAGES = [
     badge: "Precision Clean Cut",
     statusText: "Master Filleted & Cut",
     accentColor: "#f59e0b",
+    fishImage: "/images/hero/hero_freshly_sliced.jpg",
     icon: <Scissors className="w-5 h-5 text-amber-400" />
   },
   {
@@ -50,6 +50,7 @@ const STAGES = [
     badge: "Airtight Eco Pack",
     statusText: "Hermetic Fresh Lock",
     accentColor: "#3b82f6",
+    fishImage: "/images/hero/hero_vacuum_sealed.jpg",
     icon: <Package className="w-5 h-5 text-blue-400" />
   },
   {
@@ -60,6 +61,7 @@ const STAGES = [
     badge: "Ice-Cold Temperature Lock",
     statusText: "Constant 0°C to 4°C Chilled",
     accentColor: "#10b981",
+    fishImage: "/images/hero/hero_cold_chain.jpg",
     icon: <ThermometerSnowflake className="w-5 h-5 text-emerald-400" />
   },
   {
@@ -70,6 +72,7 @@ const STAGES = [
     badge: "On The Way",
     statusText: "Express Cold Courier En Route",
     accentColor: "#a855f7",
+    fishImage: "/images/hero/hero_express_delivery.jpg",
     icon: <Truck className="w-5 h-5 text-purple-400" />
   },
   {
@@ -80,6 +83,7 @@ const STAGES = [
     badge: "Shore to Door Complete",
     statusText: "Fresh Seafood Delivered Fresh",
     accentColor: "#00d1ff",
+    fishImage: "/images/hero/hero_delivered_door.jpg",
     icon: <Home className="w-5 h-5 text-cyan-400" />
   }
 ];
@@ -89,10 +93,6 @@ export function OceanExoticShoreToDoorHero() {
   const [activeStageIdx, setActiveStageIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [stageProgress, setStageProgress] = useState(0);
-
-  // Single Real Fish Source Image URL (Whole fresh landed ocean fish)
-  const singleFishImage = "https://images.unsplash.com/photo-1534483509719-3feaee7c30da?auto=format&fit=crop&w=1200&q=85";
-  const slicedFishImage = "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=1200&q=85";
 
   // ⏱️ Auto-Play Animation Timer (4.5s per stage, continuous loop)
   useEffect(() => {
@@ -243,7 +243,7 @@ export function OceanExoticShoreToDoorHero() {
           </div>
         </header>
 
-        {/* MAIN VISUAL ANCHOR STAGE — Single Fish Animated Transformation */}
+        {/* MAIN VISUAL ANCHOR STAGE — Custom Generated Image For Each Stage */}
         <main className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center my-auto py-4">
           
           {/* LEFT SIDE — Minimal Text & Bold Stage Title */}
@@ -289,7 +289,7 @@ export function OceanExoticShoreToDoorHero() {
             </AnimatePresence>
           </div>
 
-          {/* RIGHT SIDE — ANIMATED SINGLE FISH STAGE TRANSFORMATION */}
+          {/* RIGHT SIDE — CUSTOM GENERATED REAL SEAFOOD IMAGE STAGE */}
           <div className="lg:col-span-7 flex items-center justify-center relative">
             <AnimatePresence mode="wait">
               <motion.div
@@ -298,133 +298,38 @@ export function OceanExoticShoreToDoorHero() {
                 animate={{ opacity: 1, scale: 1, rotate: 0 }}
                 exit={{ opacity: 0, scale: 1.05, rotate: 1 }}
                 transition={{ duration: 0.45, ease: "easeOut" }}
-                className="relative w-full max-w-xl aspect-[16/10] rounded-3xl overflow-hidden border border-cyan-500/40 bg-slate-950/90 shadow-[0_0_60px_rgba(0,243,255,0.25)] flex items-center justify-center p-4"
+                className="relative w-full max-w-xl aspect-[16/10] rounded-3xl overflow-hidden border border-cyan-500/40 bg-slate-950/90 shadow-[0_0_60px_rgba(0,243,255,0.25)] flex items-center justify-center p-2 group"
               >
-                
-                {/* 🌊 STAGE 1: SHORE CATCH — Whole Fresh Ocean Fish */}
-                {activeStageIdx === 0 && (
-                  <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
-                    <img
-                      src={singleFishImage}
-                      alt="Whole Ocean Catch"
-                      className="w-full h-full object-cover rounded-2xl animate-breathing-zoom"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-cyan-500/10 pointer-events-none" />
-                    {/* Water Droplets Ripple Badge */}
-                    <div className="absolute top-4 right-4 bg-slate-900/90 border border-cyan-400/50 px-3 py-1 rounded-full flex items-center gap-2 backdrop-blur-md">
-                      <Waves className="w-4 h-4 text-cyan-400 animate-pulse" />
-                      <span className="text-[10px] font-black uppercase text-cyan-300 tracking-wider">FRESH DOCK LANDING</span>
-                    </div>
-                  </div>
-                )}
+                {/* Custom Generated Image For Active Stage */}
+                <img
+                  src={currentStage.fishImage}
+                  alt={currentStage.title}
+                  className="w-full h-full object-cover rounded-2xl transition-transform duration-700 group-hover:scale-105"
+                />
 
-                {/* 🔪 STAGE 2: FRESHLY SLICED — Animated Cut/Slicing Laser Lines */}
+                {/* Subtle Ambient Vignette & Lighting */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-slate-950/20 pointer-events-none rounded-2xl" />
+
+                {/* Stage Specific Badges */}
                 {activeStageIdx === 1 && (
-                  <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
-                    <img
-                      src={slicedFishImage}
-                      alt="Freshly Sliced Fillet"
-                      className="w-full h-full object-cover rounded-2xl"
-                    />
-                    {/* Animated Slicing Guide Overlay Lines */}
-                    <motion.div
-                      initial={{ opacity: 0, x: "-100%" }}
-                      animate={{ opacity: [0, 1, 0], x: ["-100%", "100%"] }}
-                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                      className="absolute inset-y-0 w-2 bg-gradient-to-b from-transparent via-amber-400 to-transparent shadow-[0_0_20px_#f59e0b] transform -rotate-12 pointer-events-none"
-                    />
-                    <div className="absolute bottom-4 left-4 bg-slate-900/90 border border-amber-400/50 px-3 py-1 rounded-full flex items-center gap-2 backdrop-blur-md">
-                      <Scissors className="w-4 h-4 text-amber-400" />
-                      <span className="text-[10px] font-black uppercase text-amber-300 tracking-wider">PRECISION CLEAN FILLETED</span>
-                    </div>
-                  </div>
+                  <motion.div
+                    initial={{ opacity: 0, x: "-100%" }}
+                    animate={{ opacity: [0, 1, 0], x: ["-100%", "100%"] }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute inset-y-0 w-2 bg-gradient-to-b from-transparent via-amber-400 to-transparent shadow-[0_0_20px_#f59e0b] transform -rotate-12 pointer-events-none"
+                  />
                 )}
 
-                {/* 📦 STAGE 3: VACUUM SEALED — Vacuum Pack Frame & Air Extract Animation */}
-                {activeStageIdx === 2 && (
-                  <div className="relative w-full h-full flex items-center justify-center overflow-hidden border-4 border-blue-500/40 rounded-2xl bg-blue-950/30">
-                    <img
-                      src={slicedFishImage}
-                      alt="Vacuum Sealed Seafood"
-                      className="w-full h-full object-cover rounded-xl scale-95 opacity-90"
-                    />
-                    {/* Vacuum Pack Plastic Grid & Air Extraction Wave Overlay */}
-                    <div className="absolute inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px] opacity-30 pointer-events-none" />
-                    <div className="absolute inset-0 border-2 border-dashed border-blue-400 animate-pulse pointer-events-none" />
-                    
-                    <div className="absolute top-4 left-4 bg-blue-950/90 border border-blue-400 px-3.5 py-1 rounded-full flex items-center gap-2 shadow-lg backdrop-blur-md">
-                      <Package className="w-4 h-4 text-blue-400" />
-                      <span className="text-[10px] font-black uppercase text-blue-300 tracking-wider">AIRTIGHT VACUUM PACKED</span>
-                    </div>
+                {/* Stage Bottom Telemetry Overlay */}
+                <div className="absolute bottom-4 left-4 right-4 bg-slate-950/85 border border-white/20 p-3 rounded-2xl flex items-center justify-between backdrop-blur-md shadow-2xl">
+                  <div className="flex items-center gap-2">
+                    {currentStage.icon}
+                    <span className="text-xs font-black uppercase text-white tracking-wider">{currentStage.label}</span>
                   </div>
-                )}
-
-                {/* ❄️ STAGE 4: COLD CHAIN — Ice Crystals & 0°C to 4°C Temperature Halo */}
-                {activeStageIdx === 3 && (
-                  <div className="relative w-full h-full flex items-center justify-center overflow-hidden border-4 border-emerald-500/40 rounded-2xl bg-emerald-950/40">
-                    <img
-                      src={slicedFishImage}
-                      alt="Cold Chain Chilled"
-                      className="w-full h-full object-cover rounded-xl scale-95 filter brightness-110 contrast-105"
-                    />
-                    {/* Frost / Ice Mist Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-emerald-950/70 via-cyan-950/30 to-transparent pointer-events-none" />
-                    
-                    {/* 0°C to 4°C Temperature Badge */}
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                      <div className="bg-slate-950/90 border-2 border-emerald-400 px-6 py-3 rounded-2xl shadow-[0_0_30px_rgba(16,185,129,0.5)] flex items-center gap-3">
-                        <ThermometerSnowflake className="w-7 h-7 text-emerald-400 animate-pulse" />
-                        <div className="text-left">
-                          <p className="text-sm font-black text-white uppercase tracking-wider">0°C TO 4°C</p>
-                          <p className="text-[9px] font-bold text-emerald-400 uppercase">COLD CHAIN LOCKED</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* 🚚 STAGE 5: EXPRESS DELIVERY — Velocity Trail & Express Delivery Courier */}
-                {activeStageIdx === 4 && (
-                  <div className="relative w-full h-full flex items-center justify-center overflow-hidden border-4 border-purple-500/40 rounded-2xl bg-purple-950/40">
-                    <img
-                      src={slicedFishImage}
-                      alt="Express Delivery"
-                      className="w-full h-full object-cover rounded-xl scale-95"
-                    />
-                    {/* Fast Velocity Lines Overlay */}
-                    <motion.div
-                      animate={{ x: ["-100%", "100%"] }}
-                      transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                      className="absolute inset-x-0 h-1 bg-purple-400 shadow-[0_0_15px_#a855f7] pointer-events-none"
-                    />
-                    <div className="absolute bottom-4 right-4 bg-purple-950/90 border border-purple-400 px-4 py-1.5 rounded-full flex items-center gap-2 shadow-xl backdrop-blur-md">
-                      <Truck className="w-4 h-4 text-purple-400 animate-bounce" />
-                      <span className="text-[10px] font-black uppercase text-purple-300 tracking-wider">90 MIN EXPRESS DISPATCH</span>
-                    </div>
-                  </div>
-                )}
-
-                {/* 🚪 STAGE 6: DELIVERED TO DOOR — Home Doorstep Presentation */}
-                {activeStageIdx === 5 && (
-                  <div className="relative w-full h-full flex items-center justify-center overflow-hidden border-4 border-cyan-400/50 rounded-2xl bg-cyan-950/40">
-                    <img
-                      src={singleFishImage}
-                      alt="Delivered Seafood"
-                      className="w-full h-full object-cover rounded-xl"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent pointer-events-none" />
-                    
-                    <div className="absolute bottom-4 left-4 right-4 bg-slate-950/90 border border-cyan-400/60 p-3 rounded-2xl flex items-center justify-between backdrop-blur-md shadow-2xl">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-5 h-5 text-cyan-400" />
-                        <span className="text-xs font-black uppercase text-white tracking-wider">FRESH SEAFOOD AT YOUR DOOR</span>
-                      </div>
-                      <Link href="/customer/products" className="px-3 py-1 bg-cyan-400 text-slate-950 text-[10px] font-black uppercase rounded-lg">
-                        ORDER NOW
-                      </Link>
-                    </div>
-                  </div>
-                )}
+                  <span className="text-[10px] font-black uppercase px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                    REAL CATCH
+                  </span>
+                </div>
 
               </motion.div>
             </AnimatePresence>
@@ -443,7 +348,7 @@ export function OceanExoticShoreToDoorHero() {
             />
           </div>
 
-          {/* Interactive Step Ribbon Buttons (Minimal Text) */}
+          {/* Interactive Step Ribbon Buttons */}
           <div className="flex items-center justify-between gap-1.5 sm:gap-2 overflow-x-auto pb-1">
             {STAGES.map((stg, i) => (
               <button
