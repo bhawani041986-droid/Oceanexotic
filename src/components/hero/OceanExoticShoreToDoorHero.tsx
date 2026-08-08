@@ -14,10 +14,9 @@ import {
   Play,
   Pause,
   RotateCcw,
-  Film,
   Sparkles,
-  CheckCircle2,
-  ShoppingCart
+  ShoppingCart,
+  CheckCircle2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -38,7 +37,7 @@ interface OceanExoticShoreToDoorHeroProps {
   heroItems?: Hero3DFishItem[];
 }
 
-// 🎬 6 STAGES OF THE CONTINUOUS SINGLE-FRAME PROCESS VIDEO (Bloom/Apple Style)
+// 🎬 6 STAGES OF THE SINGLE-FRAME PROCESS (High-Res Guaranteed Local Assets & Animations)
 const DEFAULT_STAGES = [
   {
     id: "catch",
@@ -49,7 +48,6 @@ const DEFAULT_STAGES = [
     statusText: "Landed at Port Blair Harbour Dock",
     startTime: 0,
     endTime: 3,
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-underwater-view-of-ocean-waves-42864-large.mp4",
     imageUrl: "/images/hero/hero_shore_catch.jpg",
     icon: <Waves className="w-5 h-5 text-cyan-400" />
   },
@@ -62,7 +60,6 @@ const DEFAULT_STAGES = [
     statusText: "Laser Sliced Fresh Steaks & Fry Cut",
     startTime: 3,
     endTime: 6,
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-cutting-fresh-fish-on-a-wooden-board-43187-large.mp4",
     imageUrl: "/images/hero/hero_freshly_sliced.jpg",
     icon: <Scissors className="w-5 h-5 text-amber-400" />
   },
@@ -75,7 +72,6 @@ const DEFAULT_STAGES = [
     statusText: "Hermetic Freshness Encapsulation",
     startTime: 6,
     endTime: 9,
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-water-bubbles-in-a-blue-background-42907-large.mp4",
     imageUrl: "/images/hero/hero_vacuum_sealed.jpg",
     icon: <Package className="w-5 h-5 text-blue-400" />
   },
@@ -88,7 +84,6 @@ const DEFAULT_STAGES = [
     statusText: "Constant Chilled Preservation",
     startTime: 9,
     endTime: 12,
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-ice-cubes-falling-into-water-42921-large.mp4",
     imageUrl: "/images/hero/hero_cold_chain.jpg",
     icon: <ThermometerSnowflake className="w-5 h-5 text-emerald-400" />
   },
@@ -101,7 +96,6 @@ const DEFAULT_STAGES = [
     statusText: "Cold Courier Velocity En Route",
     startTime: 12,
     endTime: 15,
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-driving-down-a-city-street-at-night-41544-large.mp4",
     imageUrl: "/images/hero/hero_express_delivery.jpg",
     icon: <Truck className="w-5 h-5 text-purple-400" />
   },
@@ -114,62 +108,46 @@ const DEFAULT_STAGES = [
     statusText: "Fresh Seafood Delivered Fresh",
     startTime: 15,
     endTime: 18,
-    videoUrl: "https://assets.mixkit.co/videos/preview/mixkit-hands-serving-a-plate-of-delicious-food-43285-large.mp4",
     imageUrl: "/images/hero/hero_delivered_door.jpg",
     icon: <Home className="w-5 h-5 text-cyan-400" />
   }
 ];
 
 export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoorHeroProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [activeStageIdx, setActiveStageIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [currentTime, setCurrentTime] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   const TOTAL_DURATION = 18;
 
   // Active Fish item configured in Admin Theme 3D HERO STAGE CONTROL (Slot 1 / Slot 2 / Slot 3)
   const activeAdminFish = heroItems && heroItems.length > 0 ? heroItems[0] : null;
 
-  // Video Timeupdate Event Listener
-  const handleTimeUpdate = () => {
-    const video = videoRef.current;
-    if (!video) return;
+  // ⏱️ Auto-Play Progress Engine (Continuous 60fps Process Switcher)
+  useEffect(() => {
+    if (!isPlaying) return;
 
-    const time = video.currentTime % TOTAL_DURATION;
-    setCurrentTime(time);
+    const interval = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          setActiveStageIdx((current) => (current + 1) % DEFAULT_STAGES.length);
+          return 0;
+        }
+        return prev + 2.5;
+      });
+    }, 110);
 
-    const newStageIdx = DEFAULT_STAGES.findIndex(
-      (s) => time >= s.startTime && time < s.endTime
-    );
-    if (newStageIdx !== -1 && newStageIdx !== activeStageIdx) {
-      setActiveStageIdx(newStageIdx);
-    }
-  };
+    return () => clearInterval(interval);
+  }, [isPlaying]);
 
   const handleStageSelect = (idx: number) => {
     setActiveStageIdx(idx);
-    const video = videoRef.current;
-    if (video) {
-      video.currentTime = DEFAULT_STAGES[idx].startTime;
-      setCurrentTime(DEFAULT_STAGES[idx].startTime);
-    }
+    setProgress(0);
   };
 
-  // Toggle Video Play / Pause
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (isPlaying) {
-      video.play().catch(() => {});
-    } else {
-      video.pause();
-    }
-  }, [isPlaying]);
-
-  // 🎨 WebGL/Canvas Particle & Caustics Overlay Renderer (60fps)
+  // 🎨 WebGL/Canvas Atmospheric Particle Overlay Engine
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -252,24 +230,15 @@ export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoor
 
   const currentStage = DEFAULT_STAGES[activeStageIdx];
 
+  // Active Stage Image: Admin uploaded image if available, else stage image
+  const displayImage = activeAdminFish?.image && (activeStageIdx === 0 || activeStageIdx === 5)
+    ? activeAdminFish.image
+    : currentStage.imageUrl;
+
   return (
     <div className="relative w-full min-h-[580px] lg:min-h-[640px] bg-[#030712] text-white overflow-hidden select-none border-b border-cyan-500/20">
       
-      {/* 🎥 CONTINUOUS SINGLE-FRAME BACKGROUND VIDEO SCRUBBER STREAM */}
-      <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
-        <video
-          ref={videoRef}
-          src={currentStage.videoUrl}
-          className="w-full h-full object-cover opacity-50 scale-105 filter brightness-110 contrast-105"
-          playsInline
-          muted
-          autoPlay
-          loop
-          onTimeUpdate={handleTimeUpdate}
-        />
-      </div>
-
-      {/* WebGL Canvas Particle & Lighting Overlay */}
+      {/* 🎨 ATMOSPHERIC CANVAS OVERLAY */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full pointer-events-none z-10"
@@ -280,13 +249,13 @@ export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoor
 
       <div className="relative z-20 max-w-7xl mx-auto h-full min-h-[580px] lg:min-h-[640px] flex flex-col justify-between p-4 sm:p-6 lg:p-10">
         
-        {/* HEADER BAR — Single-Frame Video Status & Auto Controls */}
+        {/* HEADER BAR — Live Status & Auto Controls */}
         <header className="w-full flex items-center justify-between">
           <div className="flex items-center gap-2.5 bg-slate-900/90 backdrop-blur-xl border border-cyan-500/30 px-3.5 py-1.5 rounded-full shadow-lg">
             <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
             <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-cyan-300 flex items-center gap-1.5">
-              <Film className="w-3.5 h-3.5 text-amber-400" />
-              OCEANEXOTIC — SINGLE-FRAME PROCESS VIDEO
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              OCEANEXOTIC — SHORE TO DOOR PROCESS ENGINE
             </span>
           </div>
 
@@ -294,25 +263,25 @@ export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoor
             <button
               onClick={() => setIsPlaying(!isPlaying)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/90 border border-white/20 hover:border-cyan-400 text-xs font-black text-cyan-300 transition-all backdrop-blur-md"
-              title={isPlaying ? "Pause Process Video" : "Play Process Video"}
+              title={isPlaying ? "Pause Process" : "Play Process"}
             >
               {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
               <span className="hidden sm:inline text-[10px] uppercase tracking-wider">
-                {isPlaying ? "LIVE 60FPS VIDEO" : "PAUSED"}
+                {isPlaying ? "AUTO PLAYING" : "PAUSED"}
               </span>
             </button>
 
             <button
               onClick={() => handleStageSelect(0)}
               className="p-1.5 rounded-full bg-slate-900/90 border border-white/20 hover:border-cyan-400 text-slate-300 transition-all"
-              title="Restart Video Journey"
+              title="Restart Journey"
             >
               <RotateCcw className="w-3.5 h-3.5" />
             </button>
           </div>
         </header>
 
-        {/* MAIN DISPLAY STAGE — Minimal Stage Headlines (Left) + Single-Frame Process Video Anchor (Right) */}
+        {/* MAIN DISPLAY STAGE — Headlines (Left) + Single Frame Animated Seafood Viewport (Right) */}
         <main className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center my-auto py-4">
           
           {/* LEFT COLUMN — Stage Headlines & Conversion CTAs */}
@@ -369,55 +338,81 @@ export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoor
             </AnimatePresence>
           </div>
 
-          {/* RIGHT COLUMN — SINGLE-FRAME 60FPS PROCESS VIDEO VIEWPORT */}
+          {/* RIGHT COLUMN — SINGLE-FRAME GUARANTEED BRIGHT SEAFOOD VIEWPORT */}
           <div className="lg:col-span-7 flex items-center justify-center relative z-20">
-            <div className="relative w-full max-w-lg aspect-[16/10] rounded-3xl overflow-hidden border border-cyan-500/40 bg-slate-950/90 shadow-[0_0_60px_rgba(0,243,255,0.25)] flex items-center justify-center p-2 group">
-              
-              {/* Single Frame Live Stage Process Video Stream */}
-              <video
-                src={currentStage.videoUrl}
-                className="w-full h-full object-cover rounded-2xl"
-                autoPlay
-                muted
-                loop
-                playsInline
-              />
-
-              {/* Laser Slice Overlay on Stage 2 */}
-              {activeStageIdx === 1 && (
-                <motion.div
-                  initial={{ opacity: 0, x: "-100%" }}
-                  animate={{ opacity: [0, 1, 0], x: ["-100%", "100%"] }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute inset-y-0 w-2 bg-gradient-to-b from-transparent via-amber-400 to-transparent shadow-[0_0_20px_#f59e0b] transform -rotate-12 pointer-events-none"
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentStage.id}
+                initial={{ opacity: 0, scale: 0.92, rotate: -1 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                exit={{ opacity: 0, scale: 1.05, rotate: 1 }}
+                transition={{ duration: 0.45, ease: "easeOut" }}
+                className="relative w-full max-w-lg aspect-[16/10] rounded-3xl overflow-hidden border-2 border-cyan-400/60 bg-slate-950 shadow-[0_0_60px_rgba(0,243,255,0.35)] flex items-center justify-center p-2 group"
+              >
+                {/* Guaranteed High-Res Real Seafood Stage Photo */}
+                <img
+                  src={displayImage}
+                  alt={currentStage.title}
+                  className="w-full h-full object-cover rounded-2xl transition-transform duration-700 group-hover:scale-105"
                 />
-              )}
 
-              {/* Telemetry Badge Overlay */}
-              <div className="absolute bottom-4 left-4 right-4 bg-slate-950/85 border border-white/20 p-3 rounded-2xl flex items-center justify-between backdrop-blur-md shadow-2xl">
-                <div className="flex items-center gap-2">
-                  {currentStage.icon}
-                  <span className="text-xs font-black uppercase text-white tracking-wider">
-                    {activeAdminFish ? activeAdminFish.name : currentStage.label}
+                {/* Laser Slice Overlay on Stage 2 */}
+                {activeStageIdx === 1 && (
+                  <motion.div
+                    initial={{ opacity: 0, x: "-100%" }}
+                    animate={{ opacity: [0, 1, 0], x: ["-100%", "100%"] }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute inset-y-0 w-2.5 bg-gradient-to-b from-transparent via-amber-400 to-transparent shadow-[0_0_25px_#f59e0b] transform -rotate-12 pointer-events-none"
+                  />
+                )}
+
+                {/* Vacuum Pack Sealed Border on Stage 3 */}
+                {activeStageIdx === 2 && (
+                  <div className="absolute inset-2 border-2 border-dashed border-blue-400/80 rounded-xl pointer-events-none animate-pulse" />
+                )}
+
+                {/* Cold Chain Frost Badge on Stage 4 */}
+                {activeStageIdx === 3 && (
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="bg-slate-950/90 border-2 border-emerald-400 px-5 py-2.5 rounded-2xl shadow-[0_0_30px_rgba(16,185,129,0.6)] flex items-center gap-2.5 backdrop-blur-md">
+                      <ThermometerSnowflake className="w-6 h-6 text-emerald-400 animate-bounce" />
+                      <div className="text-left">
+                        <p className="text-xs font-black text-white uppercase tracking-wider">0°C TO 4°C CHILLED</p>
+                        <p className="text-[9px] font-bold text-emerald-400 uppercase">COLD CHAIN LOCKED</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Ambient Top/Bottom Glow */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-slate-950/20 pointer-events-none rounded-2xl" />
+
+                {/* Telemetry Badge Overlay */}
+                <div className="absolute bottom-4 left-4 right-4 bg-slate-950/90 border border-white/25 p-3 rounded-2xl flex items-center justify-between backdrop-blur-md shadow-2xl">
+                  <div className="flex items-center gap-2">
+                    {currentStage.icon}
+                    <span className="text-xs font-black uppercase text-white tracking-wider">
+                      {activeAdminFish ? activeAdminFish.name : currentStage.label}
+                    </span>
+                  </div>
+                  <span className="text-[10px] font-black uppercase px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                    REAL SEAFOOD
                   </span>
                 </div>
-                <span className="text-[10px] font-black uppercase px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                  SINGLE-FRAME VIDEO
-                </span>
-              </div>
-            </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
 
         </main>
 
-        {/* FOOTER — TIMED VIDEO PROGRESS BAR & STAGE RIBBON BUTTONS */}
+        {/* FOOTER — TIMED PROGRESS BAR & STEP RIBBON BUTTONS */}
         <footer className="w-full space-y-3 pt-2 border-t border-white/10">
           
-          {/* Continuous Video Timeline Progress Bar */}
+          {/* Continuous Timeline Progress Bar */}
           <div className="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden border border-white/10 relative">
             <div
               className="h-full bg-gradient-to-r from-cyan-400 via-teal-400 via-amber-400 to-cyan-300 transition-all duration-100 ease-linear shadow-[0_0_10px_#00f3ff]"
-              style={{ width: `${(currentTime / TOTAL_DURATION) * 100}%` }}
+              style={{ width: `${((activeStageIdx + progress / 100) / DEFAULT_STAGES.length) * 100}%` }}
             />
           </div>
 
