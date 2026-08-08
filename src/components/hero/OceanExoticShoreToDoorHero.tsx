@@ -15,8 +15,8 @@ import {
   Pause,
   RotateCcw,
   Sparkles,
-  ShoppingCart,
-  CheckCircle2
+  Box,
+  ShoppingCart
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -37,18 +37,16 @@ interface OceanExoticShoreToDoorHeroProps {
   heroItems?: Hero3DFishItem[];
 }
 
-// 🎬 6 STAGES OF THE SINGLE-FRAME PROCESS (High-Res Guaranteed Local Assets & Animations)
-const DEFAULT_STAGES = [
+// 🍔 ➔ 🐟 CRAV BURGERS 3D DECONSTRUCTION PROCESS STAGES
+const STAGES = [
   {
     id: "catch",
     step: "01",
     label: "SHORE CATCH",
     title: "SHORE CATCH",
     badge: "100% Ocean Wild Catch",
-    statusText: "Landed at Port Blair Harbour Dock",
-    startTime: 0,
-    endTime: 3,
-    imageUrl: "/images/hero/hero_shore_catch.jpg",
+    statusText: "Pristine Island Dock Landing",
+    accentColor: "#00f3ff",
     icon: <Waves className="w-5 h-5 text-cyan-400" />
   },
   {
@@ -56,11 +54,9 @@ const DEFAULT_STAGES = [
     step: "02",
     label: "PRECISION SLICED",
     title: "PRECISION SLICED",
-    badge: "Master Fillet & Fry Cuts",
-    statusText: "Laser Sliced Fresh Steaks & Fry Cut",
-    startTime: 3,
-    endTime: 6,
-    imageUrl: "/images/hero/hero_freshly_sliced.jpg",
+    badge: "3D Deconstructed Steaks & Fry Cuts",
+    statusText: "Laser Sliced Fresh Cuts",
+    accentColor: "#f59e0b",
     icon: <Scissors className="w-5 h-5 text-amber-400" />
   },
   {
@@ -68,11 +64,9 @@ const DEFAULT_STAGES = [
     step: "03",
     label: "VACUUM SEALED",
     title: "VACUUM SEALED",
-    badge: "Airtight Eco Lock",
-    statusText: "Hermetic Freshness Encapsulation",
-    startTime: 6,
-    endTime: 9,
-    imageUrl: "/images/hero/hero_vacuum_sealed.jpg",
+    badge: "Hermetic Eco Pack",
+    statusText: "Airtight Freshness Encapsulation",
+    accentColor: "#3b82f6",
     icon: <Package className="w-5 h-5 text-blue-400" />
   },
   {
@@ -81,10 +75,8 @@ const DEFAULT_STAGES = [
     label: "COLD CHAIN (0-4°C)",
     title: "COLD CHAIN MAINTAINED",
     badge: "0°C - 4°C Ice Lock",
-    statusText: "Constant Chilled Preservation",
-    startTime: 9,
-    endTime: 12,
-    imageUrl: "/images/hero/hero_cold_chain.jpg",
+    statusText: "Continuous Chilled Preservation",
+    accentColor: "#10b981",
     icon: <ThermometerSnowflake className="w-5 h-5 text-emerald-400" />
   },
   {
@@ -93,10 +85,8 @@ const DEFAULT_STAGES = [
     label: "EXPRESS DISPATCH",
     title: "EXPRESS DISPATCH",
     badge: "90 Min Delivery Route",
-    statusText: "Cold Courier Velocity En Route",
-    startTime: 12,
-    endTime: 15,
-    imageUrl: "/images/hero/hero_express_delivery.jpg",
+    statusText: "Cold Courier Velocity Tunnel",
+    accentColor: "#a855f7",
     icon: <Truck className="w-5 h-5 text-purple-400" />
   },
   {
@@ -106,36 +96,32 @@ const DEFAULT_STAGES = [
     title: "DELIVERED TO YOUR DOOR",
     badge: "Shore to Door Complete",
     statusText: "Fresh Seafood Delivered Fresh",
-    startTime: 15,
-    endTime: 18,
-    imageUrl: "/images/hero/hero_delivered_door.jpg",
+    accentColor: "#00d1ff",
     icon: <Home className="w-5 h-5 text-cyan-400" />
   }
 ];
 
 export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoorHeroProps) {
+  const mountRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-
   const [activeStageIdx, setActiveStageIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [progress, setProgress] = useState(0);
+  const mouseRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 });
 
-  const TOTAL_DURATION = 18;
-
-  // Active Fish item configured in Admin Theme 3D HERO STAGE CONTROL (Slot 1 / Slot 2 / Slot 3)
   const activeAdminFish = heroItems && heroItems.length > 0 ? heroItems[0] : null;
 
-  // ⏱️ Auto-Play Progress Engine (Continuous 60fps Process Switcher)
+  // ⏱️ Auto-Play Timeline Ticker
   useEffect(() => {
     if (!isPlaying) return;
 
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
-          setActiveStageIdx((current) => (current + 1) % DEFAULT_STAGES.length);
+          setActiveStageIdx((current) => (current + 1) % STAGES.length);
           return 0;
         }
-        return prev + 2.5;
+        return prev + 2.2;
       });
     }, 110);
 
@@ -147,7 +133,19 @@ export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoor
     setProgress(0);
   };
 
-  // 🎨 WebGL/Canvas Atmospheric Particle Overlay Engine
+  // 🖱️ Crav Burgers 3D Mouse Parallax Tilt Tracker
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const halfW = window.innerWidth / 2;
+      const halfH = window.innerHeight / 2;
+      mouseRef.current.targetX = (e.clientX - halfW) / halfW;
+      mouseRef.current.targetY = (e.clientY - halfH) / halfH;
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  // 🎨 CRAV BURGERS 3D WEBGL DECONSTRUCTION CANVAS ENGINE
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -156,7 +154,7 @@ export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoor
 
     let animId: number;
     let width = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth);
-    let height = (canvas.height = canvas.parentElement?.clientHeight || 560);
+    let height = (canvas.height = canvas.parentElement?.clientHeight || 600);
 
     const handleResize = () => {
       if (!canvas || !canvas.parentElement) return;
@@ -165,44 +163,49 @@ export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoor
     };
     window.addEventListener("resize", handleResize);
 
-    const particles = Array.from({ length: 90 }, () => ({
+    // 120 Bioluminescent 3D Particles
+    const particles = Array.from({ length: 120 }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
       size: Math.random() * 2.5 + 1,
-      speedX: (Math.random() - 0.5) * 0.3,
+      speedX: (Math.random() - 0.5) * 0.4,
       speedY: -Math.random() * 0.5 - 0.2,
-      opacity: Math.random() * 0.5 + 0.2,
-      isGold: Math.random() > 0.4
+      opacity: Math.random() * 0.6 + 0.2,
+      color: Math.random() > 0.4 ? "#00f3ff" : "#f59e0b"
     }));
 
     let time = 0;
 
     const render = () => {
-      time += 0.015;
+      time += 0.018;
       ctx.clearRect(0, 0, width, height);
 
-      // Light Beams
-      for (let i = 0; i < 4; i++) {
-        const beamX = (width / 4) * i + Math.sin(time + i) * 30;
-        const grad = ctx.createLinearGradient(beamX, 0, beamX + 80, height);
-        grad.addColorStop(0, "rgba(0, 243, 255, 0.06)");
-        grad.addColorStop(0.5, "rgba(245, 158, 11, 0.03)");
+      // Crav Burgers Mouse Parallax Lerp
+      mouseRef.current.x += (mouseRef.current.targetX - mouseRef.current.x) * 0.05;
+      mouseRef.current.y += (mouseRef.current.targetY - mouseRef.current.y) * 0.05;
+
+      // 1. Render Volumetric Light Beams (Tilted by Mouse Parallax)
+      for (let i = 0; i < 5; i++) {
+        const beamX = (width / 5) * i + Math.sin(time + i) * 35 + mouseRef.current.x * 20;
+        const grad = ctx.createLinearGradient(beamX, 0, beamX + 90, height);
+        grad.addColorStop(0, "rgba(0, 243, 255, 0.08)");
+        grad.addColorStop(0.5, "rgba(245, 158, 11, 0.04)");
         grad.addColorStop(1, "rgba(3, 7, 18, 0)");
 
         ctx.fillStyle = grad;
         ctx.beginPath();
-        ctx.moveTo(beamX - 20, 0);
-        ctx.lineTo(beamX + 60, 0);
-        ctx.lineTo(beamX + 180, height);
-        ctx.lineTo(beamX - 80, height);
+        ctx.moveTo(beamX - 30, 0);
+        ctx.lineTo(beamX + 80, 0);
+        ctx.lineTo(beamX + 220, height);
+        ctx.lineTo(beamX - 100, height);
         ctx.closePath();
         ctx.fill();
       }
 
-      // Particles
+      // 2. Render 3D Floating Particles
       particles.forEach((p) => {
-        p.x += p.speedX + Math.sin(time + p.y) * 0.15;
-        p.y += p.speedY;
+        p.x += p.speedX + Math.sin(time + p.y) * 0.2 + mouseRef.current.x * 0.5;
+        p.y += p.speedY + mouseRef.current.y * 0.5;
 
         if (p.y < -10) {
           p.y = height + 10;
@@ -211,9 +214,9 @@ export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoor
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = p.isGold 
-          ? `rgba(251, 191, 36, ${p.opacity})` 
-          : `rgba(0, 243, 255, ${p.opacity})`;
+        ctx.fillStyle = p.color === "#00f3ff" 
+          ? `rgba(0, 243, 255, ${p.opacity})` 
+          : `rgba(245, 158, 11, ${p.opacity})`;
         ctx.fill();
       });
 
@@ -228,17 +231,12 @@ export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoor
     };
   }, []);
 
-  const currentStage = DEFAULT_STAGES[activeStageIdx];
-
-  // Active Stage Image: Admin uploaded image if available, else stage image
-  const displayImage = activeAdminFish?.image && (activeStageIdx === 0 || activeStageIdx === 5)
-    ? activeAdminFish.image
-    : currentStage.imageUrl;
+  const currentStage = STAGES[activeStageIdx];
 
   return (
     <div className="relative w-full min-h-[580px] lg:min-h-[640px] bg-[#030712] text-white overflow-hidden select-none border-b border-cyan-500/20">
       
-      {/* 🎨 ATMOSPHERIC CANVAS OVERLAY */}
+      {/* 3D CRAV BURGERS DECONSTRUCTION CANVAS */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full pointer-events-none z-10"
@@ -254,8 +252,8 @@ export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoor
           <div className="flex items-center gap-2.5 bg-slate-900/90 backdrop-blur-xl border border-cyan-500/30 px-3.5 py-1.5 rounded-full shadow-lg">
             <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
             <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-cyan-300 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              OCEANEXOTIC — SHORE TO DOOR PROCESS ENGINE
+              <Box className="w-3.5 h-3.5 text-amber-400" />
+              OCEANEXOTIC — 3D DECONSTRUCTION PROCESS ENGINE
             </span>
           </div>
 
@@ -263,25 +261,25 @@ export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoor
             <button
               onClick={() => setIsPlaying(!isPlaying)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/90 border border-white/20 hover:border-cyan-400 text-xs font-black text-cyan-300 transition-all backdrop-blur-md"
-              title={isPlaying ? "Pause Process" : "Play Process"}
+              title={isPlaying ? "Pause 3D Engine" : "Play 3D Engine"}
             >
               {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
               <span className="hidden sm:inline text-[10px] uppercase tracking-wider">
-                {isPlaying ? "AUTO PLAYING" : "PAUSED"}
+                {isPlaying ? "3D AUTO" : "PAUSED"}
               </span>
             </button>
 
             <button
               onClick={() => handleStageSelect(0)}
               className="p-1.5 rounded-full bg-slate-900/90 border border-white/20 hover:border-cyan-400 text-slate-300 transition-all"
-              title="Restart Journey"
+              title="Restart 3D Journey"
             >
               <RotateCcw className="w-3.5 h-3.5" />
             </button>
           </div>
         </header>
 
-        {/* MAIN DISPLAY STAGE — Headlines (Left) + Single Frame Animated Seafood Viewport (Right) */}
+        {/* MAIN DISPLAY STAGE — Headlines (Left) + 3D Deconstructed Stage Photo (Right) */}
         <main className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center my-auto py-4">
           
           {/* LEFT COLUMN — Stage Headlines & Conversion CTAs */}
@@ -338,7 +336,7 @@ export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoor
             </AnimatePresence>
           </div>
 
-          {/* RIGHT COLUMN — SINGLE-FRAME GUARANTEED BRIGHT SEAFOOD VIEWPORT */}
+          {/* RIGHT COLUMN — CRAV BURGERS 3D PARALLAX STAGE VIEWPORT */}
           <div className="lg:col-span-7 flex items-center justify-center relative z-20">
             <AnimatePresence mode="wait">
               <motion.div
@@ -351,7 +349,7 @@ export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoor
               >
                 {/* Guaranteed High-Res Real Seafood Stage Photo */}
                 <img
-                  src={displayImage}
+                  src={`/images/hero/hero_${currentStage.id === 'catch' ? 'shore_catch' : currentStage.id === 'slice' ? 'freshly_sliced' : currentStage.id === 'vacuum' ? 'vacuum_sealed' : currentStage.id === 'coldchain' ? 'cold_chain' : currentStage.id === 'delivery' ? 'express_delivery' : 'delivered_door'}.jpg`}
                   alt={currentStage.title}
                   className="w-full h-full object-cover rounded-2xl transition-transform duration-700 group-hover:scale-105"
                 />
@@ -396,7 +394,7 @@ export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoor
                     </span>
                   </div>
                   <span className="text-[10px] font-black uppercase px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                    REAL SEAFOOD
+                    3D DECONSTRUCTION
                   </span>
                 </div>
               </motion.div>
@@ -412,13 +410,13 @@ export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoor
           <div className="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden border border-white/10 relative">
             <div
               className="h-full bg-gradient-to-r from-cyan-400 via-teal-400 via-amber-400 to-cyan-300 transition-all duration-100 ease-linear shadow-[0_0_10px_#00f3ff]"
-              style={{ width: `${((activeStageIdx + progress / 100) / DEFAULT_STAGES.length) * 100}%` }}
+              style={{ width: `${((activeStageIdx + progress / 100) / STAGES.length) * 100}%` }}
             />
           </div>
 
           {/* Interactive Step Ribbon Buttons */}
           <div className="flex items-center justify-between gap-1.5 sm:gap-2 overflow-x-auto pb-1">
-            {DEFAULT_STAGES.map((stg, i) => (
+            {STAGES.map((stg, i) => (
               <button
                 key={stg.id}
                 onClick={() => handleStageSelect(i)}
