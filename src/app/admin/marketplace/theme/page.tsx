@@ -413,13 +413,20 @@ export default function MarketplaceThemeControl() {
                </Badge>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                {[
+                  {
+                     id: "SHORE_TO_DOOR_3D",
+                     title: "🌊 Shore to Door 3D",
+                     desc: "Cinematic 6-stage interactive scroll transition (Ocean -> Fresh Catch -> Pack -> Doorstep).",
+                     badge: "Signature 3D",
+                     color: "border-cyan-500 bg-cyan-950/40 text-cyan-300"
+                  },
                   {
                      id: "AMAZON_CARD_GRID",
                      title: "🛒 Amazon Multi-Card Grid",
                      desc: "Horizontal snap carousel of themed cards with 2x2 product grids, thumbnails, & prices.",
-                     badge: "Recommended",
+                     badge: "Multi-Grid",
                      color: "border-teal-500 bg-teal-950/40 text-teal-300"
                   },
                   {

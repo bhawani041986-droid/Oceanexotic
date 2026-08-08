@@ -86,7 +86,7 @@ interface SettingsState {
   
   // Customer Theme Engine
   customerTheme: string;
-  heroStyle?: 'AMAZON_CARD_GRID' | 'SWIGGY_DYNAMIC_BANNER' | 'ZOMATO_HIGH_IMPACT' | 'COMPACT_MINIMAL_STRIP';
+  heroStyle?: 'SHORE_TO_DOOR_3D' | 'AMAZON_CARD_GRID' | 'SWIGGY_DYNAMIC_BANNER' | 'ZOMATO_HIGH_IMPACT' | 'COMPACT_MINIMAL_STRIP';
   categoryAnimationMode?: 'PARALLAX_FLOAT' | 'PULSE_ZOOM' | 'STATIC';
   amazonHeroCards?: AmazonHeroCardConfig[];
   swiggyBanners?: SwiggyBannerSlide[];
@@ -272,7 +272,7 @@ export const useSettingsStore = create<SettingsState>()(
       theme: "theme-ocean-neon",
       font: "font-inter",
       customerTheme: "theme-ocean-neon",
-      heroStyle: "AMAZON_CARD_GRID",
+      heroStyle: "SHORE_TO_DOOR_3D",
       amazonHeroCards: DEFAULT_AMAZON_HERO_CARDS,
       swiggyBanners: DEFAULT_SWIGGY_BANNERS,
       zomatoHeroConfig: DEFAULT_ZOMATO_HERO,

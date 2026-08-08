@@ -63,6 +63,7 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Input } from "@/components/ui/Input";
 import { useSettingsStore, DEFAULT_AMAZON_HERO_CARDS } from "@/store/settingsStore";
+import { OceanExoticShoreToDoorHero } from "@/components/hero/OceanExoticShoreToDoorHero";
 import { useCartStore } from "@/store/cartStore";
 import { useToast } from "@/components/ui/Toast";
 import { Logo } from "@/components/ui/Logo";
@@ -2180,7 +2181,10 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
   return (
     <div className="w-full">
       {/* 3. PRO UI/UX DYNAMIC FISH MARKET HERO SECTIONS */}
-      {(!settings.heroStyle || settings.heroStyle === 'AMAZON_CARD_GRID') && (
+      {(!settings.heroStyle || settings.heroStyle === 'SHORE_TO_DOOR_3D') && (
+         <OceanExoticShoreToDoorHero />
+      )}
+      {settings.heroStyle === 'AMAZON_CARD_GRID' && (
          <AmazonWebHeroSection cards={settings.amazonHeroCards} />
       )}
       {settings.heroStyle === 'COMPACT_MINIMAL_STRIP' && (
