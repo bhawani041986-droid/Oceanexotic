@@ -1101,121 +1101,236 @@ export default function ProductDetailPage({
 
       </div>
 
-      {/* ── Cut Options Modal ── */}
+      {/* ── Cut Options Modal — Premium Redesign ── */}
       {isCutModalOpen && (
-        <Modal
-          isOpen={isCutModalOpen}
-          onClose={() => setIsCutModalOpen(false)}
-          title="Select Your Cut"
-        >
-          <div className="space-y-4 px-1 pb-2">
+        <div className="fixed inset-0 z-[400] flex items-end md:items-center justify-center">
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsCutModalOpen(false)}
+            className="absolute inset-0 bg-black/70 backdrop-blur-md"
+          />
 
-            {/* Weight Selector inside modal */}
-            {product.variants && product.variants.length > 0 && (
-              <div className="space-y-2">
-                <p className="text-[9px] font-black text-[var(--c-text-secondary)] uppercase tracking-[0.25em]">Select Weight</p>
-                <div className="grid grid-cols-3 gap-2">
-                  {product.variants.map((v: any) => (
-                    <button
-                      key={v.id}
-                      type="button"
-                      onClick={() => { setActiveVariant(v); setBaseSelectedPrice(v.price); }}
-                      className={cn(
-                        "flex flex-col items-center justify-center py-2.5 px-2 rounded-xl border-2 text-center transition-all",
-                        activeVariant?.id === v.id
-                          ? "border-[var(--c-primary)] bg-[var(--c-primary)]/10 text-[var(--foreground)] shadow-[0_0_12px_rgba(0,200,150,0.2)]"
-                          : "border-[var(--foreground)]/10 bg-[var(--foreground)]/5 text-[var(--c-text-secondary)] hover:border-[var(--foreground)]/30"
-                      )}
-                    >
-                      <span className="text-[10px] font-black uppercase italic">{v.label}</span>
-                      <span className="text-[12px] font-black italic mt-0.5">₹{v.price.toLocaleString()}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+          {/* Panel */}
+          <motion.div
+            initial={{ y: "100%", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: "100%", opacity: 0 }}
+            transition={{ type: "spring", damping: 32, stiffness: 300 }}
+            className="relative w-full max-w-lg bg-[#0a0f1a] border border-white/10 rounded-t-[32px] md:rounded-[32px] overflow-hidden shadow-[0_-20px_60px_rgba(0,0,0,0.8)] md:shadow-2xl z-10 flex flex-col max-h-[92vh]"
+          >
+            {/* Header gradient bar */}
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--c-primary)] to-transparent" />
 
-            {/* Cut Options */}
-            <CutOptionsSelector
-              cutOptions={liveCutOptions}
-              basePrice={baseSelectedPrice}
-              onSelectionChange={(cuts, finalPrice) => {
-                setSelectedCuts(cuts);
-                setCurrentPrice(finalPrice + (selectedPrepOption ? parseFloat(selectedPrepOption.price_flat_add) : 0));
-              }}
-            />
+            {/* Drag handle (mobile) */}
+            <div className="pt-3 pb-1 flex justify-center md:hidden">
+              <div className="w-10 h-1 rounded-full bg-white/20" />
+            </div>
 
-            {/* Prep option mini-selector inside modal */}
-            {product.prep_options && product.prep_options.length > 0 && (
-              <div className="space-y-2">
-                <p className="text-[9px] font-black text-[var(--c-text-secondary)] uppercase tracking-widest">Preparation Style</p>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {product.prep_options.map((option: any) => (
-                    <button
-                      key={option.id}
-                      onClick={() => setSelectedPrepOption(option)}
-                      className={cn(
-                        "flex flex-col items-center justify-center py-3 px-2 transition-all border rounded-xl text-center text-[9px] font-black uppercase",
-                        selectedPrepOption?.id === option.id
-                          ? "bg-[var(--c-primary)]/10 border-[var(--c-primary)] text-[var(--foreground)]"
-                          : "bg-[var(--foreground)]/5 border-[var(--foreground)]/5 text-[var(--c-text-secondary)] hover:border-[var(--foreground)]/15"
-                      )}
-                    >
-                      <span className="text-lg mb-1">{option.prep_type === 'RAW' ? '🐟' : option.prep_type === 'MARINATED' ? '🧂' : option.prep_type === 'GRILLED' ? '🔥' : option.prep_type === 'FRIED' ? '🍳' : '🍽️'}</span>
-                      <p>{option.name}</p>
-                      <span className="text-[8px] opacity-70">{option.price_flat_add > 0 ? `+ ₹${option.price_flat_add}` : "Included"}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Quantity Stepper inside modal */}
-            <div className="flex items-center justify-between bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl px-4 py-3">
+            {/* Header */}
+            <div className="px-6 pt-4 pb-4 flex items-center justify-between border-b border-white/5 shrink-0">
               <div>
-                <p className="text-[9px] font-black text-[var(--c-text-secondary)] uppercase tracking-widest">Quantity</p>
-                <p className="text-[8px] text-[var(--c-text-secondary)] opacity-60 mt-0.5">Total: ₹{(currentPrice * quantity).toLocaleString()}</p>
+                <p className="text-[8px] font-black text-[var(--c-primary)] uppercase tracking-[0.35em] mb-0.5">🔪 Harbor Fresh</p>
+                <h2 className="text-xl font-black text-white uppercase italic tracking-tighter leading-none">Select Your Cut</h2>
               </div>
+              {/* Live price badge */}
               <div className="flex items-center gap-3">
+                <div className="text-right">
+                  <p className="text-[7px] font-black text-white/40 uppercase tracking-widest">Unit Price</p>
+                  <p className="text-lg font-black text-[var(--c-primary)] italic leading-none">₹{currentPrice.toLocaleString()}</p>
+                </div>
                 <button
-                  type="button"
-                  onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                  className="w-8 h-8 rounded-full bg-[var(--foreground)]/10 hover:bg-[var(--c-primary)]/20 border border-[var(--foreground)]/10 hover:border-[var(--c-primary)]/40 flex items-center justify-center text-[var(--foreground)] transition-all active:scale-95 font-black"
+                  onClick={() => setIsCutModalOpen(false)}
+                  className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-all"
                 >
-                  <Minus className="w-3.5 h-3.5" />
-                </button>
-                <span className="text-xl font-black text-[var(--foreground)] min-w-[32px] text-center">{quantity}</span>
-                <button
-                  type="button"
-                  onClick={() => setQuantity(q => Math.min(20, q + 1))}
-                  className="w-8 h-8 rounded-full bg-[var(--foreground)]/10 hover:bg-[var(--c-primary)]/20 border border-[var(--foreground)]/10 hover:border-[var(--c-primary)]/40 flex items-center justify-center text-[var(--foreground)] transition-all active:scale-95 font-black"
-                >
-                  <Plus className="w-3.5 h-3.5" />
+                  <Plus className="w-3.5 h-3.5 rotate-45" />
                 </button>
               </div>
             </div>
 
-            {/* Price Summary */}
-            <div className="flex items-center justify-between px-2 py-1 rounded-lg bg-[var(--c-primary)]/5 border border-[var(--c-primary)]/10">
-              <span className="text-[9px] font-black text-[var(--c-text-secondary)] uppercase tracking-widest">
-                {activeVariant?.label || product.weight} × {quantity} {quantity > 1 ? 'units' : 'unit'}
-              </span>
-              <span className="text-base font-black text-[var(--c-primary)] italic">₹{(currentPrice * quantity).toLocaleString()}</span>
+            {/* Scrollable Content */}
+            <div className="overflow-y-auto flex-1 px-6 py-4 space-y-5">
+
+              {/* ── CUT STYLE CARDS ── */}
+              {liveCutOptions.length > 0 ? (
+                <div className="space-y-2">
+                  <p className="text-[8px] font-black text-white/40 uppercase tracking-[0.3em]">How would you like it cut?</p>
+                  <div className="space-y-2">
+                    {(() => {
+                      const CUT_META: Record<string, { icon: string; yield: string; desc: string; badge?: string }> = {
+                        WHOLE:      { icon: '🐟', yield: '100%', desc: 'Full fish, as caught from harbor',          badge: 'Best Value' },
+                        CURRY_CUT:  { icon: '🍛', yield: '75%',  desc: 'Bone-in pieces, perfect for slow curries',  badge: 'Most Popular' },
+                        STEAK_CUT:  { icon: '🥩', yield: '70%',  desc: 'Thick cross-section steaks, grill-ready'                         },
+                        FILLET:     { icon: '🍽️', yield: '55%',  desc: 'Boneless skin-on slabs, pan-sear perfect',  badge: 'Premium'     },
+                        CLEANED:    { icon: '✨', yield: '85%',  desc: 'Gutted & scaled, ready to cook instantly'                        },
+                        UNCLEANED:  { icon: '🌊', yield: '100%', desc: 'As-is from harbor, maximum freshness'                            },
+                        HEAD_ON:    { icon: '🐠', yield: '95%',  desc: 'Full head retained for rich stock'                               },
+                        HEAD_OFF:   { icon: '✂️', yield: '80%',  desc: 'Head removed, cleaner serving'                                   },
+                        SKIN_ON:    { icon: '🔵', yield: '98%',  desc: 'Natural skin retained, crispy when fried'                        },
+                        SKIN_OFF:   { icon: '⚪', yield: '90%',  desc: 'Skin removed for easy cooking & marinating'                      },
+                      };
+                      const selectedPrimary = selectedCuts?.primary || null;
+                      return liveCutOptions.map((cut: any) => {
+                        const meta = CUT_META[cut.cut_type] || { icon: '🐟', yield: '--', desc: cut.desc || '' };
+                        const isSelected = selectedPrimary === cut.cut_type;
+                        const priceDelta = cut.price_flat_add > 0 ? `+₹${cut.price_flat_add}` : cut.price_modifier_percent > 0 ? `+${cut.price_modifier_percent}%` : cut.price_modifier_percent < 0 ? `${cut.price_modifier_percent}%` : null;
+                        return (
+                          <button
+                            key={cut.cut_type}
+                            type="button"
+                            disabled={!cut.is_available}
+                            onClick={() => {
+                              const newCuts = { primary: cut.cut_type, cleaning: null, head: null, skin: null };
+                              setSelectedCuts(newCuts);
+                              const finalPrice = Math.round(baseSelectedPrice * (1 + (cut.price_modifier_percent || 0) / 100) + (cut.price_flat_add || 0));
+                              setCurrentPrice(finalPrice + (selectedPrepOption ? parseFloat(selectedPrepOption.price_flat_add) : 0));
+                            }}
+                            className={cn(
+                              "w-full flex items-center gap-4 p-3.5 rounded-2xl border-2 transition-all duration-200 text-left group relative overflow-hidden",
+                              isSelected
+                                ? "border-[var(--c-primary)] bg-[var(--c-primary)]/10 shadow-[0_0_20px_rgba(0,200,150,0.15)]"
+                                : "border-white/8 bg-white/[0.03] hover:border-white/20 hover:bg-white/[0.06]",
+                              !cut.is_available && "opacity-30 cursor-not-allowed"
+                            )}
+                          >
+                            {/* Shimmer on selected */}
+                            {isSelected && (
+                              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[var(--c-primary)]/5 to-transparent pointer-events-none" />
+                            )}
+
+                            {/* Emoji Icon */}
+                            <div className={cn(
+                              "w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0 transition-all",
+                              isSelected ? "bg-[var(--c-primary)]/20 scale-110" : "bg-white/5 group-hover:bg-white/10"
+                            )}>
+                              {meta.icon}
+                            </div>
+
+                            {/* Info */}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-0.5">
+                                <p className={cn("text-[11px] font-black uppercase italic tracking-wide", isSelected ? "text-[var(--c-primary)]" : "text-white")}>
+                                  {cut.label || cut.cut_type.replace(/_/g, ' ')}
+                                </p>
+                                {meta.badge && (
+                                  <span className={cn(
+                                    "text-[6px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-full border",
+                                    isSelected ? "bg-[var(--c-primary)]/20 border-[var(--c-primary)]/40 text-[var(--c-primary)]" : "bg-white/5 border-white/10 text-white/50"
+                                  )}>{meta.badge}</span>
+                                )}
+                              </div>
+                              <p className="text-[9px] text-white/40 leading-tight">{meta.desc}</p>
+                              <div className="flex items-center gap-3 mt-1.5">
+                                <span className="text-[8px] font-black text-white/30 uppercase">Yield: <span className={isSelected ? "text-[var(--c-primary)]" : "text-white/50"}>{meta.yield}</span></span>
+                                {priceDelta && <span className={cn("text-[8px] font-black", isSelected ? "text-[var(--c-primary)]" : "text-amber-400/70")}>{priceDelta}</span>}
+                              </div>
+                            </div>
+
+                            {/* Check */}
+                            <div className={cn(
+                              "w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all",
+                              isSelected ? "border-[var(--c-primary)] bg-[var(--c-primary)]" : "border-white/20"
+                            )}>
+                              {isSelected && <Check className="w-2.5 h-2.5 text-black" />}
+                            </div>
+                          </button>
+                        );
+                      });
+                    })()}
+                  </div>
+                </div>
+              ) : (
+                <div className="text-center py-6 text-white/30 text-[10px] font-black uppercase tracking-widest">
+                  Loading cut options…
+                </div>
+              )}
+
+              {/* ── PREP STYLE ── */}
+              {product.prep_options && product.prep_options.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-[8px] font-black text-white/40 uppercase tracking-[0.3em]">Preparation Style</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {product.prep_options.map((option: any) => {
+                      const isSelected = selectedPrepOption?.id === option.id;
+                      const prepIcon = option.prep_type === 'RAW' ? '🐟' : option.prep_type === 'MARINATED' ? '🧂' : option.prep_type === 'GRILLED' ? '🔥' : option.prep_type === 'FRIED' ? '🍳' : '🍽️';
+                      return (
+                        <button
+                          key={option.id}
+                          type="button"
+                          onClick={() => setSelectedPrepOption(option)}
+                          className={cn(
+                            "flex items-center gap-3 p-3 rounded-xl border-2 text-left transition-all",
+                            isSelected
+                              ? "border-[var(--c-primary)] bg-[var(--c-primary)]/10"
+                              : "border-white/8 bg-white/[0.03] hover:border-white/20"
+                          )}
+                        >
+                          <span className="text-xl">{prepIcon}</span>
+                          <div>
+                            <p className={cn("text-[10px] font-black uppercase", isSelected ? "text-[var(--c-primary)]" : "text-white")}>{option.name}</p>
+                            <p className="text-[8px] text-white/30">{option.price_flat_add > 0 ? `+ ₹${option.price_flat_add}` : "Included"}</p>
+                          </div>
+                          {isSelected && <Check className="w-3.5 h-3.5 text-[var(--c-primary)] ml-auto" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
             </div>
 
-            {/* Confirm CTA */}
-            <button
-              onClick={handleAddToCart}
-              className="w-full py-3.5 rounded-xl bg-[var(--c-primary)] text-[var(--foreground)] font-black uppercase text-[11px] tracking-widest flex items-center justify-center gap-2 shadow-[var(--c-shadow-glow)] hover:opacity-90 transition-all active:scale-[0.98]"
-            >
-              <ShoppingCart className="w-4 h-4" />
-              {selectedCuts?.primary
-                ? `Add ${quantity > 1 ? `${quantity}×` : ''} ${selectedCuts.primary.replace(/_/g, ' ')} · ₹${(currentPrice * quantity).toLocaleString()}`
-                : `Confirm & Add to Cart · ₹${(currentPrice * quantity).toLocaleString()}`
-              }
-            </button>
-          </div>
-        </Modal>
+            {/* ── STICKY BOTTOM BAR ── */}
+            <div className="px-6 py-4 border-t border-white/5 bg-[#0a0f1a]/95 backdrop-blur-xl shrink-0 space-y-3">
+
+              {/* Quantity + Total row */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-[7px] font-black text-white/30 uppercase tracking-widest">Quantity</p>
+                  <p className="text-[8px] text-white/40 mt-0.5">
+                    {activeVariant?.label || product.weight} × {quantity} = <span className="text-[var(--c-primary)] font-black">₹{(currentPrice * quantity).toLocaleString()}</span>
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                    className="w-9 h-9 rounded-full bg-white/5 border border-white/10 hover:border-[var(--c-primary)]/50 hover:bg-[var(--c-primary)]/10 flex items-center justify-center text-white transition-all active:scale-90"
+                  >
+                    <Minus className="w-3.5 h-3.5" />
+                  </button>
+                  <span className="text-2xl font-black text-white min-w-[36px] text-center tabular-nums">{quantity}</span>
+                  <button
+                    type="button"
+                    onClick={() => setQuantity(q => Math.min(20, q + 1))}
+                    className="w-9 h-9 rounded-full bg-white/5 border border-white/10 hover:border-[var(--c-primary)]/50 hover:bg-[var(--c-primary)]/10 flex items-center justify-center text-white transition-all active:scale-90"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Confirm CTA */}
+              <button
+                onClick={handleAddToCart}
+                className="relative w-full py-4 rounded-2xl bg-[var(--c-primary)] text-black font-black uppercase text-[11px] tracking-[0.2em] flex items-center justify-center gap-2.5 overflow-hidden group transition-all active:scale-[0.97] hover:shadow-[0_0_30px_rgba(0,200,150,0.4)]"
+              >
+                {/* shimmer */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 pointer-events-none" />
+                <ShoppingCart className="w-4 h-4 relative z-10" />
+                <span className="relative z-10">
+                  {selectedCuts?.primary
+                    ? `Add ${quantity > 1 ? `${quantity} × ` : ''}${selectedCuts.primary.replace(/_/g, ' ')} — ₹${(currentPrice * quantity).toLocaleString()}`
+                    : `Add to Cart — ₹${(currentPrice * quantity).toLocaleString()}`
+                  }
+                </span>
+              </button>
+
+            </div>
+          </motion.div>
+        </div>
       )}
 
     </>
