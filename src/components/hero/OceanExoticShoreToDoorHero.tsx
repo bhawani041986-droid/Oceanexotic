@@ -49,17 +49,17 @@ interface OceanExoticShoreToDoorHeroProps {
   hero3dStages?: Hero3DStageConfig[];
 }
 
-// 🍔 ➔ 🐟 WORLD-CLASS 3D STACKED TRANSPARENT CUTOUT PROCESS STAGES
+// 🍔 ➔ 🐟 WORLD-CLASS 3D STACKED USER-PROVIDED SEAFOOD CUTOUT STAGES
 const DEFAULT_STAGES = [
   {
     id: "catch",
     step: "01",
     label: "SHORE CATCH",
     title: "SHORE CATCH",
-    badge: "100% Ocean Wild Catch",
+    badge: "100% Ocean Wild Red Snapper",
     statusText: "Pristine Island Dock Landing",
     accentColor: "#00f3ff",
-    cutoutUrl: "/ICONS/Red-snapper.png",
+    cutoutUrl: "/images/hero/user_fresh_fish.png",
     icon: <Waves className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-cyan-400" />
   },
   {
@@ -67,10 +67,10 @@ const DEFAULT_STAGES = [
     step: "02",
     label: "PRECISION SLICED",
     title: "PRECISION SLICED",
-    badge: "3D Deconstructed Cutouts",
-    statusText: "Laser Sliced Fresh Cuts",
+    badge: "Kingfish / Surmai 3D Deconstructed Cuts",
+    statusText: "Laser Sliced Fresh Steaks & Fillets",
     accentColor: "#f59e0b",
-    cutoutUrl: "/ICONS/kingfish.png",
+    cutoutUrl: "/images/hero/user_sliced_steaks.jpg",
     icon: <Scissors className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-amber-400" />
   },
   {
@@ -78,10 +78,10 @@ const DEFAULT_STAGES = [
     step: "03",
     label: "VACUUM SEALED",
     title: "VACUUM SEALED",
-    badge: "Hermetic Eco Pack",
-    statusText: "Airtight Freshness Encapsulation",
+    badge: "Airtight White Pomfret Pack",
+    statusText: "Hermetic Freshness Encapsulation",
     accentColor: "#3b82f6",
-    cutoutUrl: "/ICONS/white-pomfret.png",
+    cutoutUrl: "/images/hero/user_pomfret_ice.jpg",
     icon: <Package className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-blue-400" />
   },
   {
@@ -89,10 +89,10 @@ const DEFAULT_STAGES = [
     step: "04",
     label: "COLD CHAIN (0-4°C)",
     title: "COLD CHAIN MAINTAINED",
-    badge: "0°C - 4°C Ice Lock",
+    badge: "Tiger Prawns 0°C - 4°C Ice Lock",
     statusText: "Continuous Chilled Preservation",
     accentColor: "#10b981",
-    cutoutUrl: "/ICONS/tiger-prawns.png",
+    cutoutUrl: "/images/hero/user_tiger_prawn.jpg",
     icon: <ThermometerSnowflake className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-emerald-400" />
   },
   {
@@ -100,21 +100,21 @@ const DEFAULT_STAGES = [
     step: "05",
     label: "EXPRESS DISPATCH",
     title: "EXPRESS DISPATCH",
-    badge: "90 Min Route",
+    badge: "Fresh Mackerel 90 Min Route",
     statusText: "Cold Courier Velocity Tunnel",
     accentColor: "#a855f7",
-    cutoutUrl: "/ICONS/spiny-lobster.png",
+    cutoutUrl: "/images/hero/user_mackerel.png",
     icon: <Truck className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-purple-400" />
   },
   {
     id: "door",
     step: "06",
     label: "DELIVERED TO DOOR",
-    title: "DELIVERED TO DOOR",
+    title: "DELIVERED TO YOUR DOOR",
     badge: "Shore to Door Complete",
     statusText: "Fresh Seafood Delivered Fresh",
     accentColor: "#00d1ff",
-    cutoutUrl: "/ICONS/grouper.png",
+    cutoutUrl: "/images/hero/user_fresh_fish.png",
     icon: <Home className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-cyan-400" />
   }
 ];
