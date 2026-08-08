@@ -60,6 +60,73 @@ export interface Hero3DFishItem {
   productId?: string;   // Links to a real product detail page
 }
 
+export interface Hero3DStageConfig {
+  id: string;
+  step: string;
+  label: string;
+  title: string;
+  badge: string;
+  statusText: string;
+  imageUrl: string;
+}
+
+export const DEFAULT_HERO3D_STAGES: Hero3DStageConfig[] = [
+  {
+    id: "catch",
+    step: "01",
+    label: "SHORE CATCH",
+    title: "SHORE CATCH",
+    badge: "100% Ocean Wild Catch",
+    statusText: "Pristine Island Dock Landing",
+    imageUrl: "/images/hero/hero_shore_catch.jpg"
+  },
+  {
+    id: "slice",
+    step: "02",
+    label: "PRECISION SLICED",
+    title: "PRECISION SLICED",
+    badge: "3D Deconstructed Steaks & Fry Cuts",
+    statusText: "Laser Sliced Fresh Cuts",
+    imageUrl: "/images/hero/hero_freshly_sliced.jpg"
+  },
+  {
+    id: "vacuum",
+    step: "03",
+    label: "VACUUM SEALED",
+    title: "VACUUM SEALED",
+    badge: "Hermetic Eco Pack",
+    statusText: "Airtight Freshness Encapsulation",
+    imageUrl: "/images/hero/hero_vacuum_sealed.jpg"
+  },
+  {
+    id: "coldchain",
+    step: "04",
+    label: "COLD CHAIN (0-4°C)",
+    title: "COLD CHAIN MAINTAINED",
+    badge: "0°C - 4°C Ice Lock",
+    statusText: "Continuous Chilled Preservation",
+    imageUrl: "/images/hero/hero_cold_chain.jpg"
+  },
+  {
+    id: "delivery",
+    step: "05",
+    label: "EXPRESS DISPATCH",
+    title: "EXPRESS DISPATCH",
+    badge: "90 Min Delivery Route",
+    statusText: "Cold Courier Velocity Tunnel",
+    imageUrl: "/images/hero/hero_express_delivery.jpg"
+  },
+  {
+    id: "door",
+    step: "06",
+    label: "DELIVERED TO DOOR",
+    title: "DELIVERED TO YOUR DOOR",
+    badge: "Shore to Door Complete",
+    statusText: "Fresh Seafood Delivered Fresh",
+    imageUrl: "/images/hero/hero_delivered_door.jpg"
+  }
+];
+
 export interface CompactStripConfig {
   tickerText: string;
   bgColor: string;
@@ -134,6 +201,7 @@ interface SettingsState {
     sellerAppIcon?: string;
     adminAppIcon?: string;
     hero3dItems?: Hero3DFishItem[];
+    hero3dStages?: Hero3DStageConfig[];
   };
 
   // PayU Registry

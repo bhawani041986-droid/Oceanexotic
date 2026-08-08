@@ -33,12 +33,23 @@ export interface Hero3DFishItem {
   icon?: string;
 }
 
+export interface Hero3DStageConfig {
+  id: string;
+  step: string;
+  label: string;
+  title: string;
+  badge: string;
+  statusText: string;
+  imageUrl: string;
+}
+
 interface OceanExoticShoreToDoorHeroProps {
   heroItems?: Hero3DFishItem[];
+  hero3dStages?: Hero3DStageConfig[];
 }
 
 // 🍔 ➔ 🐟 CRAV BURGERS 3D DECONSTRUCTION PROCESS STAGES
-const STAGES = [
+const DEFAULT_STAGES = [
   {
     id: "catch",
     step: "01",
@@ -101,7 +112,7 @@ const STAGES = [
   }
 ];
 
-export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoorHeroProps) {
+export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExoticShoreToDoorHeroProps) {
   const mountRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [activeStageIdx, setActiveStageIdx] = useState(0);
@@ -110,6 +121,17 @@ export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoor
   const mouseRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 });
 
   const activeAdminFish = heroItems && heroItems.length > 0 ? heroItems[0] : null;
+
+  const STAGES = DEFAULT_STAGES.map((stg, i) => {
+    const customStage = hero3dStages && hero3dStages[i];
+    return {
+      ...stg,
+      title: customStage?.title || stg.title,
+      badge: customStage?.badge || stg.badge,
+      statusText: customStage?.statusText || stg.statusText,
+      imageUrl: customStage?.imageUrl || `/images/hero/hero_${stg.id === 'catch' ? 'shore_catch' : stg.id === 'slice' ? 'freshly_sliced' : stg.id === 'vacuum' ? 'vacuum_sealed' : stg.id === 'coldchain' ? 'cold_chain' : stg.id === 'delivery' ? 'express_delivery' : 'delivered_door'}.jpg`
+    };
+  });
 
   // ⏱️ Auto-Play Timeline Ticker
   useEffect(() => {
@@ -349,7 +371,7 @@ export function OceanExoticShoreToDoorHero({ heroItems }: OceanExoticShoreToDoor
               >
                 {/* Guaranteed High-Res Real Seafood Stage Photo */}
                 <img
-                  src={`/images/hero/hero_${currentStage.id === 'catch' ? 'shore_catch' : currentStage.id === 'slice' ? 'freshly_sliced' : currentStage.id === 'vacuum' ? 'vacuum_sealed' : currentStage.id === 'coldchain' ? 'cold_chain' : currentStage.id === 'delivery' ? 'express_delivery' : 'delivered_door'}.jpg`}
+                  src={currentStage.imageUrl}
                   alt={currentStage.title}
                   className="w-full h-full object-cover rounded-2xl transition-transform duration-700 group-hover:scale-105"
                 />

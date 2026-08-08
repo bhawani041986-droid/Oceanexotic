@@ -11,7 +11,9 @@ import {
   SwiggyBannerSlide,
   ZomatoHeroConfig,
   CompactStripConfig,
-  Hero3DFishItem
+  Hero3DFishItem,
+  DEFAULT_HERO3D_STAGES,
+  Hero3DStageConfig
 } from "@/store/settingsStore";
 import { OceanExoticShoreToDoorHero } from "@/components/hero/OceanExoticShoreToDoorHero";
 import { CUSTOMER_THEMES, CustomerTheme } from "@/config/customerThemes";
@@ -145,6 +147,9 @@ export default function MarketplaceThemeControl() {
   const [tempHero3d, setTempHero3d] = useState<Hero3DFishItem[]>(
     (customerAssets as any)?.hero3dItems || DEFAULT_HERO3D
   );
+  const [tempHero3dStages, setTempHero3dStages] = useState<Hero3DStageConfig[]>(
+    (customerAssets as any)?.hero3dStages || DEFAULT_HERO3D_STAGES
+  );
   const [availableProducts, setAvailableProducts] = useState<any[]>([]);
 
   // Fetch settings & products on mount
@@ -179,6 +184,8 @@ export default function MarketplaceThemeControl() {
       setTempLogoSecondaryColor(logoSecondaryColor || "#F0ABFC");
       const stored3d = (customerAssets as any)?.hero3dItems;
       if (stored3d && stored3d.length > 0) setTempHero3d(stored3d);
+      const storedStages = (customerAssets as any)?.hero3dStages;
+      if (storedStages && storedStages.length > 0) setTempHero3dStages(storedStages);
       isHydratedRef.current = true;
     }
   }, [customerAssets, customerTheme, atmosphericGlow, heroOverlayOpacity, heroStyle, categoryAnimationMode, amazonHeroCards, swiggyBanners, zomatoHeroConfig, compactStripConfig, logoTextColor, logoPrimaryColor, logoSecondaryColor]);
@@ -234,7 +241,7 @@ export default function MarketplaceThemeControl() {
     setIsCommitting(true);
     setSettings({
       customerTheme: selectedThemeId,
-      customerAssets: { ...tempAssets, hero3dItems: tempHero3d } as any,
+      customerAssets: { ...tempAssets, hero3dItems: tempHero3d, hero3dStages: tempHero3dStages } as any,
       atmosphericGlow: tempGlow,
       heroOverlayOpacity: tempHeroOpacity,
       heroStyle: tempHeroStyle,
@@ -1367,6 +1374,81 @@ export default function MarketplaceThemeControl() {
                ))}
             </div>
          </div>
+          {/* 🎬 SHORE TO DOOR 6-STAGE PROCESS CONTROL PANEL */}
+          <div className="space-y-6 bg-slate-900/90 border border-teal-700/50 rounded-3xl p-6 md:p-8 shadow-2xl mb-8">
+             <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+                <div>
+                   <h3 className="text-lg md:text-xl font-black uppercase tracking-tight text-white flex items-center gap-2">
+                      <Layers className="w-5 h-5 text-teal-400" /> Shore to Door 6-Stage Process Control
+                   </h3>
+                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                      Customize titles, badges, subtitles, and upload custom stage photos for all 6 process stages (Shore Catch ➔ Doorstep Serving).
+                   </p>
+                </div>
+                <Badge className="bg-teal-500/20 text-teal-400 border border-teal-500/30 text-[9px] font-black uppercase tracking-wider">
+                   6 Stages Active
+                </Badge>
+             </div>
+
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {tempHero3dStages.map((stg, idx) => (
+                   <div key={stg.id} className="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 space-y-3">
+                      <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+                         <span className="text-xs font-black uppercase text-teal-300 tracking-wider">
+                            Stage {stg.step} // {stg.label}
+                         </span>
+                         {stg.imageUrl && (
+                            <img src={stg.imageUrl} alt={stg.title} className="w-10 h-10 rounded-lg object-cover border border-slate-700" />
+                         )}
+                      </div>
+
+                      {/* Stage Photo Uploader */}
+                      <ImageUploaderBox
+                         label={`Stage ${stg.step} Photo`}
+                         value={stg.imageUrl}
+                         aspect="banner"
+                         onChange={(url) => {
+                            const updated = tempHero3dStages.map((s, i) => i === idx ? { ...s, imageUrl: url } : s);
+                            setTempHero3dStages(updated);
+                         }}
+                      />
+
+                      {/* Stage Title */}
+                      <div>
+                         <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">Stage Title</label>
+                         <input
+                            type="text"
+                            value={stg.title}
+                            onChange={(e) => setTempHero3dStages(tempHero3dStages.map((s, i) => i === idx ? { ...s, title: e.target.value } : s))}
+                            className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white font-bold"
+                         />
+                      </div>
+
+                      {/* Badge Label */}
+                      <div>
+                         <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">Badge Label</label>
+                         <input
+                            type="text"
+                            value={stg.badge}
+                            onChange={(e) => setTempHero3dStages(tempHero3dStages.map((s, i) => i === idx ? { ...s, badge: e.target.value } : s))}
+                            className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-amber-300 font-bold"
+                         />
+                      </div>
+
+                      {/* Status Subtitle */}
+                      <div>
+                         <label className="text-[8.5px] font-bold text-slate-400 uppercase block mb-0.5">Status Subtitle</label>
+                         <input
+                            type="text"
+                            value={stg.statusText}
+                            onChange={(e) => setTempHero3dStages(tempHero3dStages.map((s, i) => i === idx ? { ...s, statusText: e.target.value } : s))}
+                            className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-slate-300 font-bold"
+                         />
+                      </div>
+                   </div>
+                ))}
+             </div>
+          </div>
 
           {/* 🚀 ADMIN LOGO BRAND COLOR & NEON GLOW CONTROL PANEL */}
          <div className="space-y-6 bg-slate-900/90 border border-slate-700 rounded-3xl p-6 md:p-8 shadow-2xl">
