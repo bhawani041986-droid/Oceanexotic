@@ -343,11 +343,26 @@ export function OceanExoticShoreToDoorHero() {
                 transition={{ duration: 0.45, ease: "easeOut" }}
                 className="relative w-full max-w-lg aspect-[16/10] rounded-3xl overflow-hidden border border-cyan-500/40 bg-slate-950/90 shadow-[0_0_60px_rgba(0,243,255,0.25)] flex items-center justify-center p-2 group"
               >
-                {/* Single Fish Real Catch Stage Photo */}
-                <img
-                  src={`/images/hero/hero_${currentStage.id === 'catch' ? 'shore_catch' : currentStage.id === 'slice' ? 'freshly_sliced' : currentStage.id === 'vacuum' ? 'vacuum_sealed' : currentStage.id === 'coldchain' ? 'cold_chain' : currentStage.id === 'delivery' ? 'express_delivery' : 'delivered_door'}.jpg`}
-                  alt={currentStage.title}
-                  className="w-full h-full object-cover rounded-2xl transition-transform duration-700 group-hover:scale-105"
+                {/* Live Process Video Stage Stream */}
+                <video
+                  src={
+                    activeStageIdx === 0
+                      ? "https://assets.mixkit.co/videos/preview/mixkit-underwater-view-of-ocean-waves-42864-large.mp4"
+                      : activeStageIdx === 1
+                      ? "https://assets.mixkit.co/videos/preview/mixkit-cutting-fresh-fish-on-a-wooden-board-43187-large.mp4"
+                      : activeStageIdx === 2
+                      ? "https://assets.mixkit.co/videos/preview/mixkit-water-bubbles-in-a-blue-background-42907-large.mp4"
+                      : activeStageIdx === 3
+                      ? "https://assets.mixkit.co/videos/preview/mixkit-ice-cubes-falling-into-water-42921-large.mp4"
+                      : activeStageIdx === 4
+                      ? "https://assets.mixkit.co/videos/preview/mixkit-driving-down-a-city-street-at-night-41544-large.mp4"
+                      : "https://assets.mixkit.co/videos/preview/mixkit-hands-serving-a-plate-of-delicious-food-43285-large.mp4"
+                  }
+                  className="w-full h-full object-cover rounded-2xl"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
                 />
 
                 {/* Laser Slice Overlay on Stage 2 */}
@@ -367,7 +382,7 @@ export function OceanExoticShoreToDoorHero() {
                     <span className="text-xs font-black uppercase text-white tracking-wider">{currentStage.label}</span>
                   </div>
                   <span className="text-[10px] font-black uppercase px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                    SINGLE PROCESS VIDEO
+                    60FPS CINEMATIC VIDEO
                   </span>
                 </div>
               </motion.div>
