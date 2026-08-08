@@ -619,33 +619,60 @@ export default function CustomerProfilePage() {
                     </div>
                    <Button onClick={() => handleOpenModal("profile")} variant="ghost" className="p-2 h-auto text-primary hover:bg-primary/5 rounded-xl"><Edit3 className="w-4 h-4" /></Button>
                 </Card>
-             </div>
-
-             <div className="md:hidden relative overflow-hidden bg-[var(--foreground)]/5 rounded-2xl border border-[var(--foreground)]/10 p-[1px] shadow-glow-purple/5">
-                <div className="flex items-center gap-0">
-                   {menuItems.map((item, idx) => {
+                   {/* Premium Horizontally-Scrollable Tab Selector for Mobile (Prevents Overlap) */}
+             <div className="md:hidden w-full overflow-x-auto scrollbar-none flex gap-2.5 py-2 px-1 relative z-30 select-none">
+                <div className="flex items-center gap-2 min-w-max">
+                   {menuItems.map((item) => {
                      const isActive = activeTab === item.id;
-                     const shortLabels: Record<string, string> = { overview: "Profile", loyalty: "Loyalty", referrals: "Refer", addresses: "Address", payments: "Payment", security: "Security", notifications: "Alerts" };
+                     const shortLabels: Record<string, string> = { 
+                       overview: "Profile", 
+                       loyalty: "Loyalty", 
+                       referrals: "Refer", 
+                       addresses: "Addresses", 
+                       payments: "Payments", 
+                       security: "Security", 
+                       notifications: "Alerts" 
+                     };
+                     
                      return (
                        <button 
                          key={item.id} 
-                         onClick={() => setActiveTab(item.id)} 
-                         className={cn(
-                           "flex flex-col items-center justify-center flex-1 h-[72px] transition-all gap-1.5 relative group",
-                           isActive ? "text-white" : "text-text-secondary opacity-60"
-                         )}
-                         style={{
-                           clipPath: "polygon(18% 0, 100% 0, 82% 100%, 0 100%)",
-                           marginLeft: idx === 0 ? "0" : "-6%",
-                           backgroundColor: isActive ? 'var(--primary)' : 'rgba(255,255,255,0.03)',
-                           boxShadow: isActive ? `inset 0 0 0 1px ${item.color}` : 'none',
-                           borderLeftWidth: isActive ? '5px' : '0px',
-                           borderLeftStyle: 'solid',
-                           borderLeftColor: isActive ? item.color : 'transparent'
+                         onClick={() => {
+                           setActiveTab(item.id);
+                           // Smoothly scroll the clicked element into view
+                           document.getElementById(`tab-${item.id}`)?.scrollIntoView({
+                             behavior: 'smooth',
+                             block: 'nearest',
+                             inline: 'center'
+                           });
                          }}
+                         id={`tab-${item.id}`}
+                         className={cn(
+                           "flex items-center gap-2 px-4 py-2.5 rounded-full border text-xs font-black uppercase tracking-wider transition-all relative shrink-0",
+                           isActive 
+                             ? "border-[var(--c-primary)]/30 text-white shadow-[0_0_15px_rgba(var(--c-primary-rgb),0.15)]" 
+                             : "border-white/5 bg-white/[0.03] text-white/50 hover:text-white hover:border-white/10"
+                         )}
                        >
-                         <span className={cn("scale-[0.85] transition-transform", isActive ? "text-white" : "")} style={{ color: !isActive ? item.color : undefined }}>{item.icon}</span>
-                         <span className="text-[9px] font-black uppercase tracking-tighter italic leading-none">{shortLabels[item.id]}</span>
+                         {/* Animated background bubble for the active tab */}
+                         {isActive && (
+                           <motion.div
+                             layoutId="activeProfileTabMobile"
+                             className="absolute inset-0 rounded-full bg-[var(--c-primary)]/15 pointer-events-none"
+                             transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                           />
+                         )}
+                         
+                         <span 
+                           className={cn("w-4 h-4 flex items-center justify-center shrink-0", isActive ? "scale-110 transition-transform" : "")} 
+                           style={{ color: item.color }}
+                         >
+                           {item.icon}
+                         </span>
+                         
+                         <span className="relative z-10 leading-none">
+                           {shortLabels[item.id]}
+                         </span>
                        </button>
                      );
                    })}
