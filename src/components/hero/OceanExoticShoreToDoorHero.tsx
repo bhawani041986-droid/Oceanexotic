@@ -16,7 +16,9 @@ import {
   RotateCcw,
   Sparkles,
   Box,
-  ShoppingCart
+  ShoppingCart,
+  Zap,
+  CheckCircle2
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -48,7 +50,7 @@ interface OceanExoticShoreToDoorHeroProps {
   hero3dStages?: Hero3DStageConfig[];
 }
 
-// 🍔 ➔ 🐟 CRAV BURGERS 3D DECONSTRUCTION PROCESS STAGES
+// 🍔 ➔ 🐟 BORDERLESS 3D DECONSTRUCTION PROCESS STAGES
 const DEFAULT_STAGES = [
   {
     id: "catch",
@@ -113,7 +115,6 @@ const DEFAULT_STAGES = [
 ];
 
 export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExoticShoreToDoorHeroProps) {
-  const mountRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [activeStageIdx, setActiveStageIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -301,7 +302,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
           </div>
         </header>
 
-        {/* MAIN DISPLAY STAGE — Headlines (Left) + 3D Deconstructed Stage Photo (Right) */}
+        {/* MAIN DISPLAY STAGE — Headlines (Left) + Borderless Floating 3D Stage Video Engine (Right) */}
         <main className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center my-auto py-4">
           
           {/* LEFT COLUMN — Stage Headlines & Conversion CTAs */}
@@ -358,66 +359,108 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
             </AnimatePresence>
           </div>
 
-          {/* RIGHT COLUMN — CRAV BURGERS 3D PARALLAX STAGE VIEWPORT */}
+          {/* RIGHT COLUMN — BORDERLESS FLOATING 3D VIDEO DECONSTRUCTION VIEWPORT */}
           <div className="lg:col-span-7 flex items-center justify-center relative z-20">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStage.id}
-                initial={{ opacity: 0, scale: 0.92, rotate: -1 }}
-                animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                exit={{ opacity: 0, scale: 1.05, rotate: 1 }}
-                transition={{ duration: 0.45, ease: "easeOut" }}
-                className="relative w-full max-w-lg aspect-[16/10] rounded-3xl overflow-hidden border-2 border-cyan-400/60 bg-slate-950 shadow-[0_0_60px_rgba(0,243,255,0.35)] flex items-center justify-center p-2 group"
+                initial={{ opacity: 0, scale: 0.9, rotateY: -15, y: 15 }}
+                animate={{ opacity: 1, scale: 1, rotateY: 0, y: 0 }}
+                exit={{ opacity: 0, scale: 1.08, rotateY: 15, y: -15 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="relative w-full max-w-lg aspect-[16/10] flex items-center justify-center group"
               >
-                {/* Guaranteed High-Res Real Seafood Stage Photo */}
-                <img
-                  src={currentStage.imageUrl}
-                  alt={currentStage.title}
-                  className="w-full h-full object-cover rounded-2xl transition-transform duration-700 group-hover:scale-105"
-                />
-
-                {/* Laser Slice Overlay on Stage 2 */}
-                {activeStageIdx === 1 && (
-                  <motion.div
-                    initial={{ opacity: 0, x: "-100%" }}
-                    animate={{ opacity: [0, 1, 0], x: ["-100%", "100%"] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute inset-y-0 w-2.5 bg-gradient-to-b from-transparent via-amber-400 to-transparent shadow-[0_0_25px_#f59e0b] transform -rotate-12 pointer-events-none"
+                {/* 🌟 BORDERLESS 3D FLOATING CANVAS CONTAINER */}
+                <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-[0_20px_80px_rgba(0,243,255,0.25)] flex items-center justify-center">
+                  
+                  {/* High-Res Stage Photo with Dynamic 3D Floating Zoom */}
+                  <img
+                    src={currentStage.imageUrl}
+                    alt={currentStage.title}
+                    className="w-full h-full object-cover rounded-3xl transition-transform duration-1000 group-hover:scale-108"
                   />
-                )}
 
-                {/* Vacuum Pack Sealed Border on Stage 3 */}
-                {activeStageIdx === 2 && (
-                  <div className="absolute inset-2 border-2 border-dashed border-blue-400/80 rounded-xl pointer-events-none animate-pulse" />
-                )}
+                  {/* 🌊 STAGE 1: 3D WATER RIPPLE & CAUSTICS VIDEO OVERLAY */}
+                  {activeStageIdx === 0 && (
+                    <div className="absolute inset-0 bg-cyan-500/10 mix-blend-overlay pointer-events-none animate-pulse" />
+                  )}
 
-                {/* Cold Chain Frost Badge on Stage 4 */}
-                {activeStageIdx === 3 && (
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="bg-slate-950/90 border-2 border-emerald-400 px-5 py-2.5 rounded-2xl shadow-[0_0_30px_rgba(16,185,129,0.6)] flex items-center gap-2.5 backdrop-blur-md">
-                      <ThermometerSnowflake className="w-6 h-6 text-emerald-400 animate-bounce" />
-                      <div className="text-left">
-                        <p className="text-xs font-black text-white uppercase tracking-wider">0°C TO 4°C CHILLED</p>
-                        <p className="text-[9px] font-bold text-emerald-400 uppercase">COLD CHAIN LOCKED</p>
+                  {/* 🔪 STAGE 2: 3D DYNAMIC LASER SLICING VIDEO EFFECT */}
+                  {activeStageIdx === 1 && (
+                    <>
+                      <motion.div
+                        initial={{ opacity: 0, x: "-100%" }}
+                        animate={{ opacity: [0, 1, 1, 0], x: ["-100%", "40%", "80%", "120%"] }}
+                        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                        className="absolute inset-y-0 w-3 bg-gradient-to-b from-transparent via-amber-400 to-transparent shadow-[0_0_35px_#f59e0b] transform -rotate-12 pointer-events-none z-20"
+                      />
+                      <motion.div
+                        initial={{ opacity: 0, scaleX: 0 }}
+                        animate={{ opacity: [0, 0.9, 0], scaleX: [0, 1, 0] }}
+                        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                        className="absolute inset-x-0 h-1 bg-amber-400 shadow-[0_0_20px_#f59e0b] pointer-events-none z-20"
+                      />
+                    </>
+                  )}
+
+                  {/* 📦 STAGE 3: 3D GLASSMORPHIC VACUUM SHRINK-WRAP VIDEO EFFECT */}
+                  {activeStageIdx === 2 && (
+                    <>
+                      <motion.div
+                        initial={{ opacity: 0, scale: 1.1 }}
+                        animate={{ opacity: [0.3, 0.8, 0.3], scale: [1.1, 0.98, 1.1] }}
+                        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+                        className="absolute inset-2 border-2 border-blue-400/90 rounded-2xl pointer-events-none z-20 shadow-[0_0_30px_rgba(59,130,246,0.5)]"
+                      />
+                      <div className="absolute inset-0 bg-blue-500/10 backdrop-blur-[1px] pointer-events-none z-10" />
+                    </>
+                  )}
+
+                  {/* ❄️ STAGE 4: 3D CRYO FROST ICE CRYSTAL LOCK VIDEO EFFECT */}
+                  {activeStageIdx === 3 && (
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
+                      <div className="bg-slate-950/90 border-2 border-emerald-400 px-6 py-3 rounded-2xl shadow-[0_0_40px_rgba(16,185,129,0.7)] flex items-center gap-3 backdrop-blur-md animate-pulse">
+                        <ThermometerSnowflake className="w-7 h-7 text-emerald-400 animate-bounce" />
+                        <div className="text-left">
+                          <p className="text-xs font-black text-white uppercase tracking-wider">0°C TO 4°C CHILLED LOCK</p>
+                          <p className="text-[9px] font-bold text-emerald-400 uppercase tracking-widest">CRYO ICE VAULT PRESERVED</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {/* Ambient Top/Bottom Glow */}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-slate-950/20 pointer-events-none rounded-2xl" />
+                  {/* 🚚 STAGE 5: 3D EXPRESS VELOCITY SPEED-LINE TUNNEL VIDEO EFFECT */}
+                  {activeStageIdx === 4 && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: [0.2, 0.7, 0.2] }}
+                      transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                      className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-500/20 via-transparent to-transparent pointer-events-none z-20"
+                    />
+                  )}
 
-                {/* Telemetry Badge Overlay */}
-                <div className="absolute bottom-4 left-4 right-4 bg-slate-950/90 border border-white/25 p-3 rounded-2xl flex items-center justify-between backdrop-blur-md shadow-2xl">
-                  <div className="flex items-center gap-2">
-                    {currentStage.icon}
-                    <span className="text-xs font-black uppercase text-white tracking-wider">
-                      {activeAdminFish ? activeAdminFish.name : currentStage.label}
+                  {/* 🍽️ STAGE 6: GOURMET DOORSTEP DINING SERVING GLAZE EFFECT */}
+                  {activeStageIdx === 5 && (
+                    <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/20 via-transparent to-amber-500/10 pointer-events-none z-20" />
+                  )}
+
+                  {/* Ambient Top/Bottom Dark Vignette */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-transparent to-slate-950/20 pointer-events-none rounded-3xl" />
+
+                  {/* 3D Telemetry Badge Overlay (Borderless Floating Pill) */}
+                  <div className="absolute bottom-4 left-4 right-4 bg-slate-950/90 border border-white/20 p-3 rounded-2xl flex items-center justify-between backdrop-blur-md shadow-2xl z-30">
+                    <div className="flex items-center gap-2">
+                      {currentStage.icon}
+                      <span className="text-xs font-black uppercase text-white tracking-wider">
+                        {activeAdminFish ? activeAdminFish.name : currentStage.label}
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-black uppercase px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 flex items-center gap-1">
+                      <Zap className="w-3 h-3 text-amber-400" />
+                      3D PROCESS
                     </span>
                   </div>
-                  <span className="text-[10px] font-black uppercase px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                    3D DECONSTRUCTION
-                  </span>
+
                 </div>
               </motion.div>
             </AnimatePresence>
