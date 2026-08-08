@@ -276,20 +276,21 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
 
       <div className="relative z-20 max-w-7xl mx-auto w-full h-full flex flex-col justify-between px-3 sm:px-6 lg:px-10">
         
-        {/* HEADER BAR — Compact Pill */}
-        <header className="w-full flex items-center justify-between pb-1.5 sm:pb-2">
-          <div className="flex items-center gap-1.5 sm:gap-2.5 bg-slate-900/95 backdrop-blur-xl border border-cyan-500/30 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full shadow-lg">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-            <span className="text-[9px] sm:text-xs font-black uppercase tracking-wider text-cyan-300 flex items-center gap-1">
-              <Box className="w-3 h-3 text-amber-400" />
-              OCEANEXOTIC — 3D STACKED ENGINE
+        {/* HEADER BAR — Compact Mobile Aligned Pill */}
+        <header className="w-full flex items-center justify-between gap-2 pb-1.5 sm:pb-2">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 bg-slate-900/95 backdrop-blur-xl border border-cyan-500/30 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full shadow-lg min-w-0 truncate">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping shrink-0" />
+            <span className="text-[9px] sm:text-xs font-black uppercase tracking-wider text-cyan-300 flex items-center gap-1 truncate">
+              <Box className="w-3 h-3 text-amber-400 shrink-0" />
+              <span className="inline sm:hidden">OCEANEXOTIC // 3D</span>
+              <span className="hidden sm:inline">OCEANEXOTIC — 3D STACKED ENGINE</span>
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <button
               onClick={() => setIsPlaying(!isPlaying)}
-              className="flex items-center gap-1 px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-slate-900/95 border border-white/20 hover:border-cyan-400 text-[9px] sm:text-xs font-black text-cyan-300 transition-all backdrop-blur-md"
+              className="flex items-center gap-1 px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-slate-900/95 border border-white/20 hover:border-cyan-400 text-[9px] sm:text-xs font-black text-cyan-300 transition-all backdrop-blur-md shrink-0"
               title={isPlaying ? "Pause 3D Engine" : "Play 3D Engine"}
             >
               {isPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3 fill-current" />}
@@ -300,7 +301,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
 
             <button
               onClick={() => handleStageSelect(0)}
-              className="p-1 sm:p-1.5 rounded-full bg-slate-900/95 border border-white/20 hover:border-cyan-400 text-slate-300 transition-all"
+              className="p-1 sm:p-1.5 rounded-full bg-slate-900/95 border border-white/20 hover:border-cyan-400 text-slate-300 transition-all shrink-0"
               title="Restart 3D Journey"
             >
               <RotateCcw className="w-3.5 h-3.5" />
