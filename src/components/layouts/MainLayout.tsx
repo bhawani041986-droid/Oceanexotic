@@ -173,25 +173,39 @@ export default function MainLayout({ children }: MainLayoutProps) {
       <header className={cn(
         "sticky top-0 left-0 right-0 z-[100] transition-all duration-500 border-b",
         scrolled 
-          ? "h-16 md:h-20 bg-[var(--c-bg)]/90 backdrop-blur-3xl border-[var(--foreground)]/10" 
-          : "h-20 md:h-24 bg-[var(--c-bg)]/60 backdrop-blur-xl border-[var(--foreground)]/5"
+          ? "h-14 md:h-20 bg-[var(--c-bg)]/90 backdrop-blur-3xl border-[var(--foreground)]/10" 
+          : "h-14 md:h-24 bg-[var(--c-bg)]/60 backdrop-blur-xl border-[var(--foreground)]/5"
       )}>
-        <div className="w-full px-1.5 sm:px-2.5 lg:px-4 h-full flex items-center justify-between">
-          <div className="flex items-center gap-0.5 sm:gap-1.5 lg:gap-4">
+        <div className="w-full px-2 sm:px-3 lg:px-6 h-full flex items-center justify-between gap-1">
+
+          {/* LEFT: Hamburger + Logo + Desktop Nav */}
+          <div className="flex items-center gap-1 sm:gap-2 lg:gap-4 shrink-0 min-w-0">
             <button 
               onClick={() => setIsMobileMenuOpen(true)}
-              className="p-1.5 sm:p-2 text-[var(--c-text-primary)]"
+              className="p-1.5 text-[var(--c-text-primary)] shrink-0"
             >
-              <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
+              <Menu className="w-5 h-5" />
             </button>
-            <Link href="/customer" className="flex items-center gap-2 group">
-              <Logo size="lg" className="!h-[48px] !w-[192px] min-[375px]:!h-[51px] min-[375px]:!w-[204px] min-[420px]:!h-[54px] min-[420px]:!w-[216px] sm:!h-[54px] sm:!w-[216px] md:!h-[68px] md:!w-[272px] xl:!h-[72px] xl:!w-[288px]" />
+            <Link href="/customer" className="flex items-center group shrink-0">
+              {/* Responsive logo: grows with breakpoints */}
+              <Logo
+                size="lg"
+                className="
+                  !h-[34px]  !w-[136px]
+                  min-[360px]:!h-[38px]  min-[360px]:!w-[152px]
+                  sm:!h-[44px]  sm:!w-[176px]
+                  md:!h-[54px]  md:!w-[216px]
+                  lg:!h-[60px]  lg:!w-[240px]
+                  xl:!h-[66px]  xl:!w-[264px]
+                "
+              />
             </Link>
 
-            <nav className="hidden xl:flex items-center gap-4.5 ml-4">
+            {/* Desktop nav — xl only */}
+            <nav className="hidden xl:flex items-center gap-4 ml-4">
               {navItems.filter(item => item.label !== "Profile").map((item) => (
-                <Link 
-                  key={item.label} 
+                <Link
+                  key={item.label}
                   href={item.href}
                   className={cn(
                     "flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest transition-all",
@@ -202,49 +216,73 @@ export default function MainLayout({ children }: MainLayoutProps) {
                   {item.label}
                 </Link>
               ))}
-
-              <div className="ml-2.5">
+              <div className="ml-2">
                 <ServiceAreaChecker className="!max-w-[210px]" />
               </div>
             </nav>
           </div>
 
+
+          {/* CENTER: Desktop search */}
           <Suspense fallback={<div className="flex-1 max-w-[200px] xl:max-w-md relative hidden lg:block mx-4 xl:mx-10" />}>
             <HeaderSearch isProductsPage={isProductsPage} />
           </Suspense>
 
-          <div className="flex items-center gap-1 sm:gap-1.5 md:gap-2.5 lg:gap-3">
+          {/* RIGHT: Actions */}
+          <div className="flex items-center gap-0.5 xs:gap-1 sm:gap-1.5 md:gap-2.5 shrink-0">
+
+            {/* Language Selector — globe icon only on mobile, full pill on sm+ */}
             <div className="block">
-              <LanguageSelector />
+              <LanguageSelector compact />
             </div>
-            <div className="hidden lg:flex items-center gap-2">
-              <button onClick={() => router.push('/customer/wishlist')} className="p-3 text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)]"><Heart className="w-5 h-5" /></button>
+
+            {/* Wishlist — desktop only */}
+            <div className="hidden lg:flex items-center">
+              <button onClick={() => router.push('/customer/wishlist')} className="p-2 text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)]">
+                <Heart className="w-5 h-5" />
+              </button>
             </div>
-            <button onClick={() => router.push('/customer/notifications')} className="p-1 sm:p-1.5 md:p-2 text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] relative shrink-0">
-              <Bell className="w-4 h-4 sm:w-5 sm:h-5 md:w-5 md:h-5" />
+
+            {/* Notifications */}
+            <button
+              onClick={() => router.push('/customer/notifications')}
+              className="p-1 sm:p-1.5 text-[var(--c-text-secondary)] hover:text-[var(--c-text-primary)] relative shrink-0"
+            >
+              <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
               {mounted && unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 min-w-[16px] h-4 rounded-full bg-[var(--c-primary)] text-slate-950 font-black text-[9px] flex items-center justify-center px-1 border border-[var(--c-bg)] shadow-sm">
+                <span className="absolute -top-0.5 -right-0.5 min-w-[14px] h-3.5 rounded-full bg-[var(--c-primary)] text-slate-950 font-black text-[8px] flex items-center justify-center px-0.5 border border-[var(--c-bg)]">
                   {unreadCount > 99 ? '99+' : unreadCount}
                 </span>
               )}
             </button>
-            <Link href="/customer/cart" className="p-1 sm:p-1.5 md:px-2.5 md:py-1.5 bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/20 rounded-full flex items-center gap-1 md:gap-2 relative transition-all shrink-0">
-               <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--c-primary)]" />
-               <span className="absolute top-0.5 right-0.5 md:relative md:top-0 md:right-0 bg-[var(--c-primary)] md:bg-transparent rounded-full text-[7px] md:text-xs font-black text-[var(--foreground)] md:text-[var(--c-primary)] px-0.5 md:px-1">
-                 {mounted ? items.length : 0}
-               </span>
+
+            {/* Cart */}
+            <Link
+              href="/customer/cart"
+              className="p-1 sm:p-1.5 md:px-2.5 md:py-1.5 bg-[var(--c-primary)]/10 border border-[var(--c-primary)]/20 rounded-full flex items-center gap-1 md:gap-2 relative transition-all shrink-0"
+            >
+              <ShoppingCart className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[var(--c-primary)]" />
+              <span className="absolute -top-0.5 -right-0.5 md:relative md:top-0 md:right-0 bg-[var(--c-primary)] md:bg-transparent rounded-full text-[7px] md:text-xs font-black text-[var(--foreground)] md:text-[var(--c-primary)] min-w-[14px] h-3.5 flex items-center justify-center px-0.5 md:h-auto md:px-1 md:min-w-0">
+                {mounted ? items.length : 0}
+              </span>
             </Link>
-            <button onClick={() => router.push('/customer/profile')} className="h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 flex items-center justify-center hover:border-[var(--c-primary)] transition-all overflow-hidden relative group shrink-0">
+
+            {/* Profile Avatar */}
+            <button
+              onClick={() => router.push('/customer/profile')}
+              className="h-7 w-7 sm:h-8 sm:w-8 md:h-9 md:w-9 rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 flex items-center justify-center hover:border-[var(--c-primary)] transition-all overflow-hidden shrink-0"
+            >
               {isAuthenticated ? (
-                <img 
-                  src={(user?.avatar && user.avatar !== 'null' && user.avatar !== 'undefined') ? user.avatar : "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80"} 
-                  alt="Profile" 
+                <img
+                  src={(user?.avatar && user.avatar !== 'null' && user.avatar !== 'undefined') ? user.avatar : "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80"}
+                  alt="Profile"
                   className="w-full h-full object-cover rounded-full"
                 />
               ) : (
-                <UserIcon className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--c-text-primary)]" />
+                <UserIcon className="w-4 h-4 text-[var(--c-text-primary)]" />
               )}
             </button>
+
           </div>
         </div>
       </header>

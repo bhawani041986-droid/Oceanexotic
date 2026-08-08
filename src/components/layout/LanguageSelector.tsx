@@ -21,11 +21,14 @@ const LANGUAGES = [
   { code: 'tl', name: 'Filipino' },
 ];
 
-export function LanguageSelector() {
+interface LanguageSelectorProps {
+  compact?: boolean;
+}
+
+export function LanguageSelector({ compact = false }: LanguageSelectorProps) {
   const [lang, setLang] = useState('en');
   const [isOpen, setIsOpen] = useState(false);
 
-  // Initialize lang from googtrans cookie if it exists
   useEffect(() => {
     const match = document.cookie.match(/googtrans=\/en\/(.*?)(;|$)/);
     if (match && match[1]) {
@@ -36,14 +39,11 @@ export function LanguageSelector() {
   const changeLanguage = (langCode: string) => {
     setLang(langCode);
     setIsOpen(false);
-    
-    // Attempt to change the Google Translate hidden dropdown
     const select = document.querySelector('.goog-te-combo') as HTMLSelectElement;
     if (select) {
       select.value = langCode;
       select.dispatchEvent(new Event('change'));
     } else {
-      // If widget hasn't fully loaded, set cookie and reload as fallback
       document.cookie = `googtrans=/en/${langCode}; path=/`;
       document.cookie = `googtrans=/en/${langCode}; domain=.${window.location.hostname}; path=/`;
       window.location.reload();
@@ -54,14 +54,17 @@ export function LanguageSelector() {
 
   return (
     <div className="relative">
-      <button 
+      <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border border-[var(--foreground)]/10 bg-[var(--foreground)]/5 hover:border-[var(--c-primary)]/40 hover:bg-[var(--c-primary)]/10 text-[10px] font-black uppercase text-[var(--c-text-primary)] transition-all shrink-0"
         title="Change Language"
+        className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2.5 py-1.5 rounded-xl border border-[var(--foreground)]/10 bg-[var(--foreground)]/5 hover:border-[var(--c-primary)]/40 hover:bg-[var(--c-primary)]/10 text-[var(--c-text-primary)] transition-all shrink-0"
       >
-        <Globe className="w-4 h-4 text-[var(--c-primary)]" />
-        <span className="text-[10px] font-black uppercase tracking-wider">{currentLang.code.slice(0, 2)}</span>
-        <ChevronDown className="w-3 h-3 opacity-60" />
+        <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[var(--c-primary)]" />
+        {/* Mobile: globe only. sm+: show code + chevron */}
+        <span className="hidden sm:inline text-[10px] font-black uppercase tracking-wider">
+          {currentLang.code.slice(0, 2).toUpperCase()}
+        </span>
+        <ChevronDown className="hidden sm:block w-3 h-3 opacity-60" />
       </button>
 
       <AnimatePresence>
