@@ -617,8 +617,9 @@ export default function CustomerProfilePage() {
                        <h3 className="text-lg font-black uppercase italic text-primary leading-tight">{displayName}</h3>
                        <p className="text-[9px] font-black text-primary uppercase tracking-widest italic">{displayGrade}</p>
                     </div>
-                   <Button onClick={() => handleOpenModal("profile")} variant="ghost" className="p-2 h-auto text-primary hover:bg-primary/5 rounded-xl"><Edit3 className="w-4 h-4" /></Button>
+                    <Button onClick={() => handleOpenModal("profile")} variant="ghost" className="p-2 h-auto text-primary hover:bg-primary/5 rounded-xl"><Edit3 className="w-4 h-4" /></Button>
                 </Card>
+             </div>
                    {/* Premium Horizontally-Scrollable Tab Selector for Mobile (Prevents Overlap) */}
              <div className="md:hidden w-full overflow-x-auto scrollbar-none flex gap-2.5 py-2 px-1 relative z-30 select-none">
                 <div className="flex items-center gap-2 min-w-max">
