@@ -49,7 +49,7 @@ interface OceanExoticShoreToDoorHeroProps {
   hero3dStages?: Hero3DStageConfig[];
 }
 
-// 🍔 ➔ 🐟 BORDERLESS 3D DECONSTRUCTION PROCESS STAGES
+// 🍔 ➔ 🐟 CRAV BURGERS NATIVE MOBILE APP 3D PROCESS STAGES
 const DEFAULT_STAGES = [
   {
     id: "catch",
@@ -59,17 +59,17 @@ const DEFAULT_STAGES = [
     badge: "100% Ocean Wild Catch",
     statusText: "Pristine Island Dock Landing",
     accentColor: "#00f3ff",
-    icon: <Waves className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400" />
+    icon: <Waves className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-cyan-400" />
   },
   {
     id: "slice",
     step: "02",
     label: "PRECISION SLICED",
     title: "PRECISION SLICED",
-    badge: "3D Deconstructed Steaks & Fry Cuts",
+    badge: "3D Deconstructed Cuts",
     statusText: "Laser Sliced Fresh Cuts",
     accentColor: "#f59e0b",
-    icon: <Scissors className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
+    icon: <Scissors className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-amber-400" />
   },
   {
     id: "vacuum",
@@ -79,7 +79,7 @@ const DEFAULT_STAGES = [
     badge: "Hermetic Eco Pack",
     statusText: "Airtight Freshness Encapsulation",
     accentColor: "#3b82f6",
-    icon: <Package className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
+    icon: <Package className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-blue-400" />
   },
   {
     id: "coldchain",
@@ -89,27 +89,27 @@ const DEFAULT_STAGES = [
     badge: "0°C - 4°C Ice Lock",
     statusText: "Continuous Chilled Preservation",
     accentColor: "#10b981",
-    icon: <ThermometerSnowflake className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400" />
+    icon: <ThermometerSnowflake className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-emerald-400" />
   },
   {
     id: "delivery",
     step: "05",
     label: "EXPRESS DISPATCH",
     title: "EXPRESS DISPATCH",
-    badge: "90 Min Delivery Route",
+    badge: "90 Min Route",
     statusText: "Cold Courier Velocity Tunnel",
     accentColor: "#a855f7",
-    icon: <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
+    icon: <Truck className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-purple-400" />
   },
   {
     id: "door",
     step: "06",
     label: "DELIVERED TO DOOR",
-    title: "DELIVERED TO YOUR DOOR",
+    title: "DELIVERED TO DOOR",
     badge: "Shore to Door Complete",
     statusText: "Fresh Seafood Delivered Fresh",
     accentColor: "#00d1ff",
-    icon: <Home className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400" />
+    icon: <Home className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-cyan-400" />
   }
 ];
 
@@ -167,7 +167,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  // 🎨 CRAV BURGERS 3D WEBGL DECONSTRUCTION CANVAS ENGINE
+  // 🎨 NATIVE MOBILE APP CANVAS BACKGROUND ENGINE
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -256,9 +256,9 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
   const currentStage = STAGES[activeStageIdx];
 
   return (
-    <div className="relative w-full bg-[#030712] text-white overflow-hidden select-none border-b border-cyan-500/20 py-4 sm:py-6 lg:py-8 min-h-[460px] sm:min-h-[540px] lg:min-h-[620px] flex flex-col justify-between">
+    <div className="relative w-full bg-[#030712] text-white overflow-hidden select-none border-b border-cyan-500/20 py-3 sm:py-6 lg:py-8 min-h-[440px] sm:min-h-[540px] lg:min-h-[620px] flex flex-col justify-between">
       
-      {/* 3D CRAV BURGERS DECONSTRUCTION CANVAS */}
+      {/* NATIVE APP CANVAS ENGINE */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full pointer-events-none z-10"
@@ -269,12 +269,12 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
 
       <div className="relative z-20 max-w-7xl mx-auto w-full h-full flex flex-col justify-between px-3 sm:px-6 lg:px-10">
         
-        {/* HEADER BAR — Live Status & Auto Controls */}
-        <header className="w-full flex items-center justify-between pb-2">
-          <div className="flex items-center gap-2 sm:gap-2.5 bg-slate-900/90 backdrop-blur-xl border border-cyan-500/30 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full shadow-lg">
-            <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-cyan-400 animate-ping" />
-            <span className="text-[9px] sm:text-xs font-black uppercase tracking-widest text-cyan-300 flex items-center gap-1.5">
-              <Box className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-400" />
+        {/* NATIVE MOBILE HEADER BAR — Compact Pill */}
+        <header className="w-full flex items-center justify-between pb-1.5 sm:pb-2">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 bg-slate-900/95 backdrop-blur-xl border border-cyan-500/30 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full shadow-lg">
+            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+            <span className="text-[9px] sm:text-xs font-black uppercase tracking-wider text-cyan-300 flex items-center gap-1">
+              <Box className="w-3 h-3 text-amber-400" />
               OCEANEXOTIC — 3D PROCESS
             </span>
           </div>
@@ -282,10 +282,10 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
           <div className="flex items-center gap-1.5 sm:gap-2">
             <button
               onClick={() => setIsPlaying(!isPlaying)}
-              className="flex items-center gap-1 sm:gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full bg-slate-900/90 border border-white/20 hover:border-cyan-400 text-[10px] sm:text-xs font-black text-cyan-300 transition-all backdrop-blur-md"
+              className="flex items-center gap-1 px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-slate-900/95 border border-white/20 hover:border-cyan-400 text-[9px] sm:text-xs font-black text-cyan-300 transition-all backdrop-blur-md"
               title={isPlaying ? "Pause 3D Engine" : "Play 3D Engine"}
             >
-              {isPlaying ? <Pause className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> : <Play className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current" />}
+              {isPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3 fill-current" />}
               <span className="hidden sm:inline text-[10px] uppercase tracking-wider">
                 {isPlaying ? "3D AUTO" : "PAUSED"}
               </span>
@@ -293,61 +293,61 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
 
             <button
               onClick={() => handleStageSelect(0)}
-              className="p-1 sm:p-1.5 rounded-full bg-slate-900/90 border border-white/20 hover:border-cyan-400 text-slate-300 transition-all"
+              className="p-1 sm:p-1.5 rounded-full bg-slate-900/95 border border-white/20 hover:border-cyan-400 text-slate-300 transition-all"
               title="Restart 3D Journey"
             >
-              <RotateCcw className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+              <RotateCcw className="w-3 h-3" />
             </button>
           </div>
         </header>
 
-        {/* MAIN DISPLAY STAGE — Headlines (Left) + Borderless Floating 3D Stage Video Engine (Right) */}
-        <main className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8 items-center my-auto py-2 sm:py-4">
+        {/* NATIVE MOBILE MAIN DISPLAY STAGE */}
+        <main className="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-6 lg:gap-8 items-center my-auto py-1 sm:py-4">
           
-          {/* LEFT COLUMN — Stage Headlines & Conversion CTAs */}
-          <div className="lg:col-span-5 space-y-2 sm:space-y-4 text-center lg:text-left z-20">
+          {/* LEFT COLUMN — Native Mobile Stage Headlines & Conversion CTAs */}
+          <div className="lg:col-span-5 space-y-1.5 sm:space-y-4 text-center lg:text-left z-20">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStage.id}
-                initial={{ opacity: 0, y: 15, filter: "blur(4px)" }}
+                initial={{ opacity: 0, y: 12, filter: "blur(3px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -15, filter: "blur(4px)" }}
+                exit={{ opacity: 0, y: -12, filter: "blur(3px)" }}
                 transition={{ duration: 0.35, ease: "easeOut" }}
-                className="space-y-2 sm:space-y-3"
+                className="space-y-1.5 sm:space-y-3"
               >
-                {/* Step Pill */}
-                <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full border border-white/15 bg-slate-900/90 backdrop-blur-md shadow-xl">
+                {/* Native Mobile Step Micro-Badge */}
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full border border-white/15 bg-slate-900/95 backdrop-blur-md shadow-lg">
                   {currentStage.icon}
-                  <span className="text-[9px] sm:text-xs font-black uppercase tracking-widest text-slate-200">
+                  <span className="text-[9px] sm:text-xs font-black uppercase tracking-wider text-slate-200">
                     {activeAdminFish ? `${activeAdminFish.name} // ${currentStage.badge}` : currentStage.badge}
                   </span>
                 </div>
 
-                {/* Stage Headline */}
-                <div className="space-y-0.5 sm:space-y-1">
-                  <span className="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] sm:tracking-[0.25em] text-cyan-400">
+                {/* Native Mobile Stage Title */}
+                <div className="space-y-0.5">
+                  <span className="text-[9.5px] sm:text-xs font-black uppercase tracking-[0.18em] sm:tracking-[0.25em] text-cyan-400">
                     STAGE {currentStage.step} // {currentStage.statusText}
                   </span>
-                  <h1 className="text-2xl sm:text-4xl lg:text-6xl font-black uppercase italic tracking-tight leading-none text-white drop-shadow-2xl">
+                  <h1 className="text-xl sm:text-4xl lg:text-6xl font-black uppercase italic tracking-tight leading-tight text-white drop-shadow-xl">
                     {currentStage.title}
                   </h1>
                 </div>
 
-                {/* Optional Admin Price Tag if configured */}
+                {/* Native Mobile Price Tag */}
                 {activeAdminFish?.price && (
-                  <div className="flex items-center justify-center lg:justify-start gap-1.5 sm:gap-2 pt-0.5">
-                    <span className="text-lg sm:text-2xl font-black text-amber-400">{activeAdminFish.price}</span>
+                  <div className="flex items-center justify-center lg:justify-start gap-1.5 pt-0.5">
+                    <span className="text-base sm:text-2xl font-black text-amber-400">{activeAdminFish.price}</span>
                     {activeAdminFish.unit && (
-                      <span className="text-[10px] sm:text-xs text-slate-400 font-bold uppercase">/ {activeAdminFish.unit}</span>
+                      <span className="text-[9.5px] sm:text-xs text-slate-400 font-bold uppercase">/ {activeAdminFish.unit}</span>
                     )}
                   </div>
                 )}
 
-                {/* Primary Conversion CTA */}
-                <div className="pt-1 sm:pt-2 flex items-center justify-center lg:justify-start gap-3">
+                {/* Native Mobile Conversion CTA Button */}
+                <div className="pt-1 sm:pt-2 flex items-center justify-center lg:justify-start">
                   <Link
                     href={activeAdminFish?.productId ? `/customer/products/${activeAdminFish.productId}` : "/customer/products"}
-                    className="px-4 py-2 sm:px-6 sm:py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-teal-500 to-amber-500 hover:from-cyan-400 hover:to-amber-400 text-slate-950 font-black text-[11px] sm:text-xs md:text-sm uppercase tracking-wider transition-all shadow-[0_0_25px_rgba(0,243,255,0.4)] hover:scale-105 active:scale-95 flex items-center gap-2 group"
+                    className="w-full sm:w-auto px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl bg-gradient-to-r from-cyan-500 via-teal-500 to-amber-500 hover:from-cyan-400 hover:to-amber-400 text-slate-950 font-black text-[11px] sm:text-xs md:text-sm uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,243,255,0.4)] hover:scale-105 active:scale-95 flex items-center justify-center gap-2 group"
                   >
                     <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     EXPLORE FRESH CATCH
@@ -358,28 +358,28 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
             </AnimatePresence>
           </div>
 
-          {/* RIGHT COLUMN — BORDERLESS FLOATING 3D VIDEO DECONSTRUCTION VIEWPORT (MOBILE OPTIMIZED) */}
+          {/* RIGHT COLUMN — NATIVE MOBILE BORDERLESS FLOATING 3D VIEWPORT */}
           <div className="lg:col-span-7 flex items-center justify-center relative z-20">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStage.id}
-                initial={{ opacity: 0, scale: 0.92, rotateY: -10, y: 10 }}
+                initial={{ opacity: 0, scale: 0.94, rotateY: -8, y: 8 }}
                 animate={{ opacity: 1, scale: 1, rotateY: 0, y: 0 }}
-                exit={{ opacity: 0, scale: 1.05, rotateY: 10, y: -10 }}
-                transition={{ duration: 0.45, ease: "easeOut" }}
+                exit={{ opacity: 0, scale: 1.04, rotateY: 8, y: -8 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
                 className="relative w-full max-w-lg aspect-[16/9] sm:aspect-[16/10] flex items-center justify-center group"
               >
-                {/* 🌟 BORDERLESS 3D FLOATING CANVAS CONTAINER */}
-                <div className="relative w-full h-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_15px_60px_rgba(0,243,255,0.2)] flex items-center justify-center">
+                {/* 🌟 NATIVE MOBILE BORDERLESS FLOATING CONTAINER */}
+                <div className="relative w-full h-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_12px_45px_rgba(0,243,255,0.22)] flex items-center justify-center">
                   
-                  {/* High-Res Stage Photo with Dynamic 3D Floating Zoom */}
+                  {/* High-Res Stage Photo */}
                   <img
                     src={currentStage.imageUrl}
                     alt={currentStage.title}
                     className="w-full h-full object-cover rounded-2xl sm:rounded-3xl transition-transform duration-1000 group-hover:scale-105"
                   />
 
-                  {/* 🌊 STAGE 1: 3D WATER RIPPLE & CAUSTICS OVERLAY */}
+                  {/* 🌊 STAGE 1: 3D WATER RIPPLE OVERLAY */}
                   {activeStageIdx === 0 && (
                     <div className="absolute inset-0 bg-cyan-500/10 mix-blend-overlay pointer-events-none animate-pulse" />
                   )}
@@ -391,13 +391,13 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
                         initial={{ opacity: 0, x: "-100%" }}
                         animate={{ opacity: [0, 1, 1, 0], x: ["-100%", "40%", "80%", "120%"] }}
                         transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-                        className="absolute inset-y-0 w-2.5 bg-gradient-to-b from-transparent via-amber-400 to-transparent shadow-[0_0_35px_#f59e0b] transform -rotate-12 pointer-events-none z-20"
+                        className="absolute inset-y-0 w-2 sm:w-2.5 bg-gradient-to-b from-transparent via-amber-400 to-transparent shadow-[0_0_30px_#f59e0b] transform -rotate-12 pointer-events-none z-20"
                       />
                       <motion.div
                         initial={{ opacity: 0, scaleX: 0 }}
                         animate={{ opacity: [0, 0.9, 0], scaleX: [0, 1, 0] }}
                         transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-                        className="absolute inset-x-0 h-0.5 sm:h-1 bg-amber-400 shadow-[0_0_20px_#f59e0b] pointer-events-none z-20"
+                        className="absolute inset-x-0 h-0.5 sm:h-1 bg-amber-400 shadow-[0_0_15px_#f59e0b] pointer-events-none z-20"
                       />
                     </>
                   )}
@@ -409,20 +409,20 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
                         initial={{ opacity: 0, scale: 1.1 }}
                         animate={{ opacity: [0.3, 0.8, 0.3], scale: [1.1, 0.98, 1.1] }}
                         transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-                        className="absolute inset-1.5 sm:inset-2 border-2 border-blue-400/90 rounded-xl sm:rounded-2xl pointer-events-none z-20 shadow-[0_0_30px_rgba(59,130,246,0.5)]"
+                        className="absolute inset-1.5 sm:inset-2 border-2 border-blue-400/90 rounded-xl sm:rounded-2xl pointer-events-none z-20 shadow-[0_0_25px_rgba(59,130,246,0.5)]"
                       />
                       <div className="absolute inset-0 bg-blue-500/10 backdrop-blur-[1px] pointer-events-none z-10" />
                     </>
                   )}
 
-                  {/* ❄️ STAGE 4: 3D CRYO FROST ICE CRYSTAL LOCK BADGE (POSITIONED TOP-RIGHT TO NEVER COVER FISH OR OVERLAP TELEMETRY) */}
+                  {/* ❄️ STAGE 4: 3D CRYO FROST ICE CRYSTAL LOCK BADGE (TOP-RIGHT NATIVE MOBILE PLACEMENT) */}
                   {activeStageIdx === 3 && (
-                    <div className="absolute top-2.5 right-2.5 sm:top-4 sm:right-4 pointer-events-none z-30">
-                      <div className="bg-slate-950/90 border border-emerald-400/80 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl sm:rounded-2xl shadow-[0_0_25px_rgba(16,185,129,0.5)] flex items-center gap-2 backdrop-blur-md">
-                        <ThermometerSnowflake className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-400 animate-bounce" />
+                    <div className="absolute top-2 right-2 sm:top-4 sm:right-4 pointer-events-none z-30">
+                      <div className="bg-slate-950/95 border border-emerald-400/80 px-2.5 py-1 sm:px-4 sm:py-2 rounded-lg sm:rounded-2xl shadow-[0_0_20px_rgba(16,185,129,0.5)] flex items-center gap-1.5 backdrop-blur-md">
+                        <ThermometerSnowflake className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-emerald-400 animate-bounce" />
                         <div className="text-left">
-                          <p className="text-[9px] sm:text-xs font-black text-white uppercase tracking-wider">0°C TO 4°C CHILLED LOCK</p>
-                          <p className="text-[8px] sm:text-[9px] font-bold text-emerald-400 uppercase tracking-widest hidden sm:block">CRYO VAULT LOCKED</p>
+                          <p className="text-[8.5px] sm:text-xs font-black text-white uppercase tracking-wider">0°C TO 4°C CHILLED LOCK</p>
+                          <p className="text-[7.5px] sm:text-[9px] font-bold text-emerald-400 uppercase tracking-widest hidden sm:block">CRYO VAULT LOCKED</p>
                         </div>
                       </div>
                     </div>
@@ -446,15 +446,15 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
                   {/* Ambient Top/Bottom Dark Vignette */}
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-transparent to-slate-950/20 pointer-events-none rounded-2xl sm:rounded-3xl" />
 
-                  {/* 3D Telemetry Badge Overlay (Compact Mobile Floating Pill) */}
-                  <div className="absolute bottom-2 left-2 right-2 sm:bottom-4 sm:left-4 sm:right-4 bg-slate-950/90 border border-white/20 p-2 sm:p-3 rounded-xl sm:rounded-2xl flex items-center justify-between backdrop-blur-md shadow-2xl z-30">
+                  {/* NATIVE MOBILE TELEMETRY FLOATING BAR */}
+                  <div className="absolute bottom-1.5 left-1.5 right-1.5 sm:bottom-4 sm:left-4 sm:right-4 bg-slate-950/95 border border-white/20 px-2.5 py-1.5 sm:p-3 rounded-xl sm:rounded-2xl flex items-center justify-between backdrop-blur-md shadow-xl z-30">
                     <div className="flex items-center gap-1.5 sm:gap-2 truncate">
                       {currentStage.icon}
-                      <span className="text-[10px] sm:text-xs font-black uppercase text-white tracking-wider truncate">
+                      <span className="text-[9.5px] sm:text-xs font-black uppercase text-white tracking-wider truncate">
                         {activeAdminFish ? activeAdminFish.name : currentStage.label}
                       </span>
                     </div>
-                    <span className="text-[8.5px] sm:text-[10px] font-black uppercase px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 flex items-center gap-1 shrink-0">
+                    <span className="text-[8px] sm:text-[10px] font-black uppercase px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 flex items-center gap-1 shrink-0">
                       <Zap className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-400" />
                       3D PROCESS
                     </span>
@@ -467,8 +467,8 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
 
         </main>
 
-        {/* FOOTER — TIMED PROGRESS BAR & STEP RIBBON BUTTONS */}
-        <footer className="w-full space-y-2 sm:space-y-3 pt-1.5 sm:pt-2 border-t border-white/10">
+        {/* NATIVE MOBILE FOOTER — TIMED PROGRESS BAR & STEP RIBBON */}
+        <footer className="w-full space-y-1.5 sm:space-y-3 pt-1 sm:pt-2 border-t border-white/10">
           
           {/* Continuous Timeline Progress Bar */}
           <div className="w-full h-1 bg-slate-900 rounded-full overflow-hidden border border-white/10 relative">
@@ -478,14 +478,14 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
             />
           </div>
 
-          {/* Interactive Step Ribbon Buttons */}
+          {/* Native Mobile Interactive Step Ribbon */}
           <div className="flex items-center justify-between gap-1 sm:gap-2 overflow-x-auto pb-0.5 no-scrollbar">
             {STAGES.map((stg, i) => (
               <button
                 key={stg.id}
                 onClick={() => handleStageSelect(i)}
                 className={cn(
-                  "flex-1 min-w-[85px] sm:min-w-[110px] py-1.5 px-1.5 sm:py-2 sm:px-2 rounded-lg sm:rounded-xl text-[9px] sm:text-xs font-black uppercase tracking-wider border transition-all flex items-center justify-center gap-1 sm:gap-1.5",
+                  "flex-1 min-w-[80px] sm:min-w-[110px] py-1 px-1 sm:py-2 sm:px-2 rounded-lg sm:rounded-xl text-[8.5px] sm:text-xs font-black uppercase tracking-wider border transition-all flex items-center justify-center gap-1 sm:gap-1.5",
                   i === activeStageIdx
                     ? "bg-cyan-500/25 border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(0,243,255,0.3)] scale-[1.02]"
                     : i < activeStageIdx
