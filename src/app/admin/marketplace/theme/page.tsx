@@ -417,9 +417,9 @@ export default function MarketplaceThemeControl() {
                {[
                   {
                      id: "SHORE_TO_DOOR_3D",
-                     title: "🌊 Shore to Door 3D",
-                     desc: "Cinematic 6-stage interactive scroll transition (Ocean -> Fresh Catch -> Pack -> Doorstep).",
-                     badge: "Signature 3D",
+                     title: "🎬 Shore to Door Single-Frame Process Video",
+                     desc: "Continuous single-frame video stream transforming one fresh fish (Catch -> Slice -> Vacuum -> Cold Chain -> Delivery -> Door).",
+                     badge: "Signature Single-Frame Video",
                      color: "border-cyan-500 bg-cyan-950/40 text-cyan-300"
                   },
                   {

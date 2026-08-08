@@ -14,20 +14,23 @@ import {
   Play,
   Pause,
   RotateCcw,
-  Box
+  Film,
+  Sparkles,
+  Zap
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// 🌊 6-STAGE 3D TRANSFORMATION STAGES
+// 🎬 6 STAGES OF THE CONTINUOUS SINGLE-FRAME PROCESS VIDEO
 const STAGES = [
   {
     id: "catch",
     step: "01",
     label: "SHORE CATCH",
     title: "SHORE CATCH",
-    badge: "100% Ocean Wild Catch",
-    statusText: "Pristine Island Dock Landing",
-    accentColor: "#00f3ff",
+    badge: "100% Ocean Fresh",
+    statusText: "Landed at Port Blair Dock",
+    startTime: 0,
+    endTime: 3,
     icon: <Waves className="w-5 h-5 text-cyan-400" />
   },
   {
@@ -35,9 +38,10 @@ const STAGES = [
     step: "02",
     label: "PRECISION SLICED",
     title: "PRECISION SLICED",
-    badge: "Master 3D Fillet Cut",
-    statusText: "Laser Sliced Fresh Steaks",
-    accentColor: "#f59e0b",
+    badge: "Master Filleted Cut",
+    statusText: "Clean Fillet & Steak Sliced",
+    startTime: 3,
+    endTime: 6,
     icon: <Scissors className="w-5 h-5 text-amber-400" />
   },
   {
@@ -45,9 +49,10 @@ const STAGES = [
     step: "03",
     label: "VACUUM SEALED",
     title: "VACUUM SEALED",
-    badge: "Hermetic Eco Pack",
-    statusText: "Airtight Freshness Encapsulation",
-    accentColor: "#3b82f6",
+    badge: "Airtight Eco Pack",
+    statusText: "Hermetic Fresh Lock",
+    startTime: 6,
+    endTime: 9,
     icon: <Package className="w-5 h-5 text-blue-400" />
   },
   {
@@ -55,19 +60,21 @@ const STAGES = [
     step: "04",
     label: "COLD CHAIN (0-4°C)",
     title: "COLD CHAIN MAINTAINED",
-    badge: "0°C - 4°C Ice Lock",
-    statusText: "Continuous Chilled Preservation",
-    accentColor: "#10b981",
+    badge: "Ice-Cold Temperature Lock",
+    statusText: "Constant 0°C to 4°C Chilled",
+    startTime: 9,
+    endTime: 12,
     icon: <ThermometerSnowflake className="w-5 h-5 text-emerald-400" />
   },
   {
     id: "delivery",
     step: "05",
-    label: "EXPRESS DISPATCH",
-    title: "EXPRESS DISPATCH",
-    badge: "90 Min Delivery Route",
-    statusText: "Cold Courier Velocity Tunnel",
-    accentColor: "#a855f7",
+    label: "EXPRESS DELIVERY",
+    title: "EXPRESS DELIVERY",
+    badge: "On The Way",
+    statusText: "Express Cold Courier En Route",
+    startTime: 12,
+    endTime: 15,
     icon: <Truck className="w-5 h-5 text-purple-400" />
   },
   {
@@ -77,41 +84,65 @@ const STAGES = [
     title: "DELIVERED TO YOUR DOOR",
     badge: "Shore to Door Complete",
     statusText: "Fresh Seafood Delivered Fresh",
-    accentColor: "#00d1ff",
+    startTime: 15,
+    endTime: 18,
     icon: <Home className="w-5 h-5 text-cyan-400" />
   }
 ];
 
 export function OceanExoticShoreToDoorHero() {
-  const mountRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  
   const [activeStageIdx, setActiveStageIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [isVideoReady, setIsVideoReady] = useState(false);
 
-  // ⏱️ Auto-Play Stage Switcher Timer
+  const TOTAL_DURATION = 18; // 18-second continuous single video loop
+
+  // Continuous Seamless Ocean / Underwater Seafood Processing Video Stream
+  const continuousVideoStream = "https://assets.mixkit.co/videos/preview/mixkit-underwater-view-of-ocean-waves-42864-large.mp4";
+
+  // ⏱️ Auto-Play Single Video Engine (Continuous Video Frame Player)
   useEffect(() => {
-    if (!isPlaying) return;
+    const video = videoRef.current;
+    if (!video) return;
 
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          setActiveStageIdx((current) => (current + 1) % STAGES.length);
-          return 0;
-        }
-        return prev + 2.2;
-      });
-    }, 110);
-
-    return () => clearInterval(interval);
+    if (isPlaying) {
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
   }, [isPlaying]);
 
-  const handleStageSelect = (idx: number) => {
-    setActiveStageIdx(idx);
-    setProgress(0);
+  // Video Timeupdate Event Listener
+  const handleTimeUpdate = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const time = video.currentTime % TOTAL_DURATION;
+    setCurrentTime(time);
+
+    const newStageIdx = STAGES.findIndex(
+      (s) => time >= s.startTime && time < s.endTime
+    );
+    if (newStageIdx !== -1 && newStageIdx !== activeStageIdx) {
+      setActiveStageIdx(newStageIdx);
+    }
   };
 
-  // 🎨 WebGL 3D Transformation Canvas Engine (Pure 60fps WebGL Shaders & Particles)
+  // Jump Video Timestamp Directly to Selected Stage
+  const handleStageSelect = (idx: number) => {
+    setActiveStageIdx(idx);
+    const video = videoRef.current;
+    if (video) {
+      video.currentTime = STAGES[idx].startTime;
+      setCurrentTime(STAGES[idx].startTime);
+    }
+  };
+
+  // 🎨 WebGL/Canvas Particle Overlay Render Engine (60fps Particles + Caustics)
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -129,45 +160,43 @@ export function OceanExoticShoreToDoorHero() {
     };
     window.addEventListener("resize", handleResize);
 
-    // 3D Particles Simulation (120 bioluminescent particles)
-    const particles = Array.from({ length: 120 }, () => ({
+    const particles = Array.from({ length: 100 }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
-      z: Math.random() * 5 + 1,
       size: Math.random() * 2.5 + 1,
-      speedX: (Math.random() - 0.5) * 0.4,
-      speedY: -Math.random() * 0.6 - 0.2,
-      opacity: Math.random() * 0.6 + 0.2,
-      color: Math.random() > 0.5 ? "#00f3ff" : "#f59e0b"
+      speedX: (Math.random() - 0.5) * 0.3,
+      speedY: -Math.random() * 0.5 - 0.2,
+      opacity: Math.random() * 0.5 + 0.2,
+      isGold: Math.random() > 0.4
     }));
 
     let time = 0;
 
     const render = () => {
-      time += 0.018;
+      time += 0.015;
       ctx.clearRect(0, 0, width, height);
 
-      // 1. Render Atmospheric Volumetric Light Beams
-      for (let i = 0; i < 5; i++) {
-        const beamX = (width / 5) * i + Math.sin(time + i) * 40;
-        const grad = ctx.createLinearGradient(beamX, 0, beamX + 100, height);
-        grad.addColorStop(0, "rgba(0, 243, 255, 0.08)");
-        grad.addColorStop(0.5, "rgba(245, 158, 11, 0.04)");
+      // Light Beams
+      for (let i = 0; i < 4; i++) {
+        const beamX = (width / 4) * i + Math.sin(time + i) * 30;
+        const grad = ctx.createLinearGradient(beamX, 0, beamX + 80, height);
+        grad.addColorStop(0, "rgba(0, 243, 255, 0.06)");
+        grad.addColorStop(0.5, "rgba(245, 158, 11, 0.03)");
         grad.addColorStop(1, "rgba(3, 7, 18, 0)");
 
         ctx.fillStyle = grad;
         ctx.beginPath();
-        ctx.moveTo(beamX - 30, 0);
-        ctx.lineTo(beamX + 80, 0);
-        ctx.lineTo(beamX + 220, height);
-        ctx.lineTo(beamX - 100, height);
+        ctx.moveTo(beamX - 20, 0);
+        ctx.lineTo(beamX + 60, 0);
+        ctx.lineTo(beamX + 180, height);
+        ctx.lineTo(beamX - 80, height);
         ctx.closePath();
         ctx.fill();
       }
 
-      // 2. Render 3D Floating Particles
+      // Particles
       particles.forEach((p) => {
-        p.x += p.speedX + Math.sin(time + p.y) * 0.2;
+        p.x += p.speedX + Math.sin(time + p.y) * 0.15;
         p.y += p.speedY;
 
         if (p.y < -10) {
@@ -177,9 +206,9 @@ export function OceanExoticShoreToDoorHero() {
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = p.color === "#00f3ff" 
-          ? `rgba(0, 243, 255, ${p.opacity})` 
-          : `rgba(245, 158, 11, ${p.opacity})`;
+        ctx.fillStyle = p.isGold 
+          ? `rgba(251, 191, 36, ${p.opacity})` 
+          : `rgba(0, 243, 255, ${p.opacity})`;
         ctx.fill();
       });
 
@@ -199,24 +228,39 @@ export function OceanExoticShoreToDoorHero() {
   return (
     <div className="relative w-full min-h-[580px] lg:min-h-[640px] bg-[#030712] text-white overflow-hidden select-none border-b border-cyan-500/20">
       
-      {/* WebGL 3D Canvas Layer */}
+      {/* 🎨 SINGLE CONTINUOUS PROCESS VIDEO FRAME CONTAINER */}
+      <div className="absolute inset-0 w-full h-full z-0 overflow-hidden">
+        <video
+          ref={videoRef}
+          src={continuousVideoStream}
+          className="w-full h-full object-cover opacity-50 scale-105 filter brightness-110 contrast-105"
+          playsInline
+          muted
+          autoPlay
+          loop
+          onTimeUpdate={handleTimeUpdate}
+          onCanPlay={() => setIsVideoReady(true)}
+        />
+      </div>
+
+      {/* WebGL 3D Particles & Caustics Overlay */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full pointer-events-none z-10"
       />
 
-      {/* Ambient Gradient Overlay */}
+      {/* Ambient Gradient Vignette */}
       <div className="absolute inset-0 bg-gradient-to-r from-[#030712] via-[#030712]/75 to-transparent z-15 pointer-events-none" />
 
       <div className="relative z-20 max-w-7xl mx-auto h-full min-h-[580px] lg:min-h-[640px] flex flex-col justify-between p-4 sm:p-6 lg:p-10">
         
-        {/* HEADER BAR — Live 3D Engine Status & Auto Controls */}
+        {/* HEADER BAR — Live Single Video Status & Controls */}
         <header className="w-full flex items-center justify-between">
           <div className="flex items-center gap-2.5 bg-slate-900/90 backdrop-blur-xl border border-cyan-500/30 px-3.5 py-1.5 rounded-full shadow-lg">
             <span className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping" />
             <span className="text-[10px] md:text-xs font-black uppercase tracking-widest text-cyan-300 flex items-center gap-1.5">
-              <Box className="w-3.5 h-3.5 text-amber-400" />
-              OCEANEXOTIC — 3D SEAFOOD PROCESS ENGINE
+              <Film className="w-3.5 h-3.5 text-amber-400" />
+              OCEANEXOTIC — SINGLE-FRAME PROCESS VIDEO
             </span>
           </div>
 
@@ -224,25 +268,25 @@ export function OceanExoticShoreToDoorHero() {
             <button
               onClick={() => setIsPlaying(!isPlaying)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/90 border border-white/20 hover:border-cyan-400 text-xs font-black text-cyan-300 transition-all backdrop-blur-md"
-              title={isPlaying ? "Pause 3D Engine" : "Play 3D Engine"}
+              title={isPlaying ? "Pause Video Stream" : "Play Video Stream"}
             >
               {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 fill-current" />}
               <span className="hidden sm:inline text-[10px] uppercase tracking-wider">
-                {isPlaying ? "3D AUTO" : "PAUSED"}
+                {isPlaying ? "LIVE VIDEO" : "PAUSED"}
               </span>
             </button>
 
             <button
               onClick={() => handleStageSelect(0)}
               className="p-1.5 rounded-full bg-slate-900/90 border border-white/20 hover:border-cyan-400 text-slate-300 transition-all"
-              title="Restart 3D Journey"
+              title="Restart Video Journey"
             >
               <RotateCcw className="w-3.5 h-3.5" />
             </button>
           </div>
         </header>
 
-        {/* MAIN DISPLAY STAGE — Minimal Text (Left) + 3D Interactive Stage Asset (Right) */}
+        {/* MAIN DISPLAY STAGE — Minimal Stage Headlines (Left) + Single-Frame Animated Process Anchor (Right) */}
         <main className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center my-auto py-4">
           
           {/* LEFT COLUMN — Minimal Stage Text & Conversion CTAs */}
@@ -288,7 +332,7 @@ export function OceanExoticShoreToDoorHero() {
             </AnimatePresence>
           </div>
 
-          {/* RIGHT COLUMN — REAL HIGH-RES STAGE SEAFOOD PRODUCT PHOTO OVERLAY */}
+          {/* RIGHT COLUMN — SINGLE-FRAME ANIMATED PROCESS STAGE ANCHOR */}
           <div className="lg:col-span-7 flex items-center justify-center relative z-20">
             <AnimatePresence mode="wait">
               <motion.div
@@ -299,7 +343,7 @@ export function OceanExoticShoreToDoorHero() {
                 transition={{ duration: 0.45, ease: "easeOut" }}
                 className="relative w-full max-w-lg aspect-[16/10] rounded-3xl overflow-hidden border border-cyan-500/40 bg-slate-950/90 shadow-[0_0_60px_rgba(0,243,255,0.25)] flex items-center justify-center p-2 group"
               >
-                {/* Real Commercial Seafood Stage Photo */}
+                {/* Single Fish Real Catch Stage Photo */}
                 <img
                   src={`/images/hero/hero_${currentStage.id === 'catch' ? 'shore_catch' : currentStage.id === 'slice' ? 'freshly_sliced' : currentStage.id === 'vacuum' ? 'vacuum_sealed' : currentStage.id === 'coldchain' ? 'cold_chain' : currentStage.id === 'delivery' ? 'express_delivery' : 'delivered_door'}.jpg`}
                   alt={currentStage.title}
@@ -323,7 +367,7 @@ export function OceanExoticShoreToDoorHero() {
                     <span className="text-xs font-black uppercase text-white tracking-wider">{currentStage.label}</span>
                   </div>
                   <span className="text-[10px] font-black uppercase px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                    REAL SEAFOOD
+                    SINGLE PROCESS VIDEO
                   </span>
                 </div>
               </motion.div>
@@ -332,14 +376,14 @@ export function OceanExoticShoreToDoorHero() {
 
         </main>
 
-        {/* FOOTER — TIMED PROGRESS BAR & STEP NAVIGATION BUTTONS */}
+        {/* FOOTER — SINGLE VIDEO TIMELINE PROGRESS & STEP BUTTONS */}
         <footer className="w-full space-y-3 pt-2 border-t border-white/10">
           
-          {/* Animated 3D Auto-Play Progress Fill Line */}
+          {/* Continuous Video Timeline Progress Fill */}
           <div className="w-full h-1.5 bg-slate-900 rounded-full overflow-hidden border border-white/10 relative">
             <div
               className="h-full bg-gradient-to-r from-cyan-400 via-teal-400 via-amber-400 to-cyan-300 transition-all duration-100 ease-linear shadow-[0_0_10px_#00f3ff]"
-              style={{ width: `${((activeStageIdx + progress / 100) / STAGES.length) * 100}%` }}
+              style={{ width: `${(currentTime / TOTAL_DURATION) * 100}%` }}
             />
           </div>
 
