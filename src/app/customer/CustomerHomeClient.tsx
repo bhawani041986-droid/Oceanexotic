@@ -2180,10 +2180,27 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
   return (
     <div className="w-full">
       {/* 3. PRO UI/UX DYNAMIC FISH MARKET HERO SECTIONS */}
-      {settings.heroStyle === 'AMAZON_CARD_GRID' && (
+      {(!settings.heroStyle || settings.heroStyle === 'AMAZON_CARD_GRID') && (
          <AmazonWebHeroSection cards={settings.amazonHeroCards} />
       )}
-      <Pro3DMarketHero heroItems={settings.customerAssets?.hero3dItems as any} />
+      {settings.heroStyle === 'COMPACT_MINIMAL_STRIP' && (
+         <div className="w-full bg-slate-950/90 py-4 px-4 border-b border-cyan-500/20">
+           <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between bg-teal-950/60 border border-teal-500/40 rounded-2xl p-4 shadow-xl gap-3">
+             <div className="flex items-center gap-3">
+               <span className="w-3 h-3 rounded-full bg-teal-400 animate-ping shrink-0" />
+               <span className="text-xs md:text-sm font-black text-white uppercase tracking-wider">
+                 {settings.compactStripConfig?.tickerText || "🔥 20% OFF ALL SEAWATER FISH TODAY | FREE EXPRESS DELIVERY OVER ₹499"}
+               </span>
+             </div>
+             <Link href="/customer/products" className="px-5 py-2.5 bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-400 hover:to-cyan-400 text-slate-950 text-xs font-black uppercase tracking-wider rounded-xl transition-all shadow-lg shrink-0">
+               SHOP ALL DEALS →
+             </Link>
+           </div>
+         </div>
+      )}
+      {(settings.heroStyle === 'SWIGGY_DYNAMIC_BANNER' || settings.heroStyle === 'ZOMATO_HIGH_IMPACT') && (
+         <Pro3DMarketHero heroItems={settings.customerAssets?.hero3dItems as any} />
+      )}
 
 
       {/* MARITIME WAVE DIVIDER - MOBILE SPACED */}
