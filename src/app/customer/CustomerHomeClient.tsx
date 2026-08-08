@@ -2182,7 +2182,7 @@ export default function CustomerHomeClient({ initialAssets }: { initialAssets?: 
     <div className="w-full">
       {/* 3. PRO UI/UX DYNAMIC FISH MARKET HERO SECTIONS */}
       {(!settings.heroStyle || settings.heroStyle === 'SHORE_TO_DOOR_3D') && (
-         <OceanExoticShoreToDoorHero />
+         <OceanExoticShoreToDoorHero heroItems={settings.customerAssets?.hero3dItems as any} />
       )}
       {settings.heroStyle === 'AMAZON_CARD_GRID' && (
          <AmazonWebHeroSection cards={settings.amazonHeroCards} />

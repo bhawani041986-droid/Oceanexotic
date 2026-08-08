@@ -13,6 +13,7 @@ import {
   CompactStripConfig,
   Hero3DFishItem
 } from "@/store/settingsStore";
+import { OceanExoticShoreToDoorHero } from "@/components/hero/OceanExoticShoreToDoorHero";
 import { CUSTOMER_THEMES, CustomerTheme } from "@/config/customerThemes";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -1218,6 +1219,22 @@ export default function MarketplaceThemeControl() {
                    </div>
                 </div>
              </div>
+
+             {tempHeroStyle === 'SHORE_TO_DOOR_3D' && (
+                <div className="mt-6 space-y-4 bg-slate-950/80 border border-cyan-500/40 rounded-2xl p-4 md:p-6 shadow-2xl overflow-hidden">
+                   <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                      <h4 className="text-sm font-black uppercase tracking-tight text-cyan-300 flex items-center gap-2">
+                         <Sparkles className="w-4 h-4 text-cyan-400" /> Shore to Door Single-Frame Video Live Preview
+                      </h4>
+                      <Badge className="bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 text-[9px] font-black uppercase tracking-wider">
+                         Live Simulation
+                      </Badge>
+                   </div>
+                   <div className="rounded-xl overflow-hidden border border-cyan-500/30">
+                      <OceanExoticShoreToDoorHero heroItems={tempHero3d as any} />
+                   </div>
+                </div>
+             )}
           </div>
 
          {/* 🐠 3D HERO STAGE EDITOR */}
