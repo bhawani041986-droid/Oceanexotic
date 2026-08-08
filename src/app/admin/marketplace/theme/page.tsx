@@ -160,42 +160,30 @@ export default function MarketplaceThemeControl() {
       .catch(err => console.error("Error fetching products for theme control:", err));
   }, [fetchSettings]);
 
-  // Sync with store when hydrated or updated
+  // Sync with store ONCE on initial load
+  const isHydratedRef = useRef(false);
   useEffect(() => {
-    setTempAssets(customerAssets);
-    setSelectedThemeId(customerTheme);
-    setTempGlow(atmosphericGlow);
-    setTempHeroOpacity(heroOverlayOpacity ?? 80);
-    setTempHeroStyle(heroStyle || "AMAZON_CARD_GRID");
-    setTempCatAnimMode(categoryAnimationMode || "PARALLAX_FLOAT");
-    if (amazonHeroCards && amazonHeroCards.length > 0) setTempAmazonCards(amazonHeroCards);
-    if (swiggyBanners && swiggyBanners.length > 0) setTempSwiggyBanners(swiggyBanners);
-    if (zomatoHeroConfig) setTempZomatoHero(zomatoHeroConfig);
-    if (compactStripConfig) setTempCompactStrip(compactStripConfig);
-    setTempLogoTextColor(logoTextColor || "#00D1FF");
-    setTempLogoPrimaryColor(logoPrimaryColor || "#00D1FF");
-    setTempLogoSecondaryColor(logoSecondaryColor || "#F0ABFC");
-    const stored3d = (customerAssets as any)?.hero3dItems;
-    if (stored3d && stored3d.length > 0) setTempHero3d(stored3d);
+    if (!isHydratedRef.current && customerTheme) {
+      setTempAssets(customerAssets);
+      setSelectedThemeId(customerTheme);
+      setTempGlow(atmosphericGlow);
+      setTempHeroOpacity(heroOverlayOpacity ?? 80);
+      setTempHeroStyle(heroStyle || "SHORE_TO_DOOR_3D");
+      setTempCatAnimMode(categoryAnimationMode || "PARALLAX_FLOAT");
+      if (amazonHeroCards && amazonHeroCards.length > 0) setTempAmazonCards(amazonHeroCards);
+      if (swiggyBanners && swiggyBanners.length > 0) setTempSwiggyBanners(swiggyBanners);
+      if (zomatoHeroConfig) setTempZomatoHero(zomatoHeroConfig);
+      if (compactStripConfig) setTempCompactStrip(compactStripConfig);
+      setTempLogoTextColor(logoTextColor || "#00D1FF");
+      setTempLogoPrimaryColor(logoPrimaryColor || "#00D1FF");
+      setTempLogoSecondaryColor(logoSecondaryColor || "#F0ABFC");
+      const stored3d = (customerAssets as any)?.hero3dItems;
+      if (stored3d && stored3d.length > 0) setTempHero3d(stored3d);
+      isHydratedRef.current = true;
+    }
   }, [customerAssets, customerTheme, atmosphericGlow, heroOverlayOpacity, heroStyle, categoryAnimationMode, amazonHeroCards, swiggyBanners, zomatoHeroConfig, compactStripConfig, logoTextColor, logoPrimaryColor, logoSecondaryColor]);
 
-  const isDirty = selectedThemeId !== customerTheme || 
-                  tempGlow !== atmosphericGlow || 
-                  tempHeroOpacity !== (heroOverlayOpacity ?? 80) ||
-                  tempHeroStyle !== heroStyle ||
-                  JSON.stringify(tempAmazonCards) !== JSON.stringify(amazonHeroCards || DEFAULT_AMAZON_HERO_CARDS) ||
-                  JSON.stringify(tempSwiggyBanners) !== JSON.stringify(swiggyBanners || DEFAULT_SWIGGY_BANNERS) ||
-                  JSON.stringify(tempZomatoHero) !== JSON.stringify(zomatoHeroConfig || DEFAULT_ZOMATO_HERO) ||
-                  JSON.stringify(tempCompactStrip) !== JSON.stringify(compactStripConfig || DEFAULT_COMPACT_STRIP) ||
-                  tempLogoTextColor !== logoTextColor ||
-                  tempLogoPrimaryColor !== logoPrimaryColor ||
-                  tempLogoSecondaryColor !== logoSecondaryColor ||
-                  JSON.stringify(tempAssets) !== JSON.stringify(customerAssets) ||
-                  JSON.stringify(tempHero3d) !== JSON.stringify((customerAssets as any)?.hero3dItems || DEFAULT_HERO3D);
-                  tempLogoTextColor !== logoTextColor ||
-                  tempLogoPrimaryColor !== logoPrimaryColor ||
-                  tempLogoSecondaryColor !== logoSecondaryColor ||
-                  JSON.stringify(tempAssets) !== JSON.stringify(customerAssets);
+  const isDirty = true; // Always allow admin to commit theme settings
 
   const handleThemeSelect = (themeId: string) => {
     setSelectedThemeId(themeId);
