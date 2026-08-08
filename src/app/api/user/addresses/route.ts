@@ -87,3 +87,45 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
+// --- UPDATE EXISTING ADDRESS ---
+export async function PUT(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    if (!id) return NextResponse.json({ error: "Missing address ID" }, { status: 400 });
+
+    const body = await request.json();
+    const { user_id, type, hotel_name, room_no, jetty, address, phone, is_default, latitude, longitude, landmark, zone } = body;
+
+    if (!address) return NextResponse.json({ error: "Missing address field" }, { status: 400 });
+
+    // If setting as default, unset all others for this user
+    if (is_default && user_id) {
+      await supabase.from('user_addresses').update({ is_default: 0 }).eq('user_id', user_id);
+    }
+
+    const fullAddress = landmark ? `${address} (Landmark: ${landmark})` : address;
+
+    const updatePayload: any = {
+      label: type || 'HOME',
+      hotel_name: hotel_name || '',
+      room_no: room_no || '',
+      jetty: jetty || zone || '',
+      address_line1: fullAddress,
+      phone: phone || '',
+      is_default: is_default ? 1 : 0,
+    };
+
+    if (latitude !== undefined && latitude !== null) updatePayload.latitude = latitude;
+    if (longitude !== undefined && longitude !== null) updatePayload.longitude = longitude;
+
+    const { error } = await supabase.from('user_addresses').update(updatePayload).eq('id', id);
+    if (error) throw error;
+
+    return NextResponse.json({ success: true, message: "Address updated successfully" });
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
+

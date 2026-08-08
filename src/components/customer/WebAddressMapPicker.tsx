@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { MapPin, Navigation, Maximize2, Minimize2, Search } from "lucide-react";
 import { getPreciseDirectionalLandmark } from "@/lib/landmarkUtils";
 
@@ -8,30 +8,6 @@ interface WebAddressMapPickerProps {
   initialLat?: number;
   initialLng?: number;
   onLocationSelect: (lat: number, lng: number, addressName?: string, landmark?: string) => void;
-}
-
-const PORT_BLAIR_LANDMARKS = [
-  { name: 'Phoenix Bay Jetty', lat: 11.6744, lng: 92.7365 },
-  { name: 'Dollygunj Junction & Hub', lat: 11.6350, lng: 92.7079 },
-  { name: 'Aberdeen Clock Tower', lat: 11.6710, lng: 92.7410 },
-  { name: 'Junglighat Fish Landing', lat: 11.6605, lng: 92.7280 },
-  { name: 'Haddo Port', lat: 11.6826, lng: 92.7202 },
-  { name: 'Bhatubasti Market', lat: 11.6320, lng: 92.7260 },
-  { name: 'Minibay Junction', lat: 11.6210, lng: 92.7150 },
-  { name: 'Atamphad Crossing', lat: 11.6370, lng: 92.7030 }
-];
-
-function findNearestLandmark(lat: number, lng: number): string {
-  let minDistance = Infinity;
-  let nearestName = 'Port Blair Landmark';
-  PORT_BLAIR_LANDMARKS.forEach((lm) => {
-    const d = Math.sqrt(Math.pow(lat - lm.lat, 2) + Math.pow(lng - lm.lng, 2));
-    if (d < minDistance) {
-      minDistance = d;
-      nearestName = lm.name;
-    }
-  });
-  return nearestName;
 }
 
 export const WebAddressMapPicker: React.FC<WebAddressMapPickerProps> = ({
@@ -47,6 +23,33 @@ export const WebAddressMapPicker: React.FC<WebAddressMapPickerProps> = ({
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searching, setSearching] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  // iframeKey only changes when we explicitly need to re-render the map (layer toggle)
+  const [iframeKey, setIframeKey] = useState(0);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  // ── FIX 1: Listen to postMessage from the iframe ──────────────────────────
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data?.type === "WEB_COORDS") {
+        const nLat = Number(Number(event.data.lat).toFixed(6));
+        const nLng = Number(Number(event.data.lng).toFixed(6));
+        setLat(nLat);
+        setLng(nLng);
+        const landmark = getPreciseDirectionalLandmark(nLat, nLng);
+        onLocationSelect(nLat, nLng, undefined, landmark);
+      }
+    };
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, [onLocationSelect]);
+
+  // ── FIX 2: When lat/lng change from outside (GPS / search), send command to iframe ─
+  const sendPinToMap = (newLat: number, newLng: number) => {
+    iframeRef.current?.contentWindow?.postMessage(
+      { type: "SET_PIN", lat: newLat, lng: newLng },
+      "*"
+    );
+  };
 
   const triggerSelect = (newLat: number, newLng: number, name?: string) => {
     const formattedLat = Number(newLat.toFixed(6));
@@ -54,6 +57,7 @@ export const WebAddressMapPicker: React.FC<WebAddressMapPickerProps> = ({
     const landmark = getPreciseDirectionalLandmark(formattedLat, formattedLng, name);
     setLat(formattedLat);
     setLng(formattedLng);
+    sendPinToMap(formattedLat, formattedLng);
     onLocationSelect(formattedLat, formattedLng, name, landmark);
   };
 
@@ -72,6 +76,8 @@ export const WebAddressMapPicker: React.FC<WebAddressMapPickerProps> = ({
         setSearchResults(data.slice(0, 4));
       } else {
         setSearchResults([]);
+        setNotice("⚠️ No results found. Try a different landmark.");
+        setTimeout(() => setNotice(null), 3000);
       }
     } catch {
       setSearchResults([]);
@@ -90,6 +96,7 @@ export const WebAddressMapPicker: React.FC<WebAddressMapPickerProps> = ({
 
   const handleLocateMe = () => {
     if (navigator.geolocation) {
+      setNotice("📡 Detecting GPS position...");
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           let nLat = pos.coords.latitude;
@@ -99,18 +106,73 @@ export const WebAddressMapPicker: React.FC<WebAddressMapPickerProps> = ({
             nLat = 11.6234;
             nLng = 92.7265;
             setNotice("📍 Device GPS outside Andaman. Map pin centered on Port Blair.");
-            setTimeout(() => setNotice(null), 4000);
+          } else {
+            setNotice("✅ GPS coordinates locked!");
           }
+          setTimeout(() => setNotice(null), 4000);
           triggerSelect(nLat, nLng);
         },
         () => {
           triggerSelect(11.6234, 92.7265);
-          setNotice("📍 Map pin centered on Port Blair Harbour.");
+          setNotice("⚠️ GPS unavailable. Map pin centered on Port Blair Harbour.");
           setTimeout(() => setNotice(null), 4000);
-        }
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
       );
+    } else {
+      setNotice("⚠️ Geolocation is not supported by this browser.");
+      setTimeout(() => setNotice(null), 4000);
     }
   };
+
+  // The iframe HTML — listens for SET_PIN messages to update the marker
+  const mapHtml = `<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    body, html, #map { margin:0; padding:0; height:100%; width:100%; background:#020617; }
+    .leaflet-control-attribution { display:none !important; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+    var initLat = ${lat};
+    var initLng = ${lng};
+    var map = L.map('map', { zoomControl: true }).setView([initLat, initLng], 17);
+    L.tileLayer('https://mt1.google.com/vt/lyrs=${layerType}&x={x}&y={y}&z={z}', { maxZoom: 20 }).addTo(map);
+
+    var marker = L.marker([initLat, initLng], { draggable: true }).addTo(map);
+
+    function sendCoords(lat, lng) {
+      window.parent.postMessage({ type: 'WEB_COORDS', lat: lat, lng: lng }, '*');
+    }
+
+    marker.on('dragend', function(e) {
+      var pos = marker.getLatLng();
+      map.panTo(pos);
+      sendCoords(pos.lat, pos.lng);
+    });
+
+    map.on('click', function(e) {
+      marker.setLatLng(e.latlng);
+      map.panTo(e.latlng);
+      sendCoords(e.latlng.lat, e.latlng.lng);
+    });
+
+    // Listen for SET_PIN from React to move marker programmatically
+    window.addEventListener('message', function(event) {
+      if (event.data && event.data.type === 'SET_PIN') {
+        var ll = L.latLng(event.data.lat, event.data.lng);
+        marker.setLatLng(ll);
+        map.setView(ll, 17);
+      }
+    });
+  </script>
+</body>
+</html>`;
 
   return (
     <div className="space-y-2">
@@ -151,7 +213,7 @@ export const WebAddressMapPicker: React.FC<WebAddressMapPickerProps> = ({
         <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
-            onClick={() => setLayerType(layerType === "y" ? "m" : "y")}
+            onClick={() => { setLayerType(layerType === "y" ? "m" : "y"); setIframeKey(k => k + 1); }}
             className="px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-[9px] font-black uppercase tracking-wider text-slate-300 hover:text-white"
           >
             {layerType === "y" ? "🛰️ Hybrid" : "🗺️ Streets"}
@@ -177,56 +239,25 @@ export const WebAddressMapPicker: React.FC<WebAddressMapPickerProps> = ({
       {/* Map Canvas */}
       <div className={`relative ${isExpanded ? "h-96" : "h-52"} w-full rounded-xl overflow-hidden border border-slate-700 shadow-xl transition-all duration-300`}>
         <iframe
-          key={`${lat}-${lng}-${layerType}`}
+          key={iframeKey}
+          ref={iframeRef}
           className="w-full h-full border-0"
-          srcDoc={`
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-              <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-              <style>
-                body, html, #map { margin:0; padding:0; height:100%; width:100%; background:#020617; }
-                .leaflet-control-attribution { display:none !important; }
-              </style>
-            </head>
-            <body>
-              <div id="map"></div>
-              <script>
-                var map = L.map('map', { zoomControl: false }).setView([${lat}, ${lng}], 16);
-                L.tileLayer('https://mt1.google.com/vt/lyrs=${layerType}&x={x}&y={y}&z={z}', { maxZoom: 19 }).addTo(map);
-                var marker = L.marker([${lat}, ${lng}], { draggable: true }).addTo(map);
-                
-                marker.on('dragend', function(e) {
-                  var pos = marker.getLatLng();
-                  if (window.parent) {
-                    window.parent.postMessage({ type: 'WEB_COORDS', lat: pos.lat, lng: pos.lng }, '*');
-                  }
-                });
-
-                map.on('click', function(e) {
-                  marker.setLatLng(e.latlng);
-                  if (window.parent) {
-                    window.parent.postMessage({ type: 'WEB_COORDS', lat: e.latlng.lat, lng: e.latlng.lng }, '*');
-                  }
-                });
-              </script>
-            </body>
-            </html>
-          `}
+          srcDoc={mapHtml}
+          title="Location Map"
         />
         <button
           type="button"
           onClick={handleLocateMe}
-          className="absolute bottom-3 right-3 px-3 py-1.5 rounded-full bg-teal-600 text-white text-[9px] font-black uppercase tracking-wider flex items-center gap-1.5 shadow-lg hover:bg-teal-500"
+          className="absolute bottom-3 right-3 px-3 py-1.5 rounded-full bg-teal-600 text-white text-[9px] font-black uppercase tracking-wider flex items-center gap-1.5 shadow-lg hover:bg-teal-500 z-10"
         >
           <Navigation className="w-3 h-3" /> GPS LOCATE ME
         </button>
       </div>
 
+      {/* Coordinates Display */}
       <div className="flex items-center justify-between text-[10px] font-bold text-teal-400 px-1">
-        <span>📍 Coordinates Locked: {lat}, {lng}</span>
-        <span className="text-slate-300">📍 {getPreciseDirectionalLandmark(lat, lng)}</span>
+        <span>📍 Coordinates Locked: {lat.toFixed(6)}, {lng.toFixed(6)}</span>
+        <span className="text-slate-300 text-right max-w-[55%] truncate">📍 {getPreciseDirectionalLandmark(lat, lng)}</span>
       </div>
     </div>
   );
