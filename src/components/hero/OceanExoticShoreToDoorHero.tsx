@@ -351,8 +351,8 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
           </motion.button>
         </div>
 
-        {/* ── CENTERED HERO CONTENT ── */}
-        <div className="flex-1 flex flex-col items-center justify-center text-center px-4 sm:px-8 -mt-4 sm:-mt-10">
+        {/* ── LEFT TOP HERO CONTENT ── */}
+        <div className="flex-1 flex flex-col items-start justify-start text-left px-6 sm:px-16 pt-16 sm:pt-28 max-w-4xl">
 
           {/* Journey stage micro-badge */}
           <AnimatePresence mode="wait">
@@ -362,7 +362,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
               animate={{ opacity: 1,  y: 0 }}
               exit={{   opacity: 0, y: -10 }}
               transition={{ duration: 0.35 }}
-              className="inline-flex items-center gap-2 mb-4 sm:mb-6 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full border backdrop-blur-md"
+              className="inline-flex items-center gap-2 mb-3 sm:mb-4 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full border backdrop-blur-md"
               style={{
                 borderColor: `${STAGES[activeStage].color}70`,
                 background:  `${STAGES[activeStage].color}25`,
@@ -382,7 +382,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
             </motion.div>
           </AnimatePresence>
 
-          {/* GIANT HEADLINE */}
+          {/* GIANT HEADLINE (Single line, 23px on mobile, responsive desktop sizes) */}
           <AnimatePresence mode="wait">
             <motion.div
               key={textPhase}
@@ -390,52 +390,30 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
               animate={{ opacity: 1,  y: 0,  filter: "blur(0px)" }}
               exit={{   opacity: 0, y: -20, filter: "blur(6px)" }}
               transition={{ duration: 0.65, ease: [0.23, 1, 0.32, 1] }}
-              className="space-y-0 sm:space-y-1"
             >
-              {/* Top word */}
               <motion.h1
-                className="font-black uppercase leading-none tracking-tighter"
+                className="font-black uppercase leading-tight tracking-tighter text-[23px] sm:text-[40px] md:text-[54px] lg:text-[64px]"
                 style={{
-                  fontSize: "clamp(4.5rem, 13vw, 10rem)",
-                  background: "linear-gradient(135deg, #00f3ff 0%, #60efff 25%, #ffffff 52%, #f59e0b 78%, #ff6b35 100%)",
+                  background: "linear-gradient(135deg, #00f3ff 0%, #60efff 30%, #ffffff 50%, #f59e0b 75%, #ff6b35 100%)",
                   backgroundSize: "200% 200%",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
-                  filter: "drop-shadow(0 4px 32px rgba(0,243,255,0.7)) drop-shadow(0 0 60px rgba(0,200,255,0.4))",
+                  filter: "drop-shadow(0 2px 12px rgba(0,243,255,0.6))",
                   animation: "gradientShift 6s ease infinite",
                   textShadow: "none",
-                  letterSpacing: "-0.03em",
                 }}
               >
-                {currentHeadline.top}
-              </motion.h1>
-              {/* Bottom word */}
-              <motion.h1
-                className="font-black uppercase leading-none tracking-tighter"
-                style={{
-                  fontSize: "clamp(4.5rem, 13vw, 10rem)",
-                  background: "linear-gradient(135deg, #fbbf24 0%, #ffffff 38%, #00f3ff 68%, #c084fc 100%)",
-                  backgroundSize: "200% 200%",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  filter: "drop-shadow(0 4px 32px rgba(245,158,11,0.7)) drop-shadow(0 0 60px rgba(251,191,36,0.35))",
-                  animation: "gradientShift 6s ease infinite reverse",
-                  textShadow: "none",
-                  letterSpacing: "-0.03em",
-                }}
-              >
-                {currentHeadline.bottom}
+                {currentHeadline.top} {currentHeadline.bottom}
               </motion.h1>
             </motion.div>
           </AnimatePresence>
 
           {/* Animated underline */}
           <motion.div
-            className="w-0 h-0.5 rounded-full mt-2 sm:mt-3"
+            className="w-0 h-0.5 rounded-full mt-1.5 sm:mt-2.5"
             style={{ background: "linear-gradient(90deg, #00f3ff, #f59e0b)" }}
-            animate={{ width: ["0%", "60%", "0%"] }}
+            animate={{ width: ["0%", "50%", "0%"] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
           />
 
@@ -447,23 +425,44 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
               animate={{ opacity: 1,  y: 0 }}
               exit={{   opacity: 0, y: -8 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="mt-4 sm:mt-6 text-lg sm:text-2xl lg:text-3xl font-semibold text-white/90 max-w-xl sm:max-w-2xl leading-relaxed drop-shadow-lg"
+              className="mt-3 sm:mt-5 text-sm sm:text-xl lg:text-2xl font-semibold text-white/95 max-w-xl leading-relaxed drop-shadow-lg"
             >
               {currentHeadline.sub}
             </motion.p>
           </AnimatePresence>
+
+          {/* Price tag if admin set one */}
+          {activeAdminFish?.price && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1 }}
+              className="mt-3 sm:mt-4 flex items-center gap-2"
+            >
+              <span className="text-xs font-bold uppercase text-slate-400 tracking-wider">From</span>
+              <span className="text-lg sm:text-2xl font-black text-amber-400 drop-shadow-lg">
+                {activeAdminFish.price.startsWith("Rs") || activeAdminFish.price.startsWith("₹") ? "" : "Rs. "}{activeAdminFish.price}
+              </span>
+              {activeAdminFish.unit && (
+                <span className="text-xs sm:text-sm text-slate-300 font-bold uppercase">
+                  per {activeAdminFish.unit.replace(/^per\s+/i, "")}
+                </span>
+              )}
+              <span className="text-xs font-bold uppercase text-slate-400 tracking-wider">onwards</span>
+            </motion.div>
+          )}
 
           {/* CTA Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1,  y: 0 }}
             transition={{ duration: 0.7, delay: 0.6 }}
-            className="flex items-center justify-center gap-3 sm:gap-4 mt-6 sm:mt-8 flex-wrap"
+            className="flex items-center justify-start gap-3 sm:gap-4 mt-5 sm:mt-7 flex-wrap"
           >
             {/* Primary CTA */}
             <Link
               href={activeAdminFish?.productId ? `/customer/products/${activeAdminFish.productId}` : "/customer/products"}
-              className="group relative flex items-center gap-2.5 px-7 py-3.5 sm:px-10 sm:py-4 rounded-full font-black text-sm sm:text-base lg:text-lg uppercase tracking-widest text-slate-950 overflow-hidden transition-all hover:scale-105 active:scale-95"
+              className="group relative flex items-center gap-2.5 px-6 py-3 sm:px-8 sm:py-3.5 rounded-full font-black text-xs sm:text-sm lg:text-base uppercase tracking-widest text-slate-950 overflow-hidden transition-all hover:scale-105 active:scale-95"
               style={{
                 background:  "linear-gradient(135deg, #00f3ff, #00b4d8, #f59e0b)",
                 boxShadow:   "0 0 30px rgba(0,243,255,0.5), 0 4px 15px rgba(0,0,0,0.3)",
@@ -479,28 +478,13 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
             {/* Secondary CTA */}
             <Link
               href="/customer/products"
-              className="group flex items-center gap-2.5 px-7 py-3.5 sm:px-10 sm:py-4 rounded-full font-black text-sm sm:text-base lg:text-lg uppercase tracking-widest text-white border border-white/35 backdrop-blur-md transition-all hover:scale-105 hover:border-cyan-400/70 hover:bg-white/12 active:scale-95"
+              className="group flex items-center gap-2.5 px-6 py-3 sm:px-8 sm:py-3.5 rounded-full font-black text-xs sm:text-sm lg:text-base uppercase tracking-widest text-white border border-white/35 backdrop-blur-md transition-all hover:scale-105 hover:border-cyan-400/70 hover:bg-white/12 active:scale-95"
               style={{ boxShadow: "0 4px 15px rgba(0,0,0,0.3)" }}
             >
               <Fish className="w-4 h-4 sm:w-5 sm:h-5" />
               <span>EXPLORE MENU</span>
             </Link>
           </motion.div>
-
-          {/* Price tag if admin set one */}
-          {activeAdminFish?.price && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1 }}
-              className="mt-4 flex items-center justify-center gap-2"
-            >
-              <span className="text-xs font-bold uppercase text-slate-500 tracking-wider">From</span>
-              <span className="text-xl sm:text-2xl font-black text-amber-400 drop-shadow-lg">{activeAdminFish.price}</span>
-              {activeAdminFish.unit && <span className="text-xs text-slate-400 font-bold uppercase">/ {activeAdminFish.unit}</span>}
-              <span className="text-xs font-bold uppercase text-slate-500 tracking-wider">onwards</span>
-            </motion.div>
-          )}
         </div>
 
         {/* ── BOTTOM STAGE JOURNEY RIBBON ── */}
