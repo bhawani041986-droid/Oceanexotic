@@ -5,8 +5,8 @@ import Link from "next/link";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import {
   Waves, Scissors, Package, ThermometerSnowflake, Truck, Home,
-  ArrowRight, Play, Pause, ShoppingCart, Zap, ChevronDown,
-  Box, Star, Fish
+  ArrowRight, Play, Pause, ShoppingCart, ChevronDown,
+  Box, Fish
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -45,13 +45,74 @@ const HERO_VIDEOS = [
   "/videos/6914536_Motion_Graphics_Motion_Graphic_1280x720.mp4",
 ];
 
-// ─── Journey stages (bottom pill nav) ────────────────────────────────────────
-const STAGES = [
-  { id: "catch",     step: "01", label: "SHORE CATCH",     icon: <Waves            className="w-3 h-3" />, color: "#00f3ff" },
-  { id: "slice",     step: "02", label: "PRECISION CUT",   icon: <Scissors         className="w-3 h-3" />, color: "#f59e0b" },
-  { id: "vacuum",    step: "03", label: "VACUUM SEALED",   icon: <Package          className="w-3 h-3" />, color: "#3b82f6" },
-  { id: "coldchain", step: "04", label: "COLD CHAIN",      icon: <ThermometerSnowflake className="w-3 h-3" />, color: "#10b981" },
-  { id: "delivery",  step: "05", label: "EXPRESS DOOR",    icon: <Truck            className="w-3 h-3" />, color: "#a855f7" },
+// ─── Default 6-Stage Process Configuration ───────────────────────────────────
+const DEFAULT_STAGE_DATA = [
+  {
+    id: "catch",
+    step: "01",
+    label: "SHORE CATCH",
+    title: "SHORE CATCH",
+    badge: "100% Ocean Wild Catch",
+    statusText: "Pristine Island Dock Landing",
+    imageUrl: "https://oceanexotic.com/storage/cms/1786227333695-photo-2026-08-08-23-22-45.jpg",
+    color: "#00f3ff",
+    icon: <Waves className="w-3.5 h-3.5" />
+  },
+  {
+    id: "slice",
+    step: "02",
+    label: "PRECISION SLICED",
+    title: "PRECISION SLICED",
+    badge: "3D Deconstructed Steaks & Fry Cuts",
+    statusText: "Laser Sliced Fresh Cuts",
+    imageUrl: "/images/hero/hero_freshly_sliced.jpg",
+    color: "#f59e0b",
+    icon: <Scissors className="w-3.5 h-3.5" />
+  },
+  {
+    id: "vacuum",
+    step: "03",
+    label: "VACUUM SEALED",
+    title: "VACUUM SEALED",
+    badge: "Hermetic Eco Pack",
+    statusText: "Airtight Freshness Encapsulation",
+    imageUrl: "/images/hero/hero_vacuum_sealed.jpg",
+    color: "#3b82f6",
+    icon: <Package className="w-3.5 h-3.5" />
+  },
+  {
+    id: "coldchain",
+    step: "04",
+    label: "COLD CHAIN",
+    title: "COLD CHAIN MAINTAINED",
+    badge: "0°C - 4°C Ice Lock",
+    statusText: "Continuous Chilled Preservation",
+    imageUrl: "/images/hero/hero_cold_chain.jpg",
+    color: "#10b981",
+    icon: <ThermometerSnowflake className="w-3.5 h-3.5" />
+  },
+  {
+    id: "delivery",
+    step: "05",
+    label: "EXPRESS DISPATCH",
+    title: "EXPRESS DISPATCH",
+    badge: "90 Min Delivery Route",
+    statusText: "Cold Courier Velocity Tunnel",
+    imageUrl: "/images/hero/hero_express_delivery.jpg",
+    color: "#a855f7",
+    icon: <Truck className="w-3.5 h-3.5" />
+  },
+  {
+    id: "door",
+    step: "06",
+    label: "DELIVERED TO DOOR",
+    title: "DELIVERED TO YOUR DOOR",
+    badge: "Shore to Door Complete",
+    statusText: "Fresh Seafood Delivered Fresh",
+    imageUrl: "/images/hero/hero_delivered_door.jpg",
+    color: "#00d1ff",
+    icon: <Home className="w-3.5 h-3.5" />
+  }
 ];
 
 // ─── Floating stat cards ──────────────────────────────────────────────────────
@@ -70,7 +131,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
   const [videoReady,  setVideoReady]  = useState(false);
   const [isPlaying,   setIsPlaying]   = useState(true);
   const [activeStage, setActiveStage] = useState(0);
-  const [textPhase,   setTextPhase]   = useState(0); // cycles headline text
+  const [textPhase,   setTextPhase]   = useState(0);
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -93,11 +154,23 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
     return () => clearInterval(t);
   }, []);
 
-  // Cycle stage indicator every 3s
+  // Merge custom stage data from props (if any) with defaults
+  const mergedStages = DEFAULT_STAGE_DATA.map((def, idx) => {
+    const custom = hero3dStages?.find(s => s.step === def.step || s.id === def.id || (idx === 5 && s.step === "06"));
+    return {
+      ...def,
+      title: custom?.title || def.title,
+      badge: custom?.badge || def.badge,
+      statusText: custom?.statusText || def.statusText,
+      imageUrl: custom?.imageUrl || def.imageUrl,
+    };
+  });
+
+  // Cycle stage indicator every 3s through all 6 stages
   useEffect(() => {
-    const t = setInterval(() => setActiveStage(s => (s + 1) % STAGES.length), 3000);
+    const t = setInterval(() => setActiveStage(s => (s + 1) % mergedStages.length), 3000);
     return () => clearInterval(t);
-  }, []);
+  }, [mergedStages.length]);
 
   // ── Video cycling ─────────────────────────────────────────────────────────
   useEffect(() => {
@@ -141,9 +214,9 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
   // ── Canvas: bioluminescent particles over video ───────────────────────────
   const mouseRef = useRef({ x: 0, y: 0 });
   useEffect(() => {
-    const u1 = springX.on("change", v => { mouseRef.current.x = v; });
-    const u2 = springY.on("change", v => { mouseRef.current.y = v; });
-    return () => { u1(); u2(); };
+    const un1 = springX.on("change", v => { mouseRef.current.x = v; });
+    const un2 = springY.on("change", v => { mouseRef.current.y = v; });
+    return () => { un1(); un2(); };
   }, [springX, springY]);
 
   useEffect(() => {
@@ -160,22 +233,21 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
     resize();
     window.addEventListener("resize", resize);
 
-    // 200 particles + 8 larger glowing orbs
-    const particles = Array.from({ length: 200 }, (_, i) => ({
+    const particles = Array.from({ length: 150 }, (_, i) => ({
       x:       Math.random() * canvas.width,
       y:       Math.random() * canvas.height,
       r:       Math.random() * 2 + 0.5,
       speedX:  (Math.random() - 0.5) * 0.35,
-      speedY:  -(Math.random() * 0.6 + 0.1),
+      speedY:  -(Math.random() * 0.5 + 0.1),
       opacity: Math.random() * 0.7 + 0.15,
       cyan:    i % 3 !== 0,
       phase:   Math.random() * Math.PI * 2,
     }));
 
-    const orbs = Array.from({ length: 6 }, () => ({
+    const orbs = Array.from({ length: 4 }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      r: Math.random() * 80 + 40,
+      r: Math.random() * 60 + 30,
       ox: 0, oy: 0,
       speedX: (Math.random() - 0.5) * 0.15,
       speedY: (Math.random() - 0.5) * 0.15,
@@ -188,17 +260,17 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
       const { x: mx, y: my } = mouseRef.current;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Orbs (deep glow blobs that shift with mouse)
+      // Glow Orbs
       orbs.forEach(o => {
-        o.x += o.speedX + mx * 0.4;
-        o.y += o.speedY + my * 0.4;
+        o.x += o.speedX + mx * 0.3;
+        o.y += o.speedY + my * 0.3;
         if (o.x < -o.r) o.x = canvas.width + o.r;
         if (o.x > canvas.width + o.r) o.x = -o.r;
         if (o.y < -o.r) o.y = canvas.height + o.r;
         if (o.y > canvas.height + o.r) o.y = -o.r;
         const g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
-        g.addColorStop(0,   `hsla(${o.hue},100%,65%,0.06)`);
-        g.addColorStop(0.5, `hsla(${o.hue},100%,55%,0.03)`);
+        g.addColorStop(0,   `hsla(${o.hue},100%,65%,0.05)`);
+        g.addColorStop(0.5, `hsla(${o.hue},100%,55%,0.02)`);
         g.addColorStop(1,   `hsla(${o.hue},100%,50%,0)`);
         ctx.fillStyle = g;
         ctx.beginPath();
@@ -206,27 +278,27 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
         ctx.fill();
       });
 
-      // Volumetric light rays
-      for (let i = 0; i < 5; i++) {
-        const bx = (canvas.width / 5) * i + Math.sin(t + i) * 30 + mx * 20;
-        const gr = ctx.createLinearGradient(bx, 0, bx + 60, canvas.height);
-        gr.addColorStop(0,   "rgba(0,243,255,0.055)");
-        gr.addColorStop(0.5, "rgba(245,158,11,0.025)");
+      // Light rays
+      for (let i = 0; i < 4; i++) {
+        const bx = (canvas.width / 4) * i + Math.sin(t + i) * 20 + mx * 15;
+        const gr = ctx.createLinearGradient(bx, 0, bx + 50, canvas.height);
+        gr.addColorStop(0,   "rgba(0,243,255,0.04)");
+        gr.addColorStop(0.5, "rgba(245,158,11,0.015)");
         gr.addColorStop(1,   "rgba(0,0,0,0)");
         ctx.fillStyle = gr;
         ctx.beginPath();
-        ctx.moveTo(bx - 25, 0);
-        ctx.lineTo(bx + 65, 0);
-        ctx.lineTo(bx + 180, canvas.height);
-        ctx.lineTo(bx - 90,  canvas.height);
+        ctx.moveTo(bx - 20, 0);
+        ctx.lineTo(bx + 50, 0);
+        ctx.lineTo(bx + 140, canvas.height);
+        ctx.lineTo(bx - 70,  canvas.height);
         ctx.closePath();
         ctx.fill();
       }
 
-      // Bioluminescent particles
+      // Particles
       particles.forEach(p => {
-        p.x += p.speedX + Math.sin(t * 0.7 + p.phase) * 0.18 + mx * 0.45;
-        p.y += p.speedY + my * 0.35;
+        p.x += p.speedX + Math.sin(t * 0.7 + p.phase) * 0.15 + mx * 0.35;
+        p.y += p.speedY + my * 0.25;
         if (p.y < -8)  { p.y = canvas.height + 8; p.x = Math.random() * canvas.width; }
         if (p.x < -8)    p.x = canvas.width + 8;
         if (p.x > canvas.width + 8) p.x = -8;
@@ -246,12 +318,22 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
   }, []);
 
   const currentHeadline = HEADLINES[textPhase];
+  const activeStageConfig = mergedStages[activeStage];
+
+  // Map mouse coordinate values to 3D rotations for the floating card
+  const rotateX = useSpring(useMotionValue(0), { stiffness: 60, damping: 20 });
+  const rotateY = useSpring(useMotionValue(0), { stiffness: 60, damping: 20 });
+
+  useEffect(() => {
+    const un = springX.on("change", v => rotateY.set(v * 16));
+    const un2 = springY.on("change", v => rotateX.set(-v * 16));
+    return () => { un(); un2(); };
+  }, [springX, springY, rotateX, rotateY]);
 
   return (
     <div
       ref={containerRef}
-      className="relative w-full overflow-hidden select-none"
-      style={{ height: "100svh", minHeight: "580px" }}
+      className="relative w-full overflow-hidden select-none h-[80svh] sm:h-[100svh] min-h-[460px] sm:min-h-[580px]"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
@@ -271,17 +353,13 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
         }}
       />
 
-      {/* ── GRADIENT OVERLAYS — lightened so video shines through ── */}
-      {/* Bottom fade — only bottom 40% fades to near-black */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#030712]/90 via-[#030712]/20 to-transparent z-10 pointer-events-none" />
-      {/* Left vignette — subtle */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#030712]/40 via-transparent to-[#030712]/25 z-10 pointer-events-none" />
-      {/* Top fade — just enough for header legibility */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-transparent z-10 pointer-events-none" />
-      {/* Centre tint — very light so center video is visible */}
-      <div className="absolute inset-0 bg-black/10 z-10 pointer-events-none" />
+      {/* ── GRADIENT OVERLAYS ── */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#030712]/90 via-[#030712]/15 to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#030712]/35 via-transparent to-[#030712]/20 z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-black/5 z-10 pointer-events-none" />
 
-      {/* ── PARTICLE CANVAS (over video, under UI) ── */}
+      {/* ── PARTICLE CANVAS ── */}
       <canvas
         ref={canvasRef}
         className="absolute inset-0 w-full h-full pointer-events-none z-20"
@@ -291,25 +369,21 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
       <div className="absolute inset-0 z-30 flex flex-col">
 
         {/* ── TOP NAV BAR ── */}
-        <div className="w-full flex items-center justify-between px-4 sm:px-8 pt-4 sm:pt-6">
+        <div className="w-full flex items-center justify-between px-4 sm:px-8 pt-3 sm:pt-6">
 
           {/* Live badge */}
           <motion.div
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1,  y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex items-center gap-2 bg-black/40 backdrop-blur-xl border border-cyan-500/30 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full shadow-xl"
+            className="flex items-center gap-2 bg-black/45 backdrop-blur-xl border border-cyan-500/30 px-3 py-1.5 rounded-full shadow-xl"
           >
             <motion.span
               animate={{ opacity: [1, 0.2, 1], scale: [1, 1.3, 1] }}
               transition={{ duration: 1.4, repeat: Infinity }}
-              className="w-2 h-2 rounded-full bg-cyan-400 shrink-0"
+              className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"
             />
-            <Box className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-            <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-cyan-300 hidden sm:inline">
-              OCEANEXOTIC — LIVE
-            </span>
-            <span className="text-[10px] font-black uppercase tracking-widest text-cyan-300 sm:hidden">
+            <span className="text-[10px] font-black uppercase tracking-widest text-cyan-300">
               OCEANEXOTIC
             </span>
           </motion.div>
@@ -321,15 +395,15 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
             transition={{ duration: 0.6, delay: 0.35 }}
             className="hidden md:flex items-center gap-3"
           >
-            {STATS.map((s, i) => (
+            {STATS.map((s) => (
               <motion.div
                 key={s.label}
-                whileHover={{ scale: 1.06, y: -3 }}
+                whileHover={{ scale: 1.06, y: -2 }}
                 className="flex items-center gap-1.5 bg-black/40 backdrop-blur-xl border border-white/15 px-3 py-1.5 rounded-full"
               >
-                <span className="text-base">{s.icon}</span>
+                <span className="text-sm">{s.icon}</span>
                 <span className="text-sm font-black text-cyan-300">{s.value}</span>
-                <span className="text-[10px] font-bold uppercase text-slate-400">{s.label}</span>
+                <span className="text-[9px] font-bold uppercase text-slate-400">{s.label}</span>
               </motion.div>
             ))}
           </motion.div>
@@ -340,162 +414,220 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
             animate={{ opacity: 1,  y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
             onClick={() => setIsPlaying(p => !p)}
-            whileHover={{ scale: 1.1 }}
+            whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-1.5 bg-black/40 backdrop-blur-xl border border-white/20 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-slate-300 hover:text-cyan-300 hover:border-cyan-500/50 transition-all"
+            className="flex items-center gap-1.5 bg-black/45 backdrop-blur-xl border border-white/15 px-3 py-1 rounded-full text-slate-300 hover:text-cyan-300 hover:border-cyan-500/40 transition-all text-[10px] font-bold uppercase"
           >
-            {isPlaying
-              ? <><Pause className="w-3.5 h-3.5" /><span className="text-[10px] font-black uppercase hidden sm:inline">Pause</span></>
-              : <><Play  className="w-3.5 h-3.5 fill-current" /><span className="text-[10px] font-black uppercase hidden sm:inline">Play</span></>
-            }
+            {isPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3 fill-current" />}
+            <span className="hidden sm:inline">{isPlaying ? "Pause" : "Play"}</span>
           </motion.button>
         </div>
 
-        {/* ── LEFT TOP HERO CONTENT ── */}
-        <div className="flex-1 flex flex-col items-start justify-start text-left px-6 sm:px-16 pt-16 sm:pt-28 max-w-4xl">
-
-          {/* Journey stage micro-badge */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeStage}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1,  y: 0 }}
-              exit={{   opacity: 0, y: -10 }}
-              transition={{ duration: 0.35 }}
-              className="inline-flex items-center gap-2 mb-3 sm:mb-4 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full border backdrop-blur-md"
-              style={{
-                borderColor: `${STAGES[activeStage].color}70`,
-                background:  `${STAGES[activeStage].color}25`,
-                boxShadow:   `0 0 24px ${STAGES[activeStage].color}50`,
-              }}
-            >
-              <span style={{ color: STAGES[activeStage].color }}>{STAGES[activeStage].icon}</span>
-              <span className="text-xs sm:text-sm font-black uppercase tracking-widest text-white drop-shadow">
-                STAGE {STAGES[activeStage].step} — {STAGES[activeStage].label}
-              </span>
-              <motion.span
-                animate={{ opacity: [1, 0.3, 1] }}
-                transition={{ duration: 1.2, repeat: Infinity }}
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ background: STAGES[activeStage].color }}
-              />
-            </motion.div>
-          </AnimatePresence>
-
-          {/* GIANT HEADLINE (Single line, 23px on mobile, responsive desktop sizes) */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={textPhase}
-              initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
-              animate={{ opacity: 1,  y: 0,  filter: "blur(0px)" }}
-              exit={{   opacity: 0, y: -20, filter: "blur(6px)" }}
-              transition={{ duration: 0.65, ease: [0.23, 1, 0.32, 1] }}
-            >
-              <motion.h1
-                className="font-black uppercase leading-tight tracking-tighter text-[23px] sm:text-[40px] md:text-[54px] lg:text-[64px]"
+        {/* ── SPLIT VIEW CONTENT (Left: Text, Right: Floating Custom Stage Photo) ── */}
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-8 items-center px-6 sm:px-16 pt-8 sm:pt-14 max-w-7xl mx-auto w-full">
+          
+          {/* Left Column: Left-aligned compact typography */}
+          <div className="col-span-1 md:col-span-7 flex flex-col items-start justify-center text-left space-y-3 sm:space-y-4 max-w-xl">
+            
+            {/* Journey stage micro-badge (Shows Custom Titles & Badges) */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeStage}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1,  y: 0 }}
+                exit={{   opacity: 0, y: -8 }}
+                transition={{ duration: 0.3 }}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border backdrop-blur-md"
                 style={{
-                  background: "linear-gradient(135deg, #00f3ff 0%, #60efff 30%, #ffffff 50%, #f59e0b 75%, #ff6b35 100%)",
-                  backgroundSize: "200% 200%",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                  filter: "drop-shadow(0 2px 12px rgba(0,243,255,0.6))",
-                  animation: "gradientShift 6s ease infinite",
-                  textShadow: "none",
+                  borderColor: `${activeStageConfig.color}60`,
+                  background:  `${activeStageConfig.color}15`,
+                  boxShadow:   `0 0 16px ${activeStageConfig.color}30`,
                 }}
               >
-                {currentHeadline.top} {currentHeadline.bottom}
-              </motion.h1>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Animated underline */}
-          <motion.div
-            className="w-0 h-0.5 rounded-full mt-1.5 sm:mt-2.5"
-            style={{ background: "linear-gradient(90deg, #00f3ff, #f59e0b)" }}
-            animate={{ width: ["0%", "50%", "0%"] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
-          />
-
-          {/* Subtitle */}
-          <AnimatePresence mode="wait">
-            <motion.p
-              key={textPhase + "_sub"}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1,  y: 0 }}
-              exit={{   opacity: 0, y: -8 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="mt-3 sm:mt-5 text-sm sm:text-xl lg:text-2xl font-semibold text-white/95 max-w-xl leading-relaxed drop-shadow-lg"
-            >
-              {currentHeadline.sub}
-            </motion.p>
-          </AnimatePresence>
-
-          {/* Price tag if admin set one */}
-          {activeAdminFish?.price && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1 }}
-              className="mt-3 sm:mt-4 flex items-center gap-2"
-            >
-              <span className="text-xs font-bold uppercase text-slate-400 tracking-wider">From</span>
-              <span className="text-lg sm:text-2xl font-black text-amber-400 drop-shadow-lg">
-                {activeAdminFish.price.startsWith("Rs") || activeAdminFish.price.startsWith("₹") ? "" : "Rs. "}{activeAdminFish.price}
-              </span>
-              {activeAdminFish.unit && (
-                <span className="text-xs sm:text-sm text-slate-300 font-bold uppercase">
-                  per {activeAdminFish.unit.replace(/^per\s+/i, "")}
+                <span className="text-xs shrink-0" style={{ color: activeStageConfig.color }}>
+                  {activeStageConfig.icon}
                 </span>
-              )}
-              <span className="text-xs font-bold uppercase text-slate-400 tracking-wider">onwards</span>
+                <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-white">
+                  STAGE {activeStageConfig.step} — {activeStageConfig.title}
+                </span>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Headline (Single line, reduced font size on mobile to 19px, keeps center free) */}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={textPhase}
+                initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+                animate={{ opacity: 1,  y: 0,  filter: "blur(0px)" }}
+                exit={{   opacity: 0, y: -15, filter: "blur(4px)" }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              >
+                <motion.h1
+                  className="font-black uppercase leading-tight tracking-tighter text-[19px] sm:text-[36px] md:text-[48px] lg:text-[56px] hero-headline"
+                  style={{
+                    background: "linear-gradient(135deg, #00f3ff 0%, #60efff 30%, #ffffff 50%, #f59e0b 75%, #ff6b35 100%)",
+                    backgroundSize: "200% 200%",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    backgroundClip: "text",
+                    filter: "drop-shadow(0 2px 8px rgba(0,243,255,0.5))",
+                    animation: "gradientShift 6s ease infinite",
+                  }}
+                >
+                  {currentHeadline.top} {currentHeadline.bottom}
+                </motion.h1>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Custom active stage status/badge callout */}
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={activeStage + "_badge"}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1,  x: 0 }}
+                exit={{   opacity: 0, x: 10 }}
+                transition={{ duration: 0.3 }}
+                className="text-xs sm:text-sm font-bold uppercase tracking-widest px-2 py-0.5 rounded border border-white/10"
+                style={{
+                  color: activeStageConfig.color,
+                  borderColor: `${activeStageConfig.color}35`,
+                  background: `${activeStageConfig.color}08`
+                }}
+              >
+                {activeStageConfig.badge}
+              </motion.p>
+            </AnimatePresence>
+
+            {/* Subtitle */}
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={textPhase + "_sub"}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1,  y: 0 }}
+                exit={{   opacity: 0, y: -6 }}
+                transition={{ duration: 0.4, delay: 0.15 }}
+                className="text-xs sm:text-lg font-semibold text-white/90 leading-relaxed drop-shadow-md"
+              >
+                {currentHeadline.sub} — <span className="opacity-70 font-normal">{activeStageConfig.statusText}</span>
+              </motion.p>
+            </AnimatePresence>
+
+            {/* Price tag */}
+            {activeAdminFish?.price && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+                className="flex items-center gap-1.5"
+              >
+                <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">From</span>
+                <span className="text-base sm:text-xl font-black text-amber-400 drop-shadow">
+                  {activeAdminFish.price.startsWith("Rs") || activeAdminFish.price.startsWith("₹") ? "" : "Rs. "}{activeAdminFish.price}
+                </span>
+                {activeAdminFish.unit && (
+                  <span className="text-[10px] sm:text-xs text-slate-300 font-bold uppercase">
+                    per {activeAdminFish.unit.replace(/^per\s+/i, "")}
+                  </span>
+                )}
+                <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">onwards</span>
+              </motion.div>
+            )}
+
+            {/* CTA Buttons */}
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1,  y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="flex items-center justify-start gap-2.5 pt-1 sm:pt-2 flex-wrap"
+            >
+              <Link
+                href={activeAdminFish?.productId ? `/customer/products/${activeAdminFish.productId}` : "/customer/products"}
+                className="group relative flex items-center gap-1.5 px-5 py-2.5 sm:px-7 sm:py-3 rounded-full font-black text-[10px] sm:text-xs uppercase tracking-widest text-slate-950 overflow-hidden transition-all hover:scale-105 active:scale-95 shadow-lg"
+                style={{
+                  background:  "linear-gradient(135deg, #00f3ff, #00b4d8, #f59e0b)",
+                }}
+              >
+                <ShoppingCart className="w-3.5 h-3.5 relative z-10" />
+                <span className="relative z-10">SHOP FRESH CATCH</span>
+                <ArrowRight className="w-3.5 h-3.5 relative z-10 group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+
+              <Link
+                href="/customer/products"
+                className="group flex items-center gap-1.5 px-5 py-2.5 sm:px-7 sm:py-3 rounded-full font-black text-[10px] sm:text-xs uppercase tracking-widest text-white border border-white/35 backdrop-blur-md transition-all hover:scale-105 hover:border-cyan-400/60 hover:bg-white/10 active:scale-95 shadow"
+              >
+                <Fish className="w-3.5 h-3.5" />
+                <span>EXPLORE MENU</span>
+              </Link>
             </motion.div>
-          )}
+          </div>
 
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1,  y: 0 }}
-            transition={{ duration: 0.7, delay: 0.6 }}
-            className="flex items-center justify-start gap-3 sm:gap-4 mt-5 sm:mt-7 flex-wrap"
-          >
-            {/* Primary CTA */}
-            <Link
-              href={activeAdminFish?.productId ? `/customer/products/${activeAdminFish.productId}` : "/customer/products"}
-              className="group relative flex items-center gap-2.5 px-6 py-3 sm:px-8 sm:py-3.5 rounded-full font-black text-xs sm:text-sm lg:text-base uppercase tracking-widest text-slate-950 overflow-hidden transition-all hover:scale-105 active:scale-95"
-              style={{
-                background:  "linear-gradient(135deg, #00f3ff, #00b4d8, #f59e0b)",
-                boxShadow:   "0 0 30px rgba(0,243,255,0.5), 0 4px 15px rgba(0,0,0,0.3)",
-              }}
-            >
-              {/* shimmer sweep */}
-              <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-              <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 relative z-10" />
-              <span className="relative z-10">SHOP FRESH CATCH</span>
-              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
-            </Link>
-
-            {/* Secondary CTA */}
-            <Link
-              href="/customer/products"
-              className="group flex items-center gap-2.5 px-6 py-3 sm:px-8 sm:py-3.5 rounded-full font-black text-xs sm:text-sm lg:text-base uppercase tracking-widest text-white border border-white/35 backdrop-blur-md transition-all hover:scale-105 hover:border-cyan-400/70 hover:bg-white/12 active:scale-95"
-              style={{ boxShadow: "0 4px 15px rgba(0,0,0,0.3)" }}
-            >
-              <Fish className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span>EXPLORE MENU</span>
-            </Link>
-          </motion.div>
+          {/* Right Column: Floating 3D Process stage photo preview card (Hidden on mobile to free space) */}
+          <div className="col-span-1 md:col-span-5 hidden md:flex items-center justify-center">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeStage}
+                initial={{ opacity: 0, scale: 0.9, rotateY: 15 }}
+                animate={{ opacity: 1,  scale: 1,   rotateY: 0 }}
+                exit={{   opacity: 0, scale: 0.9, rotateY: -15 }}
+                transition={{ duration: 0.55, ease: "easeOut" }}
+                style={{
+                  transformStyle: "preserve-3d",
+                  rotateX,
+                  rotateY,
+                  perspective: 1000
+                }}
+                className="w-full max-w-[340px] aspect-[4/3] relative rounded-3xl p-1.5 border border-white/20 backdrop-blur-xl shadow-2xl overflow-hidden bg-slate-900/35"
+              >
+                {/* Custom Stage Photo */}
+                <div className="w-full h-full relative rounded-2xl overflow-hidden group">
+                  <img
+                    src={activeStageConfig.imageUrl}
+                    alt={activeStageConfig.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = "/images/hero/hero_shore_catch.jpg";
+                    }}
+                  />
+                  {/* Photo Dark Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
+                  
+                  {/* Floating Stage details tag inside photo */}
+                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+                    <div>
+                      <p className="text-[10px] font-black text-cyan-400 uppercase tracking-widest">
+                        {activeStageConfig.label}
+                      </p>
+                      <p className="text-xs font-bold text-white uppercase mt-0.5">
+                        {activeStageConfig.title}
+                      </p>
+                    </div>
+                    <span
+                      className="px-2 py-0.5 text-[8.5px] font-bold uppercase rounded"
+                      style={{
+                        background: `${activeStageConfig.color}25`,
+                        color: activeStageConfig.color,
+                        border: `1px solid ${activeStageConfig.color}40`
+                      }}
+                    >
+                      STAGE {activeStageConfig.step}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
 
-        {/* ── BOTTOM STAGE JOURNEY RIBBON ── */}
+        {/* ── BOTTOM STAGE JOURNEY RIBBON (Supports all 6 custom stages) ── */}
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1,  y: 0 }}
-          transition={{ duration: 0.7, delay: 0.9 }}
-          className="w-full px-4 sm:px-8 pb-5 sm:pb-7 space-y-3"
+          transition={{ duration: 0.6, delay: 0.7 }}
+          className="w-full px-4 sm:px-8 pb-3 sm:pb-5 space-y-2.5"
         >
-          {/* Video progress dots */}
-          <div className="flex items-center justify-center gap-2">
+          {/* Video indicator dots */}
+          <div className="flex items-center justify-center gap-1.5">
             {HERO_VIDEOS.map((_, i) => (
               <button
                 key={i}
@@ -505,10 +637,10 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
                 <motion.div
                   className="rounded-full"
                   animate={{
-                    width:   i === videoIdx ? 24 : 6,
-                    height:  6,
-                    background: i === videoIdx ? "#00f3ff" : "rgba(255,255,255,0.3)",
-                    boxShadow: i === videoIdx ? "0 0 10px rgba(0,243,255,0.8)" : "none",
+                    width:   i === videoIdx ? 20 : 5,
+                    height:  5,
+                    background: i === videoIdx ? "#00f3ff" : "rgba(255,255,255,0.35)",
+                    boxShadow: i === videoIdx ? "0 0 8px rgba(0,243,255,0.8)" : "none",
                   }}
                   transition={{ duration: 0.3 }}
                 />
@@ -516,23 +648,23 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
             ))}
           </div>
 
-          {/* Stage pills */}
-          <div className="flex items-center justify-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 scrollbar-hide">
-            {STAGES.map((stage, idx) => (
+          {/* Stage selection pills (Updated to render all 6 custom stages cleanly) */}
+          <div className="flex items-center justify-center gap-1 sm:gap-2 overflow-x-auto pb-1 scrollbar-hide">
+            {mergedStages.map((stage, idx) => (
               <motion.button
                 key={stage.id}
                 onClick={() => setActiveStage(idx)}
-                whileHover={{ scale: 1.07 }}
+                whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border text-[10px] sm:text-xs font-black uppercase tracking-wider whitespace-nowrap transition-all backdrop-blur-md shrink-0",
+                  "flex items-center gap-1 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full border text-[9px] sm:text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all backdrop-blur-md shrink-0",
                   idx === activeStage
-                    ? "bg-white/15 border-white/40 text-white shadow-lg"
-                    : "bg-black/40 border-white/15 text-slate-400 hover:text-white hover:border-white/30 hover:bg-white/10"
+                    ? "bg-white/15 border-white/40 text-white shadow-md"
+                    : "bg-black/45 border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20"
                 )}
                 style={idx === activeStage ? {
                   borderColor: `${stage.color}60`,
-                  boxShadow:   `0 0 15px ${stage.color}30`,
+                  boxShadow:   `0 0 12px ${stage.color}25`,
                 } : {}}
               >
                 <span style={{ color: idx === activeStage ? stage.color : undefined }}>
@@ -552,18 +684,17 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
             ))}
           </div>
 
-          {/* Scroll hint */}
+          {/* Bouncing scroll hint */}
           <motion.div
-            animate={{ y: [0, 5, 0] }}
+            animate={{ y: [0, 4, 0] }}
             transition={{ duration: 1.8, repeat: Infinity }}
-            className="flex flex-col items-center gap-1 pt-1 opacity-40"
+            className="flex flex-col items-center gap-0.5 pt-0.5 opacity-30"
           >
-            <ChevronDown className="w-4 h-4 text-white" />
+            <ChevronDown className="w-3.5 h-3.5 text-white" />
           </motion.div>
         </motion.div>
       </div>
 
-      {/* ── GRADIENT KEYFRAMES ── */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
         @keyframes gradientShift {
