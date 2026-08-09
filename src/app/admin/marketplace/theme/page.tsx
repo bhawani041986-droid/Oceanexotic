@@ -220,30 +220,54 @@ export default function MarketplaceThemeControl() {
       .catch(err => console.error("Error fetching products for theme control:", err));
   }, [fetchSettings]);
 
-  // Sync with store ONCE on initial load
-  const isHydratedRef = useRef(false);
-  useEffect(() => {
-    if (!isHydratedRef.current && customerTheme) {
-      setTempAssets(customerAssets);
-      setSelectedThemeId(customerTheme);
-      setTempGlow(atmosphericGlow);
-      setTempHeroOpacity(heroOverlayOpacity ?? 80);
-      setTempHeroStyle(heroStyle || "SHORE_TO_DOOR_3D");
-      setTempCatAnimMode(categoryAnimationMode || "PARALLAX_FLOAT");
+   // Sync with settings store as they rehydrate or load dynamically from API
+   useEffect(() => {
+      if (customerTheme) {
+         setSelectedThemeId(customerTheme);
+      }
+      if (atmosphericGlow) setTempGlow(atmosphericGlow);
+      if (heroOverlayOpacity !== undefined) setTempHeroOpacity(heroOverlayOpacity);
+      if (heroStyle) setTempHeroStyle(heroStyle);
+      if (categoryAnimationMode) setTempCatAnimMode(categoryAnimationMode);
       if (amazonHeroCards && amazonHeroCards.length > 0) setTempAmazonCards(amazonHeroCards);
       if (swiggyBanners && swiggyBanners.length > 0) setTempSwiggyBanners(swiggyBanners);
       if (zomatoHeroConfig) setTempZomatoHero(zomatoHeroConfig);
       if (compactStripConfig) setTempCompactStrip(compactStripConfig);
-      setTempLogoTextColor(logoTextColor || "#00D1FF");
-      setTempLogoPrimaryColor(logoPrimaryColor || "#00D1FF");
-      setTempLogoSecondaryColor(logoSecondaryColor || "#F0ABFC");
-      const stored3d = (customerAssets as any)?.hero3dItems;
-      if (stored3d && stored3d.length > 0) setTempHero3d(stored3d);
-      const storedStages = (customerAssets as any)?.hero3dStages;
-      if (storedStages && storedStages.length > 0) setTempHero3dStages(storedStages);
-      isHydratedRef.current = true;
-    }
-  }, [customerAssets, customerTheme, atmosphericGlow, heroOverlayOpacity, heroStyle, categoryAnimationMode, amazonHeroCards, swiggyBanners, zomatoHeroConfig, compactStripConfig, logoTextColor, logoPrimaryColor, logoSecondaryColor]);
+      if (logoTextColor) setTempLogoTextColor(logoTextColor);
+      if (logoPrimaryColor) setTempLogoPrimaryColor(logoPrimaryColor);
+      if (logoSecondaryColor) setTempLogoSecondaryColor(logoSecondaryColor);
+   }, [
+      customerTheme, atmosphericGlow, heroOverlayOpacity, heroStyle, 
+      categoryAnimationMode, amazonHeroCards, swiggyBanners, 
+      zomatoHeroConfig, compactStripConfig, logoTextColor, 
+      logoPrimaryColor, logoSecondaryColor
+   ]);
+
+   // Sync customer assets dynamically when loaded from Supabase API
+   useEffect(() => {
+      if (customerAssets) {
+         setTempAssets(prev => {
+            const next = { ...prev };
+            let changed = false;
+            Object.entries(customerAssets).forEach(([key, val]) => {
+               if (val && (!prev || prev[key] === undefined || prev[key] === "" || (Array.isArray(prev[key]) && prev[key].length === 0))) {
+                  next[key] = val;
+                  changed = true;
+               }
+            });
+            return changed ? next : prev;
+         });
+
+         const stored3d = (customerAssets as any)?.hero3dItems;
+         if (stored3d && stored3d.length > 0) {
+            setTempHero3d(stored3d);
+         }
+         const storedStages = (customerAssets as any)?.hero3dStages;
+         if (storedStages && storedStages.length > 0) {
+            setTempHero3dStages(storedStages);
+         }
+      }
+   }, [customerAssets]);
 
   const isDirty = true; // Always allow admin to commit theme settings
 
