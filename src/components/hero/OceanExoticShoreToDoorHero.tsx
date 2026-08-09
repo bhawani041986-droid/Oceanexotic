@@ -371,12 +371,12 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
         {/* ── TOP NAV BAR ── */}
         <div className="w-full flex items-center justify-between px-4 sm:px-8 pt-3 sm:pt-6">
 
-          {/* Live badge */}
+          {/* Live badge (Hidden on mobile to free center area) */}
           <motion.div
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1,  y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex items-center gap-2 bg-black/45 backdrop-blur-xl border border-cyan-500/30 px-3 py-1.5 rounded-full shadow-xl"
+            className="hidden md:flex items-center gap-2 bg-black/45 backdrop-blur-xl border border-cyan-500/30 px-3 py-1.5 rounded-full shadow-xl"
           >
             <motion.span
               animate={{ opacity: [1, 0.2, 1], scale: [1, 1.3, 1] }}
@@ -408,7 +408,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
             ))}
           </motion.div>
 
-          {/* Play/Pause */}
+          {/* Play/Pause (Hidden on mobile to free center area) */}
           <motion.button
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1,  y: 0 }}
@@ -416,7 +416,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
             onClick={() => setIsPlaying(p => !p)}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-1.5 bg-black/45 backdrop-blur-xl border border-white/15 px-3 py-1 rounded-full text-slate-300 hover:text-cyan-300 hover:border-cyan-500/40 transition-all text-[10px] font-bold uppercase"
+            className="hidden md:flex items-center gap-1.5 bg-black/45 backdrop-blur-xl border border-white/15 px-3 py-1 rounded-full text-slate-300 hover:text-cyan-300 hover:border-cyan-500/40 transition-all text-[10px] font-bold uppercase"
           >
             {isPlaying ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3 fill-current" />}
             <span className="hidden sm:inline">{isPlaying ? "Pause" : "Play"}</span>
@@ -429,7 +429,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
           {/* Left Column: Left-aligned compact typography */}
           <div className="col-span-1 md:col-span-7 flex flex-col items-start justify-center text-left space-y-3 sm:space-y-4 max-w-xl">
             
-            {/* Journey stage micro-badge (Shows Custom Titles & Badges) */}
+            {/* Journey stage micro-badge (Hidden on mobile to free center area) */}
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeStage}
@@ -437,7 +437,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
                 animate={{ opacity: 1,  y: 0 }}
                 exit={{   opacity: 0, y: -8 }}
                 transition={{ duration: 0.3 }}
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border backdrop-blur-md"
+                className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full border backdrop-blur-md"
                 style={{
                   borderColor: `${activeStageConfig.color}60`,
                   background:  `${activeStageConfig.color}15`,
@@ -533,12 +533,12 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
               </motion.div>
             )}
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons (Hidden on mobile, rendered below in bottom ribbon horizontally) */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1,  y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="flex items-center justify-start gap-2.5 pt-1 sm:pt-2 flex-wrap"
+              className="hidden md:flex items-center justify-start gap-2.5 pt-1 sm:pt-2 flex-wrap"
             >
               <Link
                 href={activeAdminFish?.productId ? `/customer/products/${activeAdminFish.productId}` : "/customer/products"}
@@ -562,7 +562,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
             </motion.div>
           </div>
 
-          {/* Right Column: Floating 3D Process stage photo preview card (Hidden on mobile to free space) */}
+          {/* Right Column: Floating 3D Process stage photo preview card (Hidden on mobile) */}
           <div className="col-span-1 md:col-span-5 hidden md:flex items-center justify-center">
             <AnimatePresence mode="wait">
               <motion.div
@@ -592,18 +592,18 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
                   {/* Photo Dark Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
                   
-                  {/* Floating Stage details tag inside photo */}
+                  {/* Floating Stage details tag inside photo (Shows Title + Subtitle, No duplicates) */}
                   <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
                     <div>
                       <p className="text-[10px] font-black text-cyan-400 uppercase tracking-widest">
-                        {activeStageConfig.label}
-                      </p>
-                      <p className="text-xs font-bold text-white uppercase mt-0.5">
                         {activeStageConfig.title}
+                      </p>
+                      <p className="text-[9.5px] font-semibold text-slate-300 uppercase mt-0.5 leading-none">
+                        {activeStageConfig.statusText}
                       </p>
                     </div>
                     <span
-                      className="px-2 py-0.5 text-[8.5px] font-bold uppercase rounded"
+                      className="px-2 py-0.5 text-[8.5px] font-bold uppercase rounded shrink-0 ml-2"
                       style={{
                         background: `${activeStageConfig.color}25`,
                         color: activeStageConfig.color,
@@ -626,6 +626,25 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
           transition={{ duration: 0.6, delay: 0.7 }}
           className="w-full px-4 sm:px-8 pb-3 sm:pb-5 space-y-2.5"
         >
+          {/* CTA Buttons - Mobile specific (just above dots, side-by-side horizontally, slick style) */}
+          <div className="flex md:hidden items-center justify-center gap-2 max-w-sm mx-auto w-full px-2">
+            <Link
+              href={activeAdminFish?.productId ? `/customer/products/${activeAdminFish.productId}` : "/customer/products"}
+              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-full font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-slate-950 shadow-md active:scale-95 transition-all bg-gradient-to-r from-cyan-400 to-amber-400 border border-white/20"
+            >
+              <ShoppingCart className="w-3.5 h-3.5" />
+              <span>SHOP FRESH</span>
+            </Link>
+
+            <Link
+              href="/customer/products"
+              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-full font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-white border border-white/35 backdrop-blur-md active:scale-95 transition-all bg-white/10 shadow-sm"
+            >
+              <Fish className="w-3.5 h-3.5" />
+              <span>EXPLORE</span>
+            </Link>
+          </div>
+
           {/* Video indicator dots */}
           <div className="flex items-center justify-center gap-1.5">
             {HERO_VIDEOS.map((_, i) => (
@@ -683,15 +702,6 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
               </motion.button>
             ))}
           </div>
-
-          {/* Bouncing scroll hint */}
-          <motion.div
-            animate={{ y: [0, 4, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity }}
-            className="flex flex-col items-center gap-0.5 pt-0.5 opacity-30"
-          >
-            <ChevronDown className="w-3.5 h-3.5 text-white" />
-          </motion.div>
         </motion.div>
       </div>
 
