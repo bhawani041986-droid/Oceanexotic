@@ -83,7 +83,7 @@ const DEFAULT_STAGES = [
     badge: "Airtight White Pomfret Pack",
     statusText: "Hermetic Freshness Encapsulation",
     accentColor: "#3b82f6",
-    cutoutUrl: "/images/hero/user_pomfret_ice.jpg",
+    cutoutUrl: "/images/hero/user_pomfret_transparent.png",
     icon: <Package className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-blue-400" />
   },
   {
@@ -412,6 +412,29 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
                       )}
                     />
 
+                    {/* 🌊 STAGE 1: FLOATING WATER BUBBLES */}
+                    {activeStageIdx === 0 && (
+                      <>
+                        {[
+                          { left: "10%", top: "20%", size: "w-4 h-4", dur: 2.8, delay: 0 },
+                          { right: "15%", bottom: "25%", size: "w-6 h-6", dur: 3.4, delay: 0.5 },
+                          { left: "25%", bottom: "15%", size: "w-3.5 h-3.5", dur: 2.2, delay: 0.2 }
+                        ].map((bubble, i) => (
+                          <motion.div
+                            key={i}
+                            animate={{
+                              y: [0, -35, 0],
+                              opacity: [0.3, 0.8, 0.3],
+                              scale: [0.9, 1.15, 0.9]
+                            }}
+                            transition={{ duration: bubble.dur, delay: bubble.delay, repeat: Infinity, ease: "easeInOut" }}
+                            className={cn("absolute rounded-full bg-cyan-400/25 border border-cyan-400/40 backdrop-blur-sm pointer-events-none z-20 shadow-[0_0_12px_rgba(0,243,255,0.3)]", bubble.size)}
+                            style={{ left: bubble.left, top: bubble.top, right: bubble.right, bottom: bubble.bottom }}
+                          />
+                        ))}
+                      </>
+                    )}
+
                     {/* 🔪 STAGE 2: MULTI-LAYER 3D DECONSTRUCTION WITH FLOATING FRY CUT PIECE & FISH HEAD */}
                     {activeStageIdx === 1 && (
                       <>
@@ -421,9 +444,9 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
                             src={currentStage.secondaryCutoutUrl}
                             alt="Fry Slice Cut Piece"
                             animate={{
-                              x: [0, 15, 0],
-                              y: [-10, -25, -10],
-                              rotate: [0, 12, 0]
+                              x: [0, 18, 0],
+                              y: [-12, -28, -12],
+                              rotate: [0, 15, 0]
                             }}
                             transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
                             className="absolute -top-4 -left-4 w-28 sm:w-36 h-auto object-contain filter drop-shadow-[0_15px_30px_rgba(245,158,11,0.6)] z-20 pointer-events-none"
@@ -436,9 +459,9 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
                             src={currentStage.skelCutoutUrl}
                             alt="Fish Head Cut"
                             animate={{
-                              x: [0, -15, 0],
-                              y: [10, 25, 10],
-                              rotate: [0, -10, 0]
+                              x: [0, -18, 0],
+                              y: [12, 28, 12],
+                              rotate: [0, -12, 0]
                             }}
                             transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
                             className="absolute -bottom-4 -right-4 w-32 sm:w-40 h-auto object-contain filter drop-shadow-[0_15px_30px_rgba(0,243,255,0.6)] z-20 pointer-events-none"
@@ -454,16 +477,109 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
                         />
                       </>
                     )}
-
+                    
                     {/* 📦 STAGE 3: 3D GLASSMORPHIC VACUUM SHRINK-WRAP ENVELOPE */}
                     {activeStageIdx === 2 && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 1.15 }}
-                        animate={{ opacity: [0.4, 0.9, 0.4], scale: [1.15, 0.96, 1.15] }}
-                        transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-                        className="absolute inset-2 border-2 border-blue-400/90 rounded-3xl pointer-events-none z-30 shadow-[0_0_35px_rgba(59,130,246,0.6)]"
-                      />
-                    )}
+                       <>
+                         <motion.div
+                           initial={{ opacity: 0, scale: 1.15 }}
+                           animate={{ opacity: [0.4, 0.9, 0.4], scale: [1.15, 0.96, 1.15] }}
+                           transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+                           className="absolute inset-2 border-2 border-blue-400/90 rounded-3xl pointer-events-none z-30 shadow-[0_0_35px_rgba(59,130,246,0.6)]"
+                         />
+                         {/* Floating fresh mint leaves/lime slices */}
+                         <motion.div
+                           animate={{
+                             y: [0, 12, 0],
+                             rotate: [0, 15, 0]
+                           }}
+                           transition={{ duration: 3.0, repeat: Infinity, ease: "easeInOut" }}
+                           className="absolute top-6 left-6 text-2xl filter drop-shadow-md z-25 pointer-events-none"
+                         >
+                           🍋
+                         </motion.div>
+                         <motion.div
+                           animate={{
+                             y: [0, -12, 0],
+                             rotate: [0, -20, 0]
+                           }}
+                           transition={{ duration: 2.7, repeat: Infinity, ease: "easeInOut" }}
+                           className="absolute bottom-10 right-10 text-xl filter drop-shadow-md z-25 pointer-events-none"
+                         >
+                           🌿
+                         </motion.div>
+                       </>
+                     )}
+
+                     {/* 🧊 STAGE 4: FLOATING ICE BLOCKS AROUND PRAWNS */}
+                     {activeStageIdx === 3 && (
+                       <>
+                         {[
+                           { emoji: "🧊", size: "text-2xl", x: [0, 15, 0], y: [0, -20, 0], rot: [0, 25, 0], dur: 3.1, pos: "top-4 left-6" },
+                           { emoji: "🧊", size: "text-lg", x: [0, -12, 0], y: [0, 18, 0], rot: [0, -35, 0], dur: 2.8, pos: "bottom-12 left-10" },
+                           { emoji: "✨", size: "text-base", x: [0, 10, 0], y: [0, -12, 0], rot: [0, 45, 0], dur: 2.2, pos: "top-10 right-12" }
+                         ].map((ice, i) => (
+                           <motion.div
+                             key={i}
+                             animate={{
+                               x: ice.x,
+                               y: ice.y,
+                               rotate: ice.rot
+                             }}
+                             transition={{ duration: ice.dur, repeat: Infinity, ease: "easeInOut" }}
+                             className={cn("absolute filter drop-shadow-[0_5px_15px_rgba(0,243,255,0.4)] z-25 pointer-events-none", ice.size, ice.pos)}
+                           >
+                             {ice.emoji}
+                           </motion.div>
+                         ))}
+                       </>
+                     )}
+
+                     {/* 🚚 STAGE 5: 3D EXPRESS VELOCITY SPEED-LINE TUNNEL */}
+                     {activeStageIdx === 4 && (
+                       <>
+                         <motion.div
+                           initial={{ opacity: 0 }}
+                           animate={{ opacity: [0.2, 0.7, 0.2] }}
+                           transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
+                           className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-500/20 via-transparent to-transparent pointer-events-none z-30"
+                         />
+                         {/* Flying neon speed lines */}
+                         {[
+                           { top: "25%", delay: 0 },
+                           { top: "50%", delay: 0.3 },
+                           { top: "75%", delay: 0.15 }
+                         ].map((line, i) => (
+                           <motion.div
+                             key={i}
+                             initial={{ x: "-100%", opacity: 0 }}
+                             animate={{ x: "200%", opacity: [0, 0.8, 0.8, 0] }}
+                             transition={{ duration: 1.2, delay: line.delay, repeat: Infinity, ease: "easeInOut" }}
+                             className="absolute left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent pointer-events-none z-25"
+                             style={{ top: line.top }}
+                           />
+                         ))}
+                       </>
+                     )}
+
+                     {/* 🍽️ STAGE 6: GOURMET SERVING GLAZE EFFECT */}
+                     {activeStageIdx === 5 && (
+                       <>
+                         <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/20 via-transparent to-amber-500/10 pointer-events-none z-30" />
+                         {/* Floating deconstructed elements */}
+                         <motion.div
+                           animate={{
+                             y: [0, -15, 0],
+                             rotate: [0, -10, 0]
+                           }}
+                           transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
+                           className="absolute -top-6 -right-6 text-4xl filter drop-shadow-md z-25 pointer-events-none"
+                         >
+                           🍽️
+                         </motion.div>
+                       </>
+                     )}
+
                   </motion.div>
 
                   {/* ❄️ STAGE 4: 3D CRYO FROST ICE VAULT BADGE (POSITIONED TOP-RIGHT CORNER) */}
@@ -473,25 +589,10 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
                         <ThermometerSnowflake className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-emerald-400 animate-bounce" />
                         <div className="text-left">
                           <p className="text-[8.5px] sm:text-xs font-black text-white uppercase tracking-wider">0°C TO 4°C CHILLED LOCK</p>
-                          <p className="text-[7.5px] sm:text-[9px] font-bold text-emerald-400 uppercase tracking-widest hidden sm:block">CRYO VAULT LOCKED</p>
+                           <p className="text-[7.5px] sm:text-[9px] font-bold text-emerald-400 uppercase tracking-widest hidden sm:block">CRYO VAULT LOCKED</p>
                         </div>
                       </div>
                     </div>
-                  )}
-
-                  {/* 🚚 STAGE 5: 3D EXPRESS VELOCITY SPEED-LINE TUNNEL */}
-                  {activeStageIdx === 4 && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: [0.2, 0.7, 0.2] }}
-                      transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
-                      className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-500/20 via-transparent to-transparent pointer-events-none z-30"
-                    />
-                  )}
-
-                  {/* 🍽️ STAGE 6: GOURMET SERVING GLAZE EFFECT */}
-                  {activeStageIdx === 5 && (
-                    <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/20 via-transparent to-amber-500/10 pointer-events-none z-30" />
                   )}
 
                   {/* 3D TELEMETRY FLOATING BAR (BOTTOM PILL) */}
