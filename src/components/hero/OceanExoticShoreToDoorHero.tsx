@@ -424,10 +424,10 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
         </div>
 
         {/* ── SPLIT VIEW CONTENT (Left: Text, Right: Floating Custom Stage Photo) ── */}
-        <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-8 items-center px-6 sm:px-16 pt-8 sm:pt-14 max-w-7xl mx-auto w-full">
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-8 items-start px-6 sm:px-16 pt-6 sm:pt-8 max-w-7xl mx-auto w-full h-full pb-16">
           
-          {/* Left Column: Left-aligned compact typography */}
-          <div className="col-span-1 md:col-span-7 flex flex-col items-start justify-center text-left space-y-4 sm:space-y-5 max-w-xl">
+          {/* Left Column: Left-aligned compact typography (Top aligned) */}
+          <div className="col-span-1 md:col-span-7 flex flex-col items-start justify-start text-left space-y-4 sm:space-y-5 max-w-xl pt-4 sm:pt-6">
             
             {/* Headline (Single line, reduced font size on mobile to 19px, keeps center free) */}
             <AnimatePresence mode="wait">
@@ -489,7 +489,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
             </AnimatePresence>
 
             {/* Centered micro-badge indicating active stage (desktop-only, centered below subtitle) */}
-            <div className="w-full hidden md:flex justify-start pt-1.5">
+            <div className="w-full hidden md:flex justify-start pt-1">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeStage}
@@ -558,8 +558,8 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
             </motion.div>
           </div>
 
-          {/* Right Column: Floating 3D Process stage photo preview card (Hidden on mobile) */}
-          <div className="col-span-1 md:col-span-5 hidden md:flex items-center justify-center">
+          {/* Right Column: Floating 3D Process stage photo preview card (Bottom-right aligned, smaller scale) */}
+          <div className="col-span-1 md:col-span-5 hidden md:flex items-end justify-end h-full self-end pb-8">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeStage}
@@ -573,7 +573,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
                   rotateY,
                   perspective: 1000
                 }}
-                className="w-full max-w-[340px] aspect-[4/3] relative rounded-3xl p-1.5 border border-white/20 backdrop-blur-xl shadow-2xl overflow-hidden bg-slate-900/35"
+                className="w-full max-w-[280px] aspect-[4/3] relative rounded-3xl p-1.5 border border-white/20 backdrop-blur-xl shadow-2xl overflow-hidden bg-slate-900/35"
               >
                 {/* Custom Stage Photo */}
                 <div className="w-full h-full relative rounded-2xl overflow-hidden group">
