@@ -43,9 +43,9 @@ interface OceanExoticShoreToDoorHeroProps {
 
 // ─── Videos ──────────────────────────────────────────────────────────────────
 const HERO_VIDEOS = [
-  "/videos/7020525_Market_Iced_1280x720.mp4",
-  "/videos/7020535_Market_Iced_1280x720.mp4",
-  "/videos/6914536_Motion_Graphics_Motion_Graphic_1280x720.mp4",
+  "https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/videos/7020525_Market_Iced_1280x720.mp4",
+  "https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/videos/7020535_Market_Iced_1280x720.mp4",
+  "https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/videos/6914536_Motion_Graphics_Motion_Graphic_1280x720.mp4",
 ];
 
 // ─── Default 6-Stage Process Configuration ───────────────────────────────────
@@ -57,7 +57,7 @@ const DEFAULT_STAGE_DATA = [
     title: "SHORE CATCH",
     badge: "100% Ocean Wild Catch",
     statusText: "Pristine Island Dock Landing",
-    imageUrl: "https://oceanexotic.com/storage/cms/1786227333695-photo-2026-08-08-23-22-45.jpg",
+    imageUrl: "https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/images/hero/hero_shore_catch.jpg",
     color: "#00f3ff",
     icon: <Waves className="w-3.5 h-3.5" />
   },
@@ -68,7 +68,7 @@ const DEFAULT_STAGE_DATA = [
     title: "PRECISION SLICED",
     badge: "3D Deconstructed Steaks & Fry Cuts",
     statusText: "Laser Sliced Fresh Cuts",
-    imageUrl: "/images/hero/hero_freshly_sliced.jpg",
+    imageUrl: "https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/images/hero/hero_freshly_sliced.jpg",
     color: "#f59e0b",
     icon: <Scissors className="w-3.5 h-3.5" />
   },
@@ -79,7 +79,7 @@ const DEFAULT_STAGE_DATA = [
     title: "VACUUM SEALED",
     badge: "Hermetic Eco Pack",
     statusText: "Airtight Freshness Encapsulation",
-    imageUrl: "/images/hero/hero_vacuum_sealed.jpg",
+    imageUrl: "https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/images/hero/hero_vacuum_sealed.jpg",
     color: "#3b82f6",
     icon: <Package className="w-3.5 h-3.5" />
   },
@@ -90,7 +90,7 @@ const DEFAULT_STAGE_DATA = [
     title: "COLD CHAIN MAINTAINED",
     badge: "0°C - 4°C Ice Lock",
     statusText: "Continuous Chilled Preservation",
-    imageUrl: "/images/hero/hero_cold_chain.jpg",
+    imageUrl: "https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/images/hero/hero_cold_chain.jpg",
     color: "#10b981",
     icon: <ThermometerSnowflake className="w-3.5 h-3.5" />
   },
@@ -101,7 +101,7 @@ const DEFAULT_STAGE_DATA = [
     title: "EXPRESS DISPATCH",
     badge: "90 Min Delivery Route",
     statusText: "Cold Courier Velocity Tunnel",
-    imageUrl: "/images/hero/hero_express_delivery.jpg",
+    imageUrl: "https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/images/hero/hero_express_delivery.jpg",
     color: "#a855f7",
     icon: <Truck className="w-3.5 h-3.5" />
   },
@@ -112,7 +112,7 @@ const DEFAULT_STAGE_DATA = [
     title: "DELIVERED TO YOUR DOOR",
     badge: "Shore to Door Complete",
     statusText: "Fresh Seafood Delivered Fresh",
-    imageUrl: "/images/hero/hero_delivered_door.jpg",
+    imageUrl: "https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/images/hero/hero_delivered_door.jpg",
     color: "#00d1ff",
     icon: <Home className="w-3.5 h-3.5" />
   }
@@ -591,7 +591,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages, heroVideos
                     alt={activeStageConfig.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src = "/images/hero/hero_shore_catch.jpg";
+                      (e.currentTarget as HTMLImageElement).src = "https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/images/hero/hero_shore_catch.jpg";
                     }}
                   />
                   {/* Photo Dark Overlay */}

@@ -78,7 +78,7 @@ export const DEFAULT_HERO3D_STAGES: Hero3DStageConfig[] = [
     title: "SHORE CATCH",
     badge: "100% Ocean Wild Catch",
     statusText: "Pristine Island Dock Landing",
-    imageUrl: "/images/hero/hero_shore_catch.jpg"
+    imageUrl: "https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/images/hero/hero_shore_catch.jpg"
   },
   {
     id: "slice",
@@ -87,7 +87,7 @@ export const DEFAULT_HERO3D_STAGES: Hero3DStageConfig[] = [
     title: "PRECISION SLICED",
     badge: "3D Deconstructed Steaks & Fry Cuts",
     statusText: "Laser Sliced Fresh Cuts",
-    imageUrl: "/images/hero/hero_freshly_sliced.jpg"
+    imageUrl: "https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/images/hero/hero_freshly_sliced.jpg"
   },
   {
     id: "vacuum",
@@ -96,7 +96,7 @@ export const DEFAULT_HERO3D_STAGES: Hero3DStageConfig[] = [
     title: "VACUUM SEALED",
     badge: "Hermetic Eco Pack",
     statusText: "Airtight Freshness Encapsulation",
-    imageUrl: "/images/hero/hero_vacuum_sealed.jpg"
+    imageUrl: "https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/images/hero/hero_vacuum_sealed.jpg"
   },
   {
     id: "coldchain",
@@ -105,7 +105,7 @@ export const DEFAULT_HERO3D_STAGES: Hero3DStageConfig[] = [
     title: "COLD CHAIN MAINTAINED",
     badge: "0°C - 4°C Ice Lock",
     statusText: "Continuous Chilled Preservation",
-    imageUrl: "/images/hero/hero_cold_chain.jpg"
+    imageUrl: "https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/images/hero/hero_cold_chain.jpg"
   },
   {
     id: "delivery",
@@ -114,7 +114,7 @@ export const DEFAULT_HERO3D_STAGES: Hero3DStageConfig[] = [
     title: "EXPRESS DISPATCH",
     badge: "90 Min Delivery Route",
     statusText: "Cold Courier Velocity Tunnel",
-    imageUrl: "/images/hero/hero_express_delivery.jpg"
+    imageUrl: "https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/images/hero/hero_express_delivery.jpg"
   },
   {
     id: "door",
@@ -123,7 +123,7 @@ export const DEFAULT_HERO3D_STAGES: Hero3DStageConfig[] = [
     title: "DELIVERED TO YOUR DOOR",
     badge: "Shore to Door Complete",
     statusText: "Fresh Seafood Delivered Fresh",
-    imageUrl: "/images/hero/hero_delivered_door.jpg"
+    imageUrl: "https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/images/hero/hero_delivered_door.jpg"
   }
 ];
 
@@ -398,9 +398,9 @@ export const useSettingsStore = create<SettingsState>()(
         heroPrice: "650",
         heroUnit: "kg",
         heroVideos: [
-          "/videos/7020525_Market_Iced_1280x720.mp4",
-          "/videos/7020535_Market_Iced_1280x720.mp4",
-          "/videos/6914536_Motion_Graphics_Motion_Graphic_1280x720.mp4"
+          "https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/videos/7020525_Market_Iced_1280x720.mp4",
+          "https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/videos/7020535_Market_Iced_1280x720.mp4",
+          "https://kyqmhibffbwoqlpdplfu.supabase.co/storage/v1/object/public/assets/videos/6914536_Motion_Graphics_Motion_Graphic_1280x720.mp4"
         ]
       },
 
