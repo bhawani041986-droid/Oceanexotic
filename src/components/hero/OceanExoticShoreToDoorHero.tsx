@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import {
@@ -143,8 +143,15 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages, heroVideos
 
   const activeAdminFish = heroItems && heroItems.length > 0 ? heroItems[0] : null;
 
+  const lastSrcRef = useRef("");
+
   // Resolve dynamic videos, price, and units
-  const videoList = heroVideos && heroVideos.filter(Boolean).length > 0 ? heroVideos.filter(Boolean) : HERO_VIDEOS;
+  const videoList = useMemo(() => {
+    return heroVideos && heroVideos.filter(Boolean).length > 0
+      ? heroVideos.filter(Boolean)
+      : HERO_VIDEOS;
+  }, [heroVideos]);
+
   const resolvedPrice = heroPrice || activeAdminFish?.price || "650";
   const resolvedUnit = heroUnit || activeAdminFish?.unit || "kg";
   const resolvedProductId = activeAdminFish?.productId;
@@ -185,9 +192,19 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages, heroVideos
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    video.src = videoList[videoIdx] || HERO_VIDEOS[0];
-    video.load();
-    if (isPlaying) video.play().catch(() => {});
+    const targetSrc = videoList[videoIdx] || HERO_VIDEOS[0];
+    
+    if (lastSrcRef.current !== targetSrc) {
+      lastSrcRef.current = targetSrc;
+      video.src = targetSrc;
+      video.load();
+      // If the video is already ready to play, show it immediately
+      if (video.readyState >= 2) {
+        setVideoReady(true);
+      } else {
+        setVideoReady(false);
+      }
+    }
   }, [videoIdx, videoList]);
 
   useEffect(() => {
@@ -195,6 +212,11 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages, heroVideos
     if (!video) return;
     const onEnd = () => setVideoIdx(i => (i + 1) % videoList.length);
     const onCanPlay = () => setVideoReady(true);
+    
+    if (video.readyState >= 2) {
+      setVideoReady(true);
+    }
+    
     video.addEventListener("ended", onEnd);
     video.addEventListener("canplay", onCanPlay);
     return () => {
@@ -206,7 +228,11 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages, heroVideos
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    isPlaying ? video.play().catch(() => {}) : video.pause();
+    if (isPlaying) {
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
   }, [isPlaying]);
 
   // ── Mouse parallax ────────────────────────────────────────────────────────
