@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  return NextResponse.json({ success: true, message: "Backend is fully live on Vercel and synced with GitHub." });
+  const envKeys = Object.keys(process.env).filter(key => 
+    key.includes('DATABASE') || key.includes('POSTGRES') || key.includes('SUPABASE') || key.includes('URL') || key.includes('KEY')
+  );
+  return NextResponse.json({ success: true, envKeys });
 }
