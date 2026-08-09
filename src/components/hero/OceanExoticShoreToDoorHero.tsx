@@ -429,30 +429,6 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
           {/* Left Column: Left-aligned compact typography */}
           <div className="col-span-1 md:col-span-7 flex flex-col items-start justify-center text-left space-y-4 sm:space-y-5 max-w-xl">
             
-            {/* Journey stage micro-badge (Hidden on mobile to free center area) */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeStage}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1,  y: 0 }}
-                exit={{   opacity: 0, y: -8 }}
-                transition={{ duration: 0.3 }}
-                className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full border backdrop-blur-md"
-                style={{
-                  borderColor: `${activeStageConfig.color}60`,
-                  background:  `${activeStageConfig.color}15`,
-                  boxShadow:   `0 0 16px ${activeStageConfig.color}30`,
-                }}
-              >
-                <span className="text-xs shrink-0" style={{ color: activeStageConfig.color }}>
-                  {activeStageConfig.icon}
-                </span>
-                <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-white">
-                  STAGE {activeStageConfig.step} — {activeStageConfig.title}
-                </span>
-              </motion.div>
-            </AnimatePresence>
-
             {/* Headline (Single line, reduced font size on mobile to 19px, keeps center free) */}
             <AnimatePresence mode="wait">
               <motion.div
@@ -512,40 +488,30 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
               </motion.p>
             </AnimatePresence>
 
-            {/* ── PROCESS TIMELINE IN THE HERO MIDDLE ── */}
-            <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto pb-1.5 w-full scrollbar-hide py-1.5">
-              {mergedStages.map((stage, idx) => (
-                <motion.button
-                  key={stage.id}
-                  onClick={() => setActiveStage(idx)}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={cn(
-                    "flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl border text-[9px] sm:text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all backdrop-blur-md shrink-0",
-                    idx === activeStage
-                      ? "bg-white/15 border-white/40 text-white shadow-md"
-                      : "bg-black/45 border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20"
-                  )}
-                  style={idx === activeStage ? {
-                    borderColor: `${stage.color}60`,
-                    boxShadow:   `0 0 12px ${stage.color}25`,
-                  } : {}}
+            {/* Centered micro-badge indicating active stage (desktop-only, centered below subtitle) */}
+            <div className="w-full hidden md:flex justify-start pt-1.5">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeStage}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1,  y: 0 }}
+                  exit={{   opacity: 0, y: -8 }}
+                  transition={{ duration: 0.3 }}
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border backdrop-blur-md"
+                  style={{
+                    borderColor: `${activeStageConfig.color}60`,
+                    background:  `${activeStageConfig.color}15`,
+                    boxShadow:   `0 0 16px ${activeStageConfig.color}30`,
+                  }}
                 >
-                  <span style={{ color: idx === activeStage ? stage.color : undefined }}>
-                    {stage.icon}
+                  <span className="text-xs shrink-0" style={{ color: activeStageConfig.color }}>
+                    {activeStageConfig.icon}
                   </span>
-                  <span className="hidden xs:inline">{stage.step}</span>
-                  <span>{stage.label}</span>
-                  {idx === activeStage && (
-                    <motion.span
-                      animate={{ opacity: [1, 0.3, 1] }}
-                      transition={{ duration: 1, repeat: Infinity }}
-                      className="w-1.5 h-1.5 rounded-full"
-                      style={{ background: stage.color }}
-                    />
-                  )}
-                </motion.button>
-              ))}
+                  <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-white">
+                    STAGE {activeStageConfig.step} — {activeStageConfig.title}
+                  </span>
+                </motion.div>
+              </AnimatePresence>
             </div>
 
             {/* Price Badge (Desktop specific, placed above Shop Fresh button) */}
@@ -703,6 +669,42 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
                   transition={{ duration: 0.3 }}
                 />
               </button>
+            ))}
+          </div>
+
+          {/* Stage selection pills (Restored back to bottom ribbon) */}
+          <div className="flex items-center justify-center gap-1 sm:gap-2 overflow-x-auto pb-1 scrollbar-hide">
+            {mergedStages.map((stage, idx) => (
+              <motion.button
+                key={stage.id}
+                onClick={() => setActiveStage(idx)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className={cn(
+                  "flex items-center gap-1 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full border text-[9px] sm:text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all backdrop-blur-md shrink-0",
+                  idx === activeStage
+                    ? "bg-white/15 border-white/40 text-white shadow-md"
+                    : "bg-black/45 border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20"
+                )}
+                style={idx === activeStage ? {
+                  borderColor: `${stage.color}60`,
+                  boxShadow:   `0 0 12px ${stage.color}25`,
+                } : {}}
+              >
+                <span style={{ color: idx === activeStage ? stage.color : undefined }}>
+                  {stage.icon}
+                </span>
+                <span className="hidden xs:inline">{stage.step}</span>
+                <span>{stage.label}</span>
+                {idx === activeStage && (
+                  <motion.span
+                    animate={{ opacity: [1, 0.3, 1] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                    className="w-1.5 h-1.5 rounded-full"
+                    style={{ background: stage.color }}
+                  />
+                )}
+              </motion.button>
             ))}
           </div>
         </motion.div>
