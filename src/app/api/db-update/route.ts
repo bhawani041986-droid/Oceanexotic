@@ -6,9 +6,9 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   const results: Record<string, any> = {};
 
-  // Setup connection to Supabase DB via direct database connection (works on Vercel edge/lambda)
+  // Setup connection to Supabase DB via direct database IPv6 address (works on Vercel edge/lambda)
   const sql = postgres({
-    host: 'db.kyqmhibffbwoqlpdplfu.supabase.co',
+    host: '2406:da12:557:f802:5399:88de:5f6c:d2be',
     port: 5432,
     database: 'postgres',
     username: 'postgres',
