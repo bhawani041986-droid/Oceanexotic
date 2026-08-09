@@ -6,15 +6,15 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   const results: Record<string, any> = {};
 
-  // Setup connection to Supabase DB via direct IPv6 (works on Vercel edge/lambda)
+  // Setup connection to Supabase DB via connection pooler (works on Vercel edge/lambda)
   const sql = postgres({
-    host: '2406:da12:557:f802:5399:88de:5f6c:d2be',
-    port: 5432,
+    host: 'aws-0-ap-southeast-1.pooler.supabase.com',
+    port: 6543,
     database: 'postgres',
-    username: 'postgres',
-    password: 'Sankar@1986#04',
+    username: 'oceanexotic_db.kyqmhibffbwoqlpdplfu',
+    password: 'Sankar@1986#26',
     ssl: 'require',
-    connect_timeout: 10
+    connect_timeout: 20
   });
 
   try {
