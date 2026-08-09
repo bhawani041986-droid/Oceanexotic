@@ -349,7 +349,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
         style={{
           opacity: videoReady ? 1 : 0,
           transition: "opacity 1.2s ease",
-          filter: "brightness(0.68) saturate(1.25) contrast(1.05)",
+          filter: "brightness(0.88) saturate(1.3) contrast(1.05)",
         }}
       />
 
@@ -427,7 +427,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
         <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-8 items-center px-6 sm:px-16 pt-8 sm:pt-14 max-w-7xl mx-auto w-full">
           
           {/* Left Column: Left-aligned compact typography */}
-          <div className="col-span-1 md:col-span-7 flex flex-col items-start justify-center text-left space-y-3 sm:space-y-4 max-w-xl">
+          <div className="col-span-1 md:col-span-7 flex flex-col items-start justify-center text-left space-y-4 sm:space-y-5 max-w-xl">
             
             {/* Journey stage micro-badge (Hidden on mobile to free center area) */}
             <AnimatePresence mode="wait">
@@ -512,24 +512,54 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
               </motion.p>
             </AnimatePresence>
 
-            {/* Price tag */}
+            {/* ── PROCESS TIMELINE IN THE HERO MIDDLE ── */}
+            <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto pb-1.5 w-full scrollbar-hide py-1.5">
+              {mergedStages.map((stage, idx) => (
+                <motion.button
+                  key={stage.id}
+                  onClick={() => setActiveStage(idx)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={cn(
+                    "flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3.5 sm:py-2 rounded-xl border text-[9px] sm:text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all backdrop-blur-md shrink-0",
+                    idx === activeStage
+                      ? "bg-white/15 border-white/40 text-white shadow-md"
+                      : "bg-black/45 border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20"
+                  )}
+                  style={idx === activeStage ? {
+                    borderColor: `${stage.color}60`,
+                    boxShadow:   `0 0 12px ${stage.color}25`,
+                  } : {}}
+                >
+                  <span style={{ color: idx === activeStage ? stage.color : undefined }}>
+                    {stage.icon}
+                  </span>
+                  <span className="hidden xs:inline">{stage.step}</span>
+                  <span>{stage.label}</span>
+                  {idx === activeStage && (
+                    <motion.span
+                      animate={{ opacity: [1, 0.3, 1] }}
+                      transition={{ duration: 1, repeat: Infinity }}
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{ background: stage.color }}
+                    />
+                  )}
+                </motion.button>
+              ))}
+            </div>
+
+            {/* Price Badge (Desktop specific, placed above Shop Fresh button) */}
             {activeAdminFish?.price && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.6 }}
-                className="flex items-center gap-1.5"
+                transition={{ delay: 0.5 }}
+                className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl border border-amber-500/25 bg-amber-500/10 backdrop-blur-md shadow-md text-[11px] font-bold text-amber-300 uppercase tracking-wider"
               >
-                <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">From</span>
-                <span className="text-base sm:text-xl font-black text-amber-400 drop-shadow">
-                  {activeAdminFish.price.startsWith("Rs") || activeAdminFish.price.startsWith("₹") ? "" : "Rs. "}{activeAdminFish.price}
+                <span className="text-[10px] text-amber-500 font-extrabold">PRICE RANGE</span>
+                <span>
+                  From {activeAdminFish.price.startsWith("Rs") || activeAdminFish.price.startsWith("₹") ? "" : "Rs. "}{activeAdminFish.price} per {activeAdminFish.unit?.replace(/^per\s+/i, "") || "kg"} onwards
                 </span>
-                {activeAdminFish.unit && (
-                  <span className="text-[10px] sm:text-xs text-slate-300 font-bold uppercase">
-                    per {activeAdminFish.unit.replace(/^per\s+/i, "")}
-                  </span>
-                )}
-                <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">onwards</span>
               </motion.div>
             )}
 
@@ -626,6 +656,15 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
           transition={{ duration: 0.6, delay: 0.7 }}
           className="w-full px-4 sm:px-8 pb-3 sm:pb-5 space-y-2.5"
         >
+          {/* Price Range Badge (Mobile specific, placed above bottom Shop Fresh button) */}
+          {activeAdminFish?.price && (
+            <div className="flex md:hidden items-center justify-center">
+              <div className="px-3 py-1 rounded-lg border border-amber-500/25 bg-amber-500/10 backdrop-blur-md text-[9.5px] font-bold text-amber-300 uppercase tracking-wider">
+                From {activeAdminFish.price.startsWith("Rs") || activeAdminFish.price.startsWith("₹") ? "" : "Rs. "}{activeAdminFish.price} per {activeAdminFish.unit?.replace(/^per\s+/i, "") || "kg"} onwards
+              </div>
+            </div>
+          )}
+
           {/* CTA Buttons - Mobile specific (just above dots, side-by-side horizontally, slick style) */}
           <div className="flex md:hidden items-center justify-center gap-2 max-w-sm mx-auto w-full px-2">
             <Link
@@ -664,42 +703,6 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
                   transition={{ duration: 0.3 }}
                 />
               </button>
-            ))}
-          </div>
-
-          {/* Stage selection pills (Updated to render all 6 custom stages cleanly) */}
-          <div className="flex items-center justify-center gap-1 sm:gap-2 overflow-x-auto pb-1 scrollbar-hide">
-            {mergedStages.map((stage, idx) => (
-              <motion.button
-                key={stage.id}
-                onClick={() => setActiveStage(idx)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={cn(
-                  "flex items-center gap-1 px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full border text-[9px] sm:text-[11px] font-black uppercase tracking-wider whitespace-nowrap transition-all backdrop-blur-md shrink-0",
-                  idx === activeStage
-                    ? "bg-white/15 border-white/40 text-white shadow-md"
-                    : "bg-black/45 border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/20"
-                )}
-                style={idx === activeStage ? {
-                  borderColor: `${stage.color}60`,
-                  boxShadow:   `0 0 12px ${stage.color}25`,
-                } : {}}
-              >
-                <span style={{ color: idx === activeStage ? stage.color : undefined }}>
-                  {stage.icon}
-                </span>
-                <span className="hidden xs:inline">{stage.step}</span>
-                <span>{stage.label}</span>
-                {idx === activeStage && (
-                  <motion.span
-                    animate={{ opacity: [1, 0.3, 1] }}
-                    transition={{ duration: 1, repeat: Infinity }}
-                    className="w-1.5 h-1.5 rounded-full"
-                    style={{ background: stage.color }}
-                  />
-                )}
-              </motion.button>
             ))}
           </div>
         </motion.div>
