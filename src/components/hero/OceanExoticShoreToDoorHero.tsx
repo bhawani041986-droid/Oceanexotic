@@ -267,17 +267,19 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
         style={{
           opacity: videoReady ? 1 : 0,
           transition: "opacity 1.2s ease",
-          filter: "brightness(0.38) saturate(1.1)",
+          filter: "brightness(0.68) saturate(1.25) contrast(1.05)",
         }}
       />
 
-      {/* ── GRADIENT OVERLAYS ── */}
-      {/* Bottom fade to black for content legibility */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-[#030712]/30 to-transparent z-10 pointer-events-none" />
-      {/* Left/right vignette */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#030712]/70 via-transparent to-[#030712]/50 z-10 pointer-events-none" />
-      {/* Top fade for header area */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#030712]/60 via-transparent to-transparent z-10 pointer-events-none" />
+      {/* ── GRADIENT OVERLAYS — lightened so video shines through ── */}
+      {/* Bottom fade — only bottom 40% fades to near-black */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#030712]/90 via-[#030712]/20 to-transparent z-10 pointer-events-none" />
+      {/* Left vignette — subtle */}
+      <div className="absolute inset-0 bg-gradient-to-r from-[#030712]/40 via-transparent to-[#030712]/25 z-10 pointer-events-none" />
+      {/* Top fade — just enough for header legibility */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-transparent z-10 pointer-events-none" />
+      {/* Centre tint — very light so center video is visible */}
+      <div className="absolute inset-0 bg-black/10 z-10 pointer-events-none" />
 
       {/* ── PARTICLE CANVAS (over video, under UI) ── */}
       <canvas
@@ -350,7 +352,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
         </div>
 
         {/* ── CENTERED HERO CONTENT ── */}
-        <div className="flex-1 flex flex-col items-center justify-center text-center px-4 sm:px-8 -mt-8 sm:-mt-16">
+        <div className="flex-1 flex flex-col items-center justify-center text-center px-4 sm:px-8 -mt-4 sm:-mt-10">
 
           {/* Journey stage micro-badge */}
           <AnimatePresence mode="wait">
@@ -360,15 +362,15 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
               animate={{ opacity: 1,  y: 0 }}
               exit={{   opacity: 0, y: -10 }}
               transition={{ duration: 0.35 }}
-              className="inline-flex items-center gap-2 mb-4 sm:mb-6 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full border backdrop-blur-md"
+              className="inline-flex items-center gap-2 mb-4 sm:mb-6 px-4 py-1.5 sm:px-5 sm:py-2 rounded-full border backdrop-blur-md"
               style={{
-                borderColor: `${STAGES[activeStage].color}50`,
-                background:  `${STAGES[activeStage].color}18`,
-                boxShadow:   `0 0 20px ${STAGES[activeStage].color}30`,
+                borderColor: `${STAGES[activeStage].color}70`,
+                background:  `${STAGES[activeStage].color}25`,
+                boxShadow:   `0 0 24px ${STAGES[activeStage].color}50`,
               }}
             >
               <span style={{ color: STAGES[activeStage].color }}>{STAGES[activeStage].icon}</span>
-              <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-white">
+              <span className="text-xs sm:text-sm font-black uppercase tracking-widest text-white drop-shadow">
                 STAGE {STAGES[activeStage].step} — {STAGES[activeStage].label}
               </span>
               <motion.span
@@ -392,32 +394,36 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
             >
               {/* Top word */}
               <motion.h1
-                className="font-black uppercase italic leading-none tracking-tight"
+                className="font-black uppercase leading-none tracking-tighter"
                 style={{
-                  fontSize: "clamp(4rem, 14vw, 11rem)",
-                  background: "linear-gradient(135deg, #00f3ff 0%, #00d1ff 30%, #ffffff 55%, #f59e0b 80%, #ff6b35 100%)",
+                  fontSize: "clamp(4.5rem, 13vw, 10rem)",
+                  background: "linear-gradient(135deg, #00f3ff 0%, #60efff 25%, #ffffff 52%, #f59e0b 78%, #ff6b35 100%)",
                   backgroundSize: "200% 200%",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
-                  filter: "drop-shadow(0 0 40px rgba(0,243,255,0.5))",
+                  filter: "drop-shadow(0 4px 32px rgba(0,243,255,0.7)) drop-shadow(0 0 60px rgba(0,200,255,0.4))",
                   animation: "gradientShift 6s ease infinite",
+                  textShadow: "none",
+                  letterSpacing: "-0.03em",
                 }}
               >
                 {currentHeadline.top}
               </motion.h1>
               {/* Bottom word */}
               <motion.h1
-                className="font-black uppercase italic leading-none tracking-tight"
+                className="font-black uppercase leading-none tracking-tighter"
                 style={{
-                  fontSize: "clamp(4rem, 14vw, 11rem)",
-                  background: "linear-gradient(135deg, #f59e0b 0%, #ffffff 40%, #00f3ff 70%, #a855f7 100%)",
+                  fontSize: "clamp(4.5rem, 13vw, 10rem)",
+                  background: "linear-gradient(135deg, #fbbf24 0%, #ffffff 38%, #00f3ff 68%, #c084fc 100%)",
                   backgroundSize: "200% 200%",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                   backgroundClip: "text",
-                  filter: "drop-shadow(0 0 40px rgba(245,158,11,0.45))",
+                  filter: "drop-shadow(0 4px 32px rgba(245,158,11,0.7)) drop-shadow(0 0 60px rgba(251,191,36,0.35))",
                   animation: "gradientShift 6s ease infinite reverse",
+                  textShadow: "none",
+                  letterSpacing: "-0.03em",
                 }}
               >
                 {currentHeadline.bottom}
@@ -441,7 +447,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
               animate={{ opacity: 1,  y: 0 }}
               exit={{   opacity: 0, y: -8 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="mt-4 sm:mt-5 text-base sm:text-xl lg:text-2xl font-medium text-slate-300 max-w-xl sm:max-w-2xl leading-relaxed"
+              className="mt-4 sm:mt-6 text-lg sm:text-2xl lg:text-3xl font-semibold text-white/90 max-w-xl sm:max-w-2xl leading-relaxed drop-shadow-lg"
             >
               {currentHeadline.sub}
             </motion.p>
@@ -457,7 +463,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
             {/* Primary CTA */}
             <Link
               href={activeAdminFish?.productId ? `/customer/products/${activeAdminFish.productId}` : "/customer/products"}
-              className="group relative flex items-center gap-2 px-6 py-3 sm:px-8 sm:py-3.5 rounded-full font-black text-sm sm:text-base uppercase tracking-wider text-slate-950 overflow-hidden transition-all hover:scale-105 active:scale-95"
+              className="group relative flex items-center gap-2.5 px-7 py-3.5 sm:px-10 sm:py-4 rounded-full font-black text-sm sm:text-base lg:text-lg uppercase tracking-widest text-slate-950 overflow-hidden transition-all hover:scale-105 active:scale-95"
               style={{
                 background:  "linear-gradient(135deg, #00f3ff, #00b4d8, #f59e0b)",
                 boxShadow:   "0 0 30px rgba(0,243,255,0.5), 0 4px 15px rgba(0,0,0,0.3)",
@@ -473,7 +479,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
             {/* Secondary CTA */}
             <Link
               href="/customer/products"
-              className="group flex items-center gap-2 px-6 py-3 sm:px-8 sm:py-3.5 rounded-full font-black text-sm sm:text-base uppercase tracking-wider text-white border border-white/25 backdrop-blur-md transition-all hover:scale-105 hover:border-cyan-400/60 hover:bg-white/10 active:scale-95"
+              className="group flex items-center gap-2.5 px-7 py-3.5 sm:px-10 sm:py-4 rounded-full font-black text-sm sm:text-base lg:text-lg uppercase tracking-widest text-white border border-white/35 backdrop-blur-md transition-all hover:scale-105 hover:border-cyan-400/70 hover:bg-white/12 active:scale-95"
               style={{ boxShadow: "0 4px 15px rgba(0,0,0,0.3)" }}
             >
               <Fish className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -535,10 +541,10 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
                 whileHover={{ scale: 1.07 }}
                 whileTap={{ scale: 0.95 }}
                 className={cn(
-                  "flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border text-[9px] sm:text-xs font-black uppercase tracking-wider whitespace-nowrap transition-all backdrop-blur-md shrink-0",
+                  "flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border text-[10px] sm:text-xs font-black uppercase tracking-wider whitespace-nowrap transition-all backdrop-blur-md shrink-0",
                   idx === activeStage
-                    ? "bg-white/10 border-white/35 text-white"
-                    : "bg-black/30 border-white/10 text-slate-500 hover:text-slate-300 hover:border-white/25"
+                    ? "bg-white/15 border-white/40 text-white shadow-lg"
+                    : "bg-black/40 border-white/15 text-slate-400 hover:text-white hover:border-white/30 hover:bg-white/10"
                 )}
                 style={idx === activeStage ? {
                   borderColor: `${stage.color}60`,
@@ -575,10 +581,14 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
 
       {/* ── GRADIENT KEYFRAMES ── */}
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
         @keyframes gradientShift {
           0%   { background-position: 0%   50%; }
           50%  { background-position: 100% 50%; }
           100% { background-position: 0%   50%; }
+        }
+        .hero-headline {
+          font-family: 'Inter', system-ui, sans-serif;
         }
       `}</style>
     </div>
