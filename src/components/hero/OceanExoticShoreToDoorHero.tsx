@@ -36,6 +36,9 @@ export interface Hero3DStageConfig {
 interface OceanExoticShoreToDoorHeroProps {
   heroItems?: Hero3DFishItem[];
   hero3dStages?: Hero3DStageConfig[];
+  heroVideos?: string[];
+  heroPrice?: string;
+  heroUnit?: string;
 }
 
 // ─── Videos ──────────────────────────────────────────────────────────────────
@@ -122,7 +125,7 @@ const STATS = [
   { value: "0°C",   label: "Cold Chain", icon: "❄️" },
 ];
 
-export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExoticShoreToDoorHeroProps) {
+export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages, heroVideos, heroPrice, heroUnit }: OceanExoticShoreToDoorHeroProps) {
   const canvasRef    = useRef<HTMLCanvasElement>(null);
   const videoRef     = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -139,6 +142,12 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
   const springY = useSpring(mouseY, { stiffness: 50, damping: 20 });
 
   const activeAdminFish = heroItems && heroItems.length > 0 ? heroItems[0] : null;
+
+  // Resolve dynamic videos, price, and units
+  const videoList = heroVideos && heroVideos.filter(Boolean).length > 0 ? heroVideos.filter(Boolean) : HERO_VIDEOS;
+  const resolvedPrice = heroPrice || activeAdminFish?.price || "650";
+  const resolvedUnit = heroUnit || activeAdminFish?.unit || "kg";
+  const resolvedProductId = activeAdminFish?.productId;
 
   // ── Headline text cycles ───────────────────────────────────────────────────
   const HEADLINES = [
@@ -176,15 +185,15 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    video.src = HERO_VIDEOS[videoIdx];
+    video.src = videoList[videoIdx] || HERO_VIDEOS[0];
     video.load();
     if (isPlaying) video.play().catch(() => {});
-  }, [videoIdx]);
+  }, [videoIdx, videoList]);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    const onEnd = () => setVideoIdx(i => (i + 1) % HERO_VIDEOS.length);
+    const onEnd = () => setVideoIdx(i => (i + 1) % videoList.length);
     const onCanPlay = () => setVideoReady(true);
     video.addEventListener("ended", onEnd);
     video.addEventListener("canplay", onCanPlay);
@@ -192,7 +201,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
       video.removeEventListener("ended", onEnd);
       video.removeEventListener("canplay", onCanPlay);
     };
-  }, []);
+  }, [videoList]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -515,7 +524,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
             </div>
 
             {/* Price Badge (Desktop specific, placed above Shop Fresh button) */}
-            {activeAdminFish?.price && (
+            {resolvedPrice && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -524,7 +533,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
               >
                 <span className="text-[10px] text-amber-500 font-extrabold">PRICE RANGE</span>
                 <span>
-                  From {activeAdminFish.price.startsWith("Rs") || activeAdminFish.price.startsWith("₹") ? "" : "Rs. "}{activeAdminFish.price} per {activeAdminFish.unit?.replace(/^per\s+/i, "") || "kg"} onwards
+                  From {resolvedPrice.startsWith("Rs") || resolvedPrice.startsWith("₹") ? "" : "Rs. "}{resolvedPrice} per {resolvedUnit.replace(/^per\s+/i, "")} onwards
                 </span>
               </motion.div>
             )}
@@ -623,10 +632,10 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
           className="w-full px-4 sm:px-8 pb-3 sm:pb-5 space-y-2.5"
         >
           {/* Price Range Badge (Mobile specific, placed above bottom Shop Fresh button) */}
-          {activeAdminFish?.price && (
+          {resolvedPrice && (
             <div className="flex md:hidden items-center justify-center">
               <div className="px-3 py-1 rounded-lg border border-amber-500/25 bg-amber-500/10 backdrop-blur-md text-[9.5px] font-bold text-amber-300 uppercase tracking-wider">
-                From {activeAdminFish.price.startsWith("Rs") || activeAdminFish.price.startsWith("₹") ? "" : "Rs. "}{activeAdminFish.price} per {activeAdminFish.unit?.replace(/^per\s+/i, "") || "kg"} onwards
+                From {resolvedPrice.startsWith("Rs") || resolvedPrice.startsWith("₹") ? "" : "Rs. "}{resolvedPrice} per {resolvedUnit.replace(/^per\s+/i, "")} onwards
               </div>
             </div>
           )}
@@ -634,7 +643,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
           {/* CTA Buttons - Mobile specific (just above dots, side-by-side horizontally, slick style) */}
           <div className="flex md:hidden items-center justify-center gap-2 max-w-sm mx-auto w-full px-2">
             <Link
-              href={activeAdminFish?.productId ? `/customer/products/${activeAdminFish.productId}` : "/customer/products"}
+              href={resolvedProductId ? `/customer/products/${resolvedProductId}` : "/customer/products"}
               className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-full font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-slate-950 shadow-md active:scale-95 transition-all bg-gradient-to-r from-cyan-400 to-amber-400 border border-white/20"
             >
               <ShoppingCart className="w-3.5 h-3.5" />
@@ -652,7 +661,7 @@ export function OceanExoticShoreToDoorHero({ heroItems, hero3dStages }: OceanExo
 
           {/* Video indicator dots */}
           <div className="flex items-center justify-center gap-1.5">
-            {HERO_VIDEOS.map((_, i) => (
+            {videoList.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setVideoIdx(i)}

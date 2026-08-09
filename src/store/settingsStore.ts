@@ -202,6 +202,9 @@ interface SettingsState {
     adminAppIcon?: string;
     hero3dItems?: Hero3DFishItem[];
     hero3dStages?: Hero3DStageConfig[];
+    heroPrice?: string;
+    heroUnit?: string;
+    heroVideos?: string[];
   };
 
   // PayU Registry
@@ -391,7 +394,14 @@ export const useSettingsStore = create<SettingsState>()(
         promo: "https://images.unsplash.com/photo-1551970634-747846a548cb?auto=format&fit=crop&q=80",
         promoSecondary: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80",
         mobile: "",
-        placeholder: ""
+        placeholder: "",
+        heroPrice: "650",
+        heroUnit: "kg",
+        heroVideos: [
+          "/videos/7020525_Market_Iced_1280x720.mp4",
+          "/videos/7020535_Market_Iced_1280x720.mp4",
+          "/videos/6914536_Motion_Graphics_Motion_Graphic_1280x720.mp4"
+        ]
       },
 
       payu: {

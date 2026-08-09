@@ -119,6 +119,61 @@ function ImageUploaderBox({ label, value, onChange, aspect = "square" }: ImageUp
   );
 }
 
+interface VideoUploaderButtonProps {
+  label: string;
+  onChange: (url: string) => void;
+}
+
+function VideoUploaderButton({ label, onChange }: VideoUploaderButtonProps) {
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const response = await fetch("/api/system/upload", {
+        method: "POST",
+        body: formData
+      });
+      const data = await response.json();
+      if (data.status === "success" && data.url) {
+        onChange(data.url);
+      } else {
+        alert(data.message || "Failed to upload video.");
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("Failed to upload video.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  return (
+    <div>
+      <input
+        type="file"
+        accept="video/*"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        className="hidden"
+      />
+      <button
+        type="button"
+        disabled={isUploading}
+        onClick={() => fileInputRef.current?.click()}
+        className="px-2.5 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 text-[10px] font-black uppercase hover:bg-cyan-500/30 transition-all flex items-center gap-1 flex-shrink-0 whitespace-nowrap"
+      >
+        {isUploading ? "Uploading..." : `📤 ${label}`}
+      </button>
+    </div>
+  );
+}
+
 export default function MarketplaceThemeControl() {
   const { customerTheme, heroStyle, categoryAnimationMode, amazonHeroCards, swiggyBanners, zomatoHeroConfig, compactStripConfig, logoTextColor, logoPrimaryColor, logoSecondaryColor, atmosphericGlow, heroOverlayOpacity, customerAssets, setSettings, pushSettings, fetchSettings } = useSettingsStore();
   const { toast } = useToast();
@@ -1226,7 +1281,13 @@ export default function MarketplaceThemeControl() {
                       </Badge>
                    </div>
                    <div className="rounded-xl overflow-hidden border border-cyan-500/30">
-                      <OceanExoticShoreToDoorHero heroItems={tempHero3d as any} />
+                       <OceanExoticShoreToDoorHero 
+                          heroItems={tempHero3d as any} 
+                          hero3dStages={tempHero3dStages as any} 
+                          heroVideos={tempAssets.heroVideos} 
+                          heroPrice={tempAssets.heroPrice} 
+                          heroUnit={tempAssets.heroUnit} 
+                       />
                    </div>
                 </div>
              )}
@@ -1388,6 +1449,83 @@ export default function MarketplaceThemeControl() {
                 <Badge className="bg-teal-500/20 text-teal-400 border border-teal-500/30 text-[9px] font-black uppercase tracking-wider">
                    6 Stages Active
                 </Badge>
+             </div>
+
+             {/* Shore to Door Hero Background Videos & Pricing Settings */}
+             <div className="bg-slate-950/60 border border-slate-800 rounded-2xl p-5 space-y-4 mb-6">
+                <h4 className="text-xs font-black uppercase tracking-wider text-teal-400 border-b border-slate-800 pb-2 flex items-center gap-2">
+                   <span>🎬</span> Shore to Door Hero Background Videos & Pricing Settings
+                </h4>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                   <div>
+                      <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-300 block mb-1">
+                         Hero Price Tag Value
+                      </label>
+                      <input
+                         type="text"
+                         value={tempAssets.heroPrice || ""}
+                         placeholder="e.g. 650"
+                         onChange={(e) => setTempAssets({ ...tempAssets, heroPrice: e.target.value })}
+                         className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold"
+                      />
+                   </div>
+                   <div>
+                      <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-300 block mb-1">
+                         Hero Pricing Unit
+                      </label>
+                      <input
+                         type="text"
+                         value={tempAssets.heroUnit || ""}
+                         placeholder="e.g. kg"
+                         onChange={(e) => setTempAssets({ ...tempAssets, heroUnit: e.target.value })}
+                         className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold"
+                      />
+                   </div>
+                </div>
+
+                <div className="space-y-3 pt-2">
+                   <label className="text-[10px] font-extrabold uppercase tracking-wider text-slate-300 block">
+                      Hero Cinematic Background Video Reels (Up to 3 videos cycling)
+                   </label>
+                   
+                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      {[0, 1, 2].map((videoIdx) => {
+                         const currentVideos = tempAssets.heroVideos || [];
+                         const value = currentVideos[videoIdx] || "";
+                         return (
+                            <div key={videoIdx} className="space-y-1.5 bg-slate-900/40 p-3 rounded-xl border border-slate-800 flex flex-col justify-between">
+                               <div>
+                                  <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1">Video Reel #{videoIdx + 1}</span>
+                                  <input
+                                     type="text"
+                                     placeholder="https://... or uploaded .mp4"
+                                     value={value}
+                                     onChange={(e) => {
+                                        const updatedVideos = [...currentVideos];
+                                        updatedVideos[videoIdx] = e.target.value;
+                                        setTempAssets({ ...tempAssets, heroVideos: updatedVideos });
+                                     }}
+                                     className="w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-[10px] text-slate-300 font-mono"
+                                  />
+                               </div>
+                               
+                               <div className="pt-2 flex justify-end">
+                                  <VideoUploaderButton
+                                     label="Upload Video"
+                                     onChange={(url) => {
+                                        const updatedVideos = [...currentVideos];
+                                        updatedVideos[videoIdx] = url;
+                                        setTempAssets({ ...tempAssets, heroVideos: updatedVideos });
+                                        toast(`Video Reel #${videoIdx + 1} uploaded!`, "success");
+                                     }}
+                                  />
+                                </div>
+                            </div>
+                         );
+                      })}
+                   </div>
+                </div>
              </div>
 
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
