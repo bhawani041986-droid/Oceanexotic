@@ -336,14 +336,15 @@ export default function AdminEditProductPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-      if (res.ok) {
+      const data = await res.json();
+      if (res.ok && data.success) {
         toast("System Registry Synchronized.", "success");
         router.push("/admin/products");
       } else {
-        throw new Error("Sync Failure");
+        throw new Error(data.error || "Sync Failure");
       }
-    } catch (err) {
-      toast("Registry update failed.", "error");
+    } catch (err: any) {
+      toast(err.message || "Registry update failed.", "error");
     } finally {
       setIsSubmitting(false);
     }
