@@ -302,6 +302,10 @@ export default function CheckoutPage() {
 
   // ── Place order (prepaid only) ────────────────────────
   const handlePlaceOrder = async () => {
+    if (finalTotal < 500) {
+      toast("Minimum order value is ₹500. Please add more items to your cart.", "error");
+      return;
+    }
     if (!selectedAddress) {
       toast("Please select a delivery address.", "error");
       return;
@@ -737,11 +741,16 @@ export default function CheckoutPage() {
                   </div>
 
                   {/* Place order button */}
-                  <div className="flex flex-col items-center gap-3">
+                  <div className="flex flex-col gap-4 w-full">
+                    {finalTotal < 500 && (
+                      <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive text-xs font-black uppercase tracking-wider text-center flex items-center justify-center gap-2">
+                        ⚠️ MINIMUM ORDER VALUE OF ₹500 REQUIRED TO CHECKOUT
+                      </div>
+                    )}
                     <Button
                       onClick={handlePlaceOrder}
-                      disabled={isProcessing}
-                      className="w-full h-16 bg-primary text-black font-black uppercase tracking-widest text-lg rounded-xl shadow-xl active:scale-95 transition-all"
+                      disabled={isProcessing || finalTotal < 500}
+                      className="w-full h-16 bg-primary text-black font-black uppercase tracking-widest text-lg rounded-xl shadow-xl active:scale-95 transition-all disabled:opacity-50"
                     >
                       {isProcessing ? (
                         <Loader2 className="w-6 h-6 animate-spin" />
@@ -767,7 +776,7 @@ export default function CheckoutPage() {
               <div className="space-y-4">
                 <Button
                   onClick={handlePlaceOrder}
-                  disabled={activeStep < 4 || isProcessing}
+                  disabled={activeStep < 4 || isProcessing || finalTotal < 500}
                   className="w-full h-12 bg-primary text-black font-black uppercase tracking-widest rounded-lg shadow-lg disabled:opacity-40"
                 >
                   {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : "PLACE YOUR ORDER"}

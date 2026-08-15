@@ -97,6 +97,9 @@ try {
     
     $user_id = $data['userId'] ?? 'GUEST-' . time();
     $total = $data['total'];
+    if ($total < 500) {
+        throw new Exception("Minimum order value is ₹500. Please add more items to your cart.");
+    }
     $address = $data['address'] ?? 'Default Address';
     $payment = $data['paymentMethod'] ?? null;
     if (!$payment || $payment === 'COD') {
