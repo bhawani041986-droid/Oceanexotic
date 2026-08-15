@@ -53,6 +53,7 @@ try {
     ob_clean();
     echo json_encode([
         'success' => true, 
+        'status' => 'success',
         'message' => 'Identity commissioned successfully', 
         'token' => $token,
         'user' => [

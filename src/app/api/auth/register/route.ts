@@ -90,6 +90,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
+      status: "success",
+      message: "Identity commissioned successfully",
       token: token,
       user: {
         id: newUser.id,

@@ -67,9 +67,10 @@ export default function RegisterPage() {
       } else {
         toast(response.message || "Registration failed.", "error");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Registration Error:", error);
-      toast("Registration failed. Fleet registry is busy.", "error");
+      const apiMessage = error.response?.data?.message || error.message;
+      toast(apiMessage || "Registration failed. Fleet registry is busy.", "error");
     } finally {
       setIsLoading(false);
     }
