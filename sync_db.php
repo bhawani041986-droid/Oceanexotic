@@ -112,6 +112,32 @@ try {
         ]);
       }
 
+    // 3. Sync Product Cut Options Table
+    echo "Fetching cut options from Supabase...\n";
+    $supabaseCuts = fetchSupabase('product_cut_options?select=*');
+    echo "Fetched " . count($supabaseCuts) . " cut options from Supabase.\n";
+
+    echo "Clearing old cut options...\n";
+    $pdo->exec("DELETE FROM product_cut_options");
+
+    $cutStmt = $pdo->prepare("
+        INSERT INTO product_cut_options 
+        (id, product_id, cut_type, price_modifier_percent, price_flat_add, is_available, sort_order) 
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    ");
+
+    foreach ($supabaseCuts as $cut) {
+        $cutStmt->execute([
+            $cut['id'],
+            $cut['product_id'],
+            $cut['cut_type'],
+            $cut['price_modifier_percent'],
+            $cut['price_flat_add'],
+            $cut['is_available'] ? 1 : 0,
+            $cut['sort_order'] ?? 0
+        ]);
+    }
+
     $pdo->commit();
     echo "\n🎉 SUCCESS: Local MySQL database is fully synchronized with Supabase!\n";
 
