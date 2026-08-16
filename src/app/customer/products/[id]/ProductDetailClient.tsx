@@ -454,7 +454,7 @@ export default function ProductDetailPage({
                 x_l = Math.max(0, Math.min(width - w_l, x_l));
                 y_l = Math.max(0, Math.min(height - h_l, y_l));
                 setLensPos({ x: x_l, y: y_l });
-                const s = 3;
+                const s = zoomScale;
                 const offset_x = -x_l * (width * (s - 1)) / (width - w_l);
                 const offset_y = -y_l * (height * (s - 1)) / (height - h_l);
                 setZoomOffset({ x: offset_x, y: offset_y });
@@ -475,7 +475,7 @@ export default function ProductDetailPage({
                         src={allImages[activeImage]} 
                         className="w-full h-full object-contain transition-transform duration-100 ease-out"
                         style={{
-                          transform: isHovering ? `scale(${zoomScale})` : 'scale(1)'
+                          transform: 'scale(1)'
                         }}
                         alt={product.name} 
                       />
@@ -534,10 +534,10 @@ export default function ProductDetailPage({
               {(allImages[activeImage]?.startsWith('http') || allImages[activeImage]?.startsWith('/')) ? (
                 <img 
                    src={allImages[activeImage]} 
-                   className="object-contain"
+                   className="object-cover"
                    style={{
-                     width: '300%',
-                     height: '300%',
+                     width: `${zoomScale * 100}%`,
+                     height: `${zoomScale * 100}%`,
                      maxWidth: 'none',
                      transform: `translate(${zoomOffset.x}px, ${zoomOffset.y}px)`,
                      transition: 'transform 0.05s ease-out',
