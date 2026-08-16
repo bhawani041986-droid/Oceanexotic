@@ -90,6 +90,13 @@ export default function ProductDetailPage({
     null
   );
 
+  const ACTIVE_CATCH_IDS = ["farsha-white-pomfret", "mirgal-carp", "jhinga-prawn", "kukari-scad", "chanda-kukari", "ruhi-rohu"];
+  const isOutOfStock = !product || 
+    product.stock <= 0 || 
+    product.status === 'OUT_OF_STOCK' || 
+    product.status === 'INACTIVE' ||
+    (product.stock === undefined && !ACTIVE_CATCH_IDS.includes(product.id));
+
   // Client-side fetch logic for location overrides and prep options
   useEffect(() => {
     const fetchLiveDetails = async () => {
@@ -383,12 +390,14 @@ export default function ProductDetailPage({
             <div className="flex items-center gap-[10px]">
                <p className="text-xl font-black text-[var(--c-text-primary)] italic">₹{currentPrice.toLocaleString()}</p>
                <Button 
-                 disabled={isComingSoon} 
+                 disabled={isComingSoon || isOutOfStock} 
                  onClick={handleAddToCart} 
                  className={cn(
                    "h-10 px-8 rounded-full text-[10px] font-black uppercase",
                    isComingSoon 
                      ? "bg-amber-500/20 text-amber-500 border border-amber-500/30" 
+                     : isOutOfStock
+                     ? "bg-red-500/20 text-red-500 border border-red-500/30"
                      : "bg-[var(--c-primary)] text-[var(--foreground)] shadow-[var(--c-shadow-glow)]"
                  )}
                >
@@ -788,17 +797,21 @@ export default function ProductDetailPage({
 
                   <div className="flex flex-col gap-[4px] md:gap-[10px] mt-2">
                     <button 
-                       disabled={isComingSoon} 
+                       disabled={isComingSoon || isOutOfStock} 
                        onClick={openCutSelection} 
                        className={cn(
                           "w-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98] hover:opacity-90 px-6 md:px-8 py-3 md:py-4 rounded-lg md:rounded-xl text-[10px] md:text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-[6px]",
                           isComingSoon 
                             ? "bg-amber-500/20 text-amber-500 border border-amber-500/30" 
+                            : isOutOfStock
+                            ? "bg-red-500/20 text-red-500 border border-red-500/30"
                             : "bg-[var(--c-primary)] text-[var(--foreground)] shadow-[var(--c-shadow-glow)]"
                        )}
                     >
                        {isComingSoon ? (
                          "COMING SOON"
+                       ) : isOutOfStock ? (
+                         "OUT OF STOCK"
                        ) : (
                          <>
                            <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />
@@ -1104,27 +1117,33 @@ export default function ProductDetailPage({
         <section className="mt-[10px] pt-[10px] border-t border-[var(--foreground)]/5 space-y-[10px]">
            <h4 className="text-xl font-black text-[var(--foreground)] uppercase italic tracking-tighter flex items-center gap-2"><TrendingUp className="w-5 h-5 text-[var(--c-primary)]" /> Similar Products</h4>
            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-[10px]">
-              {MASTER_PRODUCT_REGISTRY.slice(0, 5).map((item) => (
-                <div key={item.id} onClick={() => router.push(`/customer/products/${item.id}`)} className="group cursor-pointer">
-                   <Card className="flex flex-col h-full bg-[var(--c-bg-alt)] border-[var(--foreground)]/5 rounded-[20px] overflow-hidden group hover:border-[var(--c-primary)]/30 transition-all">
-                      <div className="relative aspect-square w-full bg-[var(--foreground)]/5 overflow-hidden">
-                         <div className="absolute inset-0 flex items-center justify-center text-4xl group-hover:scale-105 transition-transform duration-500">
-                           {(item.images?.[0]?.startsWith('http') || item.images?.[0]?.startsWith('/')) ? <img src={item.images[0]} className="w-full h-full object-cover" /> : (item.image?.startsWith('/') || item.image?.startsWith('http')) ? <img src={item.image} className="w-full h-full object-cover" /> : item.image}
-                         </div>
-                         <div className="absolute top-2 left-2 z-10">
-                            <Badge className="bg-black/40 backdrop-blur-md text-white border-white/10 text-[7px] uppercase font-black">{item.category}</Badge>
-                         </div>
-                      </div>
-                      <div className="p-3 space-y-1 bg-gradient-to-b from-transparent to-[var(--c-bg-alt)] z-20 flex-1 flex flex-col justify-end">
-                         <p className="text-[10px] font-black text-[var(--foreground)] uppercase truncate italic" title={item.name}>{item.name}</p>
-                         <div className="flex items-center justify-between">
-                            <p className="text-[11px] font-black text-[var(--c-primary)] italic">₹{item.price.toLocaleString()}</p>
-                            <p className="text-[8px] font-bold text-[var(--c-text-secondary)] uppercase">{item.weight}</p>
-                         </div>
-                      </div>
-                   </Card>
-                </div>
-              ))}
+              {MASTER_PRODUCT_REGISTRY.slice(0, 5).map((item) => {
+                const isSimilarItemOutOfStock = !ACTIVE_CATCH_IDS.includes(item.id);
+                return (
+                  <div key={item.id} onClick={() => router.push(`/customer/products/${item.id}`)} className="group cursor-pointer">
+                     <Card className="flex flex-col h-full bg-[var(--c-bg-alt)] border-[var(--foreground)]/5 rounded-[20px] overflow-hidden group hover:border-[var(--c-primary)]/30 transition-all relative">
+                        <div className="relative aspect-square w-full bg-[var(--foreground)]/5 overflow-hidden">
+                           <div className="absolute inset-0 flex items-center justify-center text-4xl group-hover:scale-105 transition-transform duration-500">
+                             {(item.images?.[0]?.startsWith('http') || item.images?.[0]?.startsWith('/')) ? <img src={item.images[0]} className="w-full h-full object-cover" /> : (item.image?.startsWith('/') || item.image?.startsWith('http')) ? <img src={item.image} className="w-full h-full object-cover" /> : item.image}
+                           </div>
+                           <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
+                              <Badge className="bg-black/40 backdrop-blur-md text-white border-white/10 text-[7px] uppercase font-black">{item.category}</Badge>
+                              {isSimilarItemOutOfStock && (
+                                <Badge className="bg-red-500 text-white border-none text-[6px] uppercase font-black w-fit">SOLD OUT</Badge>
+                              )}
+                           </div>
+                        </div>
+                        <div className="p-3 space-y-1 bg-gradient-to-b from-transparent to-[var(--c-bg-alt)] z-20 flex-1 flex flex-col justify-end">
+                           <p className="text-[10px] font-black text-[var(--foreground)] uppercase truncate italic" title={item.name}>{item.name}</p>
+                           <div className="flex items-center justify-between">
+                              <p className="text-[11px] font-black text-[var(--c-primary)] italic">₹{item.price.toLocaleString()}</p>
+                              <p className="text-[8px] font-bold text-[var(--c-text-secondary)] uppercase">{item.weight}</p>
+                           </div>
+                        </div>
+                     </Card>
+                  </div>
+                );
+              })}
            </div>
         </section>
 
