@@ -147,11 +147,28 @@ export default function ProductDetailPage({
     }
   }, [productId, initialCutOptions]);
 
-  // Dynamically update currentPrice based on selection & prep options additions
+  // Dynamically update currentPrice based on selection, cuts, and prep options additions
   useEffect(() => {
+    let finalPrice = baseSelectedPrice;
+    if (selectedCuts?.primary && liveCutOptions && liveCutOptions.length > 0) {
+      const activeCut = liveCutOptions.find((c: any) => c.cut_type === selectedCuts.primary);
+      if (activeCut) {
+        finalPrice = Math.round(baseSelectedPrice * (1 + (activeCut.price_modifier_percent || 0) / 100) + (activeCut.price_flat_add || 0));
+      }
+    }
     const addPrice = selectedPrepOption ? parseFloat(selectedPrepOption.price_flat_add) : 0;
-    setCurrentPrice(baseSelectedPrice + addPrice);
-  }, [baseSelectedPrice, selectedPrepOption]);
+    setCurrentPrice(finalPrice + addPrice);
+  }, [baseSelectedPrice, selectedPrepOption, selectedCuts, liveCutOptions]);
+
+  // Auto-select first available cut option when options load
+  useEffect(() => {
+    if (liveCutOptions && liveCutOptions.length > 0 && !selectedCuts?.primary) {
+      const firstAvailable = liveCutOptions.find((c: any) => c.is_available);
+      if (firstAvailable) {
+        setSelectedCuts({ primary: firstAvailable.cut_type, cleaning: null, head: null, skin: null });
+      }
+    }
+  }, [liveCutOptions]);
 
   // Amazon Scroll Zoom States & Refs
   const [zoomScale, setZoomScale] = useState(2.0);
@@ -780,7 +797,19 @@ export default function ProductDetailPage({
                             : "bg-[var(--c-primary)] text-[var(--foreground)] shadow-[var(--c-shadow-glow)]"
                        )}
                     >
-                       {isComingSoon ? "COMING SOON" : <><ShoppingCart className="w-4 h-4 md:w-5 md:h-5" /> SELECT CUT & ADD</>}
+                       {isComingSoon ? (
+                         "COMING SOON"
+                       ) : (
+                         <>
+                           <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />
+                           {liveCutOptions && liveCutOptions.length > 0
+                             ? (selectedCuts?.primary
+                                 ? `ADD TO CART (${selectedCuts.primary.replace(/_/g, ' ')})`
+                                 : "SELECT CUT & ADD")
+                             : "ADD TO BASKET"
+                           }
+                         </>
+                       )}
                     </button>
                   </div>
                   {!isComingSoon && (
@@ -1184,8 +1213,6 @@ export default function ProductDetailPage({
                             onClick={() => {
                               const newCuts = { primary: cut.cut_type, cleaning: null, head: null, skin: null };
                               setSelectedCuts(newCuts);
-                              const finalPrice = Math.round(baseSelectedPrice * (1 + (cut.price_modifier_percent || 0) / 100) + (cut.price_flat_add || 0));
-                              setCurrentPrice(finalPrice + (selectedPrepOption ? parseFloat(selectedPrepOption.price_flat_add) : 0));
                             }}
                             className={cn(
                               "w-full flex items-center gap-4 p-3.5 rounded-2xl border-2 transition-all duration-200 text-left group relative overflow-hidden",
