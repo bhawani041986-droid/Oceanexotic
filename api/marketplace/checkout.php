@@ -97,7 +97,13 @@ try {
     
     $user_id = $data['userId'] ?? 'GUEST-' . time();
     $total = $data['total'];
-    if ($total < 500) {
+    
+    // Calculate items subtotal to validate minimum order value of ₹500
+    $items_subtotal = 0;
+    foreach ($data['items'] as $item) {
+        $items_subtotal += $item['price'] * $item['quantity'];
+    }
+    if ($items_subtotal < 500) {
         throw new Exception("Minimum order value is ₹500. Please add more items to your cart.");
     }
     $address = $data['address'] ?? 'Default Address';

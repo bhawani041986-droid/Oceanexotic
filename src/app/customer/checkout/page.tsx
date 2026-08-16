@@ -120,9 +120,11 @@ export default function CheckoutPage() {
   const [activeCoupons, setActiveCoupons] = useState<any[]>([]);
 
   const cartTotal = getTotal();
-  const finalTotal = appliedCoupon
+  const deliveryFee = 50; // Flat ₹50 Handling & Delivery charges
+  const taxes = cartTotal * 0.05; // 5% GST
+  const finalTotal = (appliedCoupon
     ? Math.max(0, cartTotal - appliedCoupon.discountAmount)
-    : cartTotal;
+    : cartTotal) + deliveryFee + taxes;
 
   // ── Fetch delivery slots ──────────────────────────────
   useEffect(() => {
@@ -302,7 +304,7 @@ export default function CheckoutPage() {
 
   // ── Place order (prepaid only) ────────────────────────
   const handlePlaceOrder = async () => {
-    if (finalTotal < 500) {
+    if (cartTotal < 500) {
       toast("Minimum order value is ₹500. Please add more items to your cart.", "error");
       return;
     }
@@ -749,7 +751,7 @@ export default function CheckoutPage() {
                     )}
                     <Button
                       onClick={handlePlaceOrder}
-                      disabled={isProcessing || finalTotal < 500}
+                      disabled={isProcessing || cartTotal < 500}
                       className="w-full h-16 bg-primary text-black font-black uppercase tracking-widest text-lg rounded-xl shadow-xl active:scale-95 transition-all disabled:opacity-50"
                     >
                       {isProcessing ? (
@@ -776,7 +778,7 @@ export default function CheckoutPage() {
               <div className="space-y-4">
                 <Button
                   onClick={handlePlaceOrder}
-                  disabled={activeStep < 4 || isProcessing || finalTotal < 500}
+                  disabled={activeStep < 4 || isProcessing || cartTotal < 500}
                   className="w-full h-12 bg-primary text-black font-black uppercase tracking-widest rounded-lg shadow-lg disabled:opacity-40"
                 >
                   {isProcessing ? <Loader2 className="w-5 h-5 animate-spin" /> : "PLACE YOUR ORDER"}
@@ -863,8 +865,12 @@ export default function CheckoutPage() {
                     <span>₹{cartTotal.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between text-[var(--c-text-secondary)] font-medium">
-                    <span>Delivery:</span>
-                    <span className="text-emerald-600 font-bold">FREE</span>
+                    <span>Handling & Delivery:</span>
+                    <span>₹{deliveryFee.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between text-[var(--c-text-secondary)] font-medium">
+                    <span>GST (5%):</span>
+                    <span>₹{taxes.toLocaleString()}</span>
                   </div>
                   {appliedCoupon && (
                     <div className="flex justify-between text-primary font-black animate-fade-in bg-primary/5 p-2 -mx-2 rounded-md">

@@ -40,9 +40,9 @@ export default function CartPage() {
   const [activeCoupons, setActiveCoupons] = React.useState<any[]>([]);
 
   const subtotal = getTotal();
-  const platformFee = (subtotal * settings.commissionRate) / 100;
-  const taxes = subtotal * 0.05; // 5% fixed tax
-  const grandTotal = subtotal + platformFee + taxes;
+  const deliveryFee = 50; // Flat ₹50 Handling & Delivery charges
+  const taxes = subtotal * 0.05; // 5% GST
+  const grandTotal = subtotal + deliveryFee + taxes;
 
   React.useEffect(() => {
     setMounted(true);
@@ -306,6 +306,7 @@ export default function CartPage() {
               
               <div className="space-y-3 md:space-y-6">
                 <div className="flex justify-between items-center text-[10px] md:text-sm font-black text-[var(--c-text-secondary)] italic uppercase tracking-wider"><span>Basket Value</span><span className="text-[var(--c-text-primary)]">₹{subtotal.toLocaleString()}</span></div>
+                <div className="flex justify-between items-center text-[10px] md:text-sm font-black text-[var(--c-text-secondary)] italic uppercase tracking-wider"><span>Handling & Delivery</span><span className="text-[var(--c-text-primary)]">₹{deliveryFee.toLocaleString()}</span></div>
                 <div className="flex justify-between items-center text-[10px] md:text-sm font-black text-[var(--c-text-secondary)] italic uppercase tracking-wider"><span>Regulatory Tax (5%)</span><span className="text-[var(--c-text-primary)]">₹{taxes.toLocaleString()}</span></div>
                 
                 <div className="pt-4 md:pt-8 border-t border-[var(--border)] flex justify-between items-center">
