@@ -477,14 +477,14 @@ function ProductListingContent() {
   const filteredProducts = React.useMemo(() => {
     return products.filter(p => {
       // Find the label for the product's database category
-      const dbCat = PRODUCT_CATEGORIES.find(c => c.id === p.category);
+      const dbCat = PRODUCT_CATEGORIES.find(c => c.id?.toUpperCase() === p.category?.toUpperCase());
       const productCategoryLabel = dbCat ? dbCat.label : null;
 
       const isTodayCatch = todaysCatch.some((tc: any) => tc.product_id === p.id);
       const matchesTab = activeTab === "All Seafood" 
         || (activeTab === "Fresh Fish" && isTodayCatch)
-        || productCategoryLabel === activeTab 
-        || p.category === activeTab;
+        || (productCategoryLabel && productCategoryLabel.toLowerCase() === activeTab.toLowerCase())
+        || (p.category && p.category.toLowerCase() === activeTab.toLowerCase());
       const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesTab && matchesSearch;
     });
@@ -787,8 +787,10 @@ function ProductListingContent() {
                         <div className="space-y-12">
                           {PRODUCT_CATEGORIES.map((category) => {
                             const categoryProducts = products.filter(p => {
-                              const dbCat = PRODUCT_CATEGORIES.find(c => c.id === p.category);
-                              return (dbCat ? dbCat.label : null) === category.label || p.category === category.label || p.category === category.id;
+                              const dbCat = PRODUCT_CATEGORIES.find(c => c.id?.toUpperCase() === p.category?.toUpperCase());
+                              return (dbCat ? dbCat.label.toLowerCase() : '') === category.label.toLowerCase() 
+                                || (p.category && p.category.toLowerCase() === category.label.toLowerCase()) 
+                                || (p.category && p.category.toLowerCase() === category.id.toLowerCase());
                             });
                             
                             if (categoryProducts.length === 0) return null;
