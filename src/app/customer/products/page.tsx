@@ -480,11 +480,15 @@ function ProductListingContent() {
       const dbCat = PRODUCT_CATEGORIES.find(c => c.id === p.category);
       const productCategoryLabel = dbCat ? dbCat.label : null;
 
-      const matchesTab = activeTab === "All Seafood" || productCategoryLabel === activeTab || p.category === activeTab;
+      const isTodayCatch = todaysCatch.some((tc: any) => tc.product_id === p.id);
+      const matchesTab = activeTab === "All Seafood" 
+        || (activeTab === "Fresh Fish" && isTodayCatch)
+        || productCategoryLabel === activeTab 
+        || p.category === activeTab;
       const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesTab && matchesSearch;
     });
-  }, [activeTab, searchQuery, products]);
+  }, [activeTab, searchQuery, products, todaysCatch]);
 
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const paginatedProducts = React.useMemo(() => {
