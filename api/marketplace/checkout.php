@@ -107,9 +107,9 @@ try {
         throw new Exception("Minimum order value is ₹500. Please add more items to your cart.");
     }
     $address = $data['address'] ?? 'Default Address';
-    $payment = $data['paymentMethod'] ?? null;
-    if (!$payment || $payment === 'COD') {
-        throw new Exception("Cash on Delivery is disabled. Please select a prepaid option.");
+    $payment = $data['paymentMethod'] ?? 'COD';
+    if (!$payment) {
+        throw new Exception("Please select a payment method.");
     }
 
     $stmt->execute([

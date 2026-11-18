@@ -186,12 +186,21 @@ export async function GET(request: NextRequest) {
 
     // ── Check by area name ────────────────────────────
     if (areaQuery) {
+      // Known serviceable keywords for Andaman & Nicobar islands & Port Blair / Sri Vijaya Puram hubs
+      const isKnownAndamanZone = [
+        'port blair', 'portblair', 'sri vijaya puram', 'sri vijayapuram', 'vijaya puram', 'vijayapuram',
+        'andaman', 'dollygunj', 'chatham', 'bathubasti', 'bhatubasti', 'junglighat', 'phoenix bay',
+        'aberdeen', 'haddo', 'garacharma', 'prothrapur', 'minnie bay', 'minibay', 'shadipur',
+        'south point', 'sippighat', 'austinabad', 'hasmattabad', 'delanipur', 'prem nagar',
+        'goalghar', 'corbyn', 'marine hill', 'jetty', 'mandir', 'bazar', 'bazaar'
+      ].some(k => areaQuery.toLowerCase().includes(k));
+
       const matchedZone = activeZones.find(
         (zone: any) => areaQuery.includes(zone.name.toLowerCase()) || zone.name.toLowerCase().includes(areaQuery)
       );
       
-      const matched = !!matchedZone;
-      const hubName = matchedZone ? findHubName(matchedZone, allNodes) : 'Dollygunj Hub';
+      const matched = !!matchedZone || isKnownAndamanZone;
+      const hubName = matchedZone ? findHubName(matchedZone, allNodes) : 'Port Blair Live Hub';
 
       let delivery_charge = 0;
       let minimum_order = 0;

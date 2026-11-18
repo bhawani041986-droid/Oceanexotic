@@ -56,6 +56,7 @@ const PAYMENT_METHODS = [
   { key: "CARD",        label: "Debit / Credit Card", subtitle: "Visa, Mastercard, RuPay", icon: <CreditCard className="w-5 h-5" /> },
   { key: "NET_BANKING", label: "Net Banking",   subtitle: "All major banks supported",    icon: <Building2 className="w-5 h-5" /> },
   { key: "WALLET",      label: "Wallet",        subtitle: "Paytm, Mobikwik, FreeCharge",  icon: <Wallet className="w-5 h-5" /> },
+  { key: "COD",         label: "Cash on Delivery (COD)", subtitle: "Pay with cash or UPI upon delivery", icon: <Truck className="w-5 h-5" /> },
 ];
 
 const SLOT_ICONS: Record<string, React.ReactNode> = {

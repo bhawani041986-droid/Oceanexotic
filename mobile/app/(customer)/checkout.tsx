@@ -88,11 +88,27 @@ export default function CheckoutScreen() {
         .join(", ");
 
       // Validate service area availability dynamically
-      const areaCheck = await checkoutService.checkArea(selectedAddress.address || selectedAddress.address_line1 || selectedAddress.hotel_name);
-      if (areaCheck && areaCheck.deliverable === false) {
-        toast("Delivery is currently unavailable to your location. Please select an active delivery zone.", "error");
-        setIsPlacing(false);
-        return;
+      try {
+        const fullAreaStr = [
+          selectedAddress.jetty,
+          selectedAddress.address,
+          selectedAddress.address_line1,
+          selectedAddress.hotel_name,
+        ]
+          .filter(Boolean)
+          .join(" ");
+
+        const areaCheck = await checkoutService.checkArea(fullAreaStr);
+        if (areaCheck && areaCheck.deliverable === false) {
+          const isAndamanOrJetty = /andaman|port\s*blair|vijaya|chatham|jetty|dollygunj|bathubasti|bhatubasti|junglighat|phoenix|haddo|hasmattabad|mandir/i.test(fullAreaStr);
+          if (!isAndamanOrJetty) {
+            toast("Delivery is currently unavailable to your location. Please select an active delivery zone.", "error");
+            setIsPlacing(false);
+            return;
+          }
+        }
+      } catch (checkErr) {
+        console.warn("Service area validation error:", checkErr);
       }
 
       const result = await checkoutService.placeOrder({
@@ -152,9 +168,9 @@ export default function CheckoutScreen() {
       {/* ── Progress Header ────────────────────────────────────────── */}
       <LinearGradient
         colors={colors.isDark ? ["#020617", "#0d1b2a"] : [colors.card, colors.bgAlt]}
-        className="px-4 pt-14 pb-4 border-b" style={{ borderBottomColor: colors.border }}
+        className="px-4 pt-3 pb-2.5 border-b" style={{ borderBottomColor: colors.border }}
       >
-        <Text className="text-[9px] font-black uppercase tracking-[0.3em] mb-3" style={{ color: primaryColor }}>
+        <Text className="text-[9px] font-black uppercase tracking-[0.3em] mb-2" style={{ color: primaryColor }}>
           Secure Checkout
         </Text>
         <View className="flex-row items-center gap-0">
@@ -188,10 +204,8 @@ export default function CheckoutScreen() {
                       <Text className="text-[10px] font-black text-white">✓</Text>
                     ) : (
                       <Text
-                        className={cn(
-                          "text-[10px] font-black",
-                          active ? "text-foreground" : "text-muted-foreground"
-                        )}
+                        className="text-[10px] font-black"
+                        style={{ color: active ? "#FFFFFF" : colors.textMuted }}
                       >
                         {s}
                       </Text>
@@ -220,7 +234,7 @@ export default function CheckoutScreen() {
         </View>
       </LinearGradient>
 
-      <ScrollView className="flex-1" contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 110, gap: 12, flexGrow: 1 }}>
+      <ScrollView className="flex-1" contentContainerStyle={{ paddingHorizontal: 14, paddingTop: 10, paddingBottom: 95, gap: 10, flexGrow: 1 }}>
 
         {/* ══ STEP 1: Shipping Address ════════════════════════════════ */}
         <StepCard
@@ -263,7 +277,7 @@ export default function CheckoutScreen() {
                     <Svg width={8} height={8} style={{ position: 'absolute', bottom: -2, right: -2, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill={colors.bg} /></Svg>
                     <View className="flex-row items-start justify-between mb-2">
                       <View style={{ backgroundColor: colors.isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.06)", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4 }}>
-                        <Text className="text-[8px] font-black uppercase text-foreground">
+                        <Text className="text-[8px] font-black uppercase" style={{ color: colors.text }}>
                           {addr.type || addr.label}
                         </Text>
                       </View>
@@ -271,11 +285,11 @@ export default function CheckoutScreen() {
                         <View className="w-4 h-4 rounded-none items-center justify-center relative overflow-hidden" style={{ backgroundColor: primaryColor }}>
                           <Svg width={2} height={2} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}><Polygon points="0,0 2,0 0,2" fill={colors.card} /></Svg>
                           <Svg width={2} height={2} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}><Polygon points="2,2 0,2 2,0" fill={colors.card} /></Svg>
-                          <Text className="text-[8px] text-foreground font-black">✓</Text>
+                          <Text className="text-[8px] text-white font-black">✓</Text>
                         </View>
                       )}
                     </View>
-                    <Text className="text-sm font-black text-foreground">
+                    <Text className="text-sm font-black" style={{ color: colors.text }}>
                       {addr.hotel_name}
                     </Text>
                     {addr.room_no ? (
@@ -283,13 +297,13 @@ export default function CheckoutScreen() {
                         ROOM: {addr.room_no}
                       </Text>
                     ) : null}
-                    <Text className="text-xs text-muted-foreground mt-1 leading-snug">
+                    <Text className="text-xs mt-1 leading-snug" style={{ color: colors.textMuted }}>
                       {addr.address}
                     </Text>
-                    <Text className="text-[9px] font-black text-muted-foreground mt-2">
+                    <Text className="text-[9px] font-black mt-2" style={{ color: colors.textMuted }}>
                       🚢 JETTY: {addr.jetty}
                     </Text>
-                    <Text className="text-[9px] text-muted-foreground mt-0.5">
+                    <Text className="text-[9px] mt-0.5" style={{ color: colors.textMuted }}>
                       📞 {addr.phone}
                     </Text>
                   </Pressable>
@@ -338,50 +352,51 @@ export default function CheckoutScreen() {
           label="Payment Method"
           active={activeStep === 2}
           done={activeStep > 2}
-          summary={selectedPayment}
+          summary={selectedPayment === "COD" ? "Cash on Delivery" : selectedPayment}
           onEdit={() => activeStep > 2 ? setActiveStep(2) : undefined}
         >
-          <View className="gap-3">
+          <View className="gap-2.5">
             {[
               { key: "UPI", label: "UPI", icon: "📱", desc: "Google Pay, PhonePe, Paytm" },
               { key: "CARD", label: "Debit / Credit Card", icon: "💳", desc: "Visa, Mastercard, RuPay" },
               { key: "NET_BANKING", label: "Net Banking", icon: "🏛️", desc: "All major banks supported" },
               { key: "WALLET", label: "Wallet", icon: "👛", desc: "Paytm, Mobikwik, FreeCharge" },
+              { key: "COD", label: "Cash on Delivery", icon: "💵", desc: "Pay cash or UPI upon delivery" },
             ].map((pm) => {
               const isSel = selectedPayment === pm.key;
               return (
                 <Pressable
                   key={pm.key}
                   onPress={() => setSelectedPayment(pm.key)}
-                  className="border rounded-none p-4 flex-row items-center gap-3 relative overflow-hidden"
+                  className="border rounded-none p-3 flex-row items-center gap-3 relative overflow-hidden"
                   style={{
-                    borderColor: isSel ? primaryColor : "rgba(255,255,255,0.05)",
-                    backgroundColor: isSel ? colors.primary + "0D" : "transparent"
+                    borderColor: isSel ? primaryColor : colors.border,
+                    backgroundColor: isSel ? primaryColor + "14" : (colors.isDark ? "rgba(255,255,255,0.02)" : colors.card)
                   }}
                 >
                   <Svg width={8} height={8} style={{ position: 'absolute', top: -2, left: -2, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill={colors.bg} /></Svg>
                   <Svg width={8} height={8} style={{ position: 'absolute', bottom: -2, right: -2, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill={colors.bg} /></Svg>
                   <Text className="text-2xl">{pm.icon}</Text>
                   <View className="flex-1">
-                    <Text className="font-bold text-sm text-foreground">{pm.label}</Text>
-                    <Text className="text-[10px] text-muted-foreground mt-0.5">{pm.desc}</Text>
+                    <Text className="font-bold text-sm" style={{ color: colors.text }}>{pm.label}</Text>
+                    <Text className="text-[10px] mt-0.5" style={{ color: colors.textMuted }}>{pm.desc}</Text>
                   </View>
                   {isSel && (
                     <View className="w-5 h-5 rounded-none items-center justify-center relative overflow-hidden" style={{ backgroundColor: primaryColor }}>
                       <Svg width={3} height={3} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}><Polygon points="0,0 3,0 0,3" fill={colors.card} /></Svg>
                       <Svg width={3} height={3} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}><Polygon points="3,3 0,3 3,0" fill={colors.card} /></Svg>
-                      <Text className="text-[9px] text-foreground font-black">✓</Text>
+                      <Text className="text-[9px] text-white font-black">✓</Text>
                     </View>
                   )}
                 </Pressable>
               );
             })}
           </View>
-          <View className="flex-row justify-end mt-4">
+          <View className="flex-row justify-end mt-3">
             <Button
               label="CONTINUE"
               onPress={() => setActiveStep(3)}
-              className="min-w-[140px]"
+              className="w-full sm:w-auto min-w-[140px]"
             />
           </View>
         </StepCard>
@@ -394,17 +409,17 @@ export default function CheckoutScreen() {
           done={false}
         >
           {/* Item list */}
-          <View className="gap-3 mb-6">
+          <View className="gap-2.5 mb-4">
             {items.map((item) => {
               const imgUri = resolveMediaUrl(item.image);
               return (
                 <View
                   key={item.id}
-                  className="flex-row gap-4 items-center p-3 rounded-none border relative overflow-hidden" style={{ borderColor: colors.border, backgroundColor: colors.card }}
+                  className="flex-row gap-3 items-center p-2.5 rounded-none border relative overflow-hidden" style={{ borderColor: colors.border, backgroundColor: colors.card }}
                 >
                   <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 6,0 0,6" fill={colors.bg} /></Svg>
                   <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="6,6 0,6 6,0" fill={colors.bg} /></Svg>
-                  <View className="w-14 h-14 rounded-none overflow-hidden bg-secondary/50 relative">
+                  <View className="w-12 h-12 rounded-none overflow-hidden bg-secondary/50 relative">
                     <Svg width={4} height={4} style={{ position: 'absolute', top: 0, left: 0, zIndex: 10 }}><Polygon points="0,0 4,0 0,4" fill={colors.card} /></Svg>
                     <Svg width={4} height={4} style={{ position: 'absolute', bottom: 0, right: 0, zIndex: 10 }}><Polygon points="4,4 0,4 4,0" fill={colors.card} /></Svg>
                     {imgUri ? (
@@ -421,16 +436,17 @@ export default function CheckoutScreen() {
                   </View>
                   <View className="flex-1">
                     <Text
-                      className="text-xs font-black uppercase italic text-foreground"
+                      className="text-xs font-black uppercase italic"
+                      style={{ color: colors.text }}
                       numberOfLines={2}
                     >
                       {item.name}
                     </Text>
-                    <Text className="text-[9px] font-black uppercase text-muted-foreground mt-0.5">
+                    <Text className="text-[9px] font-black uppercase mt-0.5" style={{ color: colors.textMuted }}>
                       QTY: {item.quantity} KG
                     </Text>
                   </View>
-                  <Text className="text-sm font-black italic text-foreground">
+                  <Text className="text-sm font-black italic" style={{ color: colors.text }}>
                     ₹{(item.price * item.quantity).toLocaleString()}
                   </Text>
                 </View>
@@ -439,23 +455,29 @@ export default function CheckoutScreen() {
           </View>
 
           {/* Order Total */}
-          <View className="rounded-none p-4 mb-6 gap-2 relative overflow-hidden border" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
+          <View className="rounded-none p-3.5 mb-4 gap-2 relative overflow-hidden border" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
             <Svg width={8} height={8} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 8,0 0,8" fill={colors.bg} /></Svg>
             <Svg width={8} height={8} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="8,8 0,8 8,0" fill={colors.bg} /></Svg>
             <View className="flex-row justify-between">
-              <Text className="text-xs text-muted-foreground">Subtotal</Text>
-              <Text className="text-xs font-bold text-foreground">₹{subtotal.toLocaleString()}</Text>
+              <Text className="text-xs" style={{ color: colors.textMuted }}>Subtotal</Text>
+              <Text className="text-xs font-bold" style={{ color: colors.text }}>₹{subtotal.toLocaleString()}</Text>
             </View>
             <View className="flex-row justify-between">
-              <Text className="text-xs text-muted-foreground">Regulatory Tax (5%)</Text>
+              <Text className="text-xs" style={{ color: colors.textMuted }}>Regulatory Tax (5%)</Text>
               <Text className="text-xs font-bold" style={{ color: primaryColor }}>₹{tax.toLocaleString()}</Text>
             </View>
             <View className="flex-row justify-between">
-              <Text className="text-xs text-muted-foreground">Shipping &amp; Handling</Text>
-              <Text className="text-xs font-bold text-emerald-400">FREE</Text>
+              <Text className="text-xs" style={{ color: colors.textMuted }}>Shipping &amp; Handling</Text>
+              <Text className="text-xs font-bold text-emerald-500">FREE</Text>
+            </View>
+            <View className="flex-row justify-between">
+              <Text className="text-xs" style={{ color: colors.textMuted }}>Payment Method</Text>
+              <Text className="text-xs font-bold" style={{ color: selectedPayment === "COD" ? "#10B981" : primaryColor }}>
+                {selectedPayment === "COD" ? "Cash on Delivery (COD)" : selectedPayment}
+              </Text>
             </View>
             <View className="pt-2 flex-row justify-between border-t" style={{ borderTopColor: colors.border }}>
-              <Text className="text-sm font-black uppercase text-foreground">Order Total</Text>
+              <Text className="text-sm font-black uppercase" style={{ color: colors.text }}>Order Total</Text>
               <Text className="text-lg font-black italic" style={{ color: primaryColor }}>
                 ₹{grandTotal.toLocaleString()}
               </Text>
@@ -465,7 +487,7 @@ export default function CheckoutScreen() {
           {/* Delivery summary */}
           {selectedAddress && (
             <View 
-              className="border rounded-none p-4 mb-6 gap-1 relative overflow-hidden"
+              className="border rounded-none p-3.5 mb-4 gap-1 relative overflow-hidden"
               style={{
                 backgroundColor: colors.primary + "0D",
                 borderColor: colors.primary + "33"
@@ -476,31 +498,33 @@ export default function CheckoutScreen() {
               <Text className="text-[8px] font-black uppercase tracking-widest mb-1" style={{ color: primaryColor }}>
                 Delivering to
               </Text>
-              <Text className="text-sm font-black text-foreground">
+              <Text className="text-sm font-black" style={{ color: colors.text }}>
                 {selectedAddress.hotel_name}
               </Text>
-              <Text className="text-xs text-muted-foreground">
+              <Text className="text-xs" style={{ color: colors.textMuted }}>
                 {selectedAddress.address}
               </Text>
-              <Text className="text-[9px] text-muted-foreground mt-0.5">
+              <Text className="text-[9px] mt-0.5" style={{ color: colors.textMuted }}>
                 🚢 Jetty: {selectedAddress.jetty} · 📞 {selectedAddress.phone}
               </Text>
             </View>
           )}
 
           {/* Authorize finalize */}
-          <View className="rounded-none p-6 items-center gap-4 relative overflow-hidden border" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
+          <View className="rounded-none p-5 items-center gap-3 relative overflow-hidden border" style={{ backgroundColor: colors.bgAlt, borderColor: colors.border }}>
             <Svg width={12} height={12} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 12,0 0,12" fill={colors.bg} /></Svg>
             <Svg width={12} height={12} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="12,12 0,12 12,0" fill={colors.bg} /></Svg>
-            <Text className="text-3xl">🛡️</Text>
-            <Text className="text-[10px] font-black uppercase tracking-widest text-foreground italic text-center">
-              Confirm Delivery Address
+            <Text className="text-3xl">{selectedPayment === "COD" ? "💵" : "🛡️"}</Text>
+            <Text className="text-[10px] font-black uppercase tracking-widest italic text-center" style={{ color: colors.text }}>
+              {selectedPayment === "COD" ? "Confirm Cash On Delivery Order" : "Confirm Delivery & Place Order"}
             </Text>
-            <Text className="text-[10px] text-muted-foreground italic text-center leading-relaxed">
-              By finalizing, you confirm the secure delivery of fresh seafood to your address.
+            <Text className="text-[10px] italic text-center leading-relaxed" style={{ color: colors.textMuted }}>
+              {selectedPayment === "COD"
+                ? `Pay ₹${grandTotal.toLocaleString()} in cash or UPI at your doorstep upon delivery.`
+                : "By finalizing, you confirm the secure delivery of fresh seafood to your address."}
             </Text>
             <Button
-              label={isPlacing ? "PROCESSING..." : "PLACE ORDER"}
+              label={isPlacing ? "PROCESSING..." : selectedPayment === "COD" ? "CONFIRM CASH ON DELIVERY" : "PLACE ORDER"}
               onPress={handlePlaceOrder}
               disabled={isPlacing}
               className="w-full"
@@ -512,27 +536,27 @@ export default function CheckoutScreen() {
       </ScrollView>
 
       {/* ── Sticky bottom summary ───────────────────────────────────── */}
-      <View className="absolute bottom-0 left-0 right-0 border-t px-4 py-3" style={{ borderTopColor: colors.border, backgroundColor: colors.isDark ? "rgba(13, 21, 39, 0.95)" : "rgba(255, 255, 255, 0.95)" }}>
-        <View className="flex-row items-center justify-between mb-2">
-          <Text className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
-            {items.length} item{items.length !== 1 ? "s" : ""} · {selectedPayment}
+      <View className="absolute bottom-0 left-0 right-0 border-t px-4 py-2.5" style={{ borderTopColor: colors.border, backgroundColor: colors.isDark ? "rgba(13, 21, 39, 0.95)" : "rgba(255, 255, 255, 0.95)" }}>
+        <View className="flex-row items-center justify-between mb-1.5">
+          <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
+            {items.length} item{items.length !== 1 ? "s" : ""} · {selectedPayment === "COD" ? "Cash on Delivery" : selectedPayment}
           </Text>
-          <Text className="text-lg font-black italic text-foreground">
+          <Text className="text-lg font-black italic" style={{ color: colors.text }}>
             ₹{grandTotal.toLocaleString()}
           </Text>
         </View>
         {activeStep === 3 ? (
           <Button
-            label={isPlacing ? "PROCESSING..." : "PLACE YOUR ORDER"}
+            label={isPlacing ? "PROCESSING..." : selectedPayment === "COD" ? "CONFIRM CASH ON DELIVERY" : "PLACE YOUR ORDER"}
             onPress={handlePlaceOrder}
             disabled={isPlacing || !selectedAddress}
             className="w-full"
           />
         ) : (
-          <View className="w-full py-3 rounded-none border items-center relative overflow-hidden" style={{ borderColor: colors.border, backgroundColor: colors.bgAlt }}>
+          <View className="w-full py-2.5 rounded-none border items-center relative overflow-hidden" style={{ borderColor: colors.border, backgroundColor: colors.bgAlt }}>
             <Svg width={6} height={6} style={{ position: 'absolute', top: -1, left: -1, zIndex: 10 }}><Polygon points="0,0 6,0 0,6" fill={colors.bg} /></Svg>
             <Svg width={6} height={6} style={{ position: 'absolute', bottom: -1, right: -1, zIndex: 10 }}><Polygon points="6,6 0,6 6,0" fill={colors.bg} /></Svg>
-            <Text className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">
+            <Text className="text-[9px] font-black uppercase tracking-widest" style={{ color: colors.textMuted }}>
               Complete steps above to place order
             </Text>
           </View>

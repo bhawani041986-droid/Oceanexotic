@@ -29,16 +29,16 @@ export function useToast() {
   const bevelColor = toast.type === "success" ? "rgba(0,240,120,0.08)" : "rgba(240,60,60,0.08)";
 
   const ToastHost = toast.visible ? (
-    <View className="absolute bottom-8 left-6 right-6 z-50">
+    <View className="absolute bottom-28 left-6 right-6 z-50">
       <View
         className={cn(
-          "rounded-none border px-4 py-3 relative overflow-hidden",
+          "rounded-none border px-4 py-3 relative overflow-hidden shadow-lg",
           toast.type === "success"
-            ? "border-primary/30 bg-primary/20"
-            : "border-danger/30 bg-danger/20"
+            ? "border-emerald-500/60 bg-emerald-900/90"
+            : "border-rose-500/60 bg-rose-900/90"
         )}
       >
-        <Text className="text-center text-xs font-bold text-foreground">{toast.message}</Text>
+        <Text className="text-center text-xs font-bold text-white">{toast.message}</Text>
         {/* Cut-corner bevel overlays */}
         <Svg width={10} height={10} style={[StyleSheet.absoluteFill, { width: 10, height: 10, top: -1, left: -1 }]}>
           <Path d="M0,0 L10,0 L0,10 Z" fill={bevelColor} />
